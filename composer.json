@@ -1,7 +1,10 @@
 {
 	"name": "laravel/laravel",
 	"description": "The Laravel Framework.",
-	"keywords": ["framework", "laravel"],
+	"keywords": [
+		"framework",
+		"laravel"
+	],
 	"license": "MIT",
 	"type": "project",
 	"require": {
@@ -17,10 +20,10 @@
 		],
 		"psr-4": {
 			"App\\"						: "app/",
-			"KodiCMS\\CMS"				: "modules/CMS/",
-			"KodiCMS\\Pages"			: "modules/Pages/",
-			"KodiCMS\\API"				: "modules/API/",
-			"KodiCMS\\PluginsManager"	: "modules/Plugins/"
+			"KodiCMS\\CMS\\"			: "modules/CMS/",
+			"KodiCMS\\Pages\\"			: "modules/Pages/",
+			"KodiCMS\\API\\"			: "modules/API/",
+			"KodiCMS\\PluginsManager\\"	: "modules/Plugins/"
 		}
 	},
 	"autoload-dev": {

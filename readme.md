@@ -1,1 +1,1 @@
-## KodiCMS on Laravel PHP Framework
+## KodiCMS based on Laravel PHP Framework
