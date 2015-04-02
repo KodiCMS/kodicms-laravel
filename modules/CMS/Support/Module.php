@@ -106,6 +106,11 @@ class Module
 			$this->loadTranslations();
 			$this->loadConfig();
 
+			if(strtolower($this->getName()) != 'cms') {
+
+				App::register($this->getNamespace() . '\ServiceProvider');
+			}
+
 			$this->_isBooted = TRUE;
 		}
 
@@ -119,12 +124,7 @@ class Module
 	{
 		if (!$this->_isRegistered) {
 
-			if(strtolower($this->getName()) != 'cms') {
-				/*
-				 * Register module provider
-				 */
-				App::register($this->getNamespace() . '\ServiceProvider');
-			}
+
 
 			$this->_isRegistered = TRUE;
 		}
@@ -146,7 +146,7 @@ class Module
 
 		if (is_file($routesFile)) {
 			if($wrapNamespace !== FALSE) {
-				App::make('router')->group(['namespace' => $this->getControllerNamespace()], function ($router) use ($routesFile) {
+				app('router')->group(['namespace' => $this->getControllerNamespace()], function ($router) use ($routesFile) {
 					require $routesFile;
 				});
 			} else {
@@ -163,10 +163,10 @@ class Module
 	protected function loadViews()
 	{
 		if (is_dir($appPath = base_path() . '/resources/views/vendor/' . $this->getName())) {
-			App::make('view')->addNamespace($this->getName(), $appPath);
+			app('view')->addNamespace($this->getName(), $appPath);
 		}
 
-		App::make('view')->addNamespace($this->getName(), $this->getPath(['resources', 'views']));
+		app('view')->addNamespace($this->getName(), $this->getPath(['resources', 'views']));
 	}
 
 	/**
@@ -176,17 +176,30 @@ class Module
 	 */
 	protected function loadTranslations()
 	{
-		App::make('translator')->addNamespace($this->getName(), $this->getPath(['resources', 'lang']));
+		app('translator')->addNamespace($this->getName(), $this->getPath(['resources', 'lang']));
 	}
 
 	/**
 	 * Register a config file namespace.
-	 *
+
+	 * TODO: Оптимизировать загрузку конфигов модулей
 	 * @return void
 	 */
 	protected function loadConfig()
 	{
-//		\App::make('config')->getLoader()->addNamespace($this->getNamespace(), $this->getPath(['resources', 'lang']));
+		$path = $this->getPath('config');
+
+
+		if(!is_dir($path)) return;
+
+		foreach (new \DirectoryIterator($path) as $file) {
+			if ($file->isDot() OR strpos($file->getFilename(), '.php') === FALSE) continue;
+
+			$key = $file->getBasename('.php');
+			$config = app('config')->get($key, []);
+
+			app('config')->set($key, array_merge(require $file->getPathname(), $config));
+		}
 	}
 
 	/**

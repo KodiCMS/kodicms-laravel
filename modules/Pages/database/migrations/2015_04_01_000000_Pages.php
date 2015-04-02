@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use KodiCMS\Pages\Model\FrontendPage;
 
 class Pages extends Migration
 {
@@ -16,7 +17,7 @@ class Pages extends Migration
 				->nullable()
 				->index();
 
-			$table->smallInteger('status')->index()->default(100);
+			$table->smallInteger('status')->index()->default(FrontendPage::STATUS_PUBLISHED);
 
 			$table->string('behavior')->nullable();
 

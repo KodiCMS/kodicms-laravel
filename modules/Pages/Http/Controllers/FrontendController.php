@@ -1,15 +1,15 @@
 <?php namespace KodiCMS\Pages\Http\Controllers;
 
-use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Request;
 use KodiCMS\CMS\Http\Controllers\Controller;
 use KodiCMS\Pages\Model\FrontendPage;
 
 class FrontendController extends Controller {
 
-	public function run(Route $router)
+	public function run()
 	{
-		$uri = $router->getParameter('slug');
+		$frontPage = FrontendPage::find(Request::path());
 
-		FrontendPage::find($uri);
+		dd($frontPage->getAnchor());
 	}
 }
