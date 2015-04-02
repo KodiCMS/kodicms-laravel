@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\CMS\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\App;
 use KodiCMS\CMS\Support\ModuleInstaller;
 

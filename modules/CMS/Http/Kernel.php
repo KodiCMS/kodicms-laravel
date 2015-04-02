@@ -15,7 +15,7 @@ class Kernel extends HttpKernel {
 		'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
 		'Illuminate\Session\Middleware\StartSession',
 		'Illuminate\View\Middleware\ShareErrorsFromSession',
-		'App\Http\Middleware\VerifyCsrfToken',
+		'KodiCMS\CMS\Http\Middleware\VerifyCsrfToken',
 	];
 
 	/**
@@ -24,7 +24,6 @@ class Kernel extends HttpKernel {
 	 * @var array
 	 */
 	protected $routeMiddleware = [
-
+		'auth' => 'KodiCMS\CMS\Http\Middleware\Authenticate'
 	];
-
 }

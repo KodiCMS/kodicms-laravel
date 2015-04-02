@@ -10,7 +10,8 @@ class ApiKeys extends Migration
 		Schema::create('api_keys', function (Blueprint $table) {
 			$table->string('id', 50)->unique();
 			$table->text('description')->default('');
-			$table->timestamp('created_at');
+
+			$table->timestamps();
 		});
 	}
 

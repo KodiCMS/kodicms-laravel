@@ -1,7 +1,12 @@
 <?php namespace KodiCMS\CMS\Exceptions;
 
 use Exception;
+
+use KodiCMS\API\Exceptions\Response as APIExceptionResponse;
+use KodiCMS\API\Exceptions\Exception as APIException;
+
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler {
 
@@ -36,12 +41,52 @@ class Handler extends ExceptionHandler {
 	 */
 	public function render($request, Exception $e)
 	{
-		if(config('app.debug'))
-		{
-			return $this->renderExceptionWithWhoops($e);
+		if($request->ajax() OR ($e instanceof APIException)) {
+			return (new APIExceptionResponse(config('app.debug')))->createResponse($e);
 		}
 
-		return parent::render($request, $e);
+		if ($this->isHttpException($e))
+		{
+			return $this->renderHttpException($e);
+		}
+		else
+		{
+			if(config('app.debug'))
+			{
+				return $this->renderExceptionWithWhoops($e);
+			}
+
+			return response()->view("errors.500", [
+				'code' => 500,
+				'bodyId' => 'error.critical'
+			]);
+		}
+	}
+
+	/**
+	 * Render the given HttpException.
+	 *
+	 * @param  \Symfony\Component\HttpKernel\Exception\HttpException  $e
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	protected function renderHttpException(HttpException $e)
+	{
+		$status = $e->getStatusCode();
+
+		if (view()->exists("errors.{$status}"))
+		{
+			return response()->view("errors.{$status}", [
+				'message' => $e->getMessage(),
+				'line' => $e->getLine(),
+				'file' => $e->getFile(),
+				'code' => $status,
+				'bodyId' => 'error.' . $status
+			], $status);
+		}
+		else
+		{
+			return (new SymfonyDisplayer(config('app.debug')))->createResponse($e);
+		}
 	}
 
 	/**
@@ -61,5 +106,4 @@ class Handler extends ExceptionHandler {
 			$e->getHeaders()
 		);
 	}
-
 }
