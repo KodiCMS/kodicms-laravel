@@ -3,10 +3,5 @@
 return [
 	'admin_dir_name' => env('ADMIN_DIR_NAME', 'backend'),
 
-	'modules' => [
-		'API' => NULL,
-		'CMS' => NULL,
-		'Plugins' => NULL,
-		'Pages' => NULL,
-	],
+	'modules' => ['API', 'CMS', 'Plugins', 'Pages', 'Users', 'Email', 'Cron', 'Widgets'],
 ];

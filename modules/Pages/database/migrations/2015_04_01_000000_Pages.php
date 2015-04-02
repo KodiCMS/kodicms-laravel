@@ -37,7 +37,7 @@ class Pages extends Migration
 
 			$table->smallInteger('position')->default(0);
 
-			$table->boolean('use_redirect')->default(FALSE);
+			$table->boolean('is_redirect')->default(FALSE);
 			$table->string('redirect_url')->nullable();
 		});
 	}

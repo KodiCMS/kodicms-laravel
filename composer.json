@@ -25,7 +25,11 @@
 			"KodiCMS\\CMS\\"			: "modules/CMS/",
 			"KodiCMS\\Pages\\"			: "modules/Pages/",
 			"KodiCMS\\API\\"			: "modules/API/",
-			"KodiCMS\\Plugins\\"		: "modules/Plugins/"
+			"KodiCMS\\Plugins\\"		: "modules/Plugins/",
+			"KodiCMS\\Users\\"			: "modules/Users/",
+			"KodiCMS\\Email\\"			: "modules/Email/",
+			"KodiCMS\\Cron\\"			: "modules/Cron/",
+			"KodiCMS\\Widgets\\"		: "modules/Widgets/"
 		}
 	},
 	"autoload-dev": {

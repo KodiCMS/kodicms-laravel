@@ -230,7 +230,7 @@ class FrontendPage
 	/**
 	 * @var integer
 	 */
-	protected $level = 0;
+	protected $level = NULL;
 
 	/**
 	 * @var integer
@@ -265,7 +265,7 @@ class FrontendPage
 	/**
 	 * @var bool
 	 */
-	protected $use_redirect = FALSE;
+	protected $is_redirect = FALSE;
 
 	/**
 	 * @var string
@@ -467,9 +467,8 @@ class FrontendPage
 	public function getLevel()
 	{
 		if ($this->level === NULL) {
-			$this->level = empty($this->url)
-				? 0
-				: substr_count($this->getUri(), '/') + 1;
+			$uri = $this->getUri();
+			$this->level = empty($uri) ? 0 : substr_count($uri, '/') + 1;
 		}
 
 		return $this->level;
@@ -527,6 +526,14 @@ class FrontendPage
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getRedirectUrl()
+	{
+		return $this->redirect_url;
+	}
+
+	/**
 	 * @param string|array $key
 	 * @param null|string $value
 	 * @param null|string $field
@@ -545,6 +552,14 @@ class FrontendPage
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isRedirect()
+	{
+		return (bool) $this->is_redirect;
 	}
 
 	/**

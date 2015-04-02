@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\CMS\Http\Controllers;
+<?php namespace KodiCMS\CMS\Http\Controllers\System;
 
 use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Routing\Controller as BaseController;

@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\CMS\Http\Controllers;
+<?php namespace KodiCMS\CMS\Http\Controllers\System;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;

@@ -1,6 +1,6 @@
 <?php namespace KodiCMS\CMS\Http\Controllers;
 
-class WelcomeController extends TemplateController {
+class WelcomeController extends System\TemplateController {
 
 	protected $template = 'CMS::app';
 

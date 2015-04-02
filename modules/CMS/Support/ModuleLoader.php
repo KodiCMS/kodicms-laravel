@@ -13,6 +13,10 @@ class ModuleLoader {
 	public function __construct(array $modulesList)
 	{
 		foreach ($modulesList as $moduleName => $modulePath) {
+			if(is_numeric($moduleName)) {
+				$moduleName = $modulePath;
+				$modulePath = NULL;
+			}
 			$this->addModule($moduleName, $modulePath);
 		}
 	}

@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Pages\Http\Controllers;
 
 use Illuminate\Support\Facades\Request;
-use KodiCMS\CMS\Http\Controllers\Controller;
+use KodiCMS\CMS\Http\Controllers\System\Controller;
 use KodiCMS\Pages\Model\FrontendPage;
 
 class FrontendController extends Controller {
@@ -10,6 +10,6 @@ class FrontendController extends Controller {
 	{
 		$frontPage = FrontendPage::find(Request::path());
 
-		dd($frontPage->getAnchor());
+		dd($frontPage);
 	}
 }
