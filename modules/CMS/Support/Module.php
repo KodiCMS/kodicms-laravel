@@ -188,4 +188,12 @@ class Module
 	{
 //		\App::make('config')->getLoader()->addNamespace($this->getNamespace(), $this->getPath(['resources', 'lang']));
 	}
+
+	/**
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return (string) $this->getName();
+	}
 }

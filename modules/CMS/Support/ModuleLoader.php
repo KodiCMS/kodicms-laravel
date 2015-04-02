@@ -18,6 +18,14 @@ class ModuleLoader {
 	}
 
 	/**
+	 * @return array
+	 */
+	public function getRegisteredModules()
+	{
+		return $this->_registeredModules;
+	}
+
+	/**
 	 * @param string $moduleName
 	 * @param string $modulePath
 	 * @return $this

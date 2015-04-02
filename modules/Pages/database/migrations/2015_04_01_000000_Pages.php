@@ -9,14 +9,14 @@ class Pages extends Migration
 	{
 		Schema::create('pages', function (Blueprint $table) {
 			$table->timestamps();
-			$this->timestamp('published_at');
+			$table->timestamp('published_at');
 
 			$table->increments('id');
 			$table->unsignedInteger('parent_id')
 				->nullable()
 				->index();
 
-			$table->integer('status_id')->index()->default(100);
+			$table->smallInteger('status')->index()->default(100);
 
 			$table->string('behavior')->nullable();
 
@@ -34,7 +34,7 @@ class Pages extends Migration
 			$table->unsignedInteger('created_by_id');
 			$table->unsignedInteger('updated_by_id');
 
-			$table->integer('position')->default(0);
+			$table->smallInteger('position')->default(0);
 
 			$table->boolean('use_redirect')->default(FALSE);
 			$table->string('redirect_url')->nullable();
