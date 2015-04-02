@@ -3,14 +3,54 @@
 use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Str;
 
 abstract class Controller extends BaseController {
 
 	use DispatchesCommands, ValidatesRequests;
 
+	/**
+	 * @var Request
+	 */
+	protected $request = NULL;
+
+	/**
+	 * @var Request
+	 */
+	protected $response = NULL;
+
+	/**
+	 * @var bool
+	 */
+	public $authRequired = FALSE;
+
+	/**
+	 * @var array
+	 */
+	public $allowedActions = [];
+
+
+	/**
+	 * @param Request $request
+	 * @param Response $response
+	 * return void
+	 */
+	public function __construct(Request $request, Response $response)
+	{
+		$this->request = $request;
+		$this->response = $response;
+
+		if($this->authRequired) {
+			$this->middleware('auth', ['except' => $this->allowedActions]);
+		}
+	}
 
 	/**
 	 * Execute after an action executed
+	 * return void
 	 */
 	public function after()
 	{
@@ -19,10 +59,25 @@ abstract class Controller extends BaseController {
 
 	/**
 	 * Execute before an action executed
+	 * return void
 	 */
 	public function before()
 	{
 
+	}
+
+	/**
+	 *
+	 * @param string $separator
+	 * @return string
+	 */
+	public function getRouterPath($separator = '.')
+	{
+		$controller = $this->getRouter()->currentRouteAction();
+		$namespace = array_get($this->getRouter()->getCurrentRoute()->getAction(), 'namespace');
+		$path = trim(str_replace($namespace, '', $controller), '\\');
+
+		return str_replace(['\\', '@', '..', '.controller.'], $separator, Str::snake($path, '.'));
 	}
 
 	/**

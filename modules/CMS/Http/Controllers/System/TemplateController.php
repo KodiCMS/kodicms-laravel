@@ -1,18 +1,31 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 
-class TemplateController extends Controller {
+class TemplateController extends Controller
+{
 
-	protected $template = 'app';
+	/**
+	 * @var  \View  page template
+	 */
+	public $template = 'CMS::system.backend';
 
-	public function __construct()
-	{
-		view()->composer(['app', 'appClear'], function($view) {
-			$view->with('bodyId', Route::currentRouteName());
-		});
-	}
+	/**
+	 *
+	 * @var \Breadcrumbs
+	 */
+	public $breadcrumbs;
+
+	/**
+	 * @var  boolean  auto render template
+	 **/
+	public $autoRender = TRUE;
+
+	/**
+	 *
+	 * @var boolean
+	 */
+	public $onlyContent = FALSE;
 
 	/**
 	 * Setup the layout used by the controller.
@@ -21,8 +34,7 @@ class TemplateController extends Controller {
 	 */
 	protected function setupLayout()
 	{
-		if ( ! is_null($this->template))
-		{
+		if (!is_null($this->template)) {
 			$this->template = view($this->template);
 		}
 
@@ -43,24 +55,25 @@ class TemplateController extends Controller {
 
 	/**
 	 * @param $title
-	 * @param null $subTitle
 	 * @return $this
 	 */
-	protected function setTitle($title, $subTitle = NULL)
+	protected function setTitle($title)
 	{
-		View::share('pageTitle', $title);
-		View::share('pageSubtitle', $subTitle);
+		// Initialize empty values
+		$this->template
+			->with('title', $title);
 
 		return $this;
 	}
 
 	/**
-	 * Show the user profile.
+	 * @param $view
+	 * @param array $data
+	 * @return View
 	 */
-	public function setContent($view, $data = [])
+	public function setContent($view, array $data = [])
 	{
-		if ( ! is_null($this->template))
-		{
+		if (!is_null($this->template)) {
 			$content = view($view, $data);
 			$this->template->with('content', $content);
 
@@ -71,21 +84,36 @@ class TemplateController extends Controller {
 
 	}
 
+	public function after()
+	{
+		parent::after();
+
+		if ($this->autoRender === TRUE)
+		{
+			if ($this->onlyContent)
+			{
+				$this->template = $this->template->content;
+			}
+		}
+	}
+
 	/**
 	 * Execute an action on the controller.
 	 *
-	 * @param  string  $method
-	 * @param  array   $parameters
+	 * @param  string $method
+	 * @param  array $parameters
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
 	public function callAction($method, $parameters)
 	{
-		$this->setupLayout();
+		if ($this->autoRender === TRUE)
+		{
+			$this->setupLayout();
+		}
 
 		$response = parent::callAction($method, $parameters);
 
-		if (is_null($response) && ! is_null($this->template))
-		{
+		if (is_null($response) && !is_null($this->template)) {
 			$response = $this->template;
 		}
 

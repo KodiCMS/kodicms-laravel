@@ -26,6 +26,8 @@ class Authenticate {
 	/**
 	 * Handle an incoming request.
 	 *
+	 * TODO: добавить проверку прав доступа
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  \Closure  $next
 	 * @return mixed
