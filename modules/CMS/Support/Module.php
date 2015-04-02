@@ -101,11 +101,7 @@ class Module
 	{
 		if (!$this->_isBooted) {
 
-			/*
-			 * Register module provider
-			 */
-			App::register($this->getNamespace() . '\ServiceProvider');
-
+			$this->loadRoutes();
 			$this->loadViews();
 			$this->loadTranslations();
 			$this->loadConfig();
@@ -123,7 +119,12 @@ class Module
 	{
 		if (!$this->_isRegistered) {
 
-			$this->loadRoutes();
+			if(strtolower($this->getName()) != 'cms') {
+				/*
+				 * Register module provider
+				 */
+				App::register($this->getNamespace() . '\ServiceProvider');
+			}
 
 			$this->_isRegistered = TRUE;
 		}

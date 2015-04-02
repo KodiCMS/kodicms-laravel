@@ -1,12 +1,12 @@
 <?php
 
 return [
-	'admin_dir_name' => 'backend',
+	'admin_dir_name' => env('ADMIN_DIR_NAME', 'backend'),
 
 	'modules' => [
 		'API' => NULL,
 		'CMS' => NULL,
-		'Pages' => NULL,
 		'Plugins' => NULL,
+		'Pages' => NULL,
 	],
 ];
