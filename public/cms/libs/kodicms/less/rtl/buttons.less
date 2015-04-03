@@ -1,0 +1,50 @@
+//
+// RTL: Buttons
+// --------------------------------------------------
+
+.btn.btn-labeled {
+  position: relative;
+
+  .btn-label {
+    border-radius: 0; 
+    float: right;
+    margin-left: 12px;
+    margin-right: -13px;
+    .border-right-radius(@border-radius-base);
+  }
+
+  // Sizes
+  //
+
+  &.btn-lg {
+    .btn-label {
+      margin-left: 18px;
+      margin-right: -19px;
+      .border-right-radius(@border-radius-large);
+    }
+  }
+
+  &.btn-sm {
+    .btn-label {
+      margin-left: 9px;
+      margin-right: -10px;
+      .border-right-radius(@border-radius-small);
+    }
+  }
+
+  &.btn-xs {
+    .btn-label {
+      margin-left: 9px;
+      margin-right: -8px;
+      .border-right-radius(@border-radius-small);
+    }
+  }
+}
+
+.btn.btn-rounded.btn-labeled .btn-label,
+.btn.btn-lg.btn-rounded.btn-labeled .btn-label,
+.btn.btn-sm.btn-rounded.btn-labeled .btn-label,
+.btn.btn-xs.btn-rounded.btn-labeled .btn-label {
+  border-radius: 0;
+  .border-right-radius(9999px);
+}

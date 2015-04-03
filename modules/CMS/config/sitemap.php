@@ -12,16 +12,14 @@ return [
 		'children' => [
 			[
 				'name' => 'Information',
-//				'url' => route('backendInformation'),
-				'url' => url('backendInformation'),
+				'url' => route('backend.about'),
 				'permissions' => 'system.information',
 				'priority' => 90,
 				'icon' => 'info-circle',
 			],
 			[
 				'name' => 'Settings',
-//				'url' => route('backendSettings'),
-				'url' => url('backendSettings'),
+				'url' => route('backend.settings'),
 				'permissions' => 'system.settings',
 				'priority' => 100,
 				'icon' => 'cog',

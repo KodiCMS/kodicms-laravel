@@ -1,0 +1,136 @@
+//
+// Navbar
+// --------------------------------------------------
+
+
+// ************************************************************************* //
+//**   Small screens (mobile first)                                        **//
+
+.navbar {
+  .label,
+  .badge,
+  .dropdown-menu > li > a > .label,
+  .dropdown-menu > li > a > .badge {
+    font-size: 11px;
+    padding: 0 4px;
+    line-height: 16px;
+    top: -1px;
+    position: relative;
+  }
+
+  .nav-icon-btn.dropdown > a:after {
+    display: none !important;
+  }
+
+  .dropdown-menu > li > a > .badge {
+    line-height: 14px;
+  }
+
+  .nav-icon-btn {
+    > a {
+      width: auto;
+    }
+
+    > a .label,
+    > a .badge {
+      display: inline-block;
+    }
+
+    // Show alt button text on small screens
+    > a .small-screen-text {
+      display: inline-block;
+    }
+  }
+
+  .nav-icon-btn .label,
+  .nav-icon-btn .badge,
+  .dropdown-menu .label.pull-right,
+  .dropdown-menu .badge.pull-right {
+    float: right;
+    top: 13px;
+  }
+
+
+  // Colors
+  //
+
+  .nav-icon-btn.nav-icon-btn-success {
+    .nav-icon-btn-state(@success-color);
+  }
+  
+  .nav-icon-btn.nav-icon-btn-warning {
+    .nav-icon-btn-state(@warning-color);
+  }
+  
+  .nav-icon-btn.nav-icon-btn-danger {
+    .nav-icon-btn-state(@danger-color);
+  }
+  
+  .nav-icon-btn.nav-icon-btn-info {
+    .nav-icon-btn-state(@info-color);
+  }
+}
+
+@media (max-width: @screen-tablet) {
+  .navbar .nav-icon-btn.dropdown > .dropdown-menu {
+    display: none !important;
+  }
+}
+
+
+// ************************************************************************* //
+//**   Desktops                                                            **//
+
+@media (min-width: @screen-tablet) {
+  .navbar {
+    .dropdown-menu .label.pull-right,
+    .dropdown-menu .badge.pull-right {
+      top: 8px;
+    }
+
+    .dropdown-menu > li > a > .label,
+    .dropdown-menu > li > a > .badge {
+      font-size: 10px;
+      line-height: 13px;
+      top: 1px;
+      padding-left: 4px !important;
+      padding-right: 4px !important;
+    }
+
+    .dropdown-menu > li > a > .label {
+      padding-top: 1px;
+      padding-bottom: 1px;
+    }
+
+    .nav-icon-btn {
+      font-size: 13px;
+      
+      > a {
+        text-align: center;
+        width: @main-navbar-height;
+      }
+
+      // Show icon
+      > a .nav-icon {
+        display: inline-block;
+        font-size: 12px;
+        margin: 0 !important;
+      }
+  
+      > a .label,
+      > a .badge {
+        font-size: 8px;
+        padding: 0 2px;
+        line-height: 10px;
+        position: absolute;
+        display: block;
+        right: 10px;
+      }
+  
+      // Hide alt text
+      > a .small-screen-text {
+        display: none;
+      }
+    }
+  }
+}

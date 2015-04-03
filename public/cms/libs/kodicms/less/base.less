@@ -1,0 +1,206 @@
+//
+// Base styles
+// --------------------------------------------------
+
+
+body,
+html {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  .clearfix();
+}
+
+.ie8 body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+// Headers
+//
+
+h1.light,
+h2.light, 
+h3.light, 
+h4.light, 
+h5.light, 
+h6.light {
+  font-weight: 300;
+}
+
+h1,
+h2, 
+h3, 
+h4, 
+h5, 
+h6 {
+  outline: none;
+}
+
+a,
+a:hover {
+  text-decoration: none;
+}
+
+// Do not remove outline on small screens
+@media (min-width: @screen-tablet) {
+  a:focus {
+    outline: none;
+  }
+}
+
+.no-animation {
+  -webkit-animation-duration: 0s !important;
+  -moz-animation-duration: 0s !important;
+  -o-animation-duration: 0s !important;
+  animation-duration: 0s !important;
+}
+
+
+// Page header
+//
+
+.page-header,
+.page-header h1 {
+  margin: 0;
+}
+
+.page-header {
+  background: #fafafa;
+  border-bottom: 1px solid @table-border-color;
+  margin: -@content-wrapper-padding -@content-wrapper-padding @content-wrapper-padding -@content-wrapper-padding;
+  padding: 20px @content-wrapper-padding 20px @content-wrapper-padding;
+  .clearfix();
+}
+
+.page-header h1 {
+  color: #666;
+  display: inline-block;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 30px;
+}
+
+.page-header-icon {
+  font-size: 21px;
+  line-height: 21px;
+}
+
+
+// Screen size indicators
+//
+
+#small-screen-width-point {
+  display: block;
+}
+
+#tablet-screen-width-point {
+  display: none;
+}
+
+@media (min-width: @screen-small) {
+  #small-screen-width-point {
+    display: none !important;
+  }
+  #tablet-screen-width-point {
+    display: block;
+  }
+}
+
+@media (min-width: @screen-tablet) {
+  #tablet-screen-width-point {
+    display: none !important;
+  }
+}
+
+// =======================================================
+// Base markup
+//
+
+body,
+#main-menu,
+#content-wrapper,
+#main-wrapper {
+  .clearfix();
+}
+
+#main-wrapper {
+  width: 100%;
+  overflow: hidden !important;
+}
+
+#content-wrapper {
+  left: 0;
+  padding: (@main-navbar-height + @content-wrapper-padding) @content-wrapper-padding @content-wrapper-padding @content-wrapper-padding;
+  width: 100%;
+  position: relative;
+}
+
+#main-menu-bg {
+  display: block;
+  left: 0;
+  height: 100%;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: @zindex-main-menu - 1;
+}
+
+
+// =======================================================
+// Main menu animation
+//
+
+.enable-mm-animation() {
+  #main-navbar .navbar-inner,
+  #main-menu-toggle,
+  #main-wrapper,
+  #main-menu,
+  #content-wrapper,
+  #main-menu-bg { .transition(all .5s); }
+  #main-navbar .navbar-header { .transition(padding .5s); }
+}
+@media (max-width: @screen-small) {
+  .animate-mm-sm { .enable-mm-animation(); }
+}
+@media (min-width: @screen-small) and (max-width: @screen-tablet) {
+  .animate-mm-md { .enable-mm-animation(); }
+}
+@media (min-width: @screen-tablet) {
+  .animate-mm-lg { .enable-mm-animation(); }
+}
+
+
+.disable-mm-animation {
+  #main-navbar .navbar-inner,
+  #main-menu-toggle,
+  #main-wrapper,
+  #main-menu,
+  #content-wrapper,
+  #main-menu-bg,
+  #main-navbar .navbar-header { .transition(~"none !important"); }
+}
+
+
+.disable-mm-content-animation() {
+  -webkit-animation-duration: 0s !important;
+  -moz-animation-duration: 0s !important;
+  -o-animation-duration: 0s !important;
+  -ms-animation-duration: 0s !important;
+  animation-duration: 0s !important;
+}
+.dont-animate-mm-content #main-menu .animated {
+  .disable-mm-content-animation();
+}
+@media (max-width: @screen-small) {
+  .dont-animate-mm-content-sm #main-menu .animated { .disable-mm-content-animation(); }
+}
+@media (min-width: @screen-small) and (max-width: @screen-tablet) {
+  .dont-animate-mm-content-md #main-menu .animated { .disable-mm-content-animation(); }
+}
+@media (min-width: @screen-tablet) {
+  .dont-animate-mm-content-lg #main-menu .animated { .disable-mm-content-animation(); }
+}
+

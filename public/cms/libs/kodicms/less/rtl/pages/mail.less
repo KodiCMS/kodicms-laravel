@@ -1,0 +1,217 @@
+//
+// RTL: Pages / Mail
+//
+// --------------------------------------------------
+
+@mail-padding: 16px;
+@mail-nav-width: 200px;
+
+
+// ************************************************************************* //
+//**   Small screens (mobile first)                                        **//
+
+&.page-mail {
+  // Mail navigation
+  //
+
+  .mail-nav {
+    .navigation {
+      &.open {
+        li.active:after {
+          -ms-transform: rotate(-90deg); /* IE 9 */
+          -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */
+          transform: rotate(-90deg);
+        }
+      }
+    }
+
+    .sections {
+      li {
+        &.active {
+          &:after {
+            content: "\f104";
+            left: @mail-padding;
+            right: auto;
+          }
+        }
+
+        &.active .label,
+        &.active .badge {
+          margin-left: @mail-padding + 20;
+          margin-right: 0;
+        }
+      }
+
+      .label,
+      .badge {
+        margin-left: @mail-padding;
+        margin-right: 0;
+      }
+
+      a {
+        padding: 0 @mail-padding 0 0;
+      }
+    }
+  }
+
+  .m-nav-icon {
+    margin-left: 10px;
+    margin-right: 0;
+  }
+
+  .mail-nav-header {
+    padding-left: 0;
+    padding-right: @mail-padding;
+  }
+
+  .mail-nav-lbl {
+    margin-left: 10px;
+    margin-right: 0;
+  }
+
+
+  // Controls
+  //
+
+  .mail-controls .btn-group + .btn-group {
+    margin-left: 0;
+    margin-right: 12px;
+  }
+
+  .mail-controls .pages {
+    margin-left: 13px;
+    margin-right: 0;
+  }
+}
+
+
+// ************************************************************************* //
+//**   Desktops                                                            **//
+
+@media(min-width: @screen-md) {
+  &.page-mail {
+
+    // Mail navigation
+    //
+
+    .mail-nav {
+      border-left-width: 1px;
+      border-right-width: 0;
+
+      // Add fixed background
+      &:before {
+        border-right: none;
+        border-left: 1px solid;
+      }
+
+      .navigation {
+        .label {
+          margin-left: @mail-padding !important;
+          margin-right: 0 !important;
+        }
+      }
+    }
+
+
+    // Mail container
+    //
+
+    .mail-container {
+      margin-left: 0;
+      margin-right: @mail-nav-width;
+    }
+  }
+}
+
+
+// Mail list
+//
+
+// ************************************************************************* //
+//**   Small screens (mobile first)                                        **//
+
+&.page-mail {
+
+  .mail-item {
+    padding: 12px 46px 12px 14px;
+  }
+
+  .m-chck {
+    left: auto;
+    right: 15px;
+  }
+
+  .m-star {
+    left: auto;
+    right: 15px;
+  }
+
+  .m-from,
+  .m-subject {
+    margin-left: 80px;
+    margin-right: 0;
+  }
+
+  // Date
+  .m-date {
+    left: 15px;
+    right: auto;
+    text-align: left;
+  }
+}
+
+
+// ************************************************************************* //
+//**   Desktops                                                            **//
+
+@media(min-width: @screen-md) {
+  &.page-mail {
+    .mail-item {
+      padding-left: 100px;
+      padding-right: 220px;
+    }
+
+    // Star
+    .m-star {
+      left: auto;
+      right: 40px;
+    }
+
+    // From
+    .m-from {
+      left: auto;
+      right: 70px;
+    }
+  }
+}
+
+
+// Mail Details
+//
+
+// ************************************************************************* //
+//**   Small screens (mobile first)                                        **//
+
+&.page-mail {
+  .m-details-star {
+    margin-left: 12px;
+    margin-right: 0;
+    float: right;
+  }
+
+  .mail-info {
+    .avatar {
+      float: right;
+    }
+
+    .from {
+      float: right;
+      margin-left: 0;
+      margin-right: 10px;
+    }
+
+    .date {
+      float: left;
+    }
+  }
+}

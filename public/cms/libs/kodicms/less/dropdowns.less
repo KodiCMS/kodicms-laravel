@@ -1,0 +1,68 @@
+//
+// Dropdowns
+// --------------------------------------------------
+
+// Dropdown menus
+//
+
+.dropdown-menu {
+  border: 2px solid #ccc;
+  .box-shadow(none);
+}
+
+ul.dropdown-menu {
+  border: 2px solid #ccc;
+  padding: 5px 0;
+
+  // Links within the dropdown menu
+  > li > a {
+    margin: 0 -2px;
+    padding: 5px 18px;
+
+    > .label,
+    > .badge {
+      position: relative;
+      padding-left: 4px;
+      padding-right: 4px;
+      line-height: 13px;
+      font-size: 10px;
+      top: 1px;
+    }
+
+    > .label {
+      padding-top: 1px;
+      padding-bottom: 1px;
+    }
+  }
+
+  .divider {
+    border-width: 2px;
+    margin:5px 0;
+  }
+
+  .dropdown-header {
+    font-size: 11px;
+    font-weight: 600;
+    margin: 0 -2px;
+    padding: 6px 18px 3px 18px;
+    text-transform: uppercase;
+  }
+
+  .dropdown-icon {
+    display: inline-block;
+    font-size: 14px;
+  }
+}
+
+// Dropdown icons
+.nav .dropdown > .dropdown-toggle .nav-icon {
+  font-size: 12px;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.pull-right .dropdown-menu {
+  left: auto;
+  float: right;
+  right: 0;
+}

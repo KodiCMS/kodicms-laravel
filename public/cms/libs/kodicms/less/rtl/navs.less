@@ -1,0 +1,85 @@
+//
+// RTL: Navs
+// --------------------------------------------------
+
+
+// Nav badges and labels
+//
+
+.nav-tabs,
+.nav-pills
+ {
+  > li > a {
+    > .badge,
+    > .label {
+      margin-left: -5px;
+      margin-right: 5px;
+    }
+  }
+
+  &.nav-justified > li {
+    float: none;
+
+    > a {
+      margin: 0;
+    }
+  }
+}
+
+.nav-tabs.nav-tabs-sm > li > a {
+  > .badge,
+  > .label {
+    margin-left: -4px;
+    margin-right: 4px;
+  }
+}
+
+.nav-tabs.nav-tabs-xs > li > a {
+  > .badge,
+  > .label {   
+    margin-left: -3px;
+    margin-right: 3px;
+  }
+}
+
+
+// Tabs
+// --------------------------------------------------
+
+.nav-tabs {
+  margin: 0;
+  padding: 0;
+
+  > li {
+    float: right;
+
+    // Actual tabs (as links)
+    > a {
+      margin-right: 0;
+      margin-left: 6px;
+    }
+  }
+}
+
+
+// Pills
+// --------------------------------------------------
+
+.nav-pills {
+  margin: 0;
+  padding: 0;
+
+  > li {
+    float: right;
+    margin-left: 6px;
+    margin-right: 0;
+  }
+
+  &.nav-stacked > li {
+    float: none;
+  }
+
+  &.nav-stacked > li + li {
+    margin: 4px 0 0 0;
+  }
+}

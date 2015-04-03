@@ -1,0 +1,48 @@
+//
+// Themes / Asphalt / Base
+// --------------------------------------------------
+
+& {
+  background: @body-color;
+}
+
+
+// Panels
+//
+
+.page-header {
+  background: @page-header-color;
+  border-color: @page-header-border-color;
+}
+
+// Change border-color
+
+.table,
+.panel,
+hr {
+  border-color: @theme-border-color;
+}
+
+.bordered {
+  border-color: @theme-border-color;
+}
+
+// Fix coloured borders
+
+.bordered[class*='bg-'],
+[class*='bg-'] .border-t {
+  border-color: #fff;
+  border-color: rgba(0,0,0,.2);
+}
+
+.panel.panel-transparent > .panel-heading {
+  border-bottom-color: @theme-border-color !important;
+}
+
+// Page-wide breadcrimb
+.breadcrumb-page {
+  background: @page-header-color;
+  border-bottom: 1px solid @page-header-border-color;
+  padding-bottom: 6px;
+  padding-top: 6px;
+}

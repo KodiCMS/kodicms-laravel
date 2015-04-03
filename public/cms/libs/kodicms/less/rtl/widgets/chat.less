@@ -1,0 +1,51 @@
+//
+// RTL: Widgets / Chat
+// --------------------------------------------------
+
+.widget-chat {
+  .message-body {
+    margin-left: 0;
+    margin-right: 55px;
+  }
+
+  .message-avatar {
+    float: right;
+  }
+
+  .message-text:before {
+    border-color: transparent transparent transparent #f4f4f4;
+    border-width: 6px 0 6px 6px;
+    left: auto;
+    right: -6px;
+  }
+
+  .message.right {
+    .message-avatar {
+      float: left;
+    }
+
+    .message-body {
+      margin-left: 55px;
+      margin-right: 0;
+    }
+
+    .message-text:before {
+      border-color: transparent #f4f4f4 transparent transparent;
+      border-width: 6px 6px 6px 0;
+      left: -6px;
+      right: auto;
+    }
+  }
+
+  .chat-controls {
+    .chat-controls-input {
+      margin-left: 90px;
+      margin-right: 0;
+    }
+
+    .chat-controls-btn {
+      left: @panel-content-padding;
+      right: auto;
+    }
+  }
+}

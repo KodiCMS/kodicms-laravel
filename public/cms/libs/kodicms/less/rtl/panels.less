@@ -1,0 +1,40 @@
+//
+// RTL: Panels
+// --------------------------------------------------
+
+
+.panel-heading .nav-tabs {
+  left: 9px;
+  right: auto;
+}
+
+.panel-title-icon {
+  margin-left: 7px;
+  margin-right: 0;
+}
+
+.panel-heading-controls {
+  float: left;
+  
+  > * {
+    float: right;
+    + * {
+      margin-left: 0;
+      margin-right: 4px;
+    }
+  }
+
+  > .form-control,
+  .input-group .form-control,
+  .input-group .btn {
+    height: 26px;
+    padding: 3px 8px;
+  }
+}
+
+// Dark panels
+//
+.panel-dark .panel-heading-controls .input-group .form-control {
+  border-left-color: #d5d5d5;
+  border-right-color: transparent;
+}

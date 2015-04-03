@@ -1,0 +1,124 @@
+//
+// Plugins / jQuery.Growl
+//
+// Version: 1.1.5
+//
+// --------------------------------------------------
+
+
+// Base
+//
+
+#growls {
+  position: fixed;
+  right: 0;
+  top: 10px;
+  z-index: @zindex-growls;
+}
+
+.main-navbar-fixed #growls {
+  top: @main-navbar-height;
+}
+
+.main-menu-right #growls {
+  left: 0;
+  right: auto;
+}
+
+
+// Growls
+//
+
+.growl {
+  border-radius: 4px;
+  margin: 10px;
+  position: relative;
+  .opacity(0.95);
+  .transition(all 0.4s ease-in-out);
+
+  .growl-title {
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 2px;
+  }
+
+  .growl-message {
+    font-size: 13px;
+  }
+
+  .growl-close {
+    cursor: pointer;
+    display: inline-block;
+    float: right;
+    font-family: helvetica, verdana, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 18px;
+    margin-top: -2px;
+  }
+
+
+  // States
+  //
+
+  &.growl-incoming {
+    .opacity(0);
+  }
+
+  &.growl-outgoing {
+    .opacity(0);
+  }
+
+
+  // Sizes
+  //
+
+  &.growl-small {
+    padding: 6px 8px;
+    width: 200px;
+
+    .growl-title {
+      font-size: 13px;
+      margin-bottom: 0;
+    }
+
+    .growl-message {
+      font-size: 11px;
+    }
+  }
+
+  &.growl-medium {
+    padding: 10px;
+    width: 250px;
+  }
+
+  &.growl-large {
+    padding: 15px;
+    width: 300px;
+  }
+
+
+  // Colors
+  //
+
+  &.growl-default {
+    background: #7f8c8d;
+    color: #fff;
+  }
+
+  &.growl-error {
+    background: @danger-color;
+    color: #fff;
+  }
+
+  &.growl-notice {
+    background: @success-color;
+    color: #fff;
+  }
+
+  &.growl-warning {
+    background: @warning-color;
+    color: #fff;
+  }
+}

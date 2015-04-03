@@ -1,0 +1,33 @@
+//
+// Plugins / Morris
+//
+// Version: 0.5.0
+//
+// --------------------------------------------------
+
+
+.morris-hover {
+  position: absolute;
+  z-index: 1000;
+
+  &.morris-default-style {
+    text-align: center;
+
+    border-radius: @border-radius-base;
+    background-color: @tooltip-bg;
+    font-size: 11px;
+    padding: 4px 10px;
+
+    .morris-hover-row-label {
+      font-weight: bold;
+      margin: 4px 0;
+      color: #aaa;
+    }
+
+    .morris-hover-point {
+      white-space: nowrap;
+      margin: 2px 0;
+    }
+  }
+
+}

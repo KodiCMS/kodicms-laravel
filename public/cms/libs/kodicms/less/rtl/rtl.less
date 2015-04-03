@@ -1,0 +1,115 @@
+//
+// RTL
+// --------------------------------------------------
+
+@import "../../libs/bootstrap-3.1.1/mixins.less";
+@import "../../libs/bootstrap-3.1.1/variables.less";
+@import '../variables.less';
+@import '../mixins.less';
+
+.right-to-left {
+  // Base styles
+  //
+
+  direction: rtl !important;
+
+  .pull-right {
+    float: left !important;
+  }
+
+  .pull-left {
+    float: right !important;
+  }
+
+  // Imports
+  //
+
+  @import './grid.less';
+  @import './breadcrumb.less';
+  @import './main-navbar.less';
+  @import './main-menu.less';
+  @import './progress-bars.less';
+  @import './navbar.less';
+  @import './dropdowns.less';
+  @import './labels.less';
+  @import './navs.less';
+  @import './alerts.less';
+  @import './tables.less';
+  @import './accordion.less';
+  @import './popovers.less';
+  @import './list-groups.less';
+  @import './forms.less';
+  @import './pagination.less';
+  @import './button-groups.less';
+  @import './input-groups.less';
+  @import './panels.less';
+  @import './modals.less';
+  @import './notes.less';
+  @import './buttons.less';
+  @import './stats.less';
+  @import './counters.less';
+  @import './utils.less';
+
+
+  // Widgets
+  //
+
+  @import './widgets/threads.less';
+  @import './widgets/tasks.less';
+  @import './widgets/support-tickets.less';
+  @import './widgets/profile.less';
+  @import './widgets/notifications.less';
+  @import './widgets/messages.less';
+  @import './widgets/messages-alt.less';
+  @import './widgets/comments.less';
+  @import './widgets/chat.less';
+  @import './widgets/article-comments.less';
+  @import './widgets/followers.less';
+
+
+  // Pages
+  //
+
+  @import './pages/invoice.less';
+  @import './pages/error-pages.less';
+  @import './pages/pricing.less';
+  @import './pages/search.less';
+  @import './pages/signin.less';
+  @import './pages/signup.less';
+  @import './pages/timeline.less';
+  @import './pages/mail.less';
+  @import './pages/profile.less';
+  @import './pages/signin-alt.less';
+  @import './pages/signup-alt.less';
+
+
+  // jQuery UI
+  //
+
+  @import './plugins/jquery-ui/accordions.less';
+  @import './plugins/jquery-ui/menus.less';
+  @import './plugins/jquery-ui/spinners.less';
+  @import './plugins/jquery-ui/datepicker.less';
+
+
+  // Plugins
+  //
+
+  @import './plugins/pa.switcher.less';
+  @import './plugins/pa.wizard.less';
+  @import './plugins/pa.file-input.less';
+  @import './plugins/jquery.select2.less';
+  @import './plugins/bootstrap-datepicker.less';
+  @import './plugins/bootstrap-datepaginator.less';
+  @import './plugins/bootstrap-tabdrop.less';
+  @import './plugins/jquery.minicolors.less';
+  // {
+    @import './plugins/bootstrap-editable/bootstrap-editable.less';
+    @import './plugins/bootstrap-editable/address.less';
+  // }
+  @import './plugins/jquery.datatables.less';
+  @import './plugins/dropzone.less';
+  @import './plugins/summernote.less';
+  @import './plugins/jquery.growl.less';
+  @import './plugins/jquery.flot.less';
+}

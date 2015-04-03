@@ -1,0 +1,362 @@
+// --------------------------------------------------
+// Plugins / Switcher
+//
+
+// Base styles
+//
+
+.switcher {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  .user-select-none()
+}
+
+// Inner
+.switcher-inner {
+  display: block;
+  height: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  word-spacing: 0;
+}
+
+// Inner > States
+.switcher-state-on,
+.switcher-state-off {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  .transition(all .2s);
+}
+
+// Hide On-state
+.switcher-state-on {
+  margin-left: -100%;
+}
+
+// Show On-state
+.switcher.checked .switcher-state-on {
+  margin-left: 0;
+}
+
+// Toggler on the left
+.switcher-toggler {
+  left: 0;
+  position: absolute;
+  text-align: center;
+  .transition(all .2s);
+}
+
+// Toggler on the rught
+.switcher.checked .switcher-toggler {
+  left: 100%;
+}
+
+// Hide checkbox
+.switcher > input[type="checkbox"] {
+  left: -100000px;
+  position: absolute;
+  visibility: hidden;
+}
+
+// Hide styled checkbox
+.switcher + .styled-pseudo-checkbox {
+  display: none !important;
+}
+
+/******************************************************************
+ ******************************************************************
+ ******************************************************************/
+
+// DEFAULT THEME
+// 
+
+.switcher {
+  height: 24px;
+  width: 60px;
+}
+
+// Toggler
+.switcher-toggler {
+  background: #fff;
+  border-radius: 9999px;
+  height: 20px;
+  margin-left: 1px;
+  margin-top: 2px;
+  width: 20px;
+  .box-shadow(0 1px 5px rgba(0, 0, 0, .3));
+}
+
+.switcher-inner {
+  border-radius: 9999px;
+}
+
+// States
+.switcher-state-on,
+.switcher-state-off {
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.switcher-state-on {
+  background: @success-color;
+  padding-right: 20px;
+}
+
+.switcher-state-off {
+  background: #444;
+  padding-left: 20px;
+}
+
+.switcher.checked .switcher-toggler {
+  margin-left: -21px;
+}
+
+// SQUARE THEME
+// 
+
+.switcher-theme-square {
+  .switcher-inner {
+    border-radius: 3px;
+  }
+
+  .switcher-toggler {
+    border-radius: 2px;
+    margin-left: 2px;
+  }
+
+  &.switcher.checked .switcher-toggler {
+    margin-left: -22px;
+  }
+}
+
+
+// MODERN THEME
+// 
+
+.switcher-theme-modern {
+  &.switcher {
+    height: 8px;
+    width: 44px;
+  }
+
+  .switcher-toggler {
+    height: 20px;
+    margin-left: -3px;
+    margin-top: -6px;
+    width: 20px;
+    .box-shadow(~"0 1px 3px 1px rgba(0, 0, 0, .3), 0 0 15px 1px rgba(255, 255, 255, .8) inset");
+    #gradient > .vertical(#efefef, #e5e5e5);
+  }
+
+  .switcher-inner {
+    font-size: 0;
+    line-height: 0;
+    .box-shadow(0 0 0 3px rgba(0, 0, 0, .1));
+  }
+
+  // States
+  .switcher-state-on,
+  .switcher-state-off {
+    border-radius: 9999px;
+    .box-shadow(0 1px 6px rgba(0, 0, 0, .2) inset);
+  }
+
+  .switcher-state-on {
+    padding-right: 17px;
+  }
+
+  .switcher-state-off {
+    padding-left: 17px;
+  }
+
+  &.switcher.checked .switcher-toggler {
+    margin-left: -17px;
+  }
+}
+
+
+// Sizes
+//
+
+// Small size
+.switcher-sm {
+  width: 42px;
+  height: 21px;
+
+  .switcher-toggler {
+    height: 17px;
+    width: 17px;
+    margin-left: 1px;
+  }
+
+  .switcher-state-on,
+  .switcher-state-off {
+    font-size: 8px;
+    line-height: 21px;
+  }
+
+  .switcher-state-on {
+    padding-right: 17px;
+  }
+
+  .switcher-state-off {
+    padding-left: 17px;
+  }
+
+  &.checked .switcher-toggler {
+    margin-left: -18px;
+  }
+
+  // Square theme
+  //
+  &.switcher-theme-square {
+    .switcher-inner {
+      border-radius: 3px;
+    }
+
+    .switcher-toggler {
+      margin-left: 2px;
+    }
+
+    &.switcher.checked .switcher-toggler {
+      margin-left: -19px;
+    }
+  }
+
+  // Modern theme
+  //
+  &.switcher.switcher-theme-modern {
+    width: 34px;
+    height: 6px;
+
+    .switcher-toggler {
+      height: 17px;
+      width: 17px;
+      margin-top: -6px;
+      margin-left: -3px;
+    }
+
+    .switcher-state-on {
+      padding-right: 15px;
+    }
+
+    .switcher-state-off {
+      padding-left: 15px;
+    }
+
+    &.switcher.checked .switcher-toggler {
+      margin-left: -15px;
+    }
+  }
+}
+
+// Large size
+.switcher-lg {
+  width: 70px;
+  height: 30px;
+
+  .switcher-toggler {
+    height: 26px;
+    width: 26px;
+    margin-left: 1px;
+  }
+
+  .switcher-state-on,
+  .switcher-state-off {
+    font-size: 13px;
+    line-height: 30px;
+  }
+
+  .switcher-state-on {
+    padding-right: 26px;
+  }
+
+  .switcher-state-off {
+    padding-left: 26px;
+  }
+
+  &.checked .switcher-toggler {
+    margin-left: -27px;
+  }
+
+  // Square theme
+  //
+  &.switcher-theme-square {
+    .switcher-inner {
+      border-radius: 3px;
+    }
+
+    .switcher-toggler {
+      margin-left: 2px;
+    }
+
+    &.switcher.checked .switcher-toggler {
+      margin-left: -28px;
+    }
+  }
+
+  // Modern theme
+  //
+  &.switcher.switcher-theme-modern {
+    width: 56px;
+    height: 10px;
+
+    .switcher-toggler {
+      height: 26px;
+      width: 26px;
+      margin-top: -8px;
+      margin-left: -3px;
+    }
+
+    .switcher-state-on {
+      padding-right: 26px;
+    }
+
+    .switcher-state-off {
+      padding-left: 26px;
+    }
+
+    &.switcher.checked .switcher-toggler {
+      margin-left: -24px;
+    }
+  }
+}
+
+
+// Disabled state
+//
+
+.switcher.disabled {
+  cursor: not-allowed !important;
+  opacity: .5 !important;
+  filter: alpha(opacity=50);
+}
+
+
+// Colors
+//
+
+.switcher-success {
+  .switcher-color(@success-color);
+}
+
+.switcher-warning {
+  .switcher-color(@warning-color);
+}
+
+.switcher-danger {
+  .switcher-color(@danger-color);
+}
+
+.switcher-info {
+  .switcher-color(@info-color);
+}
+

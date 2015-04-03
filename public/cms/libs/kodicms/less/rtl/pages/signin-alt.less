@@ -1,0 +1,42 @@
+//
+// RTL: Pages / Sign In Alt
+//
+// --------------------------------------------------
+
+&.page-signin-alt {
+  padding-bottom: 40px;
+
+  .signin-header {
+    padding-left: 0;
+    padding-right: 16px;
+
+    .btn {
+      left: 16px;
+      right: auto;
+    }
+  }
+
+
+  .signin-password {
+    position: relative;
+
+    input {
+      padding-left: 70px;
+      padding-right: @padding-large-horizontal;
+    }
+
+    .forgot {
+      left: 10px;
+      right: auto;
+    }
+  }
+}
+
+@media (min-width: @screen-small) {
+  &.page-signin-alt {
+    .signin-header {
+      padding-right: 0;
+      text-align: center;
+    }
+  }
+}

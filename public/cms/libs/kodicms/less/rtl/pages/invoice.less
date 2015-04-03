@@ -1,0 +1,138 @@
+//
+// RTL: Pages / Invoice
+//
+// --------------------------------------------------
+
+// Mobile first
+//
+
+&.page-invoice {
+
+  // Header
+
+  .invoice-header {
+
+    address {
+      border-left: none;
+      border-right: 5px solid #e8e8e8;
+      padding-left: 0;
+      padding-right: 10px;
+    }
+
+    h3 {
+      margin: 0 40px 0 0;
+    }
+
+    .invoice-logo {
+      margin-left: 0;
+      margin-right: -40px;
+    }
+  }
+
+  // Information
+
+  .invoice-recipient {
+    padding-left: 0;
+    padding-right: 70px;
+  }
+
+  .invoice-recipient:before {
+    margin-left: 0;
+    margin-right: -70px;
+  }
+
+  .invoice-total span {
+    float: left;
+  }
+
+  // Table
+
+  table {
+    th,
+    td {
+      border-left: none;
+      border-right: 1px solid #fff;
+      text-align: right;
+      padding-left: 0;
+      padding-right: 15px;
+    }
+  }
+}
+
+
+// Desktops
+//
+
+@media (min-width: @screen-tablet) {
+  &.page-invoice {
+
+    // Header
+
+    .invoice-header {
+      h3 {
+        float: right;
+      }
+
+      address {
+        margin-left: 0;
+        margin-right: 30px;
+        float: right;
+      }
+    }
+
+    .invoice-date {
+      float: left;
+    }
+
+    // Information
+
+    .invoice-recipient {
+      float: right;
+    }
+
+    .invoice-total {
+      float: left;
+    }
+  }
+}
+
+// Print version
+//
+
+&.page-invoice.page-invoice-print {
+
+  // Header
+
+  .invoice-header {
+
+    h3 {
+      float: right;
+    }
+
+    address {
+      margin-left: 0;
+      margin-right: 30px;
+      float: right;
+    }
+  }
+
+  .invoice-date {
+    float: left;
+  }
+
+  // Information
+
+  .invoice-recipient {
+    float: right;
+  }
+
+  .invoice-total {
+    float: left;
+    text-align: left;
+
+    span {
+      margin-left: 0;
+      margin-right: 15px;
+    }
+  }
+}

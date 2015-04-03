@@ -1,0 +1,44 @@
+#dashboard-widgets {	
+	.dashboard-widget {
+		height: 100%;
+
+		> .close {
+			display: none;
+			padding: 3px 3px 0 0;
+			font-size: 14px;
+		}
+		
+		&:hover > .close {
+			display: inline-block;
+		}
+		
+		button.settings {
+			padding: 0;
+			cursor: pointer;
+			background: transparent;
+			border: 0;
+			-webkit-appearance: none;
+		}
+	}
+}
+
+.gridster {
+	ul {
+		margin: 0o !important;
+		
+		li {			
+			&.gs-w {
+				background: #DDD;
+			}
+			
+			&.dragging {
+				cursor: move;
+			}
+		}
+		
+		.preview-holder {
+			border: none!important;
+			background: red!important;
+		}
+	}
+}

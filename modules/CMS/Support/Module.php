@@ -100,14 +100,12 @@ class Module
 	public function boot()
 	{
 		if (!$this->_isBooted) {
-
-			$this->loadRoutes();
 			$this->loadViews();
 			$this->loadTranslations();
 			$this->loadConfig();
+			$this->loadAssets();
 
-			if(strtolower($this->getName()) != 'cms') {
-
+			if (strtolower($this->getName()) != 'cms') {
 				App::register($this->getNamespace() . '\ServiceProvider');
 			}
 
@@ -123,13 +121,20 @@ class Module
 	public function register()
 	{
 		if (!$this->_isRegistered) {
-
-
+			$this->loadRoutes();
 
 			$this->_isRegistered = TRUE;
 		}
 
 		return $this;
+	}
+
+	protected function loadAssets()
+	{
+		$packagesFile = $this->getPath(['resources', 'packages.php']);
+		if (is_file($packagesFile)) {
+			require $packagesFile;
+		}
 	}
 
 	/**
@@ -139,13 +144,10 @@ class Module
 	 */
 	protected function loadRoutes($wrapNamespace = TRUE)
 	{
-		/*
-		 * Add routes, if available
-		 */
 		$routesFile = $this->getPath('routes.php');
 
 		if (is_file($routesFile)) {
-			if($wrapNamespace !== FALSE) {
+			if ($wrapNamespace !== FALSE) {
 				app('router')->group(['namespace' => $this->getControllerNamespace()], function ($router) use ($routesFile) {
 					require $routesFile;
 				});
@@ -184,7 +186,6 @@ class Module
 
 	/**
 	 * Register a config file namespace.
-
 	 * TODO: Оптимизировать загрузку конфигов модулей
 	 * @return void
 	 */
@@ -193,7 +194,7 @@ class Module
 		$path = $this->getPath('config');
 
 
-		if(!is_dir($path)) return;
+		if (!is_dir($path)) return;
 
 		foreach (new \DirectoryIterator($path) as $file) {
 			if ($file->isDot() OR strpos($file->getFilename(), '.php') === FALSE) continue;
@@ -210,6 +211,6 @@ class Module
 	 */
 	public function __toString()
 	{
-		return (string) $this->getName();
+		return (string)$this->getName();
 	}
 }

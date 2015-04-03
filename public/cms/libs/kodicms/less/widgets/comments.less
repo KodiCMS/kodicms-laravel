@@ -1,0 +1,82 @@
+//
+// Widgets / Comments
+// --------------------------------------------------
+
+.widget-comments {
+  .comment {
+    padding: 10px;
+    
+    & + .comment {
+      padding-top: 10px;
+      border-top: 1px solid;
+      border-top-color: @table-border-color;
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+
+  .comment-avatar {
+    display: block;
+    float: left;
+    height: 32px;
+    margin-top: 5px;
+    width: 32px;
+    border-radius: 99999px;
+  }
+
+  .comment-body {
+    margin-left: 45px;
+  }
+
+  .comment-by,
+  .actions {
+    color: #aaa;
+    display: block;
+  }
+
+  .comment-by {
+    font-style: italic;
+
+    a {
+      font-style: normal;
+    }
+  }
+
+  .comment-text {
+    padding: 4px 0;
+  }
+
+  .comment-actions {
+    i {
+      display: inline-block;
+      margin-right: 5px;
+      text-decoration: none;
+    }
+
+    &,
+    a {
+      color: #aaa;
+      font-size: 12px;
+    }
+
+    a {
+      margin-right: 10px;
+      display: inline-block;
+
+      &:hover {
+        color: @text-color;
+      }
+    }
+  }
+}
+
+.panel.widget-comments,
+.panel .widget-comments {
+  .comment {
+    margin: 0 -@panel-content-padding;
+    padding-left: @panel-content-padding;
+    padding-right: @panel-content-padding;
+  }
+}

@@ -188,5 +188,6 @@ return [
 
 		'UI'		=> 'KodiCMS\CMS\Helpers\UI',
 		'CMS'		=> 'KodiCMS\CMS\Core',
+		'Assets'	=> 'KodiCMS\CMS\Assets\Core',
 	],
 ];

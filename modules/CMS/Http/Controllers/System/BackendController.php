@@ -2,6 +2,7 @@
 
 use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
 use KodiCMS\CMS\Navigation\Collection as Navigation;
+use KodiCMS\CMS\Assets\Core as Assets;
 
 class BackendController extends TemplateController
 {
@@ -28,7 +29,7 @@ class BackendController extends TemplateController
 		$this->breadcrumbs = Breadcrumbs::factory();
 
 		$this->breadcrumbs
-			->add(\UI::icon('home'), route('backendDashboard'));
+			->add(\UI::icon('home'), route('backend.dashboard'));
 
 		parent::before();
 	}
@@ -42,5 +43,31 @@ class BackendController extends TemplateController
 			->with('requestType', $this->request->ajax() ? 'request.iframe' : 'request.get');
 
 		parent::after();
+	}
+
+	public function registerMedia()
+	{
+		parent::registerMedia();
+
+		$this->templateScripts['ACE_THEME'] = config('cms.wysiwyg.ace.theme', 'textmate');
+		$this->templateScripts['DEFAULT_HTML_EDITOR'] = config('cms.wysiwyg.default_html_editor', '');
+		$this->templateScripts['DEFAULT_CODE_EDITOR'] = config('cms.wysiwyg.default_code_editor', '');
+
+		Assets::package([
+			'jquery', 'bootstrap', 'notify', 'select2', 'dropzone', 'fancybox', 'datepicker', 'underscore', 'core'
+		]);
+
+		// TODO: разобраться с подключением событий и локалей в контроллер
+//		$file = $this->request->controller();
+//		$directory = $this->request->directory();
+//		if (!empty($directory)) {
+//			$file = $directory . '/' . $file;
+//		}
+//		$file = strtolower($file);
+//		if (Kohana::find_file('media', FileSystem::normalize_path('js/controller/' . $file), 'js')) {
+//			Assets::js('controller.' . $file, ADMIN_RESOURCES . 'js/controller/' . $file . '.js', 'global', FALSE, 999);
+//		}
+//
+//		Assets::group('global', 'events', '<script type="text/javascript">' . Assets::merge_files('js/events', 'js') . '</script>', 'global');
 	}
 }

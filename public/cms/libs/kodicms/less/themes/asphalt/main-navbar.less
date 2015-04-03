@@ -1,0 +1,140 @@
+//
+// Themes / Asphalt / Main navbar
+// --------------------------------------------------
+
+
+// ************************************************************************* //
+//**   Small screens (mobile first)                                        **//
+
+#main-navbar {
+
+  .navbar-header {
+    background: @navbar-color;
+
+    a {
+      color: #fff;
+    }
+  }
+
+
+  // Navbar header
+  //
+
+  .navbar-brand {
+    color: #fff;
+  }
+
+
+  // Navbar buttons
+  //
+
+  .navbar-toggle,
+  #main-menu-toggle {
+    color: #fff;
+  }
+
+  #main-menu-toggle {
+    background: @header-color;
+
+    .fa:before {
+      color: #fff;
+    }
+  }
+
+
+  // Collapse
+  //
+
+  .navbar-collapse {
+    border-top: 1px solid lighten(@navbar-color, 6%);
+    background: @navbar-color;
+    .box-shadow(none);
+  }
+
+
+  // Navbar forms
+  //
+
+  form.navbar-form {
+    .box-shadow(none);
+
+    .form-control {
+      background: #fff;
+      background: rgba(255, 255, 255, 0.05);
+      border: none;
+      color: @input-color-placeholder;
+
+      &:focus {
+        background: #fff;
+        color: @text-color;
+        .box-shadow(none);
+      }
+    }
+  }
+}
+
+
+// ************************************************************************* //
+//**   Desktops                                                            **//
+
+@media (min-width: @screen-tablet) {
+  #main-navbar {
+
+    // Navbar button
+    #main-menu-toggle {
+      background: darken(@header-color, 5%);
+    }
+
+    // Navbar header
+    //
+
+    .navbar-header {
+      background: @header-color;
+    }
+
+    // Navbar collapse
+    //
+
+    .navbar-collapse {
+      background: @navbar-color;
+      border: none;
+
+      > div > .navbar-nav {
+        border-left: 1px solid darken(@navbar-color, 4%);
+        .box-shadow(1px 0 0 rgba(255, 255, 255, .03) inset);
+      }
+    }
+
+    .right > .navbar-nav > li {
+      border-left: 1px solid darken(@navbar-color, 4%);
+      border-right: none;
+      .box-shadow(1px 0 0 rgba(255, 255, 255, .03) inset);
+    }
+
+    .navbar-nav > li {
+      border-right: 1px solid darken(@navbar-color, 4%);
+      .box-shadow(1px 0 0 rgba(255, 255, 255, .03));
+
+      > a {
+        color: lighten(@navbar-color, 50%);
+      }
+
+      > a:hover,
+      &.active > a,
+      &.dropdown.open > a {
+        border-bottom: 3px solid @header-color;
+        color: #fff;
+      }
+    }
+
+    
+    // Navbar Items
+    //
+
+    li + li,
+    .nav + .nav,
+    .nav + .right {
+      border-top: none;
+    }
+  }
+}

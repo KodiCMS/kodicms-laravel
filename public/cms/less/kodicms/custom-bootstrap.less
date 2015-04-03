@@ -1,0 +1,316 @@
+.frontend-header {
+    background: #fff;
+    padding: 10px 20px;
+	position: relative;
+    .box-shadow(0 4px 0 rgba(0, 0, 0, .1));
+
+    .logo {
+		color: @text-color;
+		font-size: 16px;
+		height: 24px;
+		line-height: 24px;
+		width: 24px;
+		opacity: .6;
+		.transition(all .3s);
+
+		&[href]:hover {
+			opacity: 1;
+		}
+    }
+
+    .btn {
+		float: right;
+    }
+}
+
+.navbar-brand {
+	background-image: ~"url('@{images-path}/logo-color.png')";
+	background-repeat: no-repeat;
+	background-position: left center;
+	width: 119px;
+	text-indent: -9999px;
+	margin-left: 10px;
+	margin-right: 10px;
+	
+	.theme-asphalt &,
+	.theme-purple-hills &,
+	.theme-adminflare &,
+	.theme-fresh &,
+	.theme-dust &,
+	.theme-frost &,
+	.theme-clean & {
+		background-image: ~"url('@{images-path}/logo.png')";
+	}
+}
+
+/* ===================================================
+	Table
+ ===================================================*/
+.table-noborder > thead > tr > th,
+.table-noborder > tbody > tr > th,
+.table-noborder > tfoot > tr > th,
+.table-noborder > thead > tr > td,
+.table-noborder > tbody > tr > td,
+.table-noborder > tfoot > tr > td {
+  border: none;
+}
+
+/* ===================================================
+	Body
+ ===================================================*/
+.iframe {
+	#main-wrapper {
+		margin-left: 0 !important;
+		padding: 0 !important;
+	}
+	
+	#content-wrapper{
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+}
+
+/* ===================================================
+	Spoiler
+ ===================================================*/
+.spoiler-toggle-container {
+	display: block;
+	margin: 0 10px;
+}
+
+.panel-toggler {
+	cursor: pointer;
+}
+
+.panel-spoiler {
+	display: none;
+}
+
+/* ===================================================
+	Span sidebar border
+ ===================================================*/
+.span-sidebar-right {
+	border-left: 1px solid #DDD;
+	margin-left: 20px;
+}
+
+.span-sidebar-left {
+	border-right: 1px solid #DDD;
+	margin-right: 20px;
+}
+
+/* ===================================================
+	Flags
+ ===================================================*/
+.flags {
+	* {
+		cursor: pointer;
+	}
+}
+
+/* ===================================================
+	Reduce margin
+ ===================================================*/
+@max: 100;
+.i-loop (@i) when (@i <= @max) {
+  .margin-l@{i} {
+    margin-left: @i * 1px !important;
+  }
+  .margin-r@{i} {
+    margin-right: @i * 1px !important;
+  }
+  .margin-t@{i} {
+    margin-top: @i * 1px !important;
+  }
+  .margin-b@{i} {
+    margin-bottom: @i * 1px !important;
+  }
+  .i-loop(@i + 5);
+}
+.i-loop(0);
+
+.margin-sm {
+  margin: 10px 15px !important;
+}
+
+// Small horizontal margin
+.margin-sm-hr {
+  margin-left: 15px !important;
+  margin-right: 15px !important;
+}
+
+// Extra small horizontal margin
+.margin-xs-hr {
+  margin-left: 10px !important;
+  margin-right: 10px !important;
+}
+
+// Small vertical margin
+.margin-sm-vr {
+  margin-top: 15px !important;
+  margin-bottom: 15px !important;
+}
+
+// Extra small vertical margin
+.margin-xs-vr {
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+// Remove margin
+.no-margin {
+  margin: 0 !important;
+}
+
+.no-margin-hr {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.no-margin-vr {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.no-margin-l {
+  margin-left: 0 !important;
+}
+
+.no-margin-r {
+  margin-right: 0 !important;
+}
+
+.no-margin-b {
+  margin-bottom: 0 !important;
+}
+
+.no-margin-t {
+  margin-top: 0 !important;
+}
+
+/* ===================================================
+	Select2
+ ===================================================*/
+.select2-hidden-accessible {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+/* ===================================================
+	Dropdown
+ ===================================================*/
+#main-navbar {
+	.dropdown-menu {
+		&:after {
+			bottom: 100%;
+			right: 10px;
+			border: solid transparent;
+			content: " ";
+			height: 0;
+			width: 0;
+			position: absolute;
+			pointer-events: none;
+			border-color: rgba(255, 255, 255, 0);
+			border-bottom-color: #ccc;
+			border-width: 10px;
+			margin-left: -10px;
+		}
+	}
+}
+
+.user-menu {
+	> .dropdown-menu {
+		padding: 0 !important;
+		border-top-width: 0;
+		width: 280px;
+
+		&:after {
+			bottom: 100%;
+			right: 20px;
+			border: solid transparent;
+			content: " ";
+			height: 0;
+			width: 0;
+			position: absolute;
+			pointer-events: none;
+			border-color: rgba(255, 255, 255, 0);
+			border-bottom-color: @brand-info;
+			border-width: 10px;
+			margin-left: -10px;
+		}
+
+		// Header menu 
+		> li.user-header {
+			padding: 10px;
+			// Default background color. You can add any .bg-* class to 
+			//   the li element to change the background 
+			background: @brand-info;
+			text-align: center;            
+			// User image 
+			> img {
+				z-index: 5;
+				height: 90px;
+				width: 90px;
+				border: 8px solid;
+				border-color: transparent;
+				border-color: rgba(255, 255, 255, 0.2);                
+			}
+			> p {
+				z-index: 5;
+				color: #fff;
+				font-size: 17px;
+				margin-top: 10px;
+				> small {
+					display: block;
+					font-size: 10px;
+				}
+			}
+		}
+
+		// Menu Body 
+		> li.user-body {
+			padding: 10px;
+			border-bottom: 1px solid @dropdown-border !important;
+			border-top: 1px solid #dddddd;
+			.clearfix();
+
+			a {
+				line-height: 18px !important;
+			}
+		}
+
+		// Menu Footer 
+		> li.user-footer {
+			padding: 10px;
+			.clearfix();
+
+			a {
+				line-height: 25px !important;
+			}
+		}
+
+	}
+}
+
+/* ===================================================
+	Nav tabs
+ ===================================================*/
+.nav-tabs {
+	a {
+		&.tab-error {
+			background: #ebccd1 !important;
+			
+			&.dropdown-toggle, 
+			&.active {
+				background: #b94a48 !important;
+				color: #fff !important;
+			}
+		}
+	}
+}

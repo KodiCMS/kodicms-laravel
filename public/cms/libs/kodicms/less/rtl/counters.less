@@ -1,0 +1,18 @@
+//
+// RTL: Counters
+// --------------------------------------------------
+
+.counter-separated {
+  span {
+    float: right;
+
+    + span {
+      margin-left: 0;
+      margin-right: 4px;
+    }
+  }
+
+  &.counter-sm span + span {
+    margin-right: 3px;
+  }
+}

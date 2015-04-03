@@ -93,6 +93,9 @@ class Collection
 		return $section;
 	}
 
+	/**
+	 * @return void
+	 */
 	public static function setRootSection()
 	{
 		static::$rootSection = new Section([
@@ -158,6 +161,9 @@ class Collection
 		return NULL;
 	}
 
+	/**
+	 * @return void
+	 */
 	public static function sort()
 	{
 		uasort(self::getRootSection()->getSections(), function ($a, $b) {
@@ -167,5 +173,13 @@ class Collection
 
 			return ($a->id() < $b->id()) ? -1 : 1;
 		});
+	}
+
+	/**
+	 * @param Page $page
+	 */
+	public function setCurrentPage(Page & $page)
+	{
+		static::$currentPage = $page;
 	}
 }

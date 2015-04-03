@@ -1,0 +1,28 @@
+//
+// RTL: Stat Panels
+// --------------------------------------------------
+
+.stat-counters[class*='bg-'] {
+  border-color: #fff; // IE fallback
+  border-color: rgba(0,0,0,.2);
+
+  .stat-cell {
+    border-color: #fff; // IE fallback
+    border-color: rgba(0,0,0,.2);
+  }
+}
+
+.stat-cell .bg-icon {
+  left: 0;
+  right: auto;
+}
+
+.stat-cell .bg-icon.bg-icon-left {
+  left: auto;
+  right: 0;
+}
+
+.stat-counters > .stat-cell + .stat-cell {
+  border-left: none;
+  border-right: 1px solid @table-border-color;
+}

@@ -1,0 +1,329 @@
+//
+// Panels
+// --------------------------------------------------
+
+.panel,
+.panel-default {
+	border-color: @panels-border-color;
+	margin-bottom: @grid-gutter-width;
+	position: relative;
+	.box-shadow(none);
+
+	.alert-page {
+		border-left-width: 1px;
+		border-right-width: 1px;
+		border-top-width: 2px;
+		font-size: 12px;
+		margin: -2px -1px 0 -1px !important;
+		padding: 8px 15px;
+		position: relative;
+	}
+}
+
+.panel-heading {
+	background: @panel-heading-bg;
+	border-bottom: 2px solid #ececec;
+	padding-bottom: 9px;
+	padding-left: @panel-content-padding;
+	padding-right: @panel-content-padding;
+	padding-top: 11px;
+	position: relative;
+
+	.nav-tabs {
+		border-bottom-color: transparent;
+		bottom: -2px;
+		position: absolute;
+		right: 9px;
+
+		> li > a {
+			border-bottom-color: transparent;
+		}
+	}
+}
+
+// Body
+.panel-body {
+	background: #fff;
+	margin: 0;
+	padding: @panel-content-padding;
+
+	> li {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+}
+
+// Footer
+.panel-footer {
+	background: #fff;
+	border-top: 1px solid #ececec;
+	padding-left: @panel-content-padding;
+	padding-right: @panel-content-padding;
+}
+
+// Title
+.panel-title {
+	color: @text-color;
+	font-size: 14px;
+	// font-weight: 600;
+	// text-transform: uppercase;
+	line-height: 20px;
+}
+
+// Title icon
+.panel-title-icon {
+	display: inline-block;
+	font-size: 14px;
+	margin-right: 7px;
+}
+
+
+// Panel heading controls
+//
+
+.panel-heading-controls {
+	margin-top: -2px;
+	margin-bottom: -200px;
+	float: right;
+
+	> * {
+		display: block;
+		float: left;
+
+		+ * {
+			margin-left: 4px;
+		}
+	}
+
+	> .btn,
+	> .btn-group {
+		margin-top: -4px;
+	}
+
+	> .btn.btn-sm,
+	> .btn-group.btn-group-sm {
+		margin-top: -1px;
+	}
+
+	> .btn.btn-xs,
+	> .btn-group.btn-group-xs {
+		margin-top: 0;
+	}
+
+	> .progress {
+		height: 6px;
+		margin-top: 8px;
+	}
+
+	> .label, .badge {
+		margin-bottom: -10px;
+		margin-top: 1px;
+	}
+
+	> .pagination {
+		margin: -5px 0 0 0;
+	}
+
+	> .pagination.pagination-sm {
+		margin-top: -3px;
+	}
+
+	> .pagination.pagination-xs {
+		margin-top: -1px;
+	}
+
+	> .pager {
+		margin: -4px 0 0 0;
+	}
+
+	> .pager.pager-xs {
+		margin: -1px 0 0 0;
+	}
+
+	> .form-control,
+	.input-group {
+		margin-top: -2px;
+	}
+
+	> .form-control,
+	.input-group .form-control,
+	.input-group .btn {
+		height: 26px;
+		padding: 3px 8px;
+	}
+
+	> .panel-heading-icon {
+		font-size: 14px;
+		margin-top: 1px;
+	}
+
+	> .switcher {
+		margin-top: 1px;
+	}
+}
+
+// Panel heading text
+.panel-heading-text {
+	display: inline-block;
+	line-height: 20px;
+	font-size: 12px;
+	margin-top: 1px;
+}
+
+// Dark panels
+//
+.panel-dark .panel-heading-controls {
+	.btn {
+		border-color: transparent;
+	}
+
+	.btn.btn-outline {
+		border-width: 1px;
+		border-color: #fff;
+		border-color: rgba(255, 255, 255, 0.12);
+
+		&:focus {
+			// color: rgba(255, 255, 255, 0.8);
+		}
+
+		&:hover {
+			border-color: transparent !important;
+			// color: #fff;
+		}
+	}
+
+	> .form-control {
+		border-color: transparent !important;
+	}
+
+	> .pagination,
+	> .pager {
+		li a,
+		li span {
+			border-color: #fff;
+			border-color: rgba(255, 255, 255, .12);
+			color: #fff;
+			color: rgba(255, 255, 255, .7);
+		}
+
+		li a:hover {
+			color: #fff;
+			border-color: #fff;
+		}
+
+		li.active {
+			a,
+			a:hover,
+				span {
+				background: #fff;
+				border-color: #fff;
+			}
+		}
+
+		li.disabled a,
+		li.disabled span {
+			border-color: rgba(255, 255, 255, .1) !important;
+			color: rgba(255, 255, 255, .3) !important;
+		}
+	}
+
+	.input-group .form-control {
+		border-top-color: transparent;
+		border-bottom-color: transparent;
+		border-left-color: transparent;
+		border-right-color: #d5d5d5;
+	}
+}
+
+.panel-dark .panel-heading .nav-tabs {
+    > li > a {
+		background: none;
+		background: rgba(255, 255, 255, 0.1);
+		color: #fff;
+		color: rgba(255, 255, 255, .8);
+
+		&:hover {
+			color: #fff;
+		}
+    }
+
+    > li.active > a,
+    > li.active > a:hover,
+		> li.active > a:focus {
+		background: #fff;
+		border-bottom-color: #fff;
+		color: @text-color;
+    }
+}
+
+.panel.panel-dark.panel-body-colorful {
+	table,
+	.list-group {
+		color: #fff;
+	}
+}
+
+
+// Colors
+// --------------------------------------------------
+
+.panel-warning {
+	.pixel-panel(lighten(@warning-color, 20%), darken(@warning-color, 40%), darken(@warning-color, 1%));
+}
+
+.panel-danger {
+	.pixel-panel(lighten(@danger-color, 40%), #fff, lighten(@danger-color, 30%));
+}
+
+.panel-success {
+	.pixel-panel(lighten(@success-color, 20%), darken(@success-color, 40%), darken(@success-color, 1%));
+}
+
+.panel-info {
+	.pixel-panel(lighten(@info-color, 20%), darken(@info-color, 40%), darken(@info-color, 1%));
+}
+
+.panel-darken {
+	.pixel-panel(@darken-color, #fff, darken(@darken-color, 1%));
+}
+
+// Dark panels
+//
+
+.panel-warning.panel-dark {
+	.pixel-panel-dark(@warning-color);
+}
+
+.panel-danger.panel-dark {
+	.pixel-panel-dark(@danger-color);
+}
+
+.panel-success.panel-dark {
+	.pixel-panel-dark(@success-color);
+}
+
+.panel-info.panel-dark {
+	.pixel-panel-dark(@info-color);
+}
+
+// Transparent panels
+//
+
+.panel-transparent {
+	background: none !important;
+	border: none !important;
+
+	.panel-heading {
+		background: none !important;
+	}
+
+	.panel-body {
+		background: none !important;
+	}
+
+	.panel-footer {
+		background: none !important;
+		border: none !important;
+	}
+}

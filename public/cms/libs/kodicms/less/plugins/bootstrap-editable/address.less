@@ -1,0 +1,48 @@
+//
+// Plugins / Bootstrap-editable / Address
+//
+// Version: 1.5.1
+//
+// --------------------------------------------------
+
+.editable[data-type="address"] + .editable-container {
+  .editable-input {
+    width: 260px;
+  }
+
+  .editable-buttons {
+    position: relative;
+    top: 2px;
+  }
+}
+
+.editable-address {
+  margin-top: 2px;
+
+  label {
+    width: 100%;
+  }
+
+  label span,
+  input {
+    display: block;
+    float: left;
+    margin: 0;
+  }
+
+  label span {
+    width: 25%;  
+    padding: 0 10px 0 0;
+    line-height: 32px;
+    text-align: right;
+    position: relative;
+  }
+
+  input {
+    width: 75% !important;  
+  }
+}
+
+.editable-address + .editable-address {
+  margin-top: 6px;
+}

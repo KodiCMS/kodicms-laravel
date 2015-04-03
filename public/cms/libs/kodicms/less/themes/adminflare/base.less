@@ -1,0 +1,48 @@
+//
+// Themes / Adminflare / Base
+// --------------------------------------------------
+
+& {
+  background: #f4f4f4 url("@{images-path}/themes/adminflare/body-bg.png");
+}
+
+.page-header {
+  background: #ececec;
+  background: rgba(0,0,0,.03);
+  .box-shadow(0 1px 0 rgba(255,255,255,.5));
+}
+
+// Change border-color
+
+.table,
+.panel,
+.page-header,
+hr {
+  border-color: @theme-border-color;
+}
+
+.bordered {
+  border-color: @theme-border-color;
+}
+
+// Fix coloured borders
+
+.bordered[class*='bg-'],
+[class*='bg-'] .border-t {
+  border-color: #fff;
+  border-color: rgba(0,0,0,.2);
+}
+
+.panel.panel-transparent > .panel-heading {
+  border-bottom-color: @theme-border-color !important;
+}
+
+// Page-wide breadcrimb
+.breadcrumb-page {
+  background: #ececec;
+  background: rgba(0,0,0,.03);
+  border-bottom: 1px solid @theme-border-color;
+  padding-bottom: 6px;
+  padding-top: 6px;
+  .box-shadow(0 1px 0 rgba(255,255,255,.5));
+}

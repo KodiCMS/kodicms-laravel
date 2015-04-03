@@ -1,0 +1,41 @@
+//
+// Notes
+// --------------------------------------------------
+
+
+.note {
+  background: #fafafa;
+  border-left: 3px solid #ddd;
+  border-right: 0 solid #ddd;
+  margin-bottom: 20px;
+  padding: 20px;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: 0;
+  }
+}
+
+
+// Colors
+//
+
+.note.note-success {
+  .pixel-note-mixin(@success-color, lighten(#dff0d8, 7%));
+}
+
+.note.note-danger {
+  .pixel-note-mixin(@danger-color, lighten(#f2dede, 6%));
+}
+
+.note.note-warning {
+  .pixel-note-mixin(@warning-color, lighten(#f9f1c7, 5%));
+}
+
+.note.note-info {
+  .pixel-note-mixin(@info-color, lighten(#d9edf7, 7%));
+}

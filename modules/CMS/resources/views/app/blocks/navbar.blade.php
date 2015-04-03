@@ -12,7 +12,7 @@
 				<div class="right clearfix">
 					<ul class="nav navbar-nav pull-right right-navbar-nav">
 						<li>
-							{!! HTML::linkRoute('backendSettings', UI::icon('cogs fa-lg')) !!}
+							{!! HTML::linkRoute('backend.settings', UI::icon('cogs fa-lg')) !!}
 						</li>
 						<li>
 							{!! HTML::link(url('/'), UI::hidden(trans('cms::core.navigation.site')), [
@@ -37,16 +37,15 @@
 									</li>
 									<li class="user-body">
 										<div class="col-xs-6">
-											{!! HTML::linkRoute('userProfile', trans('user.sections.profile'), [],
-											['data-icon' => 'user']) !!}
+											{!! HTML::linkRoute('backend.user.profile', trans('user.sections.profile'), [], ['data-icon' => 'user']) !!}
 										</div>
 										<div class="col-xs-6">
-											{!! HTML::linkRoute('userEdit', trans('user.sections.settings'), ['id' =>
+											{!! HTML::linkRoute('backend.user.edit', trans('user.sections.settings'), ['id' =>
 											Auth::id()], ['data-icon' => 'cog']) !!}
 										</div>
 									</li>
 									<li class="user-footer">
-										{!! HTML::linkRoute('userLogout', trans('user.action.logout'), [], [
+										{!! HTML::linkRoute('backend.user.logout', trans('user.action.logout'), [], [
 										'data-icon' => 'power-off text-danger',
 										'class' => 'btn btn-default btn-xs text-bold pull-right'
 										]) !!}

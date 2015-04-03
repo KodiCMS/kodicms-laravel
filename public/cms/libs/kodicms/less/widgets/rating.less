@@ -1,0 +1,26 @@
+//
+// Widgets / Rating
+// --------------------------------------------------
+
+.widget-rating {
+  &,
+  li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: inline-block;
+
+    a {
+      display: block;
+      color: #bbb;
+      text-decoration: none;
+      text-align: center;
+      font-size: 15px;
+
+      &:before {
+        content: "\f005";
+        font-family: FontAwesome;
+      }
+    }
+  }
+}

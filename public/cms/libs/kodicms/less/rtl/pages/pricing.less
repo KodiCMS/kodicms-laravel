@@ -1,0 +1,27 @@
+//
+// RTL: Pages / Plans and Pricing
+//
+// --------------------------------------------------
+
+
+&.page-pricing .plan-period {
+  margin-left: 0;
+  margin-right: 5px;
+}
+
+@media (min-width: @screen-tablet) {
+  &.page-pricing {
+    .plan-col + .plan-col .plan-features {
+      > li {
+        border-left-width: 1px;
+        border-right-width: 0;
+        .box-shadow(1px 0 0 @table-border-color);
+      }
+
+      > a {
+        margin-left: 0;
+        margin-right: -1px;
+      }
+    }
+  }
+}

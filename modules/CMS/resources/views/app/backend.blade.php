@@ -5,13 +5,18 @@
 		<meta name="generator" content="{{ CMS::NAME }} v. {{ CMS::VERSION }}">
 		<meta name="author" content="ButscH" />
 		<title>{{ $title or 'Backend' }} &ndash; {{ config('site.title') }}</title>
-		<link href="{{ asset('favicon.ico') }}" rel="favourites icon" />
+		<link href="{{ asset('cms/favicon.ico') }}" rel="favourites icon" />
+
+		{!! Assets::group('global', 'templateScripts') !!}
+		{!! Assets::css() !!}
+		{!! Assets::js() !!}
+		{!! Assets::group('global', 'events') !!}
 	</head>
-	<body id="body.{{ $bodyId or 'backend' }}" class="{{ $requestType }} {{ $theme or 'default' }} main-menu-fixed">
+	<body id="body.{{ $bodyId or 'backend' }}" class="{{ $requestType }} {{ $theme or 'theme-default' }} main-menu-fixed">
 		<div id="main-wrapper">
 			@if($requestType != 'iframe')
 			<header>
-				{{-- @include('cms::app.blocks.navbar') --}}}
+				{{-- @include('cms::app.blocks.navbar') --}}
 			</header>
 			<div id="main-menu" role="navigation">
 				@include('cms::app.blocks.navigation', ['breadcrumbs' => $breadcrumbs])

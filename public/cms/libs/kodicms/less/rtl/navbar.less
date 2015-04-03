@@ -1,0 +1,26 @@
+//
+// RTL: Navbar
+// --------------------------------------------------
+
+.navbar {
+  .nav-icon-btn .label,
+  .nav-icon-btn .badge,
+  .dropdown-menu .label.pull-right,
+  .dropdown-menu .badge.pull-right {
+    float: left;
+  }
+}
+
+@media (min-width: @screen-tablet) {
+  .navbar .nav-icon-btn .label {
+    right: auto;
+    left: 10px;
+  }
+}
+
+@media (max-width: @screen-tablet) {
+  .navbar-nav .open .dropdown-menu > li > a,
+  .navbar-nav .open .dropdown-menu .dropdown-header {
+    padding: 5px 25px 5px 15px;
+  }
+}

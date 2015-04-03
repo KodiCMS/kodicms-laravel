@@ -1,0 +1,85 @@
+//
+// RTL: Forms
+// --------------------------------------------------
+
+.form-horizontal .form-group label {
+  text-align: left;
+}
+
+.radio, .checkbox {
+  padding-left: 0;
+  padding-right: 20px;
+}
+
+.radio,
+.radio-inline,
+.checkbox,
+.checkbox-inline {
+  label {
+    text-align: right !important;
+  }
+}
+
+.radio input[type="radio"],
+.radio-inline input[type="radio"],
+.checkbox input[type="checkbox"],
+.checkbox-inline input[type="checkbox"] {
+  float: right;
+  margin-left: 0;
+  margin-right: -20px;
+}
+
+.radio-inline, .checkbox-inline {
+  padding-left: 0;
+  padding-right: 20px;
+}
+
+.has-warning, .has-error, .has-success {
+  .help-block {
+
+    &:before {
+      left: auto;
+      right: 16px;
+    }
+    
+    &:after{
+      left: auto;
+      right: 17px;
+    }
+  }
+}
+
+.radio-inline + .radio-inline,
+.checkbox-inline + .checkbox-inline {
+  margin-left: 0;
+  margin-right: 10px;
+}
+
+.form-control-feedback {
+  left: 0;
+  right: auto;
+}
+
+.has-feedback .form-control {
+  padding-left: 32px;
+  padding-right: 12px;
+}
+
+
+// Single checkboxes and radios
+.px-single {
+
+  input.px {
+    margin: 0 !important;
+
+    & + .lbl:before,
+    & + .lbl:after {
+      margin: 0 !important;
+    }
+  }
+
+  input.px + .lbl {
+    padding: 0 !important;
+  }
+}
+

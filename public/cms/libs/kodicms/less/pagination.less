@@ -1,0 +1,75 @@
+//
+// Pagination
+// --------------------------------------------------
+
+.pagination {
+  > li > a,
+  > li > span {
+    background-color: #fff;
+    border: 1px solid @pagination-border-color;
+    color: lighten(@text-color, 15%);
+    margin-right: 5px;
+  }
+  
+  > li > a:hover {
+    color: @text-color;
+  }
+  
+  > li.active > a,
+  > li.active > span {
+    color: #fff;
+    font-weight: 600;
+  }
+  
+  > li.disabled > a:hover {
+    border-color: @pagination-border-color !important;
+  }
+
+  &.pagination-xs li a,
+  &.pagination-xs li span {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+}
+
+
+// Pager
+//
+
+.pager {  
+  li > a,
+  li > span {
+    background-color: #fff;
+    border-color: @pagination-border-color;
+    color: lighten(@text-color, 15%);
+  }
+
+  li > a:hover {
+    color: @text-color;
+  }
+
+  li.disabled > a {
+    background-color: transparent;
+  }
+  
+  li.disabled > a:hover {
+    background-color: transparent;
+    border-color: @pagination-border-color !important;
+  }
+
+  &.pager-xs li a,
+  &.pager-xs li span {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}
+
+
+.pagination > .disabled > span,
+.pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus {
+  background-color: transparent;
+}

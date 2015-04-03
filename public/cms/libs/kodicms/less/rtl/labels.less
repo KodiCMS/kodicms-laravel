@@ -1,0 +1,32 @@
+//
+// RTL: Labels
+// --------------------------------------------------
+
+
+// Tags
+//
+
+.label.label-tag {
+  margin-left: 0;
+  margin-right: (@label-tag-arrow-width);
+  .border-left-radius(2px);
+  .border-right-radius(0);
+}
+
+.label.label-tag:before {
+  border-left-width: @label-tag-arrow-width;
+  border-right-width: 0;
+  margin: 0;
+  right: -@label-tag-arrow-width - 1px;
+}
+
+.label.label-tag:after {
+  margin: (-(@label-tag-height/2 + @label-tag-circle-size/2) + 1px) 0 0 0;
+  right: -(@label-tag-horizontal-padding);
+}
+
+.ie8 & .label.label-tag:before,
+.ie9 & .label.label-tag:before {
+  border-left-width: 0;
+  border-right-width: @label-tag-arrow-width;
+}

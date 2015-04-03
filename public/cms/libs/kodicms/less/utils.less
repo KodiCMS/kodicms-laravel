@@ -1,0 +1,387 @@
+//
+// Utils
+// --------------------------------------------------
+
+//**   Borders    ********************************************************************************//
+
+// Add borders
+.bordered {
+  border: 1px solid @panels-border-color;
+}
+
+.bordered[class*='bg-'],
+[class*='bg-'] .border-t {
+  border-color: #fff;
+  border-color: rgba(0,0,0,.2);
+}
+
+.border-t {
+  border-top: 1px solid @panels-border-color;
+}
+
+// Remove borders
+.no-border {
+  border-width: 0 !important;
+}
+
+// Remove horizontal borders
+.no-border-hr {
+  border-left-width: 0 !important;
+  border-right-width: 0 !important;
+}
+
+// Remove vertical borders
+.no-border-vr {
+  border-top-width: 0 !important;
+  border-bottom-width: 0 !important;
+}
+
+// Remove top border
+.no-border-t {
+  border-top-width: 0 !important;
+}
+
+// Remove right border
+body:not(.right-to-left) .no-border-r {
+  border-right-width: 0 !important;
+}
+
+
+// Remove bottom border
+.no-border-b {
+  border-bottom-width: 0 !important;
+}
+
+// Remove left border
+body:not(.right-to-left) .no-border-l {
+  border-left-width: 0 !important;
+}
+
+
+//**   Margins    ********************************************************************************//
+
+// Make div page-wide
+.no-grid-gutter-h {
+  margin-left: -@content-wrapper-padding !important;
+  margin-right: -@content-wrapper-padding !important;
+}
+
+// Make panel page-wide
+.panel-wide {
+  margin-left: -@panel-content-padding !important;
+  margin-right: -@panel-content-padding !important;
+}
+
+// Add bottom gutter margin
+.grid-gutter-margin-b {
+  margin-bottom: @grid-gutter-width;
+}
+
+// Remove margins
+.no-margin {
+  margin: 0 !important;
+}
+
+// Remove horizontal margins
+.no-margin-hr {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+// Remove vertical margins
+.no-margin-vr {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+// Remove bottom margin
+.no-margin-b {
+  margin-bottom: 0 !important;
+}
+
+// Remove top margin
+.no-margin-t {
+  margin-top: 0 !important;
+}
+
+// Add form-group's margin
+.form-group-margin {
+  margin-bottom: 15px !important;
+}
+
+
+//**   Paddings    *******************************************************************************//
+
+// Add panel body's padding
+.panel-padding {
+  padding: @panel-content-padding !important;
+}
+
+// Add grid column's padding
+.grid-gutter-padding-h {
+  padding-left: @content-wrapper-padding;
+  padding-right: @content-wrapper-padding;
+}
+
+// Add tab content's padding
+.tab-content-padding {
+  padding: 15px 0 !important;
+}
+
+// Add horizontal panel body's padding
+.panel-padding-h {
+  padding-left: @panel-content-padding !important;
+  padding-right: @panel-content-padding !important;
+}
+
+// Reduce padding
+.padding-sm {
+  padding: 10px !important;
+}
+
+.padding-xs {
+  padding: 5px !important;
+}
+
+// Small horizontal padding
+.padding-sm-hr {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+// Extra small horizontal padding
+.padding-xs-hr {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+// Small vertical padding
+.padding-sm-vr {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+// Extra small vertical padding
+.padding-xs-vr {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+// Remove padding
+.no-padding {
+  padding: 0 !important;
+}
+
+// Remove horizontal padding
+.no-padding-hr {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+// Remove vertical padding
+.no-padding-vr {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+// Remove bottom padding
+.no-padding-b {
+  padding-bottom: 0 !important;
+}
+
+// Remove top padding
+.no-padding-t {
+  padding-top: 0 !important;
+}
+
+
+//**   Text position    **************************************************************************//
+
+// Left-aligned text
+.text-left {
+  text-align: left;
+}
+
+// Center-aligned text
+.text-center {
+  text-align: center;
+}
+
+// Right-aligned text
+.text-right {
+  text-align: right;
+}
+
+// Responsive
+
+@media (min-width: @screen-sm-min) { 
+  .text-left-sm   { text-align: left; }
+  .text-center-sm { text-align: center; }
+  .text-right-sm  { text-align: right; }
+}
+
+@media (min-width: @screen-md-min) {
+  .text-left-md   { text-align: left; }
+  .text-center-md { text-align: center; }
+  .text-right-md  { text-align: right; }
+}
+
+@media (min-width: @screen-lg-min) { 
+  .text-left-lg   { text-align: left; }
+  .text-center-lg { text-align: center; }
+  .text-right-lg  { text-align: right; }
+}
+
+
+
+// Vertical align in table cells
+//
+
+// Aligned top
+.valign-top,
+.valign-top td,
+.valign-top th {
+  vertical-align: top !important;
+}
+
+// Aligned middle
+.valign-middle,
+.valign-middle td,
+.valign-middle th {
+  vertical-align: middle !important;
+}
+
+// Aligned bottom
+.valign-bottom,
+.valign-bottom td,
+.valign-bottom th {
+  vertical-align: bottom !important;
+}
+
+
+//**   Text sizes    *****************************************************************************//
+
+// Extra small text
+.text-xs {
+  font-size: 11px;
+}
+
+// Small text
+.text-sm {
+  font-size: 12px;
+}
+
+// Big text
+.text-bg {
+  font-size: 17px;
+}
+
+// Large text
+.text-lg {
+  font-size: 23px;
+}
+
+// Extra large text
+.text-xlg {
+  font-size: 30px;
+}
+
+// Super large text
+.text-slg {
+  font-size: 50px;
+}
+
+
+//**   Text weights    ***************************************************************************//
+
+.text-slim {
+  font-weight: 300 !important;
+}
+
+.text-normal {
+  font-weight: 400 !important;
+}
+
+.text-semibold {
+  font-weight: 600 !important;
+}
+
+.text-bold {
+  font-weight: 700 !important;
+}
+
+
+//**   Text colors    ****************************************************************************//
+
+.text-default {
+  .pixel-text-color(darken(#98a3a4, 8%));
+}
+.text-success {
+  .pixel-text-color(darken(@success-color, 8%));
+}
+.text-danger {
+  .pixel-text-color(darken(@danger-color, 8%));
+}
+.text-warning {
+  .pixel-text-color(darken(@warning-color, 8%));
+}
+.text-info {
+  .pixel-text-color(darken(@info-color, 8%));
+}
+.text-light-gray {
+  .pixel-text-color(#bbb);
+}
+
+
+//**   Background colors    **********************************************************************//
+
+.bg-default {
+  .pixel-bg-color(#98a3a4);
+}
+.bg-success {
+  .pixel-bg-color(@success-color);
+}
+.bg-danger {
+  .pixel-bg-color(@danger-color);
+}
+.bg-warning {
+  .pixel-bg-color(@warning-color);
+}
+.bg-info {
+  .pixel-bg-color(@info-color);
+}
+.bg-darken {
+  .pixel-bg-color(@darken-color);
+}
+.bg-panel {
+  background: @panel-heading-bg;
+}
+.no-bg {
+  background: none !important;
+}
+
+
+//**   Rounded borders    **********************************************************************//
+
+// Round element
+.rounded {
+  border-radius: 999999px !important;
+}
+// Remove rounded borders
+.no-border-radius {
+  border-radius: 0 !important;
+}
+
+//**   Columns sizing    **********************************************************************//
+
+@media (min-width: @screen-sm-min) { 
+  .col-sm-auto { width: auto; }
+}
+
+@media (min-width: @screen-md-min) {
+  .col-md-auto { width: auto; }
+}
+
+@media (min-width: @screen-lg-min) { 
+  .col-lg-auto { width: auto; }
+}

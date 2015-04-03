@@ -1,0 +1,141 @@
+//
+// Pages / Profile
+//
+// --------------------------------------------------
+
+.page-profile {
+  // Heading
+
+  .profile-full-name {
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 40px;
+    padding-top: 15px;
+    padding-bottom: 20px;
+    position: relative;
+    border-bottom-width: 2px;
+    margin-bottom: 0;
+    text-align: center;
+  }
+
+  // Tabs
+
+  .profile-content .tab-content {
+    background: #fff;
+  }
+  
+
+  // Avatar and controls
+  //
+
+  .profile-block {
+    margin-bottom: 18px;
+    text-align: center;
+  }
+
+  .profile-photo {
+    padding: 6px;
+    display: inline-block;
+    margin-bottom: 10px;
+    border-radius: 999999px;
+  }
+
+  .profile-photo img {
+    display: block;
+    max-width: 100%;
+    border-radius: 999999px;
+  }
+
+
+  // Panels
+  //
+
+  .left-col > .panel .panel-heading {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .left-col > .panel .panel-body {
+    padding: 10px;
+    padding-bottom: 0;
+  }
+
+  .left-col .list-group-item {
+    background: none !important;
+    border: none;
+    padding-bottom: 0;
+    margin-top: 7px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .profile-skills .label {
+    display: block;
+    float: left;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+
+  .profile-list-icon {
+    width: 24px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+
+  // Timeline
+
+  .tl-header,
+  .tl-icon,
+  .tl-entry:before {
+    box-shadow: 0 0 0 4px #fff !important;
+  }
+
+  // Followers widget
+  .widget-followers {
+    margin: -@panel-content-padding;
+
+    .follower {
+      padding: 13px @panel-content-padding;
+    }
+  }
+
+  // Horizontal line
+  .profile-content-hr {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+}
+
+
+@media (min-width: @screen-tablet) {
+  .page-profile {
+    .left-col {
+      float: left;
+      width: 220px;
+    }
+    .right-col {
+      overflow: hidden;
+      padding-left: 20px;
+    }
+    .profile-content {
+      margin-top: 0;
+    }
+    .profile-full-name {
+      padding-left: 240px;
+      padding-bottom: 50px;
+      text-align: left;
+    }
+
+    .profile-row {
+      margin-top: -36px;
+    }
+
+    .profile-block {
+      margin-top: -70px;
+    }
+  }
+  .profile-content-hr {
+    display: none;
+  }
+}

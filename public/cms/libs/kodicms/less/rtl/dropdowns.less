@@ -1,0 +1,35 @@
+//
+// RTL: Dropdowns
+// --------------------------------------------------
+
+.dropdown-menu {
+  right: 0;
+  left: auto;
+
+  &.pull-right {
+    right: auto;
+    left: 0;
+  }
+
+  > li > a > .label,
+  > li > a > .badge {
+    float: left;
+    margin-left: -3px;
+    margin-right: 3px;
+  }
+}
+
+.pull-right .dropdown-menu {
+  right: auto;
+  left: 0;
+}
+
+.dropdown-menu-left {
+  left: auto;
+  right: 0;
+}
+
+.dropdown-menu-right {
+  left: 0;
+  right: auto;
+}

@@ -1,0 +1,104 @@
+//
+// Themes / Silver / Main navbar
+// --------------------------------------------------
+
+
+// Navbar backgrounds
+//
+
+#main-navbar,
+#main-navbar .navbar-header {
+  #gradient > .vertical(@navbar-start-color, @navbar-end-color);
+}
+
+// Main navbar
+//
+
+#main-navbar {
+  // Header
+  //
+
+  .nav > li > a,
+  .navbar-header a {
+    color: @navbar-text-color;
+  }
+
+  .navbar-toggle,
+  #main-menu-toggle,
+  #main-menu-toggle .fa:before,
+  a {
+    text-shadow: @navbar-text-shadow;
+  }
+
+
+  // Navbar buttona
+  //
+
+  .navbar-toggle,
+  #main-menu-toggle {
+    color: @navbar-text-color;
+  }
+
+  #main-menu-toggle .fa:before {
+    color: @navbar-text-color;
+  }
+
+
+  // Navbar collapse
+  //
+
+  #main-navbar-collapse {
+    border-top-color: darken(@navbar-end-color, 6%);
+    background: @navbar-end-color;
+  }
+
+  // Navbar forms
+  //
+
+  form.navbar-form {
+    .box-shadow(none);
+
+    .form-control {
+      background: #fff;
+      border-color: #fff;
+      border-radius: 3px;
+    }
+  }
+}
+
+
+// Desktops
+//
+
+@media (min-width: @screen-tablet) {
+  #main-navbar {
+    
+    // Navbar collapse
+    //
+
+    #main-navbar-collapse {
+      background: none;
+    }
+
+
+    // Navbar Items
+    //
+
+    // Reset borders
+    li + li,
+    .nav + .nav,
+    .nav + .right {
+      border: none;
+    }
+
+    .nav > li > a {
+      border-left: 1px solid transparent;
+      border-right: 1px solid transparent;
+
+      &:hover {
+        background: rgba(0,0,0,.08);
+        border-color: darken(@navbar-end-color, 10%);
+      }
+    }
+  }
+}

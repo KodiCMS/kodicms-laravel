@@ -1,0 +1,120 @@
+//
+// Themes / Adminflare / Main navbar
+// --------------------------------------------------
+
+// ************************************************************************* //
+//**   Small screens (mobile first)                                        **//
+
+
+// Navbar backgrounds
+//
+
+#main-navbar,
+#main-navbar .navbar-header {
+  #gradient > .vertical(#52aded, #418ce4);
+}
+
+// Navbar
+//
+
+#main-navbar {
+  border-bottom: 1px solid #185aa7;
+
+  &,
+  .navbar-header {
+    background: #418ce4;
+    .box-shadow(rgba(255, 255, 255, 0.25) 0px 1px 0px inset);
+  }
+
+  .nav > li > a,
+  .navbar-header a {
+    color: @navbar-text-color;
+  }
+
+  // Navbar header
+  //
+
+  .navbar-brand {
+    color: #fff;
+  }
+
+  // Navbar buttons
+  //
+
+  .navbar-toggle,
+  #main-menu-toggle {
+    color: #fff;
+  }
+
+  #main-menu-toggle {
+    border: 0px solid;
+    border-color: #3470b6;
+    border-color: rgba(0,0,0,.2);
+
+    .fa:before {
+      color: #fff;
+    }
+  }
+
+
+  // Navbar collapse
+  //
+
+  .main-navbar-collapse {
+    border-top: 1px solid #185aa7;
+    background: #418ce4;
+    .box-shadow(rgba(255, 255, 255, 0.18) 0px 1px 0px inset);
+  }
+
+  // Navbar forms
+  //
+
+  form.navbar-form {
+    .box-shadow(none);
+
+    .form-control {
+      background: #fff;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: #fff;
+      border-radius: 999999px;
+      .box-shadow(0 -1px 0 rgba(0, 0, 0, 0.2));
+
+      &:focus {
+        background: #fff;
+        color: @text-color;
+      }
+
+      .placeholder(#2565af);
+    }
+  }
+
+}
+
+// ************************************************************************* //
+//**   Desktops                                                            **//
+
+@media (min-width: @screen-tablet) {
+  #main-navbar {
+
+
+    // Navbar collapse
+    //
+
+    .main-navbar-collapse {
+      background: none;
+      border-top: none;
+      .box-shadow(none);
+    }
+
+    li {
+      border-bottom: none;
+    }
+
+    // Navbar buttons
+    .nav-icon-btn > a > .label,
+    .nav-icon-btn > a > .badge {
+      .box-shadow(0 1px 3px rgba(0,0,0,.1));
+    }
+  }
+}

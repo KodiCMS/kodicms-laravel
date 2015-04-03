@@ -1,0 +1,116 @@
+//
+// Pages / Sign In Alt
+//
+// --------------------------------------------------
+
+.page-signin-alt {
+	padding-bottom: 40px;
+
+	.signin-header {
+		background: #fff;
+		padding: 16px 0 16px 16px;
+		position: relative;
+		.box-shadow(~"0 2px 2px rgba(0,0,0,0.05),0 1px 0 rgba(0,0,0,0.05)");
+
+		.logo {
+			color: @text-color;
+			font-size: 16px;
+			height: 24px;
+			line-height: 24px;
+			width: 24px;
+			opacity: 1;
+			.transition(all .3s);
+
+			&[href]:hover {
+				opacity: .6;
+			}
+		}
+
+		.btn {
+			position: absolute;
+			right: 16px;
+			top: 12px;
+		}
+
+		// Demo
+		.demo-logo {
+			display: inline-block;
+			height: 24px;
+			line-height: 24px;
+		}
+	}
+
+	.form-header {
+		font-size: 22px;
+		font-weight: 300;
+		text-align: center;
+		margin: 40px 0;
+	}
+
+	.panel {
+		margin: 50px 16px 0;
+	}
+
+	.signin-password {
+		position: relative;
+
+		input {
+			padding-right: 70px;
+		}
+
+		.forgot {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			color: #555;
+			background: #f1f1f1;
+			border-radius: 2px;
+			line-height: 25px;
+			padding: 0 7px;
+			font-size: 12px;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	.signin-with {
+		margin: 0 14px;
+		padding: 20px;
+		text-align: center;
+
+		.header {
+			font-size: 16px;
+			font-weight: 300;
+			text-align: center;
+			margin: 0 0 20px 0;
+		}
+
+		.btn {
+			padding-left: 0;
+			padding-right: 0;
+			width: 40px;
+			text-align: center;
+		}
+	}
+}
+
+@media (min-width: @screen-small) {
+	.page-signin-alt {
+		.signin-header {
+			padding-left: 0;
+			text-align: center;
+		}
+
+		.panel {
+			width: 360px;
+			margin: 100px auto 0;
+		}
+
+		.signin-with {
+			width: 360px;
+			margin: 0 auto;
+		}
+	}
+}

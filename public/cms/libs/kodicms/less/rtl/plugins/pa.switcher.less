@@ -1,0 +1,218 @@
+// --------------------------------------------------
+// RTL: Plugins / Switcher
+//
+
+
+.switcher-state-on {
+  margin-left: 0;
+  margin-right: -100%;
+}
+
+.switcher.checked .switcher-state-on {
+  margin-right: 0;
+}
+
+.switcher-toggler {
+  left: auto;
+  right: 0;
+}
+
+.switcher.checked .switcher-toggler {
+  left: auto;
+  right: 100%;
+}
+
+.switcher > input[type="checkbox"] {
+  left: auto;
+  right: -100000px;
+}
+
+/******************************************************************
+ ******************************************************************
+ ******************************************************************/
+
+// DEFAULT THEME
+// 
+
+.switcher-state-on {
+  padding-left: 20px;
+  padding-right: 0;
+}
+
+.switcher-state-off {
+  padding-left: 0;
+  padding-right: 20px;
+}
+
+.switcher-toggler {
+  margin-left: 0;
+  margin-right: 1px;
+}
+
+.switcher.checked .switcher-toggler {
+  margin-left: 0;
+  margin-right: -21px;
+}
+
+// SQUARE THEME
+// 
+
+.switcher-theme-square {
+  .switcher-toggler {
+    margin-left: 0;
+    margin-right: 2px;
+  }
+
+  &.switcher.checked .switcher-toggler {
+    margin-left: 0;
+    margin-right: -22px;
+  }
+}
+
+
+// MODERN THEME
+// 
+
+.switcher-theme-modern {
+  .switcher-toggler {
+    margin-left: 0;
+    margin-right: -3px;
+  }
+
+  .switcher-state-on {
+    padding-left: 17px;
+    padding-right: 0;
+  }
+
+  .switcher-state-off {
+    padding-left: 0;
+    padding-right: 17px;
+  }
+
+  &.switcher.checked .switcher-toggler {
+    margin-left: 0;
+    margin-right: -17px;
+  }
+}
+
+
+// Sizes
+//
+
+// Small size
+.switcher-sm {
+  .switcher-toggler {
+    margin-left: 0;
+    margin-right: 1px;
+  }
+
+  .switcher-state-on {
+    padding-left: 17px;
+    padding-right: 0;
+  }
+
+  .switcher-state-off {
+    padding-left: 0;
+    padding-right: 17px;
+  }
+
+  &.checked .switcher-toggler {
+    margin-left: 0;
+    margin-right: -18px;
+  }
+
+  // Square theme
+  &.switcher-theme-square {
+    .switcher-toggler {
+      margin-left: 0;
+      margin-right: 2px;
+    }
+
+    &.switcher.checked .switcher-toggler {
+      margin-left: 0;
+      margin-right: -19px;
+    }
+  }
+
+  // Modern theme
+  &.switcher.switcher-theme-modern {
+    .switcher-toggler {
+      margin-left: 0;
+      margin-right: -3px;
+    }
+
+    .switcher-state-on {
+      padding-left: 15px;
+      padding-right: 0;
+    }
+
+    .switcher-state-off {
+      padding-left: 0;
+      padding-right: 15px;
+    }
+
+    &.switcher.checked .switcher-toggler {
+      margin-left: 0;
+      margin-right: -15px;
+    }
+  }
+}
+
+// Large size
+.switcher-lg {
+  .switcher-toggler {
+    margin-left: 0;
+    margin-right: 1px;
+  }
+
+  .switcher-state-on {
+    padding-left: 26px;
+    padding-right: 0;
+  }
+
+  .switcher-state-off {
+    padding-left: 0;
+    padding-right: 26px;
+  }
+
+  &.checked .switcher-toggler {
+    margin-left: 0;
+    margin-right: -27px;
+  }
+
+  // Square theme
+  &.switcher-theme-square {
+    .switcher-toggler {
+      margin-left: 0;
+      margin-right: 2px;
+    }
+
+    &.switcher.checked .switcher-toggler {
+      margin-left: 0;
+      margin-right: -28px;
+    }
+  }
+
+  // Modern theme
+  &.switcher.switcher-theme-modern {
+    .switcher-toggler {
+      margin-left: 0;
+      margin-right: -3px;
+    }
+
+    .switcher-state-on {
+      padding-left: 26px;
+      padding-right: 0;
+    }
+
+    .switcher-state-off {
+      padding-left: 0;
+      padding-right: 26px;
+    }
+
+    &.switcher.checked .switcher-toggler {
+      margin-left: 0;
+      margin-right: -24px;
+    }
+  }
+}

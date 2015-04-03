@@ -1,0 +1,541 @@
+//
+// Pages / Mail
+//
+// --------------------------------------------------
+
+@mail-padding: 16px;
+@mail-nav-width: 250px;
+
+
+// ************************************************************************* //
+//**   Small screens (mobile first)                                        **//
+
+.page-mail {
+	background: #fff !important;
+
+	#content-wrapper {
+		padding: 0;
+	}
+
+
+	// Mail navigation
+	//
+	.mail-nav {
+		border: 0px solid;
+		border-bottom-width: 1px;
+
+		.navigation {
+			overflow: hidden;
+			position: relative;
+			padding-top: @main-navbar-height;
+			height: @main-navbar-height;
+
+			&.open {
+				height: auto;
+
+				li.active:after {
+					-ms-transform: rotate(90deg); /* IE 9 */
+					-webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+					transform: rotate(90deg);
+				}
+			}
+		}
+
+		.sections {
+			margin: 10px 0;
+			padding: 0;
+
+			li {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				.transition(all .2s);
+
+				&.active {
+					position: absolute;
+					top: 0;
+					width: 100%;
+					border-bottom: 1px solid;
+
+					a {
+						line-height: @main-navbar-height;
+						font-size: 15px;
+					}
+
+					&:after {
+						content: "\f105";
+						font-family: FontAwesome;
+						position: absolute;
+						display: block;
+						right: @mail-padding;
+						top: 8px;
+						font-size: 20px;
+						.transition(all .2s);
+					}
+				}
+
+				&.active .label,
+				&.active .badge {
+					margin-top: 13px;
+					margin-right: @mail-padding + 20;
+				}
+			}
+
+			.label,
+			.badge {
+				margin-top: 8px;
+				margin-right: @mail-padding;
+			}
+
+			a {
+				display: block;
+				padding: 0 0 0 @mail-padding;
+				line-height: 36px;
+				font-size: 14px;
+			}
+		}
+	}
+
+	.compose-btn {
+		/*margin-top: @main-navbar-height;*/
+		border-bottom: 1px solid;
+		padding: @mail-padding;
+	}
+
+	.mail-select-folder {
+		display: none;
+	}
+
+	.mail-select-folder.active {
+		display: block;
+	}
+
+	.m-nav-icon {
+		width: 16px;
+		margin-right: 10px;
+		text-align: center;
+		display: inline-block;
+	}
+
+	.mail-nav-header {
+		margin-top: 25px;
+		font-size: 11px;
+		text-transform: uppercase;
+		padding-left: @mail-padding;
+		font-weight: 600;
+	}
+
+	.mail-nav-lbl {
+		display: inline-block;
+		width: 10px;
+		height: 10px;
+		border-radius: 3px;
+		margin-right: 10px;
+	}
+
+	.mail-nav .add-more a {
+		font-size: 12px;
+	}
+
+	.mail-nav li.divider {
+		padding: 0;
+		height: 1px;
+		margin: 9px 0 3px 0;
+	}
+
+
+	// Controls
+	//
+
+	.mail-controls {
+		border-bottom: 1px solid #efefef;
+		padding: 12px @mail-padding;
+	}
+
+	.mail-controls .btn-group + .btn-group {
+		margin-left: 12px;
+	}
+
+	.mail-controls .btn {
+		font-size: 14px;
+		line-height: 14px;
+	}
+
+	.mail-controls .btn .fa-caret-down {
+		position: relative;
+		top: -1px;
+	}
+
+	.mail-controls .pages {
+		line-height: 30px;
+		margin-right: 13px;
+		color: #bbb;
+	}
+
+	@media(min-width: @screen-md) {
+		.mail-controls .wide-btns .btn {
+			width: 60px;
+			text-align: center;
+			display: inline-block;
+		}
+	}
+
+
+	// Main container
+	//
+
+	.mail-container-header {
+		display: none;
+		border-bottom: 1px solid #efefef;
+		line-height: 35px;
+		padding: 14px @mail-padding;
+		font-size: 20px;
+		font-weight: 300;
+	}
+
+	.mail-container-header.show {
+		display: block;
+	}
+}
+
+
+// ************************************************************************* //
+//**   Desktops                                                            **//
+
+@media(min-width: @screen-sm) {
+	.page-mail {
+		#content-wrapper {
+			position: static;
+		}
+
+		// Mail navigation
+		//
+
+		.mail-nav {
+			width: @mail-nav-width;
+			border-bottom: 0;
+			position: absolute;
+			height: auto;
+			min-height: 100%;
+			border-right-width: 1px;
+
+			&.fixed {
+				position: fixed;
+
+				&:before {
+					display: none !important;
+				}
+			}
+
+			// Add fixed background
+			&:before {
+				content: "";
+				display: block;
+				top: 0;
+				bottom: 0;
+				position: fixed;
+				width: @mail-nav-width;
+				border-right: 1px solid;
+				z-index: -1;
+			}
+
+			.navigation {
+				height: auto !important;
+				padding-top: 0;
+
+				.label {
+					font-size: 10px;
+					line-height: 16px;
+					padding: 0 4px;
+					margin-top: 11px !important;
+					margin-right: @mail-padding !important;
+				}
+
+				li:after {
+					display: none !important;
+				}
+			}
+
+			.sections {
+				li.active {
+					position: static;
+					top: auto;
+					border: none;
+				}
+
+				a,
+				li.active a {
+					font-size: 13px;
+					line-height: 36px;
+				}
+			}
+		}
+
+		.mail-select-folder {
+			display: none !important;
+		}
+
+
+		// Mail container
+		//
+
+		.mail-container {
+			margin-left: @mail-nav-width;
+			min-height: 400px;
+		}
+
+		.mail-container-header {
+			display: block;
+			/*margin-top: @main-navbar-height;*/
+		}
+	}
+}
+
+
+// Mail list
+//
+
+// ************************************************************************* //
+//**   Small screens (mobile first)                                        **//
+
+.page-mail {
+	.mail-list {
+		margin: @mail-padding;
+		padding: 0;
+	}
+
+	.mail-item {
+		margin: 0;
+		list-style: none;
+		position: relative;
+		padding: 12px 14px 12px 46px;
+	}
+
+	.mail-item:nth-child(2n-1) {
+		background: #f6f6f6;
+	}
+
+	.m-chck,
+	.m-star {
+		position: absolute;
+	}
+
+	.m-chck {
+		left: 15px;
+		/*    top: 14px;*/
+	}
+
+	.m-star {
+		left: 15px;
+		top: 35px;
+
+		a {
+			font-size: 15px;
+			color: #bbb;
+
+			&:before {
+				content: "\f006";
+				font-family: FontAwesome;
+			}
+
+			&:hover {
+				color: #ffab00;
+			}
+		}
+	}
+
+	.m-from,
+	.m-subject {
+		margin-right: 80px;
+	}
+
+	// From
+	.m-from a {
+		color: #444;
+	}
+
+	// Subject
+	.m-subject {
+		margin-top: 5px;
+
+		a {
+			color: #777;
+		} 
+	}
+
+	// Date
+	.m-date {
+		position: absolute;
+		right: 15px;
+		top: 12px;
+		width: 80px;
+		text-align: right;
+		color: #aaa;
+	}
+
+	// Mail states
+	//
+
+	// Starred mail
+	.mail-item.starred .m-star a:before {
+		content: "\f005";
+		color: #ffab00;
+	}
+
+	// Unread mail
+	.unread .m-from,
+	.unread .m-subject {
+		font-weight: 700;
+	}
+}
+
+
+// ************************************************************************* //
+//**   Desktops                                                            **//
+
+@media(min-width: @screen-md) {
+	.page-mail {
+		.mail-item {
+			padding-left: 220px;
+			padding-right: 100px;
+		}
+
+		// Star
+		.m-star {
+			left: 40px;
+			top:11px;
+		}
+
+		// From
+		.m-from {
+			position: absolute;
+			overflow: hidden;
+			width: 140px;
+			left: 70px;
+		}
+
+		// Subject
+		.m-subject {
+			margin-top: 0;
+			overflow: hidden;
+		}
+
+		// Date
+		.m-date {
+			width: 150px;
+		}
+	}
+}
+
+
+// Mail Details
+//
+
+// ************************************************************************* //
+//**   Small screens (mobile first)                                        **//
+
+.page-mail {
+	.m-details-star {
+		color: #ffab00;
+		margin-right: 12px;
+		position: relative;
+		display: block;
+		float: left;
+		top: 1px;
+
+		&,
+		& > * {
+			font-size: 15px;
+		}
+
+		& > * {
+			line-height: 20px;
+		}
+	}
+
+	.label {
+		position: relative;
+		vertical-align: middle;
+		top: -1px;
+	}
+
+	.mail-info {
+		padding: 14px @mail-padding;
+		border-bottom: 1px solid #efefef;
+		.clearfix();
+
+		.avatar {
+			display: block;
+			width: 40px;
+			height: 40px;
+			border-radius: 999999px;
+			float: left;
+		}
+
+		.from {
+			display: block;
+			float: left;
+			margin-left: 10px;
+		}
+
+		.name,
+		.name a {
+			color: @text-color;
+			font-size: 14px;
+		}
+
+		.email,
+		.email a {
+			color: #aaa;
+		}
+
+		.date {
+			display: block;
+			float: right;
+			font-size: 14px;
+			color: #aaa;
+			margin-top: 9px;
+		}
+	}
+
+	.mail-message-body {
+		font-size: 14px;
+		line-height: 24px;
+		padding: 20px @mail-padding;
+	}
+
+	.mail-attachments {
+		padding: 20px @mail-padding;
+		margin: 20px 0;
+		border-top: 1px solid #efefef;
+		border-bottom: 1px solid #efefef;
+
+		li {
+			list-style: none;
+			margin: 0;
+			padding: 10px;
+		}
+
+		li:nth-child(2n-1) {
+			background: #f6f6f6;
+		}
+	}
+
+	.message-details-reply {
+		margin: 0 @mail-padding 50px @mail-padding;
+	}
+}
+
+
+// New Mail
+//
+
+// ************************************************************************* //
+//**   Small screens (mobile first)                                        **//
+
+.page-mail {
+	.new-mail-form {
+		margin: 0 0 50px 0;
+		padding: 20px @mail-padding;
+	}
+}

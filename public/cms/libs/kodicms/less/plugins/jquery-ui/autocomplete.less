@@ -1,0 +1,32 @@
+//
+// Plugins / jQuery UI / Autocomplete
+// --------------------------------------------------
+
+.ui-autocomplete {
+  position: absolute;
+  cursor: default;
+  border: 2px solid #ccc;
+  padding: 5px 0;
+  border-radius: @border-radius-base;
+
+  > li {
+    display: block;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  // Links within the dropdown menu
+  > li > a {
+    color: @text-color;
+    cursor: pointer !important;
+    display: block;
+    margin: 0 -2px;
+    padding: 5px 18px;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}

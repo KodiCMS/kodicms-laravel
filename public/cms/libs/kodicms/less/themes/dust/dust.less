@@ -1,0 +1,115 @@
+//
+// Themes / Dust
+// --------------------------------------------------
+
+.theme-dust {
+  @primary-color: #7a6f6f;
+
+  // Panel border color
+  @theme-border-color: #d6d6d6;
+
+  // Main navbar background color
+  @navbar-color: #f65d35;
+
+  // Main menu background color
+  @menu-color: #433d3c;
+
+  // Body background color
+  @body-color: #edece7;
+
+  // Page header background color
+  @page-header-color: lighten(@body-color, 4%);
+
+  // Page header border color
+  @page-header-border-color: @theme-border-color;
+
+
+  // Imports
+  //
+
+  @import 'base.less';
+  @import 'main-navbar.less';
+  @import 'main-menu.less';
+  /*@import 'pages.less';*/
+
+
+  // Styles
+  // see {PixelAdmin}/styles/pixel-admin-less/mixins.less
+  //
+
+  // Navbar icon buttons
+  .nav-icon-btn-theme(@primary-color);
+
+  // Buttons
+  .buttons-theme(@primary-color);
+
+  // Progress bars
+  .progress-bars-theme(@primary-color);
+
+  // Labels
+  .labels-theme(@primary-color);
+
+  // Badges
+  .badges-theme(@primary-color);
+
+  // Tables
+  .tables-theme(@primary-color);
+
+  // Tabs
+  .tabs-theme(@primary-color);
+
+  // Pills
+  .pills-theme(@primary-color);
+
+  // Dropdowns
+  .dropdowns-theme(@primary-color, #fff);
+
+  // Button groups
+  .button-groups-theme(@primary-color);
+
+  // Pagination
+  .pagination-theme(@primary-color);
+
+  // List groups
+  .list-groups-theme(@primary-color);
+
+  // Forms theme
+  .forms-theme(@primary-color);
+
+  // Text color
+  .text-primary {
+    .pixel-text-color(@primary-color);
+  }
+
+  // Background color
+  .bg-primary {
+    .pixel-bg-color(@primary-color);
+  }  
+
+
+  // Plugins
+  //
+
+  // jQuery UI
+  .ui-slider-theme(@primary-color);
+  .ui-autocomplete-theme(@primary-color, #fff);
+  .ui-menu-theme(@primary-color);
+  .ui-progressbar-theme(@primary-color);
+  .ui-tabs-theme(@primary-color);
+  .ui-datepicker-theme(@primary-color);
+
+  // Plugins
+  .select2-theme(@primary-color);
+  .switcher-theme(@primary-color);
+  .pixel-file-input-theme(@primary-color);
+  .bootstrap-datepicker-theme(@primary-color);
+  .bootstrap-timepicker-theme(@primary-color);
+  .datepaginator-theme(@primary-color);
+  .editable-typeahead-theme(@primary-color);
+  .data-table-theme(@primary-color);
+  .dropzone-theme(@primary-color);
+  .md-editor-theme(@primary-color);
+
+  // Widgets
+  .widget-rating-theme(@primary-color);
+}

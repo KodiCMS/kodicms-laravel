@@ -1,0 +1,155 @@
+//
+// Plugins / Bootstrap-Datepaginator
+//
+// Version: 1.1.0
+//
+// --------------------------------------------------
+
+// Timesheet pagination
+//
+
+.datepaginator {
+	font-size: 12px;
+}
+
+// Override bootstrap padding
+//
+
+.pagination {
+	margin: 0px;
+	padding: 0px;
+	white-space: nowrap;
+}
+
+.pagination a.dp-item,
+.pagination a.dp-nav {
+	margin: 0;
+	text-align: center;
+
+	&:hover {
+		z-index: @zindex-datepaginator + 3 !important;
+	}
+}
+
+.pagination a.dp-item {
+	padding: 10px 0;
+	border-radius: 0;
+	margin: 0 0 0 -1px;
+}
+
+.pagination a.dp-nav {
+	margin: 0px;
+	font-family: FontAwesome;
+	padding: 17px 0;
+	line-height: 20px;
+
+	i {
+		display: none;
+	}
+}
+
+.pagination a.dp-nav.dp-nav-right { 
+	margin: 0 0 0 -1px;
+}
+
+.pagination a.dp-nav:before {
+	display: none !important;
+}
+
+.pagination a.dp-nav.dp-nav-left:after { 
+	content: "\f053";
+}
+
+.pagination a.dp-nav.dp-nav-right:after { 
+	content: "\f054";
+}
+
+.pagination a.dp-off,
+.pagination a.dp-off:hover {
+	background-color: #F9F9F9; 
+	z-index: @zindex-datepaginator;
+}
+
+.pagination a.dp-today {
+	color: #ffffff !important;
+	z-index: @zindex-datepaginator + 1;
+}
+
+.pagination a.dp-selected {
+	color: #ffffff !important;
+	z-index: @zindex-datepaginator + 2;
+}
+
+#dp-calendar {
+	font-family: FontAwesome;
+	position: absolute;
+	line-height: 18px;
+	top: 4px;
+	right: 0;
+	font-style: normal !important;
+	display: block;
+	font-size: 14px;
+	padding: 0 8px 0 18px;
+
+	&:after {
+		content: "\f073" !important;
+	}
+
+	&:before {
+		display: none !important;
+	}
+}
+
+
+// Sizes
+//
+
+// Small
+
+.datepaginator-sm {
+	font-size: 10px;
+}
+
+.pagination a.dp-item.dp-item-sm {
+	padding: 10px 0;
+}
+
+.pagination a.dp-nav.dp-nav-sm {
+	padding: 14px 0;
+}
+
+
+// Large
+
+.datepaginator-lg {
+	font-size: 14px;
+}
+
+.pagination a.dp-item.dp-item-lg {
+	padding: 15px 0;
+}
+
+.pagination a.dp-nav.dp-nav-lg {
+	padding: 25px 0;
+	font-size: 13px;
+}
+
+.modal {
+	.pagination a.dp-item:hover,
+	.pagination a.dp-nav:hover {
+		z-index: @zindex-datepaginator-modal + 3 !important;
+	}
+
+	.pagination a.dp-off,
+	.pagination a.dp-off:hover {
+		z-index: @zindex-datepaginator-modal;
+	}
+
+	.pagination a.dp-today {
+		z-index: @zindex-datepaginator-modal + 1;
+	}
+
+	.pagination a.dp-selected {
+		z-index: @zindex-datepaginator-modal + 2;
+	}
+}

@@ -1,0 +1,102 @@
+//
+// Labels
+// --------------------------------------------------
+
+
+// Default labels
+//
+
+.label {
+	color: #fff;
+	font-size: 11px;
+	line-height: @label-tag-height;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, .2);
+	padding: 0 6px;
+	display: inline-block;
+	font-weight: 600;
+
+	&.pull-right {
+		margin: 0;
+	}
+
+	a {
+		color: #fff;
+		text-decoration: underline;
+	}
+}
+
+h1 .label,
+h2 .label,
+h3 .label,
+h4 .label,
+h5 .label,
+h6 .label {
+	font-size: 75%;
+	padding: .2em .5em;
+}
+
+
+// Tags
+//
+
+.label.label-tag {
+	display: inline-block;
+	font-size: 11px;
+	line-height: @label-tag-height - 2px;
+	margin-left: (@label-tag-arrow-width);
+	padding: 0 @label-tag-horizontal-padding;
+	position: relative;
+	.border-left-radius(0);
+
+	&:before {
+		content: "";
+		display: block;
+		position: absolute;
+		width: 0px;
+		height: 0px;
+		border-style: solid;
+		border-width: @label-tag-height/2 @label-tag-arrow-width @label-tag-height/2 0;
+		border-color: transparent #b0b0b0 transparent transparent;
+		-webkit-transform:rotate(360deg);
+		margin-left: -(@label-tag-horizontal-padding + @label-tag-arrow-width);
+		top: -1px;
+	}
+
+	&:after {
+		content: "";
+		display: block;
+		background: #fff;
+		position: absolute;
+		width: @label-tag-circle-size;
+		height: @label-tag-circle-size;
+		border-radius: 99px;
+		margin: (-(@label-tag-height/2 + @label-tag-circle-size/2) + 1px) 0 0 -(@label-tag-horizontal-padding + 5px);
+	}
+}
+
+.ie8 .label.label-tag:after {
+	display: none !important;
+}
+
+
+// Colors
+//
+.label {
+	.pixel-label(#b0b0b0);
+}
+
+.label.label-success {
+	.pixel-label(@success-color);
+}
+
+.label.label-warning {
+	.pixel-label(@warning-color);
+}
+
+.label.label-danger {
+	.pixel-label(@danger-color);
+}
+
+.label.label-info {
+	.pixel-label(@info-color);
+}

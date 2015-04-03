@@ -1,0 +1,81 @@
+//
+// Widgets / Alt Messages List
+// --------------------------------------------------
+
+.widget-messages-alt {
+  .message {
+    position: relative;
+    padding: 10px @widget-messages-alt-hpadding;
+  }
+
+  .message + .message {
+    border-top: 1px solid @table-border-color;
+  }
+
+  .messages-list {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .message-avatar {
+    display: block;
+    width: @widget-messages-alt-img-width;
+    height: @widget-messages-alt-img-width;
+    position: absolute;
+    border-radius: 999999px;
+    top: 50%;
+    margin-top: -16px;
+    left: @widget-messages-alt-hpadding;
+  }
+
+  .message-subject,
+  .message-description {
+    &, a {
+      line-height: 17px !important;
+    }
+  }
+
+  .message-subject {
+    display: block;
+    padding-left: @widget-messages-alt-img-width + 10px;
+    margin-bottom: 2px;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .message-description {
+    display: block;
+    padding-left: @widget-messages-alt-img-width + 10px;
+    font-size: 11px;
+    color: #aaa;
+    height: auto !important;
+
+    a {
+      color: @text-color;
+
+      &:hover {
+        color: #888;
+      }
+    }
+  }
+
+  .messages-link {
+    text-align: center;
+    padding: 8px 0 !important;
+    border-top: 1px solid @table-border-color;
+    display: block;
+    text-decoration: none !important;
+    font-size: 10px;
+    font-weight: 800;
+    color: #999;
+    line-height: 18px !important;
+    height: auto !important;
+
+    &:hover {
+      background: #f4f4f4;
+      color: @text-color;
+    }
+  }
+}

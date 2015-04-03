@@ -1,0 +1,25 @@
+//
+// RTL: Pages / Sign Up
+//
+// --------------------------------------------------
+
+
+&.page-signup {
+
+  .signup-form {
+    .form-group.w-icon {
+      .signup-form-icon {
+        border-left: 1px solid @input-border;
+        border-right: none;
+        left: auto;
+        right: 0;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        padding-left: @padding-large-horizontal;
+        padding-right: @signin-form-group-w-icon-width + @padding-large-horizontal !important;
+      }
+    }
+  }
+}

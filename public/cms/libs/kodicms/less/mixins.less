@@ -1,0 +1,1184 @@
+//
+// Mixins
+// --------------------------------------------------
+
+.transform (@deg) {
+  -moz-transform: rotate(@deg);
+  -o-transform: rotate(@deg);
+  -webkit-transform: rotate(@deg);
+  -ms-transform: rotate(@deg);
+  transform: rotate(@deg);
+}
+
+
+// Disable user selection
+//
+.user-select-none() {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+
+// Gradient
+//
+.pixel-gradient(@fallback: #888; @start: #000; @end: #fff; @start-percent: 0%; @end-percent: 100%) {
+  background: @fallback;
+  background-image: -webkit-linear-gradient(top, @start @start-percent, @end @end-percent);  // Safari 5.1-6, Chrome 10+
+  background-image: linear-gradient(to bottom, @start @start-percent, @end @end-percent); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
+  background-repeat: repeat-x;
+}
+
+.pixel-gradient-forced(@fallback: #888; @start: #000; @end: #fff; @start-percent: 0%; @end-percent: 100%) {
+  background: @fallback !important;
+  background-image: ~"-webkit-linear-gradient(top, @{start} @{start-percent}, @{end} @{end-percent})" !important;  // Safari 5.1-6, Chrome 10+
+  background-image: ~"linear-gradient(to bottom, @{start} @{start-percent}, @{end} @{end-percent})" !important; // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
+  background-repeat: repeat-x;
+}
+
+
+// IE background: none fix
+//
+.ie-no-gradient() {
+  filter: ~"progid:DXImageTransform.Microsoft.gradient(enabled=false)";
+}
+
+
+// IE background: none fix
+//
+.ie-background-none() {
+  background: ~"url('@{images-path}/blank.png')\9";
+}
+
+
+// --------------------------------------------------
+// User Interface
+// --------------------------------------------------
+
+// Navbar icon button
+//
+.nav-icon-btn-state(@color) {
+  .label {
+    background: @color;
+  }
+}
+
+// Badge mixin
+//
+.pixel-badge(@color) {
+  background: @color;
+  border: 1px solid @color;
+
+  // Add hover effects, but only for links
+  &[href] {
+    &:hover,
+    &:focus {
+      background-color: darken(@color, 10%);
+      border-color: darken(@color, 10%);
+    }
+  }
+}
+
+// Label mixin
+//
+.pixel-label(@color) {
+  background: @color;
+
+  // Add hover effects, but only for links
+  &[href] {
+    &:hover,
+    &:focus {
+      background-color: darken(@color, 10%);
+    }
+  }
+
+  &.label-tag {
+    border: 1px solid @color;
+
+    &:before{
+      border-color: transparent @color transparent transparent;
+    }
+
+    &[href] {
+      &:hover,
+      &:focus {
+        border-color: darken(@color, 10%);
+      }
+
+      &:hover:before,
+      &:focus:before {
+        border-color: transparent darken(@color, 10%) transparent transparent;
+      }
+    }
+
+    // Right-to-left direction
+    //
+    
+    .right-to-left &:before{
+      border-color: transparent transparent transparent @color;
+    }
+
+    .right-to-left &[href]:hover:before,
+    .right-to-left &[href]:focus:before {
+      border-color: transparent transparent transparent darken(@color, 10%);
+    }
+
+    .ie8 .right-to-left &:before,
+    .ie9 .right-to-left &:before{
+      border-color: transparent @color transparent transparent;
+    }
+
+    .ie8 .right-to-left &[href]:hover:before,
+    .ie8 .right-to-left &[href]:focus:before,
+    .ie9 .right-to-left &[href]:hover:before,
+    .ie9 .right-to-left &[href]:focus:before {
+      border-color: transparent darken(@color, 10%) transparent transparent;
+    }
+  }
+}
+
+// Button mixin
+//
+.pixel-button(@color; @gradient: 6%; @hover: 3%; @border: 0%; @font-color: #fff; @gradient-offset: 2%) {
+  color: @font-color;
+  
+  &,
+  &:focus {
+    border-color: darken(@color, 5% + @border);
+    border-bottom-color: darken(@color, 11% + @border);
+    .pixel-gradient(
+      @fallback: @color,
+      @start:    lighten(@color, floor(@gradient/2.0%) - @gradient-offset),
+      @end:      darken(@color, floor(@gradient/2.0%) + @gradient-offset)
+    );
+  }
+
+  &:hover {
+    color: @font-color;
+    border-color: darken(@color, 8% + @border);
+    border-bottom-color: darken(@color, 18% + @border);
+    .pixel-gradient-forced(
+      @fallback: darken(@color, @hover + @gradient-offset),
+      @start:    darken(lighten(@color, floor(@gradient/2.0%) - @gradient-offset), @hover),
+      @end:      darken(darken(@color, floor(@gradient/2.0%) + @gradient-offset), @hover)
+    );
+  }
+
+  &:active,
+  &.active,
+  .open &.dropdown-toggle {
+    background: none;
+    background: darken(@color, @gradient/2.0% + 1%) !important;
+    border-color: darken(@color, 14% + @border);
+    border-bottom-color: darken(@color, 14% + @border) !important;
+    color: @font-color;
+    .box-shadow(0 0 12px rgba(0, 0, 0, .1) inset);
+  }
+
+  &.btn-flat {
+    background: darken(@color, 3%);
+
+    &:hover,
+    &:active,
+    &.active,
+    .open &.dropdown-toggle {
+      background: darken(@color, 3%) !important;
+      color: @font-color;
+    }
+  }
+
+  &.btn-outline,
+  &.btn-outline.btn-flat {
+    &:hover {
+      color: @font-color;
+      border-color: darken(@color, 8% + @border);
+      border-bottom-color: darken(@color, 18% + @border);
+    }
+
+    &:active {
+      border-color: darken(@color, 14% + @border);
+    }
+  }
+
+  // Button groups & Input groups
+  //
+  .btn-group &,
+  .btn-group &:focus,
+  .input-group-btn &,
+  .input-group-btn &:focus {
+    border-left-color: darken(@color, 8% + @border);
+    border-right-color: darken(@color, 8% + @border);
+  }
+  .btn-group &:hover,
+  .btn-group.open &.dropdown-toggle,
+  .input-group-btn &:hover,
+  .input-group-btn.open &.dropdown-toggle {
+    border-color: darken(@color, 8% + @border);
+    border-bottom-color: darken(@color, 18% + @border);
+  }
+  .btn-group &:active,
+  .btn-group &.active,
+  .input-group-btn &:active,
+  .input-group-btn &.active {
+    border-left-color: darken(@color, 14% + @border);
+    border-right-color: darken(@color, 14% + @border);
+  }
+}
+
+// Progress bar mixin
+//
+.pixel-progress-bar(@color) {
+  background: @color;
+  border-color: darken(@color, 6%);
+}
+
+// Striped progress bar mixin
+//
+.pixel-progress-striped(@color) {
+  background-color: darken(@color,0%);
+  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, rgba(255,255,255,10%)), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, rgba(255,255,255,10%)), color-stop(.75, rgba(255,255,255,10%)), color-stop(.75, transparent), to(transparent));
+  background-image: -webkit-linear-gradient(45deg, rgba(255,255,255,10%) 25%, transparent 25%, transparent 50%, rgba(255,255,255,10%) 50%, rgba(255,255,255,10%) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(45deg, rgba(255,255,255,10%) 25%, transparent 25%, transparent 50%, rgba(255,255,255,10%) 50%, rgba(255,255,255,10%) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(45deg, rgba(255,255,255,10%) 25%, transparent 25%, transparent 50%, rgba(255,255,255,10%) 50%, rgba(255,255,255,10%) 75%, transparent 75%, transparent);
+  background-size: 10px 10px;
+}
+
+
+// Alert mixin
+//
+.pixel-alert(@color, @font-color, @border-color) {
+  background: @color;
+  border-color: @border-color;
+  color: @font-color;
+  background-size: 20px 20px;
+}
+
+// Dark alert mixin
+//
+.pixel-alert-dark(@color, @stripes-opacity: .06) {
+  background: none;
+  border-color: darken(@color, 10%);
+  background-color: @color;
+  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, rgba(255,255,255,@stripes-opacity)), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, rgba(255,255,255,@stripes-opacity)), color-stop(.75, rgba(255,255,255,@stripes-opacity)), color-stop(.75, transparent), to(transparent));
+  background-image: -webkit-linear-gradient(45deg, rgba(255,255,255,@stripes-opacity) 25%, transparent 25%, transparent 50%, rgba(255,255,255,@stripes-opacity) 50%, rgba(255,255,255,@stripes-opacity) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(45deg, rgba(255,255,255,@stripes-opacity) 25%, transparent 25%, transparent 50%, rgba(255,255,255,@stripes-opacity) 50%, rgba(255,255,255,@stripes-opacity) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(45deg, rgba(255,255,255,@stripes-opacity) 25%, transparent 25%, transparent 50%, rgba(255,255,255,@stripes-opacity) 50%, rgba(255,255,255,@stripes-opacity) 75%, transparent 75%, transparent);
+  background-size: 20px 20px;
+}
+
+// Tabs color mixin
+//
+.pixel-tabs(@color) {
+  // Tabs
+  > li.active > a {
+    &,
+    &:hover,
+    &:focus {
+      background: @color;
+      border-bottom: 2px solid darken(@color, 5%);
+    }
+  }
+  .nav-tabs.nav-justified > .active > a {
+    border-bottom-color: darken(@color, 5%);
+  }
+}
+
+// Pills color mixin
+//
+.pixel-pills(@color) {
+  // Pills
+  > li.active > a {
+    &,
+    &:hover,
+    &:focus {
+      background: @color;
+    }
+  }
+}
+
+// Dropdowns color mixin
+//
+.pixel-dropdowns(@color, @hover-text-color: @text-color) {
+  > li > a:hover,
+  > li.active > a {
+    background: @color;
+  }
+
+  > li > a:hover {
+    color: @hover-text-color;
+  }
+}
+
+// Table color mixin
+//
+.table-color(@color, @text: #fff) {
+  table {
+    border-top-color: darken(desaturate(@color, 15%), 12%) !important;
+  }
+
+  thead,
+  thead tr,
+  thead th,
+  .table-header {
+    border-color: darken(desaturate(@color, 15%), 12%) !important;
+    color: @text;
+  }
+
+  thead tr,
+  thead th {
+    background: darken(desaturate(@color, 8%), 6%);
+  }
+
+  .table-header {
+    background: @color;
+  }
+}
+
+// Form state mixin
+//
+.pixel-form-state-base(@color, @font-color, @border-color, @input-border-color: darken(@border-color, 17%)) {
+  .control-label {
+    color: @text-color;
+  }
+
+  .help-block {
+    background: @color;
+    border-color: @border-color;
+    color: @font-color;
+    background-size: 20px 20px;
+
+    &:before {
+      border-bottom-color: darken(@border-color, 10%);
+    }
+    
+    &:after{
+      border-bottom-color: lighten(@color, 1%);
+    }
+  }
+
+  .form-control {
+    border-color: @input-border-color;
+    .box-shadow(none);
+    &:focus,
+    &.focus {
+      border-color: darken(@input-border-color, 10%) !important;
+      .box-shadow(none);
+    }
+  }
+  .input-group-addon {
+    color: @font-color;
+    border-color: @border-color;
+    background-color: @color;
+  }
+
+  .form-control-feedback {
+    color: darken(@input-border-color, 10%);
+  }
+}
+
+// Light form state mixin
+//
+.pixel-form-state-light(@color, @font-color, @border-color) {
+  .pixel-form-state-base(@color, @font-color, @border-color);
+}
+
+.pixel-form-state-simple(@color) {
+  .help-block {
+    color: @color !important;
+  }
+}
+
+
+// Dark form state mixin
+//
+.pixel-form-state-dark(@color, @input-border-color, @stripes-opacity: .06) {
+  .pixel-form-state-base(@color, @font-color: #fff, @border-color: darken(@color, 10%), @input-border-color: @color);
+  .help-block {
+    background: @color;
+    background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, rgba(255,255,255,@stripes-opacity)), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, rgba(255,255,255,@stripes-opacity)), color-stop(.75, rgba(255,255,255,@stripes-opacity)), color-stop(.75, transparent), to(transparent));
+    background-image: -webkit-linear-gradient(45deg, rgba(255,255,255,@stripes-opacity) 25%, transparent 25%, transparent 50%, rgba(255,255,255,@stripes-opacity) 50%, rgba(255,255,255,@stripes-opacity) 75%, transparent 75%, transparent);
+    background-image: -moz-linear-gradient(45deg, rgba(255,255,255,@stripes-opacity) 25%, transparent 25%, transparent 50%, rgba(255,255,255,@stripes-opacity) 50%, rgba(255,255,255,@stripes-opacity) 75%, transparent 75%, transparent);
+    background-image: linear-gradient(45deg, rgba(255,255,255,@stripes-opacity) 25%, transparent 25%, transparent 50%, rgba(255,255,255,@stripes-opacity) 50%, rgba(255,255,255,@stripes-opacity) 75%, transparent 75%, transparent);
+    background-size: 20px 20px;
+  }
+}
+
+
+// Default panel mixin
+//
+.pixel-panel(@color, @font-color, @border-color) {
+  border-color: @border-color !important;
+  .panel-heading {
+    background: @color;
+    border-color: @border-color;
+    color: @font-color;
+    background-size: 20px 20px;
+
+    .panel-title {
+      color: @font-color;
+    }
+
+    .panel-heading-text {
+      a {
+        color: @font-color;
+        text-decoration: underline;
+
+        &:hover {
+          color: lighten(@font-color, 10%);
+        }
+      }
+    }
+  }
+
+  &.panel-body-colorful {
+    .panel-body {
+      background: @color;
+      color: @font-color;
+    }
+
+    .panel-footer {
+      background: @color;
+      border-color: @border-color;
+      color: @font-color;
+    }
+  }
+}
+
+
+// Dark panel mixin
+//
+.pixel-panel-dark(@color) {
+  border-color: @color !important;
+
+  .panel-heading {
+    background: @color;
+    border-color: @color;
+    color: #fff;
+
+    .panel-title {
+      color: #fff;
+    }
+
+    .panel-heading-text {
+      color: lighten(@color, 38%);
+
+      a {
+        color: lighten(@color, 38%);
+        text-decoration: underline;
+
+        &:hover {
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  .panel-heading-controls {
+    li.active a,
+    li.active span {
+      color: @color !important;
+    }
+  }
+
+  &.panel-body-colorful {
+    .panel-heading,
+    table,
+    table tr,
+    table th,
+    table td,
+    .list-group-item {
+      border-color: lighten(@color, 8%);
+    }
+
+    &,
+    .panel-body,
+    .list-group-item {
+      background: @color;
+      color: #fff;
+    }
+
+    .panel-footer {
+      background: @color;
+      border-color: lighten(@color, 8%);
+      color: #fff;
+    }
+  }
+}
+
+
+// Popover states mixin
+//
+.pixel-popover-state(@color, @font-color, @border-color) {
+  & + .popover .popover-title {
+    background: @color;
+    border-bottom-color: @border-color;
+    color: @font-color;
+  }
+
+  &.popover-colorful + .popover {
+    background: @color;
+    border-color: @border-color;
+    color: @font-color;
+
+    &.top .arrow:after { border-top-color: @border-color; }
+    &.bottom .arrow:after { border-bottom-color: @border-color; }
+    &.left .arrow:after { border-left-color: @border-color; }
+    &.right .arrow:after { border-right-color: @border-color; }
+  }
+}
+
+
+// Dark popover states mixin
+//
+.pixel-popover-state-dark(@color) {
+  & + .popover .popover-title {
+    background: @color;
+    border-bottom-color: @color;
+    color: #fff;
+  }
+
+  &.popover-colorful + .popover {
+    background: @color;
+    border-color: @color;
+    color: #fff;
+
+    .popover-title {
+      border-bottom-color: lighten(@color, 8%);
+      border-bottom-width: 2px;
+    }
+
+    &.top .arrow:after { border-top-color: @color; }
+    &.bottom .arrow:after { border-bottom-color: @color; }
+    &.left .arrow:after { border-left-color: @color; }
+    &.right .arrow:after { border-right-color: @color; }
+  }
+}
+
+
+// Tooltip states mixin
+//
+.pixel-tooltip-state(@color){
+  .tooltip-inner {
+    background-color: @color;
+  }
+
+  &.top .tooltip-arrow {
+    border-top-color: @color;
+  }
+  &.top-left .tooltip-arrow {
+    border-top-color: @color;
+  }
+  &.top-right .tooltip-arrow {
+    border-top-color: @color;
+  }
+  &.right .tooltip-arrow {
+    border-right-color: @color;
+  }
+  &.left .tooltip-arrow {
+    border-left-color: @color;
+  }
+  &.bottom .tooltip-arrow {
+    border-bottom-color: @color;
+  }
+  &.bottom-left .tooltip-arrow {
+    border-bottom-color: @color;
+  }
+  &.bottom-right .tooltip-arrow {
+    border-bottom-color: @color;
+  }
+}
+
+
+// Note states mixin
+//
+.pixel-note-mixin(@color, @bg-color) {
+  border-color: @color;
+  background: @bg-color;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: @color;
+  }
+}
+
+
+// Panel groups mixin
+//
+
+.pixel-panel-group(@color, @font-color: #fff) {
+  .accordion-toggle {
+    background: @color;
+    color: @font-color;
+  }
+
+  .accordion-toggle:after,
+  .accordion-toggle:hover:after,
+  .accordion-toggle.collapsed:hover:after {
+    color: @font-color;
+  }
+
+  .panel,
+  .panel-heading,
+  .panel-body,
+  &.panel-group .panel-heading + .panel-collapse .panel-body {
+    border-color: @color;
+  }
+}
+
+
+// Text color mixin
+//
+
+.pixel-text-color(@color) {
+  &,
+  &:hover,
+  &:active,
+  &:focus,
+  a,
+  a:focus {
+    color: @color;
+  }
+
+  a:hover,
+  a:active {
+    color: darken(@color, 15%);
+  }
+}
+
+
+// BG color mixin
+//
+
+.pixel-bg-color(@color, @text-color: #fff) {
+  background: @color !important;
+
+  &[href]:hover {
+    background: desaturate(darken(@color, 3%), 6%) !important;
+  }
+
+  &.darken {
+    background: desaturate(darken(@color, 3%), 6%) !important;
+
+    &[href]:hover {
+      background: desaturate(darken(@color, 6%), 6%) !important;
+    }
+  }
+  &.darker {
+    background: desaturate(darken(@color, 6%), 6%) !important;
+
+    &[href]:hover {
+      background: desaturate(darken(@color, 9%), 6%) !important;
+    }
+  }
+  .pixel-text-color(@text-color);
+
+  &[href]:hover,
+  [href]:hover {
+    color: #fff;
+  }
+
+  * {
+    border-color: lighten(@color, 7%);
+  }
+}
+
+// --------------------------------------------------
+// Themes
+// --------------------------------------------------
+
+// Navigation icon buttons theme
+//
+.nav-icon-btn-theme(@color) {
+  .nav-icon-btn.nav-icon-btn-primary {
+    
+    .nav-icon-btn-state(@color);
+  }
+}
+
+// Badges theme
+//
+.badges-theme(@color) {
+  // Primary badges
+  .badge.badge-primary {
+    .pixel-badge(@color);
+  }
+}
+
+// Labels theme
+//
+.labels-theme(@color) {
+  // Primary labels
+  .label.label-primary {
+    .pixel-label(@color);
+  }
+
+  &.right-to-left .label.label-primary.label-tag {
+    &:before{
+      border-color: transparent transparent transparent @color;
+    }
+
+    &:hover:before,
+    &:focus:before {
+      border-color: transparent transparent transparent darken(@color, 10%);
+    }
+  }
+
+  .ie8 &.right-to-left .label.label-primary.label-tag:before,
+  .ie9 &.right-to-left .label.label-primary.label-tag:before {
+    border-color: transparent @color transparent transparent;
+  }
+
+  .ie8 &.right-to-left .label.label-primary.label-tag:hover:before,
+  .ie8 &.right-to-left .label.label-primary.label-tag:focus:before,
+  .ie9 &.right-to-left .label.label-primary.label-tag:hover:before,
+  .ie9 &.right-to-left .label.label-primary.label-tag:focus:before {
+    border-color: transparent darken(@color, 10%) transparent transparent;
+  }
+}
+
+// Buttons theme
+//
+.buttons-theme(@color) {
+  .btn-primary {
+    .pixel-button(@color);
+  }
+
+  .open .btn.btn-primary.dropdown-toggle {
+    color: #fff;
+    border-bottom-color: darken(@color, 14%) !important;
+    background: none;
+    background: darken(@color, 4%) !important;
+  }
+}
+
+// Progress bars theme
+//
+.progress-bars-theme(@color) {
+  // Default progress bars
+  .progress-bar {
+    .pixel-progress-bar(@color);
+  }
+  .progress-striped .progress-bar {
+    .pixel-progress-striped(@color);
+  }
+}
+
+// Badges theme
+//
+.badges-theme(@color) {
+  // Primary badges
+  .badge.badge-primary {
+    .pixel-badge(@color);
+  }
+}
+
+// Tables theme
+//
+.tables-theme(@color) {
+  .table-primary {
+    .table-color(@color);
+  }
+}
+
+// Tabs theme
+//
+.tabs-theme(@color) {
+  .nav-tabs {
+    .pixel-tabs(@color);
+  }
+}
+
+// Pills theme
+//
+.pills-theme(@color) {
+  .nav-pills {
+    .pixel-pills(@color);
+  }
+}
+
+// Dropdowns theme
+//
+.dropdowns-theme(@color, @hover-text-color: @text-color) {
+  .dropdown-menu {
+    .pixel-dropdowns(@color, @hover-text-color);
+  }
+}
+
+// Button groups theme
+//
+.button-groups-theme(@color) {
+  .btn-group .btn-primary,
+  .btn-group .btn-primary:focus,
+  .input-group-btn .btn-primary,
+  .input-group-btn .btn-primary:focus {
+    border-left-color: darken(@color, 8%);
+    border-right-color: darken(@color, 8%);
+  }
+  .btn-group .btn-primary:hover,
+  .btn-group.open .btn-primary.dropdown-toggle,
+  .input-group-btn .btn-primary:hover,
+  .input-group-btn.open .btn-primary.dropdown-toggle {
+    border-color: darken(@color, 14%);
+  }
+  .btn-group .btn-primary:active,
+  .btn-group .btn-primary.active,
+  .input-group-btn .btn-primary:active,
+  .input-group-btn .btn-primary.active {
+    border-left-color: darken(@color, 14%);
+    border-right-color: darken(@color, 14%);
+  }
+}
+
+// Pagination theme
+//
+.pagination-theme(@color) {
+  .pagination {
+    > li > a:hover {
+      border-color: @color;
+    }
+    
+    > li.active > a,
+    > li.active > a:hover,
+    > li.active > a:focus,
+    > li.active > span {
+      background: @color;
+      border-color: @color;
+    }
+  }
+
+  // Pager
+  .pager {  
+    li > a:hover {
+      border-color: @color;
+    }
+  }
+}
+
+// List groups theme
+//
+.list-groups-theme(@color) {
+  // Linked list groups
+  a.list-group-item.active {
+    background: @color;
+    border-color: @color;
+    
+    .list-group-item-text {
+      color: lighten(@color, 40%);
+    }
+  }
+}
+
+// Forms theme
+//
+.forms-theme(@color) {
+  // Forms
+  .form-control:focus,
+  .form-control.focus {
+    border-color: @color;
+    outline: 0;
+    .box-shadow(none);
+  }
+}
+
+
+// ************************************************************************* //
+//**   Mixins for plugins                                                  **//
+
+
+// jQuery UI
+//
+
+// Sliders
+.ui-slider-theme(@color) {
+  .ui-slider-color(@color);
+}
+
+.ui-slider-color(@color) {
+  .ui-slider-handle.ui-state-active:before {
+    background: @color;
+  }
+
+  .ui-slider-range {
+    background: @color;
+  }
+}
+
+// Autocomplete
+.ui-autocomplete-theme(@color, @hover-text-color: @text-color) {
+  // Dropdowns
+  .ui-autocomplete > li > a:hover,
+  .ui-autocompletev > li.active > a {
+    background: @color;
+  }
+
+  .ui-autocomplete > li > a:hover {
+    color: @hover-text-color;
+  }
+
+  .ui-autocomplete .ui-state-focus {
+    background: @color;
+    color: @hover-text-color;
+  }
+}
+
+// Menus
+.ui-menu-theme(@color) {
+  .ui-menu .ui-menu-item a:hover,
+  .ui-menu .ui-menu-item a.ui-state-focus,
+  .ui-menu .ui-menu-item a.ui-state-active {
+    background: @color;
+  }
+}
+
+// Progress bars
+.ui-progressbar-color(@color) {
+  background: @color;
+  border-color: darken(@color, 6%);
+  .pixel-progress-striped(@color);
+}
+.ui-progressbar-theme(@color) {
+  .ui-progressbar-value {
+    .ui-progressbar-color(@color);
+  }
+}
+
+// Tabs
+.ui-tabs-theme(@color) {
+  .ui-tabs-nav > .ui-tabs-active > a {
+    &,
+    &:hover,
+    &:focus {
+      color: #fff;
+      background: @color;
+      border-bottom: 2px solid darken(@color, 5%);
+    }
+  }
+}
+
+// Datepicker
+.ui-datepicker-theme(@color) {
+  .ui-datepicker .ui-state-active {
+    background: @color !important;
+  }
+
+  .ui-datepicker-title {
+    background: @color;
+  }
+
+  .ui-datepicker th {
+    background: darken(desaturate(@color, 20%), 5%);
+  }
+
+  .ui-datepicker-buttonpane button.ui-priority-primary {
+    .pixel-button(@color);
+  }
+}
+
+
+// Plugins
+//
+
+// Select2
+.select2-color(@color) {
+  .select2-container-multi .select2-choices {
+    .select2-search-choice {
+      background: @color;
+    }
+
+    .select2-search-choice-focus {
+      background: darken(@color, 10%);
+    }
+  }
+
+  .select2-container-multi.select2-container-disabled .select2-choices .select2-search-choice {
+    background: @color !important;
+  }
+
+}
+.select2-theme(@color) {
+  .select2-drop-active,
+  .select2-container-multi.select2-container-active .select2-choices,
+  .select2-container-multi.select2-dropdown-open .select2-choices {
+    border: 1px solid @color;
+  }
+
+  .select2-drop.select2-drop-above.select2-drop-active {
+    border-top: 1px solid @color;
+  }
+
+  .select2-container-active {
+    .select2-choice,
+    .select2-choices {
+      border: 1px solid @color;
+    }
+  }
+
+  .select2-dropdown-open .select2-drop-above {
+    .select2-choice,
+    .select2-choices {
+      border: 1px solid @color;
+      border-top-color: #aaa;
+    }
+  }
+
+  .select2-results .select2-highlighted {
+    background: @color;
+  }
+
+  .select2-primary {
+    .select2-color(@color);
+  }
+}
+
+// Switchers
+.switcher-color(@color) {
+  .switcher-state-on {
+    background: @color !important;
+  }
+}
+.switcher-theme(@color) {
+  .switcher-primary {
+    .switcher-color(@color);
+  }
+}
+
+// Bootstrap Datepicker
+.bootstrap-datepicker-theme(@color) {
+  @bs-datepicker-border-color: darken(desaturate(@color, 30%), 12%);
+
+  .datepicker {
+    table tr td {
+      &.selected,
+      &.selected:hover,
+      &.selected.disabled,
+      &.selected.disabled:hover {
+        background: @color;
+      }
+      &.active,
+      &.active:hover,
+      &.active.disabled,
+      &.active.disabled:hover {
+        background: @color;
+      }
+      span {
+        &.active,
+        &.active:hover,
+        &.active.disabled,
+        &.active.disabled:hover {
+          background: @color;
+        }
+      }
+    }
+
+    thead {
+      tr {
+        background: darken(desaturate(@color, 20%), 5%);
+        &:first-child {
+          background: @color !important;
+          border-bottom-color: @bs-datepicker-border-color !important;
+        }
+      }
+
+      th.prev,
+      th.next {
+        background: @color;
+      }
+      th.prev {
+        border-color: @bs-datepicker-border-color;
+      }
+      th.next {
+        border-color: @bs-datepicker-border-color;
+      }
+    }
+
+    > .datepicker-days thead tr:first-child th.cw + .prev {
+      border-color: @bs-datepicker-border-color;
+    }
+    > .datepicker-days thead tr:last-child th.cw + th {
+      border-color: @bs-datepicker-border-color;
+    }
+  }
+}
+
+// Bootstrap Timepicker
+.bootstrap-timepicker-theme(@color) {
+  .bootstrap-timepicker-widget table td a:hover {
+    background: @color;
+    border-color: @color;
+  }
+}
+
+// Bootstrap Datepaginator
+.datepaginator-theme(@color) {
+  .pagination a.dp-today,
+  .pagination a.dp-today:hover {
+    background: lighten(@color, 10%);
+    border-color: lighten(@color, 5%);
+  }
+
+  .pagination a.dp-today:hover {
+    border-color: @color !important;
+  }
+
+  .pagination a.dp-selected {
+    background: @color !important;
+    border-color: @color !important;
+  }
+}
+
+// Bootstrap-Editable typeahead
+.editable-typeahead-theme(@color) {
+  .tt-suggestion.tt-is-under-cursor {
+    background: @color;
+  }
+}
+
+// jQuery DataTables
+.DT-color(@color) {
+  .dataTables_wrapper .DT-per-page {
+    border-color: darken(desaturate(@color, 15%), 12%) !important;
+  }
+}
+.data-table-theme(@color) {
+  .table-primary {
+    .DT-color(@color);
+  }
+}
+
+// File Inputs
+.pixel-file-input-theme(@color) {
+  .pixel-file-input:hover {
+    border-color: @color;
+  }
+}
+
+// File Inputs
+.dropzone-theme(@color) {
+  .dropzone-box.dz-drag-hover {
+    border-color: @color;
+  }
+  .dropzone-box:hover .fa.fa-cloud-upload {
+    background: @color;
+  }
+}
+
+// Markdown Editor
+.md-editor-theme(@color) {
+  .md-editor.active {
+    border-color: @color;
+  }
+}
+
+// Rating Widget
+.widget-rating-theme(@color) {
+  .widget-rating .active a {
+    color: @color;
+  }
+}

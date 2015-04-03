@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
 use Illuminate\Support\Facades\View;
+use KodiCMS\CMS\Assets\Core as Assets;
 
 class TemplateController extends Controller
 {
@@ -26,6 +27,11 @@ class TemplateController extends Controller
 	 * @var boolean
 	 */
 	public $onlyContent = FALSE;
+
+	/**
+	 * @var array
+	 */
+	public $templateScripts = [];
 
 	/**
 	 * Setup the layout used by the controller.
@@ -87,7 +93,12 @@ class TemplateController extends Controller
 	{
 		parent::before();
 
-		View::share('adminDir', config('cms.admin_dir_name'));
+		if ($this->autoRender === TRUE)
+		{
+			$this->registerMedia();
+		}
+
+		View::share('adminDir', \CMS::backendPath());
 	}
 
 	public function after()
@@ -100,7 +111,35 @@ class TemplateController extends Controller
 			{
 				$this->template = $this->template->content;
 			}
+			else
+			{
+				$scrpit = '';
+				foreach ($this->templateScripts as $var => $value)
+				{
+					$value = json_encode($value);
+
+					$scrpit .= "var {$var} = {$value};\n";
+				}
+
+				Assets::group('global', 'templateScripts', '<script type="text/javascript">' . $scrpit . '</script>', 'global');
+			}
 		}
+	}
+
+	public function registerMedia()
+	{
+		$this->templateScripts = [
+			'CURRENT_URL' => $this->request->url(),
+			'SITE_URL' => url(),
+			'BASE_URL' => url(\CMS::backendPath()),
+			'BACKEND_PATH' => \CMS::backendPath(),
+			'BACKEND_RESOURCES' => \CMS::backendResourcesURL(),
+			'PUBLIC_URL' => url(),
+			'LOCALE' => \Lang::getLocale(),
+			'ROUTE' => $this->getRouter()->currentRouteAction(),
+			'ROUTE_PATH' => $this->getRouterPath(),
+			'USER_ID' => \Auth::id()
+		];
 	}
 
 	/**

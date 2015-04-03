@@ -1,0 +1,126 @@
+//
+// Stat Panels
+// --------------------------------------------------
+
+// Stat panel
+.stat-panel {
+  background: #fff;
+  border-radius: @border-radius-base;
+  display: table;
+  margin-bottom: @grid-gutter-width;
+  overflow: hidden;
+  position: relative;
+  table-layout: fixed !important;
+  width: 100%;
+}
+
+// Rows container
+.stat-rows {
+  display: table;
+  height: 100%;
+  table-layout: fixed !important;
+  width: 100%;
+}
+
+.stat-cell,
+.stat-row {
+  float: none !important;
+}
+
+// Row
+.stat-row {
+  display: table-row !important;
+  float: none;
+  width: 100%;
+}
+
+// Cell
+.stat-cell {
+  display: table-cell !important;
+  overflow: hidden;
+  padding: @panel-content-padding;
+  position: relative;
+
+  > * {
+    position: relative;
+  }
+
+  // Icons
+  .fa {
+    line-height: @line-height-base;
+  }
+
+  // Background icon
+  .bg-icon {
+    bottom: 0;
+    color: rgba(0, 0, 0, .05);
+    font-size: 100px;
+    line-height: 100px;
+    height: 100px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    width: 120px;
+  }
+
+  // Background icon on the left side
+  .bg-icon.bg-icon-left {
+    left: 0;
+    right: auto;
+  }
+}
+
+a.stat-cell:hover {
+  text-decoration: none;
+}
+
+// jQuery Sparkline charts
+.stats-sparklines {
+  display: inline-block;
+  margin-bottom: -2px;
+  position: relative;
+  width: 100%;
+}
+
+// Counters container
+.stat-counters {
+  border-bottom: 1px solid @table-border-color;
+  border-top: 1px solid @table-border-color;
+  display: table;
+  overflow: hidden;
+  table-layout: fixed;
+  width: 100%;
+
+  > .stat-cell {
+    display: table-cell;
+    float: none;
+
+    + .stat-cell {
+      border-left: 1px solid @table-border-color;
+    }
+  }
+}
+
+// Coloured counters container
+.stat-counters[class*='bg-'] {
+  border-color: #fff; // IE fallback
+  border-color: rgba(0,0,0,.2);
+
+  .stat-cell {
+    border-color: #fff; // IE fallback
+    border-color: rgba(0,0,0,.2);
+  }
+}
+
+// Icon
+[class*='bg-'] .bg-icon {
+  color: rgba(0, 0, 0, .08);
+}
+
+
+// IE8
+//
+
+.ie8 .stat-cell .bg-icon {
+  display: none !important;
+}

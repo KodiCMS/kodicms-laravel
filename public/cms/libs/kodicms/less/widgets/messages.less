@@ -1,0 +1,105 @@
+//
+// Widgets / Messages
+// --------------------------------------------------
+
+@widget-messages-vpadding: 9px;
+
+.widget-messages {
+  .message {
+    padding: @widget-messages-vpadding 0;
+    position: relative;
+    .clearfix();
+
+    > * {
+      line-height: 19px;
+    }
+
+    .action-checkbox,
+    .from {
+      display: block;
+      float: left;
+    }
+
+    .action-checkbox {
+      width: 20px;
+
+      > label,
+      > input {
+        display: inline-block;
+        margin: 0;
+        position: relative;
+      }
+
+      > label,
+      > input {
+        vertical-align: middle;
+      }
+
+      > input,
+      > label {
+        top: -1px;
+      }
+    }
+
+    .from {
+      min-width: 115px;
+      max-width: 180px;
+      width: 25%;
+      padding-left: 5px;
+      overflow: hidden;
+      color: @text-color;
+
+      &:hover {
+        color: #888;
+      }
+    }
+
+    .title {
+      display: block;
+      float: none;
+      overflow: hidden;
+      padding-right: 60px;
+    }
+
+    .date {
+      display: block;
+      position: absolute;
+      color: #888;
+      width: 50px;
+      right: 0;
+      text-align: right;
+      top: @widget-messages-vpadding;
+    }
+
+    .message-title-icon {
+      font-weight: 400 !important;
+      color: @text-color;
+      display: inline-block;
+      margin-right: 7px;
+      font-size: 14px;
+      text-decoration: none !important;
+    }
+
+    &.unread .title {
+      font-weight: 600;
+    }
+  }
+
+  .message + .message {
+    border-top: 1px solid;
+    border-top-color: @table-border-color;
+  }
+}
+
+.panel.widget-messages,
+.panel .widget-messages {
+  .message {
+    margin: 0 -@panel-content-padding;
+    padding-left: @panel-content-padding;
+    padding-right: @panel-content-padding;
+
+    .date {
+      right: @panel-content-padding;
+    }
+  }
+}

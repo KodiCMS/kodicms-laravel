@@ -1,0 +1,110 @@
+//
+// RTL: Plugins / jQuery.Select2
+//
+// Version: 3.4.5
+//
+// --------------------------------------------------
+
+// Container
+//
+
+.select2-container {
+
+  // Choice
+  .select2-choice {
+    // Text
+    > .select2-chosen {
+      margin-left: 26px;
+      margin-right: 0;
+    }
+
+    // Close icon
+    .select2-search-choice-close {
+      left: 18px;
+      right: auto;
+    }
+
+    // Down arrow
+    .select2-arrow {
+      left: 0;
+      right: auto;
+    }
+  }
+
+  // Allow clear
+  &.select2-allowclear .select2-choice .select2-chosen {
+    margin-left: 42px;
+    margin-right: 0;
+  }
+}
+
+// Search container
+.select2-search {
+  &:after {
+    left: 9px;
+    right: auto;
+  }
+
+  // Search input
+  input {
+    padding-left: 30px;
+    padding-right: 9px;
+  }
+}
+
+
+// Results
+//
+
+.select2-results {
+  // Levels
+  ul.select2-result-sub {
+    padding-left: 0;
+    padding-right: 0;
+
+    > li .select2-result-label { padding-left: 0; padding-right: 20px }
+    ul.select2-result-sub > li .select2-result-label { padding-left: 0; padding-right: 40px }
+    ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 0; padding-right: 60px }
+    ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 0; padding-right: 80px }
+    ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 0; padding-right: 100px }
+    ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 0; padding-right: 110px }
+    ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 0; padding-right: 120px }
+  }
+}
+
+
+// Multiselect
+//
+
+.select2-container-multi {
+  // Choices container
+  .select2-choices {
+    padding-right: 0 !important;
+    text-align: right;
+
+    li {
+      float: right;
+    }
+
+    // Choices (looks like labels)
+    .select2-search-choice {
+      margin: 0 5px 5px 0;
+      padding: 0 6px 0 20px;
+
+      & + .select2-search-field input {
+        padding-left: 12px;
+        padding-right: 6px;
+      }
+    }
+  }
+}
+
+// Close icon/button
+.select2-search-choice-close {
+  left: 3px;
+  right: auto;
+
+  &:before {
+    content: "\f00d";
+  }
+}

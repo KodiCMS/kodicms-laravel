@@ -1,0 +1,39 @@
+//
+// RTL: Widgets / Messages
+// --------------------------------------------------
+
+.widget-messages .message {
+  .action-checkbox,
+  .from {
+    float: right;
+  }
+
+  .from {
+    padding-left: 0;
+    padding-right: 5px;
+  }
+
+  .title {
+    padding-left: 60px;
+    padding-right: 0;
+  }
+
+  .date {
+    left: 0;
+    right: auto;
+    text-align: left;
+  }
+
+  .message-title-icon {
+    margin-left: 7px;
+    margin-right: 0;
+  }
+}
+
+.panel.widget-messages,
+.panel .widget-messages {
+  .message .date {
+    left: @panel-content-padding;
+    right: auto;
+  }
+}

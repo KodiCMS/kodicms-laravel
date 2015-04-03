@@ -1,0 +1,49 @@
+//
+// RTL: Pages / Sign In
+//
+// --------------------------------------------------
+
+
+&.page-signin {
+  .signin-info ul .signin-icon {
+    float: right;
+    margin-left: 6px;
+    margin-right: 0;
+  }
+
+  // Right side
+  //
+
+  .signin-form {
+    .form-group.w-icon {
+      .signin-form-icon {
+        border-left: 1px solid @input-border;
+        border-right: none;
+        left: auto;
+        right: 0;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        padding-left: @padding-large-horizontal;
+        padding-right: @signin-form-group-w-icon-width + @padding-large-horizontal !important;
+      }
+    }
+
+    // Form buttons and links
+    .form-actions a.forgot-password {
+      margin-left: 0;
+      margin-right: 10px;
+    }
+  }
+
+  .close {
+    float: left;
+  }
+}
+
+@media (min-width: @screen-tablet) {
+  &.page-signin .signin-info {
+    text-align: right;
+  }
+}

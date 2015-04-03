@@ -1,0 +1,137 @@
+//
+// Popovers
+// --------------------------------------------------
+
+// Default popovers
+//
+
+.popover {
+  border: @popover-border-width solid @popover-border-color;
+  .box-shadow(none);
+
+  &.top .arrow {
+    border-top: none;
+    &:after {
+      border-top-color: @popover-border-color;
+      border-width: 7px 8px 0 8px;
+      bottom: -@popover-border-width + 4;
+    }
+  }
+
+  &.bottom .arrow {
+    border-bottom: none;
+    &:after {
+      border-bottom-color: @popover-border-color;
+      border-width: 0 8px 7px 8px;
+      top: -@popover-border-width + 4;
+    }
+  }
+
+  &.left .arrow {
+    border-left: none;
+    &:after {
+      border-left-color: @popover-border-color;
+      border-width: 8px 0 8px 7px;
+      bottom: -9px;
+      right: -@popover-border-width + 4;
+    }
+  }
+
+  &.right .arrow {
+    border-right: none;
+    &:after {
+      border-right-color: @popover-border-color;
+      border-width: 8px 7px 8px 0;
+      bottom: -9px;
+      left: -@popover-border-width + 4;
+    }
+  }
+}
+
+// Colorful popovers
+//
+
+.popover-colorful + .popover {
+  border-width: 1px;
+
+  &.top {  margin-bottom: 8px; }
+  &.left { margin-right: 8px; }
+
+  &.top .arrow:after {
+    bottom: -@popover-border-width + 6;
+  }
+
+  &.bottom .arrow:after {
+    top: -@popover-border-width + 6;
+  }
+
+  &.left .arrow:after {
+    right: -@popover-border-width + 6;
+  }
+
+  &.right .arrow:after {
+    left: -@popover-border-width + 6;
+  }
+}
+
+// Popover title
+.popover-title {
+  background-color: rgba(0, 0, 0, .06);
+  border-bottom-color: #ddd;
+  border-radius: 0;
+}
+
+
+// IE8 fixes
+//
+
+.ie8 .popover.top.in {
+  margin-top: -30px;
+}
+
+.ie8 .popover.left.in {
+  margin-left: -30px;
+}
+
+.ie8 .popover .arrow {
+  display: none !important;
+}
+
+// Colors
+// --------------------------------------------------
+
+.popover-warning {
+  .pixel-popover-state(#f9f1c7, #af8640, #f6deac);
+}
+
+.popover-danger {
+  .pixel-popover-state(#f2dede, #b94a48, #ebccd1);
+}
+
+.popover-success {
+  .pixel-popover-state(#dff0d8, #468847, #d0e6be);
+}
+
+.popover-info {
+  .pixel-popover-state(#d9edf7, #3a87ad, #bce8f1);
+}
+
+
+// Dark popovers
+
+.popover-warning.popover-dark {
+  .pixel-popover-state-dark(@warning-color);
+}
+
+.popover-danger.popover-dark {
+  .pixel-popover-state-dark(@danger-color);
+}
+
+.popover-success.popover-dark {
+  .pixel-popover-state-dark(@success-color);
+}
+
+.popover-info.popover-dark {
+  .pixel-popover-state-dark(@info-color);
+}
+

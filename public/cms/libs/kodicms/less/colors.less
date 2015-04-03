@@ -1,0 +1,128 @@
+
+.generate-color(@name, @color) {
+  @btnName: ~"btn-@{name}";
+  .@{btnName} {
+    &:focus {
+      color: #fff;
+    }
+    &.btn-outline:focus {
+      color: @text-color;
+    }
+    &.btn-outline.dark:focus {
+      color: #fff;
+      color: rgba(255, 255, 255, 0.8);;
+    }
+    .pixel-button(@color);
+  }
+
+  @badgeName: ~"badge-@{name}";
+  .badge.@{badgeName} {
+    .pixel-badge(@color);
+  }
+
+  @labelName: ~"label-@{name}";
+  .label.@{labelName} {
+    .pixel-label(@color);
+  }
+
+  @alertName: ~"alert-@{name}";
+  .alert.@{alertName} {
+    color: #fff;
+    .pixel-alert-dark(@color);
+  }
+
+  @progressName: ~"progress-bar-@{name}";
+  .progress .progress-bar.@{progressName} {
+    .pixel-progress-bar(@color);
+  }
+  .progress.progress-striped .progress-bar.@{progressName} {
+    .pixel-progress-striped(@color);
+  }
+
+  @dropdownName: ~"dropdown-menu-@{name}";
+  .dropdown-menu.@{dropdownName} {
+    .pixel-dropdowns(@color, #fff);
+  }
+
+  @tabsName: ~"nav-tabs-@{name}";
+  .nav-tabs.@{tabsName} {
+    .pixel-tabs(@color);
+  }
+
+  @pillsName: ~"nav-pills-@{name}";
+  .nav-pills.@{pillsName} {
+    .pixel-pills(@color);
+  }
+
+  @tableName: ~"table-@{name}";
+  .@{tableName} {
+    .table-color(@color);
+  }
+
+  @listGroupName: ~"list-group-@{name}";
+  .list-group.@{listGroupName} {
+    .list-groups-theme(@color);
+  }
+  
+  @panelName: ~"panel-@{name}";
+  .panel.@{panelName} {
+    .pixel-panel-dark(@color);
+  }
+
+  @popoverName: ~"popover-@{name}";
+  .@{popoverName} {
+    .pixel-popover-state-dark(@color);
+  }
+
+  @tooltipName: ~"tooltip-@{name}";
+  .@{tooltipName} + .tooltip {
+    .pixel-tooltip-state(darken(@color, 10%));
+  }
+
+  @panelGroupName: ~"panel-group-@{name}";
+  .panel-group.@{panelGroupName} {
+    .pixel-panel-group(@color);
+  }
+
+  @switcherName: ~"switcher-@{name}";
+  .@{switcherName} {
+    .switcher-color(@color);
+  }
+  
+  @uiSliderName: ~"ui-slider-@{name}";
+  .ui-slider.@{uiSliderName} {
+    .ui-slider-color(@color);
+  }
+
+  @bgName: ~"bg-@{name}";
+  .@{bgName} {
+    .pixel-bg-color(@color);
+  }
+
+  @textName: ~"text-@{name}";
+  .@{textName} {
+    .pixel-text-color(@color);
+  }
+}
+
+// Note: I would recommend generate needed colors manually, not using .generate-color (see code above for examples).
+//       One .generate-color() call generates over 85 rules and over 150 selectors.
+
+.generate-color(pa-purple, #857198);
+.generate-color(light-green, #a5cd7d);
+.generate-color(dark-gray, #39393d);
+
+
+.btn-facebook {
+  &:focus {
+    color: #fff;
+  }
+  &.btn-outline:focus {
+    color: @text-color;
+  }
+  &.btn-outline.dark:focus {
+    color: #fff;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .pixel-button(#5571ac);
+}

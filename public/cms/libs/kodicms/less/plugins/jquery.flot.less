@@ -1,0 +1,77 @@
+//
+// Plugins / jQuery.Flot
+//
+// Version: 0.8.2
+//
+// --------------------------------------------------
+
+.pa-flot-container {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  position: relative;
+  .clearfix();
+}
+
+.pa-flot-graph {
+  width: auto;
+  height: auto;
+}
+
+.pa-flot-info {
+  width: auto;
+  margin-bottom: 20px;
+  background: #f4f4f4; // IE fallback
+  background: rgba(0, 0, 0, .03);
+  border-radius: @border-radius-base;
+  .clearfix();
+
+  span {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+    text-decoration: none;
+    cursor: default;
+    padding-left: 24px;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 32px;
+    color: #646464;
+  }
+
+  i {
+    position: absolute;
+    display: block;
+    content: '';
+    width: 8px;
+    height: 8px;
+    top: 12px;
+    left: 10px;
+    border-radius: 9999px;
+  }
+}
+
+// Tooltip
+.pa-flot-tooltip {
+  position: absolute;
+  display: none;
+  padding: 5px 10px;
+  font-size: 12px;
+  background: @tooltip-bg;
+  color: #fff;
+  border-radius: @border-radius-base;
+}
+
+// Text Styles
+.tickLabel {
+  font-size: 12px;
+  color: #666;
+}
+
+// Hide the First and Last Y Label
+.yAxis .tickLabel:first-child,
+.yAxis .tickLabel:last-child { display: none; }
+
+.pieLabel > div {
+  font-size: 12px !important;
+}

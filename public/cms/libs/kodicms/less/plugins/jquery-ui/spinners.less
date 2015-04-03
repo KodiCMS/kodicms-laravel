@@ -1,0 +1,65 @@
+//
+// Plugins / jQuery UI / Spinners
+// --------------------------------------------------
+
+.ui-spinner {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  padding: 0;
+  vertical-align: middle;
+}
+
+.ui-spinner-input {
+  padding-right: 32px;
+}
+
+.ui-spinner-button {
+  display: block;
+  position: absolute;
+  text-align: center;
+
+  line-height: 15px;
+  font-weight: 400;
+  width: 20px;
+  height: 15px;
+  top: 0;
+  right: 0;
+  font-family: FontAwesome;
+  cursor: pointer;
+  text-decoration: none !important;
+  border-color: #cfcece !important;
+  border-left: 1px solid;
+  margin: 1px 1px 1px 0;
+
+  .pixel-button(@color: #f4f4f4, @gradient: 5%, @hover: 2%, @border: 4%, @font-color: @text-color);
+
+  span {
+    display: none;
+
+  }
+
+  &:after {
+    content: "\f0d8";
+    font-size: 12px;
+  }
+}
+
+.ui-spinner-button.ui-spinner-down {
+  top: 15px;
+  margin-top: 0;
+  border-top: 1px solid;
+  height: 16px;
+
+  &:after {
+    content: "\f0d7";
+  }
+}
+
+.ui-spinner-disabled .ui-spinner-button {
+  cursor: not-allowed;
+  pointer-events: none; // Future-proof disabling of clicks
+  .opacity(.65);
+  background: #eee;
+}

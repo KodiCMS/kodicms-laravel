@@ -1,0 +1,59 @@
+//
+// Alerts
+// --------------------------------------------------
+
+// Default alerts
+//
+
+.alert {
+  .pixel-alert(#f9f1c7, #af8640, #f6deac);
+
+  // Close link
+  .close{
+    top: 0;
+  }
+}
+
+.alert.alert-danger {
+  .pixel-alert(#f2dede, #b94a48, #ebccd1);
+}
+
+.alert.alert-success {
+  .pixel-alert(#dff0d8, #468847, #d0e6be);
+}
+
+.alert.alert-info {
+  .pixel-alert(#d9edf7, #3a87ad, #bce8f1);
+}
+
+
+// Dark alerts
+//
+
+.alert.alert-dark {
+  color: #fff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .2);
+  .pixel-alert-dark(@warning-color);
+}
+
+.alert.alert-danger.alert-dark {
+  .pixel-alert-dark(@danger-color, @stripes-opacity: .04);
+}
+
+.alert.alert-success.alert-dark {
+  .pixel-alert-dark(@success-color);
+}
+
+.alert.alert-info.alert-dark {
+  .pixel-alert-dark(@info-color);
+}
+
+.alert.alert-page {
+  margin: -@content-wrapper-padding -@content-wrapper-padding @content-wrapper-padding -@content-wrapper-padding;
+  border-top-width: 0;
+  border-left-width: 0;
+  border-right-width: 0;
+  border-radius: 0;
+  padding-left: @content-wrapper-padding;
+  padding-right: @content-wrapper-padding;
+}

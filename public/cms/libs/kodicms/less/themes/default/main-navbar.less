@@ -1,0 +1,274 @@
+//
+// Themes / Default / Main navbar
+// --------------------------------------------------
+
+@navbar-links-color: #555;
+@navbar-links-border: #f1f1f1;
+
+// ************************************************************************* //
+//**   Small screens (mobile first)                                        **//
+
+#main-navbar {
+  .box-shadow(~"0 2px 2px rgba(0,0,0,0.05),0 1px 0 rgba(0,0,0,0.05)");
+
+  .navbar-header {
+    background: @navbar-color;
+
+    a {
+      color: @navbar-links-color;
+    }
+  }
+
+
+  // Navbar header
+  //
+
+  .navbar-brand {
+    color: @navbar-links-color;
+  }
+
+
+  // Navbar buttons
+  //
+
+  .navbar-toggle,
+  #main-menu-toggle {
+    color: @navbar-links-color;
+  }
+
+  #main-menu-toggle {
+    background: #f8f8f8;
+
+    .fa:before {
+      color: @navbar-links-color;
+    }
+  }
+
+
+  // Collapse
+  //
+
+  .navbar-collapse {
+    border-top: 1px solid @navbar-links-border;
+    background: @navbar-color;
+    .box-shadow(none);
+  }
+
+
+  // Navbar Items
+  //
+
+  .dropdown > a,
+  .dropdown-menu > li > a,
+  .nav > li > a {
+    color: @navbar-links-color;
+  }
+
+  li + li,
+  .nav + .nav,
+  .nav + .right {
+    border-top: 1px solid @navbar-links-border;
+  }
+
+
+  // Dropdowns
+  //
+
+  .dropdown.open > a {
+    border-bottom: 1px solid darken(@navbar-links-border, 5%);
+    border-top: 1px solid darken(@navbar-links-border, 7%);
+    margin-top: -1px;
+    background: #f6f6f6;
+    color: @navbar-links-color;
+  }
+
+
+  // Navbar forms
+  //
+
+  form.navbar-form {
+    .box-shadow(none);
+
+    .form-control {
+      background: #f8f8f8;
+      border: none;
+      color: @input-color-placeholder;
+
+      &:focus {
+        color: @text-color;
+        .box-shadow(none);
+      }
+    }
+  }
+}
+
+
+// ************************************************************************* //
+//**   Desktops                                                            **//
+
+@media (min-width: @screen-tablet) {
+  #main-navbar {
+
+    // Navbar header
+    //
+
+    .navbar-header {
+      background: @header-color;
+    }
+
+    // Navbar collapse
+    //
+
+    .navbar-collapse {
+      background: @navbar-color;
+      border: none;
+
+      > div > .navbar-nav {
+        border-left: 1px solid @navbar-links-border;
+      }
+    }
+
+    .right > .navbar-nav > li {
+      border-left: 1px solid @navbar-links-border;
+      border-right: none;
+    }
+
+    .navbar-nav > li {
+      border-right: 1px solid @navbar-links-border;
+
+      > a {
+        color: @navbar-links-color;
+      }
+
+      > a:hover,
+      &.active > a,
+      &.dropdown.open > a {
+        background: #f8f8f8;
+        border-top: none !important;
+        border-bottom: none !important;
+      }
+    }
+
+    
+    // Navbar Items
+    //
+
+    li + li,
+    .nav + .nav,
+    .nav + .right {
+      border-top: none;
+    }
+
+
+    // Navbar dropdowns
+    //
+
+    .dropdown.open > a {
+      margin: 0;
+      border-top: none;
+    }
+
+    .dropdown-menu {
+      background: @navbar-color;
+      padding: 5px 0;
+
+      .divider {
+        background-color: @navbar-links-border;
+      }
+
+      & > li > a {
+        color: @text-color;
+
+        &:hover {
+          background: @navbar-links-border;
+        }
+      }
+    }
+
+
+    // Notifications widget
+    //
+
+    .widget-notifications {
+      a {
+        color:  !important;
+      }
+
+      .notification,
+      .notifications-link {
+        border-color: @navbar-links-border;
+        .box-shadow(0 1px 0 rgba(255, 255, 255, 0.05) inset);
+        .border-bottom-radius(3px);
+      }
+
+      .notification-description {
+        color: #999;
+      }
+
+      .notification-ago {
+        color: #bbb;
+      }
+
+      .notifications-link:hover {
+        background: @navbar-links-border;
+      }
+    }
+
+
+    // Alt messages widget
+    //
+
+    .widget-messages-alt {
+      a {
+        color:  !important;
+      }
+
+      .message,
+      .messages-link {
+        border-color: @navbar-links-border;
+        .border-bottom-radius(3px);
+      }
+
+      .message-subject {
+        color: @text-color !important;
+      }
+
+      .message-description {
+        color: #aaa;
+
+        a {
+          color: #888;
+        }
+      }
+
+      .messages-link:hover {
+        background: @navbar-links-border;
+      }
+    }
+  }
+
+  &.main-menu-right #main-navbar .navbar-header,
+  &.mmc #main-navbar .navbar-header {
+    background: @navbar-color;
+  }
+
+  &.main-menu-right #main-navbar .navbar-header {
+    border-right: 1px solid @navbar-links-border;
+  }
+}
+
+
+
+// RTL
+// --------------------------------------------------
+
+@media (min-width: @screen-tablet) {
+  &.right-to-left #main-navbar {    
+    .right > .navbar-nav > li {
+      border-right: 1px solid @navbar-links-border;
+      border-left: none;
+    }
+  }
+}
+
+

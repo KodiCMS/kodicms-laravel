@@ -148,7 +148,7 @@ class Section extends ItemDecorator implements \Countable, \Iterator
 			if (!empty($url) AND strpos($uri, $url) !== FALSE) {
 				$page->setActive();
 
-				Collection::$currentPage = &$page;
+				Collection::setCurrentPage($page);
 
 				$found = TRUE;
 				break;
@@ -174,7 +174,7 @@ class Section extends ItemDecorator implements \Countable, \Iterator
 	public function findSection($name)
 	{
 		foreach ($this->getSections() as $section) {
-			if ($section->getId() == $name) {
+			if ($section->getName() == $name) {
 				return $section;
 			}
 		}
@@ -212,18 +212,14 @@ class Section extends ItemDecorator implements \Countable, \Iterator
 	}
 
 	/**
-	 *
 	 * @return Section
 	 */
 	public function update()
 	{
-		$this->permissions = [];
-
 		return $this;
 	}
 
 	/**
-	 *
 	 * @return Section
 	 */
 	public function sort()

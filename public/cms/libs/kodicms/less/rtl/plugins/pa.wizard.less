@@ -1,0 +1,23 @@
+// --------------------------------------------------
+// RTL: Plugins / Wizard
+//
+
+.wizard-steps {
+  float: right;
+  right: 0;
+  .transition(right .3s);
+
+  & > li {
+    padding: 0 ((@wizard-step-number-size + (@wizard-step-number-border-width * 2)) + (@wizard-step-number-margin * 2)) 0 10px;
+
+    & + li:before {
+      margin-right: 0;
+      margin-right: -@wizard-step-number-margin - 41px;
+    }
+  }
+}
+
+.wizard-step-number {
+  margin-left: 0;
+  margin-right: -@wizard-step-number-margin - 30px;
+}

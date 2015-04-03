@@ -1,0 +1,109 @@
+@import "custom-bootstrap.less";
+
+/* ===================================================
+	Dropzone
+ ===================================================*/
+.dropzone {
+	min-height: 0 !important; 
+	padding: 0 20px !important;
+	border: 3px dashed #1a7ab9 !important;
+	
+	.dz-message {
+		font-size: 18px;
+		margin: 20px 0 !important;
+	}
+
+	&.dz-drag-hover {
+		background: lighten(#1a7ab9, 20%);
+		border-color: #fff !important;
+
+		.dz-message {
+			color: #fff;
+			opacity: 1 !important;
+		}
+	}
+}
+
+/* ===================================================
+	Loader
+ ===================================================*/
+._loader_container {
+	display: none;
+	z-index: 5000;
+	min-height: 70px;
+	position: relative;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+
+	._loader_bg {
+		left: 0;
+		top: 0;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background: none;
+		opacity: 0.6;
+		z-index: 5001;
+		cursor: wait;
+	}
+
+	span {
+		display: block;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		margin: -25px 0 0 -50px;
+		padding-left: 40px;
+		width: 90px;
+		line-height: 50px;
+		text-align: center;
+		color: #fff;
+		background: #000 ~"url('@{images-path}/loader-big-black.gif')" 15px center no-repeat;
+		z-index: 5002;
+	}
+}
+
+.fc-view-container {
+	.fc-content .btn-close {
+		font-size: 11px;
+		position: absolute;
+		top: 0;
+		right: 3px;
+		float: right;
+	}
+	
+	.fc-agendaWeek-view .fc-content .btn-close {
+		top: 4px;
+		right: 4px;
+	}
+	
+	.fc-event {
+		position: relative;
+		border-width: 0;
+		border-left-width: 6px;
+		border-radius: 0;
+		
+		.fa-icon {
+			margin: 0 5px 0 3px;
+		}
+		
+		.fc-content {
+			padding: 4px 15px 4px 4px;
+			white-space: normal;
+			
+			.fc-title, .fc-time {
+				display: inline-block;
+			}
+		}
+	}
+	
+	.fc-other-month {
+		background-color: #FAFCFD;
+		background-size: 16px 16px;
+	}
+}
+
+.editable {
+	cursor: pointer;
+}

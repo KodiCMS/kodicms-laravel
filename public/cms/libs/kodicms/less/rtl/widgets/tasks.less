@@ -1,0 +1,33 @@
+//
+// RTL: Widgets / Tasks
+// --------------------------------------------------
+
+.widget-tasks .task {
+  .action-checkbox {
+    float: right;
+  }
+
+  .task-title span {
+    margin-left: 0;
+    margin-right: 5px;
+  }
+
+  .label {
+    left: 0;
+    right: auto;
+  }
+
+  .task-sort-icon {
+    float: right;
+    margin-left: 0;
+    margin-right: -11px;
+  }
+}
+
+.panel.widget-tasks,
+.panel .widget-tasks {
+  .task .label {
+    left: @panel-content-padding;
+    right: auto;
+  }
+}

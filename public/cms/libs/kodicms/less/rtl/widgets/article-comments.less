@@ -1,0 +1,34 @@
+//
+// RTL: Widgets / Article comments
+// --------------------------------------------------
+
+.widget-article-comments {
+  // Nested comments
+  .comment > .comment {
+    margin-left: -@panel-content-padding !important;
+    margin-right: 46px - @panel-content-padding !important;
+  }
+
+  .comment-avatar {
+    float: right;
+  }
+
+  // Date
+  .comment-heading span {
+    margin-left: 0;
+    margin-right: 5px;
+  }
+
+  .comment-body {
+    margin-left: 0;
+    margin-right: 46px;
+
+    // Arrow
+    &:before {
+      border-color: transparent transparent transparent @table-border-color;
+      border-width: 6px 0 6px 6px;
+      left: auto;
+      right: -6px;
+    }
+  }
+}

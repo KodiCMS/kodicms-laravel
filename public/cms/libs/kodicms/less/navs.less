@@ -1,0 +1,257 @@
+//
+// Navs
+// --------------------------------------------------
+
+
+// Nav badges and labels
+//
+
+.nav-tabs > li > a,
+.nav-pills > li > a
+{
+  > .badge,
+  > .label {
+    position: relative;
+    background-color: rgba(0, 0, 0, .25);
+    border: 1px solid transparent;
+    margin: 0 -5px -100px 5px;
+    padding: 0 6px;
+    line-height: 14px;
+    top: 0;
+  }
+
+  > .label {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  
+  > .badge.badge-success,
+  > .label.label-success {
+    background-color: @success-color;
+  }
+  
+  > .badge.badge-warning,
+  > .label.label-warning {
+    background-color: @warning-color;
+  }
+  
+  > .badge.badge-danger,
+  > .label.label-danger {
+    background-color: @danger-color;
+  }
+  
+  > .badge.badge-info,
+  > .label.label-info {
+    background-color: @info-color;
+  }
+}
+
+.nav-tabs:not(.nav-tabs-simple) > li.active > a,
+.nav-pills > li.active > a {
+  & > .badge,
+  & > .label {
+    background-color: rgba(0, 0, 0, .25);
+    border-color: transparent;
+    color: #fff;
+  }
+}
+
+.nav-tabs.nav-justified > li > a,
+.nav-pills.nav-justified > li > a {
+  margin: 0;
+}
+
+
+// Sizes
+//
+
+// Small
+.nav-tabs.nav-tabs-sm > li > a {
+  > .badge,
+  > .label {
+    margin-left: 4px;
+    margin-right: -4px;
+  }
+}
+
+// Extra small
+.nav-tabs.nav-tabs-xs > li > a {
+  font-size: 12px;
+
+  > .badge,
+  > .label {   
+    padding-left: 4px;
+    padding-right: 4px;
+    line-height: 13px;
+    font-size: 10px;
+    margin-left: 3px;
+    margin-right: -3px;
+    top: -1px;
+  }
+
+  > .label {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+}
+
+
+// Tabs
+// --------------------------------------------------
+
+.nav-tabs {
+  border-bottom: 2px solid @tabs-border-color;
+
+  > li {
+
+    // Actual tabs (as links)
+    > a {
+      background-color: #f3f3f3; // IE fallback
+      background-color: rgba(0, 0, 0, .05);
+      border: 0;
+      border-bottom: 2px solid @tabs-border-color;
+      color: #777;
+      margin: 0 6px -1px 0;
+      padding: 8px 20px;
+
+      &:hover,
+      &:active {
+        background-color: rgba(0, 0, 0, .06);
+        border-bottom-color: darken(@tabs-border-color, 5%);
+        color: @text-color;
+      }
+
+      > .fa-caret-down {
+        font-size: 12px;
+      }
+    }
+  }
+
+  > li.dropdown.open > a:focus {
+    border-bottom: 2px solid @tabs-border-color;
+  }
+
+  // Active state
+  li.active > a {
+    &,
+    &:hover,
+    &:focus {
+      border: none;
+      color: #fff;
+    }
+  }
+
+  &.nav-justified {
+    > li > a {
+      border-bottom: 2px solid @tabs-border-color;
+      border-left: none !important;
+      border-right: none !important;
+      border-top: none !important;
+    }
+  }
+
+  &.nav-stacked {
+    > li > a {
+      margin: 0;
+      border-bottom-width: 1px !important;
+    }
+
+    > li:last-child > a {
+      border-bottom-width: 0 !important;
+    }
+
+    > li:last-child.active > a {
+      border-bottom-width: 2px !important;
+      margin-bottom: -3px;
+    }
+
+    > li:not(:first-child):not(:last-child) > a {
+      border-radius: 0;
+    }
+  }
+}
+
+
+// Simple tabs
+//
+
+.nav-tabs.nav-tabs-simple {
+  > li > a {
+    background-color: transparent !important;
+    margin-right: 0;
+  }
+
+  > li.active > a {
+    color: @text-color !important;
+  }
+}
+
+// Tab sizes
+//
+
+// Small
+.nav-tabs.nav-tabs-sm > li > a {
+  padding: 6px 15px;
+}
+
+// Extra small
+.nav-tabs.nav-tabs-xs > li > a {
+  padding: 4px 15px;
+}
+
+
+// Tab content
+//
+
+.tab-content {
+  padding: 15px 0;
+
+  &.tab-content-bordered {
+    border: 1px solid darken(@tabs-border-color, 5%);
+    border-top: none;
+    padding-left: 15px;
+    padding-right: 15px;
+    .border-bottom-radius(2px);
+  }
+}
+
+
+// Pills
+// --------------------------------------------------
+
+.nav-pills {
+  > li > a {
+    color: #777;
+    background-color: #f3f3f3; // IE fallback
+    background-color: rgba(0, 0, 0, .05);
+    border-radius: @border-radius-base;
+    padding: 8px 20px;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, .06);
+      color: @text-color;
+    }
+
+    > .fa-caret-down {
+      font-size: 12px;
+    }
+
+    > .badge,
+    > .label {
+      top: -1px;
+    }
+  }
+
+  > li {
+    margin-left: 0;
+    margin-right: 6px;
+
+    + li {
+      margin-left: 0;
+    }
+  }
+
+  &.nav-stacked > li {
+    margin: 0 0 4px 0;
+  }
+}

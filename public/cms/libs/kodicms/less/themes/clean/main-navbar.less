@@ -1,0 +1,87 @@
+//
+// Themes / Clean / Main navbar
+// --------------------------------------------------
+
+
+#main-navbar {
+  // Header
+  //
+
+  .navbar-header a {
+    color: @navbar-text-color;
+  }
+
+  .nav > li > a,
+  .navbar-header a {
+    color: @navbar-text-color;
+  }
+
+  // Collapse
+  //
+
+  .navbar-header,
+  .navbar-collapse {
+    background: @navbar-color;
+    .box-shadow(none);
+  }
+
+  .navbar-collapse {
+    border-top: 1px solid lighten(@navbar-color, 8%);
+  }
+
+  // Navbar buttons
+  //
+
+  .navbar-toggle {
+    color: @navbar-text-color;
+  }
+
+  #main-menu-toggle {
+    background: @navbar-color;
+    color: @navbar-text-color;
+
+    .fa:before {
+      color: @navbar-text-color;
+    }
+  }
+
+  // Navbar forms
+  //
+
+  form.navbar-form {
+    .box-shadow(none);
+
+    .form-control {
+      background: #fff;
+      border-color: @navbar-color;
+      border-radius: 999999px;
+    }
+  }
+}
+
+
+// Desktops
+//
+
+@media (min-width: @screen-tablet) {
+  #main-navbar {
+
+    // Navbar Items
+    //
+
+    li + li,
+    .nav + .nav,
+    .nav + .right {
+      border-top: none;
+    }
+
+
+    // Collapse
+    //
+
+    .navbar-collapse {
+      border-top: none;
+    }
+  }
+}
+

@@ -1,0 +1,78 @@
+//
+// List groups
+// --------------------------------------------------
+
+.list-group-item {
+  padding-bottom: 10px;
+  padding-top: 10px;
+  border-color: @list-groups-border-color;
+
+  > .badge {
+    line-height: 16px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  > .badge + .badge {
+    margin-right: 5px;
+  }
+
+  > .label {
+    line-height: 16px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  > .label + .label {
+    margin-right: 5px;
+  }
+}
+
+.list-group-icon {
+  width: 26px;
+  color: #aaa;
+  font-size: 14px;
+}
+
+// Linked list groups
+//
+
+a.list-group-item {
+  color: @text-color;
+
+  .list-group-item-heading {
+    color: @text-color;
+    margin-top: 5px;
+
+    & + .list-group-item-text {
+      margin-bottom: 5px;
+    }
+  }
+  .list-group-item-text {
+    color: lighten(@text-color, 10%);
+  }
+
+  // Hover state
+  &:hover,
+  &:focus {
+    background: rgba(0, 0, 0, .04);
+  }
+
+  // Active class on item itself, not parent
+  &.active {
+    color: #fff;
+
+    .list-group-item-heading {
+      color: inherit;
+    }
+
+    .badge {
+      background: #fff; // IE fallback
+      background: rgba(0, 0, 0, .25);
+      border-color: transparent;
+      color: #fff;
+    }
+  }
+}
+
+.ie8 a.list-group-item.active .badge {
+  color: @text-color;
+}

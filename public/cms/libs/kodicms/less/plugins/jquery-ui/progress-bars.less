@@ -1,0 +1,40 @@
+//
+// Plugins / jQuery UI / Progress bars
+// --------------------------------------------------
+
+.ui-progressbar {
+	background-color: rgba(0, 0, 0, .06);
+  height: 13px;
+  overflow: hidden;
+  text-align: left;
+  .box-shadow(inset 0 1px 2px rgba(0,0,0,.1));
+}
+
+.ui-progressbar .ui-progressbar-value {
+  background: none;
+  border: 1px solid;
+  height: 100%;
+}
+
+.ui-progressbar .ui-progressbar-overlay {
+	height: 100%;
+}
+
+.ui-progressbar-indeterminate .ui-progressbar-value {
+	background: none;
+}
+
+.ui-progressbar.ui-progressbar-warning .ui-progressbar-value {
+  .ui-progressbar-color(@warning-color);
+}
+
+.ui-progressbar.ui-progressbar-success .ui-progressbar-value {
+  .ui-progressbar-color(@success-color);
+}
+
+.ui-progressbar.ui-progressbar-danger .ui-progressbar-value {
+  .ui-progressbar-color(@danger-color);
+}
+.ui-progressbar.ui-progressbar-info .ui-progressbar-value {
+  .ui-progressbar-color(@info-color);
+}

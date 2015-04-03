@@ -1,7 +1,15 @@
 <?php
 
 return [
-	'admin_dir_name' => env('ADMIN_DIR_NAME', 'backend'),
+	'backend_path' => env('ADMIN_DIR_NAME', 'backend'),
 
 	'modules' => ['API', 'CMS', 'Plugins', 'Pages', 'Users', 'Email', 'Cron', 'Widgets'],
+
+	'wysiwyg' => [
+		'ace' => [
+			'theme' => 'textmate'
+		],
+		'default_html_editor' => NULL,
+		'default_code_editor' => NULL
+	]
 ];

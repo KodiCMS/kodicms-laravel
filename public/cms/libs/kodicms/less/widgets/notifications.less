@@ -1,0 +1,78 @@
+//
+// Widgets / Notifications
+// --------------------------------------------------
+
+.widget-notifications {
+  .notification {
+    position: relative;
+    padding: 7px 12px;
+  }
+
+  .notification + .notification {
+    border-top: 1px solid @table-border-color;
+  }
+
+  .notifications-list {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .notification-title,
+  .notification-description,
+  .notification-ago {
+    display: block;
+    margin-right: 35px;
+  }
+
+  .notification-title {
+    font-size: 11px;
+    font-weight: 700;
+    padding-bottom: 1px;
+  }
+  
+  .notification-link {
+    line-height: 16px !important;
+  }
+
+  .notification-description {
+    font-size: 11px;
+    color: #666;
+  }
+
+  .notification-ago {
+    font-size: 11px;
+    font-style: italic;
+    color: #bbb;
+  }
+
+  .notification-icon {
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    border-radius: @border-radius-base;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin: -13px 12px 0 0;
+    font-size: 14px;
+  }
+
+  .notifications-link {
+    text-align: center;
+    padding: 8px 0 !important;
+    border-top: 1px solid @table-border-color;
+    display: block;
+    text-decoration: none !important;
+    font-size: 10px;
+    font-weight: 800;
+    color: #999;
+    line-height: 18px !important;
+    height: auto !important;
+
+    &:hover {
+      background: #f4f4f4;
+      color: @text-color;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+//
+// RTL: Utils
+// --------------------------------------------------
+
+.no-border-r {
+  border-left-width: 0 !important;
+}
+
+.no-border-l {
+  border-right-width: 0 !important;
+}
+
+.text-left {
+  text-align: right;
+}
+
+.text-right {
+  text-align: left;
+}
+
+// Responsive
+
+@media (min-width: @screen-sm-min) { 
+  .text-left-sm   { text-align: right; }
+  .text-center-sm { text-align: center; }
+  .text-right-sm  { text-align: left; }
+}
+
+@media (min-width: @screen-md-min) {
+  .text-left-md   { text-align: right; }
+  .text-center-md { text-align: center; }
+  .text-right-md  { text-align: left; }
+}
+
+@media (min-width: @screen-lg-min) { 
+  .text-left-lg   { text-align: right; }
+  .text-center-lg { text-align: center; }
+  .text-right-lg  { text-align: left; }
+}

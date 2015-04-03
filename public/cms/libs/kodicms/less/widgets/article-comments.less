@@ -1,0 +1,94 @@
+//
+// Widgets / Article comments
+// --------------------------------------------------
+
+.widget-article-comments {
+  .comment {
+    padding-top: 13px;
+  }
+
+  .comment:first-child {
+    padding-top: 0;
+  }
+
+  // Nested comments
+  .comment > .comment {
+    margin-left: 46px - @panel-content-padding !important;
+  }
+
+  .comment-avatar {
+    border-radius: 999999px;
+    display: block;
+    float: left;
+    height: 32px;
+    position: relative;
+    width: 32px;
+  }
+
+  .comment-heading {
+    font-size: 12px;
+    padding-bottom: 2px;
+
+    // Date
+    span {
+      color: #aaa;
+      display: inline-block;
+      font-size: 11px;
+      margin-left: 5px;
+    }
+  }
+
+  .comment-body {
+    float: none;
+    margin-left: 46px;
+    position: relative;
+
+    // Arrow
+    &:before {
+      border-color: transparent @table-border-color transparent transparent;
+      border-style: solid;
+      border-width: 6px 6px 6px 0;
+      content: "";
+      display: block;
+      height: 0px;
+      left: -6px;
+      position: absolute;
+      top: 11px;
+      width: 0px;
+    }
+  }
+
+  .comment-text {
+    border: 1px solid @table-border-color;
+    border-radius: @border-radius-base;
+    padding: 7px 12px 8px 12px;
+  }
+
+  .comment-footer {
+    display: block;
+    font-size: 12px;
+    padding: 4px 12px 0 12px;
+
+    &,
+    a {
+      color: #aaa;
+    }
+
+    a:hover {
+      color: @text-color;
+    }
+
+    i {
+      font-size: 13px;
+    }
+  }
+}
+
+.panel.widget-article-comments,
+.panel .widget-article-comments {
+  .comment {
+    margin: 0 -@panel-content-padding;
+    padding-left: @panel-content-padding;
+    padding-right: @panel-content-padding;
+  }
+}

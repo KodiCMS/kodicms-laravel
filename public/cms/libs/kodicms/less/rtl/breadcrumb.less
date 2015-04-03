@@ -1,0 +1,26 @@
+//
+// RTL: Breadcrumbs
+// --------------------------------------------------
+
+.breadcrumb {
+  > li + li:before {
+    content: "\f053";
+    left: 1px;
+  }
+
+  li.active {
+    padding-left: 0;
+    padding-right: 15px;
+
+    &:before {
+      left: auto;
+      right: -1px;
+    }
+  }
+}
+
+.breadcrumb-label {
+  float: right;
+  padding-left: 15px;
+  padding-right: 0;
+}

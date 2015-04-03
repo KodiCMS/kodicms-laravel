@@ -1,0 +1,329 @@
+//
+// Plugins / Bootstrap-Datepicker
+//
+// Version: 1.3.0
+//
+// --------------------------------------------------
+
+
+// Dropdown
+//
+
+.datepicker-dropdown {
+	border: @popover-border-width solid @popover-border-color;
+	border-radius: 3px;
+	left: 0;
+	margin-top: 10px;
+	top: 0;
+	z-index: @zindex-datepicker;
+	.box-shadow(none);
+	&.datepicker-orient-bottom { margin-top: -10px; }
+
+	// Arrows
+	&:after {
+		border-bottom: 10px solid @popover-border-color;
+		border-left:   10px solid transparent;
+		border-right:  10px solid transparent;
+		border-top:    0;
+		content: '';
+		display: block;
+		position: absolute;
+	}
+	&.datepicker-orient-left:after    { left: 12px - (@popover-border-width / 2); }
+	&.datepicker-orient-right:after   { right: 12px - (@popover-border-width / 2); }
+	&.datepicker-orient-top:after     { top: -10px - @popover-border-width; }
+	&.datepicker-orient-bottom:after {
+		border-bottom: 0;
+		border-top:    10px solid @popover-border-color;
+		bottom: -10px - @popover-border-width;
+	}
+}
+
+.modal .datepicker-dropdown {
+	z-index: @zindex-datepicker-modal;
+}
+
+
+// Datepicker
+//
+
+.datepicker {
+	direction: ltr;
+	padding: 0;
+	width: auto !important;
+
+	// Embedded / Inline datepickers
+	&.datepicker-inline {
+		border: 1px solid #eee;
+		display: inline-block;
+		position: relative;
+	}
+
+	> div {
+		display: none;
+	}
+
+	&.days div.datepicker-days,
+	&.months div.datepicker-months,
+	&.years div.datepicker-years {
+		display: block;
+	}
+
+  // Years / Months
+	div.datepicker-months,
+	div.datepicker-years {
+		td {
+			width: @bootstrap-datepicker-col-width * 7 !important;
+		}
+	}
+
+	table{
+		margin: 0;
+		.user-select-none();
+	}
+
+	// Cells
+	td {    
+  	line-height: @bootstrap-datepicker-col-width + 2px;
+    padding: 0 !important;
+    text-align: center;
+    width: @bootstrap-datepicker-col-width;
+	}
+
+	// Striped
+	.table-striped & table tr {
+		td, th {
+			background-color: transparent;
+		}
+	}
+
+	// Days
+	table tr td {
+		border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+
+    &:last-child {
+	    border-right: none;
+	  }
+
+		&.day:hover {
+			background: #f3f3f3;
+			cursor: pointer;
+			position: relative;
+		}
+		&.old,
+		&.new {
+			color: #bbb;
+		}
+		&.disabled,
+		&.disabled:hover {
+			background: none;
+			color: #eee;
+			cursor: default;
+		}
+		&.today,
+		&.today:hover,
+		&.today.disabled,
+		&.today.disabled:hover {
+			background: lighten(#eee, 2%);
+      font-weight: 700 !important;
+		}
+		&.today:hover:hover { // Thank bootstrap 2.0 for this selector...
+			// TODO: Bump min BS to 2.1, use @textColor in buttonBackground above
+			color: @text-color;
+		}
+		&.today.active:hover {
+			color: #fff;
+		}
+		&.range,
+		&.range:hover,
+		&.range.disabled,
+		&.range.disabled:hover {
+			background: lighten(#eee, 2%);
+		}
+		&.range.today,
+		&.range.today:hover,
+		&.range.today.disabled,
+		&.range.today.disabled:hover {
+			background: lighten(#eee, 2%);
+      font-weight: 700;
+		}
+		&.selected,
+		&.selected:hover,
+		&.selected.disabled,
+		&.selected.disabled:hover {
+			color: #fff !important;
+		}
+		&.active,
+		&.active:hover,
+		&.active.disabled,
+		&.active.disabled:hover {
+			color: #fff !important;
+		}
+		// Years / Months
+		span {
+			border-radius: @border-radius-base;
+			cursor: pointer;
+			display: block;
+			float: left;
+			line-height: 54px;
+			margin: 1%;
+			width: 23%;
+			&:hover {
+				background: #eee;
+			}
+			&.disabled,
+			&.disabled:hover {
+				background:none;
+				color: #eee;
+				cursor: default;
+			}
+			&.active,
+			&.active:hover,
+			&.active.disabled,
+			&.active.disabled:hover {
+				color: #fff !important;
+				text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+			}
+			&.old,
+			&.new {
+				color: #eee;
+			}
+		}
+	}
+
+	thead tr:first-child th,
+	tfoot tr th {
+		cursor: pointer;
+	}
+
+	th,
+	td,
+	tr {
+		border-top: none !important;
+    text-align: center !important;
+	}
+
+	thead th,
+	tfoot th {
+    font-weight: 600;
+    padding: 0 !important;
+	}
+
+	// Header
+	thead {
+		th {
+	  	border-bottom: none !important;
+			color: #fff;
+	    font-weight: 600;
+	  	line-height: 35px !important;
+  		height: 35px !important;
+	    padding: 0 !important;
+	    text-align: center;
+		}
+
+		tr {
+			&:first-child {
+				border-bottom: 1px solid !important;
+
+				th:hover {
+		  		background: rgba(255, 255, 255, .2);
+		  	}
+			}
+
+			&:last-child {
+				border-bottom: none !important;
+			}
+		}
+
+	  // Prev / Next buttons
+		th.prev,
+		th.next {
+			color: rgba(0, 0, 0, 0);
+			display: block;
+			font-size: 0;
+			line-height: 0;
+			position: absolute;
+			width: 36px !important;
+
+			// Icons
+			&:after {
+				bottom: 0;
+				color: #fff;
+				display: block;
+				font-family: FontAwesome;
+				font-size: 14px;
+				font-weight: normal;
+				left: 0;
+				line-height: 35px;
+				position: absolute;
+				right: 0;
+				text-align: center;
+				top: 0;
+				width: 36px;
+			}
+		}
+
+		// Prev button
+		th.prev {
+			left: 0;
+			border-right: 1px solid;		
+
+			// Icon
+			&:after {
+				content: "\f053";
+			}
+		}
+
+		// Next button
+		th.next {
+			border-left: 1px solid;
+			right: 0;
+
+			// Icon
+			&:after {
+				content: "\f054";
+			}
+		}
+	}
+
+	// Today button
+	tfoot th:hover {
+		background: #eee;
+	}
+
+	tbody td,
+	tfoot th {
+		line-height: 32px !important;
+	}
+
+	// Basic styling for calendar-week cells
+	> .datepicker-days tbody .cw {
+		background: lighten(#eee, 4%) !important;
+		color: #aaa;
+		font-size: 8px;
+		font-weight: 600;
+	}
+
+	> .datepicker-days thead tr:first-child th.cw {
+		background-color: transparent;
+		cursor: default;
+
+		+ .prev {
+			left: @bootstrap-datepicker-col-width;
+			border-left: 1px solid;
+		}
+	}
+
+	> .datepicker-days thead tr:last-child th.cw + th {
+		border-left: 1px solid;
+	}
+}
+
+.input-daterange input {
+	text-align: center;
+}
+
+.date .input-group-addon {
+	cursor: pointer;
+}	

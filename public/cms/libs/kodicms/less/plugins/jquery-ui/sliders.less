@@ -1,0 +1,115 @@
+//
+// Plugins / jQuery UI / Sliders
+// --------------------------------------------------
+
+.ui-slider {
+  background: #d7d7d7;
+  border-radius: 20px;
+  position: relative;
+  text-align: left;
+}
+
+.ui-slider-handle {
+  position: absolute;
+  z-index: 2;
+  width: 14px;
+  height: 14px;
+  cursor: default;
+  border-radius: 1000px;
+  border: 1px solid rgba(0, 0, 0, .4);
+  #gradient > .vertical(#fcfcfc, #eaeaea);
+
+  &:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 1000px;
+    background: red;
+    z-index: 3;
+    top: 4px;
+    left: 4px;
+    background: #bbb;
+  }
+}
+
+.ui-slider-range {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  border: 0;
+  background-position: 0 0;
+  border-radius: 1000px;
+}
+
+/* For IE8 - See #6727 */
+.ui-state-disabled .ui-slider-handle,
+.ui-state-disabled .ui-slider-range {
+  filter: inherit;
+}
+
+.ui-slider-horizontal {
+  height: 6px;
+}
+
+.ui-slider-horizontal .ui-slider-handle {
+  top: -4px;
+  margin-left: -7px;
+}
+
+.ui-slider-horizontal .ui-slider-range {
+  top: 0;
+  height: 100%;
+}
+
+.ui-slider-horizontal .ui-slider-range-min {
+  left: 0;
+}
+
+.ui-slider-horizontal .ui-slider-range-max {
+  right: 0;
+}
+
+.ui-slider-vertical {
+  width: 6px;
+  height: 100px;
+}
+
+.ui-slider-vertical .ui-slider-handle {
+  left: -4px;
+  margin-left: 0;
+  margin-bottom: -7px;
+}
+
+.ui-slider-vertical .ui-slider-range {
+  left: 0;
+  width: 100%;
+}
+
+.ui-slider-vertical .ui-slider-range-min {
+  bottom: 0;
+}
+
+.ui-slider-vertical .ui-slider-range-max {
+  top: 0;
+}
+
+
+// Colors
+
+.ui-slider.ui-slider-info {
+  .ui-slider-color(@info-color);
+}
+
+.ui-slider.ui-slider-success {
+  .ui-slider-color(@success-color);
+}
+
+.ui-slider.ui-slider-warning {
+  .ui-slider-color(@warning-color);
+}
+
+.ui-slider.ui-slider-danger {
+  .ui-slider-color(@danger-color);
+}

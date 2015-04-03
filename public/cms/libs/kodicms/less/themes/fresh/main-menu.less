@@ -1,0 +1,192 @@
+//
+// Themes / Fresh / Main menu
+// --------------------------------------------------
+
+
+// Background
+//
+
+#main-menu-bg,
+.mmc-dropdown-open-ul {
+  background: @menu-color;
+}
+
+#main-menu {
+  #main-menu-inner {
+    padding-top: 10px;
+  }
+
+
+  // Navigation
+  //
+
+  .navigation,
+  .mmc-dropdown-open-ul {
+
+    li {
+      border-bottom: 1px solid lighten(@menu-color, 4%);
+    }
+
+    li a {
+      color: lighten(@menu-color, 40%);
+      font-size: 12px;
+      .transition(all .2s);
+
+      -webkit-transition-property: color,background;
+      -moz-transition-property: color,background;
+      -ms-transition-property: color,background;
+      -o-transition-property: color,background;
+      transition-property: color,background;
+
+      &:hover {
+        background: lighten(@menu-color, 4%);
+        color: #fff;
+      }
+    }
+
+    li.active {
+      border-color: @menu-active-color;
+
+      & > a {
+        color: #fff;
+        background: @menu-active-color;
+        border-color: @menu-active-color;
+      }
+    }
+  }
+
+
+  // Submenus
+
+  .mm-dropdown ul,
+  .mmc-dropdown-open-ul {
+    background: darken(@menu-color, 4%);
+
+    li {
+      border: none;
+
+      a:hover {
+        background: @menu-color;
+      }
+
+      &.active {
+        border-top: none;
+
+        & > a {
+          background: @menu-active-color;
+        }
+      }
+    }
+
+    li + li {
+      border-top: 1px solid @menu-color;
+    }
+  }
+
+  li.mm-dropdown.active {
+    border-bottom-color: lighten(@menu-color, 4%);
+
+    > a {
+      color: #fff !important;
+      background: none;
+      border-bottom-color: lighten(@menu-color, 4%);
+
+       &:hover {
+        background: lighten(@menu-color, 4%);
+      }
+    }
+  }
+
+  .mm-dropdown .mm-dropdown.open > a {
+    border-bottom-color: @menu-color;
+  }
+
+  .mm-dropdown li.mm-dropdown.active {
+    border-bottom-color: @menu-color;
+    border-top: 1px solid @menu-color;
+
+    > a {
+      background: none;
+      border-bottom-color: @menu-color;
+
+       &:hover {
+        background: @menu-color;
+      }
+    }
+  }
+
+
+  // Dropdowns
+  //
+
+  .mmc-dropdown-open > a {
+    color: #fff !important;
+  }
+
+  .mmc-title {
+    color: #fff;
+    background: @menu-color;
+    border-bottom: 1px solid lighten(@menu-color, 4%);
+    padding-top: 1px;
+  }
+
+  .mmc-dropdown-open-ul.top .mmc-title {
+    padding-top: 0;
+    padding-bottom: 1px;
+    border-bottom: 0;
+    border-top: 1px solid lighten(@menu-color, 4%);
+    margin-top: -1px;
+  }
+
+  .mmc-dropdown-open-ul.top {
+    margin-bottom: 1px !important;
+  }
+
+
+  // Main menu content blocks
+  .menu-content {
+    border: none;
+    margin-top: -10px;
+
+    .btn-outline {
+      border-color: lighten(@menu-color, 4%);
+      color: lighten(@menu-color, 40%);
+
+      &:hover {
+        color: #fff;
+      }
+    }
+
+    &.top {
+      border-bottom: 1px solid lighten(@menu-color, 4%); 
+    }
+  }
+}
+
+
+// Dropdown highlights
+//
+
+// Highlight opened dropdown
+.mmc-dropdown-open .mm-dropdown.open > a,
+&.mme #main-menu .mm-dropdown.open > a {
+  color: #fff !important;
+}
+
+&.mme #main-menu .mm-dropdown.open > a {
+  border-bottom: 1px solid lighten(@menu-color, 4%);
+}
+
+@media (min-width: @screen-tablet) {
+  // Highlight expanded submenus
+  #main-menu .mm-dropdown.open > a {
+    color: #fff;
+    border-bottom: 1px solid lighten(@menu-color, 4%);
+  }
+
+  // Unhighlight expanded submenus in collapsed mode
+  &.mmc #main-menu .navigation > .mm-dropdown.open > a {
+    color: lighten(@menu-color, 40%);
+    border-bottom: none;
+  }
+}

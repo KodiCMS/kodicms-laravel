@@ -1,4 +1,4 @@
-@if ($breadcrumbs->count() > 0)
+@if ($breadcrumbs->count() > 1)
 <ul class="breadcrumb breadcrumb-page">
 	@foreach($breadcrumbs as $breadcrumb)
 	<li>

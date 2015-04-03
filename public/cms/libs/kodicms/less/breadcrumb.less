@@ -1,0 +1,108 @@
+//
+// Breadcrumbs
+// --------------------------------------------------
+
+
+.breadcrumb {
+  background: none;
+  margin-bottom: @content-wrapper-padding;
+  position: relative;
+
+  // Caret
+  li + li:before {
+    color: #ccc;
+    content: "\f054"; // Unicode space added since inline-block means non-collapsing white-space
+    font-family: FontAwesome;
+    font-size: 7px;
+    display: inline-block;
+    line-height: 8px;
+    top: -1px;
+    left: -1px;
+    position: relative;
+    padding: 0;
+    height: 8px;
+    width: 15px;
+    text-align: center;
+  }
+
+  li,
+  li a {
+    color: #999;
+    font-size: 12px;
+    line-height: 18px;
+    height: 18px;
+
+    &:hover {
+      color: @text-color;
+    }
+  }
+
+  li.active {
+    // Add some space for caret
+    padding-left: 16px;
+    position: relative;
+    
+    // Caret
+    &:before {
+      position: absolute;
+      top: 50%;
+      margin-top: -3px;
+      left: 0;
+    }
+  }
+
+  li.active,
+  li.active a {
+    color: @text-color;
+    text-decoration: none;
+  }
+
+
+  // Dark background
+  //
+
+  &.breadcrumb-dark {
+    > li + li:before {
+      color: #fff; // IE8 fallback
+      color: rgba(255, 255, 255, .4)
+    }
+
+    li,
+    li a {
+      color: #fff; // IE8 fallback
+      color: rgba(255, 255, 255, .6);
+
+      &:hover {
+        color: #fff;
+      }
+    }
+
+    li.active,
+    li.active a {
+      color: #fff;
+    }
+  }
+
+  &.breadcrumb-no-padding {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  &.breadcrumb-page {
+    border-radius: 0;
+    margin-left: -@content-wrapper-padding;
+    margin-right: -@content-wrapper-padding;
+    margin-top: -@content-wrapper-padding;
+    padding-left: @content-wrapper-padding;
+    padding-right: @content-wrapper-padding;
+  }
+}
+
+.breadcrumb-label {
+  float: left;
+  font-size: 12px;
+  line-height: 18px;
+  height: 18px;
+  padding-right: 15px;
+  margin: 1px 0 -1px 0;
+}

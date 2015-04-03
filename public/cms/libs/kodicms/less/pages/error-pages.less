@@ -1,0 +1,62 @@
+//
+// Pages / Error pages
+//
+// --------------------------------------------------
+
+.page-404 {
+	background: @warning-color !important;
+}
+
+.page-500 {
+	background: @danger-color !important;
+
+	.error-text {
+		margin-bottom: 80px !important;
+	}
+}
+
+// Error pages
+//
+
+.error-container {
+	.error-code {
+		text-align: center;
+		font-size: 100px;
+		font-weight: 700;
+		line-height: 140px;
+		margin-top: 60px;
+		text-shadow: 0 4px 0 rgba(0,0,0,.1);
+	}
+
+	// Error text
+	//
+
+	.error-text {
+		text-align: center;
+		color: rgba(0, 0, 0, .5);
+		font-size: 20px;
+		font-weight: 600;
+		padding: 0 20px;
+
+		.oops {
+			font-size: 50px;
+		}
+
+		// Divider
+		.hr {
+			background: #fff;
+			background: rgba(0, 0, 0, .2);
+			display: inline-block;
+			height: 5px;
+			margin: 20px 0;
+			width: 40px;
+		}
+
+		.solve {
+			display: inline-block;
+			font-size: 16px;
+			font-weight: 400;
+			margin-top: 15px;
+		}
+	}
+}

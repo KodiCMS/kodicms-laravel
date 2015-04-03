@@ -1,0 +1,38 @@
+//
+// RTL: Widgets / Profile
+// --------------------------------------------------
+
+
+// Centered widget layout
+//
+
+.widget-profile.widget-profile-centered {
+  text-align: center;
+
+  .widget-profile-avatar {
+    width: 70px;
+    height: 70px;
+    float: none;
+    margin: 0 auto 8px auto;
+    display: block;
+  }
+}
+
+.widget-profile {
+  .widget-profile-avatar {
+    float: right;
+    margin-left: 12px;
+    margin-right: 0;
+  }
+
+  .widget-profile-bg-icon {
+    left: 5px;
+    right: auto;
+    text-align: left;
+  }
+
+  .widget-profile-counters > div + div {
+    border-left: none;
+    border-right: 1px solid @table-border-color;
+  }
+}
