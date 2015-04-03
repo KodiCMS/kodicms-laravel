@@ -162,11 +162,13 @@ class Module
 	 */
 	protected function loadViews()
 	{
-		if (is_dir($appPath = base_path() . '/resources/views/vendor/' . $this->getName())) {
-			app('view')->addNamespace($this->getName(), $appPath);
+		$namespace = strtolower($this->getName());
+
+		if (is_dir($appPath = base_path() . '/resources/views/vendor/' . $namespace)) {
+			app('view')->addNamespace($namespace, $appPath);
 		}
 
-		app('view')->addNamespace($this->getName(), $this->getPath(['resources', 'views']));
+		app('view')->addNamespace($namespace, $this->getPath(['resources', 'views']));
 	}
 
 	/**
@@ -176,7 +178,8 @@ class Module
 	 */
 	protected function loadTranslations()
 	{
-		app('translator')->addNamespace($this->getName(), $this->getPath(['resources', 'lang']));
+		$namespace = strtolower($this->getName());
+		app('translator')->addNamespace($namespace, $this->getPath(['resources', 'lang']));
 	}
 
 	/**

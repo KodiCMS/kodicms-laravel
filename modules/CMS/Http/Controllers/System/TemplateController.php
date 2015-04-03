@@ -8,7 +8,7 @@ class TemplateController extends Controller
 	/**
 	 * @var  \View  page template
 	 */
-	public $template = 'CMS::system.backend';
+	public $template = 'cms::app.backend';
 
 	/**
 	 *
@@ -81,7 +81,13 @@ class TemplateController extends Controller
 		}
 
 		return view($view, $data);
+	}
 
+	public function before()
+	{
+		parent::before();
+
+		View::share('adminDir', config('cms.admin_dir_name'));
 	}
 
 	public function after()
