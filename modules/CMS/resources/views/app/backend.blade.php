@@ -11,7 +11,7 @@
 		<div id="main-wrapper">
 			@if($requestType != 'iframe')
 			<header>
-				@include('cms::app.blocks.navbar')
+				{{-- @include('cms::app.blocks.navbar') --}}}
 			</header>
 			<div id="main-menu" role="navigation">
 				@include('cms::app.blocks.navigation', ['breadcrumbs' => $breadcrumbs])
