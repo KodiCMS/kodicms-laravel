@@ -5,8 +5,15 @@ use KodiCMS\CMS\Assets\Core as Assets;
 
 class FilemanagerController extends BackendController
 {
+	/**
+	 * @var string
+	 */
+	public $templatePreffix = 'filemanager::';
+
 	public function show()
 	{
 		Assets::package(array('elfinder', 'jquery-ui', 'ace'));
+
+		$this->setContent('filemanager');
 	}
 }

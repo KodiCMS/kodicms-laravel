@@ -68,7 +68,7 @@ Package::add('select2')
 	->js('select2' . Lang::getLocale(), CMS::resourcesURL() . '/libs/select2/select2_locale_' . Lang::getLocale() . '.js', ['select2', 'libraries']);
 
 Package::add('validate')
-	//->js(NULL, CMS::resourcesURL() . '/libs/validation/jquery.validate.min.js', 'jquery')
+	->js(NULL, CMS::resourcesURL() . '/libs/validation/jquery.validate.min.js', 'jquery')
 	->js('validate' . Lang::getLocale(), CMS::resourcesURL() . '/libs/validation/localization/messages_' . Lang::getLocale() . '.min.js', 'validate');
 
 Package::add('ckeditor')

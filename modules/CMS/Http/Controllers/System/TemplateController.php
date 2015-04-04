@@ -12,6 +12,11 @@ class TemplateController extends Controller
 	public $template = 'cms::app.backend';
 
 	/**
+	 * @var string
+	 */
+	public $templatePreffix = 'cms::';
+
+	/**
 	 *
 	 * @var \Breadcrumbs
 	 */
@@ -80,13 +85,13 @@ class TemplateController extends Controller
 	public function setContent($view, array $data = [])
 	{
 		if (!is_null($this->template)) {
-			$content = view($view, $data);
+			$content = view($this->templatePreffix . $view, $data);
 			$this->template->with('content', $content);
 
 			return $content;
 		}
 
-		return view($view, $data);
+		return view($this->templatePreffix . $view, $data);
 	}
 
 	public function before()

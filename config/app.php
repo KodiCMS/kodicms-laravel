@@ -187,6 +187,7 @@ return [
 		'HTML'		=> 'Illuminate\Html\HtmlFacade',
 
 		'UI'		=> 'KodiCMS\CMS\Helpers\UI',
+		'ACL'		=> 'KodiCMS\Users\ACL',
 		'CMS'		=> 'KodiCMS\CMS\Core',
 		'Assets'	=> 'KodiCMS\CMS\Assets\Core',
 	],
