@@ -56,6 +56,14 @@ class ItemDecorator
 	/**
 	 * @return string
 	 */
+	public function getLabel()
+	{
+		return trans($this->getAttribute('label'));
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getUrl()
 	{
 		return url($this->getAttribute('url'));

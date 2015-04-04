@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use KodiCMS\CMS\Helpers\File;
-use KodiCMS\Pages\BehaviorManager;
+use KodiCMS\CMS\Helpers\Text;
 
 class FrontendPage
 {
@@ -101,6 +101,8 @@ class FrontendPage
 
 		// TODO: добавить кеширование запросов
 		$foundPage = $query
+//			->cacheTags(['frontPage', 'pages'])
+//			->remember(config('pages.cache.findByField'))
 			->take(1)
 			->first();
 
@@ -148,6 +150,54 @@ class FrontendPage
 	public static function findById($id, $includeHidden = TRUE)
 	{
 		return self::findByField('id', (int)$id, NULL, $includeHidden);
+	}
+
+	/**
+	 * @param string $uri
+	 * @return string|boolean
+	 */
+	public static function findSimilar($uri)
+	{
+		if (empty($uri)) {
+			return FALSE;
+		}
+
+		$uriSlugs = array_merge([''], preg_split('/\//', $uri, -1, PREG_SPLIT_NO_EMPTY));
+
+		$slugs = DB::table('pages')
+			->select('id', 'slug')
+			->wherein('status_id', config('pages.similar.find_in_statuses', []));
+
+		if (config('pages.check_date')) {
+			$slugs->where('published_at', '<=', DB::raw('NOW()'));
+		}
+
+		$slugs = $slugs->get()->lists('slug', 'id');
+
+		$newSlugs = [];
+		foreach ($uriSlugs as $slug) {
+			if (in_array($slug, $slugs)) {
+				$newSlugs[] = $slug;
+				continue;
+			}
+
+			$similarPages = Text::similarWord($slug, $slugs);
+
+			if (!empty($similarPages)) {
+				$pageId = key($similarPages);
+				$page = static::findById($pageId);
+				$newSlugs[] = $page->getSlug();
+			}
+		}
+
+		if (!config('pages.similar.return_parent_page') AND (count($uriSlugs) != count($newSlugs))) {
+			return FALSE;
+		}
+
+		$uri = implode('/', $newSlugs);
+
+		$page = static::find($uri);
+		return $page ? $uri : FALSE;
 	}
 
 	/**
@@ -559,7 +609,7 @@ class FrontendPage
 	 */
 	public function isRedirect()
 	{
-		return (bool) $this->is_redirect;
+		return (bool)$this->is_redirect;
 	}
 
 	/**
