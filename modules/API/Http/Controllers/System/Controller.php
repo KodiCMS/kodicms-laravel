@@ -1,16 +1,15 @@
-<?php namespace KodiCMS\API\Controllers;
+<?php namespace KodiCMS\API\Http\Controllers\System;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 use KodiCMS\API\Exceptions\Exception;
 use KodiCMS\API\Exceptions\MissingParameterException;
 use KodiCMS\API\Exceptions\ValidationException;
 use Illuminate\View\View;
-use \App\Http\Controllers\Controller as BaseController;
+use KodiCMS\CMS\Http\Controllers\System\Controller as BaseController;
 
-abstract class SystemController extends BaseController
+abstract class Controller extends BaseController
 {
 	const NO_ERROR = 200;
 	const ERROR_MISSING_PAPAM = 110;
@@ -38,33 +37,6 @@ abstract class SystemController extends BaseController
 	 * @var array
 	 */
 	public $requiredFields = [];
-
-	/**
-	 *
-	 * @var Illuminate\Http\Request
-	 */
-	protected $request = NULL;
-
-	/**
-	 *
-	 * @var Illuminate\Http\Request
-	 */
-	protected $response = NULL;
-
-	/**
-	 *
-	 * @param Request $request
-	 * @param Response $response
-	 *
-	 * return void
-	 */
-	public function __construct(Request $request, Response $response)
-	{
-		$this->request = $request;
-		$this->response = $response;
-
-		$this->middleware('auth', ['only' => $this->privateActions]);
-	}
 
 	/**
 	 * Получение значения передаваемого параметра

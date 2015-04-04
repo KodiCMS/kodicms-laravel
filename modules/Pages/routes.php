@@ -1,7 +1,11 @@
 <?php
-Route::group(['prefix' => CMS::backendPath(), 'namespace' => 'Backend'], function () {
+Route::group(['prefix' => CMS::backendPath()], function () {
 	Route::get('/page', ['as' => 'backend.page.list', 'uses' => 'PageController@index']);
-	Route::get('/layout', ['as' => 'backend.layout.list', 'uses' => 'LayoutController@index']);
+
+	Route::controller('layout', 'LayoutController', [
+		'getIndex' => 'backend.layout.list'
+	]);
+
 });
 
 app('router')->before(function() {

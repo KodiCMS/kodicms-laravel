@@ -50,7 +50,7 @@ class ACL
 	public static function isAdmin($user = NULL)
 	{
 		if ($user === NULL) {
-			$user = \Auth::user();
+			$user = static::getCurrentUser();
 		}
 
 		if ($user instanceof User) {
@@ -61,7 +61,7 @@ class ACL
 			$roles = ['login'];
 		}
 
-		if ($user_id == self::ADMIN_USER OR in_array(self::ADMIN_ROLE, $roles)) {
+		if ($user_id == static::ADMIN_USER OR in_array(static::ADMIN_ROLE, $roles)) {
 			return TRUE;
 		}
 
@@ -79,30 +79,30 @@ class ACL
 	public static function check($action, User $user = NULL)
 	{
 		if ($user === NULL) {
-			$user = \Auth::user();
+			$user = static::getCurrentUser();
 		}
 
 		if (!($user instanceof User)) {
-			return self::DENY;
+			return static::DENY;
 		}
 
 		if (empty($action)) {
-			return self::ALLOW;
+			return static::ALLOW;
 		}
 
-		if (self::isAdmin($user)) {
-			return self::ALLOW;
+		if (static::isAdmin($user)) {
+			return static::ALLOW;
 		}
 
 		if (is_array($action)) {
 			$action = strtolower(implode('.', $action));
 		}
 
-		if (!isset(self::$permissions[$user->id])) {
-			self::setPermissions($user);
+		if (!isset(static::$permissions[$user->id])) {
+			static::setPermissions($user);
 		}
 
-		return isset(self::$permissions[$user->id][$action]);
+		return isset(static::$permissions[$user->id][$action]);
 	}
 
 	/**
@@ -115,7 +115,7 @@ class ACL
 	public static function checkArray(array $actions, User $user = NULL)
 	{
 		foreach ($actions as $action) {
-			if (self::check($action, $user)) {
+			if (static::check($action, $user)) {
 				return TRUE;
 			}
 		}
@@ -128,8 +128,13 @@ class ACL
 	 *
 	 * @param User $user
 	 */
-	protected static function _set_permissions(User $user)
+	protected static function setPermissions(User $user)
 	{
-		self::$permissions[$user->id] = array_flip($user->permissions());
+		static::$permissions[$user->id] = array_flip($user->permissions());
+	}
+
+	protected static function getCurrentUser()
+	{
+		return \Auth::user();
 	}
 }

@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\Filemanager\ElFinder;
+<?php namespace KodiCMS\Filemanager\elFinder;
 
 function chmodnum($chmod) {
     $trans = array('-' => '0', 'r' => '4', 'w' => '2', 'x' => '1');
@@ -15,7 +15,7 @@ elFinder::$netDrivers['ftp'] = 'FTP';
  * @author Dmitry (dio) Levashov
  * @author Cem (discofever)
  **/
-class elFinderVolumeFTP extends elFinderVolumeDriver {
+class VolumeFTP extends VolumeDriver {
 	
 	/**
 	 * Driver id
@@ -997,7 +997,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 		}
 
 		unlink($basename);
-		$filesToProcess = elFinderVolumeFTP::listFilesInDirectory($tmpDir, true);
+		$filesToProcess = VolumeFTP::listFilesInDirectory($tmpDir, true);
 		if(!$filesToProcess) {
 			$this->setError(elFinder::ERROR_EXTRACT_EXEC, $tmpDir." is not a directory");
 			$this->deleteDir($tmpDir); //cleanup
@@ -1261,7 +1261,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 			$success = unlink($dirPath);
 		} else {
 			$success = true;
-			foreach (array_reverse(elFinderVolumeFTP::listFilesInDirectory($dirPath, false)) as $path) {
+			foreach (array_reverse(VolumeFTP::listFilesInDirectory($dirPath, false)) as $path) {
 				$path = $dirPath . DIRECTORY_SEPARATOR . $path;
 				if(is_link($path)) {
 					unlink($path);
@@ -1317,7 +1317,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 					}
 				} else if(is_dir($path)) {
 					$result[] = $prefix.$file.DIRECTORY_SEPARATOR;
-					$subs = elFinderVolumeFTP::listFilesInDirectory($path, $omitSymlinks, $prefix.$file.DIRECTORY_SEPARATOR);
+					$subs = VolumeFTP::listFilesInDirectory($path, $omitSymlinks, $prefix.$file.DIRECTORY_SEPARATOR);
 					if($subs) {
 						$result = array_merge($result, $subs);
 					}

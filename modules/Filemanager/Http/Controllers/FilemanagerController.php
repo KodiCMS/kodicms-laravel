@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\Filemanager\Http\Controllers\Backend;
+<?php namespace KodiCMS\Filemanager\Http\Controllers;
 
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use KodiCMS\CMS\Assets\Core as Assets;

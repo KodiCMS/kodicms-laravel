@@ -1,13 +1,9 @@
-<?php namespace KodiCMS\Filemanager\ElFinder;
+<?php namespace KodiCMS\Filemanager\elFinder;
 
-/**
- * elFinder driver for local filesystem.
- *
- * @author Dmitry (dio) Levashov
- * @author Troex Nevelin
- **/
-class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
-	
+
+class VolumeLocalFileSystem extends VolumeDriver
+{
+
 	/**
 	 * Driver id
 	 * Must be started from letter and contains [a-z0-9]
@@ -16,21 +12,21 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 	 * @var string
 	 **/
 	protected $driverId = 'l';
-	
+
 	/**
 	 * Required to count total archive files size
 	 *
 	 * @var int
 	 **/
 	protected $archiveSize = 0;
-	
+
 	/**
 	 * Canonicalized absolute pathname of $root
-	 * 
+	 *
 	 * @var strung
 	 */
 	protected $aroot;
-	
+
 	/**
 	 * Constructor
 	 * Extend options with required fields
@@ -38,53 +34,55 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 	 * @return void
 	 * @author Dmitry (dio) Levashov
 	 **/
-	public function __construct() {
-		$this->options['alias']    = '';              // alias to replace root dir name
-		$this->options['dirMode']  = 0755;            // new dirs mode
+	public function __construct()
+	{
+		$this->options['alias'] = '';              // alias to replace root dir name
+		$this->options['dirMode'] = 0755;            // new dirs mode
 		$this->options['fileMode'] = 0644;            // new files mode
 		$this->options['quarantine'] = '.quarantine';  // quarantine folder name - required to check archive (must be hidden)
 		$this->options['maxArcFilesSize'] = 0;        // max allowed archive files size (0 - no limit)
 	}
-	
+
 	/*********************************************************************/
 	/*                        INIT AND CONFIGURE                         */
 	/*********************************************************************/
-	
+
 	/**
 	 * Configure after successfull mount.
 	 *
 	 * @return void
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function configure() {
+	protected function configure()
+	{
 		$this->aroot = realpath($this->root);
 		$root = $this->stat($this->root);
-		
+
 		if ($this->options['quarantine']) {
-			$this->attributes[] = array(
-				'pattern' => '~^'.preg_quote(DIRECTORY_SEPARATOR.$this->options['quarantine']).'$~',
-				'read'    => false,
-				'write'   => false,
-				'locked'  => true,
-				'hidden'  => true
-			);
+			$this->attributes[] = [
+				'pattern' => '~^' . preg_quote(DIRECTORY_SEPARATOR . $this->options['quarantine']) . '$~',
+				'read' => FALSE,
+				'write' => FALSE,
+				'locked' => TRUE,
+				'hidden' => TRUE
+			];
 		}
-		
+
 		// chek thumbnails path
 		if ($this->options['tmbPath']) {
-			$this->options['tmbPath'] = strpos($this->options['tmbPath'], DIRECTORY_SEPARATOR) === false
+			$this->options['tmbPath'] = strpos($this->options['tmbPath'], DIRECTORY_SEPARATOR) === FALSE
 				// tmb path set as dirname under root dir
-				? $this->root.DIRECTORY_SEPARATOR.$this->options['tmbPath']
+				? $this->root . DIRECTORY_SEPARATOR . $this->options['tmbPath']
 				// tmb path as full path
 				: $this->_normpath($this->options['tmbPath']);
 		}
 
 		parent::configure();
-		
+
 		// if no thumbnails url - try detect it
 		if ($root['read'] && !$this->tmbURL && $this->URL) {
 			if (strpos($this->tmbPath, $this->root) === 0) {
-				$this->tmbURL = $this->URL.str_replace(DIRECTORY_SEPARATOR, '/', substr($this->tmbPath, strlen($this->root)+1));
+				$this->tmbURL = $this->URL . str_replace(DIRECTORY_SEPARATOR, '/', substr($this->tmbPath, strlen($this->root) + 1));
 				if (preg_match("|[^/?&=]$|", $this->tmbURL)) {
 					$this->tmbURL .= '/';
 				}
@@ -93,94 +91,100 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 
 		// check quarantine dir
 		if (!empty($this->options['quarantine'])) {
-			$this->quarantine = $this->root.DIRECTORY_SEPARATOR.$this->options['quarantine'];
+			$this->quarantine = $this->root . DIRECTORY_SEPARATOR . $this->options['quarantine'];
 			if ((!is_dir($this->quarantine) && !$this->_mkdir($this->root, $this->options['quarantine'])) || !is_writable($this->quarantine)) {
-				$this->archivers['extract'] = array();
+				$this->archivers['extract'] = [];
 				$this->disabled[] = 'extract';
 			}
 		} else {
-			$this->archivers['extract'] = array();
+			$this->archivers['extract'] = [];
 			$this->disabled[] = 'extract';
 		}
-		
+
 	}
-	
+
 	/*********************************************************************/
 	/*                               FS API                              */
 	/*********************************************************************/
 
 	/*********************** paths/urls *************************/
-	
+
 	/**
 	 * Return parent directory path
 	 *
-	 * @param  string  $path  file path
+	 * @param  string $path file path
 	 * @return string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _dirname($path) {
+	protected function _dirname($path)
+	{
 		return dirname($path);
 	}
 
 	/**
 	 * Return file name
 	 *
-	 * @param  string  $path  file path
+	 * @param  string $path file path
 	 * @return string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _basename($path) {
+	protected function _basename($path)
+	{
 		return basename($path);
 	}
 
 	/**
 	 * Join dir name and file name and retur full path
 	 *
-	 * @param  string  $dir
-	 * @param  string  $name
+	 * @param  string $dir
+	 * @param  string $name
 	 * @return string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _joinPath($dir, $name) {
-		return $dir.DIRECTORY_SEPARATOR.$name;
+	protected function _joinPath($dir, $name)
+	{
+		return $dir . DIRECTORY_SEPARATOR . $name;
 	}
-	
+
 	/**
 	 * Return normalized path, this works the same as os.path.normpath() in Python
 	 *
-	 * @param  string  $path  path
+	 * @param  string $path path
 	 * @return string
 	 * @author Troex Nevelin
 	 **/
-	protected function _normpath($path) {
+	protected function _normpath($path)
+	{
 		if (empty($path)) {
 			return '.';
 		}
 
 		if (strpos($path, '/') === 0) {
-			$initial_slashes = true;
+			$initial_slashes = TRUE;
 		} else {
-			$initial_slashes = false;
+			$initial_slashes = FALSE;
 		}
-			
-		if (($initial_slashes) 
-		&& (strpos($path, '//') === 0) 
-		&& (strpos($path, '///') === false)) {
+
+		if (($initial_slashes)
+			&& (strpos($path, '//') === 0)
+			&& (strpos($path, '///') === FALSE)
+		) {
 			$initial_slashes = 2;
 		}
-			
-		$initial_slashes = (int) $initial_slashes;
+
+		$initial_slashes = (int)$initial_slashes;
 
 		$comps = explode('/', $path);
-		$new_comps = array();
+		$new_comps = [];
 		foreach ($comps as $comp) {
-			if (in_array($comp, array('', '.'))) {
+			if (in_array($comp, ['', '.'])) {
 				continue;
 			}
-				
-			if (($comp != '..') 
-			|| (!$initial_slashes && !$new_comps) 
-			|| ($new_comps && (end($new_comps) == '..'))) {
+
+			if (($comp != '..')
+				|| (!$initial_slashes && !$new_comps)
+				|| ($new_comps && (end($new_comps) == '..'))
+			) {
 				array_push($new_comps, $comp);
 			} elseif ($new_comps) {
 				array_pop($new_comps);
@@ -191,62 +195,67 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 		if ($initial_slashes) {
 			$path = str_repeat('/', $initial_slashes) . $path;
 		}
-		
+
 		return $path ? $path : '.';
 	}
-	
+
 	/**
 	 * Return file path related to root dir
 	 *
-	 * @param  string  $path  file path
+	 * @param  string $path file path
 	 * @return string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _relpath($path) {
-		return $path == $this->root ? '' : substr($path, strlen($this->root)+1);
+	protected function _relpath($path)
+	{
+		return $path == $this->root ? '' : substr($path, strlen($this->root) + 1);
 	}
-	
+
 	/**
 	 * Convert path related to root dir into real path
 	 *
-	 * @param  string  $path  file path
+	 * @param  string $path file path
 	 * @return string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _abspath($path) {
-		return $path == DIRECTORY_SEPARATOR ? $this->root : $this->root.DIRECTORY_SEPARATOR.$path;
+	protected function _abspath($path)
+	{
+		return $path == DIRECTORY_SEPARATOR ? $this->root : $this->root . DIRECTORY_SEPARATOR . $path;
 	}
-	
+
 	/**
 	 * Return fake path started from root dir
 	 *
-	 * @param  string  $path  file path
+	 * @param  string $path file path
 	 * @return string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _path($path) {
-		return $this->rootName.($path == $this->root ? '' : $this->separator.$this->_relpath($path));
+	protected function _path($path)
+	{
+		return $this->rootName . ($path == $this->root ? '' : $this->separator . $this->_relpath($path));
 	}
-	
+
 	/**
 	 * Return true if $path is children of $parent
 	 *
-	 * @param  string  $path    path to check
-	 * @param  string  $parent  parent path
+	 * @param  string $path path to check
+	 * @param  string $parent parent path
 	 * @return bool
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _inpath($path, $parent) {
+	protected function _inpath($path, $parent)
+	{
 		$real_path = realpath($path);
 		$real_parent = realpath($parent);
 		if ($real_path && $real_parent) {
-			return $real_path === $real_parent || strpos($real_path, $real_parent.DIRECTORY_SEPARATOR) === 0;
+			return $real_path === $real_parent || strpos($real_path, $real_parent . DIRECTORY_SEPARATOR) === 0;
 		}
-		return false;
+
+		return FALSE;
 	}
-	
-	
-	
+
+
+
 	/***************** file stat ********************/
 
 	/**
@@ -264,12 +273,13 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 	 *
 	 * If file does not exists - returns empty array or false.
 	 *
-	 * @param  string  $path    file path 
+	 * @param  string $path file path
 	 * @return array|false
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _stat($path) {
-		$stat = array();
+	protected function _stat($path)
+	{
+		$stat = [];
 
 		if (!file_exists($path)) {
 			return $stat;
@@ -285,261 +295,286 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 		}
 
 		if ($path != $this->root && is_link($path)) {
-			if (($target = $this->readlink($path)) == false 
-			|| $target == $path) {
-				$stat['mime']  = 'symlink-broken';
-				$stat['read']  = false;
-				$stat['write'] = false;
-				$stat['size']  = 0;
+			if (($target = $this->readlink($path)) == FALSE
+				|| $target == $path
+			) {
+				$stat['mime'] = 'symlink-broken';
+				$stat['read'] = FALSE;
+				$stat['write'] = FALSE;
+				$stat['size'] = 0;
+
 				return $stat;
 			}
-			$stat['alias']  = $this->_path($target);
+			$stat['alias'] = $this->_path($target);
 			$stat['target'] = $target;
-			$path  = $target;
+			$path = $target;
 			$lstat = lstat($path);
-			$size  = $lstat['size'];
+			$size = $lstat['size'];
 		} else {
 			$size = @filesize($path);
 		}
-		
+
 		$dir = is_dir($path);
-		
-		$stat['mime']  = $dir ? 'directory' : $this->mimetype($path);
-		$stat['ts']    = filemtime($path);
-		$stat['read']  = is_readable($path);
+
+		$stat['mime'] = $dir ? 'directory' : $this->mimetype($path);
+		$stat['ts'] = filemtime($path);
+		$stat['read'] = is_readable($path);
 		$stat['write'] = is_writable($path);
 		if ($stat['read']) {
 			$stat['size'] = $dir ? 0 : $size;
 		}
-		
+
 		return $stat;
 	}
-	
+
 
 	/**
 	 * Return true if path is dir and has at least one childs directory
 	 *
-	 * @param  string  $path  dir path
+	 * @param  string $path dir path
 	 * @return bool
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _subdirs($path) {
+	protected function _subdirs($path)
+	{
 
 		if (($dir = dir($path))) {
 			$dir = dir($path);
-			while (($entry = $dir->read()) !== false) {
-				$p = $dir->path.DIRECTORY_SEPARATOR.$entry;
+			while (($entry = $dir->read()) !== FALSE) {
+				$p = $dir->path . DIRECTORY_SEPARATOR . $entry;
 				if ($entry != '.' && $entry != '..' && is_dir($p) && !$this->attr($p, 'hidden')) {
 					$dir->close();
-					return true;
+
+					return TRUE;
 				}
 			}
 			$dir->close();
 		}
-		return false;
+
+		return FALSE;
 	}
-	
+
 	/**
 	 * Return object width and height
 	 * Usualy used for images, but can be realize for video etc...
 	 *
-	 * @param  string  $path  file path
-	 * @param  string  $mime  file mime type
+	 * @param  string $path file path
+	 * @param  string $mime file mime type
 	 * @return string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _dimensions($path, $mime) {
+	protected function _dimensions($path, $mime)
+	{
 		clearstatcache();
-		return strpos($mime, 'image') === 0 && ($s = @getimagesize($path)) !== false 
-			? $s[0].'x'.$s[1] 
-			: false;
+
+		return strpos($mime, 'image') === 0 && ($s = @getimagesize($path)) !== FALSE
+			? $s[0] . 'x' . $s[1]
+			: FALSE;
 	}
 	/******************** file/dir content *********************/
-	
+
 	/**
 	 * Return symlink target file
 	 *
-	 * @param  string  $path  link path
+	 * @param  string $path link path
 	 * @return string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function readlink($path) {
+	protected function readlink($path)
+	{
 		if (!($target = @readlink($path))) {
-			return false;
-		}
-		
-		if (substr($target, 0, 1) != DIRECTORY_SEPARATOR) {
-			$target = dirname($path).DIRECTORY_SEPARATOR.$target;
-		}
-		
-		if ($this->_inpath($target, $this->aroot)) {
-			$atarget = realpath($target);
-			return $this->_normpath($this->root.DIRECTORY_SEPARATOR.substr($atarget, strlen($this->aroot)+1));
+			return FALSE;
 		}
 
-		return false;
+		if (substr($target, 0, 1) != DIRECTORY_SEPARATOR) {
+			$target = dirname($path) . DIRECTORY_SEPARATOR . $target;
+		}
+
+		if ($this->_inpath($target, $this->aroot)) {
+			$atarget = realpath($target);
+
+			return $this->_normpath($this->root . DIRECTORY_SEPARATOR . substr($atarget, strlen($this->aroot) + 1));
+		}
+
+		return FALSE;
 	}
-		
+
 	/**
 	 * Return files list in directory.
 	 *
-	 * @param  string  $path  dir path
+	 * @param  string $path dir path
 	 * @return array
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _scandir($path) {
-		$files = array();
-		
+	protected function _scandir($path)
+	{
+		$files = [];
+
 		foreach (scandir($path) as $name) {
 			if ($name != '.' && $name != '..') {
-				$files[] = $path.DIRECTORY_SEPARATOR.$name;
+				$files[] = $path . DIRECTORY_SEPARATOR . $name;
 			}
 		}
+
 		return $files;
 	}
-		
+
 	/**
 	 * Open file and return file pointer
 	 *
-	 * @param  string  $path  file path
-	 * @param  bool    $write open file for writing
+	 * @param  string $path file path
+	 * @param  bool $write open file for writing
 	 * @return resource|false
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _fopen($path, $mode='rb') {
+	protected function _fopen($path, $mode = 'rb')
+	{
 		return @fopen($path, 'r');
 	}
-	
+
 	/**
 	 * Close opened file
 	 *
-	 * @param  resource  $fp  file pointer
+	 * @param  resource $fp file pointer
 	 * @return bool
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _fclose($fp, $path='') {
+	protected function _fclose($fp, $path = '')
+	{
 		return @fclose($fp);
 	}
-	
+
 	/********************  file/dir manipulations *************************/
-	
+
 	/**
 	 * Create dir and return created dir path or false on failed
 	 *
-	 * @param  string  $path  parent dir path
-	 * @param string  $name  new directory name
+	 * @param  string $path parent dir path
+	 * @param string $name new directory name
 	 * @return string|bool
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _mkdir($path, $name) {
-		$path = $path.DIRECTORY_SEPARATOR.$name;
+	protected function _mkdir($path, $name)
+	{
+		$path = $path . DIRECTORY_SEPARATOR . $name;
 
 		if (@mkdir($path)) {
 			@chmod($path, $this->options['dirMode']);
+
 			return $path;
 		}
 
-		return false;
+		return FALSE;
 	}
-	
+
 	/**
 	 * Create file and return it's path or false on failed
 	 *
-	 * @param  string  $path  parent dir path
-	 * @param string  $name  new file name
+	 * @param  string $path parent dir path
+	 * @param string $name new file name
 	 * @return string|bool
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _mkfile($path, $name) {
-		$path = $path.DIRECTORY_SEPARATOR.$name;
-		
+	protected function _mkfile($path, $name)
+	{
+		$path = $path . DIRECTORY_SEPARATOR . $name;
+
 		if (($fp = @fopen($path, 'w'))) {
 			@fclose($fp);
 			@chmod($path, $this->options['fileMode']);
+
 			return $path;
 		}
-		return false;
+
+		return FALSE;
 	}
-	
+
 	/**
 	 * Create symlink
 	 *
-	 * @param  string  $source     file to link to
-	 * @param  string  $targetDir  folder to create link in
-	 * @param  string  $name       symlink name
+	 * @param  string $source file to link to
+	 * @param  string $targetDir folder to create link in
+	 * @param  string $name symlink name
 	 * @return bool
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _symlink($source, $targetDir, $name) {
-		return @symlink($source, $targetDir.DIRECTORY_SEPARATOR.$name);
+	protected function _symlink($source, $targetDir, $name)
+	{
+		return @symlink($source, $targetDir . DIRECTORY_SEPARATOR . $name);
 	}
-	
+
 	/**
 	 * Copy file into another file
 	 *
-	 * @param  string  $source     source file path
-	 * @param  string  $targetDir  target directory path
-	 * @param  string  $name       new file name
+	 * @param  string $source source file path
+	 * @param  string $targetDir target directory path
+	 * @param  string $name new file name
 	 * @return bool
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _copy($source, $targetDir, $name) {
-		return copy($source, $targetDir.DIRECTORY_SEPARATOR.$name);
+	protected function _copy($source, $targetDir, $name)
+	{
+		return copy($source, $targetDir . DIRECTORY_SEPARATOR . $name);
 	}
-	
+
 	/**
 	 * Move file into another parent dir.
 	 * Return new file path or false.
 	 *
-	 * @param  string  $source  source file path
-	 * @param  string  $target  target dir path
-	 * @param  string  $name    file name
+	 * @param  string $source source file path
+	 * @param  string $target target dir path
+	 * @param  string $name file name
 	 * @return string|bool
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _move($source, $targetDir, $name) {
-		$target = $targetDir.DIRECTORY_SEPARATOR.$name;
-		return @rename($source, $target) ? $target : false;
+	protected function _move($source, $targetDir, $name)
+	{
+		$target = $targetDir . DIRECTORY_SEPARATOR . $name;
+
+		return @rename($source, $target) ? $target : FALSE;
 	}
-		
+
 	/**
 	 * Remove file
 	 *
-	 * @param  string  $path  file path
+	 * @param  string $path file path
 	 * @return bool
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _unlink($path) {
+	protected function _unlink($path)
+	{
 		return @unlink($path);
 	}
 
 	/**
 	 * Remove dir
 	 *
-	 * @param  string  $path  dir path
+	 * @param  string $path dir path
 	 * @return bool
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _rmdir($path) {
+	protected function _rmdir($path)
+	{
 		return @rmdir($path);
 	}
-	
+
 	/**
 	 * Create new file and write into it from file pointer.
 	 * Return new file path or false on error.
 	 *
-	 * @param  resource  $fp   file pointer
-	 * @param  string    $dir  target dir path
-	 * @param  string    $name file name
-	 * @param  array     $stat file stat (required by some virtual fs)
+	 * @param  resource $fp file pointer
+	 * @param  string $dir target dir path
+	 * @param  string $name file name
+	 * @param  array $stat file stat (required by some virtual fs)
 	 * @return bool|string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _save($fp, $dir, $name, $stat) {
-		$path = $dir.DIRECTORY_SEPARATOR.$name;
+	protected function _save($fp, $dir, $name, $stat)
+	{
+		$path = $dir . DIRECTORY_SEPARATOR . $name;
 
 		if (!($target = @fopen($path, 'wb'))) {
-			return false;
+			return FALSE;
 		}
 
 		while (!feof($fp)) {
@@ -548,34 +583,39 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 		fclose($target);
 		@chmod($path, $this->options['fileMode']);
 		clearstatcache();
+
 		return $path;
 	}
-	
+
 	/**
 	 * Get file contents
 	 *
-	 * @param  string  $path  file path
+	 * @param  string $path file path
 	 * @return string|false
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _getContents($path) {
+	protected function _getContents($path)
+	{
 		return file_get_contents($path);
 	}
-	
+
 	/**
 	 * Write a string to a file
 	 *
-	 * @param  string  $path     file path
-	 * @param  string  $content  new file content
+	 * @param  string $path file path
+	 * @param  string $content new file content
 	 * @return bool
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _filePutContents($path, $content) {
-		if (@file_put_contents($path, $content, LOCK_EX) !== false) {
+	protected function _filePutContents($path, $content)
+	{
+		if (@file_put_contents($path, $content, LOCK_EX) !== FALSE) {
 			clearstatcache();
-			return true;
+
+			return TRUE;
 		}
-		return false;
+
+		return FALSE;
 	}
 
 	/**
@@ -583,25 +623,28 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 	 *
 	 * @return void
 	 **/
-	protected function _checkArchivers() {
+	protected function _checkArchivers()
+	{
 		$this->archivers = $this->getArchivers();
+
 		return;
 	}
 
 	/**
 	 * Unpack archive
 	 *
-	 * @param  string  $path  archive path
-	 * @param  array   $arc   archiver command and arguments (same as in $this->archivers)
+	 * @param  string $path archive path
+	 * @param  array $arc archiver command and arguments (same as in $this->archivers)
 	 * @return void
 	 * @author Dmitry (dio) Levashov
 	 * @author Alexey Sukhotin
 	 **/
-	protected function _unpack($path, $arc) {
+	protected function _unpack($path, $arc)
+	{
 		$cwd = getcwd();
 		$dir = $this->_dirname($path);
 		chdir($dir);
-		$cmd = $arc['cmd'].' '.$arc['argc'].' '.escapeshellarg($this->_basename($path));
+		$cmd = $arc['cmd'] . ' ' . $arc['argc'] . ' ' . escapeshellarg($this->_basename($path));
 		$this->procExec($cmd, $o, $c);
 		chdir($cwd);
 	}
@@ -609,87 +652,89 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 	/**
 	 * Recursive symlinks search
 	 *
-	 * @param  string  $path  file/dir path
+	 * @param  string $path file/dir path
 	 * @return bool
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _findSymlinks($path) {
+	protected function _findSymlinks($path)
+	{
 		if (is_link($path)) {
-			return true;
+			return TRUE;
 		}
-		
+
 		if (is_dir($path)) {
 			foreach (scandir($path) as $name) {
 				if ($name != '.' && $name != '..') {
-					$p = $path.DIRECTORY_SEPARATOR.$name;
+					$p = $path . DIRECTORY_SEPARATOR . $name;
 					if (is_link($p) || !$this->nameAccepted($name)) {
-						return true;
+						return TRUE;
 					}
 					if (is_dir($p) && $this->_findSymlinks($p)) {
-						return true;
+						return TRUE;
 					} elseif (is_file($p)) {
 						$this->archiveSize += filesize($p);
 					}
 				}
 			}
 		} else {
-			
+
 			$this->archiveSize += filesize($path);
 		}
-		
-		return false;
+
+		return FALSE;
 	}
 
 	/**
 	 * Extract files from archive
 	 *
-	 * @param  string  $path  archive path
-	 * @param  array   $arc   archiver command and arguments (same as in $this->archivers)
+	 * @param  string $path archive path
+	 * @param  array $arc archiver command and arguments (same as in $this->archivers)
 	 * @return true
-	 * @author Dmitry (dio) Levashov, 
+	 * @author Dmitry (dio) Levashov,
 	 * @author Alexey Sukhotin
 	 **/
-	protected function _extract($path, $arc) {
-		
+	protected function _extract($path, $arc)
+	{
+
 		if ($this->quarantine) {
-			$dir     = $this->quarantine.DIRECTORY_SEPARATOR.str_replace(' ', '_', microtime()).basename($path);
-			$archive = $dir.DIRECTORY_SEPARATOR.basename($path);
-			
+			$dir = $this->quarantine . DIRECTORY_SEPARATOR . str_replace(' ', '_', microtime()) . basename($path);
+			$archive = $dir . DIRECTORY_SEPARATOR . basename($path);
+
 			if (!@mkdir($dir)) {
-				return false;
+				return FALSE;
 			}
-			
+
 			chmod($dir, 0777);
-			
+
 			// copy in quarantine
 			if (!copy($path, $archive)) {
-				return false;
+				return FALSE;
 			}
-			
+
 			// extract in quarantine
 			$this->_unpack($archive, $arc);
 			unlink($archive);
-			
+
 			// get files list
-			$ls = array();
+			$ls = [];
 			foreach (scandir($dir) as $i => $name) {
 				if ($name != '.' && $name != '..') {
 					$ls[] = $name;
 				}
 			}
-			
+
 			// no files - extract error ?
 			if (empty($ls)) {
-				return false;
+				return FALSE;
 			}
-			
+
 			$this->archiveSize = 0;
-			
+
 			// find symlinks
 			$symlinks = $this->_findSymlinks($dir);
 			// remove arc copy
 			$this->remove($dir);
-			
+
 			if ($symlinks) {
 				return $this->setError(elFinder::ERROR_ARC_SYMLINKS);
 			}
@@ -698,65 +743,66 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 			if ($this->options['maxArcFilesSize'] > 0 && $this->options['maxArcFilesSize'] < $this->archiveSize) {
 				return $this->setError(elFinder::ERROR_ARC_MAXSIZE);
 			}
-			
-			
-			
+
+
 			// archive contains one item - extract in archive dir
 			if (count($ls) == 1) {
 				$this->_unpack($path, $arc);
-				$result = dirname($path).DIRECTORY_SEPARATOR.$ls[0];
-				
+				$result = dirname($path) . DIRECTORY_SEPARATOR . $ls[0];
+
 
 			} else {
 				// for several files - create new directory
 				// create unique name for directory
 				$name = basename($path);
 				if (preg_match('/\.((tar\.(gz|bz|bz2|z|lzo))|cpio\.gz|ps\.gz|xcf\.(gz|bz2)|[a-z0-9]{1,4})$/i', $name, $m)) {
-					$name = substr($name, 0,  strlen($name)-strlen($m[0]));
+					$name = substr($name, 0, strlen($name) - strlen($m[0]));
 				}
-				$test = dirname($path).DIRECTORY_SEPARATOR.$name;
+				$test = dirname($path) . DIRECTORY_SEPARATOR . $name;
 				if (file_exists($test) || is_link($test)) {
-					$name = $this->uniqueName(dirname($path), $name, '-', false);
+					$name = $this->uniqueName(dirname($path), $name, '-', FALSE);
 				}
-				
-				$result  = dirname($path).DIRECTORY_SEPARATOR.$name;
-				$archive = $result.DIRECTORY_SEPARATOR.basename($path);
+
+				$result = dirname($path) . DIRECTORY_SEPARATOR . $name;
+				$archive = $result . DIRECTORY_SEPARATOR . basename($path);
 
 				if (!$this->_mkdir(dirname($path), $name) || !copy($path, $archive)) {
-					return false;
+					return FALSE;
 				}
-				
+
 				$this->_unpack($archive, $arc);
 				@unlink($archive);
 			}
-			
-			return file_exists($result) ? $result : false;
+
+			return file_exists($result) ? $result : FALSE;
 		}
 	}
-	
+
 	/**
 	 * Create archive and return its path
 	 *
-	 * @param  string  $dir    target dir
-	 * @param  array   $files  files names list
-	 * @param  string  $name   archive name
-	 * @param  array   $arc    archiver options
+	 * @param  string $dir target dir
+	 * @param  array $files files names list
+	 * @param  string $name archive name
+	 * @param  array $arc archiver options
 	 * @return string|bool
-	 * @author Dmitry (dio) Levashov, 
+	 * @author Dmitry (dio) Levashov,
 	 * @author Alexey Sukhotin
 	 **/
-	protected function _archive($dir, $files, $name, $arc) {
+	protected function _archive($dir, $files, $name, $arc)
+	{
 		$cwd = getcwd();
 		chdir($dir);
-		
+
 		$files = array_map('escapeshellarg', $files);
-		
-		$cmd = $arc['cmd'].' '.$arc['argc'].' '.escapeshellarg($name).' '.implode(' ', $files);
+
+		$cmd = $arc['cmd'] . ' ' . $arc['argc'] . ' ' . escapeshellarg($name) . ' ' . implode(' ', $files);
 		$this->procExec($cmd, $o, $c);
 		chdir($cwd);
 
-		$path = $dir.DIRECTORY_SEPARATOR.$name;
-		return file_exists($path) ? $path : false;
+		$path = $dir . DIRECTORY_SEPARATOR . $name;
+
+		return file_exists($path) ? $path : FALSE;
 	}
-	
+
 } // END class 

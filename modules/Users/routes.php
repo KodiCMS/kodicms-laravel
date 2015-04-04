@@ -1,9 +1,13 @@
 <?php
 
-Route::group(['prefix' => \CMS::backendPath(), 'namespace' => 'Backend'], function () {
+Route::group(['prefix' => \CMS::backendPath()], function () {
 
-	Route::get('/user', ['as' => 'backend.user.list', 'uses' => 'UserController@index']);
-	Route::get('/role', ['as' => 'backend.role.list', 'uses' => 'RoleController@index']);
+	Route::controller('user', 'UserController', [
+		'getIndex' => 'backend.user.list',
+		'getProfile' => 'backend.user.profile',
+	]);
 
-	Route::get('/profile', ['as' => 'backend.users.profile', 'uses' => 'UserController@profile']);
+	Route::controller('role', 'RoleController', [
+		'getIndex' => 'backend.role.list'
+	]);
 });

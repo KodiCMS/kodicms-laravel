@@ -1,47 +1,156 @@
-<?php
+<?php namespace KodiCMS\Filemanager\elFinder;
 
-error_reporting(0); // Set E_ALL for debuging
+use Illuminate\Http\Request;
 
-include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'elFinderConnector.class.php';
-include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'elFinder.class.php';
-include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'elFinderVolumeDriver.class.php';
-include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'elFinderVolumeLocalFileSystem.class.php';
-// Required for MySQL storage connector
-// include_once dirname(__FILE__).DIRECTORY_SEPARATOR.'elFinderVolumeMySQL.class.php';
-// Required for FTP connector support
-// include_once dirname(__FILE__).DIRECTORY_SEPARATOR.'elFinderVolumeFTP.class.php';
+class Connector
+{
+
+	const FILE_SYSTEM = '\KodiCMS\Filemanager\elFinder\VolumeLocalFileSystem';
+	const FTP         = '\KodiCMS\Filemanager\elFinder\VolumeFTP';
+
+	/**
+	 * elFinder instance
+	 *
+	 * @var elFinder
+	 **/
+	protected $elFinder;
+
+	/**
+	 * Options
+	 *
+	 * @var aray
+	 **/
+	protected $options = [];
+
+	/**
+	 * undocumented class variable
+	 *
+	 * @var string
+	 **/
+	protected $header = 'Content-Type: application/json';
 
 
-/**
- * Simple function to demonstrate how to control file access using "accessControl" callback.
- * This method will disable accessing files/folders starting from '.' (dot)
- *
- * @param  string  $attr  attribute name (read|write|locked|hidden)
- * @param  string  $path  file path relative to volume root directory started with directory separator
- * @return bool|null
- **/
-function access($attr, $path, $data, $volume) {
-	return strpos(basename($path), '.') === 0       // if file/folder begins with '.' (dot)
-		? !($attr == 'read' || $attr == 'write')    // set read+write to false, other (locked+hidden) set to true
-		:  null;                                    // else elFinder decide it itself
-}
+	/**
+	 * @param $elFinder
+	 * @param bool $debug
+	 */
+	public function __construct($elFinder, $debug = FALSE)
+	{
+		$this->elFinder = $elFinder;
+		if ($debug) {
+			$this->header = 'Content-Type: text/html; charset=utf-8';
+		}
+	}
 
+	/**
+	 * @param Request $request
+	 */
+	public function run(Request $request)
+	{
+		$isPost = $request->getMethod() === 'POST';
 
-// Documentation for connector options:
-// https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
-$opts = [
-	// 'debug' => true,
-	'roots' => [
-		[
-			'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
-			'path'          => '../files/',         // path to files (REQUIRED)
-			'URL'           => dirname($_SERVER['PHP_SELF']) . '/../files/', // URL to files (REQUIRED)
-			'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
-		]
-	]
-];
+		$src = $request->all();
 
-// run elFinder
-$connector = new elFinderConnector(new elFinder($opts));
-$connector->run();
+		$cmd = isset($src['cmd']) ? $src['cmd'] : '';
+		$args = [];
 
+		if (!function_exists('json_encode')) {
+			$error = $this->elFinder->error(elFinder::ERROR_CONF, elFinder::ERROR_CONF_NO_JSON);
+			$this->output(['error' => '{"error":["' . implode('","', $error) . '"]}', 'raw' => TRUE]);
+		}
+
+		if (!$this->elFinder->loaded()) {
+			$this->output(['error' => $this->elFinder->error(elFinder::ERROR_CONF, elFinder::ERROR_CONF_NO_VOL), 'debug' => $this->elFinder->mountErrors]);
+		}
+
+		// telepat_mode: on
+		if (!$cmd && $isPost) {
+			$this->output(['error' => $this->elFinder->error(elFinder::ERROR_UPLOAD, elFinder::ERROR_UPLOAD_TOTAL_SIZE), 'header' => 'Content-Type: text/html']);
+		}
+		// telepat_mode: off
+
+		if (!$this->elFinder->commandExists($cmd)) {
+			$this->output(['error' => $this->elFinder->error(elFinder::ERROR_UNKNOWN_CMD)]);
+		}
+
+		// collect required arguments to exec command
+		foreach ($this->elFinder->commandArgsList($cmd) as $name => $req) {
+			$arg = $name == 'FILES'
+				? $_FILES
+				: (isset($src[$name]) ? $src[$name] : '');
+
+			if (!is_array($arg)) {
+				$arg = trim($arg);
+			}
+			if ($req && (!isset($arg) || $arg === '')) {
+				$this->output(['error' => $this->elFinder->error(elFinder::ERROR_INV_PARAMS, $cmd)]);
+			}
+			$args[$name] = $arg;
+		}
+
+		$args['debug'] = isset($src['debug']) ? !!$src['debug'] : FALSE;
+
+		$this->output($this->elFinder->exec($cmd, $this->input_filter($args)));
+	}
+
+	/**
+	 * Output json
+	 *
+	 * @param  array  data to output
+	 * @return void
+	 * @author Dmitry (dio) Levashov
+	 **/
+	protected function output(array $data)
+	{
+		$header = isset($data['header']) ? $data['header'] : $this->header;
+		unset($data['header']);
+		if ($header) {
+			if (is_array($header)) {
+				foreach ($header as $h) {
+					header($h);
+				}
+			} else {
+				header($header);
+			}
+		}
+
+		if (isset($data['pointer'])) {
+			rewind($data['pointer']);
+			fpassthru($data['pointer']);
+			if (!empty($data['volume'])) {
+				$data['volume']->close($data['pointer'], $data['info']['hash']);
+			}
+			exit();
+		} else {
+			if (!empty($data['raw']) && !empty($data['error'])) {
+				exit($data['error']);
+			} else {
+				exit(json_encode($data));
+			}
+		}
+
+	}
+
+	/**
+	 * Remove null & stripslashes applies on "magic_quotes_gpc"
+	 *
+	 * @param  mixed $args
+	 * @return mixed
+	 * @author Naoki Sawada
+	 */
+	private function input_filter($args)
+	{
+		static $magic_quotes_gpc = NULL;
+
+		if ($magic_quotes_gpc === NULL)
+			$magic_quotes_gpc = (version_compare(PHP_VERSION, '5.4', '<') && get_magic_quotes_gpc());
+
+		if (is_array($args)) {
+			return array_map([& $this, 'input_filter'], $args);
+		}
+		$res = str_replace("\0", '', $args);
+		$magic_quotes_gpc && ($res = stripslashes($res));
+
+		return $res;
+	}
+}// END class 
