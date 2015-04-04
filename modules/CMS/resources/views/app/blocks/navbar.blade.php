@@ -12,28 +12,26 @@
 				<div class="right clearfix">
 					<ul class="nav navbar-nav pull-right right-navbar-nav">
 						<li>
-							{!! HTML::linkRoute('backend.settings', UI::icon('cogs fa-lg')) !!}
+							<a href="{{ route('backend.settings') }}">{!! UI::icon('cogs fa-lg') !!}</a>
 						</li>
 						<li>
-							{!! HTML::link(url('/'), UI::hidden(trans('cms::core.navigation.site')), [
-							'target' => 'blank', 'data-icon' => 'globe fa-lg text-info'
-							]) !!}
+							<a href="{{ url('/') }}" target="_blank", data-icon="globe fa-lg text-info">
+								{!! UI::hidden(Lang::get('cms::core.navigation.site')) !!}
+							</a>
 						</li>
-						@if(Auth::check())
-							<li class="dropdown user-menu">
-								{{-- <a href="#" class="dropdown-toggle user-menu" data-toggle="dropdown">
-									{!! Auth::user()->gravatar(25) !!}
-									<span>{{ Auth::user()->username }}</span>
-								</a>--}}
+							@if(Auth::check())
+								<li class="dropdown user-menu">
+									{{-- <a href="#" class="dropdown-toggle user-menu" data-toggle="dropdown">
+										{!! Auth::user()->gravatar(25) !!}
+										<span>{{ Auth::user()->username }}</span>
+									</a>--}}
 								<ul class="dropdown-menu">
 									<li class="user-header">
 										{{-- !! Auth::user()->gravatar(90, NULL, ['class' => 'img-circle']) !! --}}
-
 										<p>
 											{{ Auth::user()->username }}
 											<small>{{ Auth::user()->email }}</small>
 										</p>
-
 									</li>
 									<li class="user-body">
 										<div class="col-xs-6">
@@ -45,10 +43,9 @@
 										</div>
 									</li>
 									<li class="user-footer">
-										{!! HTML::linkRoute('backend.user.logout', trans('user.action.logout'), [], [
-										'data-icon' => 'power-off text-danger',
-										'class' => 'btn btn-default btn-xs text-bold pull-right'
-										]) !!}
+										<a href="{{ rooute('backend.user.logout') }}"
+										   data-icon="power-off text-danger"
+										   class="btn btn-default btn-xs text-bold pull-right">@lang('user.action.logout')</a>
 									</li>
 								</ul>
 							</li>

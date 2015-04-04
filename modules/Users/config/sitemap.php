@@ -6,15 +6,16 @@ return [
 		'children' => [
 			[
 				'name' => 'Users',
-				'url' => route('backend.users.list'),
+				'translate' => 'users::user.sections.list',
+				'url' => route('backend.user.list'),
 				'permissions' => 'users.index',
 				'priority' => 200,
 				'icon' => 'user',
-				'divider' => TRUE,
 			],
 			[
 				'name' => 'Roles',
-				'url' => route('backend.roles.list'),
+				'translate' => 'users::user.role.sections.list',
+				'url' => route('backend.role.list'),
 				'permissions' => 'roles.index',
 				'priority' => 300,
 				'icon' => 'group'

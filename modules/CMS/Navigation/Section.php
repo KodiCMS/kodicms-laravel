@@ -118,19 +118,17 @@ class Section extends ItemDecorator implements \Countable, \Iterator
 	}
 
 	/**
-	 * @param string $uri
+	 * @param string $currentUri
 	 * @return boolean
 	 */
-	public function findActivePageByUri($uri)
+	public function findActivePageByUri($currentUri)
 	{
 		$found = FALSE;
-
-		$adminDirName = config('cms.admin_dir_name');
+		$adminDirName = \CMS::backendPath();
 
 		foreach ($this->getPages() as $page) {
 
 			$url = $page->getUrl();
-
 			$len = strpos($url, $adminDirName);
 			if ($len !== FALSE) {
 				$len += strlen($adminDirName);
@@ -138,15 +136,14 @@ class Section extends ItemDecorator implements \Countable, \Iterator
 
 			$url = substr($url, $len);
 
-			$len = strpos($uri, $adminDirName);
+			$len = strpos($currentUri, $adminDirName);
 			if ($len !== FALSE) {
 				$len += strlen($adminDirName);
 			}
 
-			$uri = substr($uri, $len);
-
+			$uri = substr($currentUri, $len);
 			if (!empty($url) AND strpos($uri, $url) !== FALSE) {
-				$page->setActive();
+				$page->setStatus(TRUE);
 
 				Collection::setCurrentPage($page);
 
@@ -157,7 +154,7 @@ class Section extends ItemDecorator implements \Countable, \Iterator
 
 		if ($found === FALSE) {
 			foreach ($this->getSections() as $section) {
-				$found = $section->findActivePageByUri($uri);
+				$found = $section->findActivePageByUri($currentUri);
 				if ($found !== FALSE) {
 					return $found;
 				}

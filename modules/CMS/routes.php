@@ -11,6 +11,10 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 
 app('router')->before(function() {
 	Route::group(['namespace' => 'KodiCMS\CMS\Http\Controllers', 'prefix' => CMS::backendPath()], function () {
+		Route::get('cms/{file}.{ext}', 'System\VirtualMediaLinksController@find')
+			->where('file', '.*')
+			->where('ext', '(css|js|png|jpg|gif|otf|eot|svg|ttf|woff)');
+
 		Route::get('{slug}', [
 			'as' => 'backendError',
 			'uses' => 'System\ErrorController@show'

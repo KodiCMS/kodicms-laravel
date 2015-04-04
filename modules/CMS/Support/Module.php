@@ -105,7 +105,8 @@ class Module
 			$this->loadConfig();
 			$this->loadAssets();
 
-			if (strtolower($this->getName()) != 'cms') {
+			$serviceProviderPath = $this->getPath('ServiceProvider.php');
+			if (strtolower($this->getName()) != 'cms' AND is_file($serviceProviderPath)) {
 				App::register($this->getNamespace() . '\ServiceProvider');
 			}
 

@@ -138,7 +138,9 @@ class TemplateController extends Controller
 			'LOCALE' => \Lang::getLocale(),
 			'ROUTE' => $this->getRouter()->currentRouteAction(),
 			'ROUTE_PATH' => $this->getRouterPath(),
-			'USER_ID' => \Auth::id()
+			'USER_ID' => \Auth::id(),
+			'MESSAGE_ERRORS' => $this->session->get('errors', []),
+			'MESSAGE_SUCCESS' => $this->session->get('success', []),
 		];
 	}
 

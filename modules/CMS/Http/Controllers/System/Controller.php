@@ -5,7 +5,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Route;
+use Illuminate\Session\Store as SessionStore;
 use Illuminate\Support\Str;
 
 abstract class Controller extends BaseController {
@@ -15,12 +15,17 @@ abstract class Controller extends BaseController {
 	/**
 	 * @var Request
 	 */
-	protected $request = NULL;
+	protected $request;
 
 	/**
 	 * @var Request
 	 */
-	protected $response = NULL;
+	protected $response;
+
+	/**
+	 * @var Session
+	 */
+	protected $session;
 
 	/**
 	 * @var bool
@@ -38,10 +43,11 @@ abstract class Controller extends BaseController {
 	 * @param Response $response
 	 * return void
 	 */
-	public function __construct(Request $request, Response $response)
+	public function __construct(Request $request, Response $response, SessionStore $session)
 	{
 		$this->request = $request;
 		$this->response = $response;
+		$this->session = $session;
 
 		if($this->authRequired) {
 			$this->middleware('auth', ['except' => $this->allowedActions]);

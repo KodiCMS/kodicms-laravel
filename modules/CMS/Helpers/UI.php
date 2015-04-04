@@ -49,10 +49,10 @@ class UI
 	 */
 	public static function hidden($title, array $types = ['xs', 'sm'])
 	{
-		$attributes = ['class' => []];
+		$attributes = ['class' => ''];
 
 		foreach ($types as $type) {
-			$attributes['class'][] = 'hidden-' . e($type);
+			$attributes['class'] .= ' hidden-' . e($type);
 		}
 
 		return '<span' . \HTML::attributes($attributes) . '>' . $title . '</span>';

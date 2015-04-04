@@ -7,6 +7,7 @@ use KodiCMS\API\Exceptions\Exception as APIException;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Debug\ExceptionHandler as SymfonyDisplayer;
 
 class Handler extends ExceptionHandler {
 
@@ -45,21 +46,13 @@ class Handler extends ExceptionHandler {
 			return (new APIExceptionResponse(config('app.debug')))->createResponse($e);
 		}
 
-		if ($this->isHttpException($e))
+		if(config('app.debug'))
 		{
-			return $this->renderHttpException($e);
+			return $this->renderExceptionWithWhoops($e);
 		}
 		else
 		{
-			if(config('app.debug'))
-			{
-				return $this->renderExceptionWithWhoops($e);
-			}
-
-			return response()->view("errors.500", [
-				'code' => 500,
-				'bodyId' => 'error.critical'
-			]);
+			return $this->renderHttpException($e);
 		}
 	}
 
@@ -73,7 +66,7 @@ class Handler extends ExceptionHandler {
 	{
 		$status = $e->getStatusCode();
 
-		if (view()->exists("errors.{$status}"))
+		if (view()->exists("csm::errors.{$status}"))
 		{
 			return response()->view("errors.{$status}", [
 				'message' => $e->getMessage(),

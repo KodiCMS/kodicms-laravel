@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\CMS\Breadcrumbs;
 
 use KodiCMS\API\Exceptions\Exception;
+use KodiCMS\CMS\Traits\Accessor;
 
 /**
  * Class Item
@@ -8,26 +9,12 @@ use KodiCMS\API\Exceptions\Exception;
  */
 class Item
 {
-	/**
-	 * @var string
-	 */
-	public $url = NULL;
+	use Accessor;
 
 	/**
-	 * @var string
+	 * @var array
 	 */
-	public $name = '';
-
-	/**
-	 * @var boolean
-	 */
-	public $active = TRUE;
-
-	/**
-	 * @var string
-	 */
-	protected $data = [];
-
+	protected $attributes = [];
 
 	/**
 	 * @param string $name
@@ -43,13 +30,14 @@ class Item
 		}
 
 		$this->name = $name;
+
 		if (!is_null($url)) {
-			$this->setUrl($url);
+			$this->url =$url;
 		}
 
-		$this->active = (bool)$active;
+		$this->status = $active;
 
-		$this->data = $data;
+		$this->setAttribute($data);
 	}
 
 	/**
@@ -73,8 +61,7 @@ class Item
 	 */
 	public function getLink()
 	{
-		// TODO: необходимо убрать фильтрацию заголовка
-		return \HTML::link($this->getUrl(), $this->getName());
+		return '<a href="' . $this->getUrl() . '">' . $this->getName() . '</a>';
 	}
 
 	/**
@@ -91,18 +78,16 @@ class Item
 	 */
 	public function setUrl($url)
 	{
-		$this->url = $url;
-		return $this;
+		return $url;
 	}
 
 	/**
 	 * @param bool $status
 	 * @return $this
 	 */
-	public function setActive($status)
+	public function setStatus($status)
 	{
-		$this->active = (bool) $status;
-		return $this;
+		return (bool)$status;
 	}
 
 	/**
@@ -111,51 +96,6 @@ class Item
 	 */
 	public function setName($name)
 	{
-		$this->name = $name;
-		return $this;
-	}
-
-	/**
-	 * @param string $key
-	 * @return mixed|NULL
-	 */
-	public function getAttribute($key)
-	{
-		return array_get($this->data, $key);
-	}
-
-	/**
-	 * @param string|array $key
-	 * @param mixed $value
-	 * @return $this
-	 */
-	public function setAttribute($key, $value = NULL)
-	{
-		if (is_array($key)) {
-			$this->data = $key;
-		} else {
-			$this->data[$key] = $value;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * @param string $key
-	 * @return midex|NULL
-	 */
-	public function __get($key)
-	{
-		return $this->getAttribute($key);
-	}
-
-	/**
-	 * @param string $key
-	 * @param string $value
-	 * @return void
-	 */
-	public function __set($key, $value)
-	{
-		return $this->setAttribute($key, $value);
+		return $name;
 	}
 }

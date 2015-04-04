@@ -178,7 +178,7 @@ class Collection
 	/**
 	 * @param Page $page
 	 */
-	public function setCurrentPage(Page & $page)
+	public static function setCurrentPage(Page & $page)
 	{
 		static::$currentPage = $page;
 	}

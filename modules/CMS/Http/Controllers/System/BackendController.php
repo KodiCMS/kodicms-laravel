@@ -28,8 +28,15 @@ class BackendController extends TemplateController
 		$this->navigation = Navigation::init($this->request->getUri(), config('sitemap', []));
 		$this->breadcrumbs = Breadcrumbs::factory();
 
+		$currentPage = Navigation::getCurrentPage();
+
 		$this->breadcrumbs
 			->add(\UI::icon('home'), route('backend.dashboard'));
+
+		if(!is_null($currentPage)){
+			$this->breadcrumbs->add($currentPage->getName(), $currentPage->getUrl());
+			$this->setTitle($currentPage->getName());
+		}
 
 		parent::before();
 	}
@@ -53,9 +60,7 @@ class BackendController extends TemplateController
 		$this->templateScripts['DEFAULT_HTML_EDITOR'] = config('cms.wysiwyg.default_html_editor', '');
 		$this->templateScripts['DEFAULT_CODE_EDITOR'] = config('cms.wysiwyg.default_code_editor', '');
 
-		Assets::package([
-			'jquery', 'bootstrap', 'notify', 'select2', 'dropzone', 'fancybox', 'datepicker', 'underscore', 'core'
-		]);
+		Assets::package(['libraries', 'core']);
 
 		// TODO: разобраться с подключением событий и локалей в контроллер
 //		$file = $this->request->controller();

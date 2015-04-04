@@ -1,8 +1,11 @@
 <?php namespace KodiCMS\CMS\Navigation;
 
+use KodiCMS\CMS\Helpers\UI;
+use KodiCMS\CMS\Traits\Accessor;
 
 class ItemDecorator
 {
+	use Accessor;
 
 	/**
 	 * @var array
@@ -21,65 +24,7 @@ class ItemDecorator
 	 */
 	public function __construct(array $data = [])
 	{
-		foreach ($data as $key => $value) {
-			$this->setAttribute($key, $value);
-		}
-	}
-
-	/**
-	 * @param string $name
-	 * @param mixed $default
-	 * @return mixed|null
-	 */
-	public function getAttribute($name, $default = NULL)
-	{
-		return array_get($this->attributes, $name, $default);
-	}
-
-	/**
-	 * @param string $name
-	 * @param mixed $value
-	 * @return $this
-	 */
-	public function setAttribute($name, $value)
-	{
-		$method = 'set' . ucfirst($name);
-		if (method_exists($this, 'set' . ucfirst($name))) {
-			$this->attributes[$name] = $this->{$method}();
-		} else {
-			$this->attributes[$name] = $value;
-		}
-
-		return $this;
-	}
-
-	/**
-	 *
-	 * @param string $name
-	 * @return mixed
-	 */
-	public function __get($name)
-	{
-		return $this->getAttribute($name);
-	}
-
-	/**
-	 * @param string $name
-	 * @param mixed $value
-	 * @return void
-	 */
-	public function __set($name, $value)
-	{
-		return $this->setAttribute($name, $value);
-	}
-
-	/**
-	 * @param string $name
-	 * @return boolean
-	 */
-	public function __isset($name)
-	{
-		return isset($this->attributes[$name]);
+		$this->setAttribute($data);
 	}
 
 	/**
@@ -87,7 +32,17 @@ class ItemDecorator
 	 */
 	public function isActive()
 	{
-		return (bool) $this->getAttribute('status', FALSE);
+		return (bool)$this->getAttribute('status', FALSE);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getIcon()
+	{
+		if (!isset($this->icon)) return NULL;
+
+		return UI::icon($this->icon . ' menu-icon');
 	}
 
 	/**
@@ -111,7 +66,7 @@ class ItemDecorator
 	 */
 	public function getPermissions()
 	{
-		return (array) $this->getAttribute('premissions');
+		return (array)$this->getAttribute('premissions');
 	}
 
 	/**
@@ -121,10 +76,10 @@ class ItemDecorator
 	public function setStatus($status = TRUE)
 	{
 		if ($this->getSection() instanceof Section) {
-			$this->getSection()->setStatus((bool) $status);
+			$this->getSection()->setStatus((bool)$status);
 		}
 
-		return $this->attributes['status'] = (bool) $status;
+		return (bool)$status;
 	}
 
 	/**
@@ -134,6 +89,7 @@ class ItemDecorator
 	public function setSection(Section & $section)
 	{
 		$this->sectionObject = $section;
+
 		return $this;
 	}
 

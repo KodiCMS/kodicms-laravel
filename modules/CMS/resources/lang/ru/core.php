@@ -1,6 +1,11 @@
 <?php
 
 return [
+	'sections' => [
+		'about' => 'О системе',
+		'settings' => 'Настройки',
+		'system' => 'Системные'
+	],
 	'helpers' => [
 		'not_select' => 'Не выбран',
 	],

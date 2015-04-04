@@ -43,13 +43,13 @@ abstract class SystemController extends BaseController
 	 *
 	 * @var Illuminate\Http\Request
 	 */
-	protected $_request = NULL;
+	protected $request = NULL;
 
 	/**
 	 *
 	 * @var Illuminate\Http\Request
 	 */
-	protected $_response = NULL;
+	protected $response = NULL;
 
 	/**
 	 *
@@ -60,8 +60,8 @@ abstract class SystemController extends BaseController
 	 */
 	public function __construct(Request $request, Response $response)
 	{
-		$this->_request = $request;
-		$this->_response = $response;
+		$this->request = $request;
+		$this->response = $response;
 
 		$this->middleware('auth', ['only' => $this->privateActions]);
 	}
@@ -80,11 +80,11 @@ abstract class SystemController extends BaseController
 	 */
 	public function getParameter($key, $default = NULL, $isRequired = FALSE)
 	{
-		if ($isRequired === TRUE AND !$this->_request->has($key)) {
+		if ($isRequired === TRUE AND !$this->request->has($key)) {
 			throw (new MissingParameterException("Missing required parameter."))->setMissedFields([$key]);
 		}
 
-		$param = $this->_request->input($key, $default);
+		$param = $this->request->input($key, $default);
 
 		return $param;
 	}
@@ -145,7 +145,7 @@ abstract class SystemController extends BaseController
 		$missedFields = [];
 		if(isset($this->requiredFields[$method]) AND is_array($this->requiredFields[$method])) {
 			foreach ($this->requiredFields[$method] as $field) {
-				if(!$this->_request->has($field)) {
+				if(!$this->request->has($field)) {
 					$missedFields[] = $field;
 				}
 			}
@@ -165,7 +165,7 @@ abstract class SystemController extends BaseController
 			$this->jsonResponse['code'] = $response->getStatusCode();
 		}
 
-		$this->_response->header('Content-Type', 'application/json');
+		$this->response->header('Content-Type', 'application/json');
 		return $this->jsonResponse;
 	}
 

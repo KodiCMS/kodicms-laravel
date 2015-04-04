@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<meta name="generator" content="{{ CMS::NAME }} v. {{ CMS::VERSION }}">
+		<meta name="generator" content="{{ CMS::NAME }} v.{{ CMS::VERSION }}">
 		<meta name="author" content="ButscH" />
 		<title>{{ $title or 'Backend' }} &ndash; {{ config('site.title') }}</title>
 		<link href="{{ asset('cms/favicon.ico') }}" rel="favourites icon" />
@@ -16,7 +16,7 @@
 		<div id="main-wrapper">
 			@if($requestType != 'iframe')
 			<header>
-				{{-- @include('cms::app.blocks.navbar') --}}
+				@include('cms::app.blocks.navbar')
 			</header>
 			<div id="main-menu" role="navigation">
 				@include('cms::app.blocks.navigation', ['breadcrumbs' => $breadcrumbs])

@@ -44,7 +44,6 @@ class Collection implements \Countable, \Iterator
 	public function isLast()
 	{
 		$items = $this->items;
-
 		return $this->current() === end($items);
 	}
 
@@ -54,7 +53,6 @@ class Collection implements \Countable, \Iterator
 	public function isFirst()
 	{
 		$items = $this->items;
-
 		return $this->current() === reset($items);
 	}
 
@@ -68,13 +66,9 @@ class Collection implements \Countable, \Iterator
 	 */
 	public function add($name, $url = FALSE, $isActive = NULL, $position = NULL, array $data = [])
 	{
-		if (!empty($name)) {
-			$item = new Item($name, $url, $isActive, $data);
-
-			$position = $this->getNextPosition($position);
-
-			$this->items[$position] = $item;
-		}
+		$item = new Item($name, $url, $isActive, $data);
+		$position = $this->getNextPosition($position);
+		$this->items[$position] = $item;
 
 		return $this;
 	}
@@ -105,10 +99,10 @@ class Collection implements \Countable, \Iterator
 	{
 		foreach ($this->items as $position => $item) {
 			if (is_array($value)) {
-				if (in_array($item->$key, $value)) {
+				if (in_array($item->{$key}, $value)) {
 					return $position;
 				}
-			} else if ($item->$key == $value) {
+			} else if ($item->{$key} == $value) {
 				return $position;
 			}
 		}
@@ -172,10 +166,8 @@ class Collection implements \Countable, \Iterator
 			return FALSE;
 		}
 
-		unset($this->items[$position]);
 		return TRUE;
 	}
-
 
 	/**
 	 * @param null|integer $position
@@ -190,6 +182,11 @@ class Collection implements \Countable, \Iterator
 		}
 
 		return $position;
+	}
+
+	public function __unset($name)
+	{
+		unset($this->items[$name]);
 	}
 
 	protected function sort()
