@@ -5,5 +5,5 @@ Route::group(['prefix' => CMS::backendPath(), 'namespace' => 'Backend'], functio
 });
 
 app('router')->before(function() {
-	Route::get('{slug}', 'FrontendController@run')->where('slug', '(.*)?');
+	Route::get('{slug}', 'KodiCMS\Pages\Http\Controllers\FrontendController@run')->where('slug', '(.*)?');
 });
