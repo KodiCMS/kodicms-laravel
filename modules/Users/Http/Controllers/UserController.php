@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\Users\Http\Controllers;
 
-use KodiCMS\CMS\Http\Controllers\System\Controller as BaseController;
+use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
-class UserController extends BaseController {
+class UserController extends BackendController {
 
 	public function getIndex()
 	{

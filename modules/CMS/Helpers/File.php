@@ -6,6 +6,15 @@
 class File
 {
 	/**
+	 * @param string $path
+	 * @return string
+	 */
+	public static function normalizePath($path)
+	{
+		return str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+	}
+
+	/**
 	 * Attempt to get the mime type from a file. This method is horribly
 	 * unreliable, due to PHP being horribly unreliable when it comes to
 	 * determining the mime type of a file.

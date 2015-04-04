@@ -1,8 +1,8 @@
-<?php namespace KodiCMS\Filemanager;
+<?php namespace KodiCMS\Cron\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
-class ServiceProvider extends BaseServiceProvider {
+class ModuleServiceProvider extends BaseServiceProvider {
 
 	public function boot()
 	{

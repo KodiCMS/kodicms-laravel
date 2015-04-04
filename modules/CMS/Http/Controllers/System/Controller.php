@@ -73,7 +73,6 @@ abstract class Controller extends BaseController {
 	}
 
 	/**
-	 *
 	 * @param string $separator
 	 * @return string
 	 */
@@ -84,6 +83,14 @@ abstract class Controller extends BaseController {
 		$path = trim(str_replace($namespace, '', $controller), '\\');
 
 		return str_replace(['\\', '@', '..', '.controller.'], $separator, Str::snake($path, '.'));
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRouterController()
+	{
+		return strtolower(last(explode('\\', get_called_class())));
 	}
 
 	/**

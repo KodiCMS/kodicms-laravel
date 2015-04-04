@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\CMS\Support;
+<?php namespace KodiCMS\Installer\Support;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;

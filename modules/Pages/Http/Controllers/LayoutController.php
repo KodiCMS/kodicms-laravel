@@ -1,11 +1,11 @@
 <?php namespace KodiCMS\Pages\Http\Controllers;
 
-use KodiCMS\CMS\Http\Controllers\System\Controller as BaseController;
+use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
-class LayoutController extends BaseController
+class LayoutController extends BackendController
 {
 	public function getIndex()
 	{
-		//
+
 	}
 }

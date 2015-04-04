@@ -1,11 +1,11 @@
-<?php namespace KodiCMS\CMS;
+<?php namespace KodiCMS\CMS\Providers;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use KodiCMS\CMS\Support\ModuleLoader;
+use KodiCMS\CMS\Loader\ModuleLoader;
 use KodiCMS\CMS\Core;
 
-class ServiceProvider extends BaseServiceProvider
+class ModuleServiceProvider extends BaseServiceProvider
 {
 	public function __construct($app)
 	{

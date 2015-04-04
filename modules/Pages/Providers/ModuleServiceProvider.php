@@ -1,8 +1,9 @@
-<?php namespace KodiCMS\Pages;
+<?php namespace KodiCMS\Pages\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use KodiCMS\Pages\BehaviorManager;
 
-class ServiceProvider extends BaseServiceProvider {
+class ModuleServiceProvider extends BaseServiceProvider {
 
 	public function boot()
 	{

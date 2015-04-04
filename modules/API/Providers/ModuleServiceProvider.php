@@ -1,9 +1,9 @@
-<?php namespace KodiCMS\API;
+<?php namespace KodiCMS\API\Providers;
 
 use KodiCMS\API\Console\Commands\GenerateKey;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
-class ServiceProvider extends BaseServiceProvider {
+class ModuleServiceProvider extends BaseServiceProvider {
 
 	public function boot()
 	{

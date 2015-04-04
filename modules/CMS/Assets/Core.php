@@ -320,6 +320,44 @@ class Core
 	}
 
 	/**
+	 * @param string $path
+	 * @param string $ext
+	 * @param string $cache_key
+	 * @param integer $lifetime
+	 * @return string
+	 */
+	public static function mergeFiles($path, $ext, $cacheKey = NULL, $lifetime = Date::DAY)
+	{
+		$cache = Cache::instance();
+
+		if ($cache_key === NULL)
+		{
+			$cache_key = 'assets::merge::' . URL::title($path, '::') . '::' . $ext;
+		}
+
+		$content = $cache->get($cache_key);
+
+		if ($content === NULL)
+		{
+			$files = Kohana::find_file('media', FileSystem::normalize_path($path), $ext, TRUE);
+			if (!empty($files))
+			{
+				foreach ($files as $file)
+				{
+					$content .= file_get_contents($file) . "\n";
+				}
+
+				if (Kohana::$caching === TRUE)
+				{
+					$cache->set($cache_key, $content, $lifetime);
+				}
+			}
+		}
+
+		return $content;
+	}
+
+	/**
 	 * Sorts assets based on dependencies
 	 *
 	 * @param   array   Array of assets

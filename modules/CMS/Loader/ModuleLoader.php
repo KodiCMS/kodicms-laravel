@@ -1,7 +1,9 @@
-<?php namespace KodiCMS\CMS\Support;
+<?php namespace KodiCMS\CMS\Loader;
 
 use Carbon\Carbon;
+use Illuminate\Support\Debug\Dumper;
 use Illuminate\Support\Facades\Cache;
+use KodiCMS\CMS\Helpers\File;
 
 class ModuleLoader
 {
@@ -33,7 +35,21 @@ class ModuleLoader
 			}
 			$this->addModule($moduleName, $modulePath);
 		}
+
+		$this->addModule('App', base_path());
+		
+//		TODO:
+//		foreach($this->getRegisteredModules() as $module)
+//		{
+//			$this->dump($module->getName(), $module->getControllerNamespace(), $module->getNamespace(), $module);
+//		}
 	}
+
+	public function dump()
+	{
+		array_map(function($x) { (new Dumper)->dump($x); }, func_get_args());
+	}
+
 
 	/**
 	 * @return array
@@ -45,12 +61,21 @@ class ModuleLoader
 
 	/**
 	 * @param string $moduleName
-	 * @param string $modulePath
+	 * @param string|null $modulePath
+	 * @param string|null $namespace
 	 * @return $this
 	 */
-	public function addModule($moduleName, $modulePath)
+	public function addModule($moduleName, $modulePath = NULL, $namespace = NULL)
 	{
-		$this->_registeredModules[] = new Module($moduleName, $modulePath);
+		$class = '\\KodiCMS\\' . $moduleName . '\\ModuleContainer';
+		$moduleClass = '\\KodiCMS\\CMS\\Loader\\' . $moduleName . 'ModuleContainer';
+		if(!class_exists($class)) {
+			$class = class_exists($moduleClass)
+				? $moduleClass
+				: '\\KodiCMS\\CMS\\Loader\\ModuleContainer';
+
+		}
+		$this->_registeredModules[] = new $class($moduleName, $modulePath, $namespace);
 
 		return $this;
 	}
@@ -65,6 +90,7 @@ class ModuleLoader
 		}
 
 		$this->getFoundFilesFromCache();
+
 		return $this;
 	}
 
@@ -76,18 +102,19 @@ class ModuleLoader
 		foreach ($this->_registeredModules as $module) {
 			$module->register();
 		}
+
 		return $this;
 	}
 
 	/**
-	 * TODO Добавить кеширование найденых файлов
-	 *
 	 * @param   string $dir directory name (views, i18n, classes, extensions, etc.)
 	 * @param   string $file filename with subdirectory
 	 * @param   string $ext extension to search for
+	 * @param   boolean $array return an array of files?
+	 * @return  array   a list of files when $array is TRUE
 	 * @return  string  single file path
 	 */
-	public function findFile($dir, $file, $ext = NULL)
+	public function findFile($dir, $file, $ext = NULL, $array = FALSE)
 	{
 		if ($ext === NULL) {
 			// Use the default extension
@@ -101,31 +128,46 @@ class ModuleLoader
 		}
 
 		// Create a partial path of the filename
-		$path = $dir . DIRECTORY_SEPARATOR . $file . $ext;
+		$path = File::normalizePath($dir . DIRECTORY_SEPARATOR . $file . $ext);
 
-		if (isset(static::$files[$path])) {
+		if (isset(static::$files[$path . ($array ? '_array' : '_path')])) {
 			// This path has been cached
-			return static::$files[$path];
+			return static::$files[$path . ($array ? '_array' : '_path')];
 		}
 
-		// The file has not been found yet
-		$found = FALSE;
+		if ($array) {
+			// Array of files that have been found
+			$found = [];
 
-		foreach ($this->getRegisteredModules() as $module) {
-			$dir = $module->getPath() . DIRECTORY_SEPARATOR;
+			foreach ($this->getRegisteredModules() as $module) {
+				$dir = $module->getPath() . DIRECTORY_SEPARATOR;
 
-			if (is_file($dir . $path)) {
-				// A path has been found
-				$found = $dir . $path;
+				if (is_file($dir . $path)) {
+					// This path has a file, add it to the list
+					$found[] = $dir . $path;
+				}
+			}
+		} else {
+			// The file has not been found yet
+			$found = FALSE;
 
-				// Stop searching
-				break;
+			foreach ($this->getRegisteredModules() as $module) {
+				$dir = $module->getPath() . DIRECTORY_SEPARATOR;
+
+				if (is_file($dir . $path)) {
+					// A path has been found
+					$found = $dir . $path;
+
+					// Stop searching
+					break;
+				}
 			}
 		}
 
 		// Add the path to the cache
-		static::$files[$path] = $found;
+		static::$files[$path . ($array ? '_array' : '_path')] = $found;
 
+		// Files have been changed
 		static::$filesChanged = TRUE;
 
 		return $found;

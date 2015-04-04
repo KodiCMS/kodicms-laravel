@@ -1,8 +1,9 @@
-<?php namespace KodiCMS\CMS\Support;
+<?php namespace KodiCMS\CMS\Loader;
 
 use Illuminate\Support\Facades\App;
+use KodiCMS\CMS\Helpers\File;
 
-class Module
+class ModuleContainer
 {
 	/**
 	 * @var string
@@ -39,17 +40,21 @@ class Module
 	protected $_controllerNamespacePrefix = 'Http\\Controllers';
 
 	/**
-	 * @param $moduleName
+	 * @param string $moduleName
 	 * @param null|string $modulePath
+	 * @param null|string $namespace
 	 */
-	public function __construct($moduleName, $modulePath = NULL)
+	public function __construct($moduleName, $modulePath = NULL, $namespace = NULL)
 	{
 		if (empty($modulePath)) {
-			$modulePath = implode(DIRECTORY_SEPARATOR, [base_path(), 'modules', $moduleName]);
+			$modulePath = base_path('modules/' . $moduleName);
 		}
 
-		$this->_path = $modulePath;
+		$this->_path = File::normalizePath($modulePath);
 		$this->_name = $moduleName;
+		if (!is_null($namespace)) {
+			$this->_namespace = $namespace;
+		}
 	}
 
 	/**
@@ -105,9 +110,9 @@ class Module
 			$this->loadConfig();
 			$this->loadAssets();
 
-			$serviceProviderPath = $this->getPath('ServiceProvider.php');
-			if (strtolower($this->getName()) != 'cms' AND is_file($serviceProviderPath)) {
-				App::register($this->getNamespace() . '\ServiceProvider');
+			$serviceProviderPath = $this->getPath(['Providers', 'ModuleServiceProvider.php']);
+			if (is_file($serviceProviderPath)) {
+				App::register($this->getNamespace() . '\Providers\ModuleServiceProvider');
 			}
 
 			$this->_isBooted = TRUE;
@@ -123,7 +128,6 @@ class Module
 	{
 		if (!$this->_isRegistered) {
 			$this->loadRoutes();
-
 			$this->_isRegistered = TRUE;
 		}
 
@@ -145,7 +149,7 @@ class Module
 	 */
 	protected function loadRoutes($wrapNamespace = TRUE)
 	{
-		$routesFile = $this->getPath('routes.php');
+		$routesFile = $this->getPath(['Http', 'routes.php']);
 
 		if (is_file($routesFile)) {
 			if ($wrapNamespace !== FALSE) {
@@ -193,7 +197,6 @@ class Module
 	protected function loadConfig()
 	{
 		$path = $this->getPath('config');
-
 
 		if (!is_dir($path)) return;
 

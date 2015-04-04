@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Cron\Http\Controllers;
 
-use KodiCMS\CMS\Http\Controllers\System\Controller as BaseController;
+use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
-class CronController extends BaseController {
+class CronController extends BackendController {
 
 }

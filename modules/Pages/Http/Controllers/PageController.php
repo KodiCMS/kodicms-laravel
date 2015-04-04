@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Pages\Http\Controllers;
 
-use KodiCMS\CMS\Http\Controllers\System\Controller as BaseController;
+use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
-class PageController extends BaseController {
+class PageController extends BackendController {
 
 }

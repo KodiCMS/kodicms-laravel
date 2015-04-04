@@ -1,8 +1,8 @@
-<?php namespace KodiCMS\CMS\Console\Commands;
+<?php namespace KodiCMS\Installer\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
-use KodiCMS\CMS\Support\ModuleInstaller;
+use KodiCMS\Installer\Support\ModuleInstaller;
 
 class ModuleInstall extends Command
 {

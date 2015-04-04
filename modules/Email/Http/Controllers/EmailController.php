@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Email\Http\Controllers;
 
-use KodiCMS\CMS\Http\Controllers\System\Controller as BaseController;
+use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
-class EmailController extends BaseController {
+class EmailController extends BackendController {
 
 }

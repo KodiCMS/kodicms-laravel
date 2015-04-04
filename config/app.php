@@ -136,7 +136,7 @@ return [
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Html\HtmlServiceProvider',
 
-		'KodiCMS\CMS\ServiceProvider',
+		'KodiCMS\CMS\Providers\ModuleServiceProvider',
 	],
 
 	/*
