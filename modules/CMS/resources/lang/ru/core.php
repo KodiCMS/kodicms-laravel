@@ -4,7 +4,8 @@ return [
 	'sections' => [
 		'about' => 'О системе',
 		'settings' => 'Настройки',
-		'system' => 'Системные'
+		'system' => 'Системные',
+		'dashboard' => 'Рабочий стол'
 	],
 	'helpers' => [
 		'not_select' => 'Не выбран',

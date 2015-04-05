@@ -50,7 +50,9 @@ class ItemDecorator
 	 */
 	public function getName()
 	{
-		return $this->getAttribute('name');
+		$label = $this->getLabel();
+
+		return is_null($label) ? $this->getAttribute('name') : $label;
 	}
 
 	/**
@@ -58,7 +60,12 @@ class ItemDecorator
 	 */
 	public function getLabel()
 	{
-		return trans($this->getAttribute('label'));
+		if(($label = $this->getAttribute('label')) !== NULL)
+		{
+			return trans($label);
+		}
+
+		return NULL;
 	}
 
 	/**
