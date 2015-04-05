@@ -5,7 +5,6 @@ use KodiCMS\CMS\Assets\Core as Assets;
 
 class TemplateController extends Controller
 {
-
 	/**
 	 * @var  \View  page template
 	 */

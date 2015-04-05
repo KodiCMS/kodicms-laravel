@@ -9,7 +9,7 @@ class BackendController extends TemplateController
 	/**
 	 * @var bool
 	 */
-	public $authRequired = FALSE;
+	public $authRequired = TRUE;
 
 	/**
 	 *
@@ -47,7 +47,7 @@ class BackendController extends TemplateController
 			->with('breadcrumbs', $this->breadcrumbs)
 			->with('navigation', $this->navigation)
 			->with('bodyId', $this->getRouterPath())
-			->with('theme', config('cms.theme.defa'))
+			->with('theme', config('cms.theme.default'))
 			->with('requestType', $this->request->ajax() ? 'request.iframe' : 'request.get');
 
 		parent::after();

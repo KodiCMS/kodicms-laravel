@@ -24,6 +24,7 @@ class Kernel extends HttpKernel {
 	 * @var array
 	 */
 	protected $routeMiddleware = [
-		'auth' => 'KodiCMS\CMS\Http\Middleware\Authenticate'
+		'auth' => 'KodiCMS\Users\Http\Middleware\Authenticate',
+		'guest' => 'KodiCMS\Users\Http\Middleware\RedirectIfAuthenticated'
 	];
 }

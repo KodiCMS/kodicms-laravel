@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\CMS\Providers;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use KodiCMS\CMS\Loader\ModuleLoader;
@@ -28,8 +29,13 @@ class ModuleServiceProvider extends BaseServiceProvider
 		{
 			$this->app['module.loader']->cacheFoundFiles();
 		});
-	}
 
+		Blade::extend(function($view, $compiler)
+		{
+			$pattern = $compiler->createMatcher('event');
+			return preg_replace($pattern, '$1<?php event$2; ?>', $view);
+		});
+	}
 
 	public function register()
 	{

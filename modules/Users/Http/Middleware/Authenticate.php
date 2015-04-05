@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\CMS\Http\Middleware;
+<?php namespace KodiCMS\Users\Http\Middleware;
 
 use Closure;
 use KodiCMS\API\Exceptions\AuthenticateException;
@@ -16,7 +16,7 @@ class Authenticate {
 	/**
 	 * Create a new filter instance.
 	 *
-	 * @param  Guard  $auth
+	 * @param  Guard  $authServices
 	 */
 	public function __construct(Guard $auth)
 	{
@@ -42,7 +42,7 @@ class Authenticate {
 			}
 			else
 			{
-				return redirect()->guest('auth/login');
+				return redirect()->guest(\CMS::backendPath() . '/auth/login');
 			}
 		}
 
