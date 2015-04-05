@@ -1,6 +1,14 @@
 <?php
 
 return [
+	'sections' => [
+		'pages' => [
+			'list' => 'Страницы'
+		],
+		'layouts' => [
+			'list' => 'Шаблоны'
+		]
+	],
 	'status' => [
 		'none' => 'Не указан',
 		'hidden' => 'Скрытая',

@@ -3,7 +3,7 @@
 		{!! HTML::image( CMS::resourcesURL() . '/images/logo-color.png') !!}
 	</a>
 
-	{!! HTML::linkRoute('auth.login', trans('users::user.button.login'), [], [
+	{!! HTML::linkRoute('auth.login', trans('users::core.button.login'), [], [
 		'class' => 'btn btn-default', 'data-icon' => 'chevron-left'
 	]) !!}
 
@@ -20,13 +20,13 @@
 		</ul>
 	@endif
 	<div class="panel-body">
-		<p class="text-muted">@lang('users::user.messages.auth.forgot')</p>
+		<p class="text-muted">@lang('users::core.messages.auth.forgot')</p>
 		<hr class="panel-wide" />
 		<div class="input-group input-group-lg">
 			<span class="input-group-addon">{!! UI::icon('envelope') !!}</span>
 			{!! Form::text('forgot[email]', NULL, [
 					'class' => 'form-control',
-					'placeholder' => trans('users::user.field.auth.email')
+					'placeholder' => trans('users::core.field.auth.email')
 			]) !!}
 		</div>
 	</div>
@@ -34,7 +34,7 @@
 	@event('view.password.form.footer')
 
 	<div class="panel-footer">
-		{!! Form::button(trans('users::user.button.send_password'), [
+		{!! Form::button(trans('users::core.button.send_password'), [
 			'class' => 'btn btn-primary btn-lg', 'type' => 'submit'
 		]) !!}
 	</div>

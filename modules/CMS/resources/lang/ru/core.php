@@ -5,7 +5,9 @@ return [
 		'about' => 'О системе',
 		'settings' => 'Настройки',
 		'system' => 'Системные',
-		'dashboard' => 'Рабочий стол'
+		'dashboard' => 'Рабочий стол',
+		'design' => 'Дизайн',
+		'system' => 'Система'
 	],
 	'helpers' => [
 		'not_select' => 'Не выбран',

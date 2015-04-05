@@ -3,6 +3,7 @@
 return [
 	[
 		'name' => 'File manager',
+		'label' => 'filemanager::core.sections.index',
 		'url' => route('backend.filemanager'),
 		'priority' => 6000,
 		'permissions' => 'filemanager.index',

@@ -25,9 +25,9 @@ class Page extends Model
 	public static function statuses()
 	{
 		return [
-			FrontendPage::STATUS_DRAFT => trans('pages::pages.status.draft'),
-			FrontendPage::STATUS_PUBLISHED => trans('pages::pages.status.published'),
-			FrontendPage::STATUS_HIDDEN => trans('pages::pages.status.hidden')
+			FrontendPage::STATUS_DRAFT => trans('pages::core.status.draft'),
+			FrontendPage::STATUS_PUBLISHED => trans('pages::core.status.published'),
+			FrontendPage::STATUS_HIDDEN => trans('pages::core.status.hidden')
 		];
 	}
 
@@ -72,26 +72,26 @@ class Page extends Model
 	 */
 	public function getStatus()
 	{
-		$status = trans('pages::pages.status.none');
+		$status = trans('pages::core.status.none');
 		$label = 'default';
 
 		switch ($this->status)
 		{
 			case FrontendPage::STATUS_DRAFT:
-				$status = trans('pages::pages.status.draft');
+				$status = trans('pages::core.status.draft');
 				$label = 'info';
 				break;
 			case FrontendPage::STATUS_HIDDEN:
-				$status = trans('pages::pages.status.hidden');
+				$status = trans('pages::core.status.hidden');
 				break;
 			case FrontendPage::STATUS_PUBLISHED:
 				if (strtotime($this->published_at) > time())
 				{
-					$status = trans('pages::pages.status.pending');
+					$status = trans('pages::core.status.pending');
 				}
 				else
 				{
-					$status = trans('pages::pages.status.published');
+					$status = trans('pages::core.status.published');
 				}
 
 				$label = 'success';
@@ -138,7 +138,7 @@ class Page extends Model
 	 */
 	public function getPublicLink()
 	{
-		return link_to($this->getFrontendUrl(), \UI::label(\UI::icon('globe') . ' ' . trans('pages::pages.button.view_front')), [
+		return link_to($this->getFrontendUrl(), \UI::label(\UI::icon('globe') . ' ' . trans('pages::core.button.view_front')), [
 			'class' => 'item-preview', 'target' => '_blank'
 		]);
 	}

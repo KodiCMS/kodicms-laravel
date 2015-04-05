@@ -3,7 +3,7 @@
 return [
 	[
 		'name' => 'Pages',
-		'translate' => 'pages::page.sections.list',
+		'label' => 'pages::core.sections.pages.list',
 		'url' => route('backend.page.list'),
 		'permissions' => 'page.index',
 		'priority' => 100,
@@ -14,6 +14,7 @@ return [
 		'children' => [
 			[
 				'name' => 'Layouts',
+				'label' => 'pages::core.sections.layouts.list',
 				'url' => route('backend.layout.list'),
 				'permissions' => 'layout.index',
 				'priority' => 100,

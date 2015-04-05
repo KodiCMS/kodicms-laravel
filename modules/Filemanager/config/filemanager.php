@@ -5,7 +5,7 @@ return [
 		'driver' => \KodiCMS\Filemanager\elFinder\Connector::FILE_SYSTEM,
 		'path' => public_path('assets'), // TODO: поправить пути
 		'URL' => url('public/assets'),
-		'alias' => trans('filemanager::filemanager.public'),
+		'alias' => trans('filemanager::core.public'),
 		'uploadMaxSize' => '10M',
 		'mimeDetect' => 'internal',
 		'imgLib' => 'gd',

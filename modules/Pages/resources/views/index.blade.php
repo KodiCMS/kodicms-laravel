@@ -1,13 +1,13 @@
 <div id="page-tree" class="panel">
 	<div class="panel-heading">
 		@if (acl_check('page.add'))
-		{!! link_to_route('backend.page.add', trans('pages::pages.button.add'), [], [
+		{!! link_to_route('backend.page.add', trans('pages::core.button.add'), [], [
 			'class' => 'btn btn-default', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
 		]) !!}
 		@endif
 
 		@if (acl_check('page.sort'))
-		{!! Form::button(trans('pages::pages.button.reorder'), [
+		{!! Form::button(trans('pages::core.button.reorder'), [
 			'class' => 'btn btn-primary btn-sm', 'data-icon' => 'sort', 'data-hotkeys' => 'ctrl+s', 'id' => 'pageMapReorderButton'
 		]) !!}
 		@endif
@@ -20,10 +20,10 @@
 	<table id="page-tree-header" class="table table-primary">
 		<thead>
 		<tr class="row">
-			<th class="col-xs-7">@lang('pages::pages.field.page')</th>
-			<th class="col-xs-2 text-right">@lang('pages::pages.field.date')</th>
-			<th class="col-xs-2 text-right">@lang('pages::pages.field.status')</th>
-			<th class="col-xs-1 text-right">@lang('pages::pages.field.actions')</th>
+			<th class="col-xs-7">@lang('pages::core.field.page')</th>
+			<th class="col-xs-2 text-right">@lang('pages::core.field.date')</th>
+			<th class="col-xs-2 text-right">@lang('pages::core.field.status')</th>
+			<th class="col-xs-1 text-right">@lang('pages::core.field.actions')</th>
 		</tr>
 		</thead>
 	</table>

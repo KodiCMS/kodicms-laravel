@@ -15,6 +15,7 @@ return [
 	],
 	[
 		'name' => 'Design',
+		'label' => 'cms::core.sections.design',
 		'icon' => 'desktop',
 		'priority' => 7000
 	],

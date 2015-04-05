@@ -24,7 +24,7 @@
 				@endif
 
 				@if ($child->use_redirect)
-					{!! UI::label(trans('pages::pages.action.redirect', ['url' => $child->redirect_url])) !!}
+					{!! UI::label(trans('pages::core.action.redirect', ['url' => $child->redirect_url])) !!}
 				@endif
 				{!! $child->getPublicLink() !!}
 			</div>

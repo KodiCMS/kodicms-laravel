@@ -52,13 +52,7 @@ class Collection
 				$sectionObject->addPage($page);
 			} else {
 				$sectionObject = self::getSection($section['name']);
-				if (isset($section['icon'])) {
-					$sectionObject->icon = $section['icon'];
-				}
-
-				if (isset($section['priority'])) {
-					$sectionObject->priority = (int)$section['priority'];
-				}
+				$sectionObject->setAttribute(array_except($section, ['children']));
 
 				if (!empty($section['children'])) {
 					$sectionObject->addPages($section['children']);

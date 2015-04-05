@@ -20,16 +20,16 @@
 	<div class="panel-body">
 		<div class="form-group">
 			{!! Form::text('username', NULL, [
-					'id' => 'username', 'class' => 'form-control input-lg', 'placeholder' => trans('users::user.field.auth.username')
+					'id' => 'username', 'class' => 'form-control input-lg', 'placeholder' => trans('users::core.field.auth.username')
 			]) !!}
 		</div>
 
 		<div class="form-group signin-password">
 			{!! Form::password('password', [
-				'id' => 'password', 'class' => 'form-control input-lg', 'placeholder' =>  trans('users::user.field.auth.password')
+				'id' => 'password', 'class' => 'form-control input-lg', 'placeholder' =>  trans('users::core.field.auth.password')
 			]) !!}
 
-			{!! HTML::linkRoute('auth.password', trans('users::user.field.auth.forgot'), [], ['class' => 'forgot']) !!}
+			{!! HTML::linkRoute('auth.password', trans('users::core.field.auth.forgot'), [], ['class' => 'forgot']) !!}
 		</div>
 
 		<div class="form-group">
@@ -37,7 +37,7 @@
 				{!! Form::checkbox('remember', 'checked', TRUE, ['class' => 'px', 'id' => 'rememder']) !!}
 				<span class="lbl">
 					<?php //TODO: вынести настройки lifetime в конфиг ?>
-					{{ trans('users::user.field.auth.remember', ['lifetime' => 10]) }}
+					{{ trans('users::core.field.auth.remember', ['lifetime' => 10]) }}
 				</span>
 			</label>
 		</div>
@@ -46,7 +46,7 @@
 	@event('view.login.form.footer')
 
 	<div class="panel-footer">
-		{!! Form::button(trans('users::user.button.login'), [
+		{!! Form::button(trans('users::core.button.login'), [
 			'class' => 'btn btn-success btn-lg', 'type' => 'submit'
 		]) !!}
 	</div>
