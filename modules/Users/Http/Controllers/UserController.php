@@ -13,4 +13,9 @@ class UserController extends BackendController {
 	{
 		//
 	}
+
+	public function getEdit()
+	{
+		//
+	}
 }

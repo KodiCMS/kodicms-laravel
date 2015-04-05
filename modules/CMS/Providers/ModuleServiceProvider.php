@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use KodiCMS\CMS\Loader\ModuleLoader;
 use KodiCMS\CMS\Core;
+use KodiCMS\CMS\Loader\ModuleLoader;
 
 class ModuleServiceProvider extends BaseServiceProvider
 {
@@ -25,14 +25,16 @@ class ModuleServiceProvider extends BaseServiceProvider
 	{
 		$this->app['module.loader']->bootModules();
 
-		$this->app['cms']->shutdown(function()
-		{
+		$this->app['cms']->shutdown(function () {
 			$this->app['module.loader']->cacheFoundFiles();
 		});
 
-		Blade::extend(function($view, $compiler)
-		{
+		// TODO: удалить временную авторизацию
+		\Auth::loginUsingId(1);
+
+		Blade::extend(function ($view, $compiler) {
 			$pattern = $compiler->createMatcher('event');
+
 			return preg_replace($pattern, '$1<?php event$2; ?>', $view);
 		});
 	}

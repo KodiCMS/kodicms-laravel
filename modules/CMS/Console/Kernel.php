@@ -12,6 +12,7 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected $commands = [
 		'KodiCMS\Installer\Console\Commands\ModuleInstall',
+		'KodiCMS\Installer\Console\Commands\ModuleSeed',
 	];
 
 	/**

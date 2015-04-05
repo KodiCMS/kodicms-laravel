@@ -4,6 +4,7 @@ Route::group(['prefix' => \CMS::backendPath()], function () {
 
 	Route::controller('user', 'UserController', [
 		'getIndex' => 'backend.user.list',
+		'getEdit' => 'backend.user.edit',
 		'getProfile' => 'backend.user.profile',
 	]);
 
@@ -13,6 +14,7 @@ Route::group(['prefix' => \CMS::backendPath()], function () {
 
 	Route::controller('auth', 'Auth\AuthController', [
 		'getLogin' => 'auth.login',
+		'getLogout' => 'auth.logout',
 		'postLogin' => 'auth.login.post'
 	]);
 

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Migrations\DatabaseMigrationRepository;
 use Illuminate\Database\Migrations\Migrator;
+use KodiCMS\CMS\Loader\ModuleContainer;
 
 class ModuleInstaller {
 
@@ -72,10 +73,10 @@ class ModuleInstaller {
 	/**
 	 * Run migrations on a single module
 	 *
-	 * @param Module $module
+	 * @param ModuleContainer $module
 	 * @return $this
 	 */
-	public function migrateModule(Module $module)
+	public function migrateModule(ModuleContainer $module)
 	{
 		$this->_migrator->run($module->getPath(['database', 'migrations']));
 
@@ -119,10 +120,10 @@ class ModuleInstaller {
 	/**
 	 * Reset migrations on a single module
 	 *
-	 * @param Module $module
+	 * @param ModuleContainer $module
 	 * @return $this
 	 */
-	public function resetModule(Module $module)
+	public function resetModule(ModuleContainer $module)
 	{
 		$path = $module->getPath(['database', 'migrations']);
 		$this->_migrator->requireFiles($path, $this->_migrator->getMigrationFiles($path));
@@ -145,12 +146,13 @@ class ModuleInstaller {
 	/**
 	 * Run seeds on a module
 	 *
-	 * @param Module $module
+	 * @param ModuleContainer $module
 	 * @return $this
 	 */
-	public function seedModule(Module $module)
+	public function seedModule(ModuleContainer $module)
 	{
-		$className = $module->getNamespace() . '\\Database\\Seeds\\DatabaseSeeder';
+		$className = $module->getNamespace() . '\\database\\seeds\\DatabaseSeeder';
+
 		if (!class_exists($className)) {
 			return FALSE;
 		}

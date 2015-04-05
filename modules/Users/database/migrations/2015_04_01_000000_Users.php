@@ -18,6 +18,8 @@ class Users extends Migration
 			$table->integer('logins')->default(0);
 			$table->integer('last_login')->nullable();
 
+			$table->string('locale', 5)->default(config('app.locale'));
+
 			$table->rememberToken();
 			$table->timestamps();
 		});

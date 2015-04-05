@@ -23,8 +23,15 @@ class BackendController extends TemplateController
 	 */
 	public $breadcrumbs;
 
+	/**
+	 * @var \KodiCMS\Users\Model\User;
+	 */
+	public $currentUser;
+
 	public function before()
 	{
+		$this->currentUser = \Auth::user();
+
 		$this->navigation = Navigation::init($this->request->getUri(), config('sitemap', []));
 		$this->breadcrumbs = Breadcrumbs::factory();
 
@@ -50,6 +57,8 @@ class BackendController extends TemplateController
 			->with('theme', config('cms.theme.default'))
 			->with('requestType', $this->request->ajax() ? 'request.iframe' : 'request.get');
 
+		\View::share('currentUser', $this->currentUser);
+
 		parent::after();
 	}
 
@@ -62,13 +71,13 @@ class BackendController extends TemplateController
 		$this->templateScripts['DEFAULT_CODE_EDITOR'] = config('cms.wysiwyg.default_code_editor', '');
 
 		Assets::package(['libraries', 'core']);
-		// TODO: разобраться с подключением событий и локалей в контроллер
-		$file = $this->getRouterController();
-		if (app('module.loader')->findFile('resources/js', $file, 'js'))
-		{
-			Assets::js('controller.' . $file, ADMIN_RESOURCES . 'js/controller/' . $file . '.js', 'global', FALSE, 999);
-		}
 
+		// TODO: разобраться с подключением событий и локалей в контроллер
+//		$file = $this->getRouterController();
+//		if (app('module.loader')->findFile('resources/js', $file, 'js'))
+//		{
+//			Assets::js('controller.' . $file, ADMIN_RESOURCES . 'js/controller/' . $file . '.js', 'global', FALSE, 999);
+//		}
 
 		//Assets::group('global', 'events', '<script type="text/javascript">' . Assets::merge_files('js/events', 'js') . '</script>', 'global');
 	}

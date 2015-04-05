@@ -11,9 +11,6 @@ return [
 			'list' => 'Роли',
 		],
 	],
-	'action' => [
-		'logout' => 'Выход'
-	],
 	'field' => [
 		'auth' => [
 			'username' => 'Логин или E-mail',
@@ -25,6 +22,7 @@ return [
 	],
 	'button' => [
 		'login' => 'Вход',
+		'logout' => 'Выход',
 		'send_password' => 'Выслать пароль'
 	],
 	'messages' => [

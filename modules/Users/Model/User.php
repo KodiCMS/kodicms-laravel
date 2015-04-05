@@ -7,9 +7,13 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
+/**
+ * Class User
+ * @package KodiCMS\Users\Model
+ */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
-	use Authenticatable, CanResetPassword, CashableTrait;
+	use Authenticatable, CanResetPassword;
 
 	/**
 	 * The database table used by the model.
@@ -23,7 +27,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['username', 'email', 'password'];
+	protected $fillable = ['username', 'email', 'password', 'logins', 'last_login'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -31,6 +35,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 * @var array
 	 */
 	protected $hidden = ['password', 'remember_token'];
+
+	/**
+	 * @var array
+	 */
+	protected $roles = [];
+
+	/**
+	 * @var array
+	 */
+	protected $permissions = [];
 
 	/**
 	 * Получение аватара пользлователя из сервиса Gravatar
@@ -54,56 +68,61 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		$this->attributes['password'] = \Hash::make($password);
 	}
 
-	public function toggleFollow(User $user)
-	{
-		if($this->followers()
-				->newPivotStatement()
-				->where('user_id', $this->id)
-				->where('follower_id', $user->id)
-				->first() !== NULL)
-		{
-			$this->followers()->detach($user);
-			$this->decrement('count_followers');
-			return NULL;
-		}
-		else
-		{
-			$this->followers()->attach($user);
-			$this->increment('count_followers');
-			return TRUE;
-		}
-	}
-
-
 	/**
-	 * 
-	 * @return HasMany
-	 */
-	public function articles()
-	{
-		return $this->hasMany('App\Models\Article', 'author_id')
-			->OrderByDate()
-			->withFavorite()
-			->with('categories', 'author');
-	}
-
-	/**
+	 * TODO: добавить кеширование ролей
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	 */
-	public function favorites()
+	public function roles()
 	{
-		return $this->belongsToMany('App\Models\Article', 'user_favorites')
-			->OrderByDate()
-			->withFavorite()
-			->published()
-			->with('categories', 'author');
+		return $this->belongsToMany('KodiCMS\Users\Model\UserRole', 'roles_users', 'role_id', 'user_id');
 	}
 
 	/**
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	 * @return array
 	 */
-	public function followers()
+	public function getPermissionsByRoles()
 	{
-		return $this->belongsToMany('App\Models\User', 'user_followers', 'user_id', 'follower_id');
+		$roles = $this->roles()
+			->get()
+			->lists('name', 'id');
+
+		if(!empty($roles)) {
+			$permissions = (new RolePermission())
+				->whereIn('role_id', array_keys($roles))
+				->get()
+				->lists('action');
+		}
+
+		return array_unique($permissions);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAllowedPermissions()
+	{
+		$permissions = [];
+
+		foreach (ACL::getPermissions() as $sectionTitle => $actions) {
+			foreach ($actions as $action => $title) {
+				if (ACL::check($action, $this)) {
+					$permissions[$sectionTitle][$action] = $title;
+				}
+			}
+		}
+
+		return $permissions;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLocaleAttribute()
+	{
+		if(!empty($this->attributes['locale'])) {
+			return $this->attributes['locale'];
+		}
+
+		return config('app.locale');
 	}
 }

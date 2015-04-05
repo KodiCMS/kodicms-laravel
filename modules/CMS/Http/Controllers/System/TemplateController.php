@@ -1,6 +1,5 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
-use Illuminate\Support\Facades\View;
 use KodiCMS\CMS\Assets\Core as Assets;
 
 class TemplateController extends Controller
@@ -102,7 +101,7 @@ class TemplateController extends Controller
 			$this->registerMedia();
 		}
 
-		View::share('adminDir', \CMS::backendPath());
+		\View::share('adminDir', \CMS::backendPath());
 	}
 
 	public function after()

@@ -1,6 +1,8 @@
 @if($navigation)
 <div id="main-menu-inner">
 	<ul class="navigation">
+		@event('view.backend.navigation.before')
+
 		@foreach($navigation->getPages() as $item)
 		<li @if($item->isActive())class="active"@endif>
 			<a href="{{ $item->getUrl() }}">
@@ -51,6 +53,8 @@
 		</li>
 		@endif
 		@endforeach
+
+		@event('view.backend.navigation.after')
 	</ul>
 </div>
 @endif
