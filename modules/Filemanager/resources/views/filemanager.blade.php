@@ -4,7 +4,7 @@
 			lang: 'ru',
 			url : '/api.filemanager',
 			resizable: false,
-			height: CMS.content_height,
+			height: CMS.content_height - 20,
 			uiOptions: {
 				toolbar : [
 					[@if(acl_check('filemanager.mkdir')) 'mkdir' @endif, @if (acl_check('filemanager.upload')) 'upload' @endif],
@@ -26,7 +26,7 @@
 
 		$(window).resize(function() {
 			var node = elfinder.getUI('node');
-			var h = cms.content_height - 40;
+			var h = CMS.content_height - 20;
 			node.height(h);
 			node.find('.elfinder-navbar')
 					.add(node.find('.elfinder-cwd'))
