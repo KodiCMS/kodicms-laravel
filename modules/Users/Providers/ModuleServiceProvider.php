@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Users\Providers;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 use KodiCMS\Users\Model\User;

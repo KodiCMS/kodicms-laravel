@@ -89,7 +89,7 @@ class Section extends ItemDecorator implements \Countable, \Iterator
 		$priority = (int) $priority;
 
 		// TODO: вернуть проверку прав видимости раздела
-//		if (!ACL::check($page->getPermissions())) {
+//		if (!acl_check($page->getPermissions())) {
 //			return $this;
 //		}
 

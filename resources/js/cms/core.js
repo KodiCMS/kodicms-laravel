@@ -6337,8 +6337,8 @@ function strtr(e, t, n) {
 }
 
 function __(e, t) {
-	if (cms.translations[e] !== undefined) {
-		var e = cms.translations[e]
+	if (CMS.translations[e] !== undefined) {
+		var e = CMS.translations[e]
 	}
 	return t == undefined ? e : strtr(e, t)
 }

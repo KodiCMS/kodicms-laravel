@@ -90,7 +90,7 @@ abstract class Controller extends BaseController {
 	 */
 	public function getRouterController()
 	{
-		return strtolower(last(explode('\\', get_called_class())));
+		return last(explode('\\', get_called_class()));
 	}
 
 	/**

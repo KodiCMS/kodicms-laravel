@@ -96,7 +96,7 @@ class UserMeta
 		$userId = static::getUser($userId);
 		static::clearCache($userId);
 
-		return (bool) DB::table('user_meta')
+		return (bool) \DB::table('user_meta')
 			->where('user_id', $userId)
 			->delete();
 	}
@@ -114,8 +114,7 @@ class UserMeta
 			static::$cache[$userId] = \DB::table('user_meta')
 				->select('key', 'value')
 				->where('user_id', $userId)
-				->get()
-				->liast('value', 'key');
+				->lists('value', 'key');
 		}
 
 		return static::$cache[$userId];
@@ -128,7 +127,7 @@ class UserMeta
 	 */
 	protected static function getFromCache($userId, $key)
 	{
-		$value = array_get(static::$cache, $userId . '.' . $key)
+		$value = array_get(static::$cache, $userId . '.' . $key);
 		if (!is_null($value)) {
 			return json_decode($value);
 		}

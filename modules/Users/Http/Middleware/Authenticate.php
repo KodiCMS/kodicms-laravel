@@ -16,7 +16,7 @@ class Authenticate {
 	/**
 	 * Create a new filter instance.
 	 *
-	 * @param  Guard  $authServices
+	 * @param  Guard $auth Services
 	 */
 	public function __construct(Guard $auth)
 	{
@@ -26,7 +26,7 @@ class Authenticate {
 	/**
 	 * Handle an incoming request.
 	 *
-	 * TODO: добавить проверку прав доступа
+	 *
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  \Closure  $next

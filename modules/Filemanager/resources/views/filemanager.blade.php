@@ -4,24 +4,24 @@
 			lang: 'ru',
 			url : '/api.filemanager',
 			resizable: false,
-			height: cms.content_height,
+			height: CMS.content_height,
 			uiOptions: {
 				toolbar : [
-					[@if(ACL::check('filemanager.mkdir')) 'mkdir' @endif, @if (ACL::check('filemanager.upload')) 'upload' @endif],
+					[@if(acl_check('filemanager.mkdir')) 'mkdir' @endif, @if (acl_check('filemanager.upload')) 'upload' @endif],
 					['open', 'download'],
 					['info'],
 					['quicklook'],
-						@if (ACL::check('filemanager.edit'))['copy', 'cut', 'paste'],@endif
-						@if (ACL::check('filemanager.delete'))['rm'],<?php endif; ?>
-						@if (ACL::check('filemanager.edit'))['duplicate', 'rename', 'edit', 'resize'],@endif
-						@if (ACL::check('filemanager.edit'))['extract', 'archive'],@endif
+						@if (acl_check('filemanager.edit'))['copy', 'cut', 'paste'],@endif
+						@if (acl_check('filemanager.delete'))['rm'],<?php endif; ?>
+						@if (acl_check('filemanager.edit'))['duplicate', 'rename', 'edit', 'resize'],@endif
+						@if (acl_check('filemanager.edit'))['extract', 'archive'],@endif
 					['search'],
 					['view']
 				]
 			}
-			@if (!ACL::check('filemanager.edit')),contextmenu: false @endif
-			@if (!ACL::check('filemanager.upload')),dragUploadAllow: false @endif
-			@if (!ACL::check('filemanager.edit')),allowShortcuts : false @endif
+			@if (!acl_check('filemanager.edit')),contextmenu: false @endif
+			@if (!acl_check('filemanager.upload')),dragUploadAllow: false @endif
+			@if (!acl_check('filemanager.edit')),allowShortcuts : false @endif
 		}).elfinder('instance');
 
 		$(window).resize(function() {

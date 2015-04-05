@@ -73,11 +73,11 @@ class BackendController extends TemplateController
 		Assets::package(['libraries', 'core']);
 
 		// TODO: разобраться с подключением событий и локалей в контроллер
-//		$file = $this->getRouterController();
-//		if (app('module.loader')->findFile('resources/js', $file, 'js'))
-//		{
-//			Assets::js('controller.' . $file, ADMIN_RESOURCES . 'js/controller/' . $file . '.js', 'global', FALSE, 999);
-//		}
+		$file = $this->getRouterController();
+		if (app('module.loader')->findFile('resources/js', $file, 'js'))
+		{
+			Assets::js('controller.' . $file, \CMS::backendResourcesURL() . '/js/' . $file . '.js', 'global', FALSE, 999);
+		}
 
 		//Assets::group('global', 'events', '<script type="text/javascript">' . Assets::merge_files('js/events', 'js') . '</script>', 'global');
 	}

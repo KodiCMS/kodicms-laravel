@@ -1,0 +1,208 @@
+<?php namespace KodiCMS\Pages\Model;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Page extends Model
+{
+	/**
+	 * Список правил для meta robots
+	 * @return array
+	 */
+	public static function robots()
+	{
+		return [
+			'INDEX, FOLLOW' => 'INDEX, FOLLOW',
+			'INDEX, NOFOLLOW' => 'INDEX, NOFOLLOW',
+			'NOINDEX, FOLLOW' => 'NOINDEX, FOLLOW',
+			'NOINDEX, NOFOLLOW' => 'NOINDEX, NOFOLLOW'
+		];
+	}
+
+	/**
+	 * Список статусов
+	 * @return array
+	 */
+	public static function statuses()
+	{
+		return [
+			FrontendPage::STATUS_DRAFT => trans('pages::pages.status.draft'),
+			FrontendPage::STATUS_PUBLISHED => trans('pages::pages.status.published'),
+			FrontendPage::STATUS_HIDDEN => trans('pages::pages.status.hidden')
+		];
+	}
+
+	/**
+	 * The database table used by the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'pages';
+
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = [
+		'published_at', 'parent_id', 'status', 'behavior', 'slug',
+		'title', 'breadcrumb', 'meta_title', 'meta_keywords', 'meta_description',
+		'robots', 'layout_file', 'position',
+		'is_redirect', 'redirect_url'
+	];
+
+	/**
+	 * @var boolean
+	 */
+	public $isExpanded = FALSE;
+
+	/**
+	 * @var boolean
+	 */
+	public $hasChildren = FALSE;
+
+	/**
+	 * @var array
+	 */
+	public $childrenRows = NULL;
+
+	/**
+	 * Статус страницы
+	 *
+	 * @return string
+	 */
+	public function getStatus()
+	{
+		$status = trans('pages::pages.status.none');
+		$label = 'default';
+
+		switch ($this->status)
+		{
+			case FrontendPage::STATUS_DRAFT:
+				$status = trans('pages::pages.status.draft');
+				$label = 'info';
+				break;
+			case FrontendPage::STATUS_HIDDEN:
+				$status = trans('pages::pages.status.hidden');
+				break;
+			case FrontendPage::STATUS_PUBLISHED:
+				if (strtotime($this->published_at) > time())
+				{
+					$status = trans('pages::pages.status.pending');
+				}
+				else
+				{
+					$status = trans('pages::pages.status.published');
+				}
+
+				$label = 'success';
+				break;
+		}
+
+		return \UI::label($status, $label . ' editable-status', array('data-value' => $this->status));
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getUri()
+	{
+		if ($parent = $this->parent()->first()) {
+			$uri = $parent->getUri() . '/' . $this->slug;
+		} else {
+			$uri = $this->slug;
+		}
+
+		return $uri;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getFrontendUrl()
+	{
+		return url($this->getUri());
+	}
+
+	/**
+	 * Получение ссылки на редактирование страницы
+	 * @return string
+	 */
+	public function getBackendurl()
+	{
+		return route('backend.page.edit', [$this]);
+	}
+
+	/**
+	 * Получение ссылки на страницу
+	 * @return string
+	 */
+	public function getPublicLink()
+	{
+		return link_to($this->getFrontendUrl(), \UI::label(\UI::icon('globe') . ' ' . trans('pages::pages.button.view_front')), [
+			'class' => 'item-preview', 'target' => '_blank'
+		]);
+	}
+
+	/**
+	 * Получение названия шаблона текущей страницы
+	 * @return string
+	 */
+	public function getLayout()
+	{
+		if (empty($this->layout_file) AND $parent = $this->parent()->first())
+		{
+			return $parent->getLayout();
+		}
+
+		return $this->layout_file;
+	}
+
+	/**
+	 * Проверка на существование внутренних страницы
+	 * @return boolean
+	 */
+	public function hasChildren()
+	{
+		return (bool) \DB::table($this->table)
+			->selectRaw('COUNT(*) as total')
+			->where('parent_id', $this->id)
+			->pluck('total') > 0;
+	}
+
+	/**
+	 * @param string $keyword
+	 * @return ORM
+	 */
+	public function scopeSearchByKeyword($query, $keyword)
+	{
+		return $query->where(function($subQuery) use($keyword) {
+			$keyword = e($keyword);
+			return $subQuery
+				->orWhere(\DB::raw('LOWER(title)'), 'like', "%{$keyword}%")
+				->orWhere('slug', 'like', "%{$keyword}%")
+				->orWhere('breadcrumb', 'like', "%{$keyword}%")
+				->orWhere('meta_title', 'like', "%{$keyword}%")
+				->orWhere('meta_keywords', 'like', "%{$keyword}%");
+		});
+	}
+
+	public function authoredBy()
+	{
+		return $this->belongsTo('\KodiCMS\Users\Model\User', 'created_by_id');
+	}
+
+	public function updatedBy()
+	{
+		return $this->belongsTo('\KodiCMS\Users\Model\User', 'updated_by_id');
+	}
+
+	public function parent()
+	{
+		return $this->belongsTo('\KodiCMS\Pages\Model\Page', 'parent_id');
+	}
+
+	public function children()
+	{
+		return $this->hasMany('\KodiCMS\Pages\Model\Page', 'parent_id', 'id');
+	}
+}

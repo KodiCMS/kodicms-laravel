@@ -63,7 +63,7 @@ var Api = {
 					return Api.exception(response, callback);
 				}
 
-				var $event = method + url.replace(/\//g, ':');
+				var $event = method + url.replace(SITE_URL, ":").replace(/\//g, ':');
 				window.top.$('body').trigger($event.toLowerCase(), [this._response.response]);
 
 				if(typeof(callback) == 'function') callback(this._response);

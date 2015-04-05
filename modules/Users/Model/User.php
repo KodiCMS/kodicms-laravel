@@ -105,7 +105,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
 		foreach (ACL::getPermissions() as $sectionTitle => $actions) {
 			foreach ($actions as $action => $title) {
-				if (ACL::check($action, $this)) {
+				if (acl_check($action, $this)) {
 					$permissions[$sectionTitle][$action] = $title;
 				}
 			}

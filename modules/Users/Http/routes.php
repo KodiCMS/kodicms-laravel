@@ -23,3 +23,7 @@ Route::group(['prefix' => \CMS::backendPath()], function () {
 		'postEmail' => 'auth.password.post'
 	]);
 });
+
+Route::get('/api.user.meta', ['as' => 'api.user.meta.get', 'uses' => 'API\UserMetaController@getData']);
+Route::post('/api.user.meta', ['as' => 'api.user.meta.post', 'uses' => 'API\UserMetaController@postData']);
+Route::delete('/api.user.meta', ['as' => 'api.user.meta.delete', 'uses' => 'API\UserMetaController@deleteData']);
