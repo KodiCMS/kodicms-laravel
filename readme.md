@@ -9,8 +9,11 @@
 
 ### Авторизация
 
-	username: **admin@test.com**
-	password: **password**
+username: **admin@site.com**
+password: **password**
+
+username: **test@test.com**
+password: **password**
 
 ### События в шаблонах
 
