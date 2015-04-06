@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\Pages\Database\Seeds;
+<?php namespace KodiCMS\Pages\database\seeds;
 
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;

@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\Users\Database\Seeds;
+<?php namespace KodiCMS\Users\database\seeds;
 
 use Illuminate\Database\Seeder;
 use KodiCMS\Users\Model\User;

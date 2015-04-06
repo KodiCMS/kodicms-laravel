@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\Pages\Database\Seeds;
+<?php namespace KodiCMS\Pages\database\deeds;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +14,6 @@ class DatabaseSeeder extends Seeder
 	{
 		Model::unguard();
 
-		$this->call('\KodiCMS\Pages\Database\Seeds\PagesTableSeeder');
+		$this->call('\KodiCMS\Pages\database\seeds\PagesTableSeeder');
 	}
 }
