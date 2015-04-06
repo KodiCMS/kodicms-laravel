@@ -28,13 +28,20 @@ class BackendController extends TemplateController
 	 */
 	public $currentUser;
 
-	public function before()
+	public function boot()
 	{
 		$this->currentUser = \Auth::user();
 
 		$this->navigation = Navigation::init($this->request->getUri(), config('sitemap', []));
 		$this->breadcrumbs = Breadcrumbs::factory();
 
+		if(is_null(array_get($this->permissions, $this->getCurrentAction()))) {
+			$this->permissions[$this->getCurrentAction()] = $this->getRouter()->currentRouteName();
+		}
+	}
+
+	public function before()
+	{
 		$currentPage = Navigation::getCurrentPage();
 
 		$this->breadcrumbs

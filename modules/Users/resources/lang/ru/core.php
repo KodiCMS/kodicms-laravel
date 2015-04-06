@@ -13,7 +13,7 @@ return [
 	],
 	'field' => [
 		'auth' => [
-			'username' => 'Логин или E-mail',
+			'username' => 'Логин',
 			'password' => 'Пароль',
 			'email' => 'E-mail адрес',
 			'forgot' => 'Забыли пароль?',

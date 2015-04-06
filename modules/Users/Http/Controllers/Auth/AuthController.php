@@ -36,9 +36,8 @@ class AuthController extends FrontendController {
 	 * @param Guard $auth
 	 * @param Registrar $registrar
 	 */
-	public function __construct(Guard $auth, Registrar $registrar, Request $request, Response $response, SessionStore $session)
+	public function boot(Guard $auth, Registrar $registrar)
 	{
-		parent::__construct($request, $response, $session);
 		$this->auth = $auth;
 		$this->registrar = $registrar;
 

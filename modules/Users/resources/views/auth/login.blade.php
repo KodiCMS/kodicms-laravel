@@ -19,8 +19,8 @@
 	@endif
 	<div class="panel-body">
 		<div class="form-group">
-			{!! Form::text('username', NULL, [
-					'id' => 'username', 'class' => 'form-control input-lg', 'placeholder' => trans('users::core.field.auth.username')
+			{!! Form::text('email', NULL, [
+					'id' => 'email', 'class' => 'form-control input-lg', 'placeholder' => trans('users::core.field.auth.email')
 			]) !!}
 		</div>
 

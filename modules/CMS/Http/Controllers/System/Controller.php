@@ -5,10 +5,13 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Route;
 use Illuminate\Session\Store as SessionStore;
 use Illuminate\Support\Str;
+use KodiCMS\API\Exceptions\AuthenticateException;
 
-abstract class Controller extends BaseController {
+abstract class Controller extends BaseController
+{
 
 	use DispatchesCommands, ValidatesRequests;
 
@@ -37,6 +40,11 @@ abstract class Controller extends BaseController {
 	 */
 	public $allowedActions = [];
 
+	/**
+	 * @var array
+	 */
+	protected $permissions = [];
+
 
 	/**
 	 * @param Request $request
@@ -49,28 +57,27 @@ abstract class Controller extends BaseController {
 		$this->response = $response;
 		$this->session = $session;
 
-		if($this->authRequired) {
-			$this->middleware('auth', ['except' => $this->allowedActions]);
+		// Execute method boot() on controller execute
+		if (method_exists($this, 'boot')) {
+			app()->call([$this, 'boot']);
 		}
-	}
 
-	/**
-	 * Execute after an action executed
-	 * return void
-	 */
-	public function after()
-	{
-
+		if ($this->authRequired) {
+			$this->beforeFilter('@checkPermissions', ['except' => $this->allowedActions]);
+		}
 	}
 
 	/**
 	 * Execute before an action executed
 	 * return void
 	 */
-	public function before()
-	{
+	public function before(){}
 
-	}
+	/**
+	 * Execute after an action executed
+	 * return void
+	 */
+	public function after(){}
 
 	/**
 	 * @param string $separator
@@ -94,10 +101,20 @@ abstract class Controller extends BaseController {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getCurrentAction()
+	{
+		list($class, $method) = explode('@', $this->getRouter()->currentRouteAction());
+
+		return $method;
+	}
+
+	/**
 	 * Execute an action on the controller.
 	 *
-	 * @param  string  $method
-	 * @param  array   $parameters
+	 * @param  string $method
+	 * @param  array $parameters
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
 	public function callAction($method, $parameters)
@@ -109,5 +126,39 @@ abstract class Controller extends BaseController {
 		$this->after($response);
 
 		return $response;
+	}
+
+	/**
+	 * @param Route $router
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function checkPermissions(Route $router, $request)
+	{
+		if (auth()->guest()) {
+			return $this->denyAccess(trans('cms::core.messages.deny_access'), TRUE);
+		}
+
+		if (!acl_check(array_get($this->permissions, $this->getCurrentAction()))) {
+			return $this->denyAccess(trans('cms::core.messages.no_permissions'));
+		}
+	}
+
+	/**
+	 * @param string|array|null $message
+	 * @param bool $redirect
+	 * @return Response
+	 */
+	public function denyAccess($message = NULL, $redirect = FALSE)
+	{
+		if ($this->request->ajax()) {
+			throw new AuthenticateException('Unauthorized.');
+		} elseif ($redirect) {
+			return redirect()
+				->guest(\CMS::backendPath() . '/auth/login')
+				->withErrors($message);
+		} else {
+			abort(403, $message);
+		}
 	}
 }
