@@ -9,6 +9,8 @@
 
 ### Авторизация
 
+Сайт: http://laravel.kodicms.ru/backend
+
 username: **admin@site.com**
 password: **password**
 
