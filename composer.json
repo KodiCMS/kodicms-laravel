@@ -25,7 +25,7 @@
 			"KodiCMS\\"    : "modules/"
 		},
 		"files": [
-			"modules/Users//helpers.php"
+			"modules/Users/helpers.php"
 		]
 	},
 	"autoload-dev": {
