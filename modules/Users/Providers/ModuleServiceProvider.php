@@ -20,7 +20,7 @@ class ModuleServiceProvider extends BaseServiceProvider {
 	{
 		$this->app->bind(
 			'Illuminate\Contracts\Auth\Registrar',
-			'KodiCMS\Users\Services\Registrar'
+			'KodiCMS\Users\Services\UserCreator'
 		);
 	}
 }

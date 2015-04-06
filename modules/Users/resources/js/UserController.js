@@ -4,7 +4,7 @@ CMS.controllers.add(['user.get.edit', 'user.get.create'], function () {
 		minimumInputLength: 0,
 		multiple: true,
 		ajax: {
-			url: '/api.roles.get',
+			url: '/api.roles',
 			data: function(query, pageNumber, context) {
 				return {
 					key: query
@@ -27,7 +27,7 @@ CMS.controllers.add(['user.get.edit', 'user.get.create'], function () {
 		},
 		initSelection: function(element, callback) {
 			element.val('');
-			if (!USER.id) {
+			if (!_.has(USER, 'id')  ) {
 				callback([{'id':1, 'text':'login'}]);
 				return ;
 			}

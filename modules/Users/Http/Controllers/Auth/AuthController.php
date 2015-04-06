@@ -2,7 +2,6 @@
 
 use KodiCMS\CMS\Http\Controllers\System\FrontendController;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
@@ -33,13 +32,10 @@ class AuthController extends FrontendController {
 	 * Create a new authentication controller instance.
 	 *
 	 * @param Guard $auth
-	 * @param Registrar $registrar
 	 */
-	public function boot(Guard $auth, Registrar $registrar)
+	public function boot(Guard $auth)
 	{
 		$this->auth = $auth;
-		$this->registrar = $registrar;
-
 		$this->redirectPath = $this->session->get('nextUrl', \CMS::backendPath());
 
 		$this->beforeFilter('@checkPermissions', ['except' => 'getLogout']);
@@ -55,6 +51,11 @@ class AuthController extends FrontendController {
 		$this->setContent('auth.login');
 	}
 
+	/**
+	 * @param Route $router
+	 * @param Request $request
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 */
 	public function checkPermissions(Route $router, Request $request)
 	{
 		if ($this->auth->check() AND $this->currentUser->hasRole('login')) {

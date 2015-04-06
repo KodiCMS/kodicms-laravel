@@ -3,10 +3,11 @@
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use KodiCMS\Users\Model\User;
+use KodiCMS\Users\Services\UserCreator;
+use KodiCMS\Users\Services\UserUpdator;
 
 class UserController extends BackendController
 {
-
 	/**
 	 * @var string
 	 */
@@ -60,7 +61,29 @@ class UserController extends BackendController
 
 	public function getCreate()
 	{
-		//
+		$user = new User;
+		$this->setTitle(trans('users::core.title.create'));
+		$this->templateScripts['USER'] = $user;
+		$this->setContent('users.create', compact('user'));
+	}
+
+	public function postCreate(UserCreator $registrar)
+	{
+		$data = $this->request->all();
+
+		$validator = $registrar->validator($data);
+
+		if ($validator->fails())
+		{
+			$this->throwValidationException(
+				$this->request, $validator
+			);
+		}
+
+		$user = $registrar->create($data);
+
+		return redirect(route('backend.user.edit', [$user]))
+			->with('success', trans('users::core.messages.user.created'));
 	}
 
 	public function getEdit($id)
@@ -74,9 +97,23 @@ class UserController extends BackendController
 		$this->setContent('users.edit', compact('user'));
 	}
 
-	public function postEdit($id)
+	public function postEdit(UserUpdator $registrar, $id)
 	{
+		$data = $this->request->all();
 
+		$validator = $registrar->validator($id, $data);
+
+		if ($validator->fails())
+		{
+			$this->throwValidationException(
+				$this->request, $validator
+			);
+		}
+
+		$user = $registrar->update($id, $data);
+
+		return redirect(route('backend.user.edit', [$user]))
+			->with('success', trans('users::core.messages.user.updated'));
 	}
 
 	public function getDelete($id)
@@ -84,7 +121,8 @@ class UserController extends BackendController
 		$user = $this->getUser($id);
 		$user->delete();
 
-		return redirect(route('backend.user.list'))->with('success', trans('users::core.messages.user.deleted'));
+		return redirect(route('backend.user.list'))
+			->with('success', trans('users::core.messages.user.deleted'));
 	}
 
 	protected function getUser($id = NULL)

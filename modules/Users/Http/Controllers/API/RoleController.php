@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Users\Http\Controllers\API;
 
 use KodiCMS\API\Http\Controllers\System\Controller as APIController;
-use KodiCMS\Users\Model\Role;
+use KodiCMS\Users\Model\UserRole;
 
 class RoleController extends APIController
 {
@@ -9,6 +9,6 @@ class RoleController extends APIController
 
 	public function getAll()
 	{
-		$this->setContent(Role::get());
+		$this->setContent(UserRole::get());
 	}
 }
