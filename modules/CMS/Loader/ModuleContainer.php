@@ -100,6 +100,54 @@ class ModuleContainer
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getLocalePath()
+	{
+		return $this->getPath(['resources', 'lang']);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getViewsPath()
+	{
+		return $this->getPath(['resources', 'views']);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getConfigPath()
+	{
+		return $this->getPath('config');
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getAssetsPackagesPath()
+	{
+		return $this->getPath(['resources', 'packages.php']);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRoutesPath()
+	{
+		return $this->getPath(['Http', 'routes.php']);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getServiceProviderPath()
+	{
+		return $this->getPath(['Providers', 'ModuleServiceProvider.php']);
+	}
+
+	/**
 	 * @return $this
 	 */
 	public function boot()
@@ -110,7 +158,7 @@ class ModuleContainer
 			$this->loadAssets();
 			$this->loadConfig();
 
-			$serviceProviderPath = $this->getPath(['Providers', 'ModuleServiceProvider.php']);
+			$serviceProviderPath = $this->getServiceProviderPath();
 			if (is_file($serviceProviderPath)) {
 				App::register($this->getNamespace() . '\Providers\ModuleServiceProvider');
 			}
@@ -136,7 +184,7 @@ class ModuleContainer
 
 	protected function loadAssets()
 	{
-		$packagesFile = $this->getPath(['resources', 'packages.php']);
+		$packagesFile = $this->getAssetsPackagesPath();
 		if (is_file($packagesFile)) {
 			require $packagesFile;
 		}
@@ -151,11 +199,11 @@ class ModuleContainer
 	{
 		$namespace = strtolower($this->getName());
 
-		if (is_dir($appPath = base_path() . '/resources/views/vendor/' . $namespace)) {
+		if (is_dir($appPath = base_path() . '/resources/views/module/' . $namespace)) {
 			app('view')->addNamespace($namespace, $appPath);
 		}
 
-		app('view')->addNamespace($namespace, $this->getPath(['resources', 'views']));
+		app('view')->addNamespace($namespace, $this->getViewsPath());
 	}
 
 	/**
@@ -166,7 +214,7 @@ class ModuleContainer
 	protected function loadTranslations()
 	{
 		$namespace = strtolower($this->getName());
-		app('translator')->addNamespace($namespace, $this->getPath(['resources', 'lang']));
+		app('translator')->addNamespace($namespace, $this->getLocalePath());
 	}
 
 	/**
@@ -176,7 +224,7 @@ class ModuleContainer
 	 */
 	protected function loadConfig()
 	{
-		$path = $this->getPath('config');
+		$path = $this->getConfigPath();
 
 		if (!is_dir($path)) return;
 

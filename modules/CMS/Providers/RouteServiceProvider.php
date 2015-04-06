@@ -36,7 +36,7 @@ class RouteServiceProvider extends ServiceProvider
 	public function map(Router $router)
 	{
 		foreach ($this->app['module.loader']->getRegisteredModules() as $module) {
-			$routesFile = $module->getPath(['Http', 'routes.php']);
+			$routesFile = $module->getRoutesPath();
 			if (is_file($routesFile)) {
 				$router->group(['namespace' => $module->getControllerNamespace()], function ($router) use ($routesFile) {
 					require $routesFile;

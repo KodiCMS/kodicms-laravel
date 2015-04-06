@@ -4,13 +4,13 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use KodiCMS\Installer\Support\ModuleInstaller;
 
-class ModuleInstall extends Command
+class ModuleMigrate extends Command
 {
 
 	/**
 	 * The console command name.
 	 */
-	protected $name = 'cms:modules:install';
+	protected $name = 'cms:modules:migrate';
 
 
 	/**
