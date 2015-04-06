@@ -5,8 +5,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Session\Store as SessionStore;
+use Illuminate\Routing\Route;
 
 class AuthController extends FrontendController {
 
@@ -41,7 +40,9 @@ class AuthController extends FrontendController {
 		$this->auth = $auth;
 		$this->registrar = $registrar;
 
-		$this->middleware('guest', ['except' => 'getLogout']);
+		$this->redirectPath = \CMS::backendPath();
+
+		$this->beforeFilter('@checkPermissions', ['except' => 'getLogout']);
 	}
 
 	/**
@@ -52,5 +53,12 @@ class AuthController extends FrontendController {
 	public function getLogin()
 	{
 		$this->setContent('auth.login');
+	}
+
+	public function checkPermissions(Route $router, Request $request)
+	{
+		if ($this->auth->check() AND $this->currentUser->hasRole('login')) {
+			return redirect($this->redirectPath);
+		}
 	}
 }

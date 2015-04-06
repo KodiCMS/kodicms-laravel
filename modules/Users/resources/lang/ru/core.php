@@ -13,7 +13,7 @@ return [
 	],
 	'field' => [
 		'auth' => [
-			'username' => 'Логин',
+			'username' => 'Логин или E-mail',
 			'password' => 'Пароль',
 			'email' => 'E-mail адрес',
 			'forgot' => 'Забыли пароль?',
@@ -28,6 +28,9 @@ return [
 	'messages' => [
 		'auth' => [
 			'forgot' => 'Укажите email адрес, для которого вы хотите восстановить пароль.',
+			'deny_access' => 'Доступ запрещен',
+			'no_permissions' => 'У вас нет необходимых прав',
+			'unauthorized' => 'Необходима авторизация'
 		]
 	]
 ];

@@ -22,7 +22,6 @@ return [
 		''
 	],
 	'messages' => [
-		'deny_access' => 'Доступ запрещен',
-		'no_permissions' => 'У вас нет необходимых прав'
+
 	]
 ];

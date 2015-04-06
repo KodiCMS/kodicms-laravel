@@ -40,7 +40,7 @@
 								</li>
 								<li class="user-body">
 									<div class="col-xs-6">
-										{!! HTML::linkRoute('backend.user.profile', trans('users::core.sections.profile'), [], ['data-icon' => 'user']) !!}
+										{!! HTML::linkRoute('backend.user.current_profile', trans('users::core.sections.profile'), [], ['data-icon' => 'user']) !!}
 									</div>
 									<div class="col-xs-6">
 										{!! HTML::linkRoute('backend.user.edit', trans('users::core.sections.settings'), [Auth::user()], ['data-icon' => 'cog']) !!}

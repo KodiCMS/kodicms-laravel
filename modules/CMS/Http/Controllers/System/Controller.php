@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
+use Illuminate\Auth\Guard;
 use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -31,14 +32,19 @@ abstract class Controller extends BaseController
 	protected $session;
 
 	/**
+	 * @var \KodiCMS\Users\Model\User;
+	 */
+	protected $currentUser;
+
+	/**
 	 * @var bool
 	 */
-	public $authRequired = FALSE;
+	protected $authRequired = FALSE;
 
 	/**
 	 * @var array
 	 */
-	public $allowedActions = [];
+	protected $allowedActions = [];
 
 	/**
 	 * @var array
@@ -51,11 +57,13 @@ abstract class Controller extends BaseController
 	 * @param Response $response
 	 * return void
 	 */
-	public function __construct(Request $request, Response $response, SessionStore $session)
+	public function __construct(Request $request, Response $response, SessionStore $session, Guard $auth)
 	{
 		$this->request = $request;
 		$this->response = $response;
 		$this->session = $session;
+
+		$this->currentUser = $auth->user();
 
 		// Execute method boot() on controller execute
 		if (method_exists($this, 'boot')) {
@@ -63,7 +71,7 @@ abstract class Controller extends BaseController
 		}
 
 		if ($this->authRequired) {
-			$this->beforeFilter('@checkPermissions', ['except' => $this->allowedActions]);
+			$this->beforeFilter('@checkPermissions');
 		}
 	}
 
@@ -71,13 +79,17 @@ abstract class Controller extends BaseController
 	 * Execute before an action executed
 	 * return void
 	 */
-	public function before(){}
+	public function before()
+	{
+	}
 
 	/**
 	 * Execute after an action executed
 	 * return void
 	 */
-	public function after(){}
+	public function after()
+	{
+	}
 
 	/**
 	 * @param string $separator
@@ -129,18 +141,29 @@ abstract class Controller extends BaseController
 	}
 
 	/**
+	 * Проверка прав текущего пользователя
+	 *
 	 * @param Route $router
 	 * @param Request $request
 	 * @return Response
 	 */
-	public function checkPermissions(Route $router, $request)
+	public function checkPermissions(Route $router, Request $request)
 	{
 		if (auth()->guest()) {
-			return $this->denyAccess(trans('cms::core.messages.deny_access'), TRUE);
+			return $this->denyAccess(trans('users::core.messages.auth.unauthorized'), TRUE);
 		}
 
-		if (!acl_check(array_get($this->permissions, $this->getCurrentAction()))) {
-			return $this->denyAccess(trans('cms::core.messages.no_permissions'));
+		if(!$this->currentUser->hasRole('login')) {
+			auth()->logout();
+			return $this->denyAccess(trans('users::core.messages.auth.deny_access'), TRUE);
+		}
+
+		if (
+			!in_array($this->getCurrentAction(), $this->allowedActions)
+			AND
+			!acl_check(array_get($this->permissions, $this->getCurrentAction()))
+		) {
+			return $this->denyAccess(trans('users::core.messages.auth.no_permissions'));
 		}
 	}
 
@@ -152,7 +175,7 @@ abstract class Controller extends BaseController
 	public function denyAccess($message = NULL, $redirect = FALSE)
 	{
 		if ($this->request->ajax()) {
-			throw new AuthenticateException('Unauthorized.');
+			throw new AuthenticateException($message);
 		} elseif ($redirect) {
 			return redirect()
 				->guest(\CMS::backendPath() . '/auth/login')

@@ -23,15 +23,8 @@ class BackendController extends TemplateController
 	 */
 	public $breadcrumbs;
 
-	/**
-	 * @var \KodiCMS\Users\Model\User;
-	 */
-	public $currentUser;
-
 	public function boot()
 	{
-		$this->currentUser = \Auth::user();
-
 		$this->navigation = Navigation::init($this->request->getUri(), config('sitemap', []));
 		$this->breadcrumbs = Breadcrumbs::factory();
 
@@ -79,13 +72,14 @@ class BackendController extends TemplateController
 
 		Assets::package(['libraries', 'core']);
 
-		// TODO: разобраться с подключением событий и локалей в контроллер
+
 		$file = $this->getRouterController();
 		if (app('module.loader')->findFile('resources/js', $file, 'js'))
 		{
 			Assets::js('controller.' . $file, \CMS::backendResourcesURL() . '/js/' . $file . '.js', 'global', FALSE, 999);
 		}
 
+		// TODO: разобраться с подключением событий и локалей в контроллер
 		//Assets::group('global', 'events', '<script type="text/javascript">' . Assets::merge_files('js/events', 'js') . '</script>', 'global');
 	}
 }

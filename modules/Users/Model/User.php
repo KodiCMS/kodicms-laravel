@@ -77,6 +77,39 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return $this->belongsToMany('KodiCMS\Users\Model\UserRole', 'roles_users', 'role_id', 'user_id');
 	}
 
+	public function hasRole($role, $allRequired = FALSE)
+	{
+		$status = TRUE;
+
+		$roles = $this->roles()->lists('name');
+
+		if (is_array($role))
+		{
+			$status = (bool) $allRequired;
+
+			foreach ($role as $_role) {
+				// If the user doesn't have the role
+				if (!in_array($_role, $roles)) {
+					// Set the status false and get outta here
+					$status = FALSE;
+
+					if ($allRequired) {
+						break;
+					}
+				} elseif (!$allRequired) {
+					$status = TRUE;
+					break;
+				}
+			}
+		}
+		else
+		{
+			$status = in_array($role, $roles);
+		}
+
+		return $status;
+	}
+
 	/**
 	 * @return array
 	 */

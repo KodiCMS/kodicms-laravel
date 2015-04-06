@@ -16,6 +16,10 @@ class RolesTableSeeder extends Seeder {
 
 		$roles = [
 			[
+				'name' => 'login',
+				'description' => 'Login privileges, granted after account confirmation.'
+			],
+			[
 				'name' => 'administrator',
 				'description' => 'Administrative user, has access to everything.'
 			],

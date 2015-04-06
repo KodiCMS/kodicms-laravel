@@ -20,6 +20,6 @@ class UsersTableSeeder extends Seeder {
 			'username' => 'admin'
 		]);
 
-		$user->roles()->sync([1, 2]);
+		$user->roles()->sync([1, 2, 3]);
 	}
 }
