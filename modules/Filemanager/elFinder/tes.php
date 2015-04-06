@@ -4,7 +4,6 @@ use Illuminate\Http\Request;
 
 class Connector
 {
-
 	const FILE_SYSTEM = '\KodiCMS\Filemanager\elFinder\VolumeLocalFileSystem';
 	const FTP         = '\KodiCMS\Filemanager\elFinder\VolumeFTP';
 
