@@ -1,5 +1,6 @@
 {!! Form::model($user, [
-	'route' => 'backend.user.edit.post', 'class' => 'form-horizontal panel tabbable'
+	'route' => ['backend.user.edit.post', 'id' => $user->id],
+	'class' => 'form-horizontal panel tabbable'
 ]) !!}
 <div class="panel-heading">
 	<span class="panel-title">@lang('users::core.tab.general')</span>
@@ -116,26 +117,6 @@
 @event('view.user.edit.form.bottom', [$user])
 
 <div class="form-actions panel-footer">
-	{!! Form::button(trans('cms::core.button.save'), [
-		'type' => 'submit',
-		'class' => 'btn btn-success btn-save btn-lg',
-		'data-icon' => 'retweet',
-		'name' => 'continue',
-		'data-hotkeys' => 'ctrl+s'
-	]) !!}
-	&nbsp;&nbsp;
-	{!! Form::button(trans('cms::core.button.save_close'), [
-		'type' => 'submit',
-		'class' => 'btn btn-save-close btn-default hidden-xs',
-		'data-icon' => 'check',
-		'name' => 'commit',
-		'data-hotkeys' => 'ctrl+shift+s'
-	]) !!}
-	&nbsp;&nbsp;&nbsp;&nbsp;
-
-	{!! link_to_route('backend.user.list', UI::hidden(trans('cms::core.button.cancel')), [
-		'data-icon' => 'ban',
-		'class' => 'btn btn-close btn-sm btn-outline'
-	]) !!}
+	@include('cms::app.blocks.actionButtons', ['route' => 'backend.user.list'])
 </div>
 {!! Form::close() !!}
