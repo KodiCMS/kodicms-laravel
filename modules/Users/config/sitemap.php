@@ -6,7 +6,7 @@ return [
 		'children' => [
 			[
 				'name' => 'Users',
-				'label' => 'users::core.sections.list',
+				'label' => 'users::core.title.list',
 				'url' => route('backend.user.list'),
 				'permissions' => 'users.index',
 				'priority' => 200,

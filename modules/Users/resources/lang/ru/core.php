@@ -1,10 +1,13 @@
 <?php
 
 return [
-	'sections' => [
+	'title' => [
 		'list' => 'Пользователи',
 		'profile' => 'Профиль',
-		'settings' => 'Настройки'
+		'profile_alternate' => 'Профиль пользователя :name',
+		'settings' => 'Настройки',
+		'permissions' => 'Права доступа',
+		'edit' => 'Редактирование пользователя :name'
 	],
 	'role' => [
 		'sections' => [
@@ -12,6 +15,11 @@ return [
 		],
 	],
 	'field' => [
+		'username' => 'Имя пользователя',
+		'email' => 'E-mail',
+		'last_login' => 'Последний вход',
+		'roles' => 'Роли',
+		'actions' => 'Действия',
 		'auth' => [
 			'username' => 'Логин или E-mail',
 			'password' => 'Пароль',
@@ -23,9 +31,14 @@ return [
 	'button' => [
 		'login' => 'Вход',
 		'logout' => 'Выход',
-		'send_password' => 'Выслать пароль'
+		'send_password' => 'Выслать пароль',
+		'edit' => 'Редактировать'
 	],
 	'messages' => [
+		'user' => [
+			'not_found'	=> 'Пользователь не найден',
+			'deleted' => 'Пользователь удален',
+		],
 		'auth' => [
 			'forgot' => 'Укажите email адрес, для которого вы хотите восстановить пароль.',
 			'deny_access' => 'Доступ запрещен',

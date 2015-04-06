@@ -39,15 +39,31 @@ class Page extends Model
 	protected $table = 'pages';
 
 	/**
-	 * The attributes that are mass assignable.
+	 * The attributes that aren't mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = [
-		'published_at', 'parent_id', 'status', 'behavior', 'slug',
-		'title', 'breadcrumb', 'meta_title', 'meta_keywords', 'meta_description',
-		'robots', 'layout_file', 'position',
-		'is_redirect', 'redirect_url'
+	protected $guarded = ['id','created_at', 'updated_at', 'created_by_id', 'updated_by_id'];
+
+	/**
+	 * The attributes that should be mutated to dates.
+	 *
+	 * @var array
+	 */
+	protected $dates = ['published_at'];
+
+	/**
+	 * The attributes that should be casted to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'parent_id' => 'integer',
+		'status' => 'integer',
+		'created_by_id' => 'integer',
+		'updated_by_id' => 'integer',
+		'position' => 'integer',
+		'is_redirect' => 'boolean',
 	];
 
 	/**
@@ -98,7 +114,7 @@ class Page extends Model
 				break;
 		}
 
-		return \UI::label($status, $label . ' editable-status', array('data-value' => $this->status));
+		return \UI::label($status, $label . ' editable-status', ['data-value' => $this->status]);
 	}
 
 	/**

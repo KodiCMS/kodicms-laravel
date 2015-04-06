@@ -1,6 +1,6 @@
 <?php
 return [
-	'sections' => [
+	'title' => [
 		'section' => 'E-mail',
 		'templates' => [
 			'list' => 'Шаблоны',

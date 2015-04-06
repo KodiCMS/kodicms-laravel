@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'sections' => [
+	'title' => [
 		'about' => 'О системе',
 		'settings' => 'Настройки',
 		'system' => 'Системные',

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Laravelrus\LocalizedCarbon\LocalizedCarbon as Carbon;
 
 /**
  * Class User
@@ -23,11 +24,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	protected $table = 'users';
 
 	/**
-	 * The attributes that are mass assignable.
+	 * The attributes that aren't mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['username', 'email', 'password', 'logins', 'last_login'];
+	protected $guarded = ['id', 'last_login', 'logins'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -35,6 +36,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 * @var array
 	 */
 	protected $hidden = ['password', 'remember_token'];
+
+	/**
+	 * The attributes that should be casted to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'logins' => 'integer',
+		'last_login' => 'integer'
+	];
 
 	/**
 	 * @var array
@@ -45,6 +56,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 * @var array
 	 */
 	protected $permissions = [];
+
+	/**
+	 * @param integer $date
+	 * @return string
+	 */
+	public function getLastLoginAttribute($date)
+	{
+		return (new Carbon)->createFromTimestamp($date)->diffForHumans();
+	}
 
 	/**
 	 * Получение аватара пользлователя из сервиса Gravatar
@@ -74,7 +94,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	public function roles()
 	{
-		return $this->belongsToMany('KodiCMS\Users\Model\UserRole', 'roles_users', 'role_id', 'user_id');
+		return $this->belongsToMany('KodiCMS\Users\Model\UserRole', 'roles_users', 'user_id', 'role_id');
 	}
 
 	public function hasRole($role, $allRequired = FALSE)
@@ -136,7 +156,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	{
 		$permissions = [];
 
-		foreach (ACL::getPermissions() as $sectionTitle => $actions) {
+		foreach (\ACL::getPermissions() as $sectionTitle => $actions) {
 			foreach ($actions as $action => $title) {
 				if (acl_check($action, $this)) {
 					$permissions[$sectionTitle][$action] = $title;

@@ -25,7 +25,7 @@ class ACL
 	{
 		$permissions = [];
 
-		foreach (config('permissions') as $module => $actions) {
+		foreach (config('permissions', []) as $module => $actions) {
 			if (isset($actions['title'])) {
 				$title = $actions['title'];
 			} else {

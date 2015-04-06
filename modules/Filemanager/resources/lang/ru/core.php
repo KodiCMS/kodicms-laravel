@@ -1,7 +1,7 @@
 <?php
 return [
 	'public' => 'Корень',
-	'sections' => [
+	'title' => [
 		'index' => 'Файловый менеджер'
 	]
 ];

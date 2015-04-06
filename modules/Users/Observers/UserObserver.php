@@ -40,6 +40,7 @@ class UserObserver {
 	 */
 	public function deleted($model)
 	{
-
+		// Удаление связанных ролей
+		$model->roles()->sync([]);
 	}
 }

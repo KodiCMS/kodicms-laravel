@@ -1,6 +1,6 @@
 <?php
 return [
-	'sections' => [
+	'title' => [
 		'list' => 'Задачи'
 	]
 ];

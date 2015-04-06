@@ -3,12 +3,14 @@
 Route::group(['prefix' => \CMS::backendPath()], function () {
 
 	Route::get('user/{id}/edit', ['as' => 'backend.user.edit', 'uses' => 'UserController@getEdit'])->where('id', '[0-9]+');
+	Route::post('user/{id}/edit', ['as' => 'backend.user.edit.post', 'uses' => 'UserController@postEdit'])->where('id', '[0-9]+');
+	Route::get('user/{id}/delete', ['as' => 'backend.user.delete', 'uses' => 'UserController@getDelete'])->where('id', '[0-9]+');
 	Route::get('user/{id}/profile', ['as' => 'backend.user.profile', 'uses' => 'UserController@getProfile'])->where('id', '[0-9]+');
 	Route::get('user/profile', ['as' => 'backend.user.current_profile', 'uses' => 'UserController@getProfile']);
 
 	Route::controller('user', 'UserController', [
 		'getIndex' => 'backend.user.list',
-		'postEdit' => 'backend.user.edit.post',
+		'getCreate' => 'backend.user.create',
 		'postCreate' => 'backend.user.create.post',
 	]);
 

@@ -132,9 +132,7 @@ abstract class Controller extends BaseController
 	public function callAction($method, $parameters)
 	{
 		$this->before();
-
 		$response = call_user_func_array([$this, $method], $parameters);
-
 		$this->after($response);
 
 		return $response;

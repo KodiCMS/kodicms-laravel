@@ -6,7 +6,7 @@ return [
 		'children' => [
 			[
 				'name' => 'Snippets',
-				'label' => 'widgets::core.sections.snippets.list',
+				'label' => 'widgets::core.title.snippets.list',
 				'url' => route('backend.snippet.list'),
 				'permissions' => 'snippet.index',
 				'priority' => 200,
@@ -14,7 +14,7 @@ return [
 			],
 			[
 				'name' => 'Widgets',
-				'label' => 'widgets::core.sections.widgets.list',
+				'label' => 'widgets::core.title.widgets.list',
 				'url' => route('backend.widget.list'),
 				'permissions' => 'widgets.index',
 				'priority' => 300,

@@ -41,8 +41,7 @@ class BackendController extends TemplateController
 			->add(\UI::icon('home'), route('backend.dashboard'));
 
 		if(!is_null($currentPage)){
-			$this->breadcrumbs->add($currentPage->getName(), $currentPage->getUrl());
-			$this->setTitle($currentPage->getName());
+			$this->setTitle($currentPage->getName(), $currentPage->getUrl());
 		}
 
 		parent::before();

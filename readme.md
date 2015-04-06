@@ -28,3 +28,6 @@
 
 ### auth/password
  * `view.password.form.footer`
+ 
+### user/profile
+ * `view.user.profile.information`

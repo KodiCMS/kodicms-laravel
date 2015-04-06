@@ -25,8 +25,7 @@ class PageController extends BackendController
 		}, Page::statuses(), array_keys(Page::statuses()));
 
 		$this->setContent('index', [
-			'page' => Page::find(1),
-			'childrenPages' => [],
+			'page' => Page::find(1)
 		]);
 	}
 

@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'sections' => [
+	'title' => [
 		'pages' => [
 			'list' => 'Страницы'
 		],

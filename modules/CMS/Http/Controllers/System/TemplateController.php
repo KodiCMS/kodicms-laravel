@@ -66,11 +66,14 @@ class TemplateController extends Controller
 	 * @param $title
 	 * @return $this
 	 */
-	protected function setTitle($title)
+	protected function setTitle($title, $url = NULL)
 	{
 		// Initialize empty values
 		$this->template
 			->with('title', $title);
+
+		$this->breadcrumbs
+			->add($title, $url);
 
 		return $this;
 	}
@@ -142,8 +145,8 @@ class TemplateController extends Controller
 			'ROUTE' => $this->getRouter()->currentRouteAction(),
 			'ROUTE_PATH' => $this->getRouterPath(),
 			'USER_ID' => \Auth::id(),
-			'MESSAGE_ERRORS' => $this->session->get('errors', []),
-			'MESSAGE_SUCCESS' => $this->session->get('success', []),
+			'MESSAGE_ERRORS' => view()->shared('errors')->getBag('default'),
+			'MESSAGE_SUCCESS' => (array) $this->session->get('success', []),
 		];
 	}
 
@@ -163,7 +166,7 @@ class TemplateController extends Controller
 
 		$response = parent::callAction($method, $parameters);
 
-		if (is_null($response) && !is_null($this->template)) {
+		if (is_null($response) && $this->autoRender === TRUE && !is_null($this->template)) {
 			$response = $this->template;
 		}
 

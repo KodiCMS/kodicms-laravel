@@ -2,32 +2,32 @@
 return [
 	[
 		'name' => 'Dashboard',
-		'label' => 'cms::core.sections.dashboard',
+		'label' => 'cms::core.title.dashboard',
 		'icon' => 'dashboard',
 		'url' => route('backend.dashboard'),
 		'priority' => 0,
 	],
 	[
 		'name' => 'Content',
-		'label' => 'cms::core.sections.content',
+		'label' => 'cms::core.title.content',
 		'icon' => 'pencil-square-o',
 		'priority' => 200,
 	],
 	[
 		'name' => 'Design',
-		'label' => 'cms::core.sections.design',
+		'label' => 'cms::core.title.design',
 		'icon' => 'desktop',
 		'priority' => 7000
 	],
 	[
 		'name' => 'System',
-		'label' => 'cms::core.sections.system',
+		'label' => 'cms::core.title.system',
 		'icon' => 'cog',
 		'priority' => 8000,
 		'children' => [
 			[
 				'name' => 'Information',
-				'label' => 'cms::core.sections.about',
+				'label' => 'cms::core.title.about',
 				'url' => route('backend.about'),
 				'permissions' => 'system.about',
 				'priority' => 90,
@@ -35,7 +35,7 @@ return [
 			],
 			[
 				'name' => 'Settings',
-				'label' => 'cms::core.sections.settings',
+				'label' => 'cms::core.title.settings',
 				'url' => route('backend.settings'),
 				'permissions' => 'system.settings',
 				'priority' => 100,

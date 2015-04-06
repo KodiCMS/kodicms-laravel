@@ -21,5 +21,13 @@ class UsersTableSeeder extends Seeder {
 		]);
 
 		$user->roles()->sync([1, 2, 3]);
+
+		$user = User::create([
+			'email' => 'test@test.com',
+			'password' => 'password',
+			'username' => 'test'
+		]);
+
+		$user->roles()->sync([1, 2]);
 	}
 }

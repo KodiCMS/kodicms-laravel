@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Pages\Database\Seeds;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use KodiCMS\Pages\Model\Page;
 
@@ -16,7 +17,8 @@ class PagesTableSeeder extends Seeder {
 
 		$rootPage = Page::create([
 			'title' => 'Home',
-			'breadcrumb' => 'Home'
+			'breadcrumb' => 'Home',
+			'published_at' => new Carbon()
 		]);
 
 		$pages = [
@@ -24,11 +26,13 @@ class PagesTableSeeder extends Seeder {
 				'title' => 'News',
 				'breadcrumb' => 'News',
 				'slug' => 'news',
+				'published_at' => new Carbon()
 			],
 			[
 				'title' => 'Blog',
 				'breadcrumb' => 'Blog',
 				'slug' => 'blog',
+				'published_at' => new Carbon()
 			]
 		];
 
@@ -45,6 +49,7 @@ class PagesTableSeeder extends Seeder {
 				'title' => 'Article',
 				'breadcrumb' => 'Article',
 				'slug' => 'article',
+				'published_at' => new Carbon()
 			]));
 		}
 	}

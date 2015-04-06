@@ -40,10 +40,10 @@
 								</li>
 								<li class="user-body">
 									<div class="col-xs-6">
-										{!! HTML::linkRoute('backend.user.current_profile', trans('users::core.sections.profile'), [], ['data-icon' => 'user']) !!}
+										{!! HTML::linkRoute('backend.user.current_profile', trans('users::core.title.profile'), [], ['data-icon' => 'user']) !!}
 									</div>
 									<div class="col-xs-6">
-										{!! HTML::linkRoute('backend.user.edit', trans('users::core.sections.settings'), [Auth::user()], ['data-icon' => 'cog']) !!}
+										{!! HTML::linkRoute('backend.user.edit', trans('users::core.title.settings'), [Auth::user()], ['data-icon' => 'cog']) !!}
 									</div>
 								</li>
 								<li class="user-footer">
