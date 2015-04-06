@@ -69,6 +69,7 @@ class UserController extends BackendController
 		$this->setTitle(trans('users::core.title.edit', [
 			'name' => ucfirst($user->username)
 		]));
+		$this->templateScripts['USER'] = $user;
 
 		$this->setContent('users.edit', compact('user'));
 	}

@@ -30,6 +30,9 @@ Route::group(['prefix' => \CMS::backendPath()], function () {
 	]);
 });
 
+Route::get('/api.user.roles', ['as' => 'api.user.roles.get', 'uses' => 'API\UserController@getRoles']);
+Route::get('/api.roles', ['as' => 'api.roles.get', 'uses' => 'API\RoleController@getAll']);
+
 Route::get('/api.user.meta', ['as' => 'api.user.meta.get', 'uses' => 'API\UserMetaController@getData']);
 Route::post('/api.user.meta', ['as' => 'api.user.meta.post', 'uses' => 'API\UserMetaController@postData']);
 Route::delete('/api.user.meta', ['as' => 'api.user.meta.delete', 'uses' => 'API\UserMetaController@deleteData']);

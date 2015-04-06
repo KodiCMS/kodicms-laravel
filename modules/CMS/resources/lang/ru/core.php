@@ -9,6 +9,11 @@ return [
 		'design' => 'Дизайн',
 		'system' => 'Система'
 	],
+	'button' => [
+		'save' => 'Сохранить',
+		'cancel' => 'Отмена',
+		'save_close' => 'Сохранить и закрыть'
+	],
 	'helpers' => [
 		'not_select' => 'Не выбран',
 	],

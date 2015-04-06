@@ -14,7 +14,7 @@
 		{!! Assets::group('global', 'events') !!}
 
 	</head>
-	<body id="body.{{ $bodyId or 'backend' }}" class="{{ $requestType }} {{ $theme or 'theme-default' }} main-menu-fixed">
+	<body id="body.{{ $bodyId or 'backend' }}" class="{{ $requestType }} theme-{{ $theme or 'default' }} main-menu-fixed">
 		<div id="main-wrapper">
 			@if($requestType != 'iframe')
 			<header>

@@ -105,6 +105,7 @@ class TemplateController extends Controller
 		}
 
 		\View::share('adminDir', \CMS::backendPath());
+		\View::share('controllerAction', $this->getCurrentAction());
 	}
 
 	public function after()

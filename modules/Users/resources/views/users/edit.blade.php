@@ -1,37 +1,33 @@
-{!! Form::open([
+{!! Form::model($user, [
 	'route' => 'backend.user.edit.post', 'class' => 'form-horizontal panel tabbable'
 ]) !!}
 <div class="panel-heading">
-	<span class="panel-title">@lang('users::core.form.label.general')</span>
+	<span class="panel-title">@lang('users::core.tab.general')</span>
 </div>
 <div class="panel-body">
 	<div class="form-group form-group-lg">
-		<?php echo $user->label('username', array('class' => 'control-label col-md-3')); ?>
+		<label class="control-label col-md-3" for="username">@lang('users::core.field.username')</label>
 		<div class="col-md-4">
 			<div class="input-group">
-				<?php echo $user->field('username', array(
-						'class' => 'form-control',
-						'prefix' => 'user'
-				)); ?>
-				<span class="input-group-addon"><?php echo UI::icon('user'); ?></span>
+				{!! Form::text('username', NULL, [
+					'class' => 'form-control', 'id' => 'username'
+				]) !!}
+				<span class="input-group-addon" data-icon="user"></span>
 			</div>
 		</div>
 		<div class="col-md-offset-3 col-md-9">
-			<p class="help-block"><?php echo __('At least :num characters. Must be unique.', array(
-						':num' => 3
-				)); ?></p>
+			<p class="help-block">@lang('users::core.rule.username', ['num' => 3])</p>
 		</div>
 	</div>
 
 	<div class="form-group">
-		<?php echo $user->label('email', array('class' => 'control-label col-md-3')); ?>
+		<label class="control-label col-md-3" for="email">@lang('users::core.field.email')</label>
 		<div class="col-md-4">
 			<div class="input-group">
-				<?php echo $user->field('email', array(
-						'class' => 'form-control',
-						'prefix' => 'user'
-				)); ?>
-				<span class="input-group-addon"><?php echo UI::icon('envelope'); ?></span>
+				{!! Form::email('email', NULL, [
+					'class' => 'form-control', 'id' => 'email'
+				]) !!}
+				<span class="input-group-addon" data-icon="envelope"></span>
 			</div>
 		</div>
 	</div>
@@ -39,91 +35,107 @@
 	<hr class="panel-wide" />
 
 	<div class="form-group">
-		<?php echo $user->profile->label('locale', array('class' => 'control-label col-md-3')); ?>
+		<label class="control-label col-md-3" for="locale">@lang('users::core.field.locale')</label>
 		<div class="col-md-4">
-			<?php echo $user->profile->field('locale', array(
-					'class' => 'form-control',
-					'prefix' => 'profile'
-			)); ?>
+			{!! Form::select('locale', config('cms.locales', []), NULL, [
+				'class' => 'form-control', 'id' => 'locale'
+			]) !!}
 		</div>
 	</div>
 </div>
 
-<?php if (ACL::check('users.change_password') OR $user->id == Auth::get_id() OR ! $user->loaded()): ?>
+@if (acl_check('users.change_password') OR $user->id == auth()->user()->id OR !$user->exists)
 <div class="panel-heading">
-	<span class="panel-title"><?php echo __('Password'); ?></span>
+	<span class="panel-title">@lang('users::core.tab.password')</span>
 </div>
-<?php if ($action == 'edit'): ?>
+
+@if ($controllerAction == 'getEdit')
 <div class="note note-warning">
-	<?php echo UI::icon('lightbulb-o fa-lg'); ?> <?php echo __('Leave password blank for it to remain unchanged.'); ?>
+	{!! UI::icon('lightbulb-o fa-lg') !!} @lang('users::core.rule.password_change')
 </div>
-<?php endif; ?>
+@endif
+
 <div class="panel-body">
 	<div class="form-group">
-		<?php echo $user->label('password', array('class' => 'control-label col-md-3')); ?>
+		<label class="control-label col-md-3" for="email">@lang('users::core.field.password')</label>
 		<div class="col-md-3">
-			<?php echo $user->field('password', array(
-					'class' => 'form-control',
-					'prefix' => 'user',
-					'autocomplete' => 'off',
-					'placeholder' => __('Password')
-			)); ?>
+			{!! Form::password('password', [
+				'class' => 'form-control', 'id' => 'password', 'autocomplete' => 'off', 'placeholder' => trans('users::core.field.password')
+			]) !!}
 		</div>
 	</div>
 	<div class="form-group">
-		<?php echo $user->label('password_confirm', array('class' => 'control-label col-md-3')); ?>
+		<label class="control-label col-md-3" for="email">@lang('users::core.field.password_confirm')</label>
 		<div class="col-md-3">
-			<?php echo $user->field('password_confirm', array(
-					'class' => 'form-control',
-					'prefix' => 'user',
-					'autocomplete' => 'off',
-					'placeholder' => __('Confirm Password')
-			)); ?>
+			{!! Form::password('password_confirm', [
+				'class' => 'form-control', 'id' => 'password_confirm', 'autocomplete' => 'off', 'placeholder' => trans('users::core.field.password_confirm')
+			]) !!}
 		</div>
 	</div>
-	<?php Observer::notify('view_user_edit_password', $user->id); ?>
-</div>
-<?php endif; ?>
 
-<?php if (ACL::check('users.change_roles') AND ( $user->id === NULL OR $user->id > 1)): ?>
+	@event('view.user.edit.password', [$user])
+</div>
+@endif
+
+@if (acl_check('users.change_roles') AND ( !$user->exists OR $user->id > 1))
 <div class="panel-heading">
-	<span class="panel-title"><?php echo __('Roles'); ?></span>
+	<span class="panel-title">@lang('users::core.tab.roles')</span>
 </div>
 <div class="panel-body">
 	<div class="row-fluid">
-		<?php echo Form::hidden('user_roles', (int) $user->id, array(
+		{!! Form::hidden('user_roles', (int) $user->id, array(
 				'class' => 'col-md-12'
-		)); ?>
-		<p class="help-block"><?php echo __('Roles restrict user privileges and turn parts of the administrative interface on or off.'); ?></p>
+		)) !!}
+		<p class="help-block">@lang('users::core.rule.roles')</p>
 	</div>
 </div>
-<?php endif; ?>
+@endif
 
-<?php if ($action == 'edit'): ?>
+@if ($controllerAction == 'getEdit')
 <div class="panel-heading">
-	<span class="panel-title"><?php echo __('Admin theme'); ?></span>
+	<span class="panel-title">@lang('users::core.tab.theme')</span>
 </div>
 <div class="panel-body">
 	<?php
-	$themes = Config::get('global', 'themes', array());
-	$current_theme = Model_User_Meta::get('admin_theme', Config::get('global', 'default_theme'));
+	$themes = config('cms.theme.list', []);
+	$currentTheme = $user->getCurrentTheme();
 	?>
 
 	<div id="themes" class="row">
-		<?php foreach ($themes as $theme): ?>
+		@foreach ($themes as $theme)
 		<div class="col-md-2 col-sm-3 col-xs-4">
-			<a href="#" class="theme <?php if ($theme == $current_theme): ?>active<?php endif; ?> thumbnail" data-theme="<?php echo $theme; ?>">
-				<?php echo HTML::image(ADMIN_RESOURCES . 'images/themes/' . $theme . '.jpg'); ?>
+			<a href="#" class="theme @if ($theme == $currentTheme) active @endif thumbnail" data-theme="{{ $theme }}">
+				{!! HTML::image(resources_url() . '/images/themes/' . $theme . '.jpg') !!}
 			</a>
 		</div>
-		<?php endforeach; ?>
+		@endforeach
 	</div>
 </div>
-<?php endif; ?>
+@endif
 
-<?php Observer::notify('view_user_edit_plugins', $user); ?>
+@event('view.user.edit.form.bottom', [$user])
 
 <div class="form-actions panel-footer">
-	<?php echo UI::actions($page_name); ?>
+	{!! Form::button(trans('cms::core.button.save'), [
+		'type' => 'submit',
+		'class' => 'btn btn-success btn-save btn-lg',
+		'data-icon' => 'retweet',
+		'name' => 'continue',
+		'data-hotkeys' => 'ctrl+s'
+	]) !!}
+	&nbsp;&nbsp;
+	{!! Form::button(trans('cms::core.button.save_close'), [
+		'type' => 'submit',
+		'class' => 'btn btn-save-close btn-default hidden-xs',
+		'data-icon' => 'check',
+		'name' => 'commit',
+		'data-hotkeys' => 'ctrl+shift+s'
+	]) !!}
+	&nbsp;&nbsp;&nbsp;&nbsp;
+
+	{!! link_to_route('backend.user.list', UI::hidden(trans('cms::core.button.cancel')), [
+		'data-icon' => 'ban',
+		'class' => 'btn btn-close btn-sm btn-outline'
+	]) !!}
 </div>
 {!! Form::close() !!}

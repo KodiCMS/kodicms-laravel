@@ -3,6 +3,7 @@
 use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
 use KodiCMS\CMS\Navigation\Collection as Navigation;
 use KodiCMS\CMS\Assets\Core as Assets;
+use KodiCMS\Users\Model\UserMeta;
 
 class BackendController extends TemplateController
 {
@@ -53,7 +54,7 @@ class BackendController extends TemplateController
 			->with('breadcrumbs', $this->breadcrumbs)
 			->with('navigation', $this->navigation)
 			->with('bodyId', $this->getRouterPath())
-			->with('theme', config('cms.theme.default'))
+			->with('theme', $this->currentUser->getCurrentTheme())
 			->with('requestType', $this->request->ajax() ? 'request.iframe' : 'request.get');
 
 		\View::share('currentUser', $this->currentUser);

@@ -31,3 +31,7 @@
  
 ### user/profile
  * `view.user.profile.information`
+
+### user/edit
+ * `view.user.edit.password [$user]`
+ * `view.user.edit.form.bottom [$user]`

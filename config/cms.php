@@ -8,7 +8,7 @@ return [
 
 	'theme' => [
 		// TODO: разобраться с названием тем
-		'default' => 'theme-default',
+		'default' => 'default',
 		'list' => [
 			'default', 'asphalt', 'purple-hills', 'adminflare', 'dust', 'frost', 'fresh', 'silver', 'clean', 'white'
 		]
@@ -19,5 +19,9 @@ return [
 		],
 		'default_html_editor' => NULL,
 		'default_code_editor' => NULL
+	],
+	'locales' => [
+		'en' => 'English',
+		'ru' => 'Russian'
 	]
 ];

@@ -1,6 +1,6 @@
 <?php namespace KodiCMS\Users;
 
-use Models\User as User;
+use KodiCMS\Users\Model\User as User;
 
 class ACL
 {
@@ -26,16 +26,15 @@ class ACL
 		$permissions = [];
 
 		foreach (config('permissions', []) as $module => $actions) {
-			if (isset($actions['title'])) {
-				$title = $actions['title'];
+			$langKey = $module . '::' . 'core.permissions.title';
+			if (\Lang::has($langKey)) {
+				$title = trans($langKey);
 			} else {
-				$title = $module;
+				$title = ucfirst($module);
 			}
 
 			foreach ($actions as $action) {
-				if (is_array($action)) {
-					$permissions[$title][$module . '.' . $action['action']] = $action['description'];
-				}
+				$permissions[$title][$module . '::' . $action] = trans($module . '::core.permissions.' . $action);
 			}
 		}
 
@@ -55,7 +54,7 @@ class ACL
 
 		if ($user instanceof User) {
 			$user_id = $user->id;
-			$roles = $user->roles();
+			$roles = $user->roles()->lists('name');
 		} else {
 			$user_id = (int)$user;
 			$roles = ['login'];
@@ -130,11 +129,14 @@ class ACL
 	 */
 	protected static function setPermissions(User $user)
 	{
-		static::$permissions[$user->id] = array_flip($user->permissions());
+		static::$permissions[$user->id] = array_flip($user->getAllowedPermissions());
 	}
 
+	/**
+	 * @return \Illuminate\Contracts\Auth\Authenticatable|null
+	 */
 	protected static function getCurrentUser()
 	{
-		return \Auth::user();
+		return auth()->user();
 	}
 }

@@ -1,12 +1,12 @@
 <?php namespace KodiCMS\Users\Model;
 
+use Carbon\Carbon;
 use KodiCMS\Users\Helpers\Gravatar;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use Laravelrus\LocalizedCarbon\LocalizedCarbon as Carbon;
 
 /**
  * Class User
@@ -63,7 +63,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	public function getLastLoginAttribute($date)
 	{
-		return (new Carbon)->createFromTimestamp($date)->diffForHumans();
+		return (new Carbon())->createFromTimestamp($date)->diffForHumans();
+	}
+
+	public function getCurrentTheme()
+	{
+		return UserMeta::get('cms_theme', config('cms.theme.default'), $this->id);
 	}
 
 	/**
