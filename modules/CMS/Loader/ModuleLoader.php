@@ -85,7 +85,7 @@ class ModuleLoader
 	 */
 	public function bootModules()
 	{
-		foreach ($this->_registeredModules as $module) {
+		foreach ($this->getRegisteredModules() as $module) {
 			$module->boot();
 		}
 
@@ -99,7 +99,7 @@ class ModuleLoader
 	 */
 	public function registerModules()
 	{
-		foreach ($this->_registeredModules as $module) {
+		foreach ($this->getRegisteredModules() as $module) {
 			$module->register();
 		}
 

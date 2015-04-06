@@ -107,8 +107,8 @@ class ModuleContainer
 		if (!$this->_isBooted) {
 			$this->loadViews();
 			$this->loadTranslations();
-			$this->loadConfig();
 			$this->loadAssets();
+			$this->loadConfig();
 
 			$serviceProviderPath = $this->getPath(['Providers', 'ModuleServiceProvider.php']);
 			if (is_file($serviceProviderPath)) {
@@ -127,7 +127,7 @@ class ModuleContainer
 	public function register()
 	{
 		if (!$this->_isRegistered) {
-			$this->loadRoutes();
+
 			$this->_isRegistered = TRUE;
 		}
 
@@ -139,26 +139,6 @@ class ModuleContainer
 		$packagesFile = $this->getPath(['resources', 'packages.php']);
 		if (is_file($packagesFile)) {
 			require $packagesFile;
-		}
-	}
-
-	/**
-	 * Register a routes file namespace.
-	 *
-	 * @param bool $wrapNamespace
-	 */
-	protected function loadRoutes($wrapNamespace = TRUE)
-	{
-		$routesFile = $this->getPath(['Http', 'routes.php']);
-
-		if (is_file($routesFile)) {
-			if ($wrapNamespace !== FALSE) {
-				app('router')->group(['namespace' => $this->getControllerNamespace()], function ($router) use ($routesFile) {
-					require $routesFile;
-				});
-			} else {
-				require $routesFile;
-			}
 		}
 	}
 

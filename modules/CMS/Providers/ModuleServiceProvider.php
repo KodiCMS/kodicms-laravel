@@ -1,7 +1,5 @@
 <?php namespace KodiCMS\CMS\Providers;
 
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use KodiCMS\CMS\Core;
 use KodiCMS\CMS\Loader\ModuleLoader;
@@ -13,7 +11,7 @@ class ModuleServiceProvider extends BaseServiceProvider
 		parent::__construct($app);
 
 		$this->app->singleton('module.loader', function ($app) {
-			return new ModuleLoader(Config::get('cms.modules'));
+			return new ModuleLoader(config('cms.modules'));
 		});
 
 		$this->app->singleton('cms', function ($app) {
@@ -21,27 +19,21 @@ class ModuleServiceProvider extends BaseServiceProvider
 		});
 	}
 
-	public function boot()
-	{
-		$this->app['module.loader']->bootModules();
+	/**
+	 * Bootstrap any application services.
+	 *
+	 * @return void
+	 */
+	public function boot(){}
 
-		$this->app['cms']->shutdown(function () {
-			$this->app['module.loader']->cacheFoundFiles();
-		});
-
-		// TODO: удалить временную авторизацию
-		\Auth::loginUsingId(1);
-
-		Blade::extend(function ($view, $compiler) {
-			$pattern = $compiler->createMatcher('event');
-
-			return preg_replace($pattern, '$1<?php event$2; ?>', $view);
-		});
-	}
-
-	public function register()
-	{
-		$this->app['module.loader']->registerModules();
-	}
-
+	/**
+	 * Register any application services.
+	 *
+	 * This service provider is a great spot to register your various container
+	 * bindings with the application. As you can see, we are registering our
+	 * "Registrar" implementation here. You can add your own bindings too!
+	 *
+	 * @return void
+	 */
+	public function register(){}
 }
