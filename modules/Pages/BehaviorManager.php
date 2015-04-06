@@ -6,7 +6,7 @@ class BehaviorManager {
 
 	public static function init()
 	{
-		foreach (config('behavior') as $name => $params)
+		foreach (config('behavior', []) as $name => $params)
 		{
 			static::$behaviors[$name] = $params;
 		}
