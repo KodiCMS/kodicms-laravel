@@ -40,7 +40,7 @@ class AuthController extends FrontendController {
 		$this->auth = $auth;
 		$this->registrar = $registrar;
 
-		$this->redirectPath = \CMS::backendPath();
+		$this->redirectPath = $this->session->get('nextUrl', \CMS::backendPath());
 
 		$this->beforeFilter('@checkPermissions', ['except' => 'getLogout']);
 	}
