@@ -14,7 +14,7 @@ return [
 			],
 			[
 				'name' => 'Roles',
-				'label' => 'users::core.role.sections.list',
+				'label' => 'users::role.title.list',
 				'url' => route('backend.role.list'),
 				'permissions' => 'roles.index',
 				'priority' => 300,

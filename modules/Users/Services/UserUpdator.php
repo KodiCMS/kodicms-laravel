@@ -1,13 +1,15 @@
 <?php namespace KodiCMS\Users\Services;
 
+use KodiCMS\CMS\Contracts\ModelUpdator;
 use KodiCMS\Users\Model\User;
 use Validator;
 
-class UserUpdator
+class UserUpdator implements ModelUpdator
 {
 	/**
 	 * Get a validator for an incoming registration request.
 	 *
+	 * @param integer $id
 	 * @param  array $data
 	 * @return \Illuminate\Contracts\Validation\Validator
 	 */
@@ -29,6 +31,7 @@ class UserUpdator
 	/**
 	 * Create a new user instance after a valid registration.
 	 *
+	 * @param integer $id
 	 * @param  array $data
 	 * @return User
 	 */

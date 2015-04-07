@@ -191,7 +191,7 @@ abstract class Controller extends BaseController
 	 * @param string|null $route
 	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
 	 */
-	public function redirectAfterSave(array $parameters = [], $route = NULL)
+	public function smartRedirect(array $parameters = [], $route = NULL)
 	{
 		$isContinue = !is_null($this->request->get('continue'));
 

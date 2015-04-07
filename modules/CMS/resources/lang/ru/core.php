@@ -10,9 +10,11 @@ return [
 		'system' => 'Система'
 	],
 	'button' => [
-		'save' => 'Сохранить',
+		'update' => 'Сохранить',
+		'update_close' => 'Сохранить и закрыть',
+		'create' => 'Создать',
+		'create_close' => 'Создать и закрыть',
 		'cancel' => 'Отмена',
-		'save_close' => 'Сохранить и закрыть'
 	],
 	'helpers' => [
 		'not_select' => 'Не выбран',

@@ -14,8 +14,14 @@ Route::group(['prefix' => \CMS::backendPath()], function () {
 		'postCreate' => 'backend.user.create.post',
 	]);
 
+	Route::get('role/{id}/edit', ['as' => 'backend.role.edit', 'uses' => 'RoleController@getEdit'])->where('id', '[0-9]+');
+	Route::post('role/{id}/edit', ['as' => 'backend.role.edit.post', 'uses' => 'RoleController@postEdit'])->where('id', '[0-9]+');
+	Route::get('role/{id}/delete', ['as' => 'backend.role.delete', 'uses' => 'RoleController@getDelete'])->where('id', '[0-9]+');
+
 	Route::controller('role', 'RoleController', [
-		'getIndex' => 'backend.role.list'
+		'getIndex' => 'backend.role.list',
+		'getCreate' => 'backend.role.create',
+		'postCreate' => 'backend.role.create.post',
 	]);
 
 	Route::controller('auth', 'Auth\AuthController', [

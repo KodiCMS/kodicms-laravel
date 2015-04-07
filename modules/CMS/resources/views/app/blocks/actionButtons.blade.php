@@ -1,4 +1,14 @@
-{!! Form::button(trans('cms::core.button.save'), [
+<?php
+	if($controllerAction == 'getCreate') {
+		$contrinueButtonTitle = trans('cms::core.button.create');
+		$commitButtonTitle = trans('cms::core.button.create_close');
+	} else {
+		$contrinueButtonTitle = trans('cms::core.button.update');
+		$commitButtonTitle = trans('cms::core.button.update_close');
+	}
+?>
+
+{!! Form::button(trans($contrinueButtonTitle), [
 	'type' => 'submit',
 	'class' => 'btn btn-success btn-save btn-lg',
 	'data-icon' => 'retweet',
@@ -6,7 +16,7 @@
 	'data-hotkeys' => 'ctrl+s'
 ]) !!}
 &nbsp;&nbsp;
-{!! Form::button(trans('cms::core.button.save_close'), [
+{!! Form::button(trans($commitButtonTitle), [
 	'type' => 'submit',
 	'class' => 'btn btn-save-close btn-default hidden-xs',
 	'data-icon' => 'check',

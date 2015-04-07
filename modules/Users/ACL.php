@@ -26,7 +26,7 @@ class ACL
 		$permissions = [];
 
 		foreach (config('permissions', []) as $module => $actions) {
-			$langKey = $module . '::' . 'core.permissions.title';
+			$langKey = $module . '::' . 'permissions.title';
 			if (\Lang::has($langKey)) {
 				$title = trans($langKey);
 			} else {
@@ -34,7 +34,7 @@ class ACL
 			}
 
 			foreach ($actions as $action) {
-				$permissions[$title][$module . '::' . $action] = trans($module . '::core.permissions.' . $action);
+				$permissions[$title][$module . '::' . $action] = trans($module . '::permissions.' . $action);
 			}
 		}
 

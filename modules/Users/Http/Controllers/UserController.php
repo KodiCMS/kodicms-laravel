@@ -67,11 +67,11 @@ class UserController extends BackendController
 		$this->setContent('users.create', compact('user'));
 	}
 
-	public function postCreate(UserCreator $registrar)
+	public function postCreate(UserCreator $user)
 	{
 		$data = $this->request->all();
 
-		$validator = $registrar->validator($data);
+		$validator = $user->validator($data);
 
 		if ($validator->fails()) {
 			$this->throwValidationException(
@@ -79,10 +79,10 @@ class UserController extends BackendController
 			);
 		}
 
-		$user = $registrar->create($data);
+		$user = $user->create($data);
 
-		return $this->redirectAfterSave([$user])
-			->with('success', trans('users::core.messages.user.created', ['name' => $user->name]));
+		return $this->smartRedirect([$user])
+			->with('success', trans('users::core.messages.user.created', [$user]));
 	}
 
 	public function getEdit($id)
@@ -96,11 +96,11 @@ class UserController extends BackendController
 		$this->setContent('users.edit', compact('user'));
 	}
 
-	public function postEdit(UserUpdator $registrar, $id)
+	public function postEdit(UserUpdator $user, $id)
 	{
 		$data = $this->request->all();
 
-		$validator = $registrar->validator($id, $data);
+		$validator = $user->validator($id, $data);
 
 		if ($validator->fails()) {
 			$this->throwValidationException(
@@ -108,10 +108,10 @@ class UserController extends BackendController
 			);
 		}
 
-		$user = $registrar->update($id, $data);
+		$user = $user->update($id, $data);
 
-		return $this->redirectAfterSave([$user])
-			->with('success', trans('users::core.messages.user.updated', ['name' => $user->name]));
+		return $this->smartRedirect([$user])
+			->with('success', trans('users::core.messages.user.updated', [$user]));
 	}
 
 	public function getDelete($id)
@@ -119,10 +119,14 @@ class UserController extends BackendController
 		$user = $this->getUser($id);
 		$user->delete();
 
-		return redirect(route('backend.user.list'))
-			->with('success', trans('users::core.messages.user.deleted', ['name' => $user->name]));
+		return $this->smartRedirect()
+			->with('success', trans('users::core.messages.user.deleted', [$user]));
 	}
 
+	/**
+	 * @param integer|null $id
+	 * @return User|null
+	 */
 	protected function getUser($id = NULL)
 	{
 		if (is_null($id)) {
@@ -133,7 +137,7 @@ class UserController extends BackendController
 			return User::findOrFail($id);
 		}
 		catch (ModelNotFoundException $e) {
-			return redirect(route('backend.user.list'))->withErrors(trans('users::core.messages.user.not_found'));
+			return $this->smartRedirect()->withErrors(trans('users::core.messages.user.not_found'));
 		}
 	}
 }

@@ -1,5 +1,5 @@
 {!! Form::model($user, [
-	'route' => ['backend.user.edit.post', 'id' => $user->id],
+	'route' => ['backend.user.edit.post', $user],
 	'class' => 'form-horizontal panel tabbable'
 ]) !!}
 <div class="panel-heading">

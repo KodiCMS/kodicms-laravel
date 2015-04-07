@@ -18,6 +18,15 @@ class UserRole extends Model
 	 */
 	public $timestamps = FALSE;
 
+	/**
+	 * The attributes that should be casted to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'name' => 'string',
+		'description' => 'string'
+	];
 
 	/**
 	 * The attributes that are mass assignable.
@@ -27,12 +36,20 @@ class UserRole extends Model
 	protected $fillable = ['name', 'description'];
 
 	/**
+	 * @param string $name
+	 */
+	public function setNameAttribute($name)
+	{
+		$this->attributes['name'] = str_slug($name);
+	}
+
+	/**
 	 * Получение прав для роли
 	 * @return array
 	 */
 	public function permissions()
 	{
-		return $this->hasMany('KodiCMS\Users\Model\RolePermission');
+		return $this->hasMany('KodiCMS\Users\Model\RolePermission', 'role_id');
 	}
 
 	public function attachPermissions(array $permissionsList = [])
