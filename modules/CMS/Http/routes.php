@@ -4,6 +4,8 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 	Route::get('/', ['as' => 'backend.dashboard', 'uses' => 'DashboardController@index']);
 	Route::get('/settings', ['as' => 'backend.settings', 'uses' => 'SystemController@settings']);
 	Route::get('/about', ['as' => 'backend.about', 'uses' => 'SystemController@about']);
+
+	Route::get('/phpinfo', ['as' => 'backend.phpinfo', 'uses' => 'SystemController@phpInfo']);
 });
 
 app('router')->before(function() {

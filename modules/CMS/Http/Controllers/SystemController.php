@@ -9,6 +9,13 @@ class SystemController extends System\BackendController {
 
 	public function about()
 	{
+		$this->setContent('system.about');
+	}
 
+	public function phpInfo()
+	{
+		$this->autoRender = FALSE;
+
+		phpinfo();
 	}
 }

@@ -32,6 +32,9 @@ password: **password**
  * `view.backend.navigation.before`
  * `view.backend.navigation.after`
 
+### system/about
+ * `view.backend.system.about`
+
 #### auth/login
  * `view.login.form.header`
  * `view.login.form.footer`

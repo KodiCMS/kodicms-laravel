@@ -1,7 +1,7 @@
-cms.init.add('system_information', function () {
+CMS.controllers.add('system.about', function () {
 	function calculateEditorHeight() {
-		var conentH = cms.calculateContentHeight();
-		var h = 130;
+		var conentH = CMS.calculateContentHeight();
+		var h = 90;
 		
 		return conentH - h;
 	}
