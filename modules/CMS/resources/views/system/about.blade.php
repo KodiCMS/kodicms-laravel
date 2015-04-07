@@ -54,5 +54,5 @@
 	</div>
 	@endif
 
-	@event('view.backend.system.about')
+	@event('view.system.about')
 </div>

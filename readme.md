@@ -25,15 +25,19 @@ password: **password**
 
 ### События в шаблонах
 
+#### pages/edit
+ * `view.page.edit.before` [$page]
+ * `view.page.edit` [$page]
+
 #### backend/navbar
- * `view.backend.navbar.before`
+ * `view.navbar.before`
 
 #### backend/navigation
- * `view.backend.navigation.before`
- * `view.backend.navigation.after`
+ * `view.navigation.before`
+ * `view.navigation.after`
 
 ### system/about
- * `view.backend.system.about`
+ * `view.system.about`
 
 #### auth/login
  * `view.login.form.header`

@@ -184,7 +184,7 @@ CMS.controllers.add('page.get.add', function() {
 });
 
 CMS.controllers.add(['page.get.add', 'page.get.edit'], function() {
-	$('body').on('change', 'select[name="page[status_id]"]', function() {
+	$('body').on('change', 'select[name="status"]', function() {
 		show_password_field($(this).val());
 	});
 	
@@ -192,28 +192,26 @@ CMS.controllers.add(['page.get.add', 'page.get.edit'], function() {
 		var $fields = {};
 		var $array = ['breadcrumb', 'meta_title', 'meta_keywords', 'meta_description'];
 		for(i in $array) {
-			$fields[$array[i]] = $('#page_' + $array[i]).val();
+			$fields[$array[i]] = $('#' + $array[i]).val();
 		}
 	
-		Api.get('pages.parse_meta', {
-			page_id: PAGE_ID,
+		Api.get('/api.page.parse_meta', {
+			page_id: PAGE.id,
 			fields: $fields
 		}, function(response) {
-			if(response.response) {
-				for(field in response.response) {
-					$('#field-' + field + ' .help-block').text(response.response[field]);
+			if(response.content) {
+				for(field in response.content) {
+					$('#field-' + field + ' .help-block').text(response.content[field]);
 				}
 			}
 		});
 	});
 
-	$('input[name="page[use_redirect]"]').on('change', function() {
+	$('input[name="use_redirect"]').on('change', function() {
 		show_redirect_field($(this))
 	});
 
-	show_redirect_field($('input[name="page[use_redirect]"]'));
-	show_password_field($('select[name="page[status_id]"]').val());
-
+	show_redirect_field($('input[name="use_redirect"]'));
 	function show_redirect_field(input) {
 		var cont = $('#redirect-to-container'),
 			meta_cont = $('#page-meta-panel-li');
@@ -224,18 +222,6 @@ CMS.controllers.add(['page.get.add', 'page.get.edit'], function() {
 		} else {
 			cont.hide();
 			meta_cont.show();
-		}
-	}
-
-	function show_password_field(val) {
-		var select = $('select[name="page[status_id]"]');
-
-		if (val == 200) {
-			select.parent().addClass('well well-small').find('.password-container').removeClass('hidden');
-		} else {
-			select.parent().removeClass('well well-small')
-				.find('.password-container').addClass('hidden')
-				.find('input').val('');
 		}
 	}
 });

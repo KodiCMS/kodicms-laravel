@@ -11,21 +11,21 @@
 				@endif
 			@endif
 
-				@if (!acl_check('page.edit'))
-					{!! UI::icon('lock fa-fw') !!} {{ $child->title }}
-				@else
-					{!! link_to($child->getBackendurl(), $child->title, [
-						'data-icon' => $child->hasChildren ? 'folder-open fa-fw' : 'file-o fa-fw'
-					]) !!}
-				@endif
+			@if (!acl_check('page.edit'))
+				{!! UI::icon('lock fa-fw') !!} {{ $child->title }}
+			@else
+				{!! link_to_route('backend.page.edit', $child->title, [$child], [
+					'data-icon' => $child->hasChildren ? 'folder-open fa-fw' : 'file-o fa-fw'
+				]) !!}
+			@endif
 
-				@if ($child->behavior_id)
-					{!! UI::label(studly_case($child->behavior_id), 'default') !!}
-				@endif
+			@if ($child->behavior_id)
+				{!! UI::label(studly_case($child->behavior_id), 'default') !!}
+			@endif
 
-				@if ($child->use_redirect)
-					{!! UI::label(trans('pages::core.action.redirect', ['url' => $child->redirect_url])) !!}
-				@endif
+			@if ($child->use_redirect)
+				{!! UI::label(trans('pages::core.action.redirect', ['url' => $child->redirect_url])) !!}
+			@endif
 				{!! $child->getPublicLink() !!}
 			</div>
 			<div class="date col-xs-2 text-right text-muted">

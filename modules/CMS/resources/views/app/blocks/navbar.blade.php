@@ -12,7 +12,7 @@
 				<div class="right clearfix">
 					<ul class="nav navbar-nav pull-right right-navbar-nav">
 
-						@event('view.backend.navbar.before')
+						@event('view.navbar.before')
 
 						<li>
 							<a href="{{ route('backend.settings') }}">{!! UI::icon('cogs fa-lg') !!}</a>

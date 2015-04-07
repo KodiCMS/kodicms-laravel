@@ -5,24 +5,10 @@ use Illuminate\Database\Eloquent\Model;
 class Page extends Model
 {
 	/**
-	 * Список правил для meta robots
-	 * @return array
-	 */
-	public static function robots()
-	{
-		return [
-			'INDEX, FOLLOW' => 'INDEX, FOLLOW',
-			'INDEX, NOFOLLOW' => 'INDEX, NOFOLLOW',
-			'NOINDEX, FOLLOW' => 'NOINDEX, FOLLOW',
-			'NOINDEX, NOFOLLOW' => 'NOINDEX, NOFOLLOW'
-		];
-	}
-
-	/**
 	 * Список статусов
 	 * @return array
 	 */
-	public static function statuses()
+	public static function getStatusList()
 	{
 		return [
 			FrontendPage::STATUS_DRAFT => trans('pages::core.status.draft'),
@@ -67,6 +53,13 @@ class Page extends Model
 	];
 
 	/**
+	 * @var array
+	 */
+	protected $metaFields = [
+		'breadcrumb', 'meta_title', 'meta_keywords', 'meta_description'
+	];
+
+	/**
 	 * @var boolean
 	 */
 	public $isExpanded = FALSE;
@@ -82,8 +75,25 @@ class Page extends Model
 	public $childrenRows = NULL;
 
 	/**
+	 * @return array
+	 */
+	public function getMetaFields()
+	{
+		return $this->metaFields;
+	}
+
+	public function getRobotsList()
+	{
+		return [
+			'INDEX, FOLLOW' => 'INDEX, FOLLOW',
+			'INDEX, NOFOLLOW' => 'INDEX, NOFOLLOW',
+			'NOINDEX, FOLLOW' => 'NOINDEX, FOLLOW',
+			'NOINDEX, NOFOLLOW' => 'NOINDEX, NOFOLLOW'
+		];
+	}
+
+	/**
 	 * Статус страницы
-	 *
 	 * @return string
 	 */
 	public function getStatus()
@@ -140,15 +150,6 @@ class Page extends Model
 	}
 
 	/**
-	 * Получение ссылки на редактирование страницы
-	 * @return string
-	 */
-	public function getBackendurl()
-	{
-		return route('backend.page.edit', [$this]);
-	}
-
-	/**
 	 * Получение ссылки на страницу
 	 * @return string
 	 */
@@ -202,7 +203,22 @@ class Page extends Model
 		});
 	}
 
-	public function authoredBy()
+	/**
+	 * Получение списка страниц за исключением текущей
+	 * @return array
+	 */
+	public function getSitemap()
+	{
+		$sitemap = PageSitemap::get(TRUE);
+		if ($this->exists)
+		{
+			$sitemap->exclude([$this->id]);
+		}
+
+		return $sitemap->selectChoices();
+	}
+
+	public function createdBy()
 	{
 		return $this->belongsTo('\KodiCMS\Users\Model\User', 'created_by_id');
 	}

@@ -43,7 +43,7 @@ class PageController extends APIController
 			}
 		}
 
-		return (string)view('pages::children', [
+		return (string)view('pages::pages.children', [
 			'childrens' => $childrens,
 			'level' => $level + 1
 		]);
@@ -53,7 +53,7 @@ class PageController extends APIController
 	{
 		$pages = PageSitemap::get(TRUE)->asArray();
 
-		$this->setContent(view('pages::reorder', [
+		$this->setContent(view('pages::pages.reorder', [
 			'pages' => $pages
 		]));
 	}
@@ -131,7 +131,7 @@ class PageController extends APIController
 			$childrens[] = $page;
 		}
 
-		$this->setContent((string)view('pages::children', [
+		$this->setContent((string)view('pages::pages.children', [
 			'childrens' => $childrens,
 			'level' => 0
 		]));

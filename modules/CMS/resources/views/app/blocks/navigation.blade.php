@@ -1,7 +1,7 @@
 @if($navigation)
 <div id="main-menu-inner">
 	<ul class="navigation">
-		@event('view.backend.navigation.before')
+		@event('view.navigation.before')
 
 		@foreach($navigation->getPages() as $item)
 		<li @if($item->isActive())class="active"@endif>
@@ -54,7 +54,7 @@
 		@endif
 		@endforeach
 
-		@event('view.backend.navigation.after')
+		@event('view.navigation.after')
 	</ul>
 </div>
 @endif

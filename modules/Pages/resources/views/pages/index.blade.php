@@ -35,7 +35,9 @@
 					{!! UI::icon('lock fa-fw') !!}
 					<em title="/">{{ $page->title }}</em>
 					@else
-					{!! link_to($page->getFrontendUrl(), $page->title, ['data-icon' => 'home fa-lg fa-fw']) !!}
+					{!! link_to_route('backend.page.edit', $page->title, [$page], [
+						'data-icon' => 'home fa-lg fa-fw'
+					]) !!}
 					@endif
 
 					{!! $page->getPublicLink() !!}
