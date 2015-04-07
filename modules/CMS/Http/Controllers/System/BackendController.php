@@ -1,9 +1,8 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
+use KodiCMS\CMS\Assets\Core as Assets;
 use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
 use KodiCMS\CMS\Navigation\Collection as Navigation;
-use KodiCMS\CMS\Assets\Core as Assets;
-use KodiCMS\Users\Model\UserMeta;
 
 class BackendController extends TemplateController
 {
@@ -29,7 +28,7 @@ class BackendController extends TemplateController
 		$this->navigation = Navigation::init($this->request->getUri(), config('sitemap', []));
 		$this->breadcrumbs = Breadcrumbs::factory();
 
-		if(is_null(array_get($this->permissions, $this->getCurrentAction()))) {
+		if (is_null(array_get($this->permissions, $this->getCurrentAction()))) {
 			$this->permissions[$this->getCurrentAction()] = $this->getRouter()->currentRouteName();
 		}
 	}
@@ -41,7 +40,7 @@ class BackendController extends TemplateController
 		$this->breadcrumbs
 			->add(\UI::icon('home'), route('backend.dashboard'));
 
-		if(!is_null($currentPage)){
+		if (!is_null($currentPage)) {
 			$this->setTitle($currentPage->getName(), $currentPage->getUrl());
 		}
 
@@ -74,8 +73,7 @@ class BackendController extends TemplateController
 
 
 		$file = $this->getRouterController();
-		if (app('module.loader')->findFile('resources/js', $file, 'js'))
-		{
+		if (app('module.loader')->findFile('resources/js', $file, 'js')) {
 			Assets::js('controller.' . $file, \CMS::backendResourcesURL() . '/js/' . $file . '.js', 'global', FALSE, 999);
 		}
 

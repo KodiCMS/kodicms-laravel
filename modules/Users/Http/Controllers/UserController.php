@@ -73,8 +73,7 @@ class UserController extends BackendController
 
 		$validator = $registrar->validator($data);
 
-		if ($validator->fails())
-		{
+		if ($validator->fails()) {
 			$this->throwValidationException(
 				$this->request, $validator
 			);
@@ -82,8 +81,8 @@ class UserController extends BackendController
 
 		$user = $registrar->create($data);
 
-		return redirect(route('backend.user.edit', [$user]))
-			->with('success', trans('users::core.messages.user.created'));
+		return $this->redirectAfterSave([$user])
+			->with('success', trans('users::core.messages.user.created', ['name' => $user->name]));
 	}
 
 	public function getEdit($id)
@@ -103,8 +102,7 @@ class UserController extends BackendController
 
 		$validator = $registrar->validator($id, $data);
 
-		if ($validator->fails())
-		{
+		if ($validator->fails()) {
 			$this->throwValidationException(
 				$this->request, $validator
 			);
@@ -112,8 +110,8 @@ class UserController extends BackendController
 
 		$user = $registrar->update($id, $data);
 
-		return redirect(route('backend.user.edit', [$user]))
-			->with('success', trans('users::core.messages.user.updated'));
+		return $this->redirectAfterSave([$user])
+			->with('success', trans('users::core.messages.user.updated', ['name' => $user->name]));
 	}
 
 	public function getDelete($id)
@@ -122,12 +120,12 @@ class UserController extends BackendController
 		$user->delete();
 
 		return redirect(route('backend.user.list'))
-			->with('success', trans('users::core.messages.user.deleted'));
+			->with('success', trans('users::core.messages.user.deleted', ['name' => $user->name]));
 	}
 
 	protected function getUser($id = NULL)
 	{
-		if(is_null($id)) {
+		if (is_null($id)) {
 			return $this->currentUser;
 		}
 

@@ -2,7 +2,7 @@
 	<div class="panel-heading">
 		@if (acl_check('users.add'))
 		{!! link_to_route('backend.user.create', trans('users::core.button.create'), [], [
-			'class' => 'btn btn-default', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
+			'class' => 'btn btn-primary', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
 		]) !!}
 		@endif
 	</div>
@@ -50,3 +50,5 @@
 		</tbody>
 	</table>
 </div>
+
+{!! $users->render() !!}

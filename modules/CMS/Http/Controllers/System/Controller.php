@@ -2,10 +2,10 @@
 
 use Illuminate\Auth\Guard;
 use Illuminate\Foundation\Bus\DispatchesCommands;
-use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Routing\Route;
 use Illuminate\Session\Store as SessionStore;
 use Illuminate\Support\Str;
@@ -149,11 +149,13 @@ abstract class Controller extends BaseController
 	{
 		if (auth()->guest()) {
 			$this->session->flash('nextUrl', $this->request->getUri());
+
 			return $this->denyAccess(trans('users::core.messages.auth.unauthorized'), TRUE);
 		}
 
-		if(!$this->currentUser->hasRole('login')) {
+		if (!$this->currentUser->hasRole('login')) {
 			auth()->logout();
+
 			return $this->denyAccess(trans('users::core.messages.auth.deny_access'), TRUE);
 		}
 
@@ -180,7 +182,35 @@ abstract class Controller extends BaseController
 				->guest(\CMS::backendPath() . '/auth/login')
 				->withErrors($message);
 		} else {
-			abort(403, $message);
+			return abort(403, $message);
+		}
+	}
+
+	/**
+	 * @param array $parameters
+	 * @param string|null $route
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 */
+	public function redirectAfterSave(array $parameters = [], $route = NULL)
+	{
+		$isContinue = !is_null($this->request->get('continue'));
+
+		if ($route === NULL) {
+			if ($isContinue) {
+				$route = action('\\' . get_called_class() . '@getEdit', $parameters);
+			} else {
+				$route = action('\\' . get_called_class() . '@getIndex');
+			}
+		} else if (strpos($route, '@') !== FALSE) {
+			$route = action($route, $parameters);
+		} else {
+			$route = route($route, $parameters);
+		}
+
+		if ($isContinue) {
+			return back();
+		} else {
+			return redirect($route);
 		}
 	}
 }
