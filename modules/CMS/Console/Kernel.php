@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel {
 	protected $commands = [
 		'KodiCMS\Installer\Console\Commands\ModuleMigrate',
 		'KodiCMS\Installer\Console\Commands\ModuleSeed',
-		'KodiCMS\CMS\Console\Commands\GenerateScriptTranslates'
+		'KodiCMS\CMS\Console\Commands\GenerateScriptTranslates',
+		'KodiCMS\CMS\Console\Commands\GenerateLocalePackage'
 	];
 
 	/**
