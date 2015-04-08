@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\Pages\database\deeds;
+<?php namespace KodiCMS\Pages\database\seeds;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
