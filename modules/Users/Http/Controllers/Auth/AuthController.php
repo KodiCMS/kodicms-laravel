@@ -36,6 +36,7 @@ class AuthController extends FrontendController {
 	public function boot(Guard $auth)
 	{
 		$this->auth = $auth;
+
 		$this->redirectPath = $this->session->get('nextUrl', \CMS::backendPath());
 
 		$this->beforeFilter('@checkPermissions', ['except' => 'getLogout']);
@@ -61,5 +62,15 @@ class AuthController extends FrontendController {
 		if ($this->auth->check() AND $this->currentUser->hasRole('login')) {
 			return redirect($this->redirectPath);
 		}
+	}
+
+	/**
+	 * Get the failed login message.
+	 *
+	 * @return string
+	 */
+	protected function getFailedLoginMessage()
+	{
+		return trans('users::core.messages.auth.user_not_found');
 	}
 }

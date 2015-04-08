@@ -64,6 +64,7 @@ abstract class Controller extends BaseController
 		$this->session = $session;
 
 		$this->currentUser = $auth->user();
+		$this->loginPath = \CMS::backendPath() . '/auth/login';
 
 		// Execute method boot() on controller execute
 		if (method_exists($this, 'boot')) {
@@ -179,7 +180,7 @@ abstract class Controller extends BaseController
 			throw new AuthenticateException($message);
 		} elseif ($redirect) {
 			return redirect()
-				->guest(\CMS::backendPath() . '/auth/login')
+				->guest($this->loginPath)
 				->withErrors($message);
 		} else {
 			return abort(403, $message);
