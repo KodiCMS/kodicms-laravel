@@ -3,10 +3,11 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 
 	Route::controller('page', 'PageController', [
 		'getIndex' => 'backend.page.list',
-		'getCreate' => 'backend.page.add',
+		'getCreate' => 'backend.page.create',
+		'postCreate' => 'backend.page.create.post',
 		'getEdit' => 'backend.page.edit',
 		'postEdit' => 'backend.page.edit.post',
-		'postDelete' => 'backend.page.delete',
+		'getDelete' => 'backend.page.delete',
 	]);
 
 	Route::controller('layout', 'LayoutController', [

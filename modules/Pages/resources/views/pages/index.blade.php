@@ -1,7 +1,7 @@
 <div id="page-tree" class="panel">
 	<div class="panel-heading">
 		@if (acl_check('page.add'))
-		{!! link_to_route('backend.page.add', trans('pages::core.button.add'), [], [
+		{!! link_to_route('backend.page.create', trans('pages::core.button.add'), [], [
 			'class' => 'btn btn-default', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
 		]) !!}
 		@endif
@@ -43,8 +43,8 @@
 					{!! $page->getPublicLink() !!}
 				</div>
 				<div class="actions col-xs-offset-4 col-xs-1 text-right">
-					@if (acl_check('page.add'))
-					{!! link_to_route('backend.page.add', '', [], [
+					@if (acl_check('page.create'))
+					{!! link_to_route('backend.page.create', '', [], [
 						'data-icon' => 'plus', 'class' => 'btn btn-default btn-xs'
 					]) !!}
 					@endif

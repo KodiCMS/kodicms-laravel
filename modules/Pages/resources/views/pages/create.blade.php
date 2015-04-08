@@ -1,5 +1,5 @@
 {!! Form::model($page, [
-'route' => ['backend.page.edit.post', $page],
+'route' => ['backend.page.create.post', $page],
 'class' => 'panel'
 ]) !!}
 
@@ -34,7 +34,6 @@
 			</div>
 		</div>
 
-		@if ($page->id > 1)
 		<hr class="panel-wide" />
 		<div class="form-group form-group-sm">
 			<label class="control-label col-md-2" for="slug">
@@ -70,32 +69,13 @@
 				]) !!}
 			</div>
 		</div>
-		@endif
+
 	</div>
 	<hr class="no-margin-vr" />
 	<div class="tab-content no-padding-vr">
 		<div class="tab-pane active" id="page-content-panel">
-			@event('view.page.edit.before', [$page])
-			@event('view.page.edit', [$page])
 
-			<div class="panel-body">
-				{!! $page->getPublicLink() !!}
-				<div class="text-right">
-					@if (!is_null($creator))
-						{!! UI::label(trans('pages::core.label.page.created_by', [
-						'anchor' => link_to_route('backend.user.edit', $creator->username, [$creator]),
-						'date' => $page->created_at
-						]), 'important') !!}
-					@endif
-
-					@if (!is_null($updator))
-						{!! UI::label(trans('pages::core.label.page.updated_by', [
-						'anchor' => link_to_route('backend.user.edit', $updator->username, [$updator]),
-						'date' => $page->updated_at
-						]), 'important') !!}
-					@endif
-				</div>
-			</div>
+			@event('view.page.create')
 
 		</div>
 

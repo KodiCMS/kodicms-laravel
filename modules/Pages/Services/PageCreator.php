@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Pages\Services;
 
 use KodiCMS\CMS\Contracts\ModelCreator;
+use KodiCMS\Pages\Model\Page;
 use KodiCMS\Users\Model\UserRole;
 use Validator;
 
@@ -14,8 +15,11 @@ class PageCreator implements ModelCreator
 	 */
 	public function validator(array $data)
 	{
+		$parent_id = (int) array_get($data, 'parent_id');
 		$validator = Validator::make($data, [
-			'name' => 'required|max:32|unique:roles'
+			'title' => 'required|max:32',
+			'slug' => "max:100|unique:pages,slug,NULL,id,parent_id,{$parent_id}",
+			'status' => 'required|numeric'
 		]);
 
 		return $validator;
@@ -29,15 +33,10 @@ class PageCreator implements ModelCreator
 	 */
 	public function create(array $data)
 	{
-		$role = UserRole::create(array_only($data, [
-			'name', 'description'
+		$page = Page::create(array_except($data, [
+			'continue', 'commit'
 		]));
 
-		if (isset($data['permissions'])) {
-			$permissions = (array) $data['permissions'];
-			$role->attachPermissions($permissions);
-		}
-
-		return $role;
+		return $page;
 	}
 }

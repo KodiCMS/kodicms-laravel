@@ -173,17 +173,17 @@ CMS.controllers.add('page.get.index', function() {
 });
 
 
-CMS.controllers.add('page.get.add', function() {
-	$('body').on('keyup', 'input[name="page[title]"]', function() {
-		$('input[name="page[breadcrumb]"]')
-			.add('input[name="page[meta_title]"]')
+CMS.controllers.add('page.get.create', function() {
+	$('body').on('keyup', 'input[name="title"]', function() {
+		$('input[name="breadcrumb"]')
+			.add('input[name="meta_title"]')
 			.val($(this).val());
 	});
 	
 	$('.panel-toggler').click();
 });
 
-CMS.controllers.add(['page.get.add', 'page.get.edit'], function() {
+CMS.controllers.add(['page.get.create', 'page.get.edit'], function() {
 	$('body').on('change', 'select[name="status"]', function() {
 		show_password_field($(this).val());
 	});
@@ -207,11 +207,11 @@ CMS.controllers.add(['page.get.add', 'page.get.edit'], function() {
 		});
 	});
 
-	$('input[name="use_redirect"]').on('change', function() {
+	$('input[name="is_redirect"]').on('change', function() {
 		show_redirect_field($(this))
 	});
 
-	show_redirect_field($('input[name="use_redirect"]'));
+	show_redirect_field($('input[name="is_redirect"]'));
 	function show_redirect_field(input) {
 		var cont = $('#redirect-to-container'),
 			meta_cont = $('#page-meta-panel-li');

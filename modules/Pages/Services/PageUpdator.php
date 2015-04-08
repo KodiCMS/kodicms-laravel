@@ -15,11 +15,17 @@ class PageUpdator implements ModelUpdator
 	 */
 	public function validator($id, array $data)
 	{
+		$parent_id = (int) array_get($data, 'parent_id');
+
 		$validator = Validator::make($data, [
 			'title' => 'required|max:255',
-			'slug' => 'max:100',
-			'status' => 'required|numeric'
+			'slug' => "max:100|unique:pages,slug,{$id},id,parent_id,{$parent_id}"
 		]);
+
+		$validator->sometimes('status', 'required|numeric', function($input) use($id)
+		{
+			return $id > 1;
+		});
 
 		return $validator;
 	}
@@ -36,7 +42,7 @@ class PageUpdator implements ModelUpdator
 		$page = Page::findOrFail($id);
 
 		$page->update(array_except($data, [
-			'continue'
+			'continue', 'commit'
 		]));
 
 		return $page;

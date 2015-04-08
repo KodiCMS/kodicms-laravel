@@ -18,6 +18,7 @@ class PagesTableSeeder extends Seeder {
 		$rootPage = Page::create([
 			'title' => 'Home',
 			'breadcrumb' => 'Home',
+			'slug' => '',
 			'published_at' => new Carbon()
 		]);
 

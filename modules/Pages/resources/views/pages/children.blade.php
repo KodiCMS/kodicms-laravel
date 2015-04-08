@@ -36,8 +36,8 @@
 			</div>
 			<div class="actions col-xs-1 text-right">
 				<div class="btn-group">
-					@if (acl_check('page.add'))
-					{!! link_to_route('backend.page.add', '', ['parent_id' => $child->id], [
+					@if (acl_check('page.create'))
+					{!! link_to_route('backend.page.create', '', ['parent_id' => $child->id], [
 						'data-icon' => 'plus', 'class' => 'btn btn-default btn-xs'
 					]) !!}
 					@endif
