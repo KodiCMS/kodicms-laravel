@@ -42,7 +42,7 @@ class RoleController extends BackendController
 		$role = $role->create($data);
 
 		return $this->smartRedirect([$role])
-			->with('success', trans('users::role.messages.created', [$role]));
+			->with('success', trans('users::role.messages.created', ['name' => $role->name]));
 	}
 
 	public function getEdit($id)
@@ -73,7 +73,7 @@ class RoleController extends BackendController
 		$role = $role->update($id, $data);
 
 		return $this->smartRedirect([$role])
-			->with('success', trans('users::role.messages.updated', [$role]));
+			->with('success', trans('users::role.messages.updated', ['name' => $role->name]));
 	}
 
 	public function getDelete($id)
@@ -82,7 +82,7 @@ class RoleController extends BackendController
 		$role->delete();
 
 		return $this->smartRedirect()
-			->with('success', trans('users::role.messages.deleted', [$role]));
+			->with('success', trans('users::role.messages.deleted', ['name' => $role->name]));
 	}
 
 	/**

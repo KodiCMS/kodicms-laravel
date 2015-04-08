@@ -82,7 +82,7 @@ class UserController extends BackendController
 		$user = $user->create($data);
 
 		return $this->smartRedirect([$user])
-			->with('success', trans('users::core.messages.user.created', [$user]));
+			->with('success', trans('users::core.messages.user.created', ['name' => $user->username]));
 	}
 
 	public function getEdit($id)
@@ -111,7 +111,7 @@ class UserController extends BackendController
 		$user = $user->update($id, $data);
 
 		return $this->smartRedirect([$user])
-			->with('success', trans('users::core.messages.user.updated', [$user]));
+			->with('success', trans('users::core.messages.user.updated', ['name' => $user->username]));
 	}
 
 	public function getDelete($id)
@@ -120,7 +120,7 @@ class UserController extends BackendController
 		$user->delete();
 
 		return $this->smartRedirect()
-			->with('success', trans('users::core.messages.user.deleted', [$user]));
+			->with('success', trans('users::core.messages.user.deleted', ['name' => $user->username]));
 	}
 
 	/**
