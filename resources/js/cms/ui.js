@@ -166,7 +166,7 @@ CMS.ui.add('flags', function () {
 
 	var slugs = {};
 	$('body').on('keyup', '.slug-generator', function () {
-		var $slug_cont = $('.slug');
+		var $slug_cont = $('.slugify');
 
 		if ($(this).data('slug')) {
 			$slug_cont = $($(this).data('slug'));
@@ -196,7 +196,7 @@ CMS.ui.add('flags', function () {
 		}
 	});
 
-	$('body').on('keyup', '.slug', function () {
+	$('body').on('keyup', '.slugify', function () {
 		var c = String.fromCharCode(event.keyCode);
 		var isWordcharacter = c.match(/\w/);
 
