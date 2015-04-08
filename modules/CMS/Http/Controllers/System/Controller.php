@@ -213,7 +213,7 @@ abstract class Controller extends BaseController
 			$route = route($route, $parameters);
 		}
 
-		if ($isContinue) {
+		if ($isContinue AND $this->getCurrentAction() != 'postCreate') {
 			return back();
 		} else {
 			return redirect($route);
