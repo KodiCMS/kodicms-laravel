@@ -23,7 +23,7 @@
 				{!! UI::label(studly_case($child->behavior_id), 'default') !!}
 			@endif
 
-			@if ($child->use_redirect)
+			@if ($child->is_redirect)
 				{!! UI::label(trans('pages::core.action.redirect', ['url' => $child->redirect_url])) !!}
 			@endif
 				{!! $child->getPublicLink() !!}
