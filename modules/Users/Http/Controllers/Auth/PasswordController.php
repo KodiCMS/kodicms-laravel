@@ -14,7 +14,7 @@ class PasswordController extends FrontendController {
 	/**
 	 * @var string
 	 */
-	public $templatePreffix = 'users::';
+	public $templatePrefix = 'users::';
 
 	/*
 	|--------------------------------------------------------------------------

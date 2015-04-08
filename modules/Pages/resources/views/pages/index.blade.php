@@ -13,7 +13,7 @@
 		@endif
 
 		<div class="panel-heading-controls hidden-xs hidden-sm">
-			@include('pages::blocks.search')
+			@include('pages::pages.blocks.search')
 		</div>
 	</div>
 

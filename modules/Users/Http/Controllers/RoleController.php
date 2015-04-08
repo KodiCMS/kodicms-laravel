@@ -11,7 +11,7 @@ class RoleController extends BackendController
 	/**
 	 * @var string
 	 */
-	public $templatePreffix = 'users::';
+	public $templatePrefix = 'users::';
 
 	public function getIndex()
 	{

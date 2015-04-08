@@ -11,7 +11,7 @@ class UserController extends BackendController
 	/**
 	 * @var string
 	 */
-	public $templatePreffix = 'users::';
+	public $templatePrefix = 'users::';
 
 	/**
 	 * @var array
