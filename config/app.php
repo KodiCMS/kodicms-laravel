@@ -136,6 +136,8 @@ return [
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Html\HtmlServiceProvider',
 
+		'App\Providers\AppServiceProvider',
+
 		'KodiCMS\CMS\Providers\ModuleServiceProvider',
 		'KodiCMS\CMS\Providers\RouteServiceProvider',
 		'KodiCMS\CMS\Providers\ConfigServiceProvider',
