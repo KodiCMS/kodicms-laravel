@@ -6,6 +6,8 @@
  * Запустить команду `composer install` для загрузки всех необходимых компонентов
  * Выполнить команду `php artisan cms:modules:migrate` для создания таблиц в БД.
  * Выполнить команду `php artisan cms:modules:seed` для заполения тестовыми данными БД
+ 
+---
 
 ### Авторизация
 
@@ -17,12 +19,16 @@ password: **password**
 username: **test@test.com**  
 password: **password**
 
+---
+
 ### Консольные команды
 
  * `cms:modules:migrate` - создание таблиц в БД
  * `cms:modules:seed` - заполнение таблиц тестовыми данными
  * `cms:generate:translate:js` - генерация JS языковых файлов
- 
+
+---
+
 ### Структура модуля
  * `config` - конфиги приложения, могут быть перезаписаны из папки `/config/`
  * `Console`
@@ -43,7 +49,9 @@ password: **password**
   * `views` - Шаблоны модуля, доступны по ключу названия модуля приведенного в нижний регистр `view('{module}::template')`
   * `packages.php` - В данном файле можно подключать свои Assets (Media) пакеты
  * `ModuleContainer.php` - Если данный файл существует, то он будет подключен как системный файл модуля, в котором указаны относительыне пути и действия в момент инициализации. Необходимо наследовать от `KodiCMS\CMS\Loader\ModuleContainer`
- 
+
+---
+
 ### Состав модулей
  * CMS
   1. Dashboard
@@ -65,6 +73,8 @@ password: **password**
   1. Email
   2. Email Templates
   3. Email Types
+
+---
 
 ### События в шаблонах
 
