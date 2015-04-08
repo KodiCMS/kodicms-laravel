@@ -29,7 +29,7 @@ class Page extends Model
 	 *
 	 * @var array
 	 */
-	protected $guarded = ['id','created_at', 'updated_at', 'created_by_id', 'updated_by_id'];
+	protected $guarded = ['id', 'created_at', 'updated_at', 'created_by_id', 'updated_by_id'];
 
 	/**
 	 * The attributes that should be mutated to dates.
@@ -90,6 +90,15 @@ class Page extends Model
 			'NOINDEX, FOLLOW' => 'NOINDEX, FOLLOW',
 			'NOINDEX, NOFOLLOW' => 'NOINDEX, NOFOLLOW'
 		];
+	}
+
+	/**
+	 * @param array $attributes
+	 */
+	public function __construct(array $attributes = [])
+	{
+		parent::__construct($attributes);
+		$this->addObservableEvents(['reordering', 'reordered']);
 	}
 
 	/**
@@ -236,5 +245,42 @@ class Page extends Model
 	public function children()
 	{
 		return $this->hasMany('\KodiCMS\Pages\Model\Page', 'parent_id', 'id');
+	}
+
+	/**
+	 * @param array $pages
+	 * @return bool
+	 */
+	public function reorder(array $pages)
+	{
+		$pages = array_map(function ($page) {
+			$page['parent_id'] = empty($page['parent_id']) ? 1 : $page['parent_id'];
+			$page['id'] = (int) $page['id'];
+			$page['position'] = (int) $page['position'];
+
+			return $page;
+		}, $pages);
+
+		if ($this->fireModelEvent('reordering') === FALSE) return FALSE;
+
+		$builder = \DB::table('pages');
+		$grammar = $builder->getGrammar();
+		$insert = $grammar->compileInsert($builder, $pages);
+
+		$bindings = [];
+
+		foreach ($pages as $record) {
+			foreach ($record as $value) {
+				$bindings[] = $value;
+			}
+		}
+
+		$insert .= ' ON DUPLICATE KEY UPDATE parent_id = VALUES(parent_id), position = VALUES(position)';
+
+		\DB::insert($insert, $bindings);
+
+		$this->fireModelEvent('reordered', FALSE);
+
+		return TRUE;
 	}
 }

@@ -64,28 +64,7 @@ class PageController extends APIController
 
 		if (empty($pages)) return;
 
-		$pages = array_map(function ($page) {
-			$page['parent_id'] = empty($page['parent_id']) ? 1 : $page['parent_id'];
-			$page['id'] = (int)$page['id'];
-			$page['position'] = (int)$page['position'];
-
-			return $page;
-		}, $pages);
-
-		$builder = \DB::table('pages');
-		$grammar = $builder->getGrammar();
-		$insert = $grammar->compileInsert($builder, $pages);
-
-		$bindings = [];
-
-		foreach ($pages as $record) {
-			foreach ($record as $value) {
-				$bindings[] = $value;
-			}
-		}
-		$insert = $insert . ' ON DUPLICATE KEY UPDATE parent_id = VALUES(parent_id), position = VALUES(position)';
-
-		\DB::insert($insert, $bindings);
+		$this->setContent((new Page)->reorder($pages));
 	}
 
 	public function postChangeStatus()

@@ -1,4 +1,5 @@
 <?php namespace KodiCMS\Pages\Observers;
+use KodiCMS\Pages\Model\Page;
 
 /**
  * TODO: добавить логирование событий
@@ -42,6 +43,24 @@ class PageObserver
 			$page->updated_by_id = $user->id;
 		}
 
+		return TRUE;
+	}
+
+	/**
+	 * @param \KodiCMS\Pages\Model\Page $page
+	 * @return bool
+	 */
+	public function reordering($page)
+	{
+		return TRUE;
+	}
+
+	/**
+	 * @param \KodiCMS\Pages\Model\Page $page
+	 * @return bool
+	 */
+	public function reordered($page)
+	{
 		return TRUE;
 	}
 
