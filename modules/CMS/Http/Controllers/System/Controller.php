@@ -37,6 +37,11 @@ abstract class Controller extends BaseController
 	protected $currentUser;
 
 	/**
+	 * @var string
+	 */
+	protected $loginPath;
+
+	/**
 	 * @var bool
 	 */
 	protected $authRequired = FALSE;
