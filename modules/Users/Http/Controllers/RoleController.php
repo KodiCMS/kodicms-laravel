@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Users\Http\Controllers;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use KodiCMS\Users\Model\UserRole;
 use KodiCMS\Users\Services\RoleCreator;
@@ -87,7 +88,8 @@ class RoleController extends BackendController
 
 	/**
 	 * @param integer $id
-	 * @return UserRole|\Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+	 * @return UserRole
+	 * @throws HttpResponseException
 	 */
 	protected function getRole($id)
 	{
@@ -95,7 +97,7 @@ class RoleController extends BackendController
 			return UserRole::findOrFail($id);
 		}
 		catch (ModelNotFoundException $e) {
-			return $this->smartRedirect()->withErrors(trans('users::role.messages.not_found'));
+			$this->throwFailException($this->smartRedirect()->withErrors(trans('users::role.messages.not_found')));
 		}
 	}
 }

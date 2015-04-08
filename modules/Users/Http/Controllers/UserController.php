@@ -125,7 +125,8 @@ class UserController extends BackendController
 
 	/**
 	 * @param integer|null $id
-	 * @return User|null
+	 * @return User
+	 * @throws HttpResponseException
 	 */
 	protected function getUser($id = NULL)
 	{
@@ -137,7 +138,7 @@ class UserController extends BackendController
 			return User::findOrFail($id);
 		}
 		catch (ModelNotFoundException $e) {
-			return $this->smartRedirect()->withErrors(trans('users::core.messages.user.not_found'));
+			$this->throwFailException($this->smartRedirect()->withErrors(trans('users::core.messages.user.not_found')));
 		}
 	}
 }

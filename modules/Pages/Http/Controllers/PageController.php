@@ -111,7 +111,8 @@ class PageController extends BackendController
 
 	/**
 	 * @param integer $id
-	 * @return Page|\Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+	 * @return Page
+	 * @throws HttpResponseException
 	 */
 	protected function getPage($id)
 	{
@@ -119,7 +120,7 @@ class PageController extends BackendController
 			return Page::findOrFail($id);
 		}
 		catch (ModelNotFoundException $e) {
-			return $this->smartRedirect()->withErrors(trans('pages::core.messages.not_found'));
+			$this->throwFailException($this->smartRedirect()->withErrors(trans('pages::core.messages.not_found')));
 		}
 	}
 }

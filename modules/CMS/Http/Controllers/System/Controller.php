@@ -3,6 +3,8 @@
 use Illuminate\Auth\Guard;
 use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Exception\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
@@ -218,5 +220,14 @@ abstract class Controller extends BaseController
 		} else {
 			return redirect($route);
 		}
+	}
+
+	/**
+	 * @param RedirectResponse $response
+	 * @throws HttpResponseException
+	 */
+	public function throwFailException(RedirectResponse $response)
+	{
+		throw new HttpResponseException($response);
 	}
 }
