@@ -10,6 +10,7 @@ class ModuleServiceProvider extends BaseServiceProvider {
 	public function boot()
 	{
 		Page::observe(new PageObserver);
+		app('view')->addNamespace('frontend', base_path('resources/layouts'));
 	}
 
 

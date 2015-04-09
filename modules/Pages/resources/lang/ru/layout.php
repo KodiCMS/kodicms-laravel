@@ -11,7 +11,10 @@ return [
 		'filemanager' => 'Менеджер файлов'
 	],
 	'label' => [
-
+		'blocks' => 'Блоки',
+		'readonly' => 'Только для чтения',
+		'not_set' => 'Не указан',
+		'inherit' => 'Наследуется (:layout)'
 	],
 	'field' => [
 		'name' => 'Название',

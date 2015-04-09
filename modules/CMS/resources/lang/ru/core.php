@@ -9,6 +9,9 @@ return [
 		'design' => 'Дизайн',
 		'system' => 'Система'
 	],
+	'label' => [
+		'not_set' => 'Не указан',
+	],
 	'button' => [
 		'update' => 'Сохранить',
 		'update_close' => 'Сохранить и закрыть',

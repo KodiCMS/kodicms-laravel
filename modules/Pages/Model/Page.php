@@ -110,8 +110,7 @@ class Page extends Model
 		$status = trans('pages::core.status.none');
 		$label = 'default';
 
-		switch ($this->status)
-		{
+		switch ($this->status) {
 			case FrontendPage::STATUS_DRAFT:
 				$status = trans('pages::core.status.draft');
 				$label = 'info';
@@ -120,12 +119,9 @@ class Page extends Model
 				$status = trans('pages::core.status.hidden');
 				break;
 			case FrontendPage::STATUS_PUBLISHED:
-				if (strtotime($this->published_at) > time())
-				{
+				if (strtotime($this->published_at) > time()) {
 					$status = trans('pages::core.status.pending');
-				}
-				else
-				{
+				} else {
 					$status = trans('pages::core.status.published');
 				}
 
@@ -175,8 +171,7 @@ class Page extends Model
 	 */
 	public function getLayout()
 	{
-		if (empty($this->layout_file) AND $parent = $this->parent()->first())
-		{
+		if (empty($this->layout_file) AND $parent = $this->parent()->first()) {
 			return $parent->getLayout();
 		}
 
@@ -189,7 +184,7 @@ class Page extends Model
 	 */
 	public function hasChildren()
 	{
-		return (bool) \DB::table($this->table)
+		return (bool)\DB::table($this->table)
 			->selectRaw('COUNT(*) as total')
 			->where('parent_id', $this->id)
 			->pluck('total') > 0;
@@ -201,8 +196,9 @@ class Page extends Model
 	 */
 	public function scopeSearchByKeyword($query, $keyword)
 	{
-		return $query->where(function($subQuery) use($keyword) {
+		return $query->where(function ($subQuery) use ($keyword) {
 			$keyword = e($keyword);
+
 			return $subQuery
 				->orWhere(\DB::raw('LOWER(title)'), 'like', "%{$keyword}%")
 				->orWhere('slug', 'like', "%{$keyword}%")
@@ -219,8 +215,7 @@ class Page extends Model
 	public function getSitemap()
 	{
 		$sitemap = PageSitemap::get(TRUE);
-		if ($this->exists)
-		{
+		if ($this->exists) {
 			$sitemap->exclude([$this->id]);
 		}
 
@@ -255,8 +250,8 @@ class Page extends Model
 	{
 		$pages = array_map(function ($page) {
 			$page['parent_id'] = empty($page['parent_id']) ? 1 : $page['parent_id'];
-			$page['id'] = (int) $page['id'];
-			$page['position'] = (int) $page['position'];
+			$page['id'] = (int)$page['id'];
+			$page['position'] = (int)$page['position'];
 
 			return $page;
 		}, $pages);
@@ -282,5 +277,34 @@ class Page extends Model
 		$this->fireModelEvent('reordered', FALSE);
 
 		return TRUE;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getLayoutList()
+	{
+		$options = [];
+
+		if ($this->id != 1) {
+			$layout = NULL;
+			if ($parent = $this->parent()->first()) {
+				$layout = $parent->getLayout();
+			}
+
+			if (empty($layout)) {
+				$layout = trans('pages::layout.label.not_set');
+			}
+
+			$options[0] = trans('pages::layout.label.inherit', ['layout' => $layout]);
+		} else {
+			$options[0] = trans('pages::layout.label.not_set');
+		}
+
+		foreach ((new LayoutCollection())->getChoices() as $layout) {
+			$options[$layout] = $layout;
+		}
+
+		return $options;
 	}
 }

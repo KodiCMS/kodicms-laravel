@@ -400,6 +400,27 @@ class FrontendPage
 		return $this->parseMeta('meta_title');
 	}
 
+	public function getLayoutFile()
+	{
+		if (empty($this->layout_file) AND $parent = $this->getParent()) {
+			return $parent->getLayoutFile();
+		}
+
+		$layout = (new LayoutCollection)->findFile($this->layout_file);
+		return $layout;
+	}
+
+
+	public function getLayoutView()
+	{
+		$layout = $this->getLayoutFile();
+
+		if(!$layout) {
+			return NULL;
+		}
+		return view('frontend::' . $layout->getViewFilename());
+	}
+
 	/**
 	 * @param null $default
 	 * @return null|string
@@ -461,7 +482,7 @@ class FrontendPage
 	public function getParent($level = NULL)
 	{
 		if ($this->_parentPage === NULL AND is_numeric($this->getParentId())) {
-			$parentPage = static::findById($this->getParentId());
+			return static::findById($this->getParentId());
 		}
 
 		if ($level === NULL) {
@@ -576,6 +597,15 @@ class FrontendPage
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function isRedirect()
+	{
+		return (bool) $this->is_redirect;
+	}
+
+
+	/**
 	 * @return string
 	 */
 	public function getRedirectUrl()
@@ -602,14 +632,6 @@ class FrontendPage
 		}
 
 		return $this;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isRedirect()
-	{
-		return (bool)$this->is_redirect;
 	}
 
 	/**

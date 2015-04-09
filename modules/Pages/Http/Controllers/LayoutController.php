@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\Pages\Http\Controllers;
 
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
-use KodiCMS\CMS\Model\FileCollection;
 use KodiCMS\CMS\Assets\Core as Assets;
+use KodiCMS\Pages\Model\LayoutCollection;
 
 class LayoutController extends BackendController
 {
@@ -13,7 +13,7 @@ class LayoutController extends BackendController
 
 	public function getIndex()
 	{
-		$collection = (new FileCollection(layouts_path()));
+		$collection = new LayoutCollection();
 
 		$this->setContent('layouts.list', compact('collection'));
 	}
@@ -59,10 +59,10 @@ class LayoutController extends BackendController
 
 		if(is_null($filename))
 		{
-			return (new FileCollection(layouts_path()))->newFile();
+			return (new LayoutCollection())->newFile();
 		}
 
-		if($file = (new FileCollection(layouts_path()))->findFile($filename))
+		if($file = (new LayoutCollection())->findFile($filename))
 		{
 			return $file;
 		}

@@ -55,11 +55,13 @@
 				@else
 				@endif
 
-				<?php  /*if (count($layout->blocks()) > 0): ?>
+				@if (count($layout->getBlocks()) > 0)
 				<span class="text-muted text-normal text-sm">
-						<?php echo __('Layout blocks'); ?>: <span class="layout-block-list"><?php echo implode(', ', $layout->blocks()); ?></span>
+					@lang('pages::layout.label.blocks'): <span class="layout-block-list">
+						<?php echo implode(', ', $layout->getBlocks()); ?>
 					</span>
-				<?php endif; */ ?>
+				</span>
+				@endif
 			</th>
 			<td class="modified hidden-xs">
 				{{ $layout->getMTime() }}

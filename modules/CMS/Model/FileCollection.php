@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\CMS\Model;
 
+use Iterator;
 use KodiCMS\CMS\Helpers\File as FileSystem;
 use SplFileInfo;
-use Iterator;
 
 class FileCollection implements Iterator
 {
@@ -26,18 +26,24 @@ class FileCollection implements Iterator
 	 */
 	protected $newFiles = [];
 
+	/**
+	 * @var string
+	 */
+	protected $fileClass = '\\KodiCMS\CMS\Model\File';
+
 	public function __construct($directory)
 	{
 		$this->directory = new SplFileInfo($directory);
 		$this->settings = $this->getSettingsFile();
 
+		$this->listFiles();
+	}
+
+	protected function listFiles()
+	{
 		$files = app('files')->files($this->getRealPath());
 		foreach ($files as $path) {
-			$filename = pathinfo($path, PATHINFO_FILENAME);
-			$file = new File($path);
-			$file->setSettings(array_get($this->settings, $filename));
-
-			$this->files[$path] = $file;
+			$this->addFile($path);
 		}
 	}
 
@@ -114,7 +120,20 @@ class FileCollection implements Iterator
 	 */
 	public function newFile()
 	{
-		return $this->newFiles[] = new File(NULL, $this->getRealPath());
+		return $this->newFiles[] = new $this->fileClass(NULL, $this->getRealPath());
+	}
+
+	/**
+	 * @param string $path
+	 * @return File
+	 */
+	public function addFile($path)
+	{
+		$filename = pathinfo($path, PATHINFO_FILENAME);
+		$file = new $this->fileClass($path);
+		$file->setSettings(array_get($this->settings, $filename));
+
+		return $this->files[$path] = $file;
 	}
 
 	/**
@@ -130,15 +149,12 @@ class FileCollection implements Iterator
 	 */
 	public function saveChanges()
 	{
-		foreach($this->files as $file)
-		{
+		foreach ($this->files as $file) {
 			$file->save();
 		}
 
-		foreach($this->newFiles as $i => $file)
-		{
-			if($file->save())
-			{
+		foreach ($this->newFiles as $i => $file) {
+			if ($file->save()) {
 				unset($this->newFiles[$i]);
 				$this->files[$file->getRealPath()] = $file;
 			}
@@ -164,6 +180,20 @@ class FileCollection implements Iterator
 		$data .= ";";
 
 		return file_put_contents($this->getSettingsFilePath(), $data);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getChoices()
+	{
+		$choices = [];
+		foreach ($this as $layout)
+		{
+			$choices[$layout->getName()] = $layout->getName();
+		}
+
+		return $choices;
 	}
 
 	public function current()

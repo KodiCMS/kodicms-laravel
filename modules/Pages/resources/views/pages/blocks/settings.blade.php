@@ -7,7 +7,7 @@ $layout_link = '';
 if ((acl_check('layout.edit') OR acl_check('layout.view')) AND ! empty($layout_name))
 {
 	$layout_link = link_to('layout', $layout_name, [
-			'class' => 'popup fancybox.iframe'
+		'class' => 'popup fancybox.iframe'
 	]);
 }
 ?>
@@ -29,7 +29,7 @@ if ((acl_check('layout.edit') OR acl_check('layout.view')) AND ! empty($layout_n
 			@lang('pages::core.field.layout_file')
 		</label>
 		<div class="col-md-6">
-			{!! Form::select('layout_file', [], NULL, ['class' => 'form-control']) !!}
+			{!! Form::select('layout_file', $page->getLayoutList(), NULL, ['class' => 'form-control']) !!}
 		</div>
 
 		<div class="col-md-3">
