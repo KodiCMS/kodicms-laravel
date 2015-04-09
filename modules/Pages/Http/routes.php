@@ -10,8 +10,13 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 		'getDelete' => 'backend.page.delete',
 	]);
 
-	Route::controller('layout', 'LayoutController', [
-		'getIndex' => 'backend.layout.list'
+	Route::controller('layouts', 'LayoutController', [
+		'getIndex' => 'backend.layout.list',
+		'getCreate' => 'backend.layout.create',
+		'postCreate' => 'backend.layout.create.post',
+		'getEdit' => 'backend.layout.edit',
+		'postEdit' => 'backend.layout.edit.post',
+		'getDelete' => 'backend.layout.delete',
 	]);
 });
 

@@ -62,4 +62,44 @@ class Text
 
 		return $metaResult;
 	}
+
+	/**
+	 * Returns human readable sizes. Based on original functions written by
+	 * [Aidan Lister](http://aidanlister.com/repos/v/function.size_readable.php)
+	 * and [Quentin Zervaas](http://www.phpriot.com/d/code/strings/filesize-format/).
+	 *
+	 *     echo Text::bytes(filesize($file));
+	 *
+	 * @param   integer $bytes      size in bytes
+	 * @param   string  $force_unit a definitive unit
+	 * @param   string  $format     the return string format
+	 * @param   boolean $si         whether to use SI prefixes or IEC
+	 * @return  string
+	 */
+	public static function bytes($bytes, $force_unit = NULL, $format = NULL, $si = TRUE)
+	{
+		// Format string
+		$format = ($format === NULL) ? '%01.2f %s' : (string) $format;
+
+		// IEC prefixes (binary)
+		if ($si == FALSE OR strpos($force_unit, 'i') !== FALSE)
+		{
+			$units = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB');
+			$mod   = 1024;
+		}
+		// SI prefixes (decimal)
+		else
+		{
+			$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
+			$mod   = 1000;
+		}
+
+		// Determine unit to use
+		if (($power = array_search( (string) $force_unit, $units)) === FALSE)
+		{
+			$power = ($bytes > 0) ? floor(log($bytes, $mod)) : 0;
+		}
+
+		return sprintf($format, $bytes / pow($mod, $power), $units[$power]);
+	}
 }

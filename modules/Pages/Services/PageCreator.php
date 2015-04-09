@@ -2,7 +2,6 @@
 
 use KodiCMS\CMS\Contracts\ModelCreator;
 use KodiCMS\Pages\Model\Page;
-use KodiCMS\Users\Model\UserRole;
 use Validator;
 
 class PageCreator implements ModelCreator
