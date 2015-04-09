@@ -1,3 +1,13 @@
 * text=auto
 *.css linguist-vendored
 *.less linguist-vendored
+
+*.cs     text diff=csharp
+*.java   text diff=java
+*.html   text diff=html
+*.js     text
+*.sql    text
+
+*.png	binary
+*.jpg	binary
+*.gif	binary
