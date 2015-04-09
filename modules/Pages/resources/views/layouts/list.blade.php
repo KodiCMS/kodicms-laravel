@@ -18,7 +18,7 @@
 	</div>
 	@else
 	<div class="alert alert-danger alert-dark no-margin-b">
-		@lang('pages::layout.message.directory_not_writeable', [':dir' => $collection->getRealPath()])
+		@lang('pages::layout.messages.directory_not_writeable', [':dir' => $collection->getRealPath()])
 	</div>
 	@endif
 
