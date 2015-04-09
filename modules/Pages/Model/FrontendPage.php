@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Pages\Model;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use KodiCMS\CMS\Helpers\File;
@@ -293,6 +294,16 @@ class FrontendPage
 	protected $robots;
 
 	/**
+	 * @var string
+	 */
+	protected $created_at;
+
+	/**
+	 * @var string
+	 */
+	protected $updated_at;
+
+	/**
 	 * @var integer
 	 */
 	protected $created_by_id;
@@ -400,6 +411,9 @@ class FrontendPage
 		return $this->parseMeta('meta_title');
 	}
 
+	/**
+	 * @return Layout
+	 */
 	public function getLayoutFile()
 	{
 		if (empty($this->layout_file) AND $parent = $this->getParent()) {
@@ -410,7 +424,9 @@ class FrontendPage
 		return $layout;
 	}
 
-
+	/**
+	 * @return \Illuminate\View\View|null
+	 */
 	public function getLayoutView()
 	{
 		$layout = $this->getLayoutFile();
@@ -473,6 +489,22 @@ class FrontendPage
 	public function getParentId()
 	{
 		return $this->parent_id;
+	}
+
+	/**
+	 * @return Carbon
+	 */
+	public function getCreatedAt()
+	{
+		return (new Carbon)->createFromFormat('Y-m-d H:i:s', $this->created_at);
+	}
+
+	/**
+	 * @return Carbon
+	 */
+	public function getUpdatedAt()
+	{
+		return (new Carbon)->createFromFormat('Y-m-d H:i:s', $this->updated_at);
 	}
 
 	/**
