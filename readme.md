@@ -76,14 +76,23 @@ password: **password**
 
 ---
 
+### События
+
+#### Frontend Controller
+ * `frontend.requested [string $uri]`
+ * `frontend.found [FrontPage $page]`
+ * `frontend.not_found [string $uri]`
+
+---
+
 ### События в шаблонах
 
 #### pages/create
  * `view.page.create`
  
 #### pages/edit
- * `view.page.edit.before [$page]`
- * `view.page.edit [$page]`
+ * `view.page.edit.before [KodiCMS\Pages\Model\Page $page]`
+ * `view.page.edit [KodiCMS\Pages\Model\Page $page]`
 
 #### backend/navbar
  * `view.navbar.before`
@@ -107,8 +116,8 @@ password: **password**
  * `view.user.profile.information`
 
 ### user/edit
- * `view.user.edit.form.password [$user]`
- * `view.user.edit.form.bottom [$user]`
+ * `view.user.edit.form.password [KodiCMS\Users\Model\User $user]`
+ * `view.user.edit.form.bottom [KodiCMS\Users\Model\User $user]`
 
 ### user/create
   * `view.user.create.form.password`
