@@ -17,8 +17,8 @@ return [
 		'ace' => [
 			'theme' => 'textmate'
 		],
-		'default_html_editor' => NULL,
-		'default_code_editor' => NULL
+		'default_html_editor' => 'ckeditor',
+		'default_code_editor' => 'ace'
 	],
 	'locales' => [
 		'en' => 'English',

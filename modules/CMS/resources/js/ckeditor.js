@@ -1,5 +1,4 @@
-$(function() {
-	$('body').on('before_cms_init', function (){
+CMS.ui.add('ckeditor', function() {
 		var $ckeditor = {};
 
 		CKEDITOR.disableAutoInline = true;
@@ -30,6 +29,6 @@ $(function() {
 			}
 		}
 
-		cms.filters.add('ckeditor', $ckeditor.switchOn_handler, $ckeditor.switchOff_handler, $ckeditor.exec_handler);
+		CMS.filters.add('ckeditor', $ckeditor.switchOn_handler, $ckeditor.switchOff_handler, $ckeditor.exec_handler);
 	});
 });
