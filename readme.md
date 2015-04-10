@@ -133,6 +133,7 @@ password: **password**
 	{
 		$this->registerConsoleCommand('module.seed', '\KodiCMS\Installer\Console\Commands\ModuleSeed');
 	}
-	
-Отдельное спасибо команде JetBrains за бесплатно предоставленый ключ для PHPStorm
+
+---
+#### Отдельное спасибо команде JetBrains за бесплатно предоставленый ключ для PHPStorm
 ![PHPStorm](https://www.jetbrains.com/phpstorm/documentation/docs/logo_phpstorm.png)
