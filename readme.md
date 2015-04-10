@@ -122,8 +122,9 @@ password: **password**
 ### user/create
   * `view.user.create.form.password`
   * `view.user.create.form.bottom`
-  
-  
+
+---
+
 ### Регистрация консольных комманд через ServiceProvider
 В KodiCMS есть базовый сервисный провайдер, в котором уже реализован метод для регистрации комманд. Для использования необходимо наследовать класс провайдера от `KodiCMS\CMS\Providers\ServiceProvider`
 Пример регистрации команды
@@ -132,3 +133,6 @@ password: **password**
 	{
 		$this->registerConsoleCommand('module.seed', '\KodiCMS\Installer\Console\Commands\ModuleSeed');
 	}
+	
+Отдельное спасибо команде JetBrains за бесплатно предоставленый ключ для PHPStorm
+![PHPStorm](https://www.jetbrains.com/phpstorm/documentation/docs/logo_phpstorm.png)
