@@ -1,14 +1,12 @@
 <?php namespace KodiCMS\Users\Providers;
 
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-
+use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Users\Model\User;
 use KodiCMS\Users\Model\UserRole;
 use KodiCMS\Users\Observers\RoleObserver;
 use KodiCMS\Users\Observers\UserObserver;
 
-class ModuleServiceProvider extends BaseServiceProvider {
+class ModuleServiceProvider extends ServiceProvider {
 
 	public function boot()
 	{

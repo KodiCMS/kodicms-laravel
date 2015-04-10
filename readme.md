@@ -42,7 +42,7 @@ password: **password**
   * `Middleware`
   * `routes.php` - роуты текущего модуля, оборачиваются в неймспейс `KodiCMS\{module}`
  * `Providers`
-  * `ModuleServiceProvider.php` - Сервис провайдер, если есть, будет запущен в момент инициализации приложения
+  * `ModuleServiceProvider.php` - Сервис провайдер (наследуемый от `KodiCMS\CMS\Providers\ServiceProvider`), если есть, будет запущен в момент инициализации приложения
  * `resources`
   * `js` - JavaScript файлы, в этой папке происходит поиск js файлов по виртуальным путям `/backend/cms/js/{script.js}`
   * `lang` - Файлы переводов для модуля, доступны по ключу названия модуля приведенного в нижний регистр `trans('{module}::file.key')`
@@ -122,3 +122,13 @@ password: **password**
 ### user/create
   * `view.user.create.form.password`
   * `view.user.create.form.bottom`
+  
+  
+### Регистрация консольных комманд через ServiceProvider
+В KodiCMS есть базовый сервисный провайдер, в котором уже реализован метод для регистрации комманд. Для использования необходимо наследовать класс провайдера от `KodiCMS\CMS\Providers\ServiceProvider`
+Пример регистрации команды
+
+	public function register()
+	{
+		$this->registerConsoleCommand('module.seed', '\KodiCMS\Installer\Console\Commands\ModuleSeed');
+	}

@@ -1,9 +1,9 @@
 <?php namespace KodiCMS\CMS\Providers;
 
 use Illuminate\Routing\Router;
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as BaseRouteServiceProvider;
 
-class RouteServiceProvider extends ServiceProvider
+class RouteServiceProvider extends BaseRouteServiceProvider
 {
 
 	/**

@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\CMS\Providers;
 
 use Illuminate\Bus\Dispatcher;
-use Illuminate\Support\ServiceProvider;
 
 class BusServiceProvider extends ServiceProvider {
 

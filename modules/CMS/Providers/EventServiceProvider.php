@@ -1,9 +1,9 @@
 <?php namespace KodiCMS\CMS\Providers;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as BaseEventServiceProvider;
 
-class EventServiceProvider extends ServiceProvider {
+class EventServiceProvider extends BaseEventServiceProvider {
 
 	/**
 	 * The event handler mappings for the application.

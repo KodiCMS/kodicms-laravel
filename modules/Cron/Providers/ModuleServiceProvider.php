@@ -1,18 +1,11 @@
 <?php namespace KodiCMS\Cron\Providers;
 
-use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use KodiCMS\CMS\Providers\ServiceProvider;
 
-class ModuleServiceProvider extends BaseServiceProvider {
-
-	public function boot()
-	{
-
-	}
-
+class ModuleServiceProvider extends ServiceProvider {
 
 	public function register()
 	{
 
 	}
-
 }
