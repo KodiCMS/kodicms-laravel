@@ -16,4 +16,10 @@ class FilemanagerController extends BackendController
 
 		$this->setContent('filemanager');
 	}
+
+	public function popup()
+	{
+		Assets::package(array('elfinder', 'jquery-ui'));
+		$this->setContent('popup');
+	}
 }

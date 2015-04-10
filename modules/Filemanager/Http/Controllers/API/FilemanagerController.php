@@ -18,9 +18,4 @@ class FilemanagerController extends APIController
 		// run elFinder
 		return (new Connector(new elFinder($opts)))->run($this->request);
 	}
-
-	public function load()
-	{
-
-	}
 }

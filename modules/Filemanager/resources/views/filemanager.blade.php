@@ -1,7 +1,7 @@
 <script>
 	$(function() {
 		var elfinder = $('#elfinder').elfinder({
-			lang: 'ru',
+			lang: '{{ Lang::getLocale() }}',
 			url : '/api.filemanager',
 			resizable: false,
 			height: CMS.content_height - 20,
