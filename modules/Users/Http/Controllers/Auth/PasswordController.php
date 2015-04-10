@@ -4,9 +4,7 @@ use KodiCMS\CMS\Http\Controllers\System\FrontendController;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Foundation\Auth\ResetsPasswords;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Session\Store as SessionStore;
 
 
 class PasswordController extends FrontendController {
@@ -29,16 +27,15 @@ class PasswordController extends FrontendController {
 
 	use ResetsPasswords;
 
+
 	/**
 	 * Create a new password controller instance.
 	 *
 	 * @param Guard $auth
 	 * @param PasswordBroker $passwords
 	 */
-	public function __construct(Guard $auth, PasswordBroker $passwords, Request $request, Response $response, SessionStore $session)
+	public function boot(Guard $auth, PasswordBroker $passwords)
 	{
-		parent::__construct($request, $response, $session);
-
 		$this->auth = $auth;
 		$this->passwords = $passwords;
 
@@ -52,6 +49,7 @@ class PasswordController extends FrontendController {
 	 */
 	public function getEmail()
 	{
-		$this->setContent('auth.password');
+		$this->setContent('auth.password')
+			->with('status', $this->session->get('status'));
 	}
 }

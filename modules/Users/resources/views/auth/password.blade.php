@@ -19,12 +19,18 @@
 			@endforeach
 		</ul>
 	@endif
+
+	@if ($status)
+		<div class="alert alert-success alert-dark">
+			{{ $status }}
+		</div>
+	@endif
 	<div class="panel-body">
 		<p class="text-muted">@lang('users::core.messages.auth.forgot')</p>
 		<hr class="panel-wide" />
 		<div class="input-group input-group-lg">
 			<span class="input-group-addon">{!! UI::icon('envelope') !!}</span>
-			{!! Form::text('forgot[email]', NULL, [
+			{!! Form::text('email', NULL, [
 					'class' => 'form-control',
 					'placeholder' => trans('users::core.field.auth.email')
 			]) !!}
