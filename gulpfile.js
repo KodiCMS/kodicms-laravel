@@ -29,10 +29,15 @@ elixir(function(mix) {
 
 	mix.scripts([
 		'cms/core.js',
-		//'cms/backend.js',
-		'cms/core.js',
-		'cms/helpers.js',
 		'cms/app.js',
+		'cms/components/messages.js',
+		'cms/components/filters.js',
+		'cms/components/loader.js',
+		'cms/components/notifications.js',
+		'cms/components/filemanager.js',
+		'cms/components/controllers.js',
+		'cms/components/ui.js',
+		'cms/helpers.js',
 		'cms/ui.js',
 		'cms/api.js',
 		'cms/run.js'
