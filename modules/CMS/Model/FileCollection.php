@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\CMS\Model;
 
 use Iterator;
+use KodiCMS\CMS\Exceptions\FileValidationException;
 use KodiCMS\CMS\Helpers\File as FileSystem;
 use SplFileInfo;
 
@@ -76,7 +77,7 @@ class FileCollection implements Iterator
 	 */
 	public function getSettingsFilePath()
 	{
-		return FileSystem::normalizePath(base_path($this->directory . DIRECTORY_SEPARATOR . '.settings.php'));
+		return FileSystem::normalizePath($this->directory . DIRECTORY_SEPARATOR . '.settings.php');
 	}
 
 	/**
@@ -85,13 +86,12 @@ class FileCollection implements Iterator
 	public function getSettingsFile()
 	{
 		$settingsFile = $this->getSettingsFilePath();
-		if (is_file($settingsFile)) {
-			$seetings = (array)require $settingsFile;
-		} else {
-			$seetings = [];
-		}
 
-		return $seetings;
+		if (is_file($settingsFile)) {
+			return (array) include($settingsFile);
+		} else {
+			return [];
+		}
 	}
 
 	/**
@@ -129,9 +129,8 @@ class FileCollection implements Iterator
 	 */
 	public function addFile($path)
 	{
-		$filename = pathinfo($path, PATHINFO_FILENAME);
 		$file = new $this->fileClass($path);
-		$file->setSettings(array_get($this->settings, $filename));
+		$file->setSettings(array_get($this->settings, $file->getFilename()));
 
 		return $this->files[$path] = $file;
 	}
@@ -150,14 +149,7 @@ class FileCollection implements Iterator
 	public function saveChanges()
 	{
 		foreach ($this->files as $file) {
-			$file->save();
-		}
-
-		foreach ($this->newFiles as $i => $file) {
-			if ($file->save()) {
-				unset($this->newFiles[$i]);
-				$this->files[$file->getRealPath()] = $file;
-			}
+			$this->saveFile($file);
 		}
 
 		$this->saveSettings();
@@ -166,20 +158,43 @@ class FileCollection implements Iterator
 	}
 
 	/**
+	 * @param File $file
+	 * @return $this
+	 */
+	public function saveFile(File $file)
+	{
+		$file->save();
+		$this->files[$file->getRealPath()] = $file;
+
+		return $this;
+	}
+
+	/**
 	 * @return int
 	 */
-	protected function saveSettings()
+	public function saveSettings()
 	{
-		$settings = [];
-		foreach ($this->files as $file) {
-			$settings[$file->getFilename()] = $file->getSettings();
+		$status = is_file($this->getSettingsFilePath());
+
+		if (!$status)
+		{
+			$status = touch($this->getSettingsFilePath()) !== false;
 		}
 
-		$data = "return ";
-		$data .= var_export($settings, TRUE);
-		$data .= ";";
+		if($status)
+		{
+			$settings = [];
+			foreach ($this->files as $file) {
+				$settings[$file->getFilename()] = $file->getSettings();
+			}
 
-		return file_put_contents($this->getSettingsFilePath(), $data);
+			$data = "<?php" . PHP_EOL;
+			$data .= "return ";
+			$data .= var_export($settings, TRUE);
+			$data .= ";";
+
+			return file_put_contents($this->getSettingsFilePath(), $data);
+		}
 	}
 
 	/**

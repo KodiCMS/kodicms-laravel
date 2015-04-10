@@ -46,4 +46,5 @@ return [
 	'ACL'		=> 'KodiCMS\Users\ACL',
 	'CMS'		=> 'KodiCMS\CMS\Core',
 	'Assets'	=> 'KodiCMS\CMS\Assets\Core',
+	'WYSIWYG'	=> 'KodiCMS\CMS\Helpers\WYSIWYG',
 ];

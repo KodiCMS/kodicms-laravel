@@ -12,7 +12,7 @@ class PasswordController extends FrontendController {
 	/**
 	 * @var string
 	 */
-	public $templatePrefix = 'users::';
+	public $moduleNamespace = 'users::';
 
 	/*
 	|--------------------------------------------------------------------------

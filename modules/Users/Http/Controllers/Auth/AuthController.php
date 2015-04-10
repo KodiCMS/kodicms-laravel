@@ -11,7 +11,7 @@ class AuthController extends FrontendController {
 	/**
 	 * @var string
 	 */
-	public $templatePrefix = 'users::';
+	public $moduleNamespace = 'users::';
 
 	/*
 	|--------------------------------------------------------------------------

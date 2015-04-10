@@ -13,7 +13,7 @@ class PageController extends BackendController
 	/**
 	 * @var string
 	 */
-	public $templatePrefix = 'pages::';
+	public $moduleNamespace = 'pages::';
 
 	/**
 	 * @var array

@@ -12,7 +12,7 @@ class TemplateController extends Controller
 	/**
 	 * @var string
 	 */
-	public $templatePrefix = 'cms::';
+	public $moduleNamespace = 'cms::';
 
 	/**
 	 *
@@ -86,13 +86,13 @@ class TemplateController extends Controller
 	public function setContent($view, array $data = [])
 	{
 		if (!is_null($this->template)) {
-			$content = view($this->templatePrefix . $view, $data);
+			$content = view($this->moduleNamespace . $view, $data);
 			$this->template->with('content', $content);
 
 			return $content;
 		}
 
-		return view($this->templatePrefix . $view, $data);
+		return view($this->moduleNamespace . $view, $data);
 	}
 
 	public function before()

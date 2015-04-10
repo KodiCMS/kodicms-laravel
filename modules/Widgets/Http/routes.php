@@ -1,6 +1,15 @@
 <?php
 
 Route::group(['prefix' => CMS::backendPath()], function () {
-	Route::get('/snippet', ['as' => 'backend.snippet.list', 'uses' => 'SnippetController@index']);
+
+	Route::controller('snippets', 'SnippetController', [
+		'getIndex' => 'backend.snippet.list',
+		'getCreate' => 'backend.snippet.create',
+		'postCreate' => 'backend.snippet.create.post',
+		'getEdit' => 'backend.snippet.edit',
+		'postEdit' => 'backend.snippet.edit.post',
+		'getDelete' => 'backend.snippet.delete',
+	]);
+
 	Route::get('/widget', ['as' => 'backend.widget.list', 'uses' => 'WidgetController@index']);
 });

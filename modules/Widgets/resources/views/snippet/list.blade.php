@@ -1,0 +1,70 @@
+<div class="panel">
+	@if (!$collection->isReadOnly())
+		<div class="panel-heading">
+			@if (acl_check('snippet.add'))
+				{!! link_to_route('backend.snippet.create', trans('widgets::snippet.button.add'), [], [
+				'class' => 'btn btn-default', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
+				]) !!}
+			@endif
+		</div>
+	@else
+		<div class="alert alert-danger alert-dark no-margin-b">
+			@lang('widgets::snippet.messages.directory_not_writeable', ['dir' => $collection->getRealPath()])
+		</div>
+	@endif
+
+	<table class="table-primary table table-striped table-hover">
+		<colgroup>
+			<col />
+			<col width="150px" />
+			<col width="100px"/>
+			<col width="100px" />
+			<col width="100px" />
+		</colgroup>
+		<thead>
+		<tr>
+			<th>@lang('widgets::snippet.field.name')</th>
+			<th class="hidden-xs">@lang('widgets::snippet.field.modified')</th>
+			<th>@lang('widgets::snippet.field.size')</th>
+			<th class="hidden-xs">@lang('widgets::snippet.field.path')</th>
+			<th class="text-right">@lang('widgets::snippet.field.actions')</th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php foreach ($collection as $snippet): ?>
+		<tr id="snippet_{{ $snippet->getName() }}">
+			<th class="name">
+				{!! UI::icon('desktop') !!}
+				@if ($snippet->isReadOnly())
+					<span class="label label-warning">@lang('widgets::snippet.label.readonly')</span>
+				@endif
+
+				@if (acl_check('snippet.edit') OR acl_check('snippet.view'))
+				{!! link_to_route('backend.snippet.edit', $snippet->getName(), [$snippet->getName()], [
+				'class' => $snippet->isReadOnly() ? 'popup fancybox.iframe' : ''
+				]) !!}
+				@else
+				@endif
+			</th>
+			<td class="modified hidden-xs">
+				{{ $snippet->getMTime() }}
+			</td>
+			<td class="size">
+				{{ $snippet->getSize() }}
+			</td>
+			<td class="direction hidden-xs">
+				{!! UI::label($snippet->getRelativePath()) !!}
+			</td>
+			<td class="actions text-right">
+				@if (acl_check('snippet.delete'))
+					{!! link_to_route('backend.snippet.delete', '', [$snippet->getName()], [
+					'data-icon' => 'times fa-inverse',
+					'class' => 'btn btn-danger btn-xs btn-confirm'
+					]) !!}
+				@endif
+			</td>
+		</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
+</div>

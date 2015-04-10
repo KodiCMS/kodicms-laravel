@@ -11,7 +11,7 @@ class RoleController extends BackendController
 	/**
 	 * @var string
 	 */
-	public $templatePrefix = 'users::';
+	public $moduleNamespace = 'users::';
 
 	public function getIndex()
 	{

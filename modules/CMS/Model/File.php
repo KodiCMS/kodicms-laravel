@@ -2,8 +2,10 @@
 
 use Carbon\Carbon;
 use KodiCMS\CMS\Exceptions\Exception;
+use KodiCMS\CMS\Exceptions\FileValidationException;
 use KodiCMS\CMS\Helpers\File as FileSystem;
 use KodiCMS\CMS\Helpers\Text;
+use KodiCMS\CMS\Traits\Accessor;
 use SplFileInfo;
 use SplFileObject;
 use SplTempFileObject;
@@ -21,7 +23,7 @@ class File
 	/**
 	 * @var bool
 	 */
-	protected $isChanged = FALSE;
+	protected $isChanged = false;
 
 	/**
 	 * @var array
@@ -31,7 +33,7 @@ class File
 	/**
 	 * @var bool
 	 */
-	protected $readOnly = FALSE;
+	protected $readOnly = false;
 
 	/**
 	 * @var
@@ -41,10 +43,7 @@ class File
 	/**
 	 * @var array
 	 */
-	protected $attributes = [
-		'roles' => ['administrator', 'developer'],
-		'editor' => 'ace'
-	];
+	protected $attributes = ['roles' => ['administrator', 'developer'], 'editor' => 'ace'];
 
 	/**
 	 * @var array
@@ -56,28 +55,36 @@ class File
 	 * @param SplFileObject|string $filename
 	 * @throws Exception
 	 */
-	public function __construct($filename = NULL, $basePath = NULL)
+	public function __construct($filename = null, $basePath = null)
 	{
-		if (!is_null($basePath)) {
+		if (!is_null($basePath))
+		{
 			$this->basePath = $basePath;
 		}
 
-		if ($filename instanceof SplFileObject) {
+		if ($filename instanceof SplFileObject)
+		{
 			$this->file = $filename;
-		} else if ($filename instanceof SplFileInfo) {
+		} else if ($filename instanceof SplFileInfo)
+		{
 			$this->file = new SplFileObject($file->getRealPath());
-		} else if (!is_null($filename)) {
-			if (strpos($filename, File::$ext) === FALSE) {
+		} else if (!is_null($filename))
+		{
+			if (strpos($filename, File::$ext) === false)
+			{
 				$filename .= File::$ext;
 			}
 
-			if (is_file($filename)) {
+			if (is_file($filename))
+			{
 				$this->file = new SplFileObject($filename);
-			} else {
+			} else
+			{
 				$this->file = new SplTempFileObject();
 				$this->setName($filename);
 			}
-		} else {
+		} else
+		{
 			$this->file = new SplTempFileObject();
 		}
 	}
@@ -103,6 +110,11 @@ class File
 	 */
 	public function getName()
 	{
+		if ($this->isNew())
+		{
+			return null;
+		}
+
 		return $filename = str_replace(File::$ext, '', $this->file->getFilename());;
 	}
 
@@ -111,6 +123,11 @@ class File
 	 */
 	public function getFilename()
 	{
+		if ($this->isNew())
+		{
+			return null;
+		}
+
 		return $this->file->getFilename();
 	}
 
@@ -143,7 +160,16 @@ class File
 	 */
 	public function getSize()
 	{
-		return Text::bytes($this->file->getSize());
+		if($this->isNew())
+		{
+			$size = 0;
+		}
+		else
+		{
+			$size = $this->file->getSize();
+		}
+
+		return Text::bytes($size);
 	}
 
 	/**
@@ -151,8 +177,9 @@ class File
 	 */
 	public function getContent()
 	{
-		if ($this->isNew()) {
-			return NULL;
+		if ($this->isNew())
+		{
+			return null;
 		}
 
 		return file_get_contents($this->getRealPath());
@@ -210,7 +237,7 @@ class File
 	 * @param null|string $key
 	 * @return bool
 	 */
-	public function isChanged($key = NULL)
+	public function isChanged($key = null)
 	{
 		return is_null($key) ? !empty($this->changed) : array_key_exists($key, $this->changed);
 	}
@@ -220,7 +247,7 @@ class File
 	 */
 	public function setReadOnly()
 	{
-		$this->isReadOnly = TRUE;
+		$this->isReadOnly = true;
 	}
 
 	/**
@@ -229,7 +256,7 @@ class File
 	 */
 	public function setEditor($name)
 	{
-		return $name;
+		$this->attributes['editor'] = $name;
 	}
 
 	/**
@@ -238,7 +265,7 @@ class File
 	 */
 	public function setRoles(array $roles)
 	{
-		return $roles;
+		$this->attributes['roles'] = $roles;
 	}
 
 	/**
@@ -267,9 +294,10 @@ class File
 	 * @param array|null $settings
 	 * @return void
 	 */
-	public function setSettings(array $settings = NULL)
+	public function setSettings(array $settings = null)
 	{
-		if (!is_null($settings)) {
+		if (!is_null($settings))
+		{
 			$this->attributes = $settings;
 		}
 	}
@@ -279,69 +307,116 @@ class File
 	 */
 	public function delete()
 	{
-		return unlink($this->file);
+		return @unlink($this->getRealPath());
+	}
+
+	/**
+	 * @return bool
+	 * @throws FileValidationException
+	 */
+	public function validator()
+	{
+		if (isset($this->changed['name']))
+		{
+			$filename = $this->changed['name'];
+		} else
+		{
+			$filename = $this->getFilename();
+		}
+
+		$validator = Validator::make(['name' => str_replace(File::$ext, '', $filename)], ['name' => 'required']);
+
+		return $validator;
 	}
 
 	/**
 	 * @param array $data
-	 * @return bool
-	 * @throws Exception
+	 * @return $this
 	 */
-	public function save(array $data = [])
+	public function fill(array $data = [])
 	{
-		if ($this->isReadOnly() AND !$this->isNew()) {
-			return FALSE;
-		}
-
-		foreach ($data as $key => $value) {
+		foreach ($data as $key => $value)
+		{
 			$method = 'set' . ucfirst($key);
-			if (method_exists($this, $method)) {
+			if (method_exists($this, $method))
+			{
 				$this->{$method}($value);
-			} else {
+			} else
+			{
 				$this->changed[$key] = $value;
 			}
 		}
 
-		if (isset($this->changed['name'])) {
-			$filename = $this->changed['name'];
-		} else {
-			$filename = $this->getFilename();
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 * @throws Exception
+	 */
+	public function save()
+	{
+		if ($this->isReadOnly() AND !$this->isNew())
+		{
+			return false;
 		}
 
-		$validator = Validator::make([
-			'name' => $filename
-		], [
-			'name' => 'required'
-		]);
+		$status = true;
 
-		if ($validator->fails()) {
-			throw new Exception;
-		}
+		if ($this->isNew())
+		{
+			$newFilename = FileSystem::normalizePath($this->basePath . DIRECTORY_SEPARATOR . $this->changed['name']);
+			$status = touch($newFilename) !== false;
 
-		$status = FALSE;
-
-		if ($this->isChanged('name') AND $this->getFilename() != $this->changed['name']) {
-			if ($this->isNew()) {
-				$newFilename = FileSystem::normalizePath(base_path($this->basePath . DIRECTORY_SEPARATOR . $this->changed['name']));
-				$status = app('files')->put($newFilename, '') !== FALSE;
-
-			} else {
-				$newFilename = FileSystem::normalizePath($this->getPath() . '/' . $this->changed['name']);
-				$status = @app('files')->move($this->getRealPath(), $newFilename);
+			if ($status)
+			{
+				chmod($newFilename, 0777);
+				$this->file = new SplFileObject($newFilename);
 			}
+		}
+		else if ($this->isChanged('name'))
+		{
+			$newFilename = FileSystem::normalizePath($this->getPath() . '/' . $this->changed['name']);
+			$status = @app('files')->move($this->getRealPath(), $newFilename);
 
-			if ($status) {
+			if ($status)
+			{
 				$this->file = new SplFileObject($newFilename);
 			}
 		}
 
-		if ($status AND $this->isChanged('content')) {
-			$status = app('files')->put($this->getRealPath(), $this->changed['content']) !== FALSE;
+		if ($status AND $this->isChanged('content'))
+		{
+			$status = app('files')->put($this->getRealPath(), $this->changed['content']) !== false;
 		}
 
 		$this->changed = [];
 
 		return $status;
+	}
+
+	/**
+	 * @param $key
+	 * @return mixed
+	 */
+	public function __get($key)
+	{
+		$method = 'get' . ucfirst($key);
+		if (method_exists($this, $method))
+		{
+			return $this->{$method}();
+		}
+	}
+
+	/**
+	 * @param $key
+	 * @return bool
+	 */
+	public function __isset($key)
+	{
+		$method = 'get' . ucfirst($key);
+
+		return method_exists($this, $method);
 	}
 
 	/**
@@ -353,6 +428,21 @@ class File
 	}
 
 	/**
+	 * @return array
+	 */
+	public function toArray()
+	{
+		return [
+			'name' => $this->getName(),
+			'filename' => $this->getFilename(),
+			'size' => $this->getSize(),
+			'path' => $this->getRealPath(),
+			'ext' => $this->getExt(),
+			'settings' => $this->attributes
+		];
+	}
+
+	/**
 	 *
 	 * @param string $filename
 	 * @return string
@@ -361,11 +451,13 @@ class File
 	{
 		$filename = str_replace(File::$ext, '', $filename);
 		$filename = preg_replace('/[^a-zA-Z0-9\-\_]/', '-', strtolower($filename));
-		foreach (['-', '_', '\.'] as $separator) {
+		foreach (['-', '_', '\.'] as $separator)
+		{
 			$filename = preg_replace('/' . $separator . '+/', trim($separator, '\\'), $filename);
 		}
 
-		if (strpos($filename, File::$ext) === FALSE) {
+		if (strpos($filename, File::$ext) === false)
+		{
 			$filename .= File::$ext;
 		}
 

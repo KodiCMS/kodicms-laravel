@@ -8,7 +8,7 @@ class FilemanagerController extends BackendController
 	/**
 	 * @var string
 	 */
-	public $templatePrefix = 'filemanager::';
+	public $moduleNamespace = 'filemanager::';
 
 	public function show()
 	{
