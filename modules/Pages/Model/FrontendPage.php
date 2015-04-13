@@ -6,9 +6,12 @@ use Illuminate\Support\Facades\Request;
 use KodiCMS\CMS\Helpers\File;
 use KodiCMS\CMS\Helpers\Text;
 use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
+use KodiCMS\Widgets\Traits\Widgetable;
 
 class FrontendPage
 {
+	use Widgetable;
+
 	const STATUS_DRAFT     = 1;
 	const STATUS_PUBLISHED = 100;
 	const STATUS_HIDDEN    = 101;
@@ -17,13 +20,13 @@ class FrontendPage
 	 *
 	 * @var array
 	 */
-	private static $_pagesCache = [];
+	private static $pagesCache = [];
 
 	/**
 	 *
 	 * @var FrontendPage
 	 */
-	private static $_initialPage = NULL;
+	private static $initialPage = NULL;
 
 	/**
 	 * @param string $uri
@@ -55,7 +58,7 @@ class FrontendPage
 //					if (($behavior = BehaviorManager::load($pageObject->behavior, $pageObject, $url, $uri)) !== NULL) {
 //
 //						$pageObject->behaviorObject = $behavior;
-//						self::$_initialPage = $pageObject;
+//						self::$initialPage = $pageObject;
 //
 //						return $pageObject;
 //					}
@@ -67,7 +70,7 @@ class FrontendPage
 			$parentPage = $pageObject;
 		}
 
-		static::$_initialPage = $pageObject;
+		static::$initialPage = $pageObject;
 
 		return $pageObject;
 	}
@@ -83,8 +86,8 @@ class FrontendPage
 	{
 		$pageCacheId = static::getCacheId([$field, $value], $parentPage);
 
-		if (isset(static::$_pagesCache[$pageCacheId])) {
-			return static::$_pagesCache[$pageCacheId];
+		if (isset(static::$pagesCache[$pageCacheId])) {
+			return static::$pagesCache[$pageCacheId];
 		}
 
 		$pageClass = get_called_class();
@@ -128,7 +131,7 @@ class FrontendPage
 		// TODO Заменить на загрузку класса и behavior
 		$foundPage->setParentPage($parentPage);
 
-		static::$_pagesCache[$pageCacheId] = $foundPage;
+		static::$pagesCache[$pageCacheId] = $foundPage;
 
 		return $foundPage;
 	}
@@ -207,7 +210,7 @@ class FrontendPage
 	 */
 	public static function getInitialPage()
 	{
-		return static::$_initialPage;
+		return static::$initialPage;
 	}
 
 	/**
@@ -354,21 +357,6 @@ class FrontendPage
 	 * @var array
 	 */
 	protected $metaParams = [];
-
-	/**
-	 * @var array
-	 */
-	protected $registeredWidgets = [];
-
-	/**
-	 * @var array
-	 */
-	protected $registeredWidgetsIds = [];
-
-	/**
-	 * @var array
-	 */
-	protected $layoutBlocks = [];
 
 	/**
 	 * @param \stdClass $pageData
@@ -808,97 +796,6 @@ class FrontendPage
 		}
 
 		return $value;
-	}
-
-	/**
-	 * @param array $widgets
-	 * @return $this
-	 */
-	public function registerWidgets(array $widgets)
-	{
-		foreach ($widgets as $id => $widget)
-		{
-			$this->registeredWidgets[$id] = $widget;
-		}
-
-		return $this;
-	}
-
-	public function injectWidgetsToLayout()
-	{
-		$this->sortWidgets();
-
-		foreach ($this->registeredWidgetsIds as $id)
-		{
-			$widget = $this->registeredWidgets[$id];
-
-			if(is_null($widget->getBlock())) continue;
-
-			$this->layoutBlocks[$widget->getBlock()][] = $widget;
-
-			// TODO добавить инициализацию событий
-//			if($widget instanceof WidgetDecorator)
-//			{
-//				$widget->
-//			}
-		}
-
-	}
-
-	/**
-	 * @return $this
-	 */
-	protected function sortWidgets()
-	{
-		$ids = array_keys($this->registeredWidgets);
-
-		$widgets = [];
-		$types = ['PRE' => [], '*named' => [], 'POST' => []];
-
-		foreach ($ids as $id)
-		{
-			if (isset($types[$this->registeredWidgets[$id]->getBlock()]))
-			{
-				$types[$this->registeredWidgets[$id]->getBlock()][] = $id;
-			}
-			else
-			{
-				$types['*named'][] = $id;
-			}
-		}
-
-		foreach ($types as $type => $ids)
-		{
-			foreach ($ids as $id)
-			{
-				$widgets[$id] = $this->registeredWidgets[$id];
-			}
-		}
-
-		$this->registeredWidgetsIds = array_keys($widgets);
-		$this->registeredWidgets = $widgets;
-
-		return $this;
-	}
-
-	/**
-	 * @return $this
-	 */
-	public function buildWidgetCrumbs()
-	{
-		foreach ($this->registeredWidgetsIds as $id)
-		{
-			if (
-				($widget = $this->registeredWidgets[$id]) instanceof WidgetDecorator
-				AND
-				$this->registeredWidgets[$id]->hasCrumbs()
-			)
-			{
-				$widget->change_crumbs($this->getBreadcrumbs());
-			}
-		}
-
-		return $this;
 	}
 
 	/**

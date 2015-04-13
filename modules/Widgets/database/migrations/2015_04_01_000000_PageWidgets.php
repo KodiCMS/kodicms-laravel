@@ -13,7 +13,7 @@ class PageWidgets extends Migration
 			$table->string('block', 32);
 			// TODO: сделать настраиваемым значение по умолчанию
 			$table->integer('position')->default(500);
-			$table->boolean('set_crumbs')->default(0);
+			$table->boolean('set_crumbs')->default(FALSE);
 			$table->index(['page_id', 'block']);
 		});
 	}
