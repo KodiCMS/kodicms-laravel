@@ -1,12 +1,15 @@
 <?php namespace KodiCMS\API\Exceptions;
 
+use Illuminate\Database\Eloquent\MassAssignmentException;
 use \Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Illuminate\Http\Request;
 
 class Response {
 
 	const NO_ERROR = 200;
 	const ERROR_MISSING_PAPAM = 110;
+	const ERROR_MISSING_ASSIGMENT = 150;
 	const ERROR_VALIDATION = 120;
 	const ERROR_UNKNOWN = 130;
 	const ERROR_TOKEN = 140;
@@ -67,6 +70,11 @@ class Response {
 			$this->jsonResponse['code'] = static::ERROR_PAGE_NOT_FOUND;
 			$this->jsonResponse['message'] = $exception->getMessage();
 		}
+		else if ($exception instanceof MassAssignmentException)
+		{
+			$this->jsonResponse['code'] = static::ERROR_MISSING_ASSIGMENT;
+			$this->jsonResponse['field'] = $exception->getMessage();
+		}
 		else if ($exception instanceof \Exception)
 		{
 			$this->jsonResponse['code'] = static::ERROR_UNKNOWN;
@@ -78,7 +86,7 @@ class Response {
 			}
 		}
 
-		return new JsonResponse($this->jsonResponse, 200, ['Content-Type' => 'application/json']);
+		return new JsonResponse($this->jsonResponse, 500, ['Content-Type' => 'application/json']);
 	}
 
 }

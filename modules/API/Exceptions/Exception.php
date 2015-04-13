@@ -12,7 +12,7 @@ class Exception extends \RuntimeException {
 	const ERROR_PAGE_NOT_FOUND = 404;
 
 	const TYPE_ERROR = 'error';
-	const TYPE_CONTENT = 'content';
+	const TYPE_CONTENT = 'response';
 	const TYPE_REDIRECT = 'redirect';
 
 	private $debug;

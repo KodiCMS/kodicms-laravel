@@ -1,14 +1,28 @@
 <?php namespace KodiCMS\Pages\Observers;
+
+use KodiCMS\Pages\Model\PagePart;
+use Request;
 use KodiCMS\Pages\Model\Page;
 
 /**
  * TODO: добавить логирование событий
- *
- * Class RoleObserver
- * @package KodiCMS\Users\Observers
  */
 class PageObserver
 {
+	/**
+	 * @param \KodiCMS\Pages\Model\Page $page
+	 * @return bool
+	 */
+	public function saving($page)
+	{
+		if($page->exists)
+		{
+			$this->updateParts($page);
+		}
+
+		return TRUE;
+	}
+
 	/**
 	 * @param \KodiCMS\Pages\Model\Page $page
 	 * @return bool
@@ -29,7 +43,7 @@ class PageObserver
 	 */
 	public function created($page)
 	{
-		return TRUE;
+
 	}
 
 	/**
@@ -41,6 +55,28 @@ class PageObserver
 		$user = auth()->user();
 		if (!is_null($user)) {
 			$page->updated_by_id = $user->id;
+		}
+	}
+
+	/**
+	 * @param \KodiCMS\Pages\Model\Page $page
+	 * @return bool
+	 */
+	public function updateParts($page)
+	{
+		$partContent = Request::input('part_content', []);
+
+		foreach ($partContent as $id => $content)
+		{
+			$part = PagePart::find($id);
+			if(is_null($part)) continue;
+
+			if ($content == $part->content)
+			{
+				continue;
+			}
+
+			$part->update(['content' => $content]);
 		}
 
 		return TRUE;

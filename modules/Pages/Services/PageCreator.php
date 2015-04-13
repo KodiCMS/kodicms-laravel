@@ -32,8 +32,11 @@ class PageCreator implements ModelCreator
 	 */
 	public function create(array $data)
 	{
-		$page = Page::create(array_except($data, [
-			'continue', 'commit'
+		$page = Page::create(array_only($data, [
+			'title', 'slug', 'is_redirect', 'breadcrumb',
+			'meta_title', 'meta_keywords', 'meta_description',
+			'robots', 'parent_id', 'layout_file', 'behavior',
+			'status', 'published_at'
 		]));
 
 		return $page;

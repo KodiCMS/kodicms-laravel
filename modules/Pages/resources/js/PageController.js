@@ -225,3 +225,298 @@ CMS.controllers.add(['page.get.create', 'page.get.edit'], function() {
 		}
 	}
 });
+
+CMS.controllers.add(['page.get.edit'], function() {
+	var partModel = Backbone.Model.extend({
+		urlRoot: '/api.page.part',
+		defaults: {
+			name: 'part',
+			wysiwyg: DEFAULT_HTML_EDITOR,
+			page_id: PAGE.id,
+			content: '',
+			is_protected: 0,
+			is_expanded: 1,
+			is_indexable: 0,
+			is_developer: 1,
+			position: 0
+		},
+
+		parse: function(response, xhr) {
+			if(response.method == 'POST') {
+				return response.content;
+			}
+
+			return response;
+		},
+
+		validate: function(attrs) {
+			if(!$.trim(attrs.name))
+				return 'Name must be set';
+		},
+
+		switchProtected: function() {
+			this.save({is_protected: this.get('is_protected') == 1 ? 0 : 1});
+		},
+
+		toggleMinimize: function() {
+			this.save({is_expanded: this.get('is_expanded') == 1 ? 0 : 1});
+		},
+
+		switchIndexable: function() {
+			this.save({is_indexable: this.get('is_indexable') == 1 ? 0 : 1});
+		},
+
+		changeFilter: function(wysiwyg) {
+			if(this.get('wysiwyg') != wysiwyg)
+				this.save({wysiwyg: wysiwyg});
+		},
+
+		destroyFilter: function() {
+			CMS.filters.switchOff('pageEditPartContent-' + this.get('name') );
+		},
+
+		clear: function() {
+			this.destroy();
+		}
+	});
+
+	var partCollection = Backbone.Collection.extend({
+		url: '/api.page.part',
+		model: partModel,
+		parse: function(response, xhr) {
+			return response.content;
+		},
+		comparator: function(a) {
+			return a.get('position');
+		},
+		setOrder: function (data) {
+			Api.post('/api.page.part.reorder', {ids: data});
+		}
+	});
+
+	var partView = Backbone.View.extend({
+		tagName: 'div',
+
+		template: _.template($('#part-body').html()),
+		attributes: function () {
+			return {
+				'data-id': this.model.id
+			};
+		},
+		events: {
+			'click .part-options-button': 'toggleOptions',
+			'click .part-minimize-button': 'toggleMinimize',
+			'dblclick .panel-heading ': 'toggleMinimize',
+			'change .item-filter': 'changeFilter',
+			'change .is_protected': 'switchProtected',
+			'change .is_indexable': 'switchIndexable',
+			'click .item-remove': 'clear',
+			'click .part-rename': 'editName',
+			'keypress .edit-name': 'updateOnEnter'
+		},
+
+		updateOnEnter: function(e) {
+			if (e.keyCode == 13) this.closeEditName();
+			this.input.val(this.input.val().replace(/[^a-z0-9\-\_]/, ''));
+		},
+
+		editName: function(e) {
+			if(this.model.get('is_protected') == 1 && this.model.get('is_developer') == 0) return;
+
+			if(this.$el.hasClass("editing")) {
+				this.closeEditName();
+			} else {
+				this.$el.addClass("editing");
+				this.input.show().focus();
+				this.$el.find('.part-name').hide();
+			}
+			return false;
+		},
+
+		closeEditName: function() {
+			if(this.model.get('is_protected') == 1 && this.model.get('is_developer') == 0) return;
+
+			this.$el.removeClass("editing");
+			var value = $.trim(this.input.val());
+			this.model.save({name: value});
+			this.render();
+
+			return false;
+		},
+
+		toggleMinimize: function(e) {
+			e.preventDefault();
+
+			if(this.model.get('is_expanded') == 1) {
+				this.$el
+					.find('.part-minimize-button i')
+					.addClass('fa-chevron-down')
+					.removeClass('fa-chevron-up')
+					.end()
+					.find('.item-filter-cont').hide()
+					.end()
+					.find('.part-textarea').slideUp();
+			} else {
+				this.$el.find('.part-minimize-button i')
+					.addClass('fa-chevron-up')
+					.removeClass('fa-chevron-down')
+					.end()
+					.find('.item-filter-cont').show()
+					.end()
+					.find('.part-textarea').slideDown();
+			}
+
+			this.model.toggleMinimize();
+		},
+
+		changeFilter: function() {
+			var wysiwyg = this.$el.find('.item-filter').val();
+			this.model.changeFilter(wysiwyg);
+			CMS.filters.switchOn( 'pageEditPartContent-' + this.model.get('name'), wysiwyg);
+		},
+
+		toggleOptions: function(e) {
+			e.preventDefault();
+			this.$el.find('.part-options').toggle();
+		},
+
+		switchProtected: function() {
+			this.model.switchProtected();
+		},
+
+		switchIndexable: function() {
+			this.model.switchIndexable();
+		},
+
+		initialize: function() {
+			this.model.on('add', this.render, this);
+			this.model.on('destroy', this.remove, this);
+		},
+
+		// Re-render the titles of the todo item.
+		render: function() {
+			this.$el.html(this.template(this.model.toJSON()));
+			this.$el.data('id', this.model.id);
+
+			this.input = this.$el.find('.edit-name').hide();
+
+			if(this.model.get('is_protected') == 1) {
+				this.$el.find('.is_protected').check();
+			}
+
+			if(this.model.get('is_indexable') == 1) {
+				this.$el.find('.is_indexable').check();
+			}
+
+			return this;
+		},
+
+		// Remove the item, destroy the model.
+		clear: function(e) {
+			e.preventDefault();
+			if (confirm(__('Remove part :part_name?', {":part_name": this.model.get('name')}))) this.model.clear();
+		}
+	});
+
+	var partListView = Backbone.View.extend({
+		el: $("#pageEditParts"),
+		initialize: function() {
+			var $self = this;
+			this.collection.fetch({
+				data: {
+					pid: PAGE.id
+				},
+				success: function () {
+					$self.render();
+				}
+			});
+
+			this.$el.sortable({
+				axis: "y",
+				handle: ".panel-heading-sortable-handler",
+				receive: _.bind(function(event, ui) {
+					// do something here?
+				}, this),
+				remove: _.bind(function(event, ui) {
+					// do something here?
+				}, this),
+				update: _.bind(function(event, ui) {
+					var list = ui.item.context.parentNode;
+					this.collection.setOrder($(list).sortable('toArray', {attribute: 'data-id'}));
+				}, this)
+			});
+		},
+
+		render: function() {
+			this.clear();
+			this.collection.each(function(part) {
+				this.addPart(part);
+			}, this);
+
+			this.collection.on('add', this.render, this);
+		},
+
+		clear: function() {
+			this.$el.empty();
+		},
+
+		addPart: function(part) {
+			var view = new partView({model: part});
+			this.$el.append(view.render().el);
+			view.changeFilter();
+		}
+	});
+
+	var partPanel = Backbone.View.extend({
+		el: $("#pageEditPartsPanel"),
+
+		initialize: function() {
+			if(PAGE.id == 0)
+				this.$el.remove();
+		},
+
+		events: {
+			'click #pageEditPartAddButton': 'createPart'
+		},
+
+		createPart: function(e) {
+			e.preventDefault();
+
+			this.model = new partModel();
+
+			if(this.collection.length == 0)
+				this.model.set('name', 'body');
+
+			var i = 0;
+			this.collection.each(function(part) {
+				if(part.get('name') == this.model.get('name')) {
+					do {
+						i++;
+						this.model.set('name', 'part' + i);
+					} while (this.model.get('name') == part.get('name'));
+				}
+
+			}, this);
+
+
+			this.model.save();
+
+			this.model.on("sync", function() {
+				this.collection.each(function(part) {
+					part.destroyFilter();
+				}, this);
+				this.collection.add(this.model);
+				this.model.off('sync');
+			}, this);
+
+		}
+	});
+
+	var PartCollection = new partCollection();
+	new partListView({
+		collection: PartCollection
+	});
+	new partPanel({
+		collection: PartCollection
+	});
+});

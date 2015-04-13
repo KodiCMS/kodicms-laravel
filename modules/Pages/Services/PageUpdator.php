@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Pages\Services;
 
+use Carbon\Carbon;
 use KodiCMS\CMS\Contracts\ModelUpdator;
 use KodiCMS\Pages\Model\Page;
 use Validator;
@@ -41,9 +42,15 @@ class PageUpdator implements ModelUpdator
 	{
 		$page = Page::findOrFail($id);
 
-		$page->update(array_except($data, [
-			'continue', 'commit'
-		]));
+		$page->created_at = new Carbon;
+
+		$page
+			->update(array_only($data, [
+				'title', 'slug', 'is_redirect', 'breadcrumb',
+				'meta_title', 'meta_keywords', 'meta_description',
+				'robots', 'parent_id', 'layout_file', 'behavior',
+				'status', 'published_at'
+			]));
 
 		return $page;
 	}

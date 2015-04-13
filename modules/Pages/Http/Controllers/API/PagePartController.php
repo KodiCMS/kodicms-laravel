@@ -1,9 +1,9 @@
 <?php namespace KodiCMS\Pages\Http\Controllers\API;
 
-use KodiCMS\API\Http\Controllers\System\Controller as APIController;
+use KodiCMS\API\Http\Controllers\System\Controller;
 use KodiCMS\Pages\Model\PagePart;
 
-class PagePartController extends APIController
+class PagePartController extends Controller
 {
 	public function getByPageId()
 	{
@@ -14,28 +14,22 @@ class PagePartController extends APIController
 		$this->setContent($parts->toArray());
 	}
 
-	public function put()
+	public function create()
 	{
-		$partId = $this->getRequiredParameter('id');
-		$part = PagePart::findOrFail($partId);
+		$part = PagePart::create($this->request->all());
+		$this->setContent($part->toArray());
+	}
 
+	public function update($id)
+	{
+		$part = PagePart::findOrFail($id);
 		$part->update($this->request->all());
-
 		$this->setContent($part->toArray());
 	}
 
-	public function post()
+	public function delete($id)
 	{
-		$part = new PagePart;
-		$part->create($this->request->all());
-
-		$this->setContent($part->toArray());
-	}
-
-	public function delete()
-	{
-		$partId = $this->getRequiredParameter('id');
-		PagePart::findOrFail($partId)->delete();
+		PagePart::findOrFail($id)->delete();
 	}
 
 	public function reorder()

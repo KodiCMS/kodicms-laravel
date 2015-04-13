@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use KodiCMS\CMS\Helpers\WYSIWYG;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use KodiCMS\CMS\Assets\Core as Assets;
 use KodiCMS\Pages\Model\Page;
@@ -35,7 +36,8 @@ class PageController extends BackendController
 
 	public function getEdit($id)
 	{
-		Assets::package('backbone');
+		Assets::package(['backbone', 'jquery-ui']);
+		WYSIWYG::loadAll();
 
 		$page = $this->getPage($id);
 		$this->setTitle(trans('pages::core.title.pages.edit', [
@@ -54,7 +56,6 @@ class PageController extends BackendController
 	public function postEdit(PageUpdator $page, $id)
 	{
 		$data = $this->request->all();
-
 		$validator = $page->validator($id, $data);
 
 		if ($validator->fails()) {

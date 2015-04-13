@@ -20,6 +20,12 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 	]);
 });
 
+Route::get('/api.page.part', ['as' => 'api.page.part.get', 'uses' => 'API\PagePartController@getByPageId']);
+Route::post('/api.page.part', ['as' => 'api.page.part.post', 'uses' => 'API\PagePartController@create']);
+Route::put('/api.page.part/{id}', ['as' => 'api.page.part.put', 'uses' => 'API\PagePartController@update'])->where('id', '[0-9]+');
+Route::delete('/api.page.part/{id}', ['as' => 'api.page.part.delete', 'uses' => 'API\PagePartController@delete'])->where('id', '[0-9]+');
+Route::post('/api.page.part.reorder', ['as' => 'api.page.part.reorder', 'uses' => 'API\PagePartController@reorder']);
+
 Route::get('/api.page.children', ['as' => 'api.page.children', 'uses' => 'API\PageController@getChildren']);
 Route::get('/api.page.reorder', ['as' => 'api.page.reorder', 'uses' => 'API\PageController@getReorder']);
 Route::post('/api.page.reorder', ['as' => 'api.page.reorder', 'uses' => 'API\PageController@postReorder']);

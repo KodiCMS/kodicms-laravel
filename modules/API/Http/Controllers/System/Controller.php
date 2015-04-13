@@ -112,6 +112,7 @@ abstract class Controller extends BaseController
 	public function callAction($method, $parameters)
 	{
 		$this->jsonResponse['type'] = Exception::TYPE_CONTENT;
+		$this->jsonResponse['method'] = $this->request->method();
 		$this->jsonResponse['code'] = Exception::NO_ERROR;
 
 		$missedFields = [];

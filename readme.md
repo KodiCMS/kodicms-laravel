@@ -123,6 +123,10 @@ password: **password**
   * `view.user.create.form.password`
   * `view.user.create.form.bottom`
 
+### page/part
+ * `view.page.part.controls`
+ * `view.page.part.options`
+ 
 ---
 
 ### Регистрация консольных комманд через ServiceProvider

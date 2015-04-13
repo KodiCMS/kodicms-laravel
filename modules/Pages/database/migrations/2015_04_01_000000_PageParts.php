@@ -16,8 +16,12 @@ class PageParts extends Migration
 			$table->string('name')->index();
 			$table->string('wysiwyg')->nullable();
 
+			$table->string('content');
+			$table->string('content_html');
+
 			$table->boolean('is_expanded')->default(TRUE);
 			$table->boolean('is_indexable')->default(TRUE);
+			$table->boolean('is_protected')->default(FALSE);
 			$table->smallInteger('position')->default(0);
 		});
 	}
