@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use KodiCMS\CMS\Helpers\File;
 use KodiCMS\CMS\Helpers\Text;
+use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
 
 class FrontendPage
 {
@@ -53,7 +54,7 @@ class FrontendPage
 //				if (!is_null($pageObject->behavior)) {
 //					if (($behavior = BehaviorManager::load($pageObject->behavior, $pageObject, $url, $uri)) !== NULL) {
 //
-//						$pageObject->_behaviorObject = $behavior;
+//						$pageObject->behaviorObject = $behavior;
 //						self::$_initialPage = $pageObject;
 //
 //						return $pageObject;
@@ -342,17 +343,32 @@ class FrontendPage
 	/**
 	 * @var Behavior
 	 */
-	protected $_behaviorObject = NULL;
+	protected $behaviorObject = NULL;
 
 	/**
 	 * @var FrontendPage
 	 */
-	protected $_parentPage = NULL;
+	protected $parentPage = NULL;
 
 	/**
 	 * @var array
 	 */
-	protected $_metaParams = [];
+	protected $metaParams = [];
+
+	/**
+	 * @var array
+	 */
+	protected $registeredWidgets = [];
+
+	/**
+	 * @var array
+	 */
+	protected $registeredWidgetsIds = [];
+
+	/**
+	 * @var array
+	 */
+	protected $layoutBlocks = [];
 
 	/**
 	 * @param \stdClass $pageData
@@ -380,7 +396,7 @@ class FrontendPage
 	public function setParentPage(FrontendPage $parentPage = NULL)
 	{
 		if (!is_null($parentPage)) {
-			$this->_parentPage = $parentPage;
+			$this->parentPage = $parentPage;
 			$this->buildUri();
 		}
 
@@ -484,6 +500,24 @@ class FrontendPage
 	}
 
 	/**
+	 * @param int $level
+	 * @return Breadcrumbs
+	 */
+	public function getBreadcrumbs($level = 0)
+	{
+		$crumbs = Breadcrumbs::factory();
+
+		if (($parent = $this->getParent()) instanceof FrontendPage AND $this->level > $level)
+		{
+			$this->getParent()->recurseBreadcrumbs($level, $crumbs);
+		}
+
+		$crumbs->add($this->getBreadcrumb(), $this->getUrl(), true, null);
+
+		return $crumbs;
+	}
+
+	/**
 	 * @return int|null
 	 */
 	public function getParentId()
@@ -513,12 +547,12 @@ class FrontendPage
 	 */
 	public function getParent($level = NULL)
 	{
-		if ($this->_parentPage === NULL AND is_numeric($this->getParentId())) {
+		if ($this->parentPage === NULL AND is_numeric($this->getParentId()) AND $this->getParentId() > 0) {
 			return static::findById($this->getParentId());
 		}
 
 		if ($level === NULL) {
-			return $this->_parentPage;
+			return $this->parentPage;
 		}
 
 		if ($level > $this->getLevel()) {
@@ -625,7 +659,7 @@ class FrontendPage
 	 */
 	public function getMetaParams()
 	{
-		return $this->_metaParams;
+		return $this->metaParams;
 	}
 
 	/**
@@ -655,10 +689,10 @@ class FrontendPage
 	{
 		if (is_array($key)) {
 			foreach ($key as $key2 => $value) {
-				$this->_metaParams[$key2] = $value;
+				$this->metaParams[$key2] = $value;
 			}
 		} else {
-			$this->_metaParams[$key] = $field === NULL
+			$this->metaParams[$key] = $field === NULL
 				? $value
 				: $this->parseMeta($field, $value);
 		}
@@ -677,16 +711,6 @@ class FrontendPage
 		}
 
 		return (strpos(Request::path(), $url) === 1);
-	}
-
-	/**
-	 * @return $this
-	 */
-	protected function buildUri()
-	{
-		$this->uri = trim($this->getParent()->getUri() . '/' . $this->getSlug(), '/');
-
-		return $this;
 	}
 
 	/**
@@ -776,7 +800,7 @@ class FrontendPage
 				}
 
 				if ($metaParam !== NULL) {
-					$parts[] = array_get($this->_metaParams, $metaParam, $default);
+					$parts[] = array_get($this->metaParams, $metaParam, $default);
 				}
 			}
 
@@ -784,6 +808,121 @@ class FrontendPage
 		}
 
 		return $value;
+	}
+
+	/**
+	 * @param array $widgets
+	 * @return $this
+	 */
+	public function registerWidgets(array $widgets)
+	{
+		foreach ($widgets as $id => $widget)
+		{
+			$this->registeredWidgets[$id] = $widget;
+		}
+
+		return $this;
+	}
+
+	public function injectWidgetsToLayout()
+	{
+		$this->sortWidgets();
+
+		foreach ($this->registeredWidgetsIds as $id)
+		{
+			$widget = $this->registeredWidgets[$id];
+
+			if(is_null($widget->getBlock())) continue;
+
+			$this->layoutBlocks[$widget->getBlock()][] = $widget;
+
+			// TODO добавить инициализацию событий
+//			if($widget instanceof WidgetDecorator)
+//			{
+//				$widget->
+//			}
+		}
+
+	}
+
+	/**
+	 * @return $this
+	 */
+	protected function sortWidgets()
+	{
+		$ids = array_keys($this->registeredWidgets);
+
+		$widgets = [];
+		$types = ['PRE' => [], '*named' => [], 'POST' => []];
+
+		foreach ($ids as $id)
+		{
+			if (isset($types[$this->registeredWidgets[$id]->getBlock()]))
+			{
+				$types[$this->registeredWidgets[$id]->getBlock()][] = $id;
+			}
+			else
+			{
+				$types['*named'][] = $id;
+			}
+		}
+
+		foreach ($types as $type => $ids)
+		{
+			foreach ($ids as $id)
+			{
+				$widgets[$id] = $this->registeredWidgets[$id];
+			}
+		}
+
+		$this->registeredWidgetsIds = array_keys($widgets);
+		$this->registeredWidgets = $widgets;
+
+		return $this;
+	}
+
+	/**
+	 * @return $this
+	 */
+	public function buildWidgetCrumbs()
+	{
+		foreach ($this->registeredWidgetsIds as $id)
+		{
+			if (
+				($widget = $this->registeredWidgets[$id]) instanceof WidgetDecorator
+				AND
+				$this->registeredWidgets[$id]->hasCrumbs()
+			)
+			{
+				$widget->change_crumbs($this->getBreadcrumbs());
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @return $this
+	 */
+	protected function buildUri()
+	{
+		$this->uri = trim($this->getParent()->getUri() . '/' . $this->getSlug(), '/');
+
+		return $this;
+	}
+
+	/**
+	 * @param integer $level
+	 * @param Breadcrumbs $crumbs
+	 */
+	private function recurseBreadcrumbs($level, & $crumbs)
+	{
+		if (($parent = $this->getParent()) instanceof FrontendPage AND $this->getLevel() > $level)
+		{
+			$parent->recurseBreadcrumbs($level, $crumbs);
+		}
+
+		$crumbs->add($this->getBreadcrumb(), $this->getUrl(), false, null);
 	}
 
 	/**
