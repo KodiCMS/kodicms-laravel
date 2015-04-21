@@ -203,7 +203,7 @@ class Manager
 			return NULL;
 		}
 
-		$widget = Kohana::unserialize($data['code']);
+		$widget = unserialize($data['code']);
 		unset($data['code'], $data['type']);
 
 		foreach ($data as $key => $value)
@@ -211,7 +211,7 @@ class Manager
 			$widget->{$key} = $value;
 		}
 
-		self::$_cache[$widget->id] = $widget;
+		self::$cache[$widget->id] = $widget;
 
 		return $widget;
 	}

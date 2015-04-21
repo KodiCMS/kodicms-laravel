@@ -1,7 +1,17 @@
 <?php namespace KodiCMS\Widgets\Http\Controllers;
 
-use KodiCMS\CMS\Http\Controllers\System\Controller as BaseController;
+use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
-class WidgetController extends BaseController {
+class WidgetController extends BackendController {
+
+	/**
+	 * @var string
+	 */
+	public $moduleNamespace = 'widgets::';
+
+	public function getIndex()
+	{
+
+	}
 
 }

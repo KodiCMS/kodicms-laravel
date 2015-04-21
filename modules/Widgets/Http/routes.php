@@ -11,5 +11,7 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 		'getDelete' => 'backend.snippet.delete',
 	]);
 
-	Route::get('/widget', ['as' => 'backend.widget.list', 'uses' => 'WidgetController@index']);
+	Route::controller('widget', 'WidgetController', [
+		'getIndex' => 'backend.widget.list'
+	]);
 });

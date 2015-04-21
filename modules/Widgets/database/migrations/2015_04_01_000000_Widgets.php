@@ -13,12 +13,11 @@ class Widgets extends Migration
 
 			$table->string('name', 100);
 			$table->text('description');
-
 			$table->string('type', 100);
 			$table->string('class');
 			$table->string('template', 100)->nullable();
 
-			$table->text('object');
+			$table->json('parameters');
 		});
 	}
 
