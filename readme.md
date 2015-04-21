@@ -86,6 +86,7 @@ password: **password**
 #### Settings Controller
  * `backend.settings.validate [array $settings]`
  * `backend.settings.save [array $settings]`
+ 
 ---
 
 ### События в шаблонах
