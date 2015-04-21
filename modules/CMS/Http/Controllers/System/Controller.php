@@ -71,6 +71,11 @@ abstract class Controller extends BaseController
 		$this->session = $session;
 
 		$this->currentUser = $auth->user();
+		if(auth()->check())
+		{
+			\Lang::setLocale($this->currentUser->locale);
+		}
+
 		$this->loginPath = \CMS::backendPath() . '/auth/login';
 
 		// Execute method boot() on controller execute
