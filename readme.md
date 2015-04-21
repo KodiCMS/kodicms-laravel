@@ -26,8 +26,12 @@ password: **password**
  * `cms:modules:migrate` - создание таблиц в БД
  * `cms:modules:seed` - заполнение таблиц тестовыми данными
  * `cms:generate:translate:js` - генерация JS языковых файлов
+ * `cms:generate:locale` - генерация пакета lang файлов для перевода. Файлы будут скопированы в `/resources/lang/packages`
 
 ---
+
+### Загрузка сервис-провайдеров и алиасов
+Изначально Laravel загружает сервис-провайдеры и алиасы из конфиг файла `config/app.php`, но чтобы отделить системных провайдеров от пользовательских, они были вынесены в отдельные файлы `modules/CMS/providers.php` и `modules/CMS/aliases.php`, пользовательские подключать можно по прежнему через конфиг.
 
 ### Структура модуля
  * `config` - конфиги приложения, могут быть перезаписаны из папки `/config/`
@@ -37,10 +41,12 @@ password: **password**
   * `migrations` - файлы миграции, будут запущены по команде `cms:modules:migrate`
   * `seeds`
    * `DatabaseSeeder.php` - если существует, то будет запущен по команде `cms:modules:seed`
+ * `Helpers` - вспомогательные классы модуля
  * `Http`
   * `Controllers` - контроллеры модуля
   * `Middleware`
   * `routes.php` - роуты текущего модуля, оборачиваются в неймспейс `KodiCMS\{module}`
+ * `Observers` - Наблюдатели для моделей Eloquent
  * `Providers`
   * `ModuleServiceProvider.php` - Сервис провайдер (наследуемый от `KodiCMS\CMS\Providers\ServiceProvider`), если есть, будет запущен в момент инициализации приложения
  * `resources`
@@ -48,6 +54,7 @@ password: **password**
   * `lang` - Файлы переводов для модуля, доступны по ключу названия модуля приведенного в нижний регистр `trans('{module}::file.key')`
   * `views` - Шаблоны модуля, доступны по ключу названия модуля приведенного в нижний регистр `view('{module}::template')`
   * `packages.php` - В данном файле можно подключать свои Assets (Media) пакеты
+ * `Services` - Сервисные контейнеры
  * `ModuleContainer.php` - Если данный файл существует, то он будет подключен как системный файл модуля, в котором указаны относительыне пути и действия в момент инициализации. Необходимо наследовать от `KodiCMS\CMS\Loader\ModuleContainer`
 
 ---
