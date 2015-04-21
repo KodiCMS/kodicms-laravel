@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\CMS\Loader;
 
+use Cache;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 use KodiCMS\CMS\Helpers\File;
 
@@ -219,7 +221,6 @@ class ModuleContainer
 
 	/**
 	 * Register a config file namespace.
-	 * TODO: Оптимизировать загрузку конфигов модулей
 	 * @return void
 	 */
 	protected function loadConfig()
@@ -228,13 +229,19 @@ class ModuleContainer
 
 		if (!is_dir($path)) return;
 
-		foreach (new \DirectoryIterator($path) as $file) {
-			if ($file->isDot() OR strpos($file->getFilename(), '.php') === FALSE) continue;
+		$configs = Cache::remember("moduleConfig::{$path}", Carbon::now()->addMinutes(10), function() use($path) {
+			$configs = [];
+			foreach (new \DirectoryIterator($path) as $file) {
+				if ($file->isDot() OR strpos($file->getFilename(), '.php') === FALSE) continue;
+				$key = $file->getBasename('.php');
+				$configs[$key] = array_merge(require $file->getPathname(), app('config')->get($key, []));
+			}
+			return $configs;
+		});
 
-			$key = $file->getBasename('.php');
-			$config = app('config')->get($key, []);
-
-			app('config')->set($key, array_merge(require $file->getPathname(), $config));
+		foreach($configs as $group => $data)
+		{
+			app('config')->set($group, $data);
 		}
 	}
 

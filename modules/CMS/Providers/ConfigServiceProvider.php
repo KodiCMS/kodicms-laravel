@@ -1,19 +1,24 @@
 <?php namespace KodiCMS\CMS\Providers;
 
+use KodiCMS\CMS\Helpers\DatabaseConfig;
+
 class ConfigServiceProvider extends ServiceProvider {
 
 	/**
-	 * Overwrite any vendor / package configuration.
-	 *
-	 * This service provider is intended to provide a convenient location for you
-	 * to overwrite any "vendor" or package configuration that you may want to
-	 * modify before the application handles the incoming request / command.
-	 *
-	 * @return void
+	 * Загрузка конфигурационных файлов из БД с заменой ключей
 	 */
+	public function boot()
+	{
+		$config = DatabaseConfig::get();
+
+		foreach($config as $group => $data)
+		{
+			app('config')->set($group, array_merge(config($group, []), $data));
+		}
+	}
+
 	public function register()
 	{
 
 	}
-
 }

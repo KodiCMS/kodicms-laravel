@@ -33,8 +33,8 @@ return [
 	 */
 	'KodiCMS\CMS\Providers\ModuleServiceProvider',
 	'KodiCMS\CMS\Providers\RouteServiceProvider',
-	'KodiCMS\CMS\Providers\ConfigServiceProvider',
 	'KodiCMS\CMS\Providers\EventServiceProvider',
 	'KodiCMS\CMS\Providers\BusServiceProvider',
 	'KodiCMS\CMS\Providers\AppServiceProvider',
+	'KodiCMS\CMS\Providers\ConfigServiceProvider',
 ];

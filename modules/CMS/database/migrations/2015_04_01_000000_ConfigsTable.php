@@ -8,11 +8,11 @@ class ConfigsTable extends Migration
 	public function up()
 	{
 		Schema::create('config', function (Blueprint $table) {
-			$table->string('group_name', 128);
-			$table->string('config_key', 128);
-			$table->json('config_value');
+			$table->string('group', 128);
+			$table->string('key', 128);
+			$table->json('value');
 
-			$table->primary(['group_name', 'config_key']);
+			$table->primary(['group', 'key']);
 		});
 	}
 

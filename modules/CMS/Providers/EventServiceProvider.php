@@ -10,7 +10,14 @@ class EventServiceProvider extends BaseEventServiceProvider {
 	 *
 	 * @var array
 	 */
-	protected $listen = [];
+	protected $listen = [
+		'backend.settings.validate' => [
+			'\KodiCMS\CMS\Handlers\Events\SettingsValidate'
+		],
+		'backend.settings.save' => [
+			'\KodiCMS\CMS\Handlers\Events\SettingsSave'
+		]
+	];
 
 	/**
 	 * Register any other events for your application.

@@ -64,7 +64,7 @@ var Api = {
 				}
 
 				var $event = method + url.replace(SITE_URL, ":").replace(/\//g, ':');
-				window.top.$('body').trigger($event.toLowerCase(), [this._response.response]);
+				window.top.$('body').trigger($event.toLowerCase(), [this._response.content]);
 
 				if(typeof(callback) == 'function') callback(this._response);
 			})

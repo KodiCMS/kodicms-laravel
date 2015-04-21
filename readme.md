@@ -83,6 +83,9 @@ password: **password**
  * `frontend.found [FrontPage $page]`
  * `frontend.not_found [string $uri]`
 
+#### Settings Controller
+ * `backend.settings.validate [array $settings]`
+ * `backend.settings.save [array $settings]`
 ---
 
 ### События в шаблонах
@@ -126,7 +129,11 @@ password: **password**
 ### page/part
  * `view.page.part.controls`
  * `view.page.part.options`
- 
+
+### system/settings
+ * `view.settings.top`
+ * `view.settings.bottom`
+
 ---
 
 ### Регистрация консольных комманд через ServiceProvider

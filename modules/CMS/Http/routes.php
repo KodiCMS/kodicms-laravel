@@ -8,6 +8,8 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 	Route::get('/phpinfo', ['as' => 'backend.phpinfo', 'uses' => 'SystemController@phpInfo']);
 });
 
+Route::post('/api.settings.update', ['as' => 'api.settings.update', 'uses' => 'API\SettingsController@post']);
+
 app('router')->before(function() {
 	Route::group(['namespace' => 'KodiCMS\CMS\Http\Controllers', 'prefix' => CMS::backendPath()], function () {
 		Route::get('cms/{file}.{ext}', 'System\VirtualMediaLinksController@find')

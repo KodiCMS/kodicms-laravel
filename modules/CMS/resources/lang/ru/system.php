@@ -18,5 +18,10 @@ return [
 			'cache_driver' => 'Драйвер кеша',
 			'session_driver' => 'Драйвер сессий'
 		]
+	],
+	'messages' => [
+		'settings' => [
+			'saved' => 'Настройки сохранены'
+		]
 	]
 ];

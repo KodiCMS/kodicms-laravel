@@ -372,7 +372,7 @@ CMS.ui.add('flags', function () {
 		if ($self.data('ajax-action'))
 			$action = $self.data('ajax-action');
 
-		Api.post($action, $self.serialize(), function (response) {
+		Api.post($action, $self, function (response) {
 			setTimeout(function () {
 				$buttons.removeAttr('disabled');
 			}, 5000);
