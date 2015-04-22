@@ -576,4 +576,9 @@ CMS.ui.add('flags', function () {
 	}
 
 	$('.tabs-generated').tabdrop();
+}).add('noty', function() {
+	$.noty.defaults = $.extend($.noty.defaults, {
+		layout: 'topRight',
+		theme: 'bootstrapTheme'
+	});
 });

@@ -18,7 +18,7 @@ elixir(function(mix) {
 	mix.scripts([
 		'libs/jquery.min.js',
 		'libs/bootstrap-3.3.4/dist/js/bootstrap.js',
-		'libs/pnotify/jquery.pnotify.js',
+		'libs/jquery.noty.packaged.min.js',
 		'libs/select2/select2.js',
 		'libs/validation/jquery.validate.js',
 		'libs/dropzone/dropzone.js',

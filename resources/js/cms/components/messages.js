@@ -25,16 +25,19 @@ CMS.messages = {
 	show: function(msg, type) {
 		if(!type) type = 'success';
 
-		var title = type.charAt(0).toUpperCase() + type.slice(1);
-		window.top.$.pnotify({
-			title: __(title),
-			text: decodeURIComponent(msg),
-			sticker: false,
-			nonblock: true,
-			delay: 4000,
+		window.top.noty({
 			type: type,
-			history: false
+			text: decodeURIComponent(msg)
 		});
+
+		//window.top.$.pnotify({
+		//	text: decodeURIComponent(msg),
+		//	sticker: false,
+		//	nonblock: true,
+		//	delay: 4000,
+		//	type: type,
+		//	history: false
+		//});
 	},
 	error: function (message) {
 		this.show(message, 'error');
