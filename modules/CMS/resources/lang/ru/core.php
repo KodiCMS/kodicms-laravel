@@ -11,6 +11,7 @@ return [
 	],
 	'label' => [
 		'not_set' => 'Не указан',
+		'date_never' => 'Никогда'
 	],
 	'button' => [
 		'update' => 'Сохранить',
