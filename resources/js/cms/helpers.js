@@ -101,3 +101,65 @@
 		});
 	};
 })(jQuery);
+
+
+function strtr(e, t, n) {
+	if (typeof t === "object") {
+		var r = "";
+		for (var i = 0; i < e.length; i++) {
+			r += "0"
+		}
+		var s = 0;
+		var o = -1;
+		var u = "";
+		for (fr in t) {
+			s = 0;
+			while ((o = e.indexOf(fr, s)) != -1) {
+				if (parseInt(r.substr(o, fr.length)) != 0) {
+					s = o + 1;
+					continue
+				}
+				for (var a = 0; a < t[fr].length; a++) {
+					u += "1"
+				}
+				r = r.substr(0, o) + u + r.substr(o + fr.length, r.length - (o + fr.length));
+				e = e.substr(0, o) + t[fr] + e.substr(o + fr.length, e.length - (o + fr.length));
+				s = o + t[fr].length + 1;
+				u = ""
+			}
+		}
+		return e
+	}
+	for (var f = 0; f < t.length; f++) {
+		e = e.replace(new RegExp(t.charAt(f), "g"), n.charAt(f))
+	}
+	return e
+}
+
+function __(e, t) {
+	if (CMS.translations[e] !== undefined) {
+		var e = CMS.translations[e]
+	}
+	return t == undefined ? e : strtr(e, t)
+}
+
+function readImage(input, target) {
+	if (input.files && input.files[0] && target) {
+		var FR = new FileReader();
+		FR.onload = function(e) {
+			var img = new Image();
+			img.src = e.target.result;
+
+			var ratio = img.width / img.height;
+
+			var canvas = document.createElement("canvas");
+			canvas.width = 100 * ratio;
+			canvas.height = 100;
+
+			var ctx = canvas.getContext("2d");
+			ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+			target.attr("src", canvas.toDataURL("image/jpeg", 1));
+		};
+		FR.readAsDataURL(input.files[0]);
+	}
+}

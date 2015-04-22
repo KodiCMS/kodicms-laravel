@@ -24,7 +24,11 @@ elixir(function(mix) {
 		'libs/dropzone/dropzone.js',
 		'libs/fancybox/jquery.fancybox.js',
 		'libs/datepicker/jquery.datetimepicker.js',
-		'libs/underscore-min.js'
+		'libs/underscore-min.js',
+		'libs/moment.js',
+		'libs/fastclick.js',
+		'libs/jquery.slimscroll.js',
+		'libs/jquery.query-object.js'
 	], 'public/cms/js/libraries.js', 'public/cms/');
 
 	mix.scripts([
