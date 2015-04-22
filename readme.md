@@ -107,8 +107,11 @@ password: **password**
 
 #### backend/navbar
  * `view.navbar.before`
+ * `view.navbar.after`
 
 #### backend/navigation
+ * `view.menu.before`
+ * `view.menu.after`
  * `view.navigation.before`
  * `view.navigation.after`
 

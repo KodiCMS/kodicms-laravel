@@ -5,6 +5,7 @@ use KodiCMS\Users\Model\User;
 use KodiCMS\Users\Model\UserRole;
 use KodiCMS\Users\Observers\RoleObserver;
 use KodiCMS\Users\Observers\UserObserver;
+use Event;
 
 class ModuleServiceProvider extends ServiceProvider {
 
@@ -12,6 +13,14 @@ class ModuleServiceProvider extends ServiceProvider {
 	{
 		User::observe(new UserObserver);
 		UserRole::observe(new RoleObserver);
+
+		Event::listen('view.navbar.after', function() {
+			echo view('users::parts.navbar');
+		});
+
+		Event::listen('view.menu.before', function() {
+			echo view('users::parts.navigation');
+		});
 	}
 
 	public function register()

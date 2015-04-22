@@ -1,5 +1,7 @@
 @if($navigation)
 <div id="main-menu-inner">
+	@event('view.menu.before')
+
 	<ul class="navigation">
 		@event('view.navigation.before')
 
@@ -56,5 +58,7 @@
 
 		@event('view.navigation.after')
 	</ul>
+
+	@event('view.menu.after')
 </div>
 @endif
