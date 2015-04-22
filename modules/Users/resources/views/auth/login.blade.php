@@ -9,14 +9,6 @@
 	{!! Form::open(['route' => 'auth.login.post', 'class' => 'panel', 'id' => 'signin-form_id']) !!}
 
 	@event('view.login.form.header')
-
-	@if (count($errors) > 0)
-		<ul class="alert alert-danger alert-dark list-unstyled">
-			@foreach ($errors->all() as $error)
-				<li>{{ $error }}</li>
-			@endforeach
-		</ul>
-	@endif
 	<div class="panel-body">
 		<div class="form-group">
 			{!! Form::text('email', NULL, [
