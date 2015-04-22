@@ -39,6 +39,11 @@ class UserUpdator implements ModelUpdator
 	{
 		$user = User::findOrFail($id);
 
+		if(array_key_exists('password', $data) AND empty($data['password']))
+		{
+			unset($data['password']);
+		}
+
 		$user->update(array_only($data, [
 			'username', 'password', 'email', 'locale'
 		]));
