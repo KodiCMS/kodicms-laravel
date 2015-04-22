@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\CMS\Providers;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider {
@@ -21,6 +22,9 @@ class AppServiceProvider extends ServiceProvider {
 			$pattern = $compiler->createMatcher('event');
 			return preg_replace($pattern, '$1<?php event$2; ?>', $view);
 		});
+
+		// TODO: устанавливать отоюражение текущего времени согласно настроек, но при этом должны корректно отображаться даты в формах
+		// Carbon::setToStringFormat(config('cms.date_format'));
 	}
 
 	/**
