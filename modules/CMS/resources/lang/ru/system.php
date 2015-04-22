@@ -5,6 +5,13 @@ return [
 		'about' => [
 			'general' => 'Основная информация',
 			'php_info' => 'Информация PHP'
+		],
+		'settings' => [
+			'site_information' => 'Основные',
+			'regional' => 'Региональные настройки',
+			'debug' => 'Отладка',
+			'wysiwig' => 'Редактор',
+			'session' => 'Настройки сессии'
 		]
 	],
 	'label' => [
@@ -12,11 +19,26 @@ return [
 			'cms' => 'Версия системы',
 			'framework' => 'Используемый фреймворк',
 			'php_version' => 'Версия PHP',
-			'enviroment' => 'Текущее окружение',
+			'environment' => 'Текущее окружение',
 			'host' => 'Хост',
 			'server' => 'Сервер',
 			'cache_driver' => 'Драйвер кеша',
 			'session_driver' => 'Драйвер сессий'
+		],
+		'settings' => [
+			'session_storage' => 'Хранилище',
+			'html_editor' => 'HTML редактор',
+			'code_editor' => 'Редактор кода',
+			'debug_mode' => 'Режим отладки',
+			'date_format' => 'Формат времени',
+			'default_locale' => 'Язык системы по умолчанию',
+			'site_title' => 'Заголовок сайта',
+			'site_description' => 'Описание'
+		]
+	],
+	'button' => [
+		'settings' => [
+			'save' => 'Сохранить'
 		]
 	],
 	'messages' => [

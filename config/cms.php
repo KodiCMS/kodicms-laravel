@@ -24,7 +24,9 @@ return [
 		'en' => 'English',
 		'ru' => 'Russian'
 	],
+	'date_format' => 'Y-m-d H:i:s',
 	'date_format_list' => array(
+		'Y-m-d H:i:s',
 		'Y-m-d',
 		'd.m.Y',
 		'Y/m/d',

@@ -22,7 +22,7 @@
 				<td>{{ PHP_VERSION }}</td>
 			</tr>
 			<tr>
-				<th>@lang('cms::system.label.about.enviroment')</th>
+				<th>@lang('cms::system.label.about.environment')</th>
 				<td>{{ env('APP_ENV') }}</td>
 			</tr>
 			<tr>
