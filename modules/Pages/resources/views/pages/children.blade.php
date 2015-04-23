@@ -29,7 +29,7 @@
 				{!! $child->getPublicLink() !!}
 			</div>
 			<div class="date col-xs-2 text-right text-muted">
-				{{ $child->published_at }}
+				{{ Date::format($child->published_at) }}
 			</div>
 			<div class="status col-xs-2 text-right">
 				<?php echo $child->getStatus(); ?>

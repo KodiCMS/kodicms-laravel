@@ -5,11 +5,11 @@ use KodiCMS\CMS\Exceptions\Exception;
 use KodiCMS\CMS\Exceptions\FileValidationException;
 use KodiCMS\CMS\Helpers\File as FileSystem;
 use KodiCMS\CMS\Helpers\Text;
-use KodiCMS\CMS\Traits\Accessor;
 use SplFileInfo;
 use SplFileObject;
 use SplTempFileObject;
 use Validator;
+use Date;
 
 class File
 {
@@ -214,7 +214,7 @@ class File
 	 */
 	public function getMTime()
 	{
-		return Carbon::createFromTimestamp($this->file->getMTime());
+		return Date::format(Carbon::createFromTimestamp($this->file->getMTime()));
 	}
 
 	/**
