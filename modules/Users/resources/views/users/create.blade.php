@@ -84,6 +84,6 @@
 @event('view.user.create.form.bottom')
 
 <div class="form-actions panel-footer">
-	@include('cms::app.blocks.actionButtons', ['route' => 'backend.user.list'])
+	@include('cms::app.partials.actionButtons', ['route' => 'backend.user.list'])
 </div>
 {!! Form::close() !!}

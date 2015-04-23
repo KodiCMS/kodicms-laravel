@@ -113,6 +113,6 @@
 @event('view.user.edit.form.bottom', [$user])
 
 <div class="form-actions panel-footer">
-	@include('cms::app.blocks.actionButtons', ['route' => 'backend.user.list'])
+	@include('cms::app.partials.actionButtons', ['route' => 'backend.user.list'])
 </div>
 {!! Form::close() !!}

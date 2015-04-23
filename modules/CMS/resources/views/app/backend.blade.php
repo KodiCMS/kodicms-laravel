@@ -18,21 +18,21 @@
 		<div id="main-wrapper">
 			@if($requestType != 'iframe')
 			<header>
-				@include('cms::app.blocks.navbar')
+				@include('cms::app.partials.navbar')
 			</header>
 			<div id="main-menu" role="navigation">
-				@include('cms::app.blocks.navigation', ['breadcrumbs' => $breadcrumbs])
+				@include('cms::app.partials.navigation', ['breadcrumbs' => $breadcrumbs])
 			</div>
 			<div id="main-menu-bg"></div>
 			@endif
 			<div id="content-wrapper">
-				@include('cms::app.blocks.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
+				@include('cms::app.partials.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
 
 				<section id="content" >
 				{!! $content or NULL !!}
 				</section>
 
-				@include('cms::app.blocks.footer')
+				@include('cms::app.partials.footer')
 			</div>
 		</div>
 	</body>

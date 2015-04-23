@@ -63,6 +63,6 @@
 	</div>
 @elseif (acl_check('snippet.edit'))
 	<div class="form-actions panel-footer">
-		@include('cms::app.blocks.actionButtons', ['route' => 'backend.snippet.list'])
+		@include('cms::app.partials.actionButtons', ['route' => 'backend.snippet.list'])
 	</div>
 @endif

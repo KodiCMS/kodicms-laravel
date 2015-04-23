@@ -32,6 +32,6 @@
 ])
 
 <div class="form-actions panel-footer">
-	@include('cms::app.blocks.actionButtons', ['route' => 'backend.role.list'])
+	@include('cms::app.partials.actionButtons', ['route' => 'backend.role.list'])
 </div>
 {!! Form::close() !!}
