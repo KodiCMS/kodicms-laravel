@@ -1,20 +1,7 @@
-<script type="text/javascript">
-	$(function() {
-		$('#ace-select').on('change', function() {
-			change_ace_theme($(this).val());
-		});
-
-		CMS.filters.switchOn('highlight_content', 'ace', $('#textarea_content').data());
-	});
-	function change_ace_theme(theme) {
-		var editor = ace.edit('highlight_contentDiv');
-		editor.setTheme("ace/theme/" + theme);
-	}
-</script>
 <div class="panel-heading" data-icon="code-o">
 	<span class="panel-title">@lang('cms::system.tab.settings.ace_editor')</span>
 </div>
-<div class="panel-body no-padding-b">
+<div class="panel-body no-padding no-margin-b">
 	<div class="well no-margin-b">
 		<label>@lang('cms::system.label.settings.select_ace_theme')</label>
 		{!! Form::select('config[cms][default_ace_theme]', $availableACEThemes, config('cms.default_ace_theme', 'textmate'), [

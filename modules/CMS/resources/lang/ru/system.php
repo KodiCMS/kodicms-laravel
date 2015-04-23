@@ -12,7 +12,7 @@ return [
 			'debug' => 'Отладка',
 			'wysiwig' => 'Редактор',
 			'session' => 'Настройки сессии',
-			'ace_editor' => 'ACE'
+			'ace_editor' => 'Ace'
 		]
 	],
 	'label' => [
