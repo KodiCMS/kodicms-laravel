@@ -5,6 +5,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
+use DB;
 
 class AuthController extends FrontendController {
 
@@ -68,7 +69,7 @@ class AuthController extends FrontendController {
 		if ($this->auth->attempt($credentials, $request->has('remember')))
 		{
 			// Update the number of logins
-			$this->auth->user()->increment('logins');
+			$this->auth->user()->logins = DB::raw('logins + 1');
 
 			// Set the last login date
 			$this->auth->user()->last_login = time();
