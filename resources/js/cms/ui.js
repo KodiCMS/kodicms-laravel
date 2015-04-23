@@ -225,7 +225,6 @@ CMS.ui.add('flags', function () {
 	if (!$('.dropzone').length) {
 		return;
 	}
-	;
 
 	CMS.uploader = new Dropzone('.dropzone', {
 		success: function (file, r) {
@@ -547,7 +546,7 @@ CMS.ui.add('flags', function () {
 		var $self = $(this);
 
 		if ($('> .panel-heading', $self).size() > 0) {
-			var $tabs_content = $('<div class="tab-content no-padding-t" />').prependTo($self);
+			var $tabs_content = $('<div class="tab-content no-padding-t no-padding-b" />').prependTo($self);
 			var $tabs_ul = $('<ul class="nav nav-tabs tabs-generated" style="position:relative; margin-top: 10px;" />').insertBefore($self);
 			$('> .panel-heading', $self).each(function (j) {
 				var $li = $('<li></li>').appendTo($tabs_ul);
