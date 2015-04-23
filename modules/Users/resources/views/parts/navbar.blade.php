@@ -1,4 +1,7 @@
 @if(Auth::check())
+<li>
+	<a href="{{ route('backend.message.list') }}">{!! UI::icon('envelope fa-lg') !!}</a>
+</li>
 <li class="dropdown user-menu">
 	<a href="#" class="dropdown-toggle user-menu" data-toggle="dropdown">
 		{!! $currentUser->gravatar(25) !!}

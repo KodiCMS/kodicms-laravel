@@ -24,6 +24,13 @@ Route::group(['prefix' => \CMS::backendPath()], function () {
 		'postCreate' => 'backend.role.create.post',
 	]);
 
+	Route::controller('message', 'MessageController', [
+		'getIndex' => 'backend.message.list',
+		'getCreate' => 'backend.message.create',
+		'postCreate' => 'backend.message.create.post',
+		'getRead' => 'backend.message.read',
+	]);
+
 	Route::controller('auth', 'Auth\AuthController', [
 		'getLogin' => 'auth.login',
 		'getLogout' => 'auth.logout',
@@ -36,9 +43,15 @@ Route::group(['prefix' => \CMS::backendPath()], function () {
 	]);
 });
 
+Route::get('/api.user.list', ['as' => 'api.user.list.get', 'uses' => 'API\UserController@getUsers']);
+Route::get('/api.user.like', ['as' => 'api.user.like.get', 'uses' => 'API\UserController@getLike']);
 Route::get('/api.user.roles', ['as' => 'api.user.roles.get', 'uses' => 'API\UserController@getRoles']);
 Route::get('/api.roles', ['as' => 'api.roles.get', 'uses' => 'API\RoleController@getAll']);
 
 Route::get('/api.user.meta', ['as' => 'api.user.meta.get', 'uses' => 'API\UserMetaController@getData']);
 Route::post('/api.user.meta', ['as' => 'api.user.meta.post', 'uses' => 'API\UserMetaController@postData']);
 Route::delete('/api.user.meta', ['as' => 'api.user.meta.delete', 'uses' => 'API\UserMetaController@deleteData']);
+
+
+Route::post('/api.user.message', ['as' => 'api.user.message.post', 'uses' => 'API\UserMessageController@postMessage']);
+Route::delete('/api.user.message', ['as' => 'api.user.message.delete', 'uses' => 'API\UserMessageController@deleteMessage']);
