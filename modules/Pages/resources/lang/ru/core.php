@@ -38,7 +38,8 @@ return [
 			'updated_by' => 'Обновил :anchor :date ',
 			'layout_not_set' => 'Шаблон не указан',
 			'current_layout' => 'Текущий шаблон :name',
-			'redirect' => 'Редирект: :url'
+			'redirect' => 'Редирект: :url',
+			'behavior' => "Поведение: :behavior"
 		]
 	],
 	'field' => [

@@ -41,7 +41,7 @@
 					@endif
 
 					@if (!is_null($page->behavior))
-						{!! UI::label($page->getBehaviorTitle(), 'default') !!}
+						{!! UI::label(trans('pages::core.label.page.behavior', ['behavior' => $page->getBehaviorTitle()]), 'default') !!}
 					@endif
 
 					{!! $page->getPublicLink() !!}

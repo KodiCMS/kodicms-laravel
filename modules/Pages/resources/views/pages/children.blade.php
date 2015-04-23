@@ -20,7 +20,7 @@
 			@endif
 
 			@if (!is_null($child->behavior))
-				{!! UI::label($child->getBehaviorTitle(), 'default') !!}
+				{!! UI::label(trans('pages::core.label.page.behavior', ['behavior' => $child->getBehaviorTitle()]), 'default') !!}
 			@endif
 
 			@if ($child->is_redirect)
