@@ -28,12 +28,6 @@ abstract class Controller extends BaseController
 	];
 
 	/**
-	 *
-	 * @var array
-	 */
-	public $privateActions = [];
-
-	/**
 	 * @var array
 	 */
 	public $requiredFields = [];
@@ -193,8 +187,6 @@ abstract class Controller extends BaseController
 
 		throw $exception;
 	}
-
-
 
 	/**
 	 * Create the response for when a request fails validation.
