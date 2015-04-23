@@ -11,7 +11,8 @@ return [
 			'regional' => 'Региональные настройки',
 			'debug' => 'Отладка',
 			'wysiwig' => 'Редактор',
-			'session' => 'Настройки сессии'
+			'session' => 'Настройки сессии',
+			'ace_editor' => 'ACE'
 		]
 	],
 	'label' => [
@@ -33,7 +34,8 @@ return [
 			'date_format' => 'Формат времени',
 			'default_locale' => 'Язык системы по умолчанию',
 			'site_title' => 'Заголовок сайта',
-			'site_description' => 'Описание'
+			'site_description' => 'Описание',
+			'select_ace_theme' => 'Выберите тему'
 		]
 	],
 	'button' => [

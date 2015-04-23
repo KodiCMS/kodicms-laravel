@@ -14,12 +14,44 @@ return [
 		]
 	],
 	'wysiwyg' => [
-		'ace' => [
-			'theme' => 'textmate'
+		'ace_themes' => [
+			'ambiance' => 'ambiance',
+			'chaos' => 'chaos',
+			'chrome' => 'chrome',
+			'clouds' => 'clouds',
+			'clouds_midnight' => 'clouds_midnight',
+			'cobalt' => 'cobalt',
+			'crimson_editor' => 'crimson_editor',
+			'dawn' => 'dawn',
+			'dreamweaver' => 'dreamweaver',
+			'eclipse' => 'eclipse',
+			'github' => 'github',
+			'idle_fingers' => 'idle_fingers',
+			'katzenmilch' => 'katzenmilch',
+			'kr_theme' => 'kr_theme',
+			'kuroir' => 'kuroir',
+			'merbivore' => 'merbivore',
+			'merbivore_soft' => 'merbivore_soft',
+			'mono_industrial' => 'mono_industrial',
+			'monokai' => 'monokai',
+			'pastel_on_dark' => 'pastel_on_dark',
+			'solarized_dark' => 'solarized_dark',
+			'solarized_light' => 'solarized_light',
+			'terminal' => 'terminal',
+			'textmate' => 'textmate',
+			'tomorrow' => 'tomorrow',
+			'tomorrow_night' => 'tomorrow_night',
+			'tomorrow_night_blue' => 'tomorrow_night_blue',
+			'tomorrow_night_bright' => 'tomorrow_night_bright',
+			'tomorrow_night_eighties' => 'tomorrow_night_eighties',
+			'twilight' => 'twilight',
+			'vibrant_ink' => 'vibrant_ink',
+			'xcode' => 'xcode'
 		]
 	],
 	'default_html_editor' => 'ckeditor',
 	'default_code_editor' => 'ace',
+	'default_ace_theme' => 'textmate',
 	'locales' => [
 		'en' => 'English',
 		'ru' => 'Russian'

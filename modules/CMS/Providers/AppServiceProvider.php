@@ -1,7 +1,8 @@
 <?php namespace KodiCMS\CMS\Providers;
 
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Blade;
+use Event;
+use WYSIWYG;
 
 class AppServiceProvider extends ServiceProvider {
 
@@ -23,8 +24,10 @@ class AppServiceProvider extends ServiceProvider {
 			return preg_replace($pattern, '$1<?php event$2; ?>', $view);
 		});
 
-		// TODO: устанавливать отоюражение текущего времени согласно настроек, но при этом должны корректно отображаться даты в формах
-		// Carbon::setToStringFormat(config('cms.date_format'));
+		Event::listen('view.settings.bottom', function() {
+			WYSIWYG::loadAll();
+			echo view('cms::ace.settings')->with('availableACEThemes', config('cms.wysiwyg.ace_themes'));
+		});
 	}
 
 	/**

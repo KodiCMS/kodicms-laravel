@@ -65,7 +65,7 @@ class BackendController extends TemplateController
 	{
 		parent::registerMedia();
 
-		$this->templateScripts['ACE_THEME'] = config('cms.wysiwyg.ace.theme', 'textmate');
+		$this->templateScripts['ACE_THEME'] = config('cms.default_ace_theme', 'textmate');
 		$this->templateScripts['DEFAULT_HTML_EDITOR'] = config('cms.default_html_editor', '');
 		$this->templateScripts['DEFAULT_CODE_EDITOR'] = config('cms.default_code_editor', '');
 
