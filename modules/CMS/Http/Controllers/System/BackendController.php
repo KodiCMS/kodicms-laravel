@@ -58,8 +58,6 @@ class BackendController extends TemplateController
 			->with('theme', $this->currentUser->getCurrentTheme())
 			->with('requestType', $this->request->ajax() ? 'request.iframe' : 'request.get');
 
-		\View::share('currentUser', $this->currentUser);
-
 		parent::after();
 	}
 
