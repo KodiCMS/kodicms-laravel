@@ -54,5 +54,23 @@ class PagesTableSeeder extends Seeder {
 				'published_at' => new Carbon()
 			]));
 		}
+
+		$page = new Page([
+			'title' => 'About',
+			'breadcrumb' => 'About',
+			'slug' => 'about',
+			'published_at' => new Carbon(),
+			'is_redirect' => TRUE,
+			'redirect_url' => url('about/us')
+		]);
+
+		$rootPage->children()->save($page);
+
+		$page->children()->save(new Page([
+			'title' => 'Us',
+			'breadcrumb' => 'Us',
+			'slug' => 'us',
+			'published_at' => new Carbon()
+		]));
 	}
 }
