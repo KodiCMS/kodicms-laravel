@@ -23,7 +23,6 @@ class AuthController extends FrontendController {
 	| a simple trait to add these behaviors. Why don't you explore it?
 	|
 	*/
-
 	use AuthenticatesAndRegistersUsers;
 	
 	protected $redirectPath = '/';
@@ -50,6 +49,39 @@ class AuthController extends FrontendController {
 	public function getLogin()
 	{
 		$this->setContent('auth.login');
+	}
+
+	/**
+	 * Handle a login request to the application.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function postLogin(Request $request)
+	{
+		$this->validate($request, [
+			'email' => 'required|email', 'password' => 'required',
+		]);
+
+		$credentials = $request->only('email', 'password');
+
+		if ($this->auth->attempt($credentials, $request->has('remember')))
+		{
+			// Update the number of logins
+			$this->auth->user()->increment('logins');
+
+			// Set the last login date
+			$this->auth->user()->last_login = time();
+			$this->auth->user()->save();
+
+			return redirect()->intended($this->redirectPath());
+		}
+
+		return redirect($this->loginPath())
+			->withInput($request->only('email', 'remember'))
+			->withErrors([
+				'email' => $this->getFailedLoginMessage(),
+			]);
 	}
 
 	/**
