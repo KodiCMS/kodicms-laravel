@@ -35,6 +35,9 @@ password: **password**
 
 ### Структура модуля
  * `config` - конфиги приложения, могут быть перезаписаны из папки `/config/`
+  * `permissions.php` - Служит для указания списка прав
+  * `sitemap.php` - Служит для указания страниц для меню админ панели
+  * `behaviors.php`
  * `Console`
   * `Commands` - расположение файлов консольных компанды
  * `database`
@@ -106,8 +109,9 @@ password: **password**
  * `view.page.edit [KodiCMS\Pages\Model\Page $page]`
 
 #### backend/navbar
- * `view.navbar.before`
- * `view.navbar.after`
+ * `view.navbar.left`
+ * `view.navbar.right.before`
+ * `view.navbar.right.after`
 
 #### backend/navigation
  * `view.menu.before`

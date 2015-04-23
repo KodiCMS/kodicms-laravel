@@ -14,7 +14,7 @@ class ModuleServiceProvider extends ServiceProvider {
 		User::observe(new UserObserver);
 		UserRole::observe(new RoleObserver);
 
-		Event::listen('view.navbar.after', function() {
+		Event::listen('view.navbar.right.after', function() {
 			echo view('users::parts.navbar');
 		});
 

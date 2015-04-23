@@ -9,9 +9,11 @@
 
 		<div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
 			<div>
+				@event('view.navbar.left')
+
 				<div class="right clearfix">
 					<ul class="nav navbar-nav pull-right right-navbar-nav">
-						@event('view.navbar.before')
+						@event('view.navbar.right.before')
 						<li>
 							<a href="{{ route('backend.settings') }}">{!! UI::icon('cogs fa-lg') !!}</a>
 						</li>
@@ -20,7 +22,7 @@
 								{!! UI::hidden(Lang::get('cms::core.navigation.site')) !!}
 							</a>
 						</li>
-						@event('view.navbar.after')
+						@event('view.navbar.right.after')
 					</ul>
 				</div>
 			</div>
