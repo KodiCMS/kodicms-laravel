@@ -13,7 +13,7 @@
 		@endif
 
 		<div class="panel-heading-controls hidden-xs hidden-sm">
-			@include('pages::pages.blocks.search')
+			@include('pages::pages.partials.search')
 		</div>
 	</div>
 
@@ -51,8 +51,6 @@
 				</div>
 				<div class="clearfix"></div>
 			</div>
-
-			{{-- $content_children --}}
 		</li>
 	</ul>
 

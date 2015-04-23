@@ -49,7 +49,7 @@ if ((acl_check('layout.edit') OR acl_check('layout.view')) AND ! empty($layout_n
 			@lang('pages::core.field.behavior')
 		</label>
 		<div class="col-md-6">
-			{!! Form::select('behavior', [], NULL, ['class' => 'form-control']) !!}
+			{!! Form::select('behavior', $behaviorList, NULL, ['class' => 'form-control']) !!}
 			<div id="behavor_options"></div>
 		</div>
 	</div>

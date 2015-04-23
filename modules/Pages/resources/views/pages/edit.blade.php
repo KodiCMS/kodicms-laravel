@@ -20,6 +20,13 @@
 				@lang('pages::core.tab.page.options')
 			</a>
 		</li>
+		@if(!is_null($page->getBehaviorObject()))
+		<li id="page-options-panel-li">
+			<a href="#page-behavior-panel" data-toggle="tab" data-icon="random">
+				@lang('pages::core.tab.page.routes')
+			</a>
+		</li>
+		@endif
 	</ul>
 </div>
 
@@ -99,15 +106,22 @@
 	</div>
 
 	<div class="tab-pane fade" id="page-meta-panel">
-		@include('pages::pages.blocks.meta', ['page' => $page])
+		@include('pages::pages.partials.meta', ['page' => $page])
 	</div>
 
 	<div class="tab-pane fade" id="page-options-panel">
-		@include('pages::pages.blocks.settings', [
+		@include('pages::pages.partials.settings', [
 			'page' => $page,
-			'pagesMap' => $pagesMap
+			'pagesMap' => $pagesMap,
+			'behaviorList' => $behaviorList
 		])
 	</div>
+
+	@if(!is_null($page->getBehaviorObject()))
+	<div class="tab-pane fade" id="page-behavior-panel">
+		@include('pages::pages.partials.behavior', ['behavior' => $page->getBehaviorObject()])
+	</div>
+	@endif
 </div>
 
 <div class="form-actions panel-footer">

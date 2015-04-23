@@ -6,6 +6,7 @@ use KodiCMS\CMS\Http\Controllers\System\Controller;
 use KodiCMS\Pages\Exceptions\LayoutNotFoundException;
 use KodiCMS\Pages\Exceptions\PageNotFoundException;
 use KodiCMS\Pages\Model\FrontendPage;
+use KodiCMS\Widgets\Collection\PageWidgetCollection;
 
 class FrontendController extends Controller
 {
@@ -23,7 +24,7 @@ class FrontendController extends Controller
 
 		event('frontend.requested', [$uri]);
 
-		$frontPage = FrontendPage::find($uri);
+		$frontPage = FrontendPage::findByUri($uri);
 
 		if ($frontPage instanceof FrontendPage) {
 			if ($frontPage->isRedirect() AND strlen($frontPage->getRedirectUrl()) > 0) {
@@ -42,7 +43,7 @@ class FrontendController extends Controller
 	}
 
 	/**
-	 * TODO: добавить кеширование вывода, добавтить инициализацию Context
+	 * TODO: добавить кеширование вывода
 	 * 
 	 * @param FrontendPage $frontPage
 	 * @return \Illuminate\View\View|null
@@ -61,10 +62,12 @@ class FrontendController extends Controller
 			throw new LayoutNotFoundException;
 		}
 
+		$widgetCollection = new PageWidgetCollection($frontPage);
+
 		$html = (string) $frontPage->getLayoutView();
 		if(auth()->check() AND auth()->user()->hasRole(['administrator', 'developer']))
 		{
-			$injectHTML = (string) view('cms::app.blocks.toolbar');
+			$injectHTML = (string) view('cms::app.partials.toolbar');
 			// Insert system HTML before closed tag body
 			$matches = preg_split('/(<\/body>)/i', $html, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 

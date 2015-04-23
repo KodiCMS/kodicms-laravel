@@ -77,13 +77,14 @@
 	</div>
 
 	<div class="tab-pane fade" id="page-meta-panel">
-		@include('pages::pages.blocks.meta', ['page' => $page])
+		@include('pages::pages.partials.meta', ['page' => $page])
 	</div>
 
 	<div class="tab-pane fade" id="page-options-panel">
-		@include('pages::pages.blocks.settings', [
+		@include('pages::pages.partials.settings', [
 			'page' => $page,
-			'pagesMap' => $pagesMap
+			'pagesMap' => $pagesMap,
+			'behaviorList' => $behaviorList
 		])
 	</div>
 </div>

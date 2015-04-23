@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use KodiCMS\CMS\Helpers\WYSIWYG;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use KodiCMS\CMS\Assets\Core as Assets;
+use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Services\PageCreator;
 use KodiCMS\Pages\Services\PageUpdator;
@@ -50,7 +51,9 @@ class PageController extends BackendController
 		$creator = $page->createdBy()->first();
 		$pagesMap = $page->getSitemap();
 
-		$this->setContent('pages.edit', compact('page', 'updator', 'creator', 'pagesMap'));
+		$behaviorList = BehaviorManager::formChoices();
+
+		$this->setContent('pages.edit', compact('page', 'updator', 'creator', 'pagesMap', 'behaviorList'));
 	}
 
 	public function postEdit(PageUpdator $page, $id)
@@ -79,8 +82,9 @@ class PageController extends BackendController
 		$this->setTitle(trans('pages::core.title.pages.create'));
 
 		$pagesMap = $page->getSitemap();
+		$behaviorList = BehaviorManager::formChoices();
 
-		$this->setContent('pages.create', compact('page', 'pagesMap'));
+		$this->setContent('pages.create', compact('page', 'pagesMap', 'behaviorList'));
 	}
 
 	public function postCreate(PageCreator $page, $parent_id = NULL)

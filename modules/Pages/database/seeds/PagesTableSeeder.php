@@ -27,6 +27,7 @@ class PagesTableSeeder extends Seeder {
 				'title' => 'News',
 				'breadcrumb' => 'News',
 				'slug' => 'news',
+				'behavior' => 'test',
 				'published_at' => new Carbon()
 			],
 			[

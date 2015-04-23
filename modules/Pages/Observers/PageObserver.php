@@ -20,6 +20,11 @@ class PageObserver
 			$this->updateParts($page);
 		}
 
+		if($page->behavior == '')
+		{
+			$page->behavior = NULL;
+		}
+
 		return TRUE;
 	}
 

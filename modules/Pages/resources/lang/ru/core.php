@@ -28,7 +28,8 @@ return [
 		'page' => [
 			'content' => 'Контент',
 			'meta' => 'Meta-информация',
-			'options' => 'Настройки'
+			'options' => 'Настройки',
+			'routes' => 'Маршруты'
 		]
 	],
 	'label' => [

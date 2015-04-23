@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Pages\Providers;
 
 use KodiCMS\CMS\Providers\ServiceProvider;
-use KodiCMS\Pages\BehaviorManager;
+use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Model\PagePart;
 use KodiCMS\Pages\Observers\PageObserver;

@@ -23,7 +23,7 @@ function recurseSortPages(array $childs)
 
 	$data = '<ul class="dd-list list-unstyled">';
 	foreach ($childs as $page) {
-		$data .= (string) view('pages::pages.blocks.reorderitem', [
+		$data .= (string) view('pages::pages.partials.reorderitem', [
 			'page' => $page,
 			'childs' => !empty($page['childs']) ? recurseSortPages($page['childs']) : ''
 		]);

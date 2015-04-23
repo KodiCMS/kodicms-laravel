@@ -1,6 +1,8 @@
 <?php namespace KodiCMS\Pages\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
+use DB;
 
 class Page extends Model
 {
@@ -184,7 +186,7 @@ class Page extends Model
 	 */
 	public function hasChildren()
 	{
-		return (bool)\DB::table($this->table)
+		return (bool) DB::table($this->table)
 			->selectRaw('COUNT(*) as total')
 			->where('parent_id', $this->id)
 			->pluck('total') > 0;
@@ -200,7 +202,7 @@ class Page extends Model
 			$keyword = e($keyword);
 
 			return $subQuery
-				->orWhere(\DB::raw('LOWER(title)'), 'like', "%{$keyword}%")
+				->orWhere(DB::raw('LOWER(title)'), 'like', "%{$keyword}%")
 				->orWhere('slug', 'like', "%{$keyword}%")
 				->orWhere('breadcrumb', 'like', "%{$keyword}%")
 				->orWhere('meta_title', 'like', "%{$keyword}%")
@@ -220,6 +222,20 @@ class Page extends Model
 		}
 
 		return $sitemap->selectChoices();
+	}
+
+	/**
+	 * @return null|\KodiCMS\Pages\Behavior\Decorator
+	 * @throws \KodiCMS\Pages\Exceptions\BehaviorException
+	 */
+	public function getBehaviorObject()
+	{
+		if(is_null($this->behavior))
+		{
+			return null;
+		}
+
+		return BehaviorManager::load($this->behavior);
 	}
 
 	public function createdBy()
@@ -258,7 +274,7 @@ class Page extends Model
 
 		if ($this->fireModelEvent('reordering') === FALSE) return FALSE;
 
-		$builder = \DB::table('pages');
+		$builder = DB::table('pages');
 		$grammar = $builder->getGrammar();
 		$insert = $grammar->compileInsert($builder, $pages);
 
@@ -272,7 +288,7 @@ class Page extends Model
 
 		$insert .= ' ON DUPLICATE KEY UPDATE parent_id = VALUES(parent_id), position = VALUES(position)';
 
-		\DB::insert($insert, $bindings);
+		DB::insert($insert, $bindings);
 
 		$this->fireModelEvent('reordered', FALSE);
 

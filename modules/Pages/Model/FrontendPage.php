@@ -3,15 +3,14 @@
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
+use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
 use KodiCMS\CMS\Helpers\File;
 use KodiCMS\CMS\Helpers\Text;
-use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
-use KodiCMS\Widgets\Traits\Widgetable;
+use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
+use Cache;
 
 class FrontendPage
 {
-	use Widgetable;
-
 	const STATUS_DRAFT     = 1;
 	const STATUS_PUBLISHED = 100;
 	const STATUS_HIDDEN    = 101;
@@ -23,10 +22,60 @@ class FrontendPage
 	private static $pagesCache = [];
 
 	/**
-	 *
-	 * @var FrontendPage
+	 * @param $field
+	 * @param $value
+	 * @param FrontendPage $parentPage
+	 * @param bool $includeHidden
+	 * @return bool|FrontendPage
 	 */
-	private static $initialPage = NULL;
+	public static function findByField($field, $value, FrontendPage $parentPage = null, $includeHidden = true)
+	{
+		$pageCacheId = static::getCacheId([$field, $value, $includeHidden ? 'TRUE' : 'FALSE'], $parentPage);
+
+		if (isset(static::$pagesCache[$pageCacheId]))
+		{
+			return static::$pagesCache[$pageCacheId];
+		}
+
+		$pageClass = get_called_class();
+
+		$query = DB::table('pages')->where('pages.' . $field, $value)->whereIn('status', static::getStatuses($includeHidden));
+
+		if (config('pages::checkDate') === true)
+		{
+			$query->where('published_at', '<=', DB::raw('NOW()'));
+		}
+
+		if (!is_null($parentPage))
+		{
+			$query->where('parent_id', $parentPage->id);
+		}
+
+		// TODO: добавить кеширование на основе тегов
+		$foundPage = Cache::remember($pageCacheId, Carbon::now()->addMinutes(10), function() use($query)
+		{
+			return $query->take(1)->first();
+		});
+
+
+		if (is_null($foundPage))
+		{
+			return null;
+		}
+
+		$foundPageObject = new FrontendPage($foundPage);
+
+		if (is_null($parentPage) AND !is_null($foundPageObject->getParentId()))
+		{
+			$parentPage = static::findById($foundPageObject->getParentId());
+		}
+
+		$foundPageObject->setParentPage($parentPage);
+
+		static::$pagesCache[$pageCacheId] = $foundPageObject;
+
+		return $foundPageObject;
+	}
 
 	/**
 	 * @param string $uri
@@ -34,13 +83,14 @@ class FrontendPage
 	 * @param FrontendPage $parentPage
 	 * @return stdClass
 	 */
-	public static function find($uri, $includeHidden = TRUE, FrontendPage $parentPage = NULL)
+	public static function findByUri($uri, $includeHidden = true, FrontendPage $parentPage = null)
 	{
 		$uri = trim($uri, '/');
 
 		$urls = preg_split('/\//', $uri, -1, PREG_SPLIT_NO_EMPTY);
 
-		if ($parentPage === NULL) {
+		if ($parentPage === null)
+		{
 			$urls = array_merge([''], $urls);
 		}
 
@@ -49,91 +99,28 @@ class FrontendPage
 		$pageObject = new \stdClass;
 		$pageObject->id = 0;
 
-		foreach ($urls as $pageSlug) {
+		foreach ($urls as $pageSlug)
+		{
 			$url = ltrim($url . '/' . $pageSlug, '/');
 
-			if ($pageObject = self::findBySlug($pageSlug, $parentPage, $includeHidden)) {
-
-//				if (!is_null($pageObject->behavior)) {
-//					if (($behavior = BehaviorManager::load($pageObject->behavior, $pageObject, $url, $uri)) !== NULL) {
-//
-//						$pageObject->behaviorObject = $behavior;
-//						self::$initialPage = $pageObject;
-//
-//						return $pageObject;
-//					}
-//				}
-			} else {
+			if ($pageObject = self::findBySlug($pageSlug, $parentPage, $includeHidden))
+			{
+				if (!is_null($pageObject->getBehavior()) AND $behavior = BehaviorManager::load($pageObject->getBehavior(), $pageObject))
+				{
+					$behavior->executeRoute($pageObject->getUri());
+					$pageObject->behaviorObject = $behavior;
+					return $pageObject;
+				}
+			}
+			else
+			{
 				break;
 			}
 
 			$parentPage = $pageObject;
 		}
 
-		static::$initialPage = $pageObject;
-
 		return $pageObject;
-	}
-
-	/**
-	 * @param $field
-	 * @param $value
-	 * @param FrontendPage $parentPage
-	 * @param bool $includeHidden
-	 * @return bool|FrontendPage
-	 */
-	public static function findByField($field, $value, FrontendPage $parentPage = NULL, $includeHidden = TRUE)
-	{
-		$pageCacheId = static::getCacheId([$field, $value], $parentPage);
-
-		if (isset(static::$pagesCache[$pageCacheId])) {
-			return static::$pagesCache[$pageCacheId];
-		}
-
-		$pageClass = get_called_class();
-
-		$query = DB::table('pages')
-			->where('pages.' . $field, $value)
-			->whereIn('status', static::getStatuses($includeHidden));
-
-		if (config('pages::checkDate') === TRUE) {
-			$query->where('published_at', '<=', DB::raw('NOW()'));
-		}
-
-		if (!is_null($parentPage)) {
-			$query->where('parent_id', $parentPage->id);
-		}
-
-		// TODO: добавить кеширование запросов
-		$foundPage = $query
-//			->cacheTags(['frontPage', 'pages'])
-//			->remember(config('pages.cache.findByField'))
-			->take(1)
-			->first();
-
-		if (is_null($foundPage)) {
-			return NULL;
-		}
-
-		$foundPage = new FrontendPage($foundPage);
-
-		if (!is_null($foundPage->parent_id) AND $parentPage === NULL) {
-			$parentPage = static::findById($foundPage->getParentId());
-		}
-
-		// hook to be able to redefine the page class with behavior
-//		if ($parentPage instanceof FrontendPage AND !is_null($parentPage->getBehavior())) {
-//			// will return Page by default (if not found!)
-//			$pageClass = BehaviorManager::findPageClass($parentPage->getBehavior());
-//		}
-
-		// create the object page
-		// TODO Заменить на загрузку класса и behavior
-		$foundPage->setParentPage($parentPage);
-
-		static::$pagesCache[$pageCacheId] = $foundPage;
-
-		return $foundPage;
 	}
 
 	/**
@@ -142,7 +129,7 @@ class FrontendPage
 	 * @param bool $includeHidden
 	 * @return bool|FrontendPage
 	 */
-	public static function findBySlug($slug, FrontendPage $parentPage = NULL, $includeHidden = TRUE)
+	public static function findBySlug($slug, FrontendPage $parentPage = null, $includeHidden = true)
 	{
 		return self::findByField('slug', $slug, $parentPage, $includeHidden);
 	}
@@ -152,9 +139,9 @@ class FrontendPage
 	 * @param bool $includeHidden
 	 * @return bool|FrontendPage
 	 */
-	public static function findById($id, $includeHidden = TRUE)
+	public static function findById($id, $includeHidden = true)
 	{
-		return self::findByField('id', (int)$id, NULL, $includeHidden);
+		return self::findByField('id', (int)$id, null, $includeHidden);
 	}
 
 	/**
@@ -163,54 +150,51 @@ class FrontendPage
 	 */
 	public static function findSimilar($uri)
 	{
-		if (empty($uri)) {
-			return FALSE;
+		if (empty($uri))
+		{
+			return false;
 		}
 
 		$uriSlugs = array_merge([''], preg_split('/\//', $uri, -1, PREG_SPLIT_NO_EMPTY));
 
-		$slugs = DB::table('pages')
-			->select('id', 'slug')
-			->wherein('status_id', config('pages.similar.find_in_statuses', []));
+		$slugs = DB::table('pages')->select('id', 'slug')->wherein('status_id', config('pages.similar.find_in_statuses', []));
 
-		if (config('pages.check_date')) {
+		if (config('pages.check_date'))
+		{
 			$slugs->where('published_at', '<=', DB::raw('NOW()'));
 		}
 
 		$slugs = $slugs->get()->lists('slug', 'id');
 
 		$newSlugs = [];
-		foreach ($uriSlugs as $slug) {
-			if (in_array($slug, $slugs)) {
+		foreach ($uriSlugs as $slug)
+		{
+			if (in_array($slug, $slugs))
+			{
 				$newSlugs[] = $slug;
 				continue;
 			}
 
 			$similarPages = Text::similarWord($slug, $slugs);
 
-			if (!empty($similarPages)) {
+			if (!empty($similarPages))
+			{
 				$pageId = key($similarPages);
 				$page = static::findById($pageId);
 				$newSlugs[] = $page->getSlug();
 			}
 		}
 
-		if (!config('pages.similar.return_parent_page') AND (count($uriSlugs) != count($newSlugs))) {
-			return FALSE;
+		if (!config('pages.similar.return_parent_page') AND (count($uriSlugs) != count($newSlugs)))
+		{
+			return false;
 		}
 
 		$uri = implode('/', $newSlugs);
 
 		$page = static::find($uri);
-		return $page ? $uri : FALSE;
-	}
 
-	/**
-	 * @return FrontendPage
-	 */
-	public static function getInitialPage()
-	{
-		return static::$initialPage;
+		return $page ? $uri : false;
 	}
 
 	/**
@@ -218,9 +202,10 @@ class FrontendPage
 	 * @param FrontendPage $parentPage
 	 * @return string
 	 */
-	final protected static function getCacheId($slug, FrontendPage $parentPage = NULL)
+	final protected static function getCacheId($slug, FrontendPage $parentPage = null)
 	{
-		if (is_array($slug)) {
+		if (is_array($slug))
+		{
 			$slug = implode('::', $slug);
 		}
 
@@ -231,11 +216,12 @@ class FrontendPage
 	 * @param boolean $includeHidden
 	 * @return array
 	 */
-	public static function getStatuses($includeHidden = FALSE)
+	public static function getStatuses($includeHidden = false)
 	{
 		$statuses = [static::STATUS_PUBLISHED];
 
-		if ($includeHidden) {
+		if ($includeHidden)
+		{
 			$statuses[] = static::STATUS_HIDDEN;
 		}
 
@@ -285,7 +271,7 @@ class FrontendPage
 	/**
 	 * @var integer
 	 */
-	protected $level = NULL;
+	protected $level = null;
 
 	/**
 	 * @var integer
@@ -320,7 +306,7 @@ class FrontendPage
 	/**
 	 * @var null|integer
 	 */
-	protected $parent_id = NULL;
+	protected $parent_id = null;
 
 	/**
 	 * @var integer
@@ -330,28 +316,28 @@ class FrontendPage
 	/**
 	 * @var bool
 	 */
-	protected $is_redirect = FALSE;
+	protected $is_redirect = false;
 
 	/**
 	 * @var string
 	 */
-	protected $redirect_url = NULL;
+	protected $redirect_url = null;
 
 	/**
 	 *
 	 * @var string
 	 */
-	protected $layout_file = NULL;
+	protected $layout_file = null;
 
 	/**
 	 * @var Behavior
 	 */
-	protected $behaviorObject = NULL;
+	protected $behaviorObject = null;
 
 	/**
 	 * @var FrontendPage
 	 */
-	protected $parentPage = NULL;
+	protected $parentPage = null;
 
 	/**
 	 * @var array
@@ -362,17 +348,20 @@ class FrontendPage
 	 * @param \stdClass $pageData
 	 * @param FrontendPage $parentPage
 	 */
-	public function __construct(\stdClass $pageData, FrontendPage $parentPage = NULL)
+	public function __construct(\stdClass $pageData, FrontendPage $parentPage = null)
 	{
-		if (!is_null($parentPage)) {
+		if (!is_null($parentPage))
+		{
 			$this->setParentPage($parentPage);
 		}
 
-		foreach ($pageData as $key => $value) {
+		foreach ($pageData as $key => $value)
+		{
 			$this->$key = $value;
 		}
 
-		if ($this->getParent() instanceof FrontendPage) {
+		if ($this->getParent() instanceof FrontendPage)
+		{
 			$this->buildUri();
 		}
 	}
@@ -381,9 +370,10 @@ class FrontendPage
 	 * @param FrontendPage $parentPage
 	 * @return $this
 	 */
-	public function setParentPage(FrontendPage $parentPage = NULL)
+	public function setParentPage(FrontendPage $parentPage = null)
 	{
-		if (!is_null($parentPage)) {
+		if (!is_null($parentPage))
+		{
 			$this->parentPage = $parentPage;
 			$this->buildUri();
 		}
@@ -420,11 +410,13 @@ class FrontendPage
 	 */
 	public function getLayoutFile()
 	{
-		if (empty($this->layout_file) AND $parent = $this->getParent()) {
+		if (empty($this->layout_file) AND $parent = $this->getParent())
+		{
 			return $parent->getLayoutFile();
 		}
 
 		$layout = (new LayoutCollection)->findFile($this->layout_file);
+
 		return $layout;
 	}
 
@@ -435,9 +427,11 @@ class FrontendPage
 	{
 		$layout = $this->getLayoutFile();
 
-		if(!$layout) {
-			return NULL;
+		if (!$layout)
+		{
+			return null;
 		}
+
 		return view('frontend::' . $layout->getViewFilename());
 	}
 
@@ -445,26 +439,22 @@ class FrontendPage
 	 * @param null $default
 	 * @return null|string
 	 */
-	public function getMetaKeywords($default = NULL)
+	public function getMetaKeywords($default = null)
 	{
 		$meta = $this->parsMeta('meta_keywords');
 
-		return !empty($meta)
-			? $meta
-			: $default;
+		return !empty($meta) ? $meta : $default;
 	}
 
 	/**
 	 * @param null $default
 	 * @return null|string
 	 */
-	public function getMetaDescription($default = NULL)
+	public function getMetaDescription($default = null)
 	{
 		$meta = $this->parsMeta('meta_description');
 
-		return !empty($meta)
-			? $meta
-			: $default;
+		return !empty($meta) ? $meta : $default;
 	}
 
 	/**
@@ -480,7 +470,8 @@ class FrontendPage
 	 */
 	public function getBreadcrumb()
 	{
-		if (empty($this->breadcrumb)) {
+		if (empty($this->breadcrumb))
+		{
 			$this->breadcrumb = $this->title;
 		}
 
@@ -533,25 +524,32 @@ class FrontendPage
 	 * @param null|intger $level
 	 * @return FrontendPage|null
 	 */
-	public function getParent($level = NULL)
+	public function getParent($level = null)
 	{
-		if ($this->parentPage === NULL AND is_numeric($this->getParentId()) AND $this->getParentId() > 0) {
+		if ($this->parentPage === null AND is_numeric($this->getParentId()) AND $this->getParentId() > 0)
+		{
 			return static::findById($this->getParentId());
 		}
 
-		if ($level === NULL) {
+		if ($level === null)
+		{
 			return $this->parentPage;
 		}
 
-		if ($level > $this->getLevel()) {
-			return NULL;
-		} else if ($this->getLevel() == $level) {
+		if ($level > $this->getLevel())
+		{
+			return null;
+		}
+		else if ($this->getLevel() == $level)
+		{
 			return $this;
-		} else if ($this->getParent() instanceof FrontendPage) {
+		}
+		else if ($this->getParent() instanceof FrontendPage)
+		{
 			return $this->getParent()->getParent($level);
 		}
 
-		return NULL;
+		return null;
 	}
 
 	/**
@@ -561,11 +559,9 @@ class FrontendPage
 	 *
 	 * @return $this
 	 */
-	public function getMetaParam($key, $value = NULL, $field = NULL)
+	public function getMetaParam($key, $value = null, $field = null)
 	{
-		$this->_meta_params[$key] = $field === NULL
-			? $value
-			: $this->parse_meta($field, $value);
+		$this->_meta_params[$key] = $field === null ? $value : $this->parse_meta($field, $value);
 
 		return $this;
 	}
@@ -591,7 +587,8 @@ class FrontendPage
 	 */
 	public function getLevel()
 	{
-		if ($this->level === NULL) {
+		if ($this->level === null)
+		{
 			$uri = $this->getUri();
 			$this->level = empty($uri) ? 0 : substr_count($uri, '/') + 1;
 		}
@@ -614,7 +611,7 @@ class FrontendPage
 	{
 		$mime = File::mimeByExt(pathinfo($this->getUri(), PATHINFO_EXTENSION));
 
-		return $mime === FALSE ? 'text/html' : $mime;
+		return $mime === false ? 'text/html' : $mime;
 	}
 
 	/**
@@ -623,15 +620,19 @@ class FrontendPage
 	 * @param bool $checkCurrent
 	 * @return string
 	 */
-	public function getAnchor($label = NULL, array $attributes = NULL, $checkCurrent = TRUE)
+	public function getAnchor($label = null, array $attributes = null, $checkCurrent = true)
 	{
-		if ($label == NULL) {
+		if ($label == null)
+		{
 			$label = $this->getTitle();
 		}
 
-		if ($checkCurrent === TRUE) {
-			if ($this->isActive()) {
-				if (!isset($attributes['class'])) {
+		if ($checkCurrent === true)
+		{
+			if ($this->isActive())
+			{
+				if (!isset($attributes['class']))
+				{
 					$attributes['class'] = '';
 				}
 
@@ -655,7 +656,7 @@ class FrontendPage
 	 */
 	public function isRedirect()
 	{
-		return (bool) $this->is_redirect;
+		return (bool)$this->is_redirect;
 	}
 
 
@@ -673,16 +674,18 @@ class FrontendPage
 	 * @param null|string $field
 	 * @return $this
 	 */
-	public function setMetaParams($key, $value = NULL, $field = NULL)
+	public function setMetaParams($key, $value = null, $field = null)
 	{
-		if (is_array($key)) {
-			foreach ($key as $key2 => $value) {
+		if (is_array($key))
+		{
+			foreach ($key as $key2 => $value)
+			{
 				$this->metaParams[$key2] = $value;
 			}
-		} else {
-			$this->metaParams[$key] = $field === NULL
-				? $value
-				: $this->parseMeta($field, $value);
+		}
+		else
+		{
+			$this->metaParams[$key] = $field === null ? $value : $this->parseMeta($field, $value);
 		}
 
 		return $this;
@@ -694,8 +697,9 @@ class FrontendPage
 	public function isActive()
 	{
 		$url = $this->getUri();
-		if (empty($url)) {
-			return FALSE;
+		if (empty($url))
+		{
+			return false;
 		}
 
 		return (strpos(Request::path(), $url) === 1);
@@ -706,61 +710,62 @@ class FrontendPage
 	 * @param null|string $value
 	 * @return string
 	 */
-	public function parseMeta($key, $value = NULL)
+	public function parseMeta($key, $value = null)
 	{
-		if ($value === NULL) {
+		if ($value === null)
+		{
 			$value = strtr($this->{$key}, ['\'' => '\\\'', '\\' => '\\\\']);
 		}
 
 		$fields = [];
 
-		$found = preg_match_all(
-			'/(?<!\{)\{(' .
-			'((\$|\:)[A-Za-z0-9_\-\.\/]+(\|[\w\ ]*)?)' . // {$abc}, {:abc}
-			'|[\.]+' .
-			')\}(?!\})/u', $value, $fields);
+		$found = preg_match_all('/(?<!\{)\{(' . '((\$|\:)[A-Za-z0-9_\-\.\/]+(\|[\w\ ]*)?)' . // {$abc}, {:abc}
+			'|[\.]+' . ')\}(?!\})/u', $value, $fields);
 
-		if ($found) {
+		if ($found)
+		{
 			$fields = array_unique($fields[1]);
 			$parts = [];
 
-			foreach ($fields as $i => $field) {
+			foreach ($fields as $i => $field)
+			{
 				$patterns[] = '/(?<!\\{)\\{' . preg_quote($field, '/') . '\\}(?!\\})/u';
-				switch ($field) {
+				switch ($field)
+				{
 					case '.': // Current page
-						if ($key == 'meta_title') {
+						if ($key == 'meta_title')
+						{
 							$parts[] = $this->getTitle();
 						}
 						break;
 					case '..': // Parent page
-						if ($this->getParent() instanceof FrontendPage) {
+						if ($this->getParent() instanceof FrontendPage)
+						{
 							$method = 'get' . ucfirst($key);
 							$parts[] = $this->getParent()->{$method}();
 						}
 						break;
 					default: // Level
-						if (
-							is_numeric($field)
-							AND
-							$this->getLevel() != $field
-							AND
-							$this->getParent($field) instanceof FrontendPage
-						) {
+						if (is_numeric($field) AND $this->getLevel() != $field AND $this->getParent($field) instanceof FrontendPage
+						)
+						{
 							$method = 'get' . ucfirst($key);
 							$parts[] = $this->getParent($field)->{$method}();
 						}
 						break;
 				}
 
-				$param = NULL;
-				$metaParam = NULL;
-				$default = NULL;
+				$param = null;
+				$metaParam = null;
+				$default = null;
 
-				if (strpos($field, '|') !== FALSE) {
+				if (strpos($field, '|') !== false)
+				{
 					list($field, $default) = explode('|', $field, 2);
 				}
 
-				switch ($field{0}) {
+				switch ($field{0})
+				{
 					case '$':
 						$param = substr($field, 1);
 						break;
@@ -769,25 +774,29 @@ class FrontendPage
 						break;
 				}
 
-				if ($param !== NULL) {
-					if (strpos($param, 'site.') !== FALSE) {
+				if ($param !== null)
+				{
+					if (strpos($param, 'site.') !== false)
+					{
 						$parts[] = config('app.' . substr($param, 5), $default);
-					} else if (strpos($param, 'ctx.') !== FALSE) {
+					}
+					else if (strpos($param, 'ctx.') !== false)
+					{
 						$parts[] = app('ctx')->get(substr($param, 4));
-					} else if (
-						strpos($param, 'parent.') !== FALSE
-						AND
-						$this->getParent() instanceof FrontendPage
-						AND
-						method_exists($this, ($method = 'get' . ucfirst(substr($param, 7))))
-					) {
+					}
+					else if (strpos($param, 'parent.') !== false AND $this->getParent() instanceof FrontendPage AND method_exists($this, ($method = 'get' . ucfirst(substr($param, 7))))
+					)
+					{
 						$parts[] = $this->getParent()->{$method}();
-					} else if (method_exists($this, ($method = 'get' . ucfirst($param)))) {
+					}
+					else if (method_exists($this, ($method = 'get' . ucfirst($param))))
+					{
 						$parts[] = $this->{$method}();
 					}
 				}
 
-				if ($metaParam !== NULL) {
+				if ($metaParam !== null)
+				{
 					$parts[] = array_get($this->metaParams, $metaParam, $default);
 				}
 			}
