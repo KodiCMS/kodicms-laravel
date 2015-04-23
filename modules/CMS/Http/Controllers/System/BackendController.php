@@ -44,6 +44,8 @@ class BackendController extends TemplateController
 			$this->setTitle($currentPage->getName(), $currentPage->getUrl());
 		}
 
+		\View::share('currentPage', $currentPage);
+
 		parent::before();
 	}
 

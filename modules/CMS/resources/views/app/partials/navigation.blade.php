@@ -23,6 +23,7 @@
 			</a>
 			<ul>
 				@foreach($section as $item)
+				<?php if($item->isHidden()) continue; ?>
 				<li @if ($item->isActive())class="active"@endif>
 					<a href="{{ $item->getUrl() }}">
 						{!! $item->getIcon() !!}
@@ -41,6 +42,7 @@
 
 					<ul>
 						@foreach($sub_section as $sub_item)
+						<?php if($sub_item->isHidden()) continue; ?>
 						<li @if ($sub_item->isActive())class="active"@endif>
 							<a href="{{ $sub_item->getUrl() }}">
 								{!! $sub_item->getIcon() !!}

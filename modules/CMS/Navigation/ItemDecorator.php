@@ -36,6 +36,14 @@ class ItemDecorator
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function isHidden()
+	{
+		return (bool)$this->getAttribute('hidden', FALSE);
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getIcon()
