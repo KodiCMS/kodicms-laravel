@@ -63,6 +63,19 @@ class BackendController extends TemplateController
 		parent::after();
 	}
 
+	/**
+	 * @param $title
+	 * @param string|null $url
+	 * @return $this
+	 */
+	protected function setTitle($title, $url = NULL)
+	{
+		$this->breadcrumbs
+			->add($title, $url);
+
+		return parent::setTitle($title);
+	}
+
 	public function registerMedia()
 	{
 		parent::registerMedia();

@@ -15,12 +15,6 @@ class TemplateController extends Controller
 	public $moduleNamespace = 'cms::';
 
 	/**
-	 *
-	 * @var \Breadcrumbs
-	 */
-	public $breadcrumbs;
-
-	/**
 	 * @var  boolean  auto render template
 	 **/
 	public $autoRender = TRUE;
@@ -66,14 +60,11 @@ class TemplateController extends Controller
 	 * @param $title
 	 * @return $this
 	 */
-	protected function setTitle($title, $url = NULL)
+	protected function setTitle($title)
 	{
 		// Initialize empty values
 		$this->template
 			->with('title', $title);
-
-		$this->breadcrumbs
-			->add($title, $url);
 
 		return $this;
 	}
