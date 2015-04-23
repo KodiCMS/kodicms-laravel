@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use DB;
+use CMS;
 
 class AuthController extends FrontendController {
 
@@ -44,7 +45,9 @@ class AuthController extends FrontendController {
 	public function boot(Guard $auth)
 	{
 		$this->auth = $auth;
-		$this->redirectAfterLogout = \CMS::backendPath() . '/auth/login';
+
+		$this->redirectPath = CMS::backendPath();
+		$this->redirectAfterLogout = CMS::backendPath() . '/auth/login';
 
 		$this->beforeFilter('@checkPermissions', ['except' => 'getLogout']);
 	}
