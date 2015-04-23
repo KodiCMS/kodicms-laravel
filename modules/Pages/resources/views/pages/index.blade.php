@@ -40,6 +40,10 @@
 					]) !!}
 					@endif
 
+					@if (!is_null($page->behavior))
+						{!! UI::label($page->getBehaviorTitle(), 'default') !!}
+					@endif
+
 					{!! $page->getPublicLink() !!}
 				</div>
 				<div class="actions col-xs-offset-4 col-xs-1 text-right">

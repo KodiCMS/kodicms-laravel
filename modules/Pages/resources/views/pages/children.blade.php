@@ -19,12 +19,12 @@
 				]) !!}
 			@endif
 
-			@if ($child->behavior_id)
-				{!! UI::label(studly_case($child->behavior_id), 'default') !!}
+			@if (!is_null($child->behavior))
+				{!! UI::label($child->getBehaviorTitle(), 'default') !!}
 			@endif
 
 			@if ($child->is_redirect)
-				{!! UI::label(trans('pages::core.action.redirect', ['url' => $child->redirect_url])) !!}
+				{!! UI::label(trans('pages::core.label.page.redirect', ['url' => $child->redirect_url]), 'danger') !!}
 			@endif
 				{!! $child->getPublicLink() !!}
 			</div>

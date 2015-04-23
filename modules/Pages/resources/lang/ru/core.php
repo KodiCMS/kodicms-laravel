@@ -37,7 +37,8 @@ return [
 			'created_by' => 'Создал :anchor :date ',
 			'updated_by' => 'Обновил :anchor :date ',
 			'layout_not_set' => 'Шаблон не указан',
-			'current_layout' => 'Текущий шаблон :name'
+			'current_layout' => 'Текущий шаблон :name',
+			'redirect' => 'Редирект: :url'
 		]
 	],
 	'field' => [
@@ -62,6 +63,8 @@ return [
 		'published_at' => 'Опубликована'
 	],
 	'messages' => [
-		'not_found' => 'Страница не найдена'
+		'not_found' => 'Страница не найдена',
+		'updated' => 'Настройки страницы сохранени',
+		'created' => 'Страница создана'
 	]
 ];

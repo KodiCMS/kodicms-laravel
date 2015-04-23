@@ -49,7 +49,7 @@ class PageUpdator implements ModelUpdator
 				'title', 'slug', 'is_redirect', 'breadcrumb',
 				'meta_title', 'meta_keywords', 'meta_description',
 				'robots', 'parent_id', 'layout_file', 'behavior',
-				'status', 'published_at'
+				'status', 'published_at', 'redirect_url'
 			]));
 
 		return $page;

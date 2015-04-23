@@ -225,6 +225,14 @@ class Page extends Model
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getBehaviorTitle()
+	{
+		return studly_case($this->behavior);
+	}
+
+	/**
 	 * @return null|\KodiCMS\Pages\Behavior\Decorator
 	 * @throws \KodiCMS\Pages\Exceptions\BehaviorException
 	 */

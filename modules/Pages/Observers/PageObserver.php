@@ -25,6 +25,16 @@ class PageObserver
 			$page->behavior = NULL;
 		}
 
+		if(is_null($page->redirect_url))
+		{
+			$page->is_redirect = FALSE;
+		}
+
+		if(!$page->is_redirect)
+		{
+			$page->redirect_url = NULL;
+		}
+
 		return TRUE;
 	}
 
