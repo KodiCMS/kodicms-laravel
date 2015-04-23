@@ -25,8 +25,16 @@ class AuthController extends FrontendController {
 	|
 	*/
 	use AuthenticatesAndRegistersUsers;
-	
+
+	/**
+	 * @var string
+	 */
 	protected $redirectPath = '/';
+
+	/**
+	 * @var string
+	 */
+	protected $redirectAfterLogout = '/';
 
 	/**
 	 * Create a new authentication controller instance.
@@ -36,8 +44,7 @@ class AuthController extends FrontendController {
 	public function boot(Guard $auth)
 	{
 		$this->auth = $auth;
-
-		$this->redirectPath = $this->session->get('nextUrl', \CMS::backendPath());
+		$this->redirectAfterLogout = \CMS::backendPath() . '/auth/login';
 
 		$this->beforeFilter('@checkPermissions', ['except' => 'getLogout']);
 	}

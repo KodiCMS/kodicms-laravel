@@ -28,14 +28,18 @@ class UserController extends BackendController
 	{
 		parent::boot();
 
-		// Разрешение пользователю править свой профиль
-		$action = $this->getCurrentAction();
-		if (
-			in_array($action, ['getEdit', 'postEdit'])
-			AND
-			$this->currentUser->id == $this->getRouter()->getCurrentRoute()->getParameter('id')
-		) {
-			$this->allowedActions[] = $action;
+		if(auth()->check())
+		{
+			// Разрешение пользователю править свой профиль
+			$action = $this->getCurrentAction();
+			if (
+				in_array($action, ['getEdit', 'postEdit'])
+				AND
+				$this->currentUser->id == $this->getRouter()->getCurrentRoute()->getParameter('id')
+			)
+			{
+				$this->allowedActions[] = $action;
+			}
 		}
 	}
 

@@ -161,8 +161,6 @@ abstract class Controller extends BaseController
 	public function checkPermissions(Route $router, Request $request)
 	{
 		if (auth()->guest()) {
-			$this->session->flash('nextUrl', $this->request->getUri());
-
 			return $this->denyAccess(trans('users::core.messages.auth.unauthorized'), TRUE);
 		}
 
