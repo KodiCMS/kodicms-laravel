@@ -68,8 +68,8 @@ var Api = {
 
 				if(typeof(callback) == 'function') callback(this._response);
 			})
-			.fail(function() {
-				if(typeof(callback) == 'function') callback();
+			.fail(function(e) {
+				return Api.exception(e.responseJSON, callback);
 			});
 	},
 	serializeObject: function(form) {
@@ -137,19 +137,17 @@ var Api = {
 			case 130: // Unknown
 			case 140: // Token
 			case 120: // Permissions
-				noty({text: response.message, type: 'error', icon: 'fa fa-exclamation-triangle'});
-				break;
-			case 120: // Validation
-
+				CMS.messages.show(response.message, 'error', 'fa fa-exclamation-triangle');
 				break;
 			case 110: // Missing param
-
+				CMS.messages.show(response.message, 'error', 'fa fa-exclamation-triangle');
+				for(i in response.fields)
+					CMS.error_field(response.fields[i], 'Required');
 				break;
 			case 301: // Redirect
 			case 302: // Redirect
 				window.location.href = response.targetUrl;
 				break;
-
 		}
 	},
 	response: function() {

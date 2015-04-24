@@ -7,10 +7,13 @@ class MissingParameterException extends Exception {
 	 */
 	protected $missedFields = [];
 
-	public function setMissedFields(array $fields)
+	/**
+	 * @param array $fields
+	 */
+	public function __construct(array $fields)
 	{
 		$this->missedFields = $fields;
-		return $this;
+		$this->message = trans('api::core.messages.missing_params', ['field' => implode(', ', $fields)]);
 	}
 
 	/**

@@ -47,7 +47,7 @@ abstract class Controller extends BaseController
 	public function getParameter($key, $default = NULL, $isRequired = FALSE)
 	{
 		if ($isRequired === TRUE AND !$this->request->has($key)) {
-			throw (new MissingParameterException("Missing required parameter."))->setMissedFields([$key]);
+			throw new MissingParameterException([$key]);
 		}
 
 		$param = $this->request->input($key, $default);
@@ -119,7 +119,7 @@ abstract class Controller extends BaseController
 		}
 
 		if(count($missedFields) > 0) {
-			throw (new MissingParameterException("Missing required parameter."))->setMissedFields($missedFields);
+			throw new MissingParameterException($missedFields);
 		}
 
 		$this->before();

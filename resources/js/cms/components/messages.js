@@ -22,22 +22,15 @@ CMS.messages = {
 			this.show($messages[text], $type);
 		}
 	},
-	show: function(msg, type) {
+	show: function(msg, type, icon) {
 		if(!type) type = 'success';
 
 		window.top.noty({
+			layout: 'topRight',
 			type: type,
+			icon: icon || 'fa fa-ok',
 			text: decodeURIComponent(msg)
 		});
-
-		//window.top.$.pnotify({
-		//	text: decodeURIComponent(msg),
-		//	sticker: false,
-		//	nonblock: true,
-		//	delay: 4000,
-		//	type: type,
-		//	history: false
-		//});
 	},
 	error: function (message) {
 		this.show(message, 'error');
@@ -65,8 +58,6 @@ CMS.error_field = function(name, message) {
 
 		$tab.closest('.tabdrop').find('.dropdown-toggle').addClass('tab-error');
 	}
-
-
 }
 
 CMS.clear_error = function($container, $clear_tabs_error) {
