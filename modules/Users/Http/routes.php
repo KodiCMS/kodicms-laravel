@@ -24,6 +24,8 @@ Route::group(['prefix' => \CMS::backendPath()], function () {
 		'postCreate' => 'backend.role.create.post',
 	]);
 
+	Route::get('message/{id}', ['as' => 'backend.message.view', 'uses' => 'MessageController@getRead'])->where('id', '[0-9]+');
+
 	Route::controller('message', 'MessageController', [
 		'getIndex' => 'backend.message.list',
 		'getCreate' => 'backend.message.create',

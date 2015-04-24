@@ -11,21 +11,24 @@ class UserMessageController extends Controller
 	public function postMessage()
 	{
 		$parentId = (int) $this->getParameter('pid');
+
 		$message = $this->getRequiredParameter('message');
 
-		if($parentId > 0)
+		if ($parentId > 0)
 		{
 			$title = 0;
-			$to = MessageUsers::where('message_id', $parentId)
-				->lists('user_id');
+			$to = MessageUsers::where('message_id', $parentId)->lists('user_id');
 		}
 		else
 		{
 			$title = $this->getRequiredParameter('title');
-			$to = (array) $this->getRequiredParameter('to');
+			$to = (array)$this->getRequiredParameter('to');
 		}
 
-		(new Messages())->sendMessage($title, $message, $to, $parentId, $this->currentUser->id);
+		$messageId = (new Messages())->sendMessage($title, $message, $to, $parentId, $this->currentUser->id);
+		$this->jsonResponse['messageId'] = $messageId;
+
+		return redirect(route('backend.message.view', [$messageId]));
 	}
 
 	public function deleteMessage()

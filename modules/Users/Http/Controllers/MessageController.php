@@ -40,6 +40,9 @@ class MessageController extends BackendController
 
 	public function getRead($id)
 	{
+		$message = Messages::getById($id, $this->currentUser->id);
 
+		$this->templateScripts['MESSAGE'] = $message;
+		$this->setContent('messages.view', compact('message'));
 	}
 }

@@ -53,15 +53,14 @@ class Messages extends Model
 	 * @param int $messageId
 	 * @param int $userId
 	 */
-	public function getById($messageId, $userId)
+	public function scopeGetById($query, $messageId, $userId)
 	{
-		$query = DB::table('messages_users')
-			->select('from_user_id', 'messages.id', 'users.username as author', 'messages_users.status as is_read')
+		$query
+			->select('messages.*', 'users.username as author', 'messages_users.status as is_read')
 			->leftJoin('users', 'from_user_id', '=', 'users.id')
-			->leftJoin('messages', 'messages.id', '=', 'messages_users.message_id')
+			->leftJoin('messages_users', 'messages.id', '=', 'messages_users.message_id')
 			->where('messages_users.user_id', (int) $userId)
-			->where('messages.id', (int) $messageId)
-			->first();
+			->where('messages.id', (int) $messageId);
 	}
 
 	/**
