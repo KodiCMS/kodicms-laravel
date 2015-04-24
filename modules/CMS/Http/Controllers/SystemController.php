@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\CMS\Http\Controllers;
 
-use Carbon\Carbon;
 use KodiCMS\CMS\Helpers\Date;
+use KodiCMS\CMS\Helpers\Locale;
 use KodiCMS\CMS\Helpers\WYSIWYG;
 
 class SystemController extends System\BackendController {
@@ -13,7 +13,7 @@ class SystemController extends System\BackendController {
 		$dateFormats = Date::getFormats();
 
 		// TODO: сделать вывод языков в нормальном формате
-		$availableLocales = ['ru' => 'ru', 'en' => 'en'];
+		$availableLocales = Locale::getAvailable();
 
 		$this->setContent('system.settings', compact('htmlEditors', 'codeEditors', 'dateFormats', 'availableLocales'));
 	}

@@ -54,7 +54,7 @@ return [
 	'default_ace_theme' => 'textmate',
 	'locales' => [
 		'en' => 'English',
-		'ru' => 'Russian'
+		'ru' => 'Русский'
 	],
 	'date_format' => 'Y-m-d H:i:s',
 	'date_format_list' => array(

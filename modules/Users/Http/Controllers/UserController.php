@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Users\Http\Controllers;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use KodiCMS\CMS\Helpers\Locale;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use KodiCMS\Users\Model\User;
 use KodiCMS\Users\Services\UserCreator;
@@ -68,7 +69,10 @@ class UserController extends BackendController
 		$user = new User;
 		$this->setTitle(trans('users::core.title.create'));
 		$this->templateScripts['USER'] = $user;
-		$this->setContent('users.create', compact('user'));
+
+		$availableLocales = Locale::getAvailable();
+
+		$this->setContent('users.create', compact('user', 'availableLocales'));
 	}
 
 	public function postCreate(UserCreator $user)
@@ -97,7 +101,9 @@ class UserController extends BackendController
 		]));
 		$this->templateScripts['USER'] = $user;
 
-		$this->setContent('users.edit', compact('user'));
+		$availableLocales = Locale::getAvailable();
+
+		$this->setContent('users.edit', compact('user', 'availableLocales'));
 	}
 
 	public function postEdit(UserUpdator $user, $id)
