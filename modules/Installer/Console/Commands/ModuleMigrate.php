@@ -18,7 +18,7 @@ class ModuleMigrate extends Command
 	 */
 	public function fire()
 	{
-		$this->output->writeln('<info>Installing KodiCMS modules...</info>');
+		$this->output->writeln('<info>Migrating KodiCMS modules...</info>');
 		$installer = new ModuleInstaller(App::make('module.loader')->getRegisteredModules());
 
 		$installer->cleanOutputMessages();
