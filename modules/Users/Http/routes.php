@@ -24,13 +24,6 @@ Route::group(['prefix' => \CMS::backendPath()], function () {
 		'postCreate' => 'backend.role.create.post',
 	]);
 
-	Route::controller('message', 'MessageController', [
-		'getIndex' => 'backend.message.list',
-		'getCreate' => 'backend.message.create',
-		'postCreate' => 'backend.message.create.post',
-		'getRead' => 'backend.message.read',
-	]);
-
 	Route::controller('auth', 'Auth\AuthController', [
 		'getLogin' => 'auth.login',
 		'getLogout' => 'auth.logout',
