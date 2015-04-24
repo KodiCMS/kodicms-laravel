@@ -19,15 +19,6 @@ return [
 				'permissions' => 'roles.index',
 				'priority' => 300,
 				'icon' => 'group'
-			],
-			[
-				'name' => 'Messages',
-				'label' => 'users::message.title.list',
-				'url' => route('backend.message.list'),
-				'permissions' => 'messages.index',
-				'priority' => 400,
-				'icon' => 'envelope',
-				'hidden' => true
 			]
 		]
 	]
