@@ -86,7 +86,7 @@ class Response {
 			}
 		}
 
-		return new JsonResponse($this->jsonResponse, 500, ['Content-Type' => 'application/json']);
+		return new JsonResponse($this->jsonResponse, 200, ['Content-Type' => 'application/json']);
 	}
 
 }
