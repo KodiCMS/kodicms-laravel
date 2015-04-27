@@ -12,13 +12,11 @@ class BackendController extends TemplateController
 	public $authRequired = TRUE;
 
 	/**
-	 *
 	 * @var Navigation
 	 */
 	public $navigation;
 
 	/**
-	 *
 	 * @var Breadcrumbs
 	 */
 	public $breadcrumbs;
@@ -84,13 +82,11 @@ class BackendController extends TemplateController
 
 		Assets::package(['libraries', 'core']);
 
-
 		$file = $this->getRouterController();
 		if (app('module.loader')->findFile('resources/js', $file, 'js')) {
 			Assets::js('controller.' . $file, \CMS::backendResourcesURL() . '/js/' . $file . '.js', 'global', FALSE, 999);
 		}
 
-		// TODO: разобраться с подключением событий и локалей в контроллер
-		//Assets::group('global', 'events', '<script type="text/javascript">' . Assets::merge_files('js/events', 'js') . '</script>', 'global');
+		$this->includeMedia('backendEvents', 'js/backendEvents', 'js');
 	}
 }

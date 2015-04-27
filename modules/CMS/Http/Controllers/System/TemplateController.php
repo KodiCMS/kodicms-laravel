@@ -144,6 +144,17 @@ class TemplateController extends Controller
 	}
 
 	/**
+	 * @param string $key
+	 * @param string $file
+	 * @param string $ext
+	 */
+	public function includeMedia($key, $file, $ext)
+	{
+		$mediaContent = '<script type="text/javascript">' . Assets::mergeFiles($file, $ext) . "</script>";
+		Assets::group('global', $key, $mediaContent, 'global');
+	}
+
+	/**
 	 * Execute an action on the controller.
 	 *
 	 * @param  string $method

@@ -1,5 +1,8 @@
 <?php namespace KodiCMS\CMS\Assets;
 
+use Cache;
+use Carbon\Carbon;
+
 class Core
 {
 	/**
@@ -322,37 +325,29 @@ class Core
 	/**
 	 * @param string $path
 	 * @param string $ext
-	 * @param string $cache_key
-	 * @param integer $lifetime
 	 * @return string
 	 */
-	public static function mergeFiles($path, $ext, $cacheKey = NULL, $lifetime = Date::DAY)
+	public static function mergeFiles($path, $ext)
 	{
-		$cache = Cache::instance();
+		$cacheKey = 'assets::merge::' . md5($path) . '::' . $ext;
 
-		if ($cache_key === NULL)
+		$content = Cache::remember($cacheKey, Carbon::now()->minute(20), function() use($path, $ext)
 		{
-			$cache_key = 'assets::merge::' . URL::title($path, '::') . '::' . $ext;
-		}
+			$return = '';
+			$files = app('module.loader')->findFile('resources', $path, $ext, TRUE);
 
-		$content = $cache->get($cache_key);
-
-		if ($content === NULL)
-		{
-			$files = Kohana::find_file('media', FileSystem::normalize_path($path), $ext, TRUE);
-			if (!empty($files))
+			foreach($files as $file)
 			{
-				foreach ($files as $file)
+				if(config('app.debug'))
 				{
-					$content .= file_get_contents($file) . "\n";
+					$return .= "{$file}\n";
 				}
 
-				if (Kohana::$caching === TRUE)
-				{
-					$cache->set($cache_key, $content, $lifetime);
-				}
+				$return .= file_get_contents($file) . "\n";
 			}
-		}
+
+			return $return;
+		});
 
 		return $content;
 	}
@@ -399,6 +394,6 @@ class Core
 	/**
 	 * Enforce static usage
 	 */
-	private function __contruct(){}
+	private function __construct(){}
 	private function __clone(){}
 }

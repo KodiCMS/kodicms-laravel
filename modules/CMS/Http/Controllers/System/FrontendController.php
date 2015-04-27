@@ -13,6 +13,8 @@ class FrontendController extends TemplateController
 	{
 		parent::registerMedia();
 		Assets::package(['libraries', 'core']);
+
+		$this->includeMedia('frontendEvents', 'js/frontendEvents', 'js');
 	}
 
 	public function after()
