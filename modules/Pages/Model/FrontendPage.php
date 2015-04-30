@@ -400,6 +400,14 @@ class FrontendPage
 	/**
 	 * @return string
 	 */
+	public function getMetaRobots()
+	{
+		return $this->robots;
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getMetaTitle()
 	{
 		return $this->parseMeta('meta_title');
