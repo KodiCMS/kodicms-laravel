@@ -1,6 +1,6 @@
 <?php namespace KodiCMS\Widgets\Contracts;
 
-interface ContextInterface {
-
+interface WidgetManager
+{
 
 }

@@ -1,33 +1,13 @@
-<?php namespace KodiCMS\Widgets;
+<?php namespace KodiCMS\Widgets\Manager;
 
+use KodiCMS\Widgets\Contracts\WidgetManager;
 use DB;
 use Illuminate\Database\Query\Builder;
 use KodiCMS\Pages\Model\FrontendPage;
 
-class Manager
+class WidgetManagerDatabase implements WidgetManager
 {
-	/**
-	 * @return array
-	 */
-	public static function getAvailableWidgets()
-	{
-		return config('widgets', []);
-	}
 
-	/**
-	 * Получение списка блоков по умолчанию
-	 *
-	 * @return array
-	 */
-	public static function get_system_blocks()
-	{
-		return [
-			-1 => __('--- Remove from page ---'),
-			0 => __('--- Hide ---'),
-			'PRE' => __('Before page render'),
-			'POST' => __('After page render')
-		];
-	}
 
 	/**
 	 * @param array $types
@@ -174,45 +154,5 @@ class Manager
 				->where('widget_id', (int) $widgetId)
 				->insert($insertData);
 		}
-	}
-
-	/**
-	 * @param Builder $query
-	 * @return array
-	 */
-	protected static function makeWidgetsList(Builder $query)
-	{
-		$widgets = [];
-		foreach ($query->get() as $id => $widget)
-		{
-			$widgets[$widget->id] = static::makeWidget($widget);
-		}
-
-		return $widgets;
-	}
-
-	/**
-	 *
-	 * @param $data
-	 * @return WidgetDecorator
-	 */
-	protected static function makeWidget($data)
-	{
-		if (empty($data) OR ! self::exists_by_type($data['type']))
-		{
-			return NULL;
-		}
-
-		$widget = unserialize($data['code']);
-		unset($data['code'], $data['type']);
-
-		foreach ($data as $key => $value)
-		{
-			$widget->{$key} = $value;
-		}
-
-		self::$cache[$widget->id] = $widget;
-
-		return $widget;
 	}
 }
