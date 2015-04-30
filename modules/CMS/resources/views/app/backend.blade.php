@@ -10,8 +10,6 @@
 
 		{!! Assets::group('global', 'templateScripts') !!}
 		{!! Assets::css() !!}
-		{!! Assets::js() !!}
-		{!! Assets::group('global', 'backendEvents') !!}
 	</head>
 	<body id="body.{{ $bodyId or 'backend' }}" class="{{ $requestType }} theme-{{ $theme or 'default' }} main-menu-fixed">
 		<div id="main-wrapper">
@@ -34,5 +32,8 @@
 				@include('cms::app.partials.footer')
 			</div>
 		</div>
+
+		{!! Assets::js() !!}
+		{!! Assets::group('global', 'backendEvents') !!}
 	</body>
 </html>

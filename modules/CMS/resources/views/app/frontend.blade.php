@@ -10,10 +10,12 @@
 
 	{!! Assets::group('global', 'templateScripts') !!}
 	{!! Assets::css() !!}
-	{!! Assets::js() !!}
-	{!! Assets::group('global', 'frontendEvents') !!}
 </head>
 <body id="body.{{ $bodyId or 'backend' }}" class="{{ $theme or 'theme-default' }}">
 	{!! $content or NULL !!}
+
+
+	{!! Assets::js() !!}
+	{!! Assets::group('global', 'frontendEvents') !!}
 </body>
 </html>

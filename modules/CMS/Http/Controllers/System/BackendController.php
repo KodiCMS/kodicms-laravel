@@ -84,7 +84,7 @@ class BackendController extends TemplateController
 
 		$file = $this->getRouterController();
 		if (app('module.loader')->findFile('resources/js', $file, 'js')) {
-			Assets::js('controller.' . $file, \CMS::backendResourcesURL() . '/js/' . $file . '.js', 'global', FALSE, 999);
+			Assets::js('controller.' . $file, backend_resources_url() . '/js/' . $file . '.js', 'core', false);
 		}
 
 		$this->includeMedia('backendEvents', 'js/backendEvents', 'js');
