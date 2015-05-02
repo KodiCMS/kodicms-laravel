@@ -9,10 +9,10 @@ class Response
 
 	const NO_ERROR                = 200;
 	const ERROR_MISSING_PAPAM     = 110;
-	const ERROR_MISSING_ASSIGMENT = 150;
 	const ERROR_VALIDATION        = 120;
 	const ERROR_UNKNOWN           = 130;
 	const ERROR_TOKEN             = 140;
+	const ERROR_MISSING_ASSIGMENT = 150;
 	const ERROR_PERMISSIONS       = 220;
 	const ERROR_UNAUTHORIZED      = 403;
 	const ERROR_PAGE_NOT_FOUND    = 404;
@@ -23,6 +23,9 @@ class Response
 
 	private $debug;
 
+	/**
+	 * @param bool $debug
+	 */
 	public function __construct($debug = true)
 	{
 		$this->debug = $debug;
