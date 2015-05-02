@@ -1,26 +1,41 @@
 <?php namespace KodiCMS\API\Exceptions;
 
+use Illuminate\Validation\Validator;
+
 class MissingParameterException extends Exception {
+
+	protected $code = Response::ERROR_MISSING_PAPAM;
 
 	/**
 	 * @var array
 	 */
-	protected $missedFields = [];
+	protected $rules = [];
 
 	/**
-	 * @param array $fields
+	 * @param Validator $validator
 	 */
-	public function __construct(array $fields)
+	public function __construct(Validator $validator)
 	{
-		$this->missedFields = $fields;
-		$this->message = trans('api::core.messages.missing_params', ['field' => implode(', ', $fields)]);
+		$this->rules = $validator->errors()->getMessages();
+		$this->message = trans('api::core.messages.missing_params', ['field' => implode(', ', array_keys($validator->failed()))]);
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getMissedFields()
+	public function getFailedRules()
 	{
-		return $this->missedFields;
+		return $this->rules;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function responseArray()
+	{
+		$data = parent::responseArray();
+		$data['failed_rules'] = $this->getFailedRules();
+
+		return $data;
 	}
 }

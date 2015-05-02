@@ -1,31 +1,22 @@
 <?php namespace KodiCMS\API\Http\Controllers\System;
 
+use BadMethodCallException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-
-use KodiCMS\API\Exceptions\Exception;
-use KodiCMS\API\Exceptions\MissingParameterException;
-use KodiCMS\API\Exceptions\ValidationException;
 use Illuminate\View\View;
+use KodiCMS\API\Exceptions\MissingParameterException;
+use KodiCMS\API\Exceptions\Response;
+use KodiCMS\API\Exceptions\ValidationException;
 use KodiCMS\CMS\Http\Controllers\System\Controller as BaseController;
+use Validator;
 
 abstract class Controller extends BaseController
 {
-	const NO_ERROR = 200;
-	const ERROR_MISSING_PAPAM = 110;
-	const ERROR_VALIDATION = 120;
-	const ERROR_UNKNOWN = 130;
-	const ERROR_TOKEN = 140;
-	const ERROR_PERMISSIONS = 220;
-	const ERROR_PAGE_NOT_FOUND = 404;
-
 	/**
 	 * Массив возвращаемых значений, будет преобразован в формат JSON
 	 * @var array
 	 */
-	public $jsonResponse = [
-		'content' => NULL
-	];
+	public $jsonResponse = ['content' => null];
 
 	/**
 	 * @var array
@@ -40,14 +31,15 @@ abstract class Controller extends BaseController
 	 *
 	 * @param string $key Ключ
 	 * @param mixed $default Значение по умолчанию, если параметр отсутсвует
-	 * @param bool $isRequired Параметр обязателен для передачи
+	 * @param bool|string|array $isRequired Параметр обязателен для передачи
 	 * @return string
 	 * @throws MissingApiParameterException
 	 */
-	public function getParameter($key, $default = NULL, $isRequired = FALSE)
+	public function getParameter($key, $default = null, $isRequired = false)
 	{
-		if ($isRequired === TRUE AND !$this->request->has($key)) {
-			throw new MissingParameterException([$key]);
+		if (!empty($isRequired))
+		{
+			$this->validateParameters([$key => $isRequired]);
 		}
 
 		$param = $this->request->input($key, $default);
@@ -56,17 +48,17 @@ abstract class Controller extends BaseController
 	}
 
 	/**
-	 *
 	 * @param string $key
+	 * @param bool|string|array $rules
 	 * @return string
+	 * @throws MissingApiParameterException
 	 */
-	public function getRequiredParameter($key)
+	public function getRequiredParameter($key, $rules = true)
 	{
-		return $this->getParameter($key, NULL, TRUE);
+		return $this->getParameter($key, null, $rules);
 	}
 
 	/**
-	 *
 	 * @param string $message
 	 */
 	public function setMessage($message)
@@ -75,7 +67,6 @@ abstract class Controller extends BaseController
 	}
 
 	/**
-	 *
 	 * @param array $errors
 	 */
 	public function setErrors(array $errors)
@@ -84,12 +75,12 @@ abstract class Controller extends BaseController
 	}
 
 	/**
-	 *
 	 * @param mixed $data
 	 */
 	public function setContent($data)
 	{
-		if($data instanceof View) {
+		if ($data instanceof View)
+		{
 			$data = $data->render();
 		}
 
@@ -97,77 +88,115 @@ abstract class Controller extends BaseController
 	}
 
 	/**
+	 * @param array $parameters
+	 * @return bool
+	 * @throws MissingApiParameterException
+	 */
+	final public function validateParameters(array $parameters)
+	{
+		$parameters = array_map(function ($rules)
+		{
+			if (is_bool($rules) AND $rules === true)
+			{
+				return 'required';
+			}
+
+			return $rules;
+
+		}, $parameters);
+
+		$validator = Validator::make($this->request->all(), $parameters);
+
+		if ($validator->fails())
+		{
+			throw new MissingParameterException($validator);
+		}
+
+		return true;
+	}
+
+	/**
 	 * Execute an action on the controller.
 	 *
-	 * @param  string  $method
-	 * @param  array   $parameters
+	 * @param  string $method
+	 * @param  array $parameters
 	 * @return array
 	 */
 	public function callAction($method, $parameters)
 	{
-		$this->jsonResponse['type'] = Exception::TYPE_CONTENT;
+		$this->jsonResponse['type'] = Response::TYPE_CONTENT;
 		$this->jsonResponse['method'] = $this->request->method();
-		$this->jsonResponse['code'] = Exception::NO_ERROR;
+		$this->jsonResponse['code'] = Response::NO_ERROR;
 
-		$missedFields = [];
-		if(isset($this->requiredFields[$method]) AND is_array($this->requiredFields[$method])) {
-			foreach ($this->requiredFields[$method] as $field) {
-				if(!$this->request->has($field)) {
-					$missedFields[] = $field;
-				}
-			}
-		}
-
-		if(count($missedFields) > 0) {
-			throw new MissingParameterException($missedFields);
+		if (isset($this->requiredFields[$method]) AND is_array($this->requiredFields[$method]))
+		{
+			$this->validateParameters($this->requiredFields[$method]);
 		}
 
 		$this->before();
 		$response = call_user_func_array([$this, $method], $parameters);
 		$this->after();
 
-		if($response instanceof RedirectResponse) {
-			$this->jsonResponse['type'] = Exception::TYPE_REDIRECT;
+		if ($response instanceof RedirectResponse)
+		{
+			$this->jsonResponse['type'] = Response::TYPE_REDIRECT;
 			$this->jsonResponse['targetUrl'] = $response->getTargetUrl();
 			$this->jsonResponse['code'] = $response->getStatusCode();
 		}
 
 		$this->response->header('Content-Type', 'application/json');
+
 		return $this->jsonResponse;
 	}
 
 	/**
 	 * Handle calls to missing methods on the controller.
 	 *
-	 * @param  string  $method
-	 * @param  array   $parameters
+	 * @param  string $method
+	 * @param  array $parameters
 	 * @return mixed
 	 *
-	 * @throws \BadMethodCallException
+	 * @throws BadMethodCallException
 	 */
 	public function __call($method, $parameters)
 	{
-		throw new \BadMethodCallException("The requested API action [$method] does not exist.");
+		throw new BadMethodCallException("The requested API action [$method] does not exist.");
 	}
 
 	/***************************************
 	 * Magic methods
 	 ***************************************/
+
+	/**
+	 * @param string $key
+	 * @param mixed $value
+	 */
 	public function __set($key, $value)
 	{
 		$this->jsonResponse[$key] = $value;
 	}
 
+	/**
+	 * @param string $key
+	 * @return mixed
+	 */
 	public function __get($key)
 	{
 		return $this->jsonResponse[$key];
 	}
 
+	/**
+	 * @param string $key
+	 * @return bool
+	 */
 	public function __isset($key)
 	{
 		return isset($this->jsonResponse[$key]);
 	}
 
+	/**
+	 * @param string $key
+	 */
 	public function __unset($key)
 	{
 		unset($this->jsonResponse[$key]);
@@ -176,8 +205,8 @@ abstract class Controller extends BaseController
 	/**
 	 * Throw the failed validation exception.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \Illuminate\Contracts\Validation\Validator  $validator
+	 * @param  \Illuminate\Http\Request $request
+	 * @param  \Illuminate\Contracts\Validation\Validator $validator
 	 * @return void
 	 */
 	protected function throwValidationException(Request $request, $validator)
@@ -191,8 +220,8 @@ abstract class Controller extends BaseController
 	/**
 	 * Create the response for when a request fails validation.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  array  $errors
+	 * @param  \Illuminate\Http\Request $request
+	 * @param  array $errors
 	 * @return \Illuminate\Http\Response
 	 */
 	protected function buildFailedValidationResponse(Request $request, array $errors)
@@ -202,8 +231,6 @@ abstract class Controller extends BaseController
 			return new JsonResponse($errors, 422);
 		}
 
-		return redirect()->to($this->getRedirectUrl())
-			->withInput($request->input())
-			->withErrors($errors, $this->errorBag());
+		return redirect()->to($this->getRedirectUrl())->withInput($request->input())->withErrors($errors, $this->errorBag());
 	}
 }
