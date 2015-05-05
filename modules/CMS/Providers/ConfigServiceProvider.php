@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\CMS\Providers;
 
+use CMS;
+use Illuminate\Database\QueryException;
 use KodiCMS\CMS\Helpers\DatabaseConfig;
 
 class ConfigServiceProvider extends ServiceProvider {
@@ -9,7 +11,14 @@ class ConfigServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$config = DatabaseConfig::get();
+		try
+		{
+			$config = DatabaseConfig::get();
+		}
+		catch(QueryException $e) // Если таблица конфиг не существует
+		{
+			$config = [];
+		}
 
 		foreach($config as $group => $data)
 		{
