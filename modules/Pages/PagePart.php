@@ -65,7 +65,7 @@ class PagePart
 
 		$pageId = ($page instanceof FrontendPage) ? $page->getId() : (int)$page;
 
-		static::loadPartsbyPageId($pageId);
+		static::loadPartsByPageId($pageId);
 
 		if (empty(static::$cached[$pageId][$part]))
 		{
@@ -88,7 +88,7 @@ class PagePart
 	 * @param integer $pageId
 	 * @return array|null
 	 */
-	final private static function loadPartsbyPageId($pageId)
+	final private static function loadPartsByPageId($pageId)
 	{
 		if (!array_key_exists($pageId, static::$cached))
 		{
