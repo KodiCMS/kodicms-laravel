@@ -1,7 +1,8 @@
 <?php namespace KodiCMS\CMS\Providers;
 
-use Illuminate\Routing\Router;
+use CMS;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as BaseRouteServiceProvider;
+use Illuminate\Routing\Router;
 
 class RouteServiceProvider extends BaseRouteServiceProvider
 {
@@ -35,10 +36,18 @@ class RouteServiceProvider extends BaseRouteServiceProvider
 	 */
 	public function map(Router $router)
 	{
-		foreach ($this->app['module.loader']->getRegisteredModules() as $module) {
+		if (!CMS::isInstalled())
+		{
+			return;
+		}
+
+		foreach ($this->app['module.loader']->getRegisteredModules() as $module)
+		{
 			$routesFile = $module->getRoutesPath();
-			if (is_file($routesFile)) {
-				$router->group(['namespace' => $module->getControllerNamespace()], function ($router) use ($routesFile) {
+			if (is_file($routesFile))
+			{
+				$router->group(['namespace' => $module->getControllerNamespace()], function ($router) use ($routesFile)
+				{
 					require $routesFile;
 				});
 			}

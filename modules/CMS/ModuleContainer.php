@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\CMS;
 
+use CMS;
+
 class ModuleContainer extends Loader\ModuleContainer
 {
 	/**
@@ -10,7 +12,12 @@ class ModuleContainer extends Loader\ModuleContainer
 		if (!$this->_isBooted) {
 			$this->loadViews();
 			$this->loadTranslations();
-			$this->loadConfig();
+
+			if (CMS::isInstalled())
+			{
+				$this->loadConfig();
+			}
+
 			$this->loadAssets();
 			$this->_isBooted = TRUE;
 		}

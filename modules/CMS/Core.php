@@ -15,6 +15,15 @@ class Core extends Container {
 	protected $shutdowsCalbbacks = [];
 
 	/**
+	 * TODO: доработать проверку
+	 * @return bool
+	 */
+	public static function isInstalled()
+	{
+		return is_file(base_path('.env'));
+	}
+
+	/**
 	 * @return string
 	 */
 	public static function backendPath()
