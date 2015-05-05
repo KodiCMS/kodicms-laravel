@@ -8,5 +8,6 @@ class ModuleServiceProvider extends ServiceProvider {
 	{
 		$this->registerConsoleCommand('module.migrate', '\KodiCMS\Installer\Console\Commands\ModuleMigrate');
 		$this->registerConsoleCommand('module.seed', '\KodiCMS\Installer\Console\Commands\ModuleSeed');
+		$this->registerConsoleCommand('cms.install', '\KodiCMS\Installer\Console\Commands\Install');
 	}
 }
