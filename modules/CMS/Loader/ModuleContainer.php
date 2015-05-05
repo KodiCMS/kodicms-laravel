@@ -2,10 +2,12 @@
 
 use Cache;
 use Carbon\Carbon;
+use CMS;
 use Illuminate\Support\Facades\App;
+use KodiCMS\CMS\Contracts\ModuleContainerInterface;
 use KodiCMS\CMS\Helpers\File;
 
-class ModuleContainer
+class ModuleContainer implements ModuleContainerInterface
 {
 	/**
 	 * @var string
@@ -20,12 +22,12 @@ class ModuleContainer
 	/**
 	 * @var bool
 	 */
-	protected $_isRegistered = FALSE;
+	protected $_isRegistered = false;
 
 	/**
 	 * @var bool
 	 */
-	protected $_isBooted = FALSE;
+	protected $_isBooted = false;
 
 	/**
 	 * @var string
@@ -46,15 +48,17 @@ class ModuleContainer
 	 * @param null|string $modulePath
 	 * @param null|string $namespace
 	 */
-	public function __construct($moduleName, $modulePath = NULL, $namespace = NULL)
+	public function __construct($moduleName, $modulePath = null, $namespace = null)
 	{
-		if (empty($modulePath)) {
+		if (empty($modulePath))
+		{
 			$modulePath = base_path('modules/' . $moduleName);
 		}
 
 		$this->_path = File::normalizePath($modulePath);
 		$this->_name = $moduleName;
-		if (!is_null($namespace)) {
+		if (!is_null($namespace))
+		{
 			$this->_namespace = $namespace;
 		}
 	}
@@ -87,14 +91,16 @@ class ModuleContainer
 	 * @param strimg|null $sub
 	 * @return string
 	 */
-	public function getPath($sub = NULL)
+	public function getPath($sub = null)
 	{
 		$path = $this->_path;
-		if (is_array($sub)) {
+		if (is_array($sub))
+		{
 			$sub = implode(DIRECTORY_SEPARATOR, $sub);
 		}
 
-		if (!is_null($sub)) {
+		if (!is_null($sub))
+		{
 			$path .= DIRECTORY_SEPARATOR . $sub;
 		}
 
@@ -154,18 +160,24 @@ class ModuleContainer
 	 */
 	public function boot()
 	{
-		if (!$this->_isBooted) {
+		if (!$this->_isBooted)
+		{
 			$this->loadViews();
 			$this->loadTranslations();
 			$this->loadAssets();
-			$this->loadConfig();
+
+			if (CMS::isInstalled())
+			{
+				$this->loadConfig();
+			}
 
 			$serviceProviderPath = $this->getServiceProviderPath();
-			if (is_file($serviceProviderPath)) {
+			if (is_file($serviceProviderPath))
+			{
 				App::register($this->getNamespace() . '\Providers\ModuleServiceProvider');
 			}
 
-			$this->_isBooted = TRUE;
+			$this->_isBooted = true;
 		}
 
 		return $this;
@@ -176,9 +188,10 @@ class ModuleContainer
 	 */
 	public function register()
 	{
-		if (!$this->_isRegistered) {
+		if (!$this->_isRegistered)
+		{
 
-			$this->_isRegistered = TRUE;
+			$this->_isRegistered = true;
 		}
 
 		return $this;
@@ -187,7 +200,8 @@ class ModuleContainer
 	protected function loadAssets()
 	{
 		$packagesFile = $this->getAssetsPackagesPath();
-		if (is_file($packagesFile)) {
+		if (is_file($packagesFile))
+		{
 			require $packagesFile;
 		}
 	}
@@ -201,7 +215,8 @@ class ModuleContainer
 	{
 		$namespace = strtolower($this->getName());
 
-		if (is_dir($appPath = base_path() . '/resources/views/module/' . $namespace)) {
+		if (is_dir($appPath = base_path() . '/resources/views/module/' . $namespace))
+		{
 			app('view')->addNamespace($namespace, $appPath);
 		}
 
@@ -229,17 +244,20 @@ class ModuleContainer
 
 		if (!is_dir($path)) return;
 
-		$configs = Cache::remember("moduleConfig::{$path}", Carbon::now()->addMinutes(10), function() use($path) {
+		$configs = Cache::remember("moduleConfig::{$path}", Carbon::now()->addMinutes(10), function () use ($path)
+		{
 			$configs = [];
-			foreach (new \DirectoryIterator($path) as $file) {
-				if ($file->isDot() OR strpos($file->getFilename(), '.php') === FALSE) continue;
+			foreach (new \DirectoryIterator($path) as $file)
+			{
+				if ($file->isDot() OR strpos($file->getFilename(), '.php') === false) continue;
 				$key = $file->getBasename('.php');
 				$configs[$key] = array_merge(require $file->getPathname(), app('config')->get($key, []));
 			}
+
 			return $configs;
 		});
 
-		foreach($configs as $group => $data)
+		foreach ($configs as $group => $data)
 		{
 			app('config')->set($group, $data);
 		}

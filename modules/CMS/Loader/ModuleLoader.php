@@ -2,6 +2,8 @@
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use KodiCMS\CMS\Contracts\ModuleContainerInterface;
+use KodiCMS\CMS\Exceptions\ModuleLoaderException;
 use KodiCMS\CMS\Helpers\File;
 
 class ModuleLoader
@@ -53,17 +55,25 @@ class ModuleLoader
 	 * @param string|null $modulePath
 	 * @param string|null $namespace
 	 * @return $this
+	 * @throws ModuleLoaderException
 	 */
 	public function addModule($moduleName, $modulePath = null, $namespace = null)
 	{
-		$class = '\\KodiCMS\\' . $moduleName . '\\ModuleContainer';
+		$moduleContainerClass = '\\KodiCMS\\' . $moduleName . '\\ModuleContainer';
 		$moduleClass = '\\KodiCMS\\CMS\\Loader\\' . $moduleName . 'ModuleContainer';
-		if (!class_exists($class))
+		if (!class_exists($moduleContainerClass))
 		{
-			$class = class_exists($moduleClass) ? $moduleClass : '\\KodiCMS\\CMS\\Loader\\ModuleContainer';
-
+			$moduleContainerClass = class_exists($moduleClass) ? $moduleClass : '\\KodiCMS\\CMS\\Loader\\ModuleContainer';
 		}
-		$this->_registeredModules[] = new $class($moduleName, $modulePath, $namespace);
+
+		$moduleContainer = new $moduleContainerClass($moduleName, $modulePath, $namespace);
+
+		if (!($moduleContainer instanceof ModuleContainerInterface))
+		{
+			throw new ModuleLoaderException("Container module [{$moduleContainerClass}] must be implements of ModuleContainerInterface");
+		}
+
+		$this->_registeredModules[] = $moduleContainer;
 
 		return $this;
 	}
