@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
+use CMS;
+use Lang;
 use Illuminate\Auth\Guard;
 use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -70,20 +72,17 @@ abstract class Controller extends BaseController
 		$this->response = $response;
 		$this->session = $session;
 
-		$this->currentUser = $auth->user();
-		if(auth()->check())
-		{
-			\Lang::setLocale($this->currentUser->locale);
-		}
-
-		$this->loginPath = \CMS::backendPath() . '/auth/login';
+		$this->loadCurrentUser($auth);
+		$this->loginPath = CMS::backendPath() . '/auth/login';
 
 		// Execute method boot() on controller execute
-		if (method_exists($this, 'boot')) {
+		if (method_exists($this, 'boot'))
+		{
 			app()->call([$this, 'boot']);
 		}
 
-		if ($this->authRequired) {
+		if ($this->authRequired)
+		{
 			$this->beforeFilter('@checkPermissions');
 		}
 	}
@@ -92,17 +91,13 @@ abstract class Controller extends BaseController
 	 * Execute before an action executed
 	 * return void
 	 */
-	public function before()
-	{
-	}
+	public function before(){}
 
 	/**
 	 * Execute after an action executed
 	 * return void
 	 */
-	public function after()
-	{
-	}
+	public function after(){}
 
 	/**
 	 * @param string $separator
@@ -160,21 +155,24 @@ abstract class Controller extends BaseController
 	 */
 	public function checkPermissions(Route $router, Request $request)
 	{
-		if (auth()->guest()) {
-			return $this->denyAccess(trans('users::core.messages.auth.unauthorized'), TRUE);
+		if (auth()->guest())
+		{
+			return $this->denyAccess(trans('users::core.messages.auth.unauthorized'), true);
 		}
 
-		if (!$this->currentUser->hasRole('login')) {
+		if (!$this->currentUser->hasRole('login'))
+		{
 			auth()->logout();
 
-			return $this->denyAccess(trans('users::core.messages.auth.deny_access'), TRUE);
+			return $this->denyAccess(trans('users::core.messages.auth.deny_access'), true);
 		}
 
 		if (
 			!in_array($this->getCurrentAction(), $this->allowedActions)
 			AND
 			!acl_check(array_get($this->permissions, $this->getCurrentAction()))
-		) {
+		)
+		{
 			return $this->denyAccess(trans('users::core.messages.auth.no_permissions'));
 		}
 	}
@@ -186,13 +184,16 @@ abstract class Controller extends BaseController
 	 */
 	public function denyAccess($message = NULL, $redirect = FALSE)
 	{
-		if ($this->request->ajax()) {
+		if ($this->request->ajax())
+		{
 			throw new AuthenticateException($message);
-		} elseif ($redirect) {
-			return redirect()
-				->guest($this->loginPath)
-				->withErrors($message);
-		} else {
+		}
+		elseif ($redirect)
+		{
+			return redirect()->guest($this->loginPath)->withErrors($message);
+		}
+		else
+		{
 			return abort(403, $message);
 		}
 	}
@@ -206,21 +207,32 @@ abstract class Controller extends BaseController
 	{
 		$isContinue = !is_null($this->request->get('continue'));
 
-		if ($route === NULL) {
-			if ($isContinue) {
+		if ($route === null)
+		{
+			if ($isContinue)
+			{
 				$route = action('\\' . get_called_class() . '@getEdit', $parameters);
-			} else {
+			}
+			else
+			{
 				$route = action('\\' . get_called_class() . '@getIndex');
 			}
-		} else if (strpos($route, '@') !== FALSE) {
+		}
+		else if (strpos($route, '@') !== false)
+		{
 			$route = action($route, $parameters);
-		} else {
+		}
+		else
+		{
 			$route = route($route, $parameters);
 		}
 
-		if ($isContinue AND $this->getCurrentAction() != 'postCreate') {
+		if ($isContinue AND $this->getCurrentAction() != 'postCreate')
+		{
 			return back();
-		} else {
+		}
+		else
+		{
 			return redirect($route);
 		}
 	}
@@ -232,5 +244,18 @@ abstract class Controller extends BaseController
 	public function throwFailException(RedirectResponse $response)
 	{
 		throw new HttpResponseException($response);
+	}
+
+	/**
+	 * загрузка объекта текущего пользователя.
+	 * @param Guard $auth
+	 */
+	protected function loadCurrentUser(Guard $auth)
+	{
+		$this->currentUser = $auth->user();
+		if (auth()->check())
+		{
+			Lang::setLocale($this->currentUser->locale);
+		}
 	}
 }
