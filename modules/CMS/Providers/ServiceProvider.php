@@ -15,7 +15,7 @@ abstract class ServiceProvider extends BaseServiceProvider
 		$key = 'command.' . $key;
 		$this->app[$key] = $this->app->share(function ($app) use ($class)
 		{
-			return new $class;
+			return $app->make($class);
 		});
 
 		$this->commands($key);
