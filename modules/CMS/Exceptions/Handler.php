@@ -46,7 +46,8 @@ class Handler extends ExceptionHandler {
 			return (new APIExceptionResponse(config('app.debug')))->createResponse($e);
 		}
 
-		if(config('app.debug'))
+		// TODO: поправить отлов исключений
+		if(config('app.debug') or !($e instanceof HttpException))
 		{
 			return $this->renderExceptionWithWhoops($e);
 		}
