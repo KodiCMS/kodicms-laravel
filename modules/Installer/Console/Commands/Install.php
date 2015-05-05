@@ -12,6 +12,9 @@ class Install extends GeneratorCommand
 	 */
 	protected $name = 'cms:install';
 
+	/**
+	 * @return array
+	 */
 	protected function getDefaultEnvironment()
 	{
 		return [
