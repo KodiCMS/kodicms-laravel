@@ -109,10 +109,10 @@ class Install extends GeneratorCommand
 			'password' => 'DB_PASSWORD'
 		];
 
-		// Обновляем данные подключения в БД
+		// Обновляем данные подключения к БД
 		foreach($configs as $key => $env)
 		{
-			Config::set('database.connections.mysql.' . $key, array_get($this->getEnvironment(), $env));
+			Config::set("database.connections.mysql.{$key}", array_get($this->getEnvironment(), $env));
 		}
 
 		$this->call('cms:modules:migrate');
@@ -156,16 +156,16 @@ class Install extends GeneratorCommand
 		$defaults = $this->getDefaultEnvironment();
 
 		return [
-			['DB_HOST', null, InputOption::VALUE_OPTIONAL, "Database host", array_get($defaults, 'DB_HOST')],
-			['DB_DATABASE', null, InputOption::VALUE_OPTIONAL, 'Database name', array_get($defaults, 'DB_DATABASE')],
+			['DB_HOST', 'host', InputOption::VALUE_OPTIONAL, "Database host", array_get($defaults, 'DB_HOST')],
+			['DB_DATABASE', 'db', InputOption::VALUE_OPTIONAL, 'Database name', array_get($defaults, 'DB_DATABASE')],
 			['DB_USERNAME', 'u', InputOption::VALUE_OPTIONAL, 'Database username', array_get($defaults, 'DB_USERNAME')],
 			['DB_PASSWORD', 'p', InputOption::VALUE_OPTIONAL, 'Database password', array_get($defaults, 'DB_PASSWORD')],
-			['CACHE_DRIVER', null, InputOption::VALUE_OPTIONAL, 'Cache driver [file|redis]', array_get($defaults, 'CACHE_DRIVER')],
-			['SESSION_DRIVER', null, InputOption::VALUE_OPTIONAL, 'Session driver [file|database]', array_get($defaults, 'SESSION_DRIVER')],
-			['APP_ENV', null, InputOption::VALUE_OPTIONAL, 'Application Environmet [local|production]', array_get($defaults, 'APP_ENV')],
-			['APP_DEBUG', null, InputOption::VALUE_OPTIONAL, 'Application Debug [true|false]', array_get($defaults, 'APP_DEBUG')],
-			['APP_URL', null, InputOption::VALUE_OPTIONAL, 'Application host', array_get($defaults, 'APP_URL')],
-			['ADMIN_DIR_NAME', null, InputOption::VALUE_OPTIONAL, 'Admin directory name', array_get($defaults, 'ADMIN_DIR_NAME')]
+			['CACHE_DRIVER', 'cache', InputOption::VALUE_OPTIONAL, 'Cache driver [file|redis]', array_get($defaults, 'CACHE_DRIVER')],
+			['SESSION_DRIVER', 'session', InputOption::VALUE_OPTIONAL, 'Session driver [file|database]', array_get($defaults, 'SESSION_DRIVER')],
+			['APP_ENV', 'env', InputOption::VALUE_OPTIONAL, 'Application Environmet [local|production]', array_get($defaults, 'APP_ENV')],
+			['APP_DEBUG', 'debug', InputOption::VALUE_OPTIONAL, 'Application Debug [true|false]', array_get($defaults, 'APP_DEBUG')],
+			['APP_URL', 'url', InputOption::VALUE_OPTIONAL, 'Application host', array_get($defaults, 'APP_URL')],
+			['ADMIN_DIR_NAME', 'dir', InputOption::VALUE_OPTIONAL, 'Admin directory name', array_get($defaults, 'ADMIN_DIR_NAME')]
 		];
 	}
 
