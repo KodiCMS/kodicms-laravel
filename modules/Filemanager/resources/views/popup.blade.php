@@ -1,3 +1,4 @@
+@section('scripts')
 <script type="text/javascript">
 	function elfinderInit(params) {
 		var params = $.extend({
@@ -49,3 +50,4 @@
 		}
 	});
 </script>
+@stop

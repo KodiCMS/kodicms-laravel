@@ -7,6 +7,7 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}" />
 	<title>{{ $title or 'Backend' }} &ndash; {{ config('cms.title') }}</title>
 	<link href="{{ asset('cms/favicon.ico') }}" rel="favourites icon" />
+	@yield('head')
 
 	{!! Assets::group('global', 'templateScripts') !!}
 	{!! Assets::css() !!}
@@ -17,5 +18,6 @@
 
 	{!! Assets::js() !!}
 	{!! Assets::group('global', 'frontendEvents') !!}
+	@yield('scripts')
 </body>
 </html>
