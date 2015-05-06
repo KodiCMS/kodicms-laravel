@@ -1,6 +1,6 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
-use KodiCMS\CMS\Assets\Core as Assets;
+use Assets;
 
 class FrontendController extends TemplateController
 {

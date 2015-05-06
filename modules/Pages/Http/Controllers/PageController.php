@@ -4,7 +4,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use KodiCMS\CMS\Helpers\WYSIWYG;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
-use KodiCMS\CMS\Assets\Core as Assets;
+use Assets;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Services\PageCreator;

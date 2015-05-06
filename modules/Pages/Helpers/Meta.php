@@ -2,7 +2,7 @@
 
 use HTML;
 use KodiCMS\Pages\Model\FrontendPage;
-use KodiCMS\CMS\Assets\Core as Assets;
+use Assets;
 
 class Meta
 {

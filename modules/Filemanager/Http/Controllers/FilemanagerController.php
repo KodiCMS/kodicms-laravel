@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Filemanager\Http\Controllers;
 
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
-use KodiCMS\CMS\Assets\Core as Assets;
+use Assets;
 
 class FilemanagerController extends BackendController
 {

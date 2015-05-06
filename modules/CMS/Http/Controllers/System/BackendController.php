@@ -1,6 +1,8 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
-use KodiCMS\CMS\Assets\Core as Assets;
+use UI;
+use View;
+use Assets;
 use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
 use KodiCMS\CMS\Navigation\Collection as Navigation;
 
@@ -36,13 +38,13 @@ class BackendController extends TemplateController
 		$currentPage = Navigation::getCurrentPage();
 
 		$this->breadcrumbs
-			->add(\UI::icon('home'), route('backend.dashboard'));
+			->add(UI::icon('home'), route('backend.dashboard'));
 
 		if (!is_null($currentPage)) {
 			$this->setTitle($currentPage->getName(), $currentPage->getUrl());
 		}
 
-		\View::share('currentPage', $currentPage);
+		View::share('currentPage', $currentPage);
 
 		parent::before();
 	}

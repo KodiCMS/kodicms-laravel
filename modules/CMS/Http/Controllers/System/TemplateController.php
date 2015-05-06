@@ -3,7 +3,7 @@
 use CMS;
 use View;
 use Lang;
-use KodiCMS\CMS\Assets\Core as Assets;
+use Assets;
 
 class TemplateController extends Controller
 {

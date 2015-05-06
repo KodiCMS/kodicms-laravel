@@ -1,6 +1,6 @@
 <?php namespace KodiCMS\CMS\Http\Controllers;
 
-use KodiCMS\CMS\Assets\Core as Assets;
+use Assets;
 use KodiCMS\Users\Model\UserRole;
 
 abstract class AbstractFileController extends System\BackendController {

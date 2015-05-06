@@ -5,7 +5,7 @@ use KodiCMS\Installer\Exceptions\InstallValidationException;
 use Lang;
 use Date;
 use KodiCMS\CMS\Http\Controllers\System\FrontendController;
-use KodiCMS\CMS\Assets\Core as Assets;
+use Assets;
 use KodiCMS\Installer\Installer;
 
 class InstallerController extends FrontendController {

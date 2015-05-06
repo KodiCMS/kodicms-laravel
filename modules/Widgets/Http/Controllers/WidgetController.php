@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Widgets\Http\Controllers;
 
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
-use KodiCMS\CMS\Assets\Core as Assets;
+use Assets;
 use KodiCMS\Widgets\Model\Widget;
 
 class WidgetController extends BackendController {

@@ -1,6 +1,6 @@
 <?php namespace KodiCMS\CMS\Helpers;
 
-use KodiCMS\CMS\Assets\Core as Assets;
+use Assets;
 use KodiCMS\Pages\Filter\Dummy as Filter;
 
 class WYSIWYG
