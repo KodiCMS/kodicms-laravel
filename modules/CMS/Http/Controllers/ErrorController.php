@@ -1,7 +1,5 @@
 <?php namespace KodiCMS\CMS\Http\Controllers;
 
-use Illuminate\Auth\Guard;
-
 class ErrorController extends System\FrontendController {
 
 	public function error500(\Exception $e)
@@ -30,10 +28,4 @@ class ErrorController extends System\FrontendController {
 			'debug' => config('app.debug')
 		]);
 	}
-
-	/**
-	 * загрузка объекта текущего пользователя.
-	 * @param Guard $auth
-	 */
-	protected function loadCurrentUser(Guard $auth) {}
 }

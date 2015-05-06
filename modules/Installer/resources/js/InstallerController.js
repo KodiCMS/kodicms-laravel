@@ -36,7 +36,7 @@ $(function() {
 			$form = $(".form-horizontal");
 
 			if(currentIndex == 1 && newIndex > currentIndex && FAILED ) {
-				cms.messages.parse([__('Before proceeding to the next step you need to fix errors')], 'error');
+				CMS.messages.parse([__('Before proceeding to the next step you need to fix errors')], 'error');
 				return false;
 			}
 
@@ -44,11 +44,12 @@ $(function() {
 				if(validate_step_2($form))
 				{
 					return check_connect();
-				}
+				};
 
 				return false;
 			}
 
+			console.log(currentIndex, newIndex, currentIndex)
 			if(currentIndex == 3 && newIndex > currentIndex) {
 				return validate_step_3($form);
 			}
@@ -56,7 +57,8 @@ $(function() {
 			return true;
 		},
 		onFinishing: function (event, currentIndex) {
-			return $("form").submit();
+			$status = validate_step_3($form);
+			return $status && $("form").submit();
 		}
 	});
 
@@ -74,13 +76,13 @@ $(function() {
 	}
 
 	function validate_step_3($form) {
-
+		console.log($form);
 		$form.validate({
 			onsubmit: false,
 			rules: {
 				'install[site_name]': "required",
 				'install[username]': "required",
-				'install[password_field]': {
+				'install[password]': {
 					required: true,
 					minlength: 5
 				},
@@ -89,7 +91,7 @@ $(function() {
 					email: true
 				},
 				'install[admin_dir_name]': "required",
-				'install[password_confirm]': {
+				'install[password_confirmation]': {
 					equalTo: "#password"
 				},
 			}

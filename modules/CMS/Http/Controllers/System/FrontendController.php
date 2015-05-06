@@ -14,6 +14,11 @@ class FrontendController extends TemplateController
 		parent::registerMedia();
 		Assets::package(['libraries', 'core']);
 
+		$file = $this->getRouterController();
+		if (app('module.loader')->findFile('resources/js', $file, 'js')) {
+			Assets::js('controller.' . $file, backend_resources_url() . '/js/' . $file . '.js', 'core', false);
+		}
+
 		$this->includeMedia('frontendEvents', 'js/frontendEvents', 'js');
 	}
 

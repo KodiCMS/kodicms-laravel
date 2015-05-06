@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Installer\Http\Controllers;
 
 use KodiCMS\Installer\EnvironmentTester;
+use KodiCMS\Installer\Exceptions\InstallValidationException;
 use Lang;
 use Date;
 use KodiCMS\CMS\Http\Controllers\System\FrontendController;
@@ -24,9 +25,17 @@ class InstallerController extends FrontendController {
 		$this->installer = new Installer;
 	}
 
+	public function error()
+	{
+		$this->setTitle(trans('installer::core.title.not_installed'));
+		$this->setContent('not_installed', [
+			'title' => $this->template->title
+		]);
+	}
+
 	public function run()
 	{
-		Assets::package(['steps']);
+		Assets::package(['steps', 'validate']);
 
 		list($failed, $tests, $optional) = EnvironmentTester::check();
 
@@ -58,9 +67,15 @@ class InstallerController extends FrontendController {
 			$data = $this->installer->install($data);
 			return redirect(array_get($data, 'admin_dir_name'));
 		}
+		catch(InstallValidationException $e)
+		{
+			$this->throwValidationException(
+				$this->request, $e->getValidator()
+			);
+		}
 		catch(\Exception $e)
 		{
-			dd($e);
+			$this->throwFailException($this->smartRedirect()->withErrors($e->getMessage()));
 		}
 	}
 }

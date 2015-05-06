@@ -3,6 +3,7 @@
 use DB;
 use CMS;
 use Illuminate\Database\DatabaseManager;
+use KodiCMS\Installer\Exceptions\InstallDatabaseException;
 use KodiCMS\Installer\Support\ModuleInstaller;
 use Lang;
 use Validator;
@@ -211,8 +212,8 @@ class Installer {
 			'admin_dir_name' => 'required',
 			'username' => 'required',
 			'email' => 'required|email',
-			'cache_type' => 'required',
-			'session_type' => 'required',
+//			'cache_type' => 'required',
+//			'session_type' => 'required',
 			'password' => 'required|confirmed',
 			'password_confirmation' => 'required',
 			'db_host' => 'required',
@@ -220,9 +221,12 @@ class Installer {
 			'db_username' => 'required'
 		]);
 
-		if (!$validator->fails())
+		if ($validator->fails())
 		{
-			throw new InstallValidationException($validator);
+			$e = new InstallValidationException;
+			$e->setValidator($validator);
+
+			throw $e;
 		}
 
 		return $validator;
@@ -274,9 +278,9 @@ class Installer {
 	{
 		$$this->installer->resetModules();
 
-		if(is_file(base_path('.env')))
+		if(is_file(app()->environmentFile()))
 		{
-			unlink(base_path('.env'));
+			unlink(app()->environmentFile());
 		}
 	}
 }

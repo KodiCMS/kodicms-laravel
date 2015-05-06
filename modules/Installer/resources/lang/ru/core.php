@@ -12,7 +12,8 @@ return [
 		]
 	],
 	'button' => [
-		'empty_database' => 'Очистить БД'
+		'empty_database' => 'Очистить БД',
+		'install' => 'Установить'
 	],
 	'title' => [
 		'language' => 'Язык',
@@ -21,7 +22,8 @@ return [
 		'site_information' => 'Основная информация',
 		'user_settings' => 'Настройки пользователя',
 		'site_settings' => 'Настройки сайта',
-		'regional_settings' => 'Региональные настройки'
+		'regional_settings' => 'Региональные настройки',
+		'not_installed' => 'Система не установлена'
 	],
 	'field' => [
 		'current_language' => 'Текущий язык',
@@ -42,6 +44,7 @@ return [
 		'date_format' => 'Формат времени'
 	],
 	'messages' => [
+		'not_installed' => 'Не найден файл окружения :file. Вы можете создать его вручную и установить систему через консоль, либо воспользоваться инсталлятором.',
 		'database_name_inforamtion' => 'Необходимо указать название существующей базы данных',
 		'database_connection_failed' => 'Не удалось подключиться к БД',
 		'database_no_password' => 'Если для подключения к БД не требуется пароль, оставьте поле пустым.',

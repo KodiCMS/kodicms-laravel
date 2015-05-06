@@ -12,14 +12,13 @@ app('router')->before(function() {
 	Route::group(['namespace' => 'KodiCMS\Installer\Http\Controllers'], function () {
 		Route::get('api.installer.databaseCheck', ['as' => 'api.installer.databaseCheck', 'uses' => 'API\InstallerController@databaseCheck']);
 
-		Route::get('{slug}', [
-			'uses' => 'InstallerController@run'
-		])
-			->where('slug', '(.*)?');
+		Route::get('install', ['uses' => 'InstallerController@run', 'as' => 'installer.get']);
+		Route::post('install', ['uses' => 'InstallerController@install', 'as' => 'installer.post']);
 
-		Route::post('{slug}', [
-			'uses' => 'InstallerController@install'
-		])
-			->where('slug', '(.*)?');
+		Route::get('{slug}', [
+			'uses' => 'InstallerController@error',
+			'as' => 'installer.error'
+		])->where('slug', '(.*)?');
+
 	});
 });
