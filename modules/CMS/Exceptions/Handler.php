@@ -1,7 +1,5 @@
 <?php namespace KodiCMS\CMS\Exceptions;
 
-use Exception;
-
 use KodiCMS\API\Exceptions\Response as APIExceptionResponse;
 use KodiCMS\API\Exceptions\Exception as APIException;
 
@@ -28,7 +26,7 @@ class Handler extends ExceptionHandler {
 	 * @param  \Exception  $e
 	 * @return void
 	 */
-	public function report(Exception $e)
+	public function report(\Exception $e)
 	{
 		return parent::report($e);
 	}
@@ -40,14 +38,14 @@ class Handler extends ExceptionHandler {
 	 * @param  \Exception  $e
 	 * @return \Illuminate\Http\Response
 	 */
-	public function render($request, Exception $e)
+	public function render($request, \Exception $e)
 	{
 		if($request->ajax() OR ($e instanceof APIException)) {
 			return (new APIExceptionResponse(config('app.debug')))->createResponse($e);
 		}
 
 		// TODO: поправить отлов исключений
-		if(config('app.debug') or !($e instanceof HttpException))
+		if(config('app.debug') or !$this->isHttpException($e))
 		{
 			return $this->renderExceptionWithWhoops($e);
 		}
