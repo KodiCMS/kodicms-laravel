@@ -1,34 +1,31 @@
 <?php namespace KodiCMS\CMS\Exceptions;
 
-use Exception;
-
-use KodiCMS\API\Exceptions\Response as APIExceptionResponse;
-use KodiCMS\API\Exceptions\Exception as APIException;
-
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Http\Response;
+use KodiCMS\API\Exceptions\Exception as APIException;
+use KodiCMS\API\Exceptions\Response as APIExceptionResponse;
 use Symfony\Component\Debug\ExceptionHandler as SymfonyDisplayer;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class Handler extends ExceptionHandler {
+class Handler extends ExceptionHandler
+{
 
 	/**
 	 * A list of the exception types that should not be reported.
 	 *
 	 * @var array
 	 */
-	protected $dontReport = [
-		'Symfony\Component\HttpKernel\Exception\HttpException'
-	];
+	protected $dontReport = ['Symfony\Component\HttpKernel\Exception\HttpException'];
 
 	/**
 	 * Report or log an exception.
 	 *
 	 * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
 	 *
-	 * @param  \Exception  $e
+	 * @param  \Exception $e
 	 * @return void
 	 */
-	public function report(Exception $e)
+	public function report(\Exception $e)
 	{
 		return parent::report($e);
 	}
@@ -36,48 +33,72 @@ class Handler extends ExceptionHandler {
 	/**
 	 * Render an exception into an HTTP response.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \Exception  $e
+	 * @param  \Illuminate\Http\Request $request
+	 * @param  \Exception $e
 	 * @return \Illuminate\Http\Response
 	 */
-	public function render($request, Exception $e)
+	public function render($request, \Exception $e)
 	{
-		if($request->ajax() OR ($e instanceof APIException)) {
+		if ($request->ajax() OR ($e instanceof APIException))
+		{
 			return (new APIExceptionResponse(config('app.debug')))->createResponse($e);
 		}
 
-		// TODO: поправить отлов исключений
-		if(config('app.debug') or !($e instanceof HttpException))
+		if (config('app.debug'))
 		{
 			return $this->renderExceptionWithWhoops($e);
 		}
-		else
+		else if (!$this->isHttpException($e))
 		{
-			return $this->renderHttpException($e);
+			return $this->renderException($e);
 		}
+
+		return $this->renderHttpException($e);
 	}
 
 	/**
 	 * Render the given HttpException.
 	 *
-	 * @param  \Symfony\Component\HttpKernel\Exception\HttpException  $e
-	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @param  \Symfony\Component\HttpKernel\Exception\HttpException $e
+	 * @return \Illuminate\Http\Response
 	 */
 	protected function renderHttpException(HttpException $e)
 	{
-		$status = $e->getStatusCode();
+		return $this->renderControllerException($e, $e->getStatusCode());
+	}
 
-		if (view()->exists("csm::errors.{$status}"))
+	/**
+	 * @param  \Exception $e
+	 * @return \Illuminate\Http\Response
+	 */
+	protected function renderException(\Exception $e)
+	{
+		return $this->renderControllerException($e, 500);
+	}
+
+	/**
+	 * Render an exception using ErrorController
+	 *
+	 * @param  \Exception $e
+	 * @return \Illuminate\Http\Response
+	 */
+	protected function renderControllerException(\Exception $e, $code = 500)
+	{
+		try
 		{
-			return response()->view("errors.{$status}", [
-				'message' => $e->getMessage(),
-				'line' => $e->getLine(),
-				'file' => $e->getFile(),
-				'code' => $status,
-				'bodyId' => 'error.' . $status
-			], $status);
+			$controller = app()->make('\KodiCMS\CMS\Http\Controllers\ErrorController');
+			if (method_exists($controller, 'error' . $code))
+			{
+				$action = 'error' . $code;
+			}
+			else
+			{
+				$action = 'error500';
+			}
+
+			return new Response($controller->callAction($action, [$e]));
 		}
-		else
+		catch (\Exception $ex)
 		{
 			return (new SymfonyDisplayer(config('app.debug')))->createResponse($e);
 		}
@@ -89,15 +110,11 @@ class Handler extends ExceptionHandler {
 	 * @param  \Exception $e
 	 * @return \Illuminate\Http\Response
 	 */
-	protected function renderExceptionWithWhoops(Exception $e)
+	protected function renderExceptionWithWhoops(\Exception $e)
 	{
 		$whoops = new \Whoops\Run;
 		$whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler());
 
-		return new \Illuminate\Http\Response(
-			$whoops->handleException($e),
-			$e->getStatusCode(),
-			$e->getHeaders()
-		);
+		return new Response($whoops->handleException($e), $e->getStatusCode(), $e->getHeaders());
 	}
 }

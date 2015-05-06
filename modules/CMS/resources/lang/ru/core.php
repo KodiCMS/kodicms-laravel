@@ -33,6 +33,6 @@ return [
 		''
 	],
 	'messages' => [
-
+		'route_not_found' => 'Страница не найдена'
 	]
 ];

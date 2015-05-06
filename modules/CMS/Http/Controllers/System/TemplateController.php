@@ -1,5 +1,8 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
+use CMS;
+use View;
+use Lang;
 use KodiCMS\CMS\Assets\Core as Assets;
 
 class TemplateController extends Controller
@@ -95,9 +98,9 @@ class TemplateController extends Controller
 			$this->registerMedia();
 		}
 
-		\View::share('adminDir', \CMS::backendPath());
-		\View::share('controllerAction', $this->getCurrentAction());
-		\View::share('currentUser', $this->currentUser);
+		View::share('adminDir', \CMS::backendPath());
+		View::share('controllerAction', $this->getCurrentAction());
+		View::share('currentUser', $this->currentUser);
 	}
 
 	public function after()
@@ -130,12 +133,12 @@ class TemplateController extends Controller
 		$this->templateScripts = [
 			'CURRENT_URL' => $this->request->url(),
 			'SITE_URL' => url(),
-			'BASE_URL' => url(\CMS::backendPath()),
-			'BACKEND_PATH' => \CMS::backendPath(),
-			'BACKEND_RESOURCES' => \CMS::backendResourcesURL(),
+			'BASE_URL' => url(CMS::backendPath()),
+			'BACKEND_PATH' => CMS::backendPath(),
+			'BACKEND_RESOURCES' => CMS::backendResourcesURL(),
 			'PUBLIC_URL' => url(),
-			'LOCALE' => \Lang::getLocale(),
-			'ROUTE' => $this->getRouter()->currentRouteAction(),
+			'LOCALE' => Lang::getLocale(),
+			'ROUTE' => !is_null($this->getRouter()) ? $this->getRouter()->currentRouteAction() : null,
 			'ROUTE_PATH' => $this->getRouterPath(),
 			'USER_ID' => \Auth::id(),
 			'MESSAGE_ERRORS' => view()->shared('errors')->getBag('default'),
