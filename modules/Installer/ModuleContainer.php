@@ -12,12 +12,6 @@ class ModuleContainer extends BaseModuleContainer
 	public function boot()
 	{
 		parent::boot();
-
-		if (!CMS::isInstalled())
-		{
-			app()->call([$this, 'loadRoutes']);
-		}
-
 	}
 
 	/**
@@ -25,6 +19,11 @@ class ModuleContainer extends BaseModuleContainer
 	 */
 	public function loadRoutes(Router $router)
 	{
+		if(CMS::isInstalled())
+		{
+			return;
+		}
+
 		$routesFile = $this->getRoutesPath();
 		if (is_file($routesFile))
 		{

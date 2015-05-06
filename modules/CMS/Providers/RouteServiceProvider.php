@@ -36,21 +36,9 @@ class RouteServiceProvider extends BaseRouteServiceProvider
 	 */
 	public function map(Router $router)
 	{
-		if (!CMS::isInstalled())
-		{
-			return;
-		}
-
 		foreach ($this->app['module.loader']->getRegisteredModules() as $module)
 		{
-			$routesFile = $module->getRoutesPath();
-			if (is_file($routesFile))
-			{
-				$router->group(['namespace' => $module->getControllerNamespace()], function ($router) use ($routesFile)
-				{
-					require $routesFile;
-				});
-			}
+			$this->app->call([$module, 'loadRoutes'], [$router]);
 		}
 	}
 }

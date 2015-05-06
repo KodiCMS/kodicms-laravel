@@ -6,6 +6,7 @@ use CMS;
 use Illuminate\Support\Facades\App;
 use KodiCMS\CMS\Contracts\ModuleContainerInterface;
 use KodiCMS\CMS\Helpers\File;
+use Illuminate\Routing\Router;
 
 class ModuleContainer implements ModuleContainerInterface
 {
@@ -195,6 +196,26 @@ class ModuleContainer implements ModuleContainerInterface
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @param Router $router
+	 */
+	public function loadRoutes(Router $router)
+	{
+		if(!CMS::isInstalled())
+		{
+			return;
+		}
+
+		$routesFile = $this->getRoutesPath();
+		if (is_file($routesFile))
+		{
+			$router->group(['namespace' => $this->getControllerNamespace()], function ($router) use ($routesFile)
+			{
+				require $routesFile;
+			});
+		}
 	}
 
 	protected function loadAssets()
