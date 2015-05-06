@@ -50,7 +50,7 @@ class Install extends GeneratorCommand
 	 */
 	public function getEnvPath()
 	{
-		return base_path('.env');
+		return base_path(app()->environmentFile());
 	}
 
 	/**

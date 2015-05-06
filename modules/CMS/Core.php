@@ -20,7 +20,7 @@ class Core extends Container {
 	 */
 	public static function isInstalled()
 	{
-		return is_file(base_path('.env'));
+		return is_file(base_path(app()->environmentFile()));
 	}
 
 	/**
