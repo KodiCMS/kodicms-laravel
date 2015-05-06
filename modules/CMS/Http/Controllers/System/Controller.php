@@ -136,7 +136,7 @@ abstract class Controller extends BaseController
 	{
 		if (!is_null($this->getRouter()) AND !is_null($this->getRouter()->currentRouteAction()))
 		{
-			list($class, $method) = explode('@', $this->getRouter()->currentRouteAction());
+			list($class, $method) = explode('@', $this->getRouter()->currentRouteAction(), 2);
 		}
 		else
 		{
