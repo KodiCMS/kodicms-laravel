@@ -212,7 +212,7 @@ class ModuleContainer implements ModuleContainerInterface
 	{
 		if (!CMS::isInstalled())
 		{
-			return;
+			return [];
 		}
 
 		$path = $this->getConfigPath();
