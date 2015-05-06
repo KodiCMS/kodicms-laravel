@@ -19,18 +19,11 @@ class ModuleContainer extends BaseModuleContainer
 	 */
 	public function loadRoutes(Router $router)
 	{
-		if(CMS::isInstalled())
+		if (CMS::isInstalled())
 		{
 			return;
 		}
 
-		$routesFile = $this->getRoutesPath();
-		if (is_file($routesFile))
-		{
-			$router->group(['namespace' => $this->getControllerNamespace()], function ($router) use ($routesFile)
-			{
-				require $routesFile;
-			});
-		}
+		$this->includeRoutes($router);
 	}
 }

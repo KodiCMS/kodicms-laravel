@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\CMS\Contracts;
 
+use Illuminate\Routing\Router;
+
 interface ModuleContainerInterface
 {
 	/**
@@ -59,6 +61,19 @@ interface ModuleContainerInterface
 	 * @return string
 	 */
 	public function getServiceProviderPath();
+
+	/**
+	 * @return array
+	 */
+	public function loadConfig();
+
+	/**
+	 * @param Router $router
+	 *
+	 * @return void
+	 */
+	public function loadRoutes(Router $router);
+
 //
 //	/**
 //	 * @return $this

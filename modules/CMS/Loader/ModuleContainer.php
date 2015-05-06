@@ -167,11 +167,6 @@ class ModuleContainer implements ModuleContainerInterface
 			$this->loadTranslations();
 			$this->loadAssets();
 
-			if (CMS::isInstalled())
-			{
-				$this->loadConfig();
-			}
-
 			$serviceProviderPath = $this->getServiceProviderPath();
 			if (is_file($serviceProviderPath))
 			{
@@ -191,7 +186,6 @@ class ModuleContainer implements ModuleContainerInterface
 	{
 		if (!$this->_isRegistered)
 		{
-
 			$this->_isRegistered = true;
 		}
 
@@ -208,6 +202,45 @@ class ModuleContainer implements ModuleContainerInterface
 			return;
 		}
 
+		$this->includeRoutes($router);
+	}
+
+	/**
+	 * Register a config file namespace.
+	 * @return void
+	 */
+	public function loadConfig()
+	{
+		if (!CMS::isInstalled())
+		{
+			return;
+		}
+
+		$path = $this->getConfigPath();
+
+		if (!is_dir($path)) return [];
+
+		$configs = Cache::remember("moduleConfig::{$path}", Carbon::now()->addMinutes(10), function () use ($path)
+		{
+			$configs = [];
+			foreach (new \DirectoryIterator($path) as $file)
+			{
+				if ($file->isDot() OR strpos($file->getFilename(), '.php') === false) continue;
+				$key = $file->getBasename('.php');
+				$configs[$key] = array_merge(require $file->getPathname(), app('config')->get($key, []));
+			}
+
+			return $configs;
+		});
+
+		return $configs;
+	}
+
+	/**
+	 * @param Router $router
+	 */
+	protected function includeRoutes(Router $router)
+	{
 		$routesFile = $this->getRoutesPath();
 		if (is_file($routesFile))
 		{
@@ -253,35 +286,6 @@ class ModuleContainer implements ModuleContainerInterface
 	{
 		$namespace = strtolower($this->getName());
 		app('translator')->addNamespace($namespace, $this->getLocalePath());
-	}
-
-	/**
-	 * Register a config file namespace.
-	 * @return void
-	 */
-	protected function loadConfig()
-	{
-		$path = $this->getConfigPath();
-
-		if (!is_dir($path)) return;
-
-		$configs = Cache::remember("moduleConfig::{$path}", Carbon::now()->addMinutes(10), function () use ($path)
-		{
-			$configs = [];
-			foreach (new \DirectoryIterator($path) as $file)
-			{
-				if ($file->isDot() OR strpos($file->getFilename(), '.php') === false) continue;
-				$key = $file->getBasename('.php');
-				$configs[$key] = array_merge(require $file->getPathname(), app('config')->get($key, []));
-			}
-
-			return $configs;
-		});
-
-		foreach ($configs as $group => $data)
-		{
-			app('config')->set($group, $data);
-		}
 	}
 
 	/**

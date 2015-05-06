@@ -12,12 +12,6 @@ class ModuleContainer extends Loader\ModuleContainer
 		if (!$this->_isBooted) {
 			$this->loadViews();
 			$this->loadTranslations();
-
-			if (CMS::isInstalled())
-			{
-				$this->loadConfig();
-			}
-
 			$this->loadAssets();
 			$this->_isBooted = TRUE;
 		}
