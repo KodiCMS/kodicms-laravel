@@ -2,9 +2,9 @@
 
 use DB;
 use Config;
+use KodiCMS\Installer\Installer;
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputOption;
-use Illuminate\Support\Str;
 
 class Install extends GeneratorCommand
 {
@@ -22,32 +22,11 @@ class Install extends GeneratorCommand
 	/**
 	 * @return array
 	 */
-	protected function getDefaultEnvironment()
-	{
-		return [
-			'APP_ENV' => 'local',
-			'APP_DEBUG' => 'true',
-			'APP_KEY' => Str::random(32),
-			'DB_HOST' => 'localhost',
-			'DB_DATABASE' => 'homestead',
-			'DB_USERNAME' => 'homestead',
-			'DB_PASSWORD' => '',
-			'CACHE_DRIVER' => 'file',
-			'SESSION_DRIVER' => 'database',
-			'QUEUE_DRIVER' => 'database',
-			'APP_URL' => 'http://localhost',
-			'ADMIN_DIR_NAME' => 'backend'
-		];
-	}
-
-	/**
-	 * @return array
-	 */
 	protected function getEnvironment()
 	{
 		if (empty($this->env))
 		{
-			foreach ($this->getDefaultEnvironment() as $key => $default)
+			foreach (Installer::getDefaultEnvironment() as $key => $default)
 			{
 				$this->env[$key] = $this->input->hasOption($key) ? $this->input->getOption($key) : $default;
 			}
@@ -134,7 +113,7 @@ class Install extends GeneratorCommand
 		$stub = $this->files->get($this->getStub());
 
 		$options = [];
-		foreach($this->getDefaultEnvironment() as $key => $default)
+		foreach(Installer::getDefaultEnvironment() as $key => $default)
 		{
 			$value = $this->input->hasOption($key) ? $this->input->getOption($key) : $default;
 			$options['{{' . $key . '}}'] =  $value;
@@ -153,7 +132,7 @@ class Install extends GeneratorCommand
 	 */
 	protected function getOptions()
 	{
-		$defaults = $this->getDefaultEnvironment();
+		$defaults = Installer::getDefaultEnvironment();
 
 		return [
 			['DB_HOST', 'host', InputOption::VALUE_OPTIONAL, "Database host", array_get($defaults, 'DB_HOST')],

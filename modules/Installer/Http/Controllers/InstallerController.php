@@ -1,23 +1,66 @@
 <?php namespace KodiCMS\Installer\Http\Controllers;
 
-use Illuminate\Auth\Guard;
+use KodiCMS\Installer\EnvironmentTester;
+use Lang;
+use Date;
 use KodiCMS\CMS\Http\Controllers\System\FrontendController;
+use KodiCMS\CMS\Assets\Core as Assets;
 use KodiCMS\Installer\Installer;
 
 class InstallerController extends FrontendController {
 
-	protected function loadCurrentUser(Guard $auth)
-	{
-		$this->currentUser = NULL;
-	}
+	/**
+	 * @var string
+	 */
+	public $moduleNamespace = 'installer::';
+
+	/**
+	 * @var Installer
+	 */
+	protected $installer;
 
 	public function boot()
 	{
-		$this->installer = new Installer();
+		$this->installer = new Installer;
 	}
 
 	public function run()
 	{
-		dd('sdfdsf');
+		Assets::package(['steps']);
+
+		list($failed, $tests, $optional) = EnvironmentTester::check();
+
+		$this->setContent('install', [
+			'environment' => view($this->moduleNamespace . 'env', [
+				'failed' => $failed,
+				'tests' => $tests,
+				'optional' => $optional
+			]),
+			'title' => $this->template->title,
+			'data' => $this->installer->getParameters(),
+			'locales' => config('cms.locales'),
+			'selectedLocale' => $this->request->get('locale', Lang::locale()),
+			'dateFormats' => config('cms.date_format_list'),
+			'timezones' => Date::getTimezones()
+		]);
+
+		$this->templateScripts['FAILED'] = $failed;
+	}
+
+	public function install()
+	{
+		$this->autoRender = FALSE;
+
+		$data = $this->request->get('install', []);
+
+		try
+		{
+			$data = $this->installer->install($data);
+			return redirect(array_get($data, 'admin_dir_name'));
+		}
+		catch(\Exception $e)
+		{
+			dd($e);
+		}
 	}
 }

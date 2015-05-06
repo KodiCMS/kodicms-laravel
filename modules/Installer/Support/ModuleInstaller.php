@@ -134,10 +134,11 @@ class ModuleInstaller {
 	/**
 	 * @return $this
 	 */
-	public function seedModules()
+	public function seedModules(array $data = [])
 	{
-		foreach ($this->_modules as $module) {
-			$this->seedModule($module);
+		foreach ($this->_modules as $module)
+		{
+			$this->seedModule($module, array_get($data, $module->getName(), []));
 		}
 
 		return $this;
@@ -149,7 +150,7 @@ class ModuleInstaller {
 	 * @param ModuleContainer $module
 	 * @return $this
 	 */
-	public function seedModule(ModuleContainer $module)
+	public function seedModule(ModuleContainer $module, array $data = [])
 	{
 		$className = $module->getNamespace() . '\\database\\seeds\\DatabaseSeeder';
 
@@ -157,7 +158,7 @@ class ModuleInstaller {
 			return FALSE;
 		}
 
-		$seeder = App::make($className);
+		$seeder = app($className, $data);
 		$seeder->run();
 
 		$this->output(sprintf('<info>Seeded %s</info> ', $module));

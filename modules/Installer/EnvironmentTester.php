@@ -17,6 +17,7 @@ class EnvironmentTester
 		clearstatcache(true);
 
 		$env = new static;
+		$methods = get_class_methods($env);
 
 		$result = [
 			static::KEY_HAS_ERROR => false,
