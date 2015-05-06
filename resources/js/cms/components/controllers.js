@@ -10,7 +10,6 @@ CMS.controllers = {
 		else if (typeof(rout) == 'string')
 			this._controllers.push([rout, callback]);
 
-		this._controllers.reverse();
 		return this;
 	},
 	call: function () {
