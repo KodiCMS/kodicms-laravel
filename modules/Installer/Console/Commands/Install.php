@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\Installer\Console\Commands;
 
+use DB;
+use Config;
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Support\Str;
@@ -11,6 +13,11 @@ class Install extends GeneratorCommand
 	 * The console command name.
 	 */
 	protected $name = 'cms:install';
+
+	/**
+	 * @var array
+	 */
+	protected $env = [];
 
 	/**
 	 * @return array
@@ -31,6 +38,22 @@ class Install extends GeneratorCommand
 			'APP_URL' => 'http://localhost',
 			'ADMIN_DIR_NAME' => 'backend'
 		];
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getEnvironment()
+	{
+		if (empty($this->env))
+		{
+			foreach ($this->getDefaultEnvironment() as $key => $default)
+			{
+				$this->env[$key] = $this->input->hasOption($key) ? $this->input->getOption($key) : $default;
+			}
+		}
+
+		return $this->env;
 	}
 
 	/**
@@ -66,10 +89,41 @@ class Install extends GeneratorCommand
 		if($this->files->put($path, $this->buildEnvFile()))
 		{
 			$this->info('.env file created successfully.');
-
-			// TODO: добавть миграцию модулей
-			// $this->call('php artisan cms:modules:migrate');
+			$this->migrate();
+			$this->seed();
 		}
+	}
+
+	/**
+	 * Миграция данных
+	 */
+	public function migrate()
+	{
+		// Сбрасываем подключение к БД
+		DB::purge();
+
+		$configs = [
+			'host' => 'DB_HOST',
+			'database' => 'DB_DATABASE',
+			'username' => 'DB_USERNAME',
+			'password' => 'DB_PASSWORD'
+		];
+
+		// Обновляем данные подключения в БД
+		foreach($configs as $key => $env)
+		{
+			Config::set('database.connections.mysql.' . $key, array_get($this->getEnvironment(), $env));
+		}
+
+		$this->call('cms:modules:migrate');
+	}
+
+	/**
+	 * Сидирование данных
+	 */
+	public function seed()
+	{
+		$this->call('cms:modules:seed');
 	}
 
 	/**

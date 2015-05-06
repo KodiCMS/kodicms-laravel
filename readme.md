@@ -6,9 +6,7 @@
 
  * Клонировать репозиторий `git clone git@github.com:KodiCMS/kodicms-laravel.git`
  * Запустить команду `composer install` для загрузки всех необходимых компонентов
- * Выполнить команду `php artisan cms:install` создание .env файла (`php artisan cms:install --help` для просмотра доступных параметров)
- * Выполнить команду `php artisan cms:modules:migrate` для создания таблиц в БД
- * Выполнить команду `php artisan cms:modules:seed` для заполения тестовыми данными БД
+ * Выполнить команду `php artisan cms:install` создание .env файла, миграция и добавление сидов (`php artisan cms:install --help` для просмотра доступных параметров)
  
 ---
 
@@ -26,7 +24,7 @@ password: **password**
 
 ### Консольные команды
 
- * `cms:install` - создание .env файла (в будущем данная команда будет создавать файл и производить миграцию)
+ * `cms:install` - создание .env файла, миграция и добавление сидов (в будущем данная команда будет создавать файл и производить миграцию)
  * `cms:modules:migrate` - создание таблиц в БД
  * `cms:modules:seed` - заполнение таблиц тестовыми данными
  * `cms:generate:translate:js` - генерация JS языковых файлов
