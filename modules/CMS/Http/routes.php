@@ -15,11 +15,5 @@ app('router')->before(function() {
 		Route::get('cms/{file}.{ext}', 'System\VirtualMediaLinksController@find')
 			->where('file', '.*')
 			->where('ext', '(css|js|png|jpg|gif|otf|eot|svg|ttf|woff)');
-
-		Route::get('{slug}', [
-			'as' => 'backendError',
-			'uses' => 'System\ErrorController@show'
-		])
-			->where('slug', '(.*)?');
 	});
 });
