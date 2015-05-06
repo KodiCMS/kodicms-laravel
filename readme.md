@@ -117,10 +117,7 @@ password: **password**
  * `view.navbar.right.after`
 
 #### backend/navigation
- * `view.menu.before`
- * `view.menu.after`
- * `view.navigation.before`
- * `view.navigation.after`
+ * `view.menu [KodiCMS\CMS\Navigation\Section $navigation]`
 
 ### system/about
  * `view.system.about`

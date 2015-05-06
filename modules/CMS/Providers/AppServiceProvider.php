@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\CMS\Providers;
 
-use Illuminate\Support\Facades\Blade;
-use Event;
+use Blade;
 use WYSIWYG;
 
 class AppServiceProvider extends ServiceProvider {
@@ -22,11 +21,6 @@ class AppServiceProvider extends ServiceProvider {
 		Blade::extend(function ($view, $compiler) {
 			$pattern = $compiler->createMatcher('event');
 			return preg_replace($pattern, '$1<?php event$2; ?>', $view);
-		});
-
-		Event::listen('view.settings.bottom', function() {
-			WYSIWYG::loadAll();
-			echo view('cms::ace.settings')->with('availableACEThemes', config('cms.wysiwyg.ace_themes'));
 		});
 	}
 

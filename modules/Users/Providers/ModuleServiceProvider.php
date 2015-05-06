@@ -18,9 +18,9 @@ class ModuleServiceProvider extends ServiceProvider {
 			echo view('users::parts.navbar');
 		});
 
-		Event::listen('view.menu.before', function() {
+		Event::listen('view.menu', function($navigation) {
 			echo view('users::parts.navigation');
-		});
+		}, 999);
 	}
 
 	public function register()
