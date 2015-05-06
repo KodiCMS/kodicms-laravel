@@ -5,7 +5,6 @@ use KodiCMS\CMS\Helpers\DatabaseConfig;
 
 class ConfigServiceProvider extends ServiceProvider {
 
-
 	public function boot()
 	{
 		/**
