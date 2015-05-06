@@ -166,13 +166,6 @@ class ModuleContainer implements ModuleContainerInterface
 			$this->loadViews();
 			$this->loadTranslations();
 			$this->loadAssets();
-
-			$serviceProviderPath = $this->getServiceProviderPath();
-			if (is_file($serviceProviderPath))
-			{
-				App::register($this->getNamespace() . '\Providers\ModuleServiceProvider');
-			}
-
 			$this->_isBooted = true;
 		}
 
@@ -186,6 +179,12 @@ class ModuleContainer implements ModuleContainerInterface
 	{
 		if (!$this->_isRegistered)
 		{
+			$serviceProviderPath = $this->getServiceProviderPath();
+			if (is_file($serviceProviderPath))
+			{
+				App::register($this->getNamespace() . '\Providers\ModuleServiceProvider');
+			}
+
 			$this->_isRegistered = true;
 		}
 

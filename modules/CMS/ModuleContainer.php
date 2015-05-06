@@ -7,13 +7,11 @@ class ModuleContainer extends Loader\ModuleContainer
 	/**
 	 * @return $this
 	 */
-	public function boot()
+	public function register()
 	{
-		if (!$this->_isBooted) {
-			$this->loadViews();
-			$this->loadTranslations();
-			$this->loadAssets();
-			$this->_isBooted = TRUE;
+		if (!$this->_isRegistered)
+		{
+			$this->_isRegistered = true;
 		}
 
 		return $this;
