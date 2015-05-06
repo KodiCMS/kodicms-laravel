@@ -264,14 +264,17 @@ abstract class Controller extends BaseController
 	 */
 
 	/**
-	 *
+	 * @param Guard $auth
 	 */
 	protected function loadCurrentUser(Guard $auth)
 	{
-		$this->currentUser = $auth->user();
-		if (auth()->check())
+		if ($this->authRequired)
 		{
-			Lang::setLocale($this->currentUser->locale);
+			$this->currentUser = $auth->user();
+			if (auth()->check())
+			{
+				Lang::setLocale($this->currentUser->locale);
+			}
 		}
 	}
 }
