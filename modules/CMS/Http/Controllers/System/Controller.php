@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
 use CMS;
-use Lang;
 use Illuminate\Auth\Guard;
 use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -14,6 +13,7 @@ use Illuminate\Routing\Route;
 use Illuminate\Session\Store as SessionStore;
 use Illuminate\Support\Str;
 use KodiCMS\API\Exceptions\AuthenticateException;
+use Lang;
 
 abstract class Controller extends BaseController
 {
@@ -48,7 +48,7 @@ abstract class Controller extends BaseController
 	/**
 	 * @var bool
 	 */
-	protected $authRequired = FALSE;
+	protected $authRequired = false;
 
 	/**
 	 * @var array
@@ -91,13 +91,17 @@ abstract class Controller extends BaseController
 	 * Execute before an action executed
 	 * return void
 	 */
-	public function before(){}
+	public function before()
+	{
+	}
 
 	/**
 	 * Execute after an action executed
 	 * return void
 	 */
-	public function after(){}
+	public function after()
+	{
+	}
 
 	/**
 	 * @param string $separator
@@ -105,11 +109,16 @@ abstract class Controller extends BaseController
 	 */
 	public function getRouterPath($separator = '.')
 	{
-		$controller = $this->getRouter()->currentRouteAction();
-		$namespace = array_get($this->getRouter()->getCurrentRoute()->getAction(), 'namespace');
-		$path = trim(str_replace($namespace, '', $controller), '\\');
+		if (!is_null($this->getRouter()))
+		{
+			$controller = $this->getRouter()->currentRouteAction();
+			$namespace = array_get($this->getRouter()->getCurrentRoute()->getAction(), 'namespace');
+			$path = trim(str_replace($namespace, '', $controller), '\\');
 
-		return str_replace(['\\', '@', '..', '.controller.'], $separator, Str::snake($path, '.'));
+			return str_replace(['\\', '@', '..', '.controller.'], $separator, Str::snake($path, '.'));
+		}
+
+		return null;
 	}
 
 	/**
@@ -125,7 +134,14 @@ abstract class Controller extends BaseController
 	 */
 	public function getCurrentAction()
 	{
-		list($class, $method) = explode('@', $this->getRouter()->currentRouteAction());
+		if (!is_null($this->getRouter()) AND !is_null($this->getRouter()->currentRouteAction()))
+		{
+			list($class, $method) = explode('@', $this->getRouter()->currentRouteAction());
+		}
+		else
+		{
+			$method = null;
+		}
 
 		return $method;
 	}
@@ -167,10 +183,7 @@ abstract class Controller extends BaseController
 			return $this->denyAccess(trans('users::core.messages.auth.deny_access'), true);
 		}
 
-		if (
-			!in_array($this->getCurrentAction(), $this->allowedActions)
-			AND
-			!acl_check(array_get($this->permissions, $this->getCurrentAction()))
+		if (!in_array($this->getCurrentAction(), $this->allowedActions) AND !acl_check(array_get($this->permissions, $this->getCurrentAction()))
 		)
 		{
 			return $this->denyAccess(trans('users::core.messages.auth.no_permissions'));
@@ -182,7 +195,7 @@ abstract class Controller extends BaseController
 	 * @param bool $redirect
 	 * @return Response
 	 */
-	public function denyAccess($message = NULL, $redirect = FALSE)
+	public function denyAccess($message = null, $redirect = false)
 	{
 		if ($this->request->ajax())
 		{
@@ -203,7 +216,7 @@ abstract class Controller extends BaseController
 	 * @param string|null $route
 	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
 	 */
-	public function smartRedirect(array $parameters = [], $route = NULL)
+	public function smartRedirect(array $parameters = [], $route = null)
 	{
 		$isContinue = !is_null($this->request->get('continue'));
 
@@ -247,8 +260,11 @@ abstract class Controller extends BaseController
 	}
 
 	/**
-	 * загрузка объекта текущего пользователя.
 	 * @param Guard $auth
+	 */
+
+	/**
+	 *
 	 */
 	protected function loadCurrentUser(Guard $auth)
 	{

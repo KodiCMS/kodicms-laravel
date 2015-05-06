@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Pages\Http\Controllers;
 
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use KodiCMS\CMS\Http\Controllers\System\Controller;
 use KodiCMS\Pages\Exceptions\LayoutNotFoundException;
 use KodiCMS\Pages\Exceptions\PageNotFoundException;
@@ -26,25 +26,30 @@ class FrontendController extends Controller
 
 		$frontPage = FrontendPage::findByUri($uri);
 
-		if ($frontPage instanceof FrontendPage) {
-			if ($frontPage->isRedirect() AND strlen($frontPage->getRedirectUrl()) > 0) {
+		if ($frontPage instanceof FrontendPage)
+		{
+			if ($frontPage->isRedirect() AND strlen($frontPage->getRedirectUrl()) > 0)
+			{
 				return redirect($frontPage->getRedirectUrl(), 301);
-			} else {
+			}
+			else
+			{
 				return $this->render($frontPage);
 			}
 		}
 
-		if (config('cms.find_similar') AND ($uri = FrontendPage::findSimilar($uri)) !== FALSE) {
+		if (config('cms.find_similar') AND ($uri = FrontendPage::findSimilar($uri)) !== false)
+		{
 			return redirect($uri, 301);
 		}
 
 		event('frontend.not_found', [$uri]);
-		throw new PageNotFoundException;
+		throw new PageNotFoundException(trans('pages::core.messages.not_found'));
 	}
 
 	/**
 	 * TODO: добавить кеширование вывода
-	 * 
+	 *
 	 * @param FrontendPage $frontPage
 	 * @return \Illuminate\View\View|null
 	 * @throws LayoutNotFoundException
@@ -53,19 +58,21 @@ class FrontendController extends Controller
 	{
 		event('frontend.found', [$frontPage]);
 
-		app()->singleton('frontpage', function() use($frontPage) {
+		app()->singleton('frontpage', function () use ($frontPage)
+		{
 			return $frontPage;
 		});
 
 		$layout = $frontPage->getLayoutView();
-		if (is_null($layout)) {
-			throw new LayoutNotFoundException;
+		if (is_null($layout))
+		{
+			throw new LayoutNotFoundException(trans('pages::core.messages.layout_not_set'));
 		}
 
-		$widgetCollection = new PageWidgetCollection($frontPage);
+		//$widgetCollection = new PageWidgetCollection($frontPage);
 
-		$html = (string) $frontPage->getLayoutView();
-		if(auth()->check() AND auth()->user()->hasRole(['administrator', 'developer']))
+		$html = (string)$frontPage->getLayoutView();
+		if (auth()->check() AND auth()->user()->hasRole(['administrator', 'developer']))
 		{
 			$injectHTML = (string) view('cms::app.partials.toolbar');
 			// Insert system HTML before closed tag body
@@ -82,7 +89,8 @@ class FrontendController extends Controller
 
 		$response->header('Content-Type', $frontPage->getMime());
 
-		if(config('cms.show_response_sign', TRUE)) {
+		if (config('cms.show_response_sign', true))
+		{
 			$response->header('X-Powered-CMS', \CMS::NAME . '/' . \CMS::VERSION);
 		}
 
@@ -97,7 +105,8 @@ class FrontendController extends Controller
 		$response->setPublic();
 
 		// Check that the Response is not modified for the given Request
-		if ($response->isNotModified($this->request)) {
+		if ($response->isNotModified($this->request))
+		{
 			// return the 304 Response immediately
 			return $response;
 		}
