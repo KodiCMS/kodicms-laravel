@@ -94,7 +94,7 @@ class Widget extends Model
 	 */
 	public function isHandler()
 	{
-		return in_array('KodiCMS\Widgets\Contracts\WidgetHandler', class_implements($this->class));
+		return WidgetManagerDatabase::isHandler($this->class);
 	}
 
 	/**
@@ -102,7 +102,7 @@ class Widget extends Model
 	 */
 	public function isRenderable()
 	{
-		return in_array('KodiCMS\Widgets\Contracts\WidgetRenderable', class_implements($this->class));
+		return WidgetManagerDatabase::isRenderable($this->class);
 	}
 
 	/**
@@ -110,7 +110,7 @@ class Widget extends Model
 	 */
 	public function isCacheable()
 	{
-		return in_array('KodiCMS\Widgets\Contracts\WidgetCacheable', class_implements($this->class));
+		return WidgetManagerDatabase::isCacheable($this->class);
 	}
 
 	/**
@@ -126,7 +126,7 @@ class Widget extends Model
 	 */
 	public function isCorrupt()
 	{
-		return !in_array('KodiCMS\Widgets\Contracts\Widget', class_implements($this->class));
+		return WidgetManagerDatabase::isCorrupt($this->class);
 	}
 
 	public function scopeFilterByType($query, array $types)

@@ -84,6 +84,7 @@ class WidgetController extends BackendController {
 	 */
 	protected function getWidget($id)
 	{
+		// TODO: добавить проверку виджета на поврежденность
 		try {
 			return Widget::findOrFail($id);
 		}

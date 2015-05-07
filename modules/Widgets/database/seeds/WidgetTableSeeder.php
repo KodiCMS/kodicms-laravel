@@ -26,5 +26,13 @@ class WidgetTableSeeder extends Seeder {
 			],
 			'settings' => []
 		]);
+
+		Widget::create([
+			'name' => 'Сломанный виджет',
+			'type' => 'http',
+			'class' => '\KodiCMS\Widgets\Widget\HTTP',
+			'parameters' => [],
+			'settings' => []
+		]);
 	}
 }
