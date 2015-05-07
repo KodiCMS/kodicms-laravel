@@ -42,10 +42,11 @@ return [
 	/*
 	 * KodiCMS aliases...
 	 */
-	'UI'		=> 'KodiCMS\CMS\Helpers\UI',
-	'ACL'		=> 'KodiCMS\Users\ACL',
-	'CMS'		=> 'KodiCMS\CMS\Core',
-	'Assets'	=> 'KodiCMS\CMS\Assets\Core',
-	'WYSIWYG'	=> 'KodiCMS\CMS\Helpers\WYSIWYG',
-	'Date'	=> 'KodiCMS\CMS\Helpers\Date',
+	'ModuleLoader' 	=> 'KodiCMS\Support\Facades\ModuleLoader',
+	'UI'			=> 'KodiCMS\CMS\Helpers\UI',
+	'ACL'			=> 'KodiCMS\Users\ACL',
+	'CMS'			=> 'KodiCMS\CMS\Core',
+	'Assets'		=> 'KodiCMS\CMS\Assets\Core',
+	'WYSIWYG'		=> 'KodiCMS\CMS\Helpers\WYSIWYG',
+	'Date'			=> 'KodiCMS\CMS\Helpers\Date',
 ];

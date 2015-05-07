@@ -2,6 +2,7 @@
 
 use HTML;
 use Cache;
+use ModuleLoader;
 use Carbon\Carbon;
 
 class Core
@@ -403,7 +404,7 @@ class Core
 		$content = Cache::remember($cacheKey, Carbon::now()->minute(20), function() use($path, $ext)
 		{
 			$return = '';
-			$files = app('module.loader')->findFile('resources', $path, $ext, TRUE);
+			$files = ModuleLoader::findFile('resources', $path, $ext, TRUE);
 
 			foreach($files as $file)
 			{

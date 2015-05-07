@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\CMS\Console\Commands;
 
+use ModuleLoader;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Input\InputOption;
@@ -29,7 +30,7 @@ class GenerateLocalePackage extends Command {
 
 		$newLocale = $this->input->getOption('locale');
 
-		foreach(app('module.loader')->getRegisteredModules() as $module)
+		foreach(ModuleLoader::getRegisteredModules() as $module)
 		{
 			if(!is_dir($module->getLocalePath())) continue;
 

@@ -2,6 +2,7 @@
 
 use KodiCMS\CMS\Helpers\File;
 use Illuminate\Http\Response;
+use ModuleLoader;
 
 class VirtualMediaLinksController extends Controller
 {
@@ -14,7 +15,7 @@ class VirtualMediaLinksController extends Controller
 		$ext = $route->getParameter('ext');
 
 		// Remove the extension from the filename
-		if ($file = app('module.loader')->findFile('resources', $file, $ext))
+		if ($file = ModuleLoader::findFile('resources', $file, $ext))
 		{
 			// Check if the browser sent an "if-none-match: <etag>" header, and tell if the file hasn't changed
 

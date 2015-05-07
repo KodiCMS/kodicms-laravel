@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\CMS\Console\Commands;
 
+use ModuleLoader;
 use KodiCMS\CMS\Loader\ModuleContainer;
 use RuntimeException;
 use Illuminate\Console\GeneratorCommand;
@@ -59,7 +60,7 @@ class ControllerMakeCommand extends GeneratorCommand {
 	{
 		$module = $this->input->getOption('module');
 
-		foreach(app('module.loader')->getRegisteredModules() as $moduleContainer)
+		foreach(ModuleLoader::getRegisteredModules() as $moduleContainer)
 		{
 			if(strtolower($moduleContainer->getName()) == strtolower($module))
 			{

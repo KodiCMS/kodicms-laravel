@@ -2,6 +2,7 @@
 
 use Blade;
 use WYSIWYG;
+use ModuleLoader;
 
 class AppServiceProvider extends ServiceProvider {
 
@@ -12,10 +13,10 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->app['module.loader']->bootModules();
+		ModuleLoader::bootModules();
 
 		$this->app['cms']->shutdown(function () {
-			$this->app['module.loader']->cacheFoundFiles();
+			ModuleLoader::cacheFoundFiles();
 		});
 
 		Blade::extend(function ($view, $compiler) {
@@ -35,7 +36,7 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app['module.loader']->registerModules();
+		ModuleLoader::registerModules();
 	}
 
 }

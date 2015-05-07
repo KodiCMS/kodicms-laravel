@@ -3,6 +3,7 @@
 use UI;
 use View;
 use Assets;
+use ModuleLoader;
 use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
 use KodiCMS\CMS\Navigation\Collection as Navigation;
 
@@ -85,7 +86,7 @@ class BackendController extends TemplateController
 		Assets::package(['libraries', 'core']);
 
 		$file = $this->getRouterController();
-		if (app('module.loader')->findFile('resources/js', $file, 'js')) {
+		if (ModuleLoader::findFile('resources/js', $file, 'js')) {
 			Assets::js('controller.' . $file, backend_resources_url() . '/js/' . $file . '.js', 'core', false);
 		}
 

@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Installer\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\App;
+use ModuleLoader;
 use KodiCMS\Installer\Support\ModuleInstaller;
 
 class ModuleMigrate extends Command
@@ -19,7 +19,7 @@ class ModuleMigrate extends Command
 	public function fire()
 	{
 		$this->output->writeln('<info>Migrating KodiCMS modules...</info>');
-		$installer = new ModuleInstaller(app('module.loader')->getRegisteredModules());
+		$installer = new ModuleInstaller(ModuleLoader::getRegisteredModules());
 
 		$installer->cleanOutputMessages();
 		$installer->resetModules();
