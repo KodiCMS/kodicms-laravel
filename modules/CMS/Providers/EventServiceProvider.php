@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\CMS\Providers;
 
+use WYSIWYG;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as BaseEventServiceProvider;
 
