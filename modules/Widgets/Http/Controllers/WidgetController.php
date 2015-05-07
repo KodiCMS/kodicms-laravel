@@ -20,4 +20,39 @@ class WidgetController extends BackendController {
 		$this->setContent('widgets.list', compact('widgets'));
 	}
 
+	public function getCreate()
+	{
+		$this->setTitle(trans('widgets::core.title.create'));
+
+		$this->setContent('widgets.create');
+	}
+
+	public function postCreate()
+	{
+
+	}
+
+	public function getLocation($id)
+	{
+		$this->setTitle(trans('widgets::core.title.location'));
+
+		$this->setContent('widgets.location');
+	}
+
+	public function getEdit($id)
+	{
+		$this->setTitle(trans('widgets::core.title.edit'));
+
+		$this->setContent('widgets.edit');
+	}
+
+	public function postEdit($id)
+	{
+
+	}
+
+	public function getDelete($id)
+	{
+
+	}
 }

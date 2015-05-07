@@ -59,7 +59,7 @@
 
 @if(!$snippet->isNew() AND $snippet->isReadOnly())
 	<div class="panel-default alert alert-danger alert-dark no-margin-b">
-		@lang('widgets::snippet.messages.layout_not_writeable')
+		@lang('widgets::snippet.messages.snippet_not_writeable')
 	</div>
 @elseif (acl_check('snippet.edit'))
 	<div class="form-actions panel-footer">

@@ -2,6 +2,7 @@
 
 return [
 	'title' => [
+		'list' => 'Сниппеты',
 		'edit' => 'Редактирование снипета :name',
 		'create' => 'Создание снипета',
 	],
@@ -24,6 +25,7 @@ return [
 		'actions' => 'Действия'
 	],
 	'messages' => [
+		'snippet_not_writeable' => 'Сниппет в режиме только для чтения',
 		'directory_not_writeable' => 'Директория :dir не доступна для записи',
 		'not_found' => 'Шаблон не найден',
 		'deleted' => 'Снипет :name удален',

@@ -2,5 +2,17 @@
 
 interface WidgetRenderEngine
 {
-	public function render(Widget $widget);
+	/**
+	 * @param WidgetRenderable $widget
+	 */
+	public function __construct(WidgetRenderable $widget, array $parameters = []);
+
+	/**
+	 * @return Widget
+	 */
+	public function getWidget();
+
+	public function render();
+
+	public function __toString();
 }

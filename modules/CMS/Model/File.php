@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use KodiCMS\CMS\Exceptions\Exception;
+use KodiCMS\CMS\Exceptions\FileModelException;
 use KodiCMS\CMS\Exceptions\FileValidationException;
 use KodiCMS\CMS\Helpers\File as FileSystem;
 use KodiCMS\CMS\Helpers\Text;
@@ -10,6 +11,7 @@ use SplFileObject;
 use SplTempFileObject;
 use Validator;
 use Date;
+use View;
 
 class File
 {
@@ -52,10 +54,13 @@ class File
 
 	/**
 	 * TODO добавить поддержку модулей
+	 *
 	 * @param SplFileObject|string $filename
-	 * @throws Exception
+	 * @param string $basePath
+	 * @param bool $onlyExists
+	 * @throws FileModelException
 	 */
-	public function __construct($filename = null, $basePath = null)
+	public function __construct($filename = null, $basePath = null, $onlyExists = false)
 	{
 		if (!is_null($basePath))
 		{
@@ -65,10 +70,12 @@ class File
 		if ($filename instanceof SplFileObject)
 		{
 			$this->file = $filename;
-		} else if ($filename instanceof SplFileInfo)
+		}
+		else if ($filename instanceof SplFileInfo)
 		{
 			$this->file = new SplFileObject($file->getRealPath());
-		} else if (!is_null($filename))
+		}
+		else if (!is_null($filename))
 		{
 			if (strpos($filename, File::$ext) === false)
 			{
@@ -78,12 +85,26 @@ class File
 			if (is_file($filename))
 			{
 				$this->file = new SplFileObject($filename);
-			} else
+			}
+			else if (is_file($this->basePath . DIRECTORY_SEPARATOR . $filename))
+			{
+				$this->file = new SplFileObject($this->basePath . DIRECTORY_SEPARATOR . $filename);
+			}
+			else if ($onlyExists)
+			{
+				throw new FileModelException("File [{$filename}] not found");
+			}
+			else
 			{
 				$this->file = new SplTempFileObject();
 				$this->setName($filename);
 			}
-		} else
+		}
+		else if($onlyExists)
+		{
+			throw new FileModelException;
+		}
+		else
 		{
 			$this->file = new SplTempFileObject();
 		}
@@ -231,6 +252,14 @@ class File
 	public function isNew()
 	{
 		return $this->file instanceof SplTempFileObject;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isExists()
+	{
+		return !($this->file instanceof SplTempFileObject);
 	}
 
 	/**
@@ -428,14 +457,6 @@ class File
 	}
 
 	/**
-	 * @return string
-	 */
-	public function __toString()
-	{
-		return (string)$this->getContent();
-	}
-
-	/**
 	 * @return array
 	 */
 	public function toArray()
@@ -448,6 +469,15 @@ class File
 			'ext' => $this->getExt(),
 			'settings' => $this->attributes
 		];
+	}
+
+	/**
+	 * @param array $paramters
+	 * @return View
+	 */
+	public function toView(array $paramters = [])
+	{
+		return view()->file($this->getRealPath())->with($paramters);
 	}
 
 	/**
@@ -470,5 +500,13 @@ class File
 		}
 
 		return $filename;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return (string)$this->getContent();
 	}
 }

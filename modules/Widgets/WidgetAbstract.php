@@ -1,11 +1,12 @@
 <?php namespace KodiCMS\Widgets;
 
 use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
-use KodiCMS\Widgets\Contracts\WidgetRenderEngine;
+use KodiCMS\Widgets\Contracts\WidgetCacheable;
+use KodiCMS\Widgets\Contracts\WidgetRenderable;
 use KodiCMS\Widgets\Engine\WidgetRenderHTML;
 use Cache;
 
-abstract class WidgetAbstract implements WidgetInterface
+abstract class WidgetAbstract implements WidgetInterface, WidgetRenderable, WidgetCacheable
 {
 	/**
 	 * @var int
@@ -46,16 +47,6 @@ abstract class WidgetAbstract implements WidgetInterface
 	 * @var string
 	 */
 	protected $settingsTemplate = null;
-
-	/**
-	 * @var bool
-	 */
-	protected $isCacheable = true;
-
-	/**
-	 * @var bool
-	 */
-	protected $isHandler = false;
 
 	/**
 	 * @var array
@@ -117,14 +108,6 @@ abstract class WidgetAbstract implements WidgetInterface
 	}
 
 	/**
-	 * @return boolean
-	 */
-	public function isHandler()
-	{
-		return (bool)$this->isHandler;
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getSettingsTemplate()
@@ -145,12 +128,11 @@ abstract class WidgetAbstract implements WidgetInterface
 	}
 
 	/**
-	 * @param WidgetRenderEngine $engine
-	 * @return mixed
+	 * @return string
 	 */
-	public function render(WidgetRenderEngine $engine)
+	public function getDefaultFrontendTemplate()
 	{
-		return $engine->render($this);
+		return $this->defaultFrontendTemplate;
 	}
 
 	/**
@@ -159,27 +141,18 @@ abstract class WidgetAbstract implements WidgetInterface
 	 */
 	public function __toString()
 	{
-		// TODO: реализовать рендер виджета
-		return (string) $this->render(new WidgetRenderHTML);
+		return (string) new WidgetRenderHTML($this);
 	}
 
 	/**********************************************************************************************************
 	 * Cache
 	 **********************************************************************************************************/
 	/**
-	 * @return boolean
-	 */
-	public function isCacheable()
-	{
-		return (bool) $this->isCacheable;
-	}
-
-	/**
 	 * @return int
 	 */
 	public function getCacheLifetime()
 	{
-		return (int) $this->getParameter('cache_lifetime', 0);
+		return (int) $this->getSetting('cache_lifetime', 0);
 	}
 
 	/**
@@ -187,7 +160,7 @@ abstract class WidgetAbstract implements WidgetInterface
 	 */
 	public function getCacheTags()
 	{
-		return $this->getParameter('cache_tags', []);
+		return $this->getSetting('cache_tags', []);
 	}
 
 	/**
@@ -222,7 +195,7 @@ abstract class WidgetAbstract implements WidgetInterface
 	 * @param bool $status
 	 * @return bool
 	 */
-	public function setParameterCache($status)
+	public function setSettingCache($status)
 	{
 		return (bool) $status;
 	}
@@ -231,7 +204,7 @@ abstract class WidgetAbstract implements WidgetInterface
 	 * @param int $lifetime
 	 * @return int
 	 */
-	public function setParameterCacheLifetime($lifetime)
+	public function setSettingCacheLifetime($lifetime)
 	{
 		return (int) $lifetime;
 	}
@@ -240,16 +213,22 @@ abstract class WidgetAbstract implements WidgetInterface
 	 * @param array | string $tags
 	 * @return array
 	 */
-	public function setParameterCacheTags(array $tags)
+	public function setSettingCacheTags(array $tags)
 	{
 		return $tags;
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public function clearCache()
 	{
 		// TODO: реализовать метод очистки кеша
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public function clearCacheByTags()
 	{
 		// TODO: реализовать метод очистки кеша по тегам
@@ -286,10 +265,7 @@ abstract class WidgetAbstract implements WidgetInterface
 	{
 		if (is_array($name))
 		{
-			foreach ($name as $key => $value)
-			{
-				$this->setParameter($key, $value);
-			}
+			$this->setParameters($name);
 		}
 		else
 		{
@@ -308,13 +284,30 @@ abstract class WidgetAbstract implements WidgetInterface
 	}
 
 	/**
+	 * @param array $parameters
+	 * @return $this
+	 */
+	public function setParameters(array $parameters)
+	{
+		foreach ($parameters as $key => $value)
+		{
+			$this->setParameter($key, $value);
+		}
+
+		return $this;
+	}
+
+	/**********************************************************************************************************
+	 * Settings
+	 **********************************************************************************************************/
+	/**
 	 *
 	 * @param string $name
 	 * @return mixed
 	 */
 	public function __get($name)
 	{
-		return $this->getParameter($name);
+		return $this->getSetting($name);
 	}
 
 	/**
@@ -324,7 +317,7 @@ abstract class WidgetAbstract implements WidgetInterface
 	 */
 	public function __set($name, $value)
 	{
-		$this->setParameter($name, $value);
+		$this->setSetting($name, $value);
 	}
 
 	/**
@@ -333,7 +326,7 @@ abstract class WidgetAbstract implements WidgetInterface
 	 */
 	public function __isset($name)
 	{
-		return isset($this->parameters[$name]);
+		return isset($this->settings[$name]);
 	}
 
 	/**
@@ -341,12 +334,9 @@ abstract class WidgetAbstract implements WidgetInterface
 	 */
 	public function __unset($name)
 	{
-		unset($this->parameters[$name]);
+		unset($this->settings[$name]);
 	}
 
-	/**********************************************************************************************************
-	 * Settings
-	 **********************************************************************************************************/
 	/**
 	 * @return array
 	 */
@@ -374,10 +364,7 @@ abstract class WidgetAbstract implements WidgetInterface
 	{
 		if (is_array($name))
 		{
-			foreach ($name as $key => $value)
-			{
-				$this->setSetting($key, $value);
-			}
+			$this->setSettings($name);
 		}
 		else
 		{
@@ -390,6 +377,20 @@ abstract class WidgetAbstract implements WidgetInterface
 			{
 				$this->settings[$name] = $value;
 			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @param array $settings
+	 * @return $this
+	 */
+	public function setSettings(array $settings)
+	{
+		foreach ($settings as $key => $value)
+		{
+			$this->setSetting($key, $value);
 		}
 
 		return $this;

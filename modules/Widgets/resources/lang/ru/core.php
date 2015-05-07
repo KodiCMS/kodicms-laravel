@@ -1,11 +1,19 @@
 <?php
 return [
 	'title' => [
-		'snippets' => [
-			'list' => 'Сниппеты'
-		],
-		'widgets' => [
-			'list' => 'Виджеты'
-		]
+		'list' => 'Виджеты',
+		'create' => 'Новый виджет',
+		'edit' => 'Редактирование виджета :name'
+	],
+	'field' => [
+		'name' => 'Название',
+		'description' => 'Описание',
+		'type' => 'Тип',
+		'template' => 'Шаблон',
+		'cache' => 'Кеширование',
+		'actions' => 'Действия'
+	],
+	'button' => [
+		'create' => 'Создать'
 	]
 ];
