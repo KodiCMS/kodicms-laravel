@@ -20,6 +20,8 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 	]);
 });
 
+Route::get('/api.layout.rebuild', ['as' => 'api.layout.rebuild.get', 'uses' => 'API\LayoutController@getRebuildBlocks']);
+
 Route::get('/api.page.part', ['as' => 'api.page.part.get', 'uses' => 'API\PagePartController@getByPageId']);
 Route::post('/api.page.part', ['as' => 'api.page.part.post', 'uses' => 'API\PagePartController@create']);
 Route::put('/api.page.part/{id}', ['as' => 'api.page.part.put', 'uses' => 'API\PagePartController@update'])->where('id', '[0-9]+');

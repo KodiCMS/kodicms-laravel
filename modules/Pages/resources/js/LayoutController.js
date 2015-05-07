@@ -17,12 +17,11 @@ CMS.controllers.add(['layout.get.edit', 'layout.get.create'], function () {
 	CMS.filters.switchOn('textarea_content', DEFAULT_CODE_EDITOR, $('#textarea_content').data());
 });
 
-CMS.controllers.add('layout.get.list', function () {
-	$('body').on('post:api-layout.rebuild', function(e, response) {
-		if(!response) return;
-
+CMS.controllers.add('layout.get.index', function () {
+	$('body').on('get:api.layout.rebuild', function(e, response) {
 		for(i in response) {
-			$('.layout-block-list', '#layout_' + i).text((response[i] instanceof Array) ? response[i].sort().join (', ') : '')
+			var blocks = response[i];
+			$('.layout-block-list', '#layout_' + i).text((blocks instanceof Array) ? blocks.sort().join (', ') : '');
 		}
 	});
 });

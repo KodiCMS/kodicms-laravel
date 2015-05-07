@@ -16,15 +16,16 @@ class SnippetController extends AbstractFileController
 	protected $collection;
 
 	/**
-	 * @var array
+	 * @return SnippetCollection
 	 */
-	protected $editors = ['ace', 'ckeditor'];
-
 	protected function getCollection()
 	{
 		return new SnippetCollection();
 	}
 
+	/**
+	 * @return string
+	 */
 	protected function getSectionPrefix()
 	{
 		return 'snippet';

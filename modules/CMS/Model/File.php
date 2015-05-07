@@ -121,6 +121,14 @@ class File
 	/**
 	 * @return string
 	 */
+	public function getKey()
+	{
+		return str_slug($this->getName());
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getFilename()
 	{
 		if ($this->isNew())

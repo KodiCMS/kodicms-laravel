@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Pages\Model;
 
+use DB;
 use KodiCMS\CMS\Model\File;
 
 class Layout extends File
@@ -25,7 +26,7 @@ class Layout extends File
 	 */
 	public function isUsed()
 	{
-		return (bool) \DB::table('pages')
+		return (bool) DB::table('pages')
 			->where('layout_file', $this->getName())
 			->count();
 	}
@@ -56,11 +57,11 @@ class Layout extends File
 	 * TODO: добавить кеширование
 	 * @return mixed
 	 */
-	public function rebuildBlocks()
+	public function findBlocks()
 	{
 		$blocks = LayoutBlock::findInString($this->getContent());
 
-		\DB::table('layout_blocks')
+		DB::table('layout_blocks')
 			->where('layout_name', $this->getName())
 			->delete();
 
@@ -75,8 +76,7 @@ class Layout extends File
 
 		if (count($insertData) > 0)
 		{
-			\DB::table('layout_blocks')
-				->insert($insertData);
+			DB::table('layout_blocks')->insert($insertData);
 		}
 
 		return $blocks;

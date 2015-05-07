@@ -32,7 +32,7 @@
 		</thead>
 		<tbody>
 		<?php foreach ($collection as $snippet): ?>
-		<tr id="snippet_{{ $snippet->getName() }}">
+		<tr id="snippet_{{ $snippet->getKey() }}">
 			<th class="name">
 				{!! UI::icon('desktop') !!}
 				@if ($snippet->isReadOnly())

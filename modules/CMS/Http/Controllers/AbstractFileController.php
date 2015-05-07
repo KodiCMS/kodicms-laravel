@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\CMS\Http\Controllers;
 
-use Assets;
+use KodiCMS\CMS\Model\FileCollection;
+use WYSIWYG;
 use KodiCMS\Users\Model\UserRole;
 
 abstract class AbstractFileController extends System\BackendController {
@@ -14,11 +15,6 @@ abstract class AbstractFileController extends System\BackendController {
 	 * @var string
 	 */
 	protected $sectionPrefix;
-
-	/**
-	 * @var array
-	 */
-	protected $editors = NULL;
 
 	/**
 	 * @return FileCollection
@@ -130,23 +126,27 @@ abstract class AbstractFileController extends System\BackendController {
 			->withErrors(trans("{$this->moduleNamespace}{$this->sectionPrefix}.messages.not_deleted"));
 	}
 
+	/**
+	 * @param null|string $filename
+	 * @return mixed
+	 */
 	public function getFile($filename = NULL)
 	{
-		if(is_array($this->editors))
-		{
-			Assets::package($this->editors);
-		}
+		WYSIWYG::loadAll();
 
-		if(is_null($filename))
+		if (is_null($filename))
 		{
 			return $this->collection->newFile();
 		}
 
-		if($file =$this->collection->findFile($filename))
+		if ($file = $this->collection->findFile($filename))
 		{
 			return $file;
 		}
 
-		$this->throwFailException($this->smartRedirect()->withErrors(trans("{$this->moduleNamespace}{$this->sectionPrefix}.messages.not_found")));
+		$this->throwFailException(
+			$this->smartRedirect()
+				->withErrors(trans("{$this->moduleNamespace}{$this->sectionPrefix}.messages.not_found"))
+		);
 	}
 }

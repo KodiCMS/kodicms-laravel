@@ -42,13 +42,26 @@ class LayoutBlock extends Model
 	public static function findInString($content)
 	{
 		$content = str_replace(' ', '', $content);
-		preg_match_all("/Block::([a-z_]{3,5})\(\'([0-9a-zA-Z\_\-\.]+)\'(\,.*)?\)/i", $content, $blocks);
+		return array_unique(array_merge(static::findInBladeTemplate($content), static::findInPHPTemplate($content)));
+	}
 
-		if (!empty($blocks[2]))
-		{
-			return $blocks[2];
-		}
+	/**
+	 * @param string $content
+	 * @return array
+	 */
+	protected static function findInBladeTemplate($content)
+	{
+		preg_match_all("/block_(run|def)\(\'([0-9a-zA-Z\_\-\.]+)\'(\,.*)?\)/i", $content, $blocks);
+		return is_array($blocks[2]) ? $blocks[2] : [];
+	}
 
-		return [];
+	/**
+	 * @param string $content
+	 * @return array
+	 */
+	protected static function findInPHPTemplate($content)
+	{
+		preg_match_all("/Block::(run|def)\(\'([0-9a-zA-Z\_\-\.]+)\'(\,.*)?\)/i", $content, $blocks);
+		return is_array($blocks[2]) ? $blocks[2] : [];
 	}
 }

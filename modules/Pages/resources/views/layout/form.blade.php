@@ -12,21 +12,21 @@
 	</div>
 </div>
 @if (!$layout->isReadOnly() OR $layout->isNew())
-	<div class="panel-toggler text-center panel-heading" data-target-spoiler=".spoiler-settings">
-		{!! UI::icon('chevron-down panel-toggler-icon') !!} <span class="muted">@lang('pages::layout.label.settings')</span>
-	</div>
-	<div class="panel-spoiler spoiler-settings panel-body">
-		<div class="form-group">
-			<label class="col-md-3 control-label">@lang('pages::layout.label.roles')</label>
-			<div class="col-md-9">
-				{!! Form::select('roles[]', $roles, NULL, [
+<div class="panel-toggler text-center panel-heading" data-target-spoiler=".spoiler-settings">
+	{!! UI::icon('chevron-down panel-toggler-icon') !!} <span class="muted">@lang('pages::layout.label.settings')</span>
+</div>
+<div class="panel-spoiler spoiler-settings panel-body">
+	<div class="form-group">
+		<label class="col-md-3 control-label">@lang('pages::layout.label.roles')</label>
+		<div class="col-md-9">
+			{!! Form::select('roles[]', $roles, NULL, [
 				'class' => 'form-control', 'multiple'
-				]) !!}
-			</div>
+			]) !!}
 		</div>
-
-		<hr class="panel-wide" />
 	</div>
+
+	<hr class="panel-wide" />
+</div>
 @endif
 <div class="panel-heading">
 	<span class="panel-title">@lang('pages::layout.field.content')</span>
@@ -50,16 +50,16 @@
 		</div>
 	@endif
 </div>
-{!! Form::textarea('content', $layout->getContent(), [
+{!! Form::textarea('content', NULL, [
 'class' => 'form-control',
 'id' => 'textarea_content',
 'data-height' => 600,
-'data-readonly' => ($layout->isReadOnly() OR ($layout->isNew() AND !$layout->isReadOnly())) ? 'off' : 'on'
+'data-readonly' => ($layout->isReadOnly() OR ($layout->isNew() AND !$layout->isReadOnly())) ? 'on' : 'off'
 ]) !!}
 
 @if(!$layout->isNew() AND $layout->isReadOnly())
 	<div class="panel-default alert alert-danger alert-dark no-margin-b">
-		<?php echo __('File is not writable'); ?>
+		@lang('pages::layout.messages.layout_not_writeable')
 	</div>
 @elseif (acl_check('layout.edit'))
 	<div class="form-actions panel-footer">

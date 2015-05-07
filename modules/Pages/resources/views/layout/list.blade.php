@@ -11,8 +11,7 @@
 		{!! Form::button(trans('pages::layout.button.rebuild'), [
 			'data-icon' => 'refresh',
 			'class' => 'btn btn-inverse btn-xs',
-			'data-api-url' => '/api.layout.rebuild',
-			'data-api-method' => 'POST'
+			'data-api-url' => '/api.layout.rebuild'
 		]) !!}
 		@endif
 	</div>
@@ -41,7 +40,7 @@
 		</thead>
 		<tbody>
 		<?php foreach ($collection as $layout): ?>
-		<tr id="layout_{{ $layout->getName() }}">
+		<tr id="layout_{{ $layout->getKey() }}">
 			<th class="name">
 				{!! UI::icon('desktop') !!}
 				@if ($layout->isReadOnly())

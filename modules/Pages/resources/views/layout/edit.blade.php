@@ -1,5 +1,5 @@
 {!! Form::model($file, [
-	'route' => ['backend.layout.edit.post', [$file->getName()]],
+	'route' => ['backend.layout.edit.post', $file->getName()],
 	'class' => 'form-horizontal panel'
 ]) !!}
 

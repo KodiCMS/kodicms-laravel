@@ -14,7 +14,9 @@ return [
 		'blocks' => 'Блоки',
 		'readonly' => 'Только для чтения',
 		'not_set' => 'Не указан',
-		'inherit' => 'Наследуется (:layout)'
+		'inherit' => 'Наследуется (:layout)',
+		'settings' => 'Настройки',
+		'roles' => 'Роли'
 	],
 	'field' => [
 		'name' => 'Название',
@@ -26,6 +28,7 @@ return [
 	],
 	'messages' => [
 		'directory_not_writeable' => 'Директория :dir не доступна для записи',
+		'layout_not_writeable' => 'Шаблон в режиме только для чтения',
 		'not_found' => 'Шаблон не найден'
 	]
 ];

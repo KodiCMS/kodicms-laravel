@@ -11,15 +11,26 @@ class LayoutController extends AbstractFileController
 	public $moduleNamespace = 'pages::';
 
 	/**
+	 * @var array
+	 */
+	protected $editors = NULL;
+
+	/**
 	 * @var LayoutCollection
 	 */
 	protected $collection;
 
+	/**
+	 * @return LayoutCollection
+	 */
 	protected function getCollection()
 	{
 		return new LayoutCollection();
 	}
 
+	/**
+	 * @return string
+	 */
 	protected function getSectionPrefix()
 	{
 		return 'layout';
