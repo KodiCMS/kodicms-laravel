@@ -51,7 +51,7 @@ class Meta
 			$this
 				->setTitle(e($this->page->getMetaTitle()))
 				->addMeta(['name' => 'keywords', 'content' => e($this->page->getMetaKeywords())])
-				->addMeta(['name' => 'description', 'content' => es($this->page->getMetaDescription())])
+				->addMeta(['name' => 'description', 'content' => e($this->page->getMetaDescription())])
 				->addMeta(['name' => 'robots', 'content' => e($this->page->getMetaRobots())])
 				->addMeta(['charset' => 'utf-8'], 'meta::charset');
 		}
@@ -208,6 +208,6 @@ class Meta
 	 */
 	public function __toString()
 	{
-		return (string) $this->render();
+		return (string) $this->build();
 	}
 }

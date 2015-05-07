@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Facade;
 class FrontpageMeta extends Facade {
 
 	/**
+	 * @return \KodiCMS\Pages\Helpers\Meta
+	 */
+	public static function get()
+	{
+		return app('frontpage.meta');
+	}
+
+	/**
 	 * Get the registered name of the component.
 	 *
 	 * @return string
