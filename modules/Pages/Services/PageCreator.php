@@ -32,6 +32,7 @@ class PageCreator implements ModelCreator
 	 */
 	public function create(array $data)
 	{
+		// TODO: фильтровать входные данные через модель
 		$page = Page::create(array_only($data, [
 			'title', 'slug', 'is_redirect', 'breadcrumb',
 			'meta_title', 'meta_keywords', 'meta_description',
