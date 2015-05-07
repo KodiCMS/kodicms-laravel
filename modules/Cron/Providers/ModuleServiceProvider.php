@@ -18,6 +18,11 @@ class ModuleServiceProvider extends ServiceProvider
 				Job::runAll();
 			}
 		});
+		Event::listen('view.settings.bottom', function() {
+			$agents = Job::agents();
+			echo view('cron::cron.settings', compact('agents'));
+		});
+
 	}
 
 	public function boot()
