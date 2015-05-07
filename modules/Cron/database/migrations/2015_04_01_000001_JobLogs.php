@@ -10,10 +10,10 @@ class JobLogs extends Migration
 		Schema::create('job_logs', function (Blueprint $table) {
 			$table->increments('id');
 			$table->unsignedInteger('job_id')->index();
-			$table->timestamp('created_at');
+			$table->tinyInteger('status');
+			$table->timestamps();
 
-			// TODO: перенести статус по умолчанию в класс
-			$table->tinyInteger('status')->default(1);
+			$table->foreign('job_id')->references('id')->on('jobs')->onDelete('cascade');
 		});
 	}
 

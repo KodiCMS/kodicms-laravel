@@ -12,19 +12,18 @@ class Jobs extends Migration
 			$table->string('name');
 			$table->string('task_name');
 
-			$table->dateTime('start_on');
-			$table->dateTime('send_on');
+			$table->dateTime('date_start');
+			$table->dateTime('date_end');
 
-			$table->dateTime('last_run');
+			$table->dateTime('last_run')->nullable();
 			$table->dateTime('next_run')->index();
 
 			$table->integer('interval');
 			$table->string('crontime', 100);
 
-			// TODO: перенести статус по умолчанию в класс
-			$table->tinyInteger('status')->default(1);
+			$table->tinyInteger('status');
 			$table->integer('attempts');
-			$table->timestamp('created_at');
+			$table->timestamps();
 		});
 	}
 
