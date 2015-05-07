@@ -30,6 +30,11 @@ class ModuleServiceProvider extends ServiceProvider {
 			$pattern = $compiler->createMatcher('meta');
 			return preg_replace($pattern, '$1<?php meta$2; ?>', $view);
 		});
+
+		Blade::extend(function ($view, $compiler) {
+			$pattern = $compiler->createMatcher('block');
+			return preg_replace($pattern, '$1<?php Block::run$2; ?>', $view);
+		});
 	}
 
 

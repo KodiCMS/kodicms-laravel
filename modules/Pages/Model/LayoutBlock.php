@@ -51,8 +51,9 @@ class LayoutBlock extends Model
 	 */
 	protected static function findInBladeTemplate($content)
 	{
-		preg_match_all("/block_(run|def)\(\'([0-9a-zA-Z\_\-\.]+)\'(\,.*)?\)/i", $content, $blocks);
-		return is_array($blocks[2]) ? $blocks[2] : [];
+		preg_match_all("/@block\(\'([0-9a-zA-Z\_\-\.]+)\'(\,.*)?\)/", $content, $blocks);
+
+		return is_array($blocks[1]) ? $blocks[1] : [];
 	}
 
 	/**
