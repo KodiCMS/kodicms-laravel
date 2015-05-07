@@ -9,5 +9,5 @@ interface Widget {
 	public function getDescription();
 	public function getId();
 
-	public function render(WidgetRenderEngine $engine);
+	public function render();
 }

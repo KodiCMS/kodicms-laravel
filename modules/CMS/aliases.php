@@ -51,4 +51,5 @@ return [
 	'Assets'		=> 'KodiCMS\CMS\Assets\Core',
 	'WYSIWYG'		=> 'KodiCMS\CMS\Helpers\WYSIWYG',
 	'Date'			=> 'KodiCMS\CMS\Helpers\Date',
+	'Block'			=> 'KodiCMS\Pages\Helpers\Block'
 ];
