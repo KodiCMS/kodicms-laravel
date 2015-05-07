@@ -2,6 +2,12 @@
 
 interface Widget {
 
+	/**
+	 * @param int $id
+	 * @param string $type
+	 * @param string $name
+	 * @param string $description
+	 */
 	public function __construct($id, $type, $name, $description = '');
 
 	/**

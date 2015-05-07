@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Widgets\Exceptions\WidgetException;
-use KodiCMS\Widgets\Manager as WidgetsManager;
+use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 
 class Widget extends Model
 {
@@ -31,11 +31,16 @@ class Widget extends Model
 	];
 
 	/**
+	 * @var \KodiCMS\Widgets\Contracts\Widget
+	 */
+	protected $widget = null;
+
+	/**
 	 * @return string
 	 */
 	public function getType()
 	{
-		foreach (WidgetsManager::getAvailableWidgets() as $group => $types)
+		foreach (WidgetManagerDatabase::getAvailableTypes() as $group => $types)
 		{
 			if (isset($types[$this->type]))
 			{
@@ -46,26 +51,82 @@ class Widget extends Model
 		return $this->type;
 	}
 
-	public function asWidget()
+	/**
+	 * @return \KodiCMS\Widgets\Contracts\Widget|null
+	 * @throws WidgetException
+	 */
+	public function toWidget()
 	{
-		if(!$this->exists)
+		if (!$this->exists or !$this->isClassExists())
 		{
 			return null;
 		}
 
+		if (!is_null($this->widget))
+		{
+			return $this->widget;
+		}
+
 		$widgetClass = $this->class;
 
-		if(!in_array('KodiCMS\Widgets\Contracts\Widget', class_implements($widgetClass)))
+		if ($this->isCorrupt())
 		{
 			throw new WidgetException("Widget class {$widgetClass} must be implemented of [KodiCMS\Widgets\Contracts\Widget]");
 		}
 
-		$widget = new $widgetClass($this->id, $this->type, $this->name, $this->description);
+		$this->widget = new $widgetClass($this->id, $this->type, $this->name, $this->description);
 
-		$widget->setParameters($this->parameters);
-		$widget->setSettings($this->settings);
+		if (!is_null($this->parameters))
+		{
+			$this->widget->setParameters($this->parameters);
+		}
 
-		return $widget;
+		if (!is_null($this->settings))
+		{
+			$this->widget->setSettings($this->settings);
+		}
+
+		return $this->widget;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isHandler()
+	{
+		return in_array('KodiCMS\Widgets\Contracts\WidgetHandler', class_implements($this->class));
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isRenderable()
+	{
+		return in_array('KodiCMS\Widgets\Contracts\WidgetRenderable', class_implements($this->class));
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isCacheable()
+	{
+		return in_array('KodiCMS\Widgets\Contracts\WidgetCacheable', class_implements($this->class));
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isClassExists()
+	{
+		return class_exists($this->class);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isCorrupt()
+	{
+		return !in_array('KodiCMS\Widgets\Contracts\Widget', class_implements($this->class));
 	}
 
 	public function scopeFilterByType($query, array $types)
@@ -74,5 +135,22 @@ class Widget extends Model
 		{
 			return $query->whereIn('type', $types);
 		}
+	}
+
+	/**
+	 * Handle dynamic method calls into the model.
+	 *
+	 * @param  string  $method
+	 * @param  array   $parameters
+	 * @return mixed
+	 */
+	public function __call($method, $parameters)
+	{
+		if ($this->exists and !$this->isCorrupt() and $this->isClassExists() and method_exists($this->toWidget(), $method))
+		{
+			return call_user_func_array([$this->toWidget(), $method], $parameters);
+		}
+
+		return parent::__call($method, $parameters);
 	}
 }

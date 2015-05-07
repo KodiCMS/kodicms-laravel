@@ -148,6 +148,14 @@ abstract class WidgetAbstract implements WidgetInterface, WidgetRenderable, Widg
 	 * Cache
 	 **********************************************************************************************************/
 	/**
+	 * @return bool
+	 */
+	public function isCacheEnabled()
+	{
+		return (bool) $this->cache;
+	}
+
+	/**
 	 * @return int
 	 */
 	public function getCacheLifetime()
@@ -223,7 +231,7 @@ abstract class WidgetAbstract implements WidgetInterface, WidgetRenderable, Widg
 	 */
 	public function clearCache()
 	{
-		// TODO: реализовать метод очистки кеша
+		Cache::forget($this->getCacheKey());
 	}
 
 	/**
@@ -231,7 +239,10 @@ abstract class WidgetAbstract implements WidgetInterface, WidgetRenderable, Widg
 	 */
 	public function clearCacheByTags()
 	{
-		// TODO: реализовать метод очистки кеша по тегам
+		if (Cache::getFacadeRoot()->store()->getStore() instanceof TaggableStore)
+		{
+			Cache::tags($this->getCacheTags())->flush();
+		}
 	}
 
 	/**********************************************************************************************************

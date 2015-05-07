@@ -1,6 +1,12 @@
 <?php namespace KodiCMS\Widgets\Contracts;
 
 interface WidgetCacheable extends WidgetRenderable {
+
+	/**
+	 * @return bool
+	 */
+	public function isCacheEnabled();
+
 	/**
 	 * @return int
 	 */

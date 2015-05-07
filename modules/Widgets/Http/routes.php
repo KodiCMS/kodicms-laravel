@@ -20,4 +20,7 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 		'postEdit' => 'backend.widget.edit.post',
 		'getDelete' => 'backend.widget.delete',
 	]);
+
+	Route::get('/api.layout.rebuild', ['as' => 'api.layout.rebuild.get', 'uses' => 'API\LayoutController@getRebuildBlocks']);
+	Route::get('handler/{$id}', ['as' => 'widget.handler', 'uses' => 'HandlerController@handle']);
 });

@@ -1,14 +1,11 @@
 <?php namespace KodiCMS\Widgets\Manager;
 
-use KodiCMS\Widgets\Contracts\WidgetManager;
 use DB;
 use Illuminate\Database\Query\Builder;
 use KodiCMS\Pages\Model\FrontendPage;
 
-class WidgetManagerDatabase implements WidgetManager
+class WidgetManagerDatabase extends WidgetManager
 {
-
-
 	/**
 	 * @param array $types
 	 * @return array
