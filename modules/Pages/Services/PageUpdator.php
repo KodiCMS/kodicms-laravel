@@ -42,8 +42,6 @@ class PageUpdator implements ModelUpdator
 	{
 		$page = Page::findOrFail($id);
 
-		$page->created_at = new Carbon;
-
 		$page
 			->update(array_only($data, [
 				'title', 'slug', 'is_redirect', 'breadcrumb',
