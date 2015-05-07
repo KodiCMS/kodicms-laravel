@@ -40,7 +40,7 @@
 					]) !!}
 					@endif
 
-					@if (!is_null($page->behavior))
+					@if ($page->hasBehavior())
 						{!! UI::label(trans('pages::core.label.page.behavior', ['behavior' => $page->getBehaviorTitle()]), 'default') !!}
 					@endif
 

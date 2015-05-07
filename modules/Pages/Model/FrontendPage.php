@@ -105,7 +105,7 @@ class FrontendPage
 
 			if ($pageObject = self::findBySlug($pageSlug, $parentPage, $includeHidden))
 			{
-				if (!is_null($pageObject->getBehavior()) AND $behavior = BehaviorManager::load($pageObject->getBehavior(), $pageObject))
+				if ($pageObject->hasBehavior() AND $behavior = BehaviorManager::load($pageObject->getBehavior(), $pageObject))
 				{
 					$behavior->executeRoute($pageObject->getUri());
 					$pageObject->behaviorObject = $behavior;
@@ -449,7 +449,7 @@ class FrontendPage
 	 */
 	public function getMetaKeywords($default = null)
 	{
-		$meta = $this->parsMeta('meta_keywords');
+		$meta = $this->parseMeta('meta_keywords');
 
 		return !empty($meta) ? $meta : $default;
 	}
@@ -460,7 +460,7 @@ class FrontendPage
 	 */
 	public function getMetaDescription($default = null)
 	{
-		$meta = $this->parsMeta('meta_description');
+		$meta = $this->parseMeta('meta_description');
 
 		return !empty($meta) ? $meta : $default;
 	}
@@ -610,6 +610,14 @@ class FrontendPage
 	public function getBehavior()
 	{
 		return $this->behavior;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function hasBehavior()
+	{
+		return ! empty($this->behavior);
 	}
 
 	/**

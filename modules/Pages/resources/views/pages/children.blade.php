@@ -19,7 +19,7 @@
 				]) !!}
 			@endif
 
-			@if (!is_null($child->behavior))
+			@if ($child->hasBehavior())
 				{!! UI::label(trans('pages::core.label.page.behavior', ['behavior' => $child->getBehaviorTitle()]), 'default') !!}
 			@endif
 

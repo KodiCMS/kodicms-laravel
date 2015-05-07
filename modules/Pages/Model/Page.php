@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 use DB;
+use UI;
 
 class Page extends Model
 {
@@ -131,7 +132,7 @@ class Page extends Model
 				break;
 		}
 
-		return \UI::label($status, $label . ' editable-status', ['data-value' => $this->status]);
+		return UI::label($status, $label . ' editable-status', ['data-value' => $this->status]);
 	}
 
 	/**
@@ -162,7 +163,7 @@ class Page extends Model
 	 */
 	public function getPublicLink()
 	{
-		return link_to($this->getFrontendUrl(), \UI::label(\UI::icon('globe') . ' ' . trans('pages::core.button.view_front')), [
+		return link_to($this->getFrontendUrl(), UI::label(\UI::icon('globe') . ' ' . trans('pages::core.button.view_front')), [
 			'class' => 'item-preview', 'target' => '_blank'
 		]);
 	}
@@ -227,6 +228,14 @@ class Page extends Model
 	/**
 	 * @return string
 	 */
+	public function hasBehavior()
+	{
+		return !empty($this->behavior);
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getBehaviorTitle()
 	{
 		return studly_case($this->behavior);
@@ -238,7 +247,7 @@ class Page extends Model
 	 */
 	public function getBehaviorObject()
 	{
-		if(is_null($this->behavior))
+		if(!$this->hasBehavior())
 		{
 			return null;
 		}
