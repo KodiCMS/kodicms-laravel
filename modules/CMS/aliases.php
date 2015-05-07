@@ -43,6 +43,8 @@ return [
 	 * KodiCMS aliases...
 	 */
 	'ModuleLoader' 	=> 'KodiCMS\Support\Facades\ModuleLoader',
+	'Frontpage' 	=> 'KodiCMS\Support\Facades\Frontpage',
+	'FrontpageMeta'	=> 'KodiCMS\Support\Facades\FrontpageMeta',
 	'UI'			=> 'KodiCMS\CMS\Helpers\UI',
 	'ACL'			=> 'KodiCMS\Users\ACL',
 	'CMS'			=> 'KodiCMS\CMS\Core',
