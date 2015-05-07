@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Cron\Model;
 
+use Artisan;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use DB;
@@ -46,6 +47,14 @@ class Job extends Model
 				$job->setNextRun();
 			}
 		});
+	}
+
+	public static function agents()
+	{
+		return [
+			static::AGENT_SYSTEM => trans('cron::core.settings.agents.system'),
+			static::AGENT_CRON   => trans('cron::core.settings.agents.cron')
+		];
 	}
 
 	public function getDates()
@@ -103,11 +112,7 @@ class Job extends Model
 	public static function runAll()
 	{
 		$now = new Carbon;
-		$jobs = static::where('attempts', '<=', static::MAX_ATEMTPS)
-			->where('date_start', '<=', $now)
-			->where('date_end', '>=' , $now)
-			->where('next_run', '<', $now)
-			->get();
+		$jobs = static::where('attempts', '<=', static::MAX_ATEMTPS)->where('date_start', '<=', $now)->where('date_end', '>=', $now)->where('next_run', '<', $now)->get();
 
 		foreach ($jobs as $job)
 		{
@@ -131,13 +136,19 @@ class Job extends Model
 				throw new \Exception('Job not found or action not set');
 			}
 
-			list($class, $method) = explode('@', $action);
-			$instance = app($class);
-			if ( ! method_exists($instance, $method))
+			if (strpos($action, '@') !== false)
 			{
-				throw new \Exception('Invalid method ' . $method);
+				list($class, $method) = explode('@', $action);
+				$instance = app($class);
+				if ( ! method_exists($instance, $method))
+				{
+					throw new \Exception('Invalid method ' . $method);
+				}
+				$instance->$method();
+			} else
+			{
+				Artisan::call($action);
 			}
-			$instance->$method();
 		} catch (\Exception $e)
 		{
 			dd($e);
