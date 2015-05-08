@@ -1,30 +1,32 @@
 <?php
 
 return [
-	'title' => [
-		'about' => 'О системе',
-		'settings' => 'Настройки',
-		'system' => 'Системные',
+	'title'      => [
+		'about'     => 'О системе',
+		'settings'  => 'Настройки',
+		'system'    => 'Системные',
 		'dashboard' => 'Рабочий стол',
-		'design' => 'Дизайн',
-		'system' => 'Система'
+		'design'    => 'Дизайн',
+		'system'    => 'Система'
 	],
-	'label' => [
-		'not_set' => 'Не указан',
+	'label'      => [
+		'not_set'    => 'Не указан',
 		'date_never' => 'Никогда'
 	],
-	'button' => [
-		'update' => 'Сохранить',
+	'button'     => [
+		'update'       => 'Сохранить',
 		'update_close' => 'Сохранить и закрыть',
-		'create' => 'Создать',
+		'create'       => 'Создать',
 		'create_close' => 'Создать и закрыть',
-		'cancel' => 'Отмена',
+		'cancel'       => 'Отмена',
 	],
-	'helpers' => [
-		'not_select' => 'Не выбран',
+	'helpers'    => [
+		'not_select'  => 'Не выбран',
+		'key'         => 'Ключ',
+		'description' => 'Описание',
 	],
-	'footer' => [
-		'poweredBy' => 'Работает на :framework v:version',
+	'footer'     => [
+		'poweredBy'   => 'Работает на :framework v:version',
 		'adminTeheme' => 'Тема :name',
 	],
 	'navigation' => [
@@ -32,7 +34,7 @@ return [
 		'site' => 'Посмотреть сайт',
 		''
 	],
-	'messages' => [
+	'messages'   => [
 		'route_not_found' => 'Страница не найдена'
-	]
+	],
 ];

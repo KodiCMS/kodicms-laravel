@@ -11,7 +11,9 @@ class EmailTemplates extends Migration
 			$table->increments('id');
 			$table->timestamps();
 
-			$table->unsignedInteger('type_id')->index();
+			$table->unsignedInteger('email_type_id');
+			$table->foreign('email_type_id')->references('id')->on('email_types')->onDelete('cascade');
+
 			$table->tinyInteger('status');
 
 			$table->boolean('use_queue')->default(FALSE);
@@ -21,8 +23,7 @@ class EmailTemplates extends Migration
 
 			$table->text('message');
 
-			// TODO: вынести константу в класс Email
-			$table->string('message_type', 5)->default('html');
+			$table->string('message_type', 5);
 
 			$table->string('cc');
 			$table->string('bcc');
