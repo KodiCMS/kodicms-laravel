@@ -8,6 +8,11 @@ use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 class Widget extends Model
 {
 	/**
+	 * @var array
+	 */
+	private static $cachedWidgets = [];
+
+	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
@@ -70,6 +75,12 @@ class Widget extends Model
 			return $this->widget;
 		}
 
+		if (array_key_exists($this->id, static::$cachedWidgets))
+		{
+			$this->widget = static::$cachedWidgets[$this->id];
+			return $this->widget;
+		}
+
 		if (!is_null($this->widget = WidgetManagerDatabase::makeWidget($this->type, $this->name, $this->description, $this->settings)))
 		{
 			$this->widget->setId($this->id);
@@ -79,6 +90,8 @@ class Widget extends Model
 			// TODO: возможно стоит переделать
 			$this->widget = new \KodiCMS\Widgets\Widget\Temp($this->name, $this->description);
 		}
+
+		static::$cachedWidgets[$this->id] = $this->widget;
 
 		return $this->widget;
 	}
@@ -167,6 +180,14 @@ class Widget extends Model
 		}
 
 		return [$widgetBlocks, $blocksToExclude];
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	 */
+	public function pages()
+	{
+		return $this->belongsToMany('KodiCMS\Pages\Model\Page', 'page_widgets', 'widget_id', 'page_id');
 	}
 
 	/**

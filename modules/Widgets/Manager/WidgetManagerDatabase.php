@@ -1,7 +1,9 @@
 <?php namespace KodiCMS\Widgets\Manager;
 
 use DB;
+use Illuminate\Database\Eloquent\Collection;
 use KodiCMS\Pages\Model\FrontendPage;
+use KodiCMS\Widgets\Contracts\WidgetCorrupt;
 use KodiCMS\Widgets\Model\Widget;
 
 class WidgetManagerDatabase extends WidgetManager
@@ -13,19 +15,14 @@ class WidgetManagerDatabase extends WidgetManager
 	 */
 	public static function getWidgetsByType(array $types = null)
 	{
-		$query = DB::table('widgets')
-			->select('widgets.*')
-			->selectRaw('COUNT(page_widgets.page_id) as used')
-			->join('page_widgets', 'widgets.id', '=', 'page_widgets.widget_id')
-			->groupBy('widgets.id')
-			->orderBy('widgets.name');
+		$widgets = new Widget;
 
 		if(is_array($types) AND count($types) > 0)
 		{
-			$query->whereIn('widgets.type', $types);
+			$widgets->whereIn('widgets.type', $types);
 		}
 
-		return static::makeWidgetsList($query);
+		return static::buildWidgetCollection($widgets->get());
 	}
 
 	/**
@@ -33,32 +30,39 @@ class WidgetManagerDatabase extends WidgetManager
 	 */
 	public static function getAllWidgets()
 	{
-		$query = DB::table('widgets')
-			->orderBy('type', 'asc')
-			->orderBy('name', 'asc');
+		$widgets = Widget::all();
 
-		return static::makeWidgetsList($query);
+		return static::buildWidgetCollection($widgets);
 	}
 
 	/**
-	 * @param FrontendPage|integer $page
+	 * @param int $pageId
 	 * @return array
 	 */
-	public static function getWidgetsByPage($page)
+	public static function getWidgetsByPage($pageId)
 	{
-		if($page instanceof FrontendPage)
+		$widgets = Widget::whereHas('pages', function($q) use($pageId)
 		{
-			$page = $page->getId();
-		}
+			$q->where('pages.id', (int) $pageId);
 
-		$query = DB::table('page_widgets')
-			->select('widgets.*', 'page_widgets.block', 'page_widgets.position')
-			->join('widgets', 'page_widgets.widget_id', '=', 'widgets.id')
-			->where('page_id', (int) $page)
-			->orderBy('page_widgets.block', 'asc')
-			->orderBy('page_widgets.position', 'asc');
+		})->get();
 
-		return static::makeWidgetsList($query);
+		return static::buildWidgetCollection($widgets);
+	}
+
+	/**
+	 * @param Collection $widgets
+	 * @return array
+	 */
+	private static function buildWidgetCollection(Collection $widgets)
+	{
+		return $widgets->map(function($widget)
+		{
+			return $widget->toWidget();
+		})->filter(function($widget)
+		{
+			return !($widget instanceof WidgetCorrupt);
+		})->toArray();
 	}
 
 	/**
@@ -67,11 +71,7 @@ class WidgetManagerDatabase extends WidgetManager
 	 */
 	public static function getWidgetById($id)
 	{
-		$query = DB::table('widgets')
-			->where('id', (int) $id)
-			->first();
-
-		return static::makeWidget($query);
+		return Widget::find($id)->toWidget();
 	}
 
 	/**
