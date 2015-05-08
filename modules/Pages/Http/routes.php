@@ -21,6 +21,7 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 });
 
 Route::get('/api.layout.rebuild', ['as' => 'api.layout.rebuild.get', 'uses' => 'API\LayoutController@getRebuildBlocks']);
+Route::get('/api.layout.blocks', ['as' => 'api.layout.rebuild.get', 'uses' => 'API\LayoutController@getBlocks']);
 
 Route::get('/api.page.part', ['as' => 'api.page.part.get', 'uses' => 'API\PagePartController@getByPageId']);
 Route::post('/api.page.part', ['as' => 'api.page.part.post', 'uses' => 'API\PagePartController@create']);

@@ -129,20 +129,6 @@ class WidgetManager implements WidgetManagerInterface
 	}
 
 	/**
-	 * Получение списка блоков по умолчанию
-	 * @return array
-	 */
-	public static function getDefaultBlocks()
-	{
-		return [
-			-1 => __('--- Remove from page ---'),
-			0 => __('--- Hide ---'),
-			'PRE' => __('Before page render'),
-			'POST' => __('After page render')
-		];
-	}
-
-	/**
 	 * @param string $needleType
 	 * @return string|null
 	 */

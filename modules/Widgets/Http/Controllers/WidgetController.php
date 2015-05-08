@@ -4,6 +4,8 @@ use Assets;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use KodiCMS\CMS\Assets\Package;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
+use KodiCMS\Pages\Model\LayoutBlock;
+use KodiCMS\Pages\Model\PageSitemap;
 use KodiCMS\Widgets\Manager\WidgetManager;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 use KodiCMS\Widgets\Model\SnippetCollection;
@@ -53,12 +55,6 @@ class WidgetController extends BackendController {
 			->with('success', trans('widgets::core.messages.created', ['name' => $widget->name]));
 	}
 
-	public function getLocation($id)
-	{
-		$this->setTitle(trans('widgets::core.title.location'));
-		$this->setContent('widgets.location');
-	}
-
 	public function getEdit($id)
 	{
 		$widget = $this->getWidget($id);
@@ -106,6 +102,38 @@ class WidgetController extends BackendController {
 
 		return $this->smartRedirect()
 			->with('success', trans('widgets::core.messages.deleted', ['name' => $widget->name]));
+	}
+
+	public function getLocation($id)
+	{
+		$widget = $this->getWidget($id);
+		list($widgetBlocks, $blocksToExclude) = $widget->getLocations();
+
+		$pages = PageSitemap::get(true)->asArray();
+
+		$this->breadcrumbs
+			->add($widget->getType())
+			->add($widget->name, route('backend.widget.edit', [$widget]));
+
+		$this->setTitle(trans('widgets::core.title.location', [
+			'name' => $widget->name
+		]));
+
+		$layoutBlocks = (new LayoutBlock)->getBlocksGroupedByLayouts();
+
+		$content = $this->setContent('widgets.location', compact('widget', 'pages', 'widgetBlocks', 'blocksToExclude', 'layoutBlocks'));
+	}
+
+	public function postLocation($id)
+	{
+		$widget = $this->getWidget($id);
+		WidgetManagerDatabase::placeWidgetsOnPages($id, $this->request->input('blocks', []));
+		return back();
+	}
+
+	public function getTemplate($template)
+	{
+
 	}
 
 	/**

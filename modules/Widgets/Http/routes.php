@@ -14,6 +14,8 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 	Route::controller('widget', 'WidgetController', [
 		'getIndex' => 'backend.widget.list',
 		'getLocation' => 'backend.widget.location',
+		'postLocation' => 'backend.widget.location.post',
+		'getTemplate' => 'backend.widget.template',
 		'getCreate' => 'backend.widget.create',
 		'postCreate' => 'backend.widget.create.post',
 		'getEdit' => 'backend.widget.edit',

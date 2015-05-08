@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Widgets\Model;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Widgets\Exceptions\WidgetException;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
@@ -136,6 +137,36 @@ class Widget extends Model
 		{
 			return $query->whereIn('type', $types);
 		}
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getLocations()
+	{
+		if (!$this->exists)
+		{
+			return [null, null];
+		}
+
+		$query = DB::table('page_widgets')->get();
+
+		$blocksToExclude = []; // занятые блоки для исключения из списков
+		$widgetBlocks = []; // выбранные блоки для текущего виджета
+
+		foreach ($query as $row)
+		{
+			if ($row->widget_id == $this->id)
+			{
+				$widgetBlocks[$row->page_id] = [$row->block, $row->position];
+			}
+			else
+			{
+				$blocksToExclude[$row->page_id][$row->block] = [$row->block, $row->position];
+			}
+		}
+
+		return [$widgetBlocks, $blocksToExclude];
 	}
 
 	/**

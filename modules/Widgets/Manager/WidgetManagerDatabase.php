@@ -120,6 +120,8 @@ class WidgetManagerDatabase extends WidgetManager
 	}
 
 	/**
+	 * // TODO: добавить установку хлебных крошек
+	 *
 	 * @param integer $widgetId
 	 * @param array $locations
 	 */
