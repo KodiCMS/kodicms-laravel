@@ -1,8 +1,6 @@
 <?php namespace KodiCMS\Widgets\database\seeds;
 
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use KodiCMS\Pages\Model\Page;
 use KodiCMS\Widgets\Model\Widget;
 
 class WidgetTableSeeder extends Seeder {
@@ -21,18 +19,21 @@ class WidgetTableSeeder extends Seeder {
 			'description' => 'Меню, логотип',
 			'type' => 'html',
 			'class' => '\KodiCMS\Widgets\Widget\HTML',
-			'parameters' => [
+			'settings' => [
 				'header' => 'Шапка сайта'
-			],
-			'settings' => []
+			]
 		]);
 
 		Widget::create([
-			'name' => 'Сломанный виджет',
+			'name' => 'Тестовый обработчик',
+			'type' => 'handler',
+			'class' => '\KodiCMS\Widgets\Widget\Handler',
+		]);
+
+		Widget::create([
+			'name' => 'Тест 1',
 			'type' => 'http',
-			'class' => '\KodiCMS\Widgets\Widget\HTTP',
-			'parameters' => [],
-			'settings' => []
+			'class' => '\KodiCMS\Widgets\Widget\HTTP'
 		]);
 	}
 }

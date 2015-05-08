@@ -334,7 +334,11 @@ class Page extends Model
 			$options[0] = trans('pages::layout.label.not_set');
 		}
 
-		foreach ((new LayoutCollection())->getChoices() as $layout) {
+		$layoutList = (new LayoutCollection())->getHTMLSelectChoices();
+
+		array_shift($layoutList);
+
+		foreach ($layoutList as $layout) {
 			$options[$layout] = $layout;
 		}
 

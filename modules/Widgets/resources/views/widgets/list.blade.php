@@ -1,9 +1,9 @@
 <div class="panel">
 	<div class="panel-heading">
 		@if (acl_check('widgets.add'))
-			{!! link_to_route('backend.widget.create', trans('widgets::core.button.create'), [], [
+		{!! link_to_route('backend.widget.create', trans('widgets::core.button.create'), [], [
 			'class' => 'btn btn-primary', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
-			]) !!}
+		]) !!}
 		@endif
 	</div>
 
@@ -31,7 +31,10 @@
 			<tr class="widget @if($widget->isCorrupt()) bg-danger @endif" id="{{ $widget->id }}">
 				@if($widget->isCorrupt())
 				<th data-icon="lock">{{ $widget->name }}</th>
-				<td colspan="4">
+				<td class="type">
+					{!! UI::label($widget->getType()) !!}
+				</td>
+				<td colspan="3">
 					@lang('widgets::core.messages.corrupted')
 				</td>
 				<td class="actions text-right">
@@ -60,9 +63,11 @@
 					<span class="text-muted">{{ $widget->description }}</span>
 
 					@if($widget->isHandler())
-					<span class="text-muted text-xs">{!!
-						__('To use handler send your data to URL :href or use route :route', [
-							'href' => $widget->toWidget()->getHandlerLink(),
+
+					@if(!empty($widget->description))<br />@endif
+					<span class="text-success text-xs">{!!
+						trans('widgets::core.messages.is_handler', [
+							'url' => $widget->getHandlerLink(),
 							'route' => route('widget.handler', [$widget->id])
 						])
 					 !!}</span>

@@ -1,18 +1,10 @@
-<?php namespace KodiCMS\Widgets;
+<?php namespace KodiCMS\Widgets\Widget;
 
 use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
-use KodiCMS\Widgets\Contracts\WidgetCacheable;
-use KodiCMS\Widgets\Contracts\WidgetRenderable;
-use KodiCMS\Widgets\Engine\WidgetRenderHTML;
-use Cache;
+use KodiCMS\Widgets\Manager\WidgetManager;
 
-abstract class WidgetAbstract implements WidgetInterface, WidgetRenderable, WidgetCacheable
+abstract class Decorator implements WidgetInterface
 {
-	/**
-	 * @var int
-	 */
-	private $id;
-
 	/**
 	 * @var string
 	 */
@@ -54,25 +46,14 @@ abstract class WidgetAbstract implements WidgetInterface, WidgetRenderable, Widg
 	protected $settings = [];
 
 	/**
-	 * @param int $id
-	 * @param string $type
 	 * @param string $name
 	 * @param string $description
 	 */
-	public function __construct($id, $type, $name, $description = '')
+	public function __construct($name, $description = '')
 	{
-		$this->id = (int) $id;
-		$this->type = $type;
+		$this->type = WidgetManager::getTypeByClassName(get_called_class());
 		$this->name = $name;
 		$this->description = $description;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isExists()
-	{
-		return $this->getId() > 0;
 	}
 
 	/**
@@ -100,149 +81,19 @@ abstract class WidgetAbstract implements WidgetInterface, WidgetRenderable, Widg
 	}
 
 	/**
-	 * @return int
-	 */
-	public function getId()
-	{
-		return $this->id;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getSettingsTemplate()
-	{
-		return $this->settingsTemplate;
-	}
-
-	/**********************************************************************************************************
-	 * Frontend Template
-	 **********************************************************************************************************/
-
-	/**
-	 * @return string
-	 */
-	public function getFrontendTemplate()
-	{
-		return $this->frontendTemplate;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getDefaultFrontendTemplate()
-	{
-		return $this->defaultFrontendTemplate;
-	}
-
-	/**
-	 *
-	 * @return string
-	 */
-	public function __toString()
-	{
-		return (string) new WidgetRenderHTML($this);
-	}
-
-	/**********************************************************************************************************
-	 * Cache
-	 **********************************************************************************************************/
-	/**
-	 * @return bool
-	 */
-	public function isCacheEnabled()
-	{
-		return (bool) $this->cache;
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getCacheLifetime()
-	{
-		return (int) $this->getSetting('cache_lifetime', 0);
-	}
-
-	/**
 	 * @return array
 	 */
-	public function getCacheTags()
+	public function getRoles()
 	{
-		return $this->getSetting('cache_tags', []);
+		return (array) $this->getSetting('roles', []);
 	}
 
 	/**
-	 * @return string
+	 * @param array $roles
 	 */
-	public function getCacheTagsAsString()
+	public function setRoles(array $roles)
 	{
-		return implode(', ', $this->getCacheTags());
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getCacheKey()
-	{
-		return 'Widget::' . $this->getType() . '::' . $this->getId();
-	}
-
-	/**
-	 * @param bool $enabled
-	 * @param int $lifetime
-	 * @param array $tags
-	 */
-	public function setCacheSettings($enabled = true, $lifetime = 300, array $tags = [])
-	{
-		$this->cache = $enabled;
-		$this->cache_lifetime = $lifetime;
-		$this->cache_tags = $tags;
-	}
-
-	/**
-	 * @param bool $status
-	 * @return bool
-	 */
-	public function setSettingCache($status)
-	{
-		$this->settings['cache'] = (bool) $status;
-	}
-
-	/**
-	 * @param int $lifetime
-	 * @return int
-	 */
-	public function setSettingCacheLifetime($lifetime)
-	{
-		$this->settings['cache_lifetime'] = (int) $lifetime;
-	}
-
-	/**
-	 * @param array | string $tags
-	 * @return array
-	 */
-	public function setSettingCacheTags(array $tags)
-	{
-		$this->settings['cache_tags'] = $tags;
-	}
-
-	/**
-	 * @return boolean
-	 */
-	public function clearCache()
-	{
-		Cache::forget($this->getCacheKey());
-	}
-
-	/**
-	 * @return boolean
-	 */
-	public function clearCacheByTags()
-	{
-		if (Cache::getFacadeRoot()->store()->getStore() instanceof TaggableStore)
-		{
-			Cache::tags($this->getCacheTags())->flush();
-		}
+		$this->settings['roles'] = array_unique($roles);
 	}
 
 	/**********************************************************************************************************
@@ -405,5 +256,47 @@ abstract class WidgetAbstract implements WidgetInterface, WidgetRenderable, Widg
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function prepareSettingsData()
+	{
+		return [];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSettingsTemplate()
+	{
+		return $this->settingsTemplate;
+	}
+
+	/**
+	 * @return null|string
+	 */
+	public function renderSettingsTemplate()
+	{
+		$template = $this->getSettingsTemplate();
+		if (empty($template))
+		{
+			return null;
+		}
+
+		$this->prepareSettingsData();
+
+		$data = $this->getSettings();
+		$data['widget'] = $this;
+
+		try
+		{
+			return view($template, $data)->render();
+		}
+		catch(\Exception $e)
+		{
+			return null;
+		}
 	}
 }

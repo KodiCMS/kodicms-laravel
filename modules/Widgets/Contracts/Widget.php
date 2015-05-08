@@ -3,12 +3,10 @@
 interface Widget {
 
 	/**
-	 * @param int $id
-	 * @param string $type
 	 * @param string $name
 	 * @param string $description
 	 */
-	public function __construct($id, $type, $name, $description = '');
+	public function __construct($name, $description = '');
 
 	/**
 	 * @return string
@@ -26,14 +24,14 @@ interface Widget {
 	public function getDescription();
 
 	/**
-	 * @return int
-	 */
-	public function getId();
-
-	/**
 	 * @return string
 	 */
 	public function getSettingsTemplate();
+
+	/**
+	 * @return array
+	 */
+	public function prepareSettingsData();
 
 	/**
 	 * @param string $name
@@ -88,5 +86,5 @@ interface Widget {
 	/**
 	 * @return array
 	 */
-	public function getPreparedData();
+	public function prepareData();
 }

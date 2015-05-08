@@ -12,7 +12,7 @@ class Widget extends Model
 	 * @var array
 	 */
 	protected $fillable = [
-		'name', 'description', 'type', 'class', 'template', 'parameters', 'settings'
+		'name', 'description', 'type', 'class', 'template', 'settings'
 	];
 
 	/**
@@ -24,9 +24,8 @@ class Widget extends Model
 		'name' => 'string',
 		'description' => 'string',
 		'type' => 'string',
-		'class' => 'string',
+		'clas' => 'string',
 		'template' => 'string',
-		'parameters' => 'array',
 		'settings' => 'array',
 	];
 
@@ -34,6 +33,14 @@ class Widget extends Model
 	 * @var \KodiCMS\Widgets\Contracts\Widget
 	 */
 	protected $widget = null;
+
+	/**
+	 * @param string $template
+	 */
+	public function setTemplateAttribute($template)
+	{
+		$this->attributes['template'] = empty($template) ? null : $template;
+	}
 
 	/**
 	 * @return string
@@ -57,33 +64,19 @@ class Widget extends Model
 	 */
 	public function toWidget()
 	{
-		if (!$this->exists or !$this->isClassExists())
-		{
-			return null;
-		}
-
 		if (!is_null($this->widget))
 		{
 			return $this->widget;
 		}
 
-		$widgetClass = $this->class;
-
-		if ($this->isCorrupt())
+		if (!is_null($this->widget = WidgetManagerDatabase::makeWidget($this->type, $this->name, $this->description, $this->settings)))
 		{
-			throw new WidgetException("Widget class {$widgetClass} must be implemented of [KodiCMS\Widgets\Contracts\Widget]");
+			$this->widget->setId($this->id);
 		}
-
-		$this->widget = new $widgetClass($this->id, $this->type, $this->name, $this->description);
-
-		if (!is_null($this->parameters))
+		else
 		{
-			$this->widget->setParameters($this->parameters);
-		}
-
-		if (!is_null($this->settings))
-		{
-			$this->widget->setSettings($this->settings);
+			// TODO: возможно стоит переделать
+			$this->widget = new \KodiCMS\Widgets\Widget\Temp($this->name, $this->description);
 		}
 
 		return $this->widget;
@@ -92,9 +85,17 @@ class Widget extends Model
 	/**
 	 * @return bool
 	 */
+	public function isWidgetable()
+	{
+		return ($this->exists and WidgetManagerDatabase::isWidgetable(get_class($this->toWidget())));
+	}
+
+	/**
+	 * @return bool
+	 */
 	public function isHandler()
 	{
-		return WidgetManagerDatabase::isHandler($this->class);
+		return WidgetManagerDatabase::isHandler(get_class($this->toWidget()));
 	}
 
 	/**
@@ -102,7 +103,7 @@ class Widget extends Model
 	 */
 	public function isRenderable()
 	{
-		return WidgetManagerDatabase::isRenderable($this->class);
+		return WidgetManagerDatabase::isRenderable(get_class($this->toWidget()));
 	}
 
 	/**
@@ -110,7 +111,7 @@ class Widget extends Model
 	 */
 	public function isCacheable()
 	{
-		return WidgetManagerDatabase::isCacheable($this->class);
+		return WidgetManagerDatabase::isCacheable(get_class($this->toWidget()));
 	}
 
 	/**
@@ -118,7 +119,7 @@ class Widget extends Model
 	 */
 	public function isClassExists()
 	{
-		return class_exists($this->class);
+		return WidgetManagerDatabase::isClassExists(get_class($this->toWidget()));
 	}
 
 	/**
@@ -126,7 +127,7 @@ class Widget extends Model
 	 */
 	public function isCorrupt()
 	{
-		return WidgetManagerDatabase::isCorrupt($this->class);
+		return WidgetManagerDatabase::isCorrupt(get_class($this->toWidget()));
 	}
 
 	public function scopeFilterByType($query, array $types)
@@ -146,7 +147,7 @@ class Widget extends Model
 	 */
 	public function __call($method, $parameters)
 	{
-		if ($this->exists and !$this->isCorrupt() and $this->isClassExists() and method_exists($this->toWidget(), $method))
+		if (method_exists($this->toWidget(), $method))
 		{
 			return call_user_func_array([$this->toWidget(), $method], $parameters);
 		}

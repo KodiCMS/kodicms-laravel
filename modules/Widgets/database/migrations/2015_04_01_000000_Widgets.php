@@ -19,7 +19,6 @@ class Widgets extends Migration
 
 			$table->string('template', 100)->nullable();
 
-			$table->json('parameters');
 			$table->json('settings');
 		});
 	}

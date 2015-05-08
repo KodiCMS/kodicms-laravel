@@ -200,9 +200,12 @@ class FileCollection implements Iterator
 	/**
 	 * @return array
 	 */
-	public function getChoices()
+	public function getHTMLSelectChoices()
 	{
-		$choices = [];
+		$choices = [
+			trans('cms::core.label.not_set')
+		];
+
 		foreach ($this as $layout)
 		{
 			$choices[$layout->getName()] = $layout->getName();

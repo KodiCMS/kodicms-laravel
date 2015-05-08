@@ -81,7 +81,7 @@ class Package implements \Iterator
 	/**
 	 * @return array
 	 */
-	public static function selectChoises()
+	public static function getHTMLSelectChoice()
 	{
 		$options = array_keys(static::$list);
 

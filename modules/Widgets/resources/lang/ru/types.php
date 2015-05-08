@@ -1,5 +1,6 @@
 <?php
 
 return [
-	'html' => 'HTML'
+	'html' => 'HTML',
+	'handler' => 'Обработчик'
 ];

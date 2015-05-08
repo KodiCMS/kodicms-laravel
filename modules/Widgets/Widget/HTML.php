@@ -1,13 +1,18 @@
 <?php namespace KodiCMS\Widgets\Widget;
 
-use KodiCMS\Widgets\WidgetAbstract;
 
-class HTML extends WidgetAbstract
+use KodiCMS\Widgets\Contracts\WidgetRenderable;
+use KodiCMS\Widgets\Traits\WidgetRender;
+
+class HTML extends DatabaseDecorator implements WidgetRenderable
 {
+
+	use WidgetRender;
+
 	/**
 	 * @return array
 	 */
-	public function getPreparedData()
+	public function prepareData()
 	{
 		return [
 

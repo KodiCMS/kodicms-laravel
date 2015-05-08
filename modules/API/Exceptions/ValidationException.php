@@ -2,7 +2,7 @@
 
 use Illuminate\Validation\Validator;
 
-class ValidationException extends Exception
+class ValidationException extends \KodiCMS\CMS\Exceptions\ValidationException
 {
 
 	/**
@@ -11,43 +11,6 @@ class ValidationException extends Exception
 	protected $code = Response::ERROR_VALIDATION;
 
 	/**
-	 * @var array
-	 */
-	protected $messages = [];
-
-	/**
-	 * @var array
-	 */
-	protected $rules = [];
-
-	/**
-	 *
-	 * @param Validator $object
-	 */
-	public function setValidator(Validator $object)
-	{
-		$this->messages = $object->errors()->getMessages();
-		$this->rules = $object->failed();
-	}
-
-	/**
-	 *
-	 * @return array
-	 */
-	public function getFailedRules()
-	{
-		return $this->rules;
-	}
-
-	/**
-	 *
-	 * @return array
-	 */
-	public function getErrorMessages()
-	{
-		return $this->messages;
-	}
-
 	/**
 	 * @return array
 	 */

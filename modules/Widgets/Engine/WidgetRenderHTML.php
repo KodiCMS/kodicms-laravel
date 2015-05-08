@@ -37,12 +37,14 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 		$widget = $this->getWidget();
 		$widget->setParameters($this->parameters);
 
+		$widget->prepareData();
+
 		$allowHTMLComments = (bool)$widget->getParameter('comments', true);
 
-		$preparedData = $widget->getPreparedData();
-		$preparedData['parameters'] = $widget->getParameters();
+		$preparedData = $widget->getParameters();
 		$preparedData['widgetId'] = $widget->getId();
-		$preparedData['header'] = $widget->getParameter('header');
+		$preparedData['settings'] = $widget->getSettings();
+		$preparedData['header'] = $widget->getSetting('header');
 
 		$html = '';
 
