@@ -8,9 +8,7 @@
 		<div class="left-col">
 			<div class="profile-block">
 				<div class="panel profile-photo">
-					{!! link_to('http://gravatar.com/emails/', $user->gravatar(100, NULL), [
-						'target' => '_blank',
-					]) !!}
+					{!! $currentUser->gravatar(100, NULL, ['class' => 'img-circle']) !!}
 				</div>
 
 				<br />
