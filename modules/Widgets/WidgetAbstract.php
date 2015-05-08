@@ -205,7 +205,7 @@ abstract class WidgetAbstract implements WidgetInterface, WidgetRenderable, Widg
 	 */
 	public function setSettingCache($status)
 	{
-		return (bool) $status;
+		$this->settings['cache'] = (bool) $status;
 	}
 
 	/**
@@ -214,7 +214,7 @@ abstract class WidgetAbstract implements WidgetInterface, WidgetRenderable, Widg
 	 */
 	public function setSettingCacheLifetime($lifetime)
 	{
-		return (int) $lifetime;
+		$this->settings['cache_lifetime'] = (int) $lifetime;
 	}
 
 	/**
@@ -223,7 +223,7 @@ abstract class WidgetAbstract implements WidgetInterface, WidgetRenderable, Widg
 	 */
 	public function setSettingCacheTags(array $tags)
 	{
-		return $tags;
+		$this->settings['cache_tags'] = $tags;
 	}
 
 	/**
@@ -283,7 +283,7 @@ abstract class WidgetAbstract implements WidgetInterface, WidgetRenderable, Widg
 			$method = 'setParameter' . studly_case($name);
 			if (method_exists($this, $method))
 			{
-				$this->parameters[$name] = $this->{$method}($value);
+				return $this->{$method}($value);
 			}
 			else
 			{
@@ -382,7 +382,7 @@ abstract class WidgetAbstract implements WidgetInterface, WidgetRenderable, Widg
 			$method = 'setSetting' . studly_case($name);
 			if (method_exists($this, $method))
 			{
-				$this->settings[$name] = $this->{$method}($value);
+				return $this->{$method}($value);
 			}
 			else
 			{
