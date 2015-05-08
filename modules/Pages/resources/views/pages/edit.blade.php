@@ -81,7 +81,6 @@
 <hr class="no-margin-vr" />
 <div class="tab-content no-padding-vr">
 	<div class="tab-pane active" id="page-content-panel">
-		@event('view.page.edit.before', [$page])
 		@event('view.page.edit', [$page])
 
 		<div class="panel-body">

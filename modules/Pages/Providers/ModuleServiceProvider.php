@@ -16,9 +16,9 @@ class ModuleServiceProvider extends ServiceProvider {
 	{
 		app('view')->addNamespace('frontend', base_path('resources/layouts'));
 
-		Event::listen('view.page.edit.before', function($page) {
+		Event::listen('view.page.edit', function($page) {
 			echo view('pages::parts.list')->with('page', $page);
-		});
+		}, 999);
 
 		Event::listen('frontend.found', function($page) {
 			app()->singleton('frontpage.meta', function ($app) use($page) {
