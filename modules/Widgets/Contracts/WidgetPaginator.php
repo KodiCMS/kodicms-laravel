@@ -1,6 +1,6 @@
 <?php namespace KodiCMS\Widgets\Contracts;
 
-interface WidgetPaginator extends Widget {
+interface WidgetPaginator extends WidgetRenderable {
 
 	/**
 	 * @return int
