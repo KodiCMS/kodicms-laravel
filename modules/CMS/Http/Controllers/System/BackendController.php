@@ -56,8 +56,7 @@ class BackendController extends TemplateController
 			->with('breadcrumbs', $this->breadcrumbs)
 			->with('navigation', $this->navigation)
 			->with('bodyId', $this->getRouterPath())
-			->with('theme', $this->currentUser->getCurrentTheme())
-			->with('requestType', $this->request->ajax() ? 'request.iframe' : 'request.get');
+			->with('theme', $this->currentUser->getCurrentTheme());
 
 		parent::after();
 	}

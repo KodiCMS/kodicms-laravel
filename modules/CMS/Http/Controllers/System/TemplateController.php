@@ -101,6 +101,7 @@ class TemplateController extends Controller
 		View::share('adminDir', \CMS::backendPath());
 		View::share('controllerAction', $this->getCurrentAction());
 		View::share('currentUser', $this->currentUser);
+		View::share('requestType', $this->request->input('type', $this->request->method()));
 	}
 
 	public function after()
