@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\Pages\Providers;
 
+use Blade;
+use Block;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
@@ -9,8 +11,6 @@ use KodiCMS\Pages\Model\PagePart as PagePartModel;
 use KodiCMS\Pages\PagePart;
 use KodiCMS\Pages\Observers\PageObserver;
 use KodiCMS\Pages\Observers\PagePartObserver;
-use Blade;
-use Block;
 use KodiCMS\Pages\Widget\PagePart as PagePartWidget;
 
 class ModuleServiceProvider extends ServiceProvider {
@@ -31,14 +31,18 @@ class ModuleServiceProvider extends ServiceProvider {
 			});
 
 			$layoutBlocks = Block::getLayoutBlocks();
+
 			foreach ($layoutBlocks as $block)
 			{
-				if (!PagePart::exists($page, $block))
+				if (!($part = PagePart::exists($page, $block)))
 				{
 					continue;
 				}
+
+				$partWidget = new PagePartWidget($part['name']);
+				$partWidget->setContent($part['content_html']);
+				Block::addWidget($partWidget, $block);
 			}
-			//Block::addWidget(new PagePartWidget());
 		});
 
 		Blade::extend(function ($view, $compiler)
@@ -54,13 +58,14 @@ class ModuleServiceProvider extends ServiceProvider {
 
 			return preg_replace($pattern, '$1<?php Block::run$2; ?>', $view);
 		});
-	}
 
+		Page::observe(new PageObserver);
+		PagePartModel::observe(new PagePartObserver);
+	}
 
 	public function register()
 	{
-		Page::observe(new PageObserver);
-		PagePartModel::observe(new PagePartObserver);
+
 		BehaviorManager::init();
 	}
 }

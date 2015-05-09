@@ -3,6 +3,7 @@
 use Illuminate\View\View;
 use Cache;
 use Illuminate\Cache\TaggableStore;
+use KodiCMS\Widgets\Helpers\ViewPHP;
 use KodiCMS\Widgets\Model\SnippetCollection;
 use KodiCMS\Widgets\Contracts\WidgetCacheable;
 
@@ -42,7 +43,7 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 
 		$widget->prepareData();
 
-		$allowHTMLComments = (bool)$widget->getParameter('comments', true);
+		$allowHTMLComments = (bool) $widget->getParameter('comments', true);
 
 		$preparedData = $widget->getParameters();
 		$preparedData['widgetId'] = $widget->getId();
@@ -82,6 +83,10 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 		if (!is_null($template))
 		{
 			if ($template instanceof View)
+			{
+				return $template->with($preparedData);
+			}
+			else if($template instanceof ViewPHP)
 			{
 				return $template->with($preparedData);
 			}

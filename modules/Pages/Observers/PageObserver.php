@@ -2,6 +2,7 @@
 
 use KodiCMS\Pages\Model\PagePart;
 use Request;
+use Cache;
 use KodiCMS\Pages\Model\Page;
 
 /**
@@ -15,27 +16,29 @@ class PageObserver
 	 */
 	public function saving($page)
 	{
-		if($page->exists)
+		if ($page->exists)
 		{
 			$this->updateParts($page);
 		}
 
-		if($page->behavior == '')
+		if ($page->behavior == '')
 		{
-			$page->behavior = NULL;
+			$page->behavior = null;
 		}
 
-		if(is_null($page->redirect_url))
+		if (is_null($page->redirect_url))
 		{
-			$page->is_redirect = FALSE;
+			$page->is_redirect = false;
 		}
 
-		if(!$page->is_redirect)
+		if (!$page->is_redirect)
 		{
-			$page->redirect_url = NULL;
+			$page->redirect_url = null;
 		}
 
-		return TRUE;
+		$this->clearCache($page);
+
+		return true;
 	}
 
 	/**
@@ -45,11 +48,12 @@ class PageObserver
 	public function creating($page)
 	{
 		$user = auth()->user();
-		if (!is_null($user)) {
+		if (!is_null($user))
+		{
 			$page->created_by_id = $user->id;
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -68,7 +72,8 @@ class PageObserver
 	public function updating($page)
 	{
 		$user = auth()->user();
-		if (!is_null($user)) {
+		if (!is_null($user))
+		{
 			$page->updated_by_id = $user->id;
 		}
 	}
@@ -84,7 +89,7 @@ class PageObserver
 		foreach ($partContent as $id => $content)
 		{
 			$part = PagePart::find($id);
-			if(is_null($part)) continue;
+			if (is_null($part)) continue;
 
 			if ($content == $part->content)
 			{
@@ -94,7 +99,7 @@ class PageObserver
 			$part->update(['content' => $content]);
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -137,7 +142,17 @@ class PageObserver
 			'parent_id' => 1
 		]);
 
+		$this->clearCache($page);
+
 		return TRUE;
 	}
 
+	/**
+	 * @param \KodiCMS\Pages\Model\Page $page
+	 */
+	protected function clearCache($page)
+	{
+		Cache::forget("id::{$page->id}::TRUE");
+		Cache::forget("slug::{$page->slug}::TRUE{$page->parent_id}");
+	}
 }

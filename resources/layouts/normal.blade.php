@@ -21,7 +21,7 @@
 		@block('content.before')
 
 		<div class="row marketing">
-			@block('content')
+			@block('content', ['comments' => false])
 		</div>
 
 		@block('content.after')
