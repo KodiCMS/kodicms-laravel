@@ -1,13 +1,11 @@
 <?php namespace KodiCMS\Widgets\Widget;
 
+use KodiCMS\Widgets\Contracts\WidgetCacheable;
+use KodiCMS\Widgets\Traits\WidgetCache;
 
-use KodiCMS\Widgets\Contracts\WidgetRenderable;
-use KodiCMS\Widgets\Traits\WidgetRender;
-
-class HTML extends DatabaseDecorator implements WidgetRenderable
+class HTML extends DatabaseDecorator implements WidgetCacheable
 {
-
-	use WidgetRender;
+	use WidgetCache;
 
 	/**
 	 * @return array
