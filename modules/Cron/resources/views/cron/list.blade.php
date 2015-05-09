@@ -7,6 +7,7 @@
 		@endif
 	</div>
 
+	@if(count($jobs))
 	<table class="table table-primary table-striped table-hover">
 		<colgroup>
 			<col width="250px" />
@@ -58,6 +59,11 @@
 		@endforeach
 		</tbody>
 	</table>
+	@else
+	<div class="panel-body">
+		<h3>@lang('cron::core.messages.empty')</h3>
+	</div>
+	@endif
 </div>
 
 {!! $jobs->render() !!}
