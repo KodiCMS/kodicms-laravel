@@ -16,7 +16,6 @@ class FrontendPage
 	const STATUS_HIDDEN    = 101;
 
 	/**
-	 *
 	 * @var array
 	 */
 	private static $pagesCache = [];
@@ -36,8 +35,6 @@ class FrontendPage
 		{
 			return static::$pagesCache[$pageCacheId];
 		}
-
-		$pageClass = get_called_class();
 
 		$query = DB::table('pages')->where('pages.' . $field, $value)->whereIn('status', static::getStatuses($includeHidden));
 
