@@ -13,6 +13,7 @@
 		</div>
 	@endif
 
+	@if($collection->getTotal() > 0)
 	<table class="table-primary table table-striped table-hover">
 		<colgroup>
 			<col />
@@ -31,7 +32,7 @@
 		</tr>
 		</thead>
 		<tbody>
-		<?php foreach ($collection as $snippet): ?>
+		@foreach ($collection as $snippet)
 		<tr id="snippet_{{ $snippet->getKey() }}">
 			<th class="name">
 				{!! UI::icon('desktop') !!}
@@ -64,7 +65,12 @@
 				@endif
 			</td>
 		</tr>
-		<?php endforeach; ?>
+		@endforeach
 		</tbody>
 	</table>
+	@else
+	<div class="panel-body">
+		<h3>@lang('widgets::snippet.messages.empty')</h3>
+	</div>
+	@endif
 </div>

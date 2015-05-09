@@ -7,6 +7,7 @@
 		@endif
 	</div>
 
+	@if(count($widgets) > 0)
 	<table class="table table-primary table-striped table-hover">
 		<colgroup>
 			<col width="250px" />
@@ -104,6 +105,11 @@
 		@endforeach
 		</tbody>
 	</table>
+	@else
+	<div class="panel-body">
+		<h3>@lang('widgets::core.messages.empty')</h3>
+	</div>
+	@endif
 </div>
 
 {!! $widgets->render() !!}
