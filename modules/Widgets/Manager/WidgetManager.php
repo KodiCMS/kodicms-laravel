@@ -161,8 +161,7 @@ class WidgetManager implements WidgetManagerInterface
 			foreach($widgets as $type => $widget)
 			{
 				if (!isset($widget['class']) or static::isCorrupt($widget['class'])) continue;
-
-				if($widget['class'] == $needleClass)
+				if(strpos($widget['class'], $needleClass) !== false)
 				{
 					return $type;
 				}
