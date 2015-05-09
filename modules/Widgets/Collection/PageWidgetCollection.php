@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Widgets\Collection;
 
 use KodiCMS\Pages\Model\FrontendPage;
-use KodiCMS\Widgets\WidgetManager;
+use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 
 class PageWidgetCollection extends WidgetCollection {
 
@@ -14,9 +14,31 @@ class PageWidgetCollection extends WidgetCollection {
 	{
 		$this->page = $page;
 
-		$widgets = WidgetManager::getWidgetsByPage($page);
+		$widgets = WidgetManagerDatabase::getWidgetsByPage($page->getId());
+		$blocks = WidgetManagerDatabase::getPageWidgetBlocks($page->getId());
 
-		$this->registeredWidgets($widgets);
+		foreach($widgets as $widget)
+		{
+			$this->registerWidget($widget, array_get($blocks, $widget->getId()));
+		}
+
 		$this->placeWidgetsToLayout();
+	}
+
+	/**
+	 * @return $this
+	 */
+	protected function buildWidgetCrumbs()
+	{
+		foreach ($this->registeredWidgets as $id => $widget)
+		{
+			$widget = $widget['object'];
+			if ($widget->hasBreadcrumbs())
+			{
+				$widget->changeBreadcrumbs($this->getBreadcrumbs());
+			}
+		}
+
+		return $this;
 	}
 }

@@ -1,9 +1,9 @@
 <?php namespace KodiCMS\Widgets\Engine;
 
-use View;
+use Illuminate\View\View;
 use Cache;
-use KodiCMS\CMS\Model\File;
 use Illuminate\Cache\TaggableStore;
+use KodiCMS\Widgets\Model\SnippetCollection;
 use KodiCMS\Widgets\Contracts\WidgetCacheable;
 
 class WidgetRenderHTML extends WidgetRenderAbstract
@@ -53,7 +53,7 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 			$html .= PHP_EOL . "<!--[Widget: {$widget->getName()}]-->" . PHP_EOL;
 		}
 
-		$html .= $this->getWidgetTemplate()->toView($preparedData)->render();
+		$html .= $this->getWidgetTemplate($preparedData)->render();
 
 		if ($allowHTMLComments)
 		{
@@ -64,9 +64,9 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 	}
 
 	/**
-	 * @return File
+	 * @return File|View
 	 */
-	protected function getWidgetTemplate()
+	protected function getWidgetTemplate($preparedData)
 	{
 		$template = $this->getWidget()->getFrontendTemplate();
 
@@ -75,10 +75,17 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 			$template = $this->getWidget()->getDefaultFrontendTemplate();
 		}
 
-		$template = 'test.blade';
+		if (!is_null($template))
+		{
+			if ($template instanceof View)
+			{
+				return $template->with($preparedData);
+			}
 
-		$snippet = new File($template, snippets_path(), true);
+			$snippet = (new SnippetCollection)->findFile($template);
+			return $snippet->toView($preparedData);
+		}
 
-		return $snippet;
+		return view('widgets::widgets.default', $preparedData);
 	}
 }

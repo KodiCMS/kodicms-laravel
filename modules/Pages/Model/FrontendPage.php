@@ -440,7 +440,7 @@ class FrontendPage
 			return null;
 		}
 
-		return view('frontend::' . $layout->getViewFilename());
+		return $layout->toView();
 	}
 
 	/**

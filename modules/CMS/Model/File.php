@@ -531,6 +531,6 @@ class File
 	 */
 	public function __toString()
 	{
-		return (string)$this->getContent();
+		return (string) $this->getContent();
 	}
 }

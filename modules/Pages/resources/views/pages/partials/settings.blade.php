@@ -6,7 +6,7 @@ $layout_link = '';
 
 if ((acl_check('layout.edit') OR acl_check('layout.view')) AND ! empty($layout_name))
 {
-	$layout_link = link_to('layout', $layout_name, [
+	$layout_link = link_to_route('backend.layout.edit', $layout_name, [$layout_name], [
 		'class' => 'popup fancybox.iframe'
 	]);
 }

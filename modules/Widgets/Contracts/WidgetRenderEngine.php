@@ -13,6 +13,4 @@ interface WidgetRenderEngine
 	public function getWidget();
 
 	public function render();
-
-	public function __toString();
 }

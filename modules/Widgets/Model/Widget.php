@@ -84,6 +84,11 @@ class Widget extends Model
 		if (!is_null($this->widget = WidgetManagerDatabase::makeWidget($this->type, $this->name, $this->description, $this->settings)))
 		{
 			$this->widget->setId($this->id);
+
+			if($this->isRenderable())
+			{
+				$this->widget->setFrontendTemplate($this->template);
+			}
 		}
 		else
 		{

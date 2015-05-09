@@ -11,6 +11,7 @@ return [
 		'permissions' => 'Права доступа',
 		'cache' => 'Натсройки кеша',
 		'template' => 'Шаблон',
+		'copy_widgets' => 'Копирование виджетов'
 	],
 	'field' => [
 		'name' => 'Название',
@@ -28,7 +29,8 @@ return [
 		'remove_from_page' => 'Убран со страницы',
 		'hide' => 'Скрытый',
 		'before_page_render' => 'До загрузки страницы',
-		'after_page_render' => 'После загрузки страницы'
+		'after_page_render' => 'После загрузки страницы',
+		'dont_copy_widgets' => 'Не копировать',
 	],
 	'settings' => [
 		'header' => 'Заголовок',

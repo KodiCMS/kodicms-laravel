@@ -14,7 +14,7 @@ class ModuleServiceProvider extends ServiceProvider {
 
 	public function boot()
 	{
-		app('view')->addNamespace('frontend', base_path('resources/layouts'));
+		app('view')->addNamespace('layouts', layouts_path());
 
 		Event::listen('view.page.edit', function($page) {
 			echo view('pages::parts.list')->with('page', $page);

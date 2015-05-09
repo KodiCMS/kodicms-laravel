@@ -1,18 +1,33 @@
 <?php namespace KodiCMS\Pages\Helpers;
 
+use KodiCMS\Widgets\Collection\WidgetCollection;
 use KodiCMS\Widgets\Contracts\Widget;
 use KodiCMS\Widgets\Engine\WidgetRenderHTML;
 use View;
 
 class Block
 {
+
+	/**
+	 * @var WidgetCollection
+	 */
+	protected $collection;
+
+	/**
+	 * @param WidgetCollection $collection
+	 */
+	public function __construct(WidgetCollection $collection)
+	{
+		$this->collection = $collection;
+	}
+
 	/**
 	 * Проверка блока на наличие в нем виджетов
 	 *
 	 * @param type string|array
 	 * @return boolean
 	 */
-	public static function hasWidgets($name)
+	public function hasWidgets($name)
 	{
 		if (!is_array($name))
 		{
@@ -40,7 +55,7 @@ class Block
 	 * @param string $name
 	 * @param array $params
 	 */
-	public static function run($name, array $params = [])
+	public function run($name, array $params = [])
 	{
 		if ($name == 'PRE' OR $name == 'POST')
 		{
@@ -51,13 +66,15 @@ class Block
 
 		foreach ($widgets as $widget)
 		{
+			$widget = $widget->getObject();
+
 			if ($widget instanceof View)
 			{
 				echo $widget->render();
 			}
 			else if ($widget instanceof Widget)
 			{
-				new WidgetRenderHTML($widget);
+				echo (new WidgetRenderHTML($widget))->render();
 			}
 		}
 	}
@@ -82,15 +99,13 @@ class Block
 	 * @param array $params Дополнительные параметры доступные в виджете
 	 * @return array
 	 */
-	public static function getWidgetsByBlock($name, array $params = [])
+	public function getWidgetsByBlock($name, array $params = [])
 	{
-		$widgets = [];
-
-		// TODO: релизовать загрузки виджетов
-		//$widgets = ....;
+		$widgets = $this->collection->getWidgetsByBlock($name);
 
 		foreach ($widgets as $widget)
 		{
+			$widget = $widget->getObject();
 			if ($widget instanceof View)
 			{
 				$widget->setParameters('params', $params);
@@ -121,5 +136,5 @@ class Block
 	 *
 	 * @param string $name
 	 */
-	public static function def($name) {}
+	public function def($name) {}
 }

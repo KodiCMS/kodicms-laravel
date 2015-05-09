@@ -17,7 +17,20 @@ trait WidgetRender {
 	 */
 	public function getDefaultFrontendTemplate()
 	{
+		if (is_null($this->defaultFrontendTemplate))
+		{
+			return view('widgets::widgets.default');
+		}
+
 		return $this->defaultFrontendTemplate;
+	}
+
+	/**
+	 * @param string $template
+	 */
+	public function setFrontendTemplate($template)
+	{
+		$this->frontendTemplate = $template;
 	}
 
 	/**
@@ -34,14 +47,5 @@ trait WidgetRender {
 	public function getMediaPackages()
 	{
 		return (array) $this->media_packages;
-	}
-
-	/**
-	 *
-	 * @return string
-	 */
-	public function __toString()
-	{
-		return (string) new WidgetRenderHTML($this);
 	}
 }

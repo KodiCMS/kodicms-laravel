@@ -19,6 +19,7 @@ class PagesTableSeeder extends Seeder {
 			'title' => 'Home',
 			'breadcrumb' => 'Home',
 			'slug' => '',
+			'layout_file' => 'normal.blade',
 			'published_at' => new Carbon()
 		]);
 

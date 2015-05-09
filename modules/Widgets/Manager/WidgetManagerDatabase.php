@@ -51,6 +51,25 @@ class WidgetManagerDatabase extends WidgetManager
 	}
 
 	/**
+	 * @param int $pageId
+	 * @return array
+	 */
+	public static function getPageWidgetBlocks($pageId)
+	{
+		$query = DB::table('page_widgets')
+			->where('page_id', $pageId)
+			->get();
+
+		$data = [];
+		foreach($query as $row)
+		{
+			$data[$row->widget_id] = $row->block;
+		}
+
+		return $data;
+	}
+
+	/**
 	 * @param Collection $widgets
 	 * @return array
 	 */

@@ -28,9 +28,4 @@ abstract class WidgetRenderAbstract implements WidgetRenderEngine
 	{
 		return $this->widget;
 	}
-
-	public function __toString()
-	{
-		return (string) $this->render();
-	}
 }

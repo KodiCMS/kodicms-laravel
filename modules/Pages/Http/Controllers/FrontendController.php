@@ -71,7 +71,7 @@ class FrontendController extends Controller
 
 		//$widgetCollection = new PageWidgetCollection($frontPage);
 
-		$html = (string)$frontPage->getLayoutView();
+		$html = $frontPage->getLayoutView()->render();
 		if (auth()->check() AND auth()->user()->hasRole(['administrator', 'developer']))
 		{
 			$injectHTML = (string) view('cms::app.partials.toolbar');
