@@ -130,7 +130,7 @@ $defaultTemplateButton = $widget->getDefaultFrontendTemplate()
 	<div class="form-group">
 		<div class="col-xs-12">
 			<label class="control-label">@lang('widgets::core.settings.assets_package')</label>
-			{!! Form::select('settings[media_packages[]]', $assetsPackages, $widget->getMediaPackages(), [
+			{!! Form::select('settings[media_packages][]', $assetsPackages, $widget->getMediaPackages(), [
 				'class' => 'form-control', 'multiple'
 			]) !!}
 		</div>
