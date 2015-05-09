@@ -20,6 +20,8 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 	]);
 });
 
+Route::post('api.layout', ['as' => 'api.layout.create', 'uses' => 'API\LayoutController@postCreate']);
+Route::put('api.layout', ['as' => 'api.layout.edit', 'uses' => 'API\LayoutController@postEdit']);
 Route::get('/api.layout.rebuild', ['as' => 'api.layout.rebuild.get', 'uses' => 'API\LayoutController@getRebuildBlocks']);
 Route::get('/api.layout.blocks', ['as' => 'api.layout.rebuild.get', 'uses' => 'API\LayoutController@getBlocks']);
 

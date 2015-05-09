@@ -63,6 +63,9 @@ var Api = {
 					return Api.exception(response, callback);
 				}
 
+				if(response.message)
+					CMS.messages.show(response.message, 'success', 'fa fa-exclamation-triangle');
+
 				var $event = method + url.replace(SITE_URL, ":").replace(/\//g, ':');
 				window.top.$('body').trigger($event.toLowerCase(), [this._response.content]);
 
@@ -131,22 +134,37 @@ var Api = {
 			callback(response);
 
 		switch (response.code) {
-			case 220: // Page not found
+			case 220: // ERROR_PERMISSIONS
 
 				break;
-			case 130: // Unknown
-			case 140: // Token
-			case 120: // Permissions
-				CMS.messages.show(response.message, 'error', 'fa fa-exclamation-triangle');
-				break;
-			case 110: // Missing param
+			case 110: // ERROR_MISSING_PAPAM
 				CMS.messages.show(response.message, 'error', 'fa fa-exclamation-triangle');
 				for(i in response.fields)
 					CMS.error_field(response.fields[i], 'Required');
 				break;
+			case 120: // ERROR_VALIDATION
+				for(i in response.errors){
+					CMS.messages.show(response.errors[i], 'error', 'fa fa-exclamation-triangle');
+					CMS.error_field(i, response.errors[i].join(', '));
+				}
+				break;
+			case 130: // ERROR_UNKNOWN
+			case 140: // ERROR_TOKEN
+			case 150: // ERROR_MISSING_ASSIGMENT
+
+				break;
 			case 301: // Redirect
 			case 302: // Redirect
+				if(REQUEST_TYPE == 'iframe')
+					var pos = response.targetUrl.indexOf('?');
+				if(pos != -1) {
+					response.targetUrl += '&type=iframe';
+				} else response.targetUrl += '?type=iframe';
 				window.location.href = response.targetUrl;
+				break;
+			case 403: // ERROR_UNAUTHORIZED
+			case 404: // ERROR_PAGE_NOT_FOUND
+
 				break;
 		}
 	},

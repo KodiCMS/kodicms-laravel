@@ -286,28 +286,27 @@ CMS.ui.add('flags', function () {
 		}
 	});
 
-	var method = ACTION == 'add' ? 'put' : 'post';
+	var $form = $('form');
 	var $form_actions = $('.iframe .form-actions');
+	var method = $form.data('api-method');
+	var action = $form.data('api-url');
 
-	var $action = CONTROLLER;
-
-	if ((typeof API_FORM_ACTION != 'undefined'))
-		$action = API_FORM_ACTION;
-
-	$('.btn-save', $form_actions).on('click', function (e) {
-		var $data = $('form').serializeObject();
-		Api[method]($action, $data);
-
-		e.preventDefault();
-	});
-
-	$('.btn-save-close', $form_actions).on('click', function (e) {
-		var $data = $('form').serializeObject();
-		Api[method]($action, $data, function (response) {
-			window.top.$.fancybox.close();
+	if((method.length > 0 && action.length > 0)) {
+		$('.btn-save', $form_actions).on('click', function (e) {
+			var $data = $form.serializeObject();
+			Api[method](action, $data);
+			e.preventDefault();
 		});
-		e.preventDefault();
-	});
+
+		$('.btn-save-close', $form_actions).on('click', function (e) {
+			var $data = $('form').serializeObject();
+			Api[method](action, $data, function (response) {
+				(response.code == 200) && window.top.$.fancybox.close();
+			});
+
+			e.preventDefault();
+		});
+	}
 
 	$('.btn-close', $form_actions).on('click', function (e) {
 		window.top.$.fancybox.close();

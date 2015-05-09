@@ -173,13 +173,13 @@ function reload_blocks($layout) {
 function load_snippets(intervalID) {
 	clearInterval(intervalID);
 	$('#snippet-select').on('select2-opening', function(e, a) {
-		var response = Api.get('snippet.list', {}, false, false);
+		var response = Api.get('/api.snippet.list', {}, false, false);
 		var self = $(this);
-		if(response.response) {
+		if(response.content) {
 			$('option', this).remove();
 
-			for(key in response.response)
-				self.append($('<option>', {value: key, text: response.response[key]}));
+			for(key in response.content)
+				self.append($('<option>', {value: key, text: response.content[key]}));
 		}
 
 		self.off();

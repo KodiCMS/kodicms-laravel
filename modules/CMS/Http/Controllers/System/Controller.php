@@ -26,6 +26,11 @@ abstract class Controller extends BaseController
 	protected $request;
 
 	/**
+	 * @var string
+	 */
+	protected $requestType = 'GET';
+
+	/**
 	 * @var Request
 	 */
 	protected $response;
@@ -71,6 +76,8 @@ abstract class Controller extends BaseController
 		$this->request = $request;
 		$this->response = $response;
 		$this->session = $session;
+
+		$this->requestType = $this->request->input('type', $this->request->method());
 
 		$this->loadCurrentUser($auth);
 		$this->loginPath = CMS::backendPath() . '/auth/login';
