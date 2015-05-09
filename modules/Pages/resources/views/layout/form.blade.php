@@ -54,10 +54,10 @@
 'class' => 'form-control',
 'id' => 'textarea_content',
 'data-height' => 600,
-'data-readonly' => ($layout->isReadOnly() OR ($layout->isNew() AND !$layout->isReadOnly())) ? 'on' : 'off'
+'data-readonly' => (!$layout->isEditable() and !$layout->isCreatable()) ? 'on' : 'off'
 ]) !!}
 
-@if(($layout->isReadOnly() OR ($layout->isNew() AND !$layout->isReadOnly())))
+@if(!$layout->isEditable() and !$layout->isCreatable())
 	<div class="panel-default alert alert-danger alert-dark no-margin-b">
 		@lang('pages::layout.messages.layout_not_writeable')
 	</div>
