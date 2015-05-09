@@ -15,6 +15,10 @@ abstract class WidgetRenderAbstract implements WidgetRenderEngine
 	 */
 	protected $parameters;
 
+	/**
+	 * @param WidgetRenderable $widget
+	 * @param array $parameters
+	 */
 	public function __construct(WidgetRenderable $widget, array $parameters = [])
 	{
 		$this->widget = $widget;

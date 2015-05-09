@@ -32,6 +32,9 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 		return $this->getContent();
 	}
 
+	/**
+	 * @return string
+	 */
 	protected function getContent()
 	{
 		$widget = $this->getWidget();
@@ -64,9 +67,10 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 	}
 
 	/**
-	 * @return File|View
+	 * @param array $preparedData
+	 * @return View
 	 */
-	protected function getWidgetTemplate($preparedData)
+	protected function getWidgetTemplate(array $preparedData)
 	{
 		$template = $this->getWidget()->getFrontendTemplate();
 
