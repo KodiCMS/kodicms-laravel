@@ -80,7 +80,7 @@ trait WidgetCache {
 	 */
 	public function setSettingCacheTags(array $tags)
 	{
-		$this->settings['cache_tags'] = $tags;
+		$this->settings['cache_tags'] = array_unique($tags);
 	}
 
 	/**

@@ -70,8 +70,8 @@ $defaultTemplateButton = $widget->getDefaultFrontendTemplate()
 	<div class="form-group">
 		<div class="checkbox col-xs-offset-3">
 			<label>
-				{!! Form::checkbox('settings[caching]', 1, $widget->isCacheEnabled(), [
-						'class' => 'px', 'id' => 'caching'
+				{!! Form::checkbox('settings[cache]', 1, $widget->isCacheEnabled(), [
+						'class' => 'px', 'id' => 'cache'
 				]) !!}
 				<span class="lbl">@lang('widgets::core.settings.cache')</span>
 			</label>
@@ -102,7 +102,7 @@ $defaultTemplateButton = $widget->getDefaultFrontendTemplate()
 		<div class="form-group">
 			<label class="control-label col-xs-3">@lang('widgets::core.settings.cache_tags')</label>
 			<div class="col-xs-9">
-				{!! Form::textarea('settings[cache_tags]',$widget->getCacheTags(), [
+				{!! Form::textarea('settings[cache_tags][]', $widget->getCacheTagsAsString(), [
 					'class' => 'tags'
 				]) !!}
 			</div>
@@ -116,7 +116,7 @@ $defaultTemplateButton = $widget->getDefaultFrontendTemplate()
 	<span class="panel-title" data-icon="users">@lang('widgets::core.title.permissions')</span>
 </div>
 <div class="panel-body panel-spoiler roles-spoiler">
-	{!! Form::select('settings[roles[]]', $usersRoles, $widget->getRoles(), [
+	{!! Form::select('settings[roles][]', $usersRoles, $widget->getRoles(), [
 		'class' => 'col-md-12 form-controll'
 	]) !!}
 </div>

@@ -2,7 +2,7 @@ CMS.controllers.add('widget.get.edit', function() {
 
 	load_snippets();
 	var cache_enabled = function() {
-		var $caching_input = $('#caching');
+		var $caching_input = $('#cache');
 		var $cache_lifetime = $('#cache_lifetime');
 
 		$cache_lifetime.prop('disabled', !$caching_input.prop('checked'));
@@ -15,7 +15,7 @@ CMS.controllers.add('widget.get.edit', function() {
 		higlight_cache_time();
 	};
 
-	$('#caching').on('change', cache_enabled).change();
+	$('#cache').on('change', cache_enabled).change();
 
 	$('#cache_lifetime').on('keyup', function() {
 		higlight_cache_time();
@@ -33,7 +33,7 @@ CMS.controllers.add('widget.get.edit', function() {
 CMS.controllers.add('page_edit', function() {
 	var layout_file = PAGE_OBJECT['layout'];
 	reload_blocks(layout_file);
-	$('body').on('post:backend:api-layout.rebuild', function(e, response) {
+	$('body').on('get:api.layout.rebuild', function(e, response) {
 		reload_blocks(layout_file);
 	});
 
