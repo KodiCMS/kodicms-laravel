@@ -7,6 +7,7 @@
 		@endif
 	</div>
 
+	@if(count($roles) > 0)
 	<table class="table table-primary table-striped table-hover">
 		<colgroup>
 			<col width="150px" />
@@ -43,9 +44,14 @@
 				@endif
 			</td>
 		</tr>
-		<?php endforeach; ?>
+		@endforeach
 		</tbody>
 	</table>
+	@else
+	<div class="panel-body">
+		<h3>@lang('users::role.messages.empty')</h3>
+	</div>
+	@endif
 </div>
 
 {!! $roles->render() !!}
