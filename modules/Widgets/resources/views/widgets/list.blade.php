@@ -82,9 +82,9 @@
 				<td class="cache">
 				@if ($widget->isCacheable())
 					@if ($widget->isCacheEnabled())
-					{!! UI::label('0', 'warning') !!}
+					{!! UI::label($widget->getCacheLifetime(), 'warning') !!}
 					@else
-					{!! UI::label($widget->getCacheLifetime(), 'success') !!}
+					{!! UI::label(0, 'success') !!}
 					@endif
 				@endif
 				</td>
