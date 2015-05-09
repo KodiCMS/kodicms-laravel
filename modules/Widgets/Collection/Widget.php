@@ -1,8 +1,9 @@
 <?php namespace KodiCMS\Widgets\Collection;
 
 use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
+use KodiCMS\Widgets\Contracts\WidgetCollectionItem;
 
-class Widget {
+class Widget implements WidgetCollectionItem {
 
 	/**
 	 * @var WidgetInterface

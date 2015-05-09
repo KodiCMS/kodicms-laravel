@@ -1,11 +1,11 @@
 <?php namespace KodiCMS\Widgets\Traits;
 
-use KodiCMS\Widgets\Engine\WidgetRenderHTML;
+use Illuminate\Contracts\View\View;
 
 trait WidgetRender {
 
 	/**
-	 * @return string
+	 * @return string|View
 	 */
 	public function getFrontendTemplate()
 	{
@@ -13,7 +13,7 @@ trait WidgetRender {
 	}
 
 	/**
-	 * @return string
+	 * @return string|View
 	 */
 	public function getDefaultFrontendTemplate()
 	{
@@ -26,7 +26,7 @@ trait WidgetRender {
 	}
 
 	/**
-	 * @param string $template
+	 * @param string|View $template
 	 */
 	public function setFrontendTemplate($template)
 	{

@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\Pages\Helpers;
 
 use KodiCMS\Widgets\Collection\WidgetCollection;
-use KodiCMS\Widgets\Contracts\Widget;
 use KodiCMS\Widgets\Engine\WidgetRenderHTML;
 use View;
 
@@ -22,8 +21,6 @@ class Block
 	}
 
 	/**
-	 * Проверка блока на наличие в нем виджетов
-	 *
 	 * @param type string|array
 	 * @return boolean
 	 */
@@ -34,19 +31,8 @@ class Block
 			$name = [$name];
 		}
 
-		// TODO: реализовать получение списка виджетов для указанного блока
-		$blocks = [];
-		//$blocks = ....;
-
-		foreach ($name as $block)
-		{
-			if (in_array($block, $blocks))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		$blocks = $this->collection->getLayoutBlocks();
+		return !empty($blocks[$name]);
 	}
 
 	/**
@@ -66,16 +52,7 @@ class Block
 
 		foreach ($widgets as $widget)
 		{
-			$widget = $widget->getObject();
-
-			if ($widget instanceof View)
-			{
-				echo $widget->render();
-			}
-			else if ($widget instanceof Widget)
-			{
-				echo (new WidgetRenderHTML($widget))->render();
-			}
+			echo (new WidgetRenderHTML($widget->getObject()))->render();
 		}
 	}
 
@@ -106,14 +83,7 @@ class Block
 		foreach ($widgets as $widget)
 		{
 			$widget = $widget->getObject();
-			if ($widget instanceof View)
-			{
-				$widget->setParameters('params', $params);
-			}
-			else if ($widget instanceof Widget)
-			{
-				$widget->setParameters($params);
-			}
+			$widget->setParameters($params);
 		}
 
 		return $widgets;
@@ -137,4 +107,17 @@ class Block
 	 * @param string $name
 	 */
 	public function def($name) {}
+
+	/**
+	 * @param string $method
+	 * @param array $parameters
+	 * @return mixed
+	 */
+	public function __call($method, array $parameters)
+	{
+		if (method_exists($this->collection, $method))
+		{
+			return call_user_func_array([$this->collection, $method], $parameters);
+		}
+	}
 }

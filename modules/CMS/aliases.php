@@ -44,7 +44,7 @@ return [
 	 */
 	'ModuleLoader' 	=> 'KodiCMS\Support\Facades\ModuleLoader',
 	'Frontpage' 	=> 'KodiCMS\Support\Facades\Frontpage',
-	'FrontpageMeta'	=> 'KodiCMS\Support\Facades\FrontpageMeta',
+	'Meta'			=> 'KodiCMS\Support\Facades\FrontpageMeta',
 	'Block'			=> 'KodiCMS\Support\Facades\Block',
 	'UI'			=> 'KodiCMS\CMS\Helpers\UI',
 	'ACL'			=> 'KodiCMS\Users\ACL',

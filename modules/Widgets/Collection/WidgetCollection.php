@@ -3,6 +3,7 @@
 use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 use KodiCMS\Widgets\Contracts\WidgetCollection as WidgetCollectionInterface;
 use Iterator;
+use KodiCMS\Widgets\Contracts\WidgetDatabase;
 
 class WidgetCollection implements WidgetCollectionInterface, Iterator {
 
@@ -18,11 +19,21 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 
 	/**
 	 * @param integer $id
-	 * @return Widget
+	 * @return Widget|null
 	 */
 	public function getWidgetById($id)
 	{
-		return array_get($this->registeredWidgets, $id);
+		foreach ($this->registeredWidgets as $widget)
+		{
+			if (!($widget->getObject() instanceof WidgetDatabase)) continue;
+
+			if ($widget->getObject()->getId() == $id)
+			{
+				return $widget;
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -34,17 +45,17 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 	}
 
 	/**
-	 * @param $block
+	 * @param string $block
 	 * @return array
 	 */
 	public function getWidgetsByBlock($block)
 	{
 		$widgets = [];
-		foreach($this->registeredWidgets as $id => $widget)
+		foreach ($this->registeredWidgets as $widget)
 		{
-			if($widget->getBlock() != $block) continue;
+			if ($widget->getBlock() != $block) continue;
 
-			$widgets[$id] = $widget;
+			$widgets[] = $widget;
 		}
 
 		return $widgets;
@@ -63,21 +74,42 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 	 * @param string $block
 	 * @return $this
 	 */
-	public function registerWidget(WidgetInterface $widget, $block)
+	public function addWidget(WidgetInterface $widget, $block)
 	{
 		$this->registeredWidgets[] = new Widget($widget, $block);
-
 		return $this;
 	}
 
-	public function placeWidgetsToLayout()
+	/**
+	 * @param integet $id
+	 * @return bool
+	 */
+	public function removeWidget($id)
+	{
+		foreach ($this->registeredWidgets as $i => $widget)
+		{
+			if (!($widget->getObject() instanceof WidgetDatabase)) continue;
+
+			if ($widget->getObject()->getId() == $id)
+			{
+				unset($this->registeredWidgets[$i]);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return void
+	 */
+	public function placeWidgetsToLayoutBlocks()
 	{
 		$this->sortWidgets();
 
-		foreach ($this->registeredWidgets as $id => $widget)
+		foreach ($this->registeredWidgets as $widget)
 		{
 			if(is_null($widget->getBlock())) continue;
-
 			$this->layoutBlocks[$widget->getBlock()][] = $widget->getObject();
 		}
 	}
@@ -90,25 +122,25 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 		$widgets = [];
 		$types = ['PRE' => [], '*named' => [], 'POST' => []];
 
-		foreach ($this->registeredWidgets as $id => $widget)
+		foreach ($this->registeredWidgets as $i => $widget)
 		{
 			$block = $widget->getBlock();
 
 			if (array_key_exists($block, $types))
 			{
-				$types[$block][] = $id;
+				$types[$block][] = $i;
 			}
 			else
 			{
-				$types['*named'][] = $id;
+				$types['*named'][] = $i;
 			}
 		}
 
 		foreach ($types as $type => $ids)
 		{
-			foreach ($ids as $id)
+			foreach ($ids as $i)
 			{
-				$widgets[$id] = $this->registeredWidgets[$id];
+				$widgets[$i] = $this->registeredWidgets[$i];
 			}
 		}
 

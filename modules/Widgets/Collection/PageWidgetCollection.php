@@ -1,6 +1,8 @@
 <?php namespace KodiCMS\Widgets\Collection;
 
+use Meta;
 use KodiCMS\Pages\Model\FrontendPage;
+use KodiCMS\Widgets\Contracts\WidgetRenderable;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 
 class PageWidgetCollection extends WidgetCollection {
@@ -10,6 +12,9 @@ class PageWidgetCollection extends WidgetCollection {
 	 */
 	protected $page;
 
+	/**
+	 * @param FrontendPage $page
+	 */
 	public function __construct(FrontendPage $page)
 	{
 		$this->page = $page;
@@ -19,10 +24,15 @@ class PageWidgetCollection extends WidgetCollection {
 
 		foreach($widgets as $widget)
 		{
-			$this->registerWidget($widget, array_get($blocks, $widget->getId()));
+			$this->addWidget($widget, array_get($blocks, $widget->getId()));
+
+			if($widget instanceof WidgetRenderable)
+			{
+				Meta::addPackage($widget->getMediaPackages());
+			}
 		}
 
-		$this->placeWidgetsToLayout();
+		$this->placeWidgetsToLayoutBlocks();
 	}
 
 	/**

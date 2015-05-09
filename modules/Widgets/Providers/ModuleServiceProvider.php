@@ -1,6 +1,5 @@
 <?php namespace KodiCMS\Widgets\Providers;
 
-
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Pages\Helpers\Block;
@@ -22,9 +21,9 @@ class ModuleServiceProvider extends ServiceProvider
 		$events->listen('frontend.found', function($page) {
 			$this->app->singleton('layout.block', function($app) use($page)
 			{
-				return new Block( new PageWidgetCollection($page));
+				return new Block(new PageWidgetCollection($page));
 			});
-		});
+		}, 9999);
 
 		// TODO: реализовать настройку виджетов на странице редактирования "Страницы"
 //		$events->listen('view.page.edit', function($page) {
