@@ -37,23 +37,17 @@ class Crontab
 	 */
 	public static function parse($cron_string, $after_timestamp = null)
 	{
-		if ( ! Crontab::valid($cron_string))
+		if (!Crontab::valid($cron_string))
 		{
 			throw new \Exception('Invalid cron string: ' . $cron_string);
 		}
-		if ($after_timestamp !== null AND ! is_numeric($after_timestamp))
+		if ($after_timestamp !== null AND !is_numeric($after_timestamp))
 		{
 			throw new \Exception("\$after_timestamp must be a valid unix timestamp ($after_timestamp given)");
 		}
 		$cron = preg_split("/[\s]+/i", trim($cron_string));
 		$start = empty($after_timestamp) ? time() : $after_timestamp;
-		$date = [
-			'minutes' => self::_parse_cron_numbers($cron[0], 0, 59),
-			'hours'   => self::_parse_cron_numbers($cron[1], 0, 23),
-			'dom'     => self::_parse_cron_numbers($cron[2], 1, 31),
-			'month'   => self::_parse_cron_numbers($cron[3], 1, 12),
-			'dow'     => self::_parse_cron_numbers($cron[4], 0, 6),
-		];
+		$date = ['minutes' => self::_parse_cron_numbers($cron[0], 0, 59), 'hours' => self::_parse_cron_numbers($cron[1], 0, 23), 'dom' => self::_parse_cron_numbers($cron[2], 1, 31), 'month' => self::_parse_cron_numbers($cron[3], 1, 12), 'dow' => self::_parse_cron_numbers($cron[4], 0, 6),];
 		// limited to time()+366 - no need to check more than 1year ahead
 		for ($i = 0; $i <= 60 * 60 * 24 * 366; $i += 60)
 		{
@@ -63,6 +57,7 @@ class Crontab
 				return $start + $i;
 			}
 		}
+
 		return null;
 	}
 
@@ -91,7 +86,9 @@ class Crontab
 				$result[$i] = intval($i);
 			}
 		}
+
 		ksort($result);
+
 		return $result;
 	}
 

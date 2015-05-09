@@ -19,6 +19,9 @@ class Job extends Model
 
 	const MAX_ATEMTPS = 5;
 
+	/**
+	 * @var array
+	 */
 	protected $fillable = [
 		'name',
 		'task_name',
@@ -32,6 +35,7 @@ class Job extends Model
 		'attempts',
 	];
 
+	// TODO: вынести в отдельный Observer
 	protected static function boot()
 	{
 		parent::boot();
@@ -49,6 +53,9 @@ class Job extends Model
 		});
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function agents()
 	{
 		return [
@@ -57,6 +64,9 @@ class Job extends Model
 		];
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getDates()
 	{
 		$dates = [
@@ -68,6 +78,9 @@ class Job extends Model
 		return array_merge(parent::getDates(), $dates);
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getTypes()
 	{
 		return array_map(function ($item)
@@ -104,6 +117,9 @@ class Job extends Model
 		return trans('cron::core.statuses.' . $this->status);
 	}
 
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
 	public function logs()
 	{
 		return $this->hasMany('KodiCMS\Cron\Model\JobLog');
@@ -112,7 +128,11 @@ class Job extends Model
 	public static function runAll()
 	{
 		$now = new Carbon;
-		$jobs = static::where('attempts', '<=', static::MAX_ATEMTPS)->where('date_start', '<=', $now)->where('date_end', '>=', $now)->where('next_run', '<', $now)->get();
+		$jobs = static::where('attempts', '<=', static::MAX_ATEMTPS)
+			->where('date_start', '<=', $now)
+			->where('date_end', '>=', $now)
+			->where('next_run', '<', $now)
+			->get();
 
 		foreach ($jobs as $job)
 		{
@@ -145,11 +165,13 @@ class Job extends Model
 					throw new \Exception('Invalid method ' . $method);
 				}
 				$instance->$method();
-			} else
+			}
+			else
 			{
 				Artisan::call($action);
 			}
-		} catch (\Exception $e)
+		}
+		catch (\Exception $e)
 		{
 			dd($e);
 			$this->failed($log);
@@ -175,5 +197,4 @@ class Job extends Model
 			'attempts' => $this->attempts + 1,
 		]);
 	}
-
 }

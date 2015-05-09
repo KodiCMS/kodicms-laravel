@@ -6,7 +6,10 @@ use Validator;
 
 class JobCreator implements ModelCreator
 {
-
+	/**
+	 * @param array $data
+	 * @return Validator
+	 */
 	public function validator(array $data)
 	{
 		return Validator::make($data, [
@@ -19,6 +22,10 @@ class JobCreator implements ModelCreator
 		], trans('cron::validation'));
 	}
 
+	/**
+	 * @param array $data
+	 * @return Job
+	 */
 	public function create(array $data)
 	{
 		return Job::create($data);

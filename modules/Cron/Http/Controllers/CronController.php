@@ -9,6 +9,9 @@ use KodiCMS\Cron\Services\JobUpdator;
 class CronController extends BackendController
 {
 
+	/**
+	 * @var string
+	 */
 	public $moduleNamespace = 'cron::';
 
 	public function getIndex()
