@@ -291,7 +291,7 @@ CMS.ui.add('flags', function () {
 	var method = $form.data('api-method');
 	var action = $form.data('api-url');
 
-	if((method.length > 0 && action.length > 0)) {
+	if((method && method.length > 0 && action && action.length > 0)) {
 		$('.btn-save', $form_actions).on('click', function (e) {
 			var $data = $form.serializeObject();
 			Api[method](action, $data);
@@ -312,54 +312,12 @@ CMS.ui.add('flags', function () {
 		window.top.$.fancybox.close();
 		e.preventDefault();
 	});
-
-	if (CLOSE_POPUP)
-		setTimeout(function () {
-			window.top.$.fancybox.close();
-		}, 1000);
 }).add('select2', function () {
-	if (!TAG_SEPARATOR) var TAG_SEPARATOR = ',';
-
 	$('select').not('.no-script').select2();
 	$('.tags').select2({
 		tags: [],
 		minimumInputLength: 0,
-		tokenSeparators: [TAG_SEPARATOR],
-		createSearchChoice: function (term, data) {
-			if ($(data).filter(function () {
-					return this.text.localeCompare(term) === 0;
-				}).length === 0) {
-				return {
-					id: term,
-					text: term
-				};
-			}
-		},
-		multiple: true,
-		ajax: {
-			url: Api.build_url('tags'),
-			dataType: "json",
-			data: function (term, page) {
-				return {term: term};
-			},
-			results: function (data, page) {
-				if (!data.response) return {results: []};
-				return {results: data.response};
-			}
-		},
-		initSelection: function (element, callback) {
-			var data = [];
-
-			var tags = element.val().split(",");
-			for (i in tags) {
-				data.push({
-					id: tags[i],
-					text: tags[i]
-				});
-			}
-			;
-			callback(data);
-		}
+		tokenSeparators: [',', ' ', ';']
 	});
 }).add('ajax_form', function () {
 	$('body').on('submit', 'form.form-ajax', function () {

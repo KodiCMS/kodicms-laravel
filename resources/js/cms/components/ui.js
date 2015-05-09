@@ -17,7 +17,7 @@ CMS.ui = {
 					CMS.ui._elements[i][1]();
 				else if (module == CMS.ui._elements[i][0])
 					CMS.ui._elements[i][1]();
-			} catch (e) {}
+			} catch (e) {console.log(CMS.ui._elements[i][0], e);}
 		}
 		$('body').trigger('ui.init.after');
 	}
