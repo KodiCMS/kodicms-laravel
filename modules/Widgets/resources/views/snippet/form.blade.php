@@ -57,7 +57,7 @@
 'data-readonly' => ($snippet->isReadOnly() OR ($snippet->isNew() AND !$snippet->isReadOnly())) ? 'on' : 'off'
 ]) !!}
 
-@if(!$snippet->isNew() AND $snippet->isReadOnly())
+@if(($snippet->isReadOnly() OR ($snippet->isNew() AND !$snippet->isReadOnly())))
 	<div class="panel-default alert alert-danger alert-dark no-margin-b">
 		@lang('widgets::snippet.messages.snippet_not_writeable')
 	</div>

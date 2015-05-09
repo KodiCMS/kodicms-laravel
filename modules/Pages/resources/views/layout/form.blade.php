@@ -57,7 +57,7 @@
 'data-readonly' => ($layout->isReadOnly() OR ($layout->isNew() AND !$layout->isReadOnly())) ? 'on' : 'off'
 ]) !!}
 
-@if(!$layout->isNew() AND $layout->isReadOnly())
+@if(($layout->isReadOnly() OR ($layout->isNew() AND !$layout->isReadOnly())))
 	<div class="panel-default alert alert-danger alert-dark no-margin-b">
 		@lang('pages::layout.messages.layout_not_writeable')
 	</div>

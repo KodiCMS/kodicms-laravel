@@ -1,29 +1,31 @@
+@section('scripts')
 <script type="text/javascript">
-	$(function() {
-		$('body').on('change', '#snippet-select', function() {
-			var $value = $(this).val();
-			if($value == 0)
-				$('#EditTemplateButton').hide();
-			else
-				$('#EditTemplateButton')
-					.show()
-					.css({display: 'inline-block'})
-					.attr('href', BASE_URL + '/snippet/edit/' + $value);
-		}).change();
+$(function() {
+	$('body').on('change', '#snippet-select', function() {
+		var $value = $(this).val();
+		if($value == 0)
+			$('#EditTemplateButton').hide();
+		else
+			$('#EditTemplateButton')
+				.show()
+				.css({display: 'inline-block'})
+				.attr('href', BASE_URL + '/snippet/edit/' + $value);
+	}).change();
 
-		$('body').on('post:backend:api.snippet', update_snippets_list);
-		$('body').on('put:backend:api.snippet', update_snippets_list);
-	});
+	$('body').on('post:backend:api.snippet', update_snippets_list);
+	$('body').on('put:backend:api.snippet', update_snippets_list);
+});
 
-	function update_snippets_list(e, response) {
-		var select = $('#snippet-select');
+function update_snippets_list(e, response) {
+	var select = $('#snippet-select');
 
-		select
-			.append($('<option>', {value: response.name, text: response.name}))
-			.select2('val', response.name)
-			.change();
-	}
+	select
+		.append($('<option>', {value: response.name, text: response.name}))
+		.select2('val', response.name)
+		.change();
+}
 </script>
+@stop
 
 <?php
 if (empty($templates))
@@ -61,7 +63,7 @@ $hidden = empty($template) ? 'hidden' : '';
 					@endif
 
 					@if (acl_check('snippet.add'))
-					{!! link_to_route('backend.snippet.edit', UI::hidden(trans('widgets::snippet.button.add'), ['md', 'sm', 'xs']), [], [
+					{!! link_to_route('backend.snippet.create', UI::hidden(trans('widgets::snippet.button.add'), ['md', 'sm', 'xs']), [], [
 						'data-icon' => 'plus', 'class' => 'btn popup fancybox.iframe btn-success',
 						'id' => 'AddTemplateButton'
 					]) !!}
