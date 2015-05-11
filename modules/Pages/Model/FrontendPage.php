@@ -102,12 +102,14 @@ class FrontendPage
 
 			if ($pageObject = self::findBySlug($pageSlug, $parentPage, $includeHidden))
 			{
-				if ($pageObject->hasBehavior() AND $behavior = BehaviorManager::load($pageObject->getBehavior(), $pageObject))
+				if ($pageObject->hasBehavior() AND !is_null($behavior = BehaviorManager::load($pageObject->getBehavior(), $pageObject)))
 				{
 					$behavior->executeRoute($pageObject->getUri());
 					$pageObject->behaviorObject = $behavior;
 					return $pageObject;
 				}
+
+				break;
 			}
 			else
 			{

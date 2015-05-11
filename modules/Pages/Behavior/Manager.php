@@ -23,8 +23,14 @@ class Manager
 	{
 		$behaviorParams = static::getBehavior($behavior);
 
+		if(is_null($behaviorParams))
+		{
+			return null;
+		}
+
 		$behaviorClass = $behaviorParams['class'];
-		if (!class_exists($behaviorClass))
+
+		if (!empty($behaviorClass) and !class_exists($behaviorClass))
 		{
 			throw new BehaviorException("Behavior class \"{$behaviorClass}\" not found!");
 		}
