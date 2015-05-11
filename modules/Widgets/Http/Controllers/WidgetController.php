@@ -2,6 +2,8 @@
 
 use Assets;
 use DB;
+use Illuminate\View\View;
+use WYSIWYG;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use KodiCMS\CMS\Assets\Package;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
@@ -154,7 +156,7 @@ class WidgetController extends BackendController {
 
 		$layoutBlocks = (new LayoutBlock)->getBlocksGroupedByLayouts();
 
-		$content = $this->setContent('widgets.location', compact('widget', 'pages', 'widgetBlocks', 'blocksToExclude', 'layoutBlocks'));
+		$this->setContent('widgets.location', compact('widget', 'pages', 'widgetBlocks', 'blocksToExclude', 'layoutBlocks'));
 	}
 
 	public function postLocation($id)
@@ -164,9 +166,22 @@ class WidgetController extends BackendController {
 		return back();
 	}
 
-	public function getTemplate($template)
+	public function getTemplate($id)
 	{
+		$widget = $this->getWidget($id);
+		WYSIWYG::loadAll(WYSIWYG::TYPE_CODE);
 
+		$template = $widget->getDefaultFrontendTemplate();
+
+		$content = null;
+		if (!($template instanceof View))
+		{
+			$template = view($template);
+		}
+
+		$content = file_get_contents($template->getPath());
+
+		$this->setContent('widgets.template', compact('content'));
 	}
 
 	/**
