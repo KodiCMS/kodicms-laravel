@@ -18,6 +18,7 @@ class Block
 	public function __construct(WidgetCollection $collection)
 	{
 		$this->collection = $collection;
+		$this->collection->placeWidgetsToLayoutBlocks();
 	}
 
 	/**

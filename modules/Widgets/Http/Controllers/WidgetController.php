@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Widgets\Http\Controllers;
 
 use Assets;
+use DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use KodiCMS\CMS\Assets\Package;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
@@ -26,6 +27,38 @@ class WidgetController extends BackendController {
 
 		$widgets = Widget::paginate();
 		$this->setContent('widgets.list', compact('widgets'));
+	}
+
+	public function getPopupList($pageId)
+	{
+		intval($pageId);
+
+		$query = DB::table('page_widgets')->select('widget_id');
+
+		if($pageId > 0)
+		{
+			$query->where('page_id', $pageId);
+		}
+
+		$ids = $query->lists('widget_id');
+
+		$widgetList = (new Widget)->newQuery();
+
+		if(count($ids) > 0)
+		{
+			$widgetList->whereNotIn('id', $ids);
+		}
+
+		$widgets = [];
+
+		foreach($widgetList->get() as $widget)
+		{
+			if($widget->isCorrupt() or $widget->isHandler()) continue;
+
+			$widgets[$widget->getType()][$widget->id] = $widget;
+		}
+
+		return $this->setContent('widgets.page.ajax_list', compact('widgets'));
 	}
 
 	public function getCreate()

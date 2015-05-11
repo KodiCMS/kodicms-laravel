@@ -74,9 +74,9 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 	 * @param string $block
 	 * @return $this
 	 */
-	public function addWidget(WidgetInterface $widget, $block)
+	public function addWidget(WidgetInterface $widget, $block, $position = 500)
 	{
-		$this->registeredWidgets[] = new Widget($widget, $block);
+		$this->registeredWidgets[] = new Widget($widget, $block, $position);
 		return $this;
 	}
 

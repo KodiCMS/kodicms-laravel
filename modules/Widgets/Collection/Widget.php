@@ -16,13 +16,19 @@ class Widget implements WidgetCollectionItem {
 	protected $block;
 
 	/**
+	 * @var int
+	 */
+	protected $position;
+
+	/**
 	 * @param WidgetInterface $widget
 	 * @param string $block
 	 */
-	public function __construct(WidgetInterface $widget, $block)
+	public function __construct(WidgetInterface $widget, $block, $position = 500)
 	{
 		$this->widget = $widget;
 		$this->block = $block;
+		$this->position = $position;
 	}
 
 	/**
@@ -39,5 +45,21 @@ class Widget implements WidgetCollectionItem {
 	public function getBlock()
 	{
 		return $this->block;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getPosition()
+	{
+		return $this->position;
+	}
+
+	/**
+	 * @param $position
+	 */
+	public function setPosition($position)
+	{
+		$this->position = (int) $position;
 	}
 }

@@ -19,16 +19,18 @@ class ModuleServiceProvider extends ServiceProvider {
 	{
 		app('view')->addNamespace('layouts', layouts_path());
 
+		app()->singleton('frontpage.meta', function ($app)
+		{
+			return new Meta();
+		});
+
 		$events->listen('view.page.edit', function ($page)
 		{
 			echo view('pages::parts.list')->with('page', $page);
 		}, 999);
 
 		$events->listen('frontend.found', function($page) {
-			app()->singleton('frontpage.meta', function ($app) use ($page)
-			{
-				return new Meta($page);
-			});
+			app('frontpage.meta')->setPage($page, true);
 
 			$layoutBlocks = Block::getLayoutBlocks();
 

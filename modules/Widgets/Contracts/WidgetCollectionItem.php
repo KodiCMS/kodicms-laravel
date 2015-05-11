@@ -18,4 +18,13 @@ interface WidgetCollectionItem {
 	 */
 	public function getBlock();
 
+	/**
+	 * @return int
+	 */
+	public function getPosition();
+
+	/**
+	 * @param $position
+	 */
+	public function setPosition($position);
 }

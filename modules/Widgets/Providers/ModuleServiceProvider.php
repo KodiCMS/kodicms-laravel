@@ -1,11 +1,13 @@
 <?php namespace KodiCMS\Widgets\Providers;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
+use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
+use Request;
 use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Pages\Helpers\Block;
+use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Model\PageSitemap;
 use KodiCMS\Widgets\Collection\PageWidgetCollection;
-use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -21,20 +23,44 @@ class ModuleServiceProvider extends ServiceProvider
 		$events->listen('frontend.found', function($page) {
 			$this->app->singleton('layout.block', function($app) use($page)
 			{
-				return new Block(new PageWidgetCollection($page));
+				$collection = new PageWidgetCollection($page->getId());
+				$collection->placeWidgetsToLayoutBlocks();
+
+				return new Block($collection);
 			});
 		}, 9999);
 
-		// TODO: реализовать настройку виджетов на странице редактирования "Страницы"
-//		$events->listen('view.page.edit', function($page) {
-//			if (acl_check('widgets.index'))
-//			{
-//				echo view('widgets::widgets.partials.page_block')
-//					->with('page', $page)
-//					->with('pages', PageSitemap::get(true)->exclude([$page->id])->flatten())
-//					->with('widgets', WidgetManagerDatabase::getWidgetsByPage($page->id))
-//				;
-//			}
-//		});
+		$events->listen('view.page.edit', function($page) {
+			if (acl_check('widgets.index'))
+			{
+				$collection = new PageWidgetCollection($page->id);
+
+				echo view('widgets::widgets.page.list')
+					->with('page', $page)
+					->with('pages', PageSitemap::get(true)->exclude([$page->id])->flatten())
+					->with('widgetsCollection', $collection)
+					->render();
+				;
+			}
+		});
+
+		Page::creating(function($page) {
+			$postData = Request::input('widgets', []);
+
+			if (!empty($postData['from_page_id']))
+			{
+				WidgetManagerDatabase::copyWidgets($postData['from_page_id'], $page->id);
+			}
+		});
+
+		Page::updating(function($page) {
+
+			$postData = Request::input('widget', []);
+
+			foreach ($postData as $widgetId => $location)
+			{
+				WidgetManagerDatabase::updateWidgetOnPage($widgetId, $page->id, $location);
+			}
+		});
 	}
 }

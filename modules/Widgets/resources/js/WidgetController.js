@@ -30,29 +30,23 @@ CMS.controllers.add('widget.get.edit', function() {
 	};
 });
 
-CMS.controllers.add('page_edit', function() {
-	var layout_file = PAGE_OBJECT['layout'];
+CMS.controllers.add('page.get.edit', function() {
+	var layout_file = PAGE['layout_file'];
 	reload_blocks(layout_file);
 	$('body').on('get:api.layout.rebuild', function(e, response) {
 		reload_blocks(layout_file);
 	});
 
-	// Reload blocks on page layout change
-//	$('body').on('change', '#page_layout_file', function() {
-//		$('.widget-blocks').data('layout', $(this).val());
-//		reload_blocks($(this).val());
-//	});
-
 	$('body').on('click', '.popup-widget-item', function() {
 		var widget_id = $(this).data('id');
 
-		Api.put('widget', {
+		Api.put('/api.widget', {
 			widget_id: widget_id,
-			page_id: PAGE_ID
+			page_id: PAGE.id
 		}, function(response) {
 			window.location = '#widgets';
 			$.fancybox.close();
-			$('#widget-list tbody').append(response.response);
+			$('#widget-list tbody').append(response.content);
 			reload_blocks(layout_file);
 		});
 	});

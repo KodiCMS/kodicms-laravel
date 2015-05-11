@@ -40,9 +40,9 @@
 				</td>
 				<td class="actions text-right">
 					@if (acl_check('widgets.delete'))
-						{!! link_to_route('backend.widget.delete', '', [$widget], [
-						'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-confirm'
-						]) !!}
+					{!! link_to_route('backend.widget.delete', '', [$widget], [
+					'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-confirm'
+					]) !!}
 					@endif
 				</td>
 				@else

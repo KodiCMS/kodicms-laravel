@@ -63,7 +63,7 @@ class WidgetManagerDatabase extends WidgetManager
 		$data = [];
 		foreach($query as $row)
 		{
-			$data[$row->widget_id] = $row->block;
+			$data[$row->widget_id] = [$row->block, $row->position];
 		}
 
 		return $data;
@@ -172,6 +172,28 @@ class WidgetManagerDatabase extends WidgetManager
 			DB::table('page_widgets')
 				->where('widget_id', (int) $widgetId)
 				->insert($insertData);
+		}
+	}
+
+	/**
+	 * @param int $widgetId
+	 * @param int $pageId
+	 * @param array $location
+	 */
+	public static function updateWidgetOnPage($widgetId, $pageId, array $location)
+	{
+		$query = DB::table('page_widgets')->where('widget_id', (int)$widgetId)->where('page_id', (int)$pageId);
+
+		if ($location['block'] < 0)
+		{
+			$query->delete();
+		}
+		else
+		{
+			$query->update([
+				'block' => $location['block'],
+				'position' => (int) array_get($location, 'position')
+			]);
 		}
 	}
 }

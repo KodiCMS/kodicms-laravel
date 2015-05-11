@@ -21,10 +21,13 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 		'getEdit' => 'backend.widget.edit',
 		'postEdit' => 'backend.widget.edit.post',
 		'getDelete' => 'backend.widget.delete',
+		'getPopupList' => 'backend.widget.popup_list'
 	]);
 
 	Route::get('handler/{$id}', ['as' => 'widget.handler', 'uses' => 'HandlerController@handle']);
 });
+
+Route::put('api.widget', ['as' => 'api.widget.place', 'uses' => 'API\WidgetController@putPlace']);
 
 Route::post('api.snippet', ['as' => 'api.snippet.create', 'uses' => 'API\SnippetController@postCreate']);
 Route::put('api.snippet', ['as' => 'api.snippet.edit', 'uses' => 'API\SnippetController@postEdit']);

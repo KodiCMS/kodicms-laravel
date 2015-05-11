@@ -8,31 +8,33 @@ use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 class PageWidgetCollection extends WidgetCollection {
 
 	/**
-	 * @var FrontendPage
+	 * @param int $pageId
 	 */
-	protected $page;
-
-	/**
-	 * @param FrontendPage $page
-	 */
-	public function __construct(FrontendPage $page)
+	public function __construct($pageId)
 	{
-		$this->page = $page;
-
-		$widgets = WidgetManagerDatabase::getWidgetsByPage($page->getId());
-		$blocks = WidgetManagerDatabase::getPageWidgetBlocks($page->getId());
+		$widgets = WidgetManagerDatabase::getWidgetsByPage($pageId);
+		$blocks = WidgetManagerDatabase::getPageWidgetBlocks($pageId);
 
 		foreach($widgets as $widget)
 		{
-			$this->addWidget($widget, array_get($blocks, $widget->getId()));
+			$this->addWidget($widget, array_get($blocks, $widget->getId() .'.0'), array_get($blocks, $widget->getId() .'.1'));
+		}
+	}
 
-			if($widget instanceof WidgetRenderable)
+	/**
+	 * @return void
+	 */
+	public function placeWidgetsToLayoutBlocks()
+	{
+		foreach ($this->registeredWidgets as $widget)
+		{
+			if($widget->getObject() instanceof WidgetRenderable)
 			{
-				Meta::addPackage($widget->getMediaPackages());
+				Meta::addPackage($widget->getObject()->getMediaPackages());
 			}
 		}
 
-		$this->placeWidgetsToLayoutBlocks();
+		parent::placeWidgetsToLayoutBlocks();
 	}
 
 	/**

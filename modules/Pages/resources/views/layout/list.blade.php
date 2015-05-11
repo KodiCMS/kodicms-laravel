@@ -57,7 +57,7 @@
 
 				@if (count($layout->getBlocks()) > 0)
 				<span class="text-muted text-normal text-sm">
-					@lang('pages::layout.label.blocks'): <span class="layout-block-list">
+					<strong>@lang('pages::layout.label.blocks'):</strong> <span class="layout-block-list">
 						<?php echo implode(', ', $layout->getBlocks()); ?>
 					</span>
 				</span>
