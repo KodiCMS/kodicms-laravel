@@ -24,8 +24,6 @@ class ModuleServiceProvider extends ServiceProvider
 			$this->app->singleton('layout.block', function($app) use($page)
 			{
 				$collection = new PageWidgetCollection($page->getId());
-				$collection->placeWidgetsToLayoutBlocks();
-
 				return new Block($collection);
 			});
 		}, 9999);
