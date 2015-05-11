@@ -44,11 +44,6 @@ class Block
 	 */
 	public function run($name, array $params = [])
 	{
-		if ($name == 'PRE' OR $name == 'POST')
-		{
-			return;
-		}
-
 		$widgets = static::getWidgetsByBlock($name, $params);
 
 		foreach ($widgets as $widget)
