@@ -446,35 +446,24 @@ CMS.ui.add('flags', function () {
 		e.preventDefault();
 		var $self = $(this);
 
-		var $callback = function (response) {
-		};
+		var $callback = function (response) {};
 		var $url = $self.data('api-url');
 		if (!$url) return;
 
 		var $callback = $self.data('callback');
-		if ($callback)
-			$callback = window[$callback];
-		else
-			$callback = function (response) {
-			};
+		if ($callback) $callback = window[$callback];
+		else $callback = function (response) {};
 
 		var $method = $self.data('method'),
 			$reload = $self.data('reload'),
 			$params = $self.data('params');
 
 		if ($reload) {
-			if ($reload === true)
-				$callback = function () {
-					window.location = ''
-				}
-			else
-				$callback = function () {
-					window.location = $reload
-				}
+			if ($reload === true) $callback = function () { window.location = '' }
+			else $callback = function () { window.location = $reload }
 		}
 
-		if (!$method)
-			$method = 'GET';
+		if (!$method) $method = 'GET';
 
 		Api.request($method, $url, $params, $callback);
 	})
@@ -536,5 +525,12 @@ CMS.ui.add('flags', function () {
 	$.noty.defaults = $.extend($.noty.defaults, {
 		layout: 'topRight',
 		theme: 'bootstrapTheme'
+	});
+})
+.add('i18nSetup', function() {
+	i18n.init({
+		lng: LOCALE,
+		fallbackLng: [],
+		resGetPath: '/cms/js/locale/__lng__.json',
 	});
 });

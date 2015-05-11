@@ -28,7 +28,8 @@ elixir(function(mix) {
 		'libs/moment.js',
 		'libs/fastclick.js',
 		'libs/jquery.slimscroll.js',
-		'libs/jquery.query-object.js'
+		'libs/jquery.query-object.js',
+		'libs/i18next-1.8.0.js'
 	], 'public/cms/js/libraries.js', 'public/cms/');
 
 	mix.scripts([
