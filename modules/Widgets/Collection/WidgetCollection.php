@@ -3,7 +3,6 @@
 use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 use KodiCMS\Widgets\Contracts\WidgetCollection as WidgetCollectionInterface;
 use Iterator;
-use KodiCMS\Widgets\Contracts\WidgetDatabase;
 
 class WidgetCollection implements WidgetCollectionInterface, Iterator {
 
@@ -25,8 +24,6 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 	{
 		foreach ($this->registeredWidgets as $widget)
 		{
-			if (!($widget->getObject() instanceof WidgetDatabase)) continue;
-
 			if ($widget->getObject()->getId() == $id)
 			{
 				return $widget;
@@ -88,8 +85,6 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 	{
 		foreach ($this->registeredWidgets as $i => $widget)
 		{
-			if (!($widget->getObject() instanceof WidgetDatabase)) continue;
-
 			if ($widget->getObject()->getId() == $id)
 			{
 				unset($this->registeredWidgets[$i]);

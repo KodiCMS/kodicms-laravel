@@ -16,4 +16,9 @@ interface WidgetRenderable extends Widget {
 	 * @return mixed
 	 */
 	public function getMediaPackages();
+
+	/**
+	 * @return array
+	 */
+	public function prepareData();
 }

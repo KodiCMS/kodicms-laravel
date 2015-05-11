@@ -3,7 +3,7 @@
 use KodiCMS\Widgets\Contracts\WidgetCacheable;
 use KodiCMS\Widgets\Traits\WidgetCache;
 
-class HTML extends DatabaseDecorator implements WidgetCacheable
+class HTML extends Decorator implements WidgetCacheable
 {
 	use WidgetCache;
 

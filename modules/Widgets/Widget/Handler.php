@@ -2,7 +2,7 @@
 
 use KodiCMS\Widgets\Contracts\WidgetHandler;
 
-class Handler extends DatabaseDecorator implements WidgetHandler
+class Handler extends Decorator implements WidgetHandler
 {
 	use \KodiCMS\Widgets\Traits\WidgetHandler;
 

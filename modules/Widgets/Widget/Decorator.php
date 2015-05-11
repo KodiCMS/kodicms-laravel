@@ -46,6 +46,11 @@ abstract class Decorator implements WidgetInterface
 	protected $settings = [];
 
 	/**
+	 * @var int
+	 */
+	private $id;
+
+	/**
 	 * @param string $name
 	 * @param string $description
 	 */
@@ -54,6 +59,37 @@ abstract class Decorator implements WidgetInterface
 		$this->type = WidgetManager::getTypeByClassName(get_called_class());
 		$this->name = $name;
 		$this->description = $description;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isExists()
+	{
+		return strlen($this->getId()) > 0;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
+
+	/**
+	 * @param int $id
+	 * @throws WidgetException
+	 */
+	public function setId($id)
+	{
+		if ($this->isExists())
+		{
+			// TODO: написать правильный текст
+			throw new WidgetException('You can\'t change widget id');
+		}
+
+		$this->id = $id;
 	}
 
 	/**
