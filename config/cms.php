@@ -53,7 +53,7 @@ return [
 	'default_code_editor' => 'ace',
 	'default_ace_theme' => 'textmate',
 	'locales' => [
-		'en' => 'English',
+		//'en' => 'English',
 		'ru' => 'Русский'
 	],
 	'date_format' => 'Y-m-d H:i:s',
