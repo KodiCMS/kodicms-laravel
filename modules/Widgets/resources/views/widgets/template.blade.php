@@ -2,7 +2,7 @@
 <script type="text/javascript">
 $(function() {
 	$('#textarea_content').on('filter:switch:on', function(e, editor) {
-		$('.panel').setHeightFor('#textarea_contentDiv', {
+		$('#content').setHeightFor('#textarea_contentDiv', {
 			contentHeight: true,
 			updateOnResize: true,
 			offset: 30,
