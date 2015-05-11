@@ -6,12 +6,12 @@ use DateTimeZone;
 class Date
 {
 
-	const YEAR = 31556926;
-	const MONTH = 2629744;
-	const WEEK = 604800;
-	const DAY = 86400;
-	const HOUR = 3600;
-	const MINUTE = 60;
+	const YEAR = 525600;
+	const MONTH = 43200;
+	const WEEK = 10080;
+	const DAY = 1440;
+	const HOUR = 60;
+	const MINUTE = 1;
 
 	/**
 	 * @param integer|string|Carbon $date

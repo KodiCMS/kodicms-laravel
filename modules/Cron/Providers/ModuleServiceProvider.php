@@ -3,6 +3,7 @@
 use Event;
 use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Cron\Model\Job;
+use KodiCMS\Cron\Observers\JobObserver;
 use Validator;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -27,7 +28,8 @@ class ModuleServiceProvider extends ServiceProvider
 
 	public function boot()
 	{
+		Job::observe(new JobObserver);
+
 		Validator::extend('crontab', 'KodiCMS\Cron\Support\Validator@validateCrontab');
 	}
-
 }
