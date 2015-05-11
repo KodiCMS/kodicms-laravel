@@ -12,6 +12,12 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 	public function render()
 	{
 		$widget = $this->getWidget();
+
+		if (method_exists($widget->getObject(), 'onRender'))
+		{
+			app()->call([$widget->getObject(), 'onRender'], [$this]);
+		}
+
 		if ($widget instanceof WidgetCacheable and $widget->isCacheEnabled())
 		{
 			if (Cache::getFacadeRoot()->store()->getStore() instanceof TaggableStore)

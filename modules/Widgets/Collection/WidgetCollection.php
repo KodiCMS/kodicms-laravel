@@ -105,7 +105,16 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 		foreach ($this->registeredWidgets as $widget)
 		{
 			if(is_null($widget->getBlock())) continue;
+
 			$this->layoutBlocks[$widget->getBlock()][] = $widget->getObject();
+		}
+
+		foreach ($this->registeredWidgets as $widget)
+		{
+			if (method_exists($widget->getObject(), 'onLoad'))
+			{
+				app()->call([$widget->getObject(), 'onLoad']);
+			}
 		}
 	}
 
