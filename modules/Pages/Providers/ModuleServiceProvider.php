@@ -67,6 +67,7 @@ class ModuleServiceProvider extends ServiceProvider {
 
 	public function register()
 	{
+		$this->registerConsoleCommand('layout.generate.key', '\KodiCMS\Pages\Console\Commands\RebuldLayoutBlocks');
 
 		BehaviorManager::init();
 	}
