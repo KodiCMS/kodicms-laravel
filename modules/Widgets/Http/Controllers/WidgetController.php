@@ -5,13 +5,10 @@ use DB;
 use Illuminate\View\View;
 use WYSIWYG;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use KodiCMS\CMS\Assets\Package;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use KodiCMS\Pages\Model\LayoutBlock;
 use KodiCMS\Pages\Model\PageSitemap;
-use KodiCMS\Widgets\Manager\WidgetManager;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
-use KodiCMS\Widgets\Model\SnippetCollection;
 use KodiCMS\Widgets\Model\Widget;
 use KodiCMS\Widgets\Services\WidgetCreator;
 use KodiCMS\Widgets\Services\WidgetUpdator;
@@ -100,15 +97,8 @@ class WidgetController extends BackendController {
 			'name' => $widget->name
 		]));
 
-		$commentKeys = WidgetManager::getTemplateKeysByType($widget->type);
 		$settingsView = $widget->renderSettingsTemplate();
-		$snippets = (new SnippetCollection())->getHTMLSelectChoices();
-
-		// TODO: добавить загрузку списка ролей
-		$usersRoles = [];
-		$assetsPackages = Package::getHTMLSelectChoice();
-
-		$this->setContent('widgets.edit', compact('widget', 'commentKeys', 'settingsView', 'snippets', 'assetsPackages', 'usersRoles'));
+		$this->setContent('widgets.edit', compact('widget', 'settingsView', 'assetsPackages', 'usersRoles'));
 	}
 
 	public function postEdit($id, WidgetUpdator $updator)

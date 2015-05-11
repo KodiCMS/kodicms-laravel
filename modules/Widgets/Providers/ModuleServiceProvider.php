@@ -2,12 +2,15 @@
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
+use KodiCMS\CMS\Assets\Package;
 use Request;
 use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Pages\Helpers\Block;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Model\PageSitemap;
 use KodiCMS\Widgets\Collection\PageWidgetCollection;
+use KodiCMS\Widgets\Manager\WidgetManager;
+use KodiCMS\Widgets\Model\SnippetCollection;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -39,6 +42,41 @@ class ModuleServiceProvider extends ServiceProvider
 					->with('widgetsCollection', $collection)
 					->render();
 				;
+			}
+		});
+
+		$events->listen('view.widget.edit', function ($widget)
+		{
+			// TODO: вынести в виджеты
+			if ($widget->isRenderable())
+			{
+				$commentKeys = WidgetManager::getTemplateKeysByType($widget->type);
+				$snippets = (new SnippetCollection())->getHTMLSelectChoices();
+				$assetsPackages = Package::getHTMLSelectChoice();
+
+				echo view('widgets::widgets.partials.renderable', compact('widget', 'commentKeys', 'snippets', 'assetsPackages'))->render();
+			}
+
+			if ($widget->isCacheable() AND acl_check('widgets.cache'))
+			{
+				echo view('widgets::widgets.partials.cacheable', compact('widget'))->render();
+			}
+
+			if (acl_check('widgets.roles') AND !$widget->isHandler())
+			{
+				// TODO: добавить загрузку списка ролей
+				$usersRoles = [];
+
+				echo view('widgets::widgets.partials.permissions', compact('widget', 'usersRoles'))->render();
+			}
+		});
+
+		$events->listen('view.widget.edit.footer', function ($widget)
+		{
+			if($widget->isHandler())
+			{
+				echo view('widgets::widgets.partials.handler', compact('widget'))
+					->render();
 			}
 		});
 
