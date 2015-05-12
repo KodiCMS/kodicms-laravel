@@ -80,11 +80,43 @@ return [
 		'text' => 'Простой текст',
 	],
 	'template_data' => [
-		'default_email' => 'E-Mail адрес по умолчанию',
+		'default_email'    => 'E-Mail адрес по умолчанию',
 		'site_title'       => 'Заголовок сайта',
 		'site_description' => 'Описание сайта',
 		'base_url'         => 'Адрес сайта (в формате :format)',
 		'current_date'     => 'Текущая дата (в формате :format)',
 		'current_time'     => 'Текущее время (в формате :format)',
+	],
+	'settings'      => [
+		'title'         => 'Настройки почты',
+		'default_email' => 'Email адрес по умолчанию',
+		'email_driver'  => 'Драйвер',
+		'test'          => [
+			'label'           => 'Для отправки тестового письма необходимо сохранить настройки',
+			'btn'             => 'Отправить тестовое письмо',
+			'subject'         => 'Тестовое письмо',
+			'message'         => 'Тестовое сообщение',
+			'result_positive' => 'Тестовое письмо было успешно отправлено',
+			'result_negative' => 'Тестовое письмо не было отправлено',
+		],
+		'sendmail'      => [
+			'path'        => 'Путь к исполняемому файлу',
+			'placeholder' => 'Например: /usr/sbin/sendmail',
+			'help'        => 'Путь до программы sendmail, обычно :path1 или :path2. :link',
+		],
+		'smtp'          => [
+			'host'       => 'Сервер',
+			'port'       => 'Порт',
+			'username'   => 'Имя пользователя',
+			'password'   => 'Пароль',
+			'encryption' => 'Шифрование',
+		],
+		'mailgun'       => [
+			'domain' => 'Домен',
+			'secret' => 'Секретный ключ',
+		],
+		'mandrill'      => [
+			'secret' => 'Секретный ключ',
+		],
 	],
 ];

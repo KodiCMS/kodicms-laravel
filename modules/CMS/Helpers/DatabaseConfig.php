@@ -27,7 +27,7 @@ class DatabaseConfig
 
 		foreach($databaseConfig as $row)
 		{
-			static::$loadedKeys[$row->group][$row->key] = json_decode($row->value);
+			static::$loadedKeys[$row->group][$row->key] = json_decode($row->value, true);
 		}
 
 		return static::$loadedKeys;
