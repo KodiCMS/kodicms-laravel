@@ -11,5 +11,11 @@ return [
 			'page_level' => 'Задать уровень',
 			'relatively_current_page' => '-- Относительно текущей страницы --'
 		]
+	],
+	'page_breadcrumbs' => [
+		'title' => 'Хлебные крошки',
+		'label' => [
+			'excluded_pages' => 'Исключить страницы из списка',
+		]
 	]
 ];

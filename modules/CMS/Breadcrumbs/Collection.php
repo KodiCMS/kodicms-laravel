@@ -6,7 +6,6 @@
  */
 class Collection implements \Countable, \Iterator
 {
-
 	/**
 	 *
 	 * @var array
@@ -166,7 +165,7 @@ class Collection implements \Countable, \Iterator
 			return FALSE;
 		}
 
-		return TRUE;
+		unset($this->items[$position]);
 	}
 
 	/**

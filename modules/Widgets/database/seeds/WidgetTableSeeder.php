@@ -23,7 +23,15 @@ class WidgetTableSeeder extends Seeder {
 				'header',
 				'page.menu',
 				'KodiCMS\Pages\Widget\PageMenu',
-				['include_children' => true]
+				['include_children' => true, 'header' => 'Sitename']
+			],
+			[
+				'Breadcrumbs',
+				null,
+				'content.before',
+				'page.breadcrumbs',
+				'KodiCMS\Pages\Widget\PageBreadcrumbs',
+				[]
 			],
 			[
 				'Content',
@@ -31,7 +39,7 @@ class WidgetTableSeeder extends Seeder {
 				'content',
 				'html',
 				'KodiCMS\Widgets\Widget\HTML',
-				[]
+				['header' => 'Content']
 			],
 			[
 				'Footer',
@@ -55,7 +63,7 @@ class WidgetTableSeeder extends Seeder {
 				'template' => $template,
 				'class' => $class,
 				'settings' => array_merge([
-					'header' => $name
+
 				], $settings)
 			]);
 
