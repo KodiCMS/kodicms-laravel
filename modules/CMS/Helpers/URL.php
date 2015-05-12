@@ -1,6 +1,6 @@
 <?php namespace KodiCMS\CMS\Helpers;
 
-use Illuminate\Support\Facades\Route;
+use Request;
 
 class URL
 {
@@ -10,23 +10,30 @@ class URL
 	 * @param string $current
 	 * @return boolean
 	 */
-	public static function match($uri, $current = NULL)
+	public static function match($uri, $current = null)
 	{
 		$uri = trim($uri, '/');
-		if ($current === NULL) {
-			$current = Route::getCurrentRoute()->getUri();
-		}
-		$current = trim($current, '/');
-		if ($current == $uri) {
-			return TRUE;
-		}
-		if (empty($uri)) {
-			return FALSE;
-		}
-		if (strpos($current, $uri) !== FALSE) {
-			return TRUE;
+		if (is_null($current))
+		{
+			$current = Request::path();
 		}
 
-		return FALSE;
+		$current = trim($current, '/');
+		if ($current == $uri)
+		{
+			return true;
+		}
+
+		if (empty($uri))
+		{
+			return false;
+		}
+
+		if (strpos($current, $uri) !== false)
+		{
+			return true;
+		}
+
+		return false;
 	}
 }

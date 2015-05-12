@@ -47,11 +47,12 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 		$widget = $this->getWidget();
 		$widget->setParameters($this->parameters);
 
-		$widget->prepareData();
+		$preparedData = $widget->prepareData();
+		$preparedData['parameters'] = $widget->getParameters();
 
 		$allowHTMLComments = (bool) $widget->getParameter('comments', true);
 
-		$preparedData = $widget->getParameters();
+
 		$preparedData['widgetId'] = $widget->getId();
 		$preparedData['settings'] = $widget->getSettings();
 		$preparedData['header'] = $widget->getSetting('header');
@@ -81,9 +82,15 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 	{
 		$template = $this->getWidget()->getFrontendTemplate();
 
-		if (is_null($template))
+		// Если не указан шаблон и указан шаблон по умолчанию
+		if (is_null($template) and !is_null($template = $this->getWidget()->getDefaultFrontendTemplate()))
 		{
-			$template = $this->getWidget()->getDefaultFrontendTemplate();
+			if ($template instanceof View)
+			{
+				return $template->with($preparedData);
+			}
+
+			return view($template)->with($preparedData);
 		}
 
 		if (!is_null($template))
@@ -97,8 +104,10 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 				return $template->with($preparedData);
 			}
 
-			$snippet = (new SnippetCollection)->findFile($template);
-			return $snippet->toView($preparedData);
+			if ($snippet = (new SnippetCollection)->findFile($template))
+			{
+				return $snippet->toView($preparedData);
+			}
 		}
 
 		return view('widgets::widgets.default', $preparedData);

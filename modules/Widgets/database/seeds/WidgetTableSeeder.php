@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Widgets\database\seeds;
 
 use Illuminate\Database\Seeder;
+use KodiCMS\Pages\Model\Page;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 use KodiCMS\Widgets\Model\Widget;
 
@@ -18,58 +19,53 @@ class WidgetTableSeeder extends Seeder {
 		$widgets = [
 			[
 				'Header menu',
-				'header.blade',
-				'header'
-			],
-			'Left menu',
-			[
-				'Footer menu',
 				null,
-				'footer'
+				'header',
+				'page.menu',
+				'KodiCMS\Pages\Widget\PageMenu',
+				['include_children' => true]
 			],
 			[
 				'Content',
 				'content.blade',
-				'content'
+				'content',
+				'html',
+				'KodiCMS\Widgets\Widget\HTML',
+				[]
+			],
+			[
+				'Footer',
+				'footer.blade',
+				'footer',
+				'html',
+				'KodiCMS\Widgets\Widget\HTML',
+				[]
 			]
 		];
 
-		foreach($widgets as $name)
+		$pages = Page::all();
+
+		foreach($widgets as $data)
 		{
-			if(is_array($name))
-			{
-				list($name, $template, $block) = $name;
-			} else {
-				$template = null;
-				$block = null;
-			}
+			list($name, $template, $block, $type, $class, $settings) = $data;
+
 			$widget = Widget::create([
 				'name' => $name,
-				'type' => 'html',
+				'type' => $type,
 				'template' => $template,
-				'class' => '\KodiCMS\Widgets\Widget\HTML',
-				'settings' => [
+				'class' => $class,
+				'settings' => array_merge([
 					'header' => $name
-				]
+				], $settings)
 			]);
 
-			WidgetManagerDatabase::placeWidgetsOnPages($widget->id, [
-				1 => [
-					'block' =>$block
-				]
-			]);
+			$placeData = [];
+			foreach($pages as $page)
+			{
+				$placeData[$page->id]['block'] = $block;
+			}
+
+			WidgetManagerDatabase::placeWidgetsOnPages($widget->id, $placeData);
 		}
-
-		Widget::create([
-			'name' => 'Test handler',
-			'type' => 'handler',
-			'class' => '\KodiCMS\Widgets\Widget\Handler',
-		]);
-
-		Widget::create([
-			'name' => 'Test corrupted widget',
-			'type' => 'http',
-			'class' => '\KodiCMS\Widgets\Widget\HTTP'
-		]);
 	}
 }

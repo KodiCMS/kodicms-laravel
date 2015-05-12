@@ -3,7 +3,7 @@
 use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 use KodiCMS\Widgets\Manager\WidgetManager;
 
-abstract class Decorator implements WidgetInterface
+abstract class Decorator implements WidgetInterface, \ArrayAccess
 {
 	/**
 	 * @var string
@@ -151,6 +151,13 @@ abstract class Decorator implements WidgetInterface
 	 */
 	public function getParameter($name, $default = null)
 	{
+		$method = 'getParameter' . studly_case($name);
+
+		if (method_exists($this, $method))
+		{
+			return $this->{$method}($default);
+		}
+
 		return array_get($this->parameters, $name, $default);
 	}
 
@@ -199,7 +206,6 @@ abstract class Decorator implements WidgetInterface
 	 * Settings
 	 **********************************************************************************************************/
 	/**
-	 *
 	 * @param string $name
 	 * @return mixed
 	 */
@@ -236,6 +242,42 @@ abstract class Decorator implements WidgetInterface
 	}
 
 	/**
+	 * @param string $offset
+	 * @param mixed $value
+	 * @return void
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->settings[$offset] = $value;
+	}
+
+	/**
+	 * @param string $offset
+	 * @return bool
+	 */
+	public function offsetExists($offset)
+	{
+		return isset($this->settings[$offset]);
+	}
+
+	/**
+	 * @param $offset
+	 */
+	public function offsetUnset($offset)
+	{
+		unset($this->settings[$offset]);
+	}
+
+	/**
+	* @param string $offset
+	* @return mixed
+	*/
+	public function offsetGet($offset)
+	{
+		return $this->getSetting($offset);
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getSettings()
@@ -250,6 +292,13 @@ abstract class Decorator implements WidgetInterface
 	 */
 	public function getSetting($name, $default = null)
 	{
+		$method = 'getSetting' . studly_case($name);
+
+		if (method_exists($this, $method))
+		{
+			return $this->{$method}($default);
+		}
+
 		return array_get($this->settings, $name, $default);
 	}
 
@@ -321,18 +370,24 @@ abstract class Decorator implements WidgetInterface
 			return null;
 		}
 
-		$this->prepareSettingsData();
-
-		$data = $this->getSettings();
+		$data = $this->prepareSettingsData();
 		$data['widget'] = $this;
 
-		try
-		{
-			return view($template, $data)->render();
-		}
-		catch(\Exception $e)
-		{
-			return null;
-		}
+		return view($template, $data);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function toArray()
+	{
+		return [
+			'id' => $this->getId(),
+			'type' => $this->getType(),
+			'name' => $this->getName(),
+			'description' => $this->getDescription(),
+			'settings' => $this->getSettings(),
+			'parameters' => $this->getParameters()
+		];
 	}
 }

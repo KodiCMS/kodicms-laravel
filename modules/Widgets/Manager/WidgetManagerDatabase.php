@@ -25,6 +25,21 @@ class WidgetManagerDatabase extends WidgetManager
 		return static::buildWidgetCollection($widgets->get());
 	}
 
+	public static function getWidgetByTypeAndDsid(array $types = null, $dsId = null)
+	{
+		$widgets = static::getWidgetsByType($types);
+
+		if(is_null($dsId))
+		{
+			return $widgets;
+		}
+
+		return $widgets->filter(function($widget) use($dsId)
+		{
+			return $widget->ds_id == (int) $dsId;
+		});
+	}
+
 	/**
 	 * @return array
 	 */
@@ -71,7 +86,7 @@ class WidgetManagerDatabase extends WidgetManager
 
 	/**
 	 * @param Collection $widgets
-	 * @return array
+	 * @return Collection
 	 */
 	private static function buildWidgetCollection(Collection $widgets)
 	{
@@ -81,7 +96,10 @@ class WidgetManagerDatabase extends WidgetManager
 		})->filter(function($widget)
 		{
 			return !($widget instanceof WidgetCorrupt);
-		})->toArray();
+		})->keyBy(function($widget)
+		{
+			return $widget->getId();
+		});
 	}
 
 	/**
