@@ -491,12 +491,12 @@ class FrontendPage
 	{
 		$crumbs = Breadcrumbs::factory();
 
-		if (($parent = $this->getParent()) instanceof FrontendPage AND $this->level > $level)
+		if (($parent = $this->getParent()) instanceof FrontendPage AND $this->getLevel() > $level)
 		{
 			$this->getParent()->recurseBreadcrumbs($level, $crumbs);
 		}
 
-		$crumbs->add($this->getBreadcrumb(), $this->getUrl(), true, null);
+		$crumbs->add($this->getBreadcrumb(), $this->getUrl(), true, null, ['id' => $this->getId()]);
 
 		return $crumbs;
 	}
@@ -841,7 +841,7 @@ class FrontendPage
 			$parent->recurseBreadcrumbs($level, $crumbs);
 		}
 
-		$crumbs->add($this->getBreadcrumb(), $this->getUrl(), false, null);
+		$crumbs->add($this->getBreadcrumb(), $this->getUrl(), false, null, ['id' => $this->getId()]);
 	}
 
 	/**
