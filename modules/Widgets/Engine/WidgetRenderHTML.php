@@ -13,9 +13,9 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 	{
 		$widget = $this->getWidget();
 
-		if (method_exists($widget->getObject(), 'onRender'))
+		if (method_exists($widget, 'onRender'))
 		{
-			app()->call([$widget->getObject(), 'onRender'], [$this]);
+			$widget->onRender($this);
 		}
 
 		if ($widget instanceof WidgetCacheable and $widget->isCacheEnabled())
