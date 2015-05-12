@@ -15,7 +15,7 @@ class PageSitemap {
 	 * Получение карты сайта
 	 * 
 	 * @param boolean $includeHidden Включить скрытые страницы
-	 * @return PageSitemap
+	 * @return Sitemap
 	 */
 	public static function get($includeHidden = FALSE)
 	{
