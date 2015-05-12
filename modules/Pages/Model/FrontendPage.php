@@ -108,8 +108,6 @@ class FrontendPage
 					$pageObject->behaviorObject = $behavior;
 					return $pageObject;
 				}
-
-				break;
 			}
 			else
 			{
