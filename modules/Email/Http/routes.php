@@ -17,3 +17,4 @@ Route::group(['prefix' => \CMS::backendPath()], function () {
 });
 
 Route::get('/api.email-types.options', ['as' => 'api.email.type.options', 'uses' => 'API\EmailTypeController@getOptions']);
+Route::post('/api.email.send', ['as' => 'api.email.send', 'uses' => 'API\EmailTypeController@postSend']);
