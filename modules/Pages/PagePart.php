@@ -40,7 +40,7 @@ class PagePart
 	 * @param FrontendPage $page
 	 * @param string $part
 	 * @param boolean $inherit
-	 * @return string
+	 * @return string|null
 	 */
 	public static function getContent(FrontendPage $page, $part = 'body', $inherit = false)
 	{
@@ -51,8 +51,9 @@ class PagePart
 		else if ($inherit !== false AND ($parent = $page->getParent()) instanceof FrontendPage)
 		{
 			return static::getContent($parent, $part, true);
-
 		}
+
+		return null;
 	}
 
 	/**
@@ -66,14 +67,14 @@ class PagePart
 
 		$pageId = ($page instanceof FrontendPage) ? $page->getId() : (int)$page;
 
-		static::loadPartsByPageId($pageId);
+		$parts = static::loadPartsByPageId($pageId);
 
-		if (empty(static::$cached[$pageId][$part]))
+		if (empty($parts[$pageId][$part]))
 		{
 			return null;
 		}
 
-		return array_get(static::$cached, implode('.', [$pageId, $part, 'content_html']));
+		return array_get($parts, implode('.', [$pageId, $part, 'content_html']));
 	}
 
 	/**
