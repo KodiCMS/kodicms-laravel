@@ -58,11 +58,6 @@ class FrontendController extends Controller
 	{
 		event('frontend.found', [$frontPage]);
 
-		app()->singleton('frontpage', function () use ($frontPage)
-		{
-			return $frontPage;
-		});
-
 		$layout = $frontPage->getLayoutView();
 		if (is_null($layout))
 		{

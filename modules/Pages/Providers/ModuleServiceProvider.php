@@ -29,6 +29,14 @@ class ModuleServiceProvider extends ServiceProvider {
 			echo view('pages::parts.list')->with('page', $page);
 		}, 999);
 
+
+		$events->listen('frontend.found', function($page) {
+			app()->singleton('frontpage', function () use ($page)
+			{
+				return $page;
+			});
+		}, 9999);
+
 		$events->listen('frontend.found', function($page) {
 			app('frontpage.meta')->setPage($page, true);
 
@@ -68,7 +76,6 @@ class ModuleServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		$this->registerConsoleCommand('layout.generate.key', '\KodiCMS\Pages\Console\Commands\RebuldLayoutBlocks');
-
 		BehaviorManager::init();
 	}
 }
