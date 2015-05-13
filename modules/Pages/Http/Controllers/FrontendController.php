@@ -64,8 +64,6 @@ class FrontendController extends Controller
 			throw new LayoutNotFoundException(trans('pages::core.messages.layout_not_set'));
 		}
 
-		//$widgetCollection = new PageWidgetCollection($frontPage);
-
 		$html = $frontPage->getLayoutView()->render();
 		if (auth()->check() AND auth()->user()->hasRole(['administrator', 'developer']))
 		{
