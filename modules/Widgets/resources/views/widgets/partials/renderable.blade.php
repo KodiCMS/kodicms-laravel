@@ -3,7 +3,7 @@
 </div>
 <div class="note note-info no-margin-b">
 	<div class="row">
-		<div class="col-sm-offset-2 col-sm-10">
+		<div class="col-sm-12">
 			<strong>@lang('widgets::core.settings.template_parameters'): </strong>
 			@foreach ($commentKeys as $param)
 				{!! UI::label($param) !!}

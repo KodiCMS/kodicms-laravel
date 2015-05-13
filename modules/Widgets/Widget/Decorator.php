@@ -248,7 +248,7 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
 	 */
 	public function offsetSet($offset, $value)
 	{
-		$this->settings[$offset] = $value;
+		$this->setSetting($offset, $value);
 	}
 
 	/**

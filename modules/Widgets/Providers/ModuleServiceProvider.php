@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Widgets\Providers;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
+use KodiCMS\Widgets\Contracts\WidgetPaginator;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 use KodiCMS\CMS\Assets\Package;
 use Request;
@@ -24,12 +25,16 @@ class ModuleServiceProvider extends ServiceProvider
 		app('view')->addNamespace('snippets', snippets_path());
 
 		$events->listen('frontend.found', function($page) {
+			$this->app->singleton('layout.widgets', function($app) use($page)
+			{
+				return new PageWidgetCollection($page->getId());
+			});
+
 			$this->app->singleton('layout.block', function($app) use($page)
 			{
-				$collection = new PageWidgetCollection($page->getId());
-				return new Block($collection);
+				return new Block(app('layout.widgets'));
 			});
-		}, 9999);
+		}, 100);
 
 		$events->listen('view.page.edit', function($page) {
 			if (acl_check('widgets.index'))
@@ -68,6 +73,17 @@ class ModuleServiceProvider extends ServiceProvider
 				$usersRoles = [];
 
 				echo view('widgets::widgets.partials.permissions', compact('widget', 'usersRoles'))->render();
+			}
+		});
+
+		$events->listen('view.widget.edit.settings', function ($widget)
+		{
+			if($widget->toWidget() instanceof WidgetPaginator)
+			{
+				echo view('widgets::widgets.paginator.widget', [
+					'widget' => $widget->toWidget()
+				])
+					->render();
 			}
 		});
 

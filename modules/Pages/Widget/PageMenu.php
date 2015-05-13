@@ -87,7 +87,7 @@ class PageMenu extends Decorator implements WidgetCacheable
 
 		$pageSitemap = PageSitemap::get(true);
 
-		$select = [trans('pages::widgets.page_menu.label.relatively_current_page')];
+		$select = [trans('pages::widgets.page_menu.label.linked_page')];
 
 		foreach ($pageSitemap->flatten() as $page)
 		{
@@ -100,7 +100,7 @@ class PageMenu extends Decorator implements WidgetCacheable
 
 	public function getPageId()
 	{
-		if ($this->settings['page_id'] > 1)
+		if ($this->settings['page_id'] > 0)
 		{
 			return $this->settings['page_id'];
 		}
@@ -118,7 +118,7 @@ class PageMenu extends Decorator implements WidgetCacheable
 	}
 
 	/**
-	 * @return array [$sitemap, $pages]
+	 * @return array [[PageSitemap] $sitemap, [array] $pages]
 	 */
 	public function prepareData()
 	{

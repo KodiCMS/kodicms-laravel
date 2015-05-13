@@ -38,10 +38,9 @@
 	<span class="panel-title" data-icon="cogs">@lang('widgets::core.title.settings')</span>
 </div>
 
-@event('view.widget.edit.settings', [$widget])
-
 {!! $settingsView !!}
 
+@event('view.widget.edit.settings', [$widget])
 
 @if (acl_check('widgets.location') and !$widget->isHandler())
 <hr class="no-margin-vr" />

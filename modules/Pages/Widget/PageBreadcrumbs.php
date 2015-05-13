@@ -43,12 +43,11 @@ class PageBreadcrumbs extends Decorator implements WidgetCacheable
 	public function prepareSettingsData()
 	{
 		$pageSitemap = PageSitemap::get(true);
-
 		return compact('pageSitemap');
 	}
 
 	/**
-	 * @return array [$breadcrumbs]
+	 * @return array [[KodiCMS\CMS\Breadcrumbs\Collection] $breadcrumbs]
 	 */
 	public function prepareData()
 	{

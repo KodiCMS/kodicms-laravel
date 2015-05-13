@@ -19,14 +19,14 @@
 
 <div class="panel-body">
 	<div class="form-group">
-		<label class="control-label col-md-3">@lang('pages::widgets.page_menu.label.start_page')</label>
+		<label class="control-label col-md-3">@lang('pages::widgets.page_menu.setting.start_page')</label>
 		<div class="col-md-4">
 			{!! Form::select('settings[page_id]', $select, $widget->page_id, ['id' => 'select_page_id']) !!}
 		</div>
 	</div>
 
 	<div class="form-group form-inline" id="page_level_container">
-		<label class="control-label col-md-3" for="page_level">@lang('pages::widgets.page_menu.label.page_level')</label>
+		<label class="control-label col-md-3" for="page_level">@lang('pages::widgets.page_menu.setting.page_level')</label>
 		<div class="col-md-9">
 			{!! Form::text('settings[page_level]', $widget->page_level, [
 				'id' => 'page_level', 'class' => 'form-control',
@@ -38,11 +38,11 @@
 	<div class="form-group">
 		<div class="col-md-offset-3 col-md-9">
 			<div class="checkbox">
-				<label>{!! Form::checkbox('settings[include_children]', 1, $widget->include_children == 1) !!} @lang('pages::widgets.page_menu.label.include_children')</label>
+				<label>{!! Form::checkbox('settings[include_children]', 1, $widget->include_children == 1) !!} @lang('pages::widgets.page_menu.setting.include_children')</label>
 			</div>
 
 			<div class="checkbox">
-				<label>{!! Form::checkbox('settings[include_hidden]', 1, $widget->include_hidden == 1) !!} @lang('pages::widgets.page_menu.label.include_hidden_pages')</label>
+				<label>{!! Form::checkbox('settings[include_hidden]', 1, $widget->include_hidden == 1) !!} @lang('pages::widgets.page_menu.setting.include_hidden_pages')</label>
 			</div>
 		</div>
 	</div>

@@ -112,7 +112,7 @@ class WidgetManager implements WidgetManagerInterface
 
 		if (!empty($comments))
 		{
-			$comments = str_replace(['/', '*', "\t", "\n", "\r", ' '], '', $comments);
+			$comments = str_replace(['/', '*', "\t", "\n", "\r"], '', $comments);
 			preg_match_all("/\[(?s)(?m)(.*)\]/i", $comments, $found);
 
 			if (!empty($found[1]))
@@ -121,9 +121,9 @@ class WidgetManager implements WidgetManagerInterface
 			}
 		}
 
-		$keys[] = '$settings';
-		$keys[] = '$widgetId';
-		$keys[] = '$header';
+		$keys[] = '[array] $settings';
+		$keys[] = '[int] $widgetId';
+		$keys[] = '[string] $header';
 
 		return $keys;
 	}
