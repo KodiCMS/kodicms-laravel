@@ -3,6 +3,7 @@
 use Assets;
 use DB;
 use Illuminate\View\View;
+use KodiCMS\Widgets\Engine\WidgetRenderSettingsHTML;
 use WYSIWYG;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
@@ -97,7 +98,7 @@ class WidgetController extends BackendController {
 			'name' => $widget->name
 		]));
 
-		$settingsView = $widget->renderSettingsTemplate();
+		$settingsView = (new WidgetRenderSettingsHTML($widget->toWidget()))->render();
 		$this->setContent('widgets.edit', compact('widget', 'settingsView', 'assetsPackages', 'usersRoles'));
 	}
 

@@ -360,23 +360,6 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
 	}
 
 	/**
-	 * @return null|string
-	 */
-	public function renderSettingsTemplate()
-	{
-		$template = $this->getSettingsTemplate();
-		if (empty($template))
-		{
-			return null;
-		}
-
-		$data = $this->prepareSettingsData();
-		$data['widget'] = $this;
-
-		return view($template, $data);
-	}
-
-	/**
 	 * @return array
 	 */
 	public function toArray()
