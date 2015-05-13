@@ -116,9 +116,9 @@
 		])
 	</div>
 
-	@if(!is_null($page->getBehaviorObject()))
+	@if(!is_null($behavior = $page->getBehaviorObject()))
 	<div class="tab-pane fade" id="page-behavior-panel">
-		@include('pages::pages.partials.behavior', ['behavior' => $page->getBehaviorObject()])
+		@include('pages::pages.partials.behavior', ['behavior' => $behavior])
 	</div>
 	@endif
 </div>

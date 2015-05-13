@@ -23,7 +23,7 @@ class Manager
 	{
 		$behaviorParams = static::getBehavior($behavior);
 
-		if(is_null($behaviorParams))
+		if (is_null($behaviorParams))
 		{
 			return null;
 		}

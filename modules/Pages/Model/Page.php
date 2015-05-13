@@ -230,7 +230,7 @@ class Page extends Model
 	 */
 	public function hasBehavior()
 	{
-		return !empty($this->behavior);
+		return !is_null($this->behavior);
 	}
 
 	/**
@@ -247,7 +247,7 @@ class Page extends Model
 	 */
 	public function getBehaviorObject()
 	{
-		if(!$this->hasBehavior())
+		if (!$this->hasBehavior())
 		{
 			return null;
 		}
