@@ -48,12 +48,16 @@ class PagesTableSeeder extends Seeder {
 
 		foreach($pages as $page)
 		{
-			$page->children()->save(new Page([
-				'title' => 'Article',
-				'breadcrumb' => 'Article',
-				'slug' => 'article',
-				'published_at' => new Carbon()
-			]));
+			foreach(range(1, 30) as $i)
+			{
+				$title = str_singular($page->title) . ' ' . $i;
+				$page->children()->save(new Page([
+					'title' => $title,
+					'breadcrumb' => $title,
+					'slug' => 'article' . $i,
+					'published_at' => new Carbon()
+				]));
+			}
 		}
 
 		$page = new Page([
