@@ -2,6 +2,7 @@
 
 use Blade;
 use Block;
+use Event;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
@@ -17,6 +18,11 @@ class ModuleServiceProvider extends ServiceProvider {
 
 	public function boot(DispatcherContract $events)
 	{
+		Event::listen('config.loaded', function()
+		{
+			BehaviorManager::init();
+		});
+
 		app('view')->addNamespace('layouts', layouts_path());
 
 		app()->singleton('frontpage.meta', function ($app)
@@ -82,6 +88,5 @@ class ModuleServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		$this->registerConsoleCommand('layout.generate.key', '\KodiCMS\Pages\Console\Commands\RebuldLayoutBlocks');
-		BehaviorManager::init();
 	}
 }
