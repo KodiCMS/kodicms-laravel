@@ -880,10 +880,10 @@ class FrontendPage
 	 * @param boolean $includeHidden
 	 * @return integer
 	 */
-	public function childrenСount($includeHidden = false)
+	public function childrenCount($includeHidden = false)
 	{
 		$query = Page::where('parent_id', $this->getId())
-			->whereIn('status', 'in', static::getStatuses($includeHidden))
+			->whereIn('status', static::getStatuses($includeHidden))
 			->orderBy('position', 'desc');
 
 		if (filter_var(config('pages.check_date'), FILTER_VALIDATE_BOOLEAN))
