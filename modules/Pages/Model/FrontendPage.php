@@ -106,8 +106,9 @@ class FrontendPage
 			{
 				if ($pageObject->hasBehavior() AND !is_null($behavior = BehaviorManager::load($pageObject->getBehavior(), $pageObject)))
 				{
-					$behavior->executeRoute($pageObject->getUri());
+					$behavior->executeRoute(substr($uri, strlen($url)));
 					$pageObject->behaviorObject = $behavior;
+
 					return $pageObject;
 				}
 			}
