@@ -29,7 +29,7 @@ class EmailTypeController extends Controller
 
 		try
 		{
-			$sended = Mail::send('email::email.messages.test', compact('body'), function ($message) use ($subject, $to)
+			$sended = Mail::send('email::email.messages.email', compact('body'), function ($message) use ($subject, $to)
 			{
 				$message->to($to)->subject($subject);
 			});

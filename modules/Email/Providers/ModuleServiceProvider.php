@@ -9,6 +9,9 @@ class ModuleServiceProvider extends ServiceProvider
 
 	public function register()
 	{
+		$this->registerConsoleCommand('email.queue-send', 'KodiCMS\Email\Console\Commands\QueueSend');
+		$this->registerConsoleCommand('email.queue-clean', 'KodiCMS\Email\Console\Commands\QueueClean');
+
 		Event::listen('view.settings.bottom', function ()
 		{
 			$drivers = [

@@ -89,6 +89,14 @@ return [
 	],
 	'settings'      => [
 		'title'         => 'Настройки почты',
+		'queue'         => [
+			'title'             => 'Параметры очереди сообщений',
+			'batch_size'        => 'Кол-во сообщений отправляемых за одну отправку',
+			'batch_help'        => 'The number of emails to send out in each batch. This should be tuned to your servers abilities and the frequency of the cron.',
+			'interval'          => 'Интервал между отправкой',
+			'max_attempts'      => 'Максимальное кол-во попыток отправки',
+			'max_attempts_help' => 'The maximum number of attempts to send an email before giving up. An email may fail to send if the server is too busy, or there`s a problem with the email itself.',
+		],
 		'default_email' => 'Email адрес по умолчанию',
 		'email_driver'  => 'Драйвер',
 		'test'          => [
@@ -118,5 +126,9 @@ return [
 		'mandrill'      => [
 			'secret' => 'Секретный ключ',
 		],
+	],
+	'jobs'          => [
+		'queue' => 'Отправка отложенных писем',
+		'clean' => 'Удаление старых сообщений из очереди',
 	],
 ];
