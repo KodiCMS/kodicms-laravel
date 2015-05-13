@@ -35,16 +35,14 @@ class EmailTypeController extends BackendController
 
 		$validator = $emailTypeCreator->validator($data);
 
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
+		if ($validator->fails())
+		{
+			$this->throwValidationException($this->request, $validator);
 		}
 
 		$emailType = $emailTypeCreator->create($data);
 
-		return $this->smartRedirect([$emailType])
-			->with('success', trans('email::core.messages.types.created', ['title' => $emailType->name]));
+		return $this->smartRedirect([$emailType])->with('success', trans('email::core.messages.types.created', ['title' => $emailType->name]));
 	}
 
 	public function getEdit($id)
@@ -65,16 +63,14 @@ class EmailTypeController extends BackendController
 
 		$validator = $emailTypeUpdator->validator($id, $data);
 
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
+		if ($validator->fails())
+		{
+			$this->throwValidationException($this->request, $validator);
 		}
 
 		$emailType = $emailTypeUpdator->update($id, $data);
 
-		return $this->smartRedirect([$emailType])
-			->with('success', trans('email::core.messages.types.updated', ['title' => $emailType->name]));
+		return $this->smartRedirect([$emailType])->with('success', trans('email::core.messages.types.updated', ['title' => $emailType->name]));
 	}
 
 	public function getDelete($id)
@@ -82,16 +78,16 @@ class EmailTypeController extends BackendController
 		$emailType = $this->getEmailType($id);
 		$emailType->delete();
 
-		return $this->smartRedirect()
-			->with('success', trans('email::core.messages.types.deleted', ['title' => $emailType->name]));
+		return $this->smartRedirect()->with('success', trans('email::core.messages.types.deleted', ['title' => $emailType->name]));
 	}
 
 	protected function getEmailType($id)
 	{
-		try {
+		try
+		{
 			return EmailType::findOrFail($id);
-		}
-		catch (ModelNotFoundException $e) {
+		} catch (ModelNotFoundException $e)
+		{
 			$this->throwFailException($this->smartRedirect()->withErrors(trans('email::core.messages.types.not_found')));
 		}
 		return null;

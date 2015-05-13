@@ -25,4 +25,32 @@ class EmailType extends Model
 		return $this->name . ' (' . $this->code . ')';
 	}
 
+	public static function get($code)
+	{
+		return static::whereCode($code)->first();
+	}
+
+	public function defaultOptions()
+	{
+		$now = \Carbon\Carbon::create();
+		return [
+			'default_email'    => config('mail.default'),
+			'site_title'       => config('cms.title'),
+			'site_description' => config('cms.description'),
+			'base_url'         => url('/'),
+			'current_time'     => $now->format('H:i:s'),
+			'current_date'     => $now->format(config('cms.date_format')),
+		];
+	}
+
+	public function send($options = [])
+	{
+		$options = array_merge($options, $this->defaultOptions());
+		$templates = $this->templates()->active()->get();
+		foreach ($templates as $template)
+		{
+			$template->send($options);
+		}
+	}
+
 }
