@@ -69,6 +69,12 @@ class ModuleServiceProvider extends ServiceProvider {
 			return preg_replace($pattern, '$1<?php Block::run$2; ?>', $view);
 		});
 
+		Blade::extend(function ($view, $compiler)
+		{
+			$pattern = $compiler->createMatcher('part');
+			return preg_replace($pattern, '$1<?php echo \KodiCMS\Pages\PagePart::getContent$2; ?>', $view);
+		});
+
 		Page::observe(new PageObserver);
 		PagePartModel::observe(new PagePartObserver);
 	}
