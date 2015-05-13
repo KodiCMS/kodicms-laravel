@@ -10,7 +10,7 @@
 	@else
 		<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
 	@endif
-	@foreach($paginator->getUrlRange(1, $paginator->total()) as $i => $url)
+	@foreach($paginator->getUrlRange(1, $paginator->lastPage()) as $i => $url)
 		@if($i == $paginator->currentPage())
 			<li class="active"><a href="#">{{ $i }}</a></li>
 		@else

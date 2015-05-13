@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Widgets\Widget;
 
 use Block;
+use Request;
 use KodiCMS\Widgets\Contracts\WidgetPaginator;
 use KodiCMS\Widgets\Contracts\WidgetRenderable;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
@@ -60,6 +61,7 @@ class Paginator extends Decorator implements WidgetRenderable
 		{
 			$paginator = new LengthAwarePaginator([], $linkedWidget->getTotalDocuments(), $linkedWidget->list_size);
 			$paginator->setPageName($this->query_key);
+			$paginator->setPath(Request::path());
 
 			$linkedWidget->list_offset = (int) (($paginator->currentPage() - 1) * $paginator->perPage());
 		}
