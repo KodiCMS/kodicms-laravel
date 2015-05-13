@@ -1,13 +1,15 @@
 <?php namespace KodiCMS\Pages\Model;
 
+use DB;
+use Cache;
+use Request;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Request;
-use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
+use KodiCMS\Users\Model\User;
 use KodiCMS\CMS\Helpers\File;
 use KodiCMS\CMS\Helpers\Text;
+use Illuminate\Database\Query\Builder;
+use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
-use Cache;
 
 class FrontendPage
 {
@@ -226,6 +228,11 @@ class FrontendPage
 	}
 
 	/**
+	 * @var int
+	 */
+	protected $id;
+
+	/**
 	 * @var string
 	 */
 	protected $title = '';
@@ -291,6 +298,11 @@ class FrontendPage
 	protected $updated_at;
 
 	/**
+	 * @var string
+	 */
+	protected $published_at;
+
+	/**
 	 * @var integer
 	 */
 	protected $created_by_id;
@@ -299,6 +311,16 @@ class FrontendPage
 	 * @var integer
 	 */
 	protected $updated_by_id;
+
+	/**
+	 * @var User
+	 */
+	protected $created_by = null;
+
+	/**
+	 * @var User
+	 */
+	protected $updated_by = null;
 
 	/**
 	 * @var null|integer
@@ -523,6 +545,40 @@ class FrontendPage
 	public function getUpdatedAt()
 	{
 		return (new Carbon)->createFromFormat('Y-m-d H:i:s', $this->updated_at);
+	}
+
+	/**
+	 * @return Carbon
+	 */
+	public function getPublishedAt()
+	{
+		return (new Carbon)->createFromFormat('Y-m-d H:i:s', $this->published_at);
+	}
+
+	/**
+	 * @return User
+	 */
+	public function getCreatedBy()
+	{
+		if(is_null($this->created_by))
+		{
+			$this->created_by = User::findOrNew($this->created_by);
+		}
+
+		return $this->created_by;
+	}
+
+	/**
+	 * @return User
+	 */
+	public function getUpdatedBy()
+	{
+		if(is_null($this->updated_by))
+		{
+			$this->updated_by = User::findOrNew($this->created_by);
+		}
+
+		return $this->updated_by;
 	}
 
 	/**
@@ -821,6 +877,56 @@ class FrontendPage
 	}
 
 	/**
+	 * @param boolean $includeHidden
+	 * @return integer
+	 */
+	public function childrenСount($includeHidden = false)
+	{
+		$query = Page::where('parent_id', $this->getId())
+			->whereIn('status', 'in', static::getStatuses($includeHidden))
+			->orderBy('position', 'desc');
+
+		if (filter_var(config('pages.check_date'), FILTER_VALIDATE_BOOLEAN))
+		{
+			$query->whereRaw('published_at <= NOW()');
+		}
+
+		return $query->count();;
+	}
+
+	/**
+	 * @param boolean $includeHidden
+	 * @return array
+	 */
+	public function getChildren($includeHidden = false)
+	{
+		$pages = [];
+		foreach ($this->getChildrenQuery($includeHidden)->get() as $row)
+		{
+			$pages[$row->id] = new static($row->toArray(), $this);
+		}
+
+		return $pages;
+	}
+
+	/**
+	 * @return Builder
+	 */
+	public function getChildrenQuery($includeHidden = false)
+	{
+		$query = Page::where('parent_id', $this->getId())
+			->whereIn('status', static::getStatuses($includeHidden))
+			->orderBy('position', 'desc');
+
+		if (filter_var(config('pages.check_date'), FILTER_VALIDATE_BOOLEAN))
+		{
+			$query->whereRaw('published_at <= NOW()');
+		}
+
+		return $query;
+	}
+
+	/**
 	 * @return $this
 	 */
 	protected function buildUri()
@@ -834,7 +940,7 @@ class FrontendPage
 	 * @param integer $level
 	 * @param Breadcrumbs $crumbs
 	 */
-	private function recurseBreadcrumbs($level, & $crumbs)
+	private function recurseBreadcrumbs($level, Breadcrumbs & $crumbs)
 	{
 		if (($parent = $this->getParent()) instanceof FrontendPage AND $this->getLevel() > $level)
 		{
