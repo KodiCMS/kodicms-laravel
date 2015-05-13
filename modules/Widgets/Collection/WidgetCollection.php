@@ -106,7 +106,7 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 		{
 			if(is_null($widget->getBlock())) continue;
 
-			$this->layoutBlocks[$widget->getBlock()][] = $widget->getObject();
+			$this->layoutBlocks[$widget->getBlock()][$widget->getPosition()] = $widget->getObject();
 		}
 
 		foreach ($this->registeredWidgets as $widget)
@@ -114,6 +114,14 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 			if (method_exists($widget->getObject(), 'onLoad'))
 			{
 				app()->call([$widget->getObject(), 'onLoad']);
+			}
+		}
+
+		foreach ($this->registeredWidgets as $widget)
+		{
+			if (method_exists($widget->getObject(), 'afterLoad'))
+			{
+				app()->call([$widget->getObject(), 'afterLoad']);
 			}
 		}
 	}
@@ -132,23 +140,21 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 
 			if (array_key_exists($block, $types))
 			{
-				$types[$block][] = $i;
+				$types[$block][$i] = $widget;
 			}
 			else
 			{
-				$types['*named'][] = $i;
+				$types['*named'][$i] = $widget;
 			}
 		}
 
 		foreach ($types as $type => $ids)
 		{
-			foreach ($ids as $i)
+			foreach ($ids as $id => $widget)
 			{
-				$widgets[$i] = $this->registeredWidgets[$i];
+				$this->registeredWidgets[$i] = $widget;
 			}
 		}
-
-		$this->registeredWidgets = $widgets;
 
 		return $this;
 	}
