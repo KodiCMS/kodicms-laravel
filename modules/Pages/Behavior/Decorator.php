@@ -1,9 +1,10 @@
 <?php namespace KodiCMS\Pages\Behavior;
 
 use KodiCMS\CMS\Helpers\Callback;
+use KodiCMS\Pages\Contracts\BehaviorInterface;
 use KodiCMS\Pages\Model\FrontendPage;
 
-abstract class Decorator
+abstract class Decorator implements BehaviorInterface
 {
 
 	/**

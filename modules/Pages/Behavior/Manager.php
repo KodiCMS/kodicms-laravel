@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Pages\Behavior;
 
+use KodiCMS\Pages\Contracts\BehaviorInterface;
 use KodiCMS\Pages\Exceptions\BehaviorException;
 
 class Manager
@@ -19,6 +20,11 @@ class Manager
 		}
 	}
 
+	/**
+	 * @param $behavior
+	 * @return BehaviorInterface
+	 * @throws BehaviorException
+	 */
 	public static function load($behavior)
 	{
 		$behaviorParams = static::getBehavior($behavior);
