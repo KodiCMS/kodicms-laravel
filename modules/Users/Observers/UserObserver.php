@@ -9,29 +9,29 @@ class UserObserver {
 
 	/**
 	 * @param \KodiCMS\Users\Model\User $model
-	 * @return bool
+	 * @return void
 	 */
 	public function created($model)
 	{
-		return TRUE;
+
 	}
 
 	/**
 	 * @param \KodiCMS\Users\Model\User $model
-	 * @return bool
+	 * @return void
 	 */
 	public function updated($model)
 	{
-		return TRUE;
+
 	}
 
 	/**
 	 * @param \KodiCMS\Users\Model\User $model
-	 * @return bool
+	 * @return void
 	 */
 	public function deleting($model)
 	{
-		return TRUE;
+
 	}
 
 	/**

@@ -34,8 +34,6 @@ class PagePartObserver
 		}
 
 		$this->clearCache($part->page_id);
-
-		return TRUE;
 	}
 
 	/**

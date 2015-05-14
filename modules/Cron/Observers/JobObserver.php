@@ -4,7 +4,7 @@ class JobObserver
 {
 	/**
 	 * @param \KodiCMS\Cron\Model\Job $job
-	 * @return bool
+	 * @return void
 	 */
 	public function saving($job)
 	{
@@ -12,54 +12,50 @@ class JobObserver
 		{
 			$job->setNextRun();
 		}
-
-		return true;
 	}
 
 	/**
 	 * @param \KodiCMS\Cron\Model\Job $job
-	 * @return bool
+	 * @return void
 	 */
 	public function creating($job)
 	{
 		$job->status = Job::STATUS_NEW;
-
-		return true;
 	}
 
 	/**
 	 * @param \KodiCMS\Cron\Model\Job $job
-	 * @return bool
+	 * @return void
 	 */
 	public function created($job)
 	{
-		return true;
+
 	}
 
 	/**
 	 * @param \KodiCMS\Cron\Model\Job $job
-	 * @return bool
+	 * @return void
 	 */
 	public function updating($job)
 	{
-		return true;
+
 	}
 
 	/**
 	 * @param \KodiCMS\Cron\Model\Job $job
-	 * @return bool
+	 * @return void
 	 */
 	public function deleting($job)
 	{
-		return true;
+
 	}
 
 	/**
 	 * @param \KodiCMS\Cron\Model\Job $job
-	 * @return bool
+	 * @return void
 	 */
 	public function deleted($job)
 	{
-		return true;
+
 	}
 }

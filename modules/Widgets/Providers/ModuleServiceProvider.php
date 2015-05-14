@@ -40,9 +40,7 @@ class ModuleServiceProvider extends ServiceProvider
 			{
 				WidgetManagerDatabase::updateWidgetOnPage($widgetId, $page->id, $location);
 			}
-
-			return true;
-		}, 1);
+		});
 
 		app('view')->addNamespace('snippets', snippets_path());
 

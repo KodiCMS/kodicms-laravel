@@ -5,14 +5,11 @@ use Request;
 use Cache;
 use KodiCMS\Pages\Model\Page;
 
-/**
- * TODO: добавить логирование событий
- */
 class PageObserver
 {
 	/**
 	 * @param \KodiCMS\Pages\Model\Page $page
-	 * @return bool
+	 * @return void
 	 */
 	public function saving($page)
 	{
@@ -37,13 +34,11 @@ class PageObserver
 		}
 
 		$this->clearCache($page);
-
-		return true;
 	}
 
 	/**
 	 * @param \KodiCMS\Pages\Model\Page $page
-	 * @return bool
+	 * @return void
 	 */
 	public function creating($page)
 	{
@@ -52,13 +47,11 @@ class PageObserver
 		{
 			$page->created_by_id = $user->id;
 		}
-
-		return true;
 	}
 
 	/**
 	 * @param \KodiCMS\Pages\Model\Page $page
-	 * @return bool
+	 * @return void
 	 */
 	public function created($page)
 	{
@@ -67,7 +60,7 @@ class PageObserver
 
 	/**
 	 * @param \KodiCMS\Pages\Model\Page $page
-	 * @return bool
+	 * @return void
 	 */
 	public function updating($page)
 	{
@@ -80,7 +73,7 @@ class PageObserver
 
 	/**
 	 * @param \KodiCMS\Pages\Model\Page $page
-	 * @return bool
+	 * @return void
 	 */
 	public function updateParts($page)
 	{
@@ -98,40 +91,38 @@ class PageObserver
 
 			$part->update(['content' => $content]);
 		}
-
-		return true;
 	}
 
 	/**
 	 * @param \KodiCMS\Pages\Model\Page $page
-	 * @return bool
+	 * @return void
 	 */
 	public function reordering($page)
 	{
-		return TRUE;
+
 	}
 
 	/**
 	 * @param \KodiCMS\Pages\Model\Page $page
-	 * @return bool
+	 * @return void
 	 */
 	public function reordered($page)
 	{
-		return TRUE;
+
 	}
 
 	/**
 	 * @param \KodiCMS\Pages\Model\Page $page
-	 * @return bool
+	 * @return void
 	 */
 	public function deleting($page)
 	{
-		return TRUE;
+
 	}
 
 	/**
 	 * @param \KodiCMS\Pages\Model\Page $page
-	 * @return bool
+	 * @return void
 	 */
 	public function deleted($page)
 	{
@@ -143,8 +134,6 @@ class PageObserver
 		]);
 
 		$this->clearCache($page);
-
-		return TRUE;
 	}
 
 	/**

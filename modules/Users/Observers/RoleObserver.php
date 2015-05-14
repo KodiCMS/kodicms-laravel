@@ -10,29 +10,29 @@ class RoleObserver {
 
 	/**
 	 * @param \KodiCMS\Users\Model\UserRole $role
-	 * @return bool
+	 * @return void
 	 */
 	public function created($role)
 	{
-		return TRUE;
+
 	}
 
 	/**
 	 * @param \KodiCMS\Users\Model\UserRole $role
-	 * @return bool
+	 * @return void
 	 */
 	public function updated($role)
 	{
-		return TRUE;
+
 	}
 
 	/**
 	 * @param \KodiCMS\Users\Model\UserRole $role
-	 * @return bool
+	 * @return void
 	 */
 	public function deleting($role)
 	{
-		return TRUE;
+
 	}
 
 	/**
