@@ -44,7 +44,8 @@ class ModuleServiceProvider extends ServiceProvider
 
 		app('view')->addNamespace('snippets', snippets_path());
 
-		Event::listen('frontend.found', function($page) {
+		Event::listen('frontend.found', function($page)
+		{
 			$this->app->singleton('layout.widgets', function($app) use($page)
 			{
 				return new PageWidgetCollection($page->getId());
@@ -54,9 +55,10 @@ class ModuleServiceProvider extends ServiceProvider
 			{
 				return new Block(app('layout.widgets'));
 			});
-		}, 100);
+		}, 9000);
 
-		Event::listen('view.page.edit', function($page) {
+		Event::listen('view.page.edit', function($page)
+		{
 			if (acl_check('widgets.index'))
 			{
 				$collection = new PageWidgetCollection($page->id);

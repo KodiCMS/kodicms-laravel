@@ -3,9 +3,11 @@
 use Blade;
 use Block;
 use Event;
+use Illuminate\Support\Debug\Dumper;
 use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 use KodiCMS\Pages\Helpers\Meta;
+use KodiCMS\Pages\Model\LayoutBlock;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Model\PagePart as PagePartModel;
 use KodiCMS\Pages\PagePart;
@@ -35,30 +37,35 @@ class ModuleServiceProvider extends ServiceProvider {
 		}, 999);
 
 
-		Event::listen('frontend.found', function($page) {
+		Event::listen('frontend.found', function($page)
+		{
 			app()->singleton('frontpage', function () use ($page)
 			{
 				return $page;
 			});
 		}, 9999);
 
-		Event::listen('frontend.found', function($page) {
+		Event::listen('frontend.found', function($page)
+		{
 			app('frontpage.meta')->setPage($page, true);
 
-			$layoutBlocks = Block::getLayoutBlocks();
+			$layoutBlocks = (new LayoutBlock)->getBlocksGroupedByLayouts($page->getLayout());
 
-			foreach ($layoutBlocks as $block)
+			foreach ($layoutBlocks as $name => $blocks)
 			{
-				if (!($part = PagePart::exists($page, $block)))
+				foreach($blocks as $block)
 				{
-					continue;
-				}
+					if (!($part = PagePart::exists($page, $block)))
+					{
+						continue;
+					}
 
-				$partWidget = new PagePartWidget($part['name']);
-				$partWidget->setContent($part['content_html']);
-				Block::addWidget($partWidget, $block);
+					$partWidget = new PagePartWidget($part['name']);
+					$partWidget->setContent($part['content_html']);
+					Block::addWidget($partWidget, $block);
+				}
 			}
-		});
+		}, 8000);
 
 		Blade::extend(function ($view, $compiler)
 		{

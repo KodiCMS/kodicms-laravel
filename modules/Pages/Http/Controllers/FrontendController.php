@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Pages\Http\Controllers;
 
+use CMS;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use KodiCMS\CMS\Http\Controllers\System\Controller;
@@ -10,21 +11,12 @@ use KodiCMS\Widgets\Collection\PageWidgetCollection;
 
 class FrontendController extends Controller
 {
-	/**
-	 * @var Request
-	 */
-	protected $request;
-
 	// TODO: использовать Dispacher для генерации событий
-	public function run(Request $request)
+	public function run($slug)
 	{
-		$this->request = $request;
+		event('frontend.requested', [$slug]);
 
-		$uri = $this->request->path();
-
-		event('frontend.requested', [$uri]);
-
-		$frontPage = FrontendPage::findByUri($uri);
+		$frontPage = FrontendPage::findByUri($slug);
 
 		if ($frontPage instanceof FrontendPage)
 		{
@@ -38,12 +30,12 @@ class FrontendController extends Controller
 			}
 		}
 
-		if (config('cms.find_similar') AND ($uri = FrontendPage::findSimilar($uri)) !== false)
+		if (config('cms.find_similar') AND ($uri = FrontendPage::findSimilar($slug)) !== false)
 		{
 			return redirect($uri, 301);
 		}
 
-		event('frontend.not_found', [$uri]);
+		event('frontend.not_found', [$slug]);
 		throw new PageNotFoundException(trans('pages::core.messages.not_found'));
 	}
 
@@ -84,7 +76,7 @@ class FrontendController extends Controller
 
 		if (config('cms.show_response_sign', true))
 		{
-			$response->header('X-Powered-CMS', \CMS::NAME . '/' . \CMS::VERSION);
+			$response->header('X-Powered-CMS', CMS::NAME . '/' . CMS::VERSION);
 		}
 
 		$response->setContent($html);

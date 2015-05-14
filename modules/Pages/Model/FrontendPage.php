@@ -434,19 +434,22 @@ class FrontendPage
 		return $this->parseMeta('meta_title');
 	}
 
+	public function getLayout()
+	{
+		if (empty($this->layout_file) AND $parent = $this->getParent())
+		{
+			return $parent->getLayout();
+		}
+
+		return $this->layout_file;
+	}
+
 	/**
 	 * @return Layout
 	 */
 	public function getLayoutFile()
 	{
-		if (empty($this->layout_file) AND $parent = $this->getParent())
-		{
-			return $parent->getLayoutFile();
-		}
-
-		$layout = (new LayoutCollection)->findFile($this->layout_file);
-
-		return $layout;
+		return (new LayoutCollection)->findFile($this->getLayout());
 	}
 
 	/**
