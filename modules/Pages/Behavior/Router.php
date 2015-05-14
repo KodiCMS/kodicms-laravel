@@ -131,7 +131,7 @@ class Router
 
 		$this->parameters = preg_split('/\//', $uri, -1, PREG_SPLIT_NO_EMPTY);
 
-		return $defaultMethod;
+		return $this->getDefaultMethod();
 	}
 
 	/**
