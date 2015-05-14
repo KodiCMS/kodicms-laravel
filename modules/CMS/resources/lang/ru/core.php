@@ -35,6 +35,7 @@ return [
 		''
 	],
 	'messages'   => [
-		'route_not_found' => 'Страница не найдена'
+		'route_not_found' => 'Страница не найдена',
+		'cache_clear' => 'Кеш очищен'
 	],
 ];
