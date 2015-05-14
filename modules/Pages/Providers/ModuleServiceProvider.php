@@ -3,7 +3,6 @@
 use Blade;
 use Block;
 use Event;
-use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 use KodiCMS\Pages\Helpers\Meta;
@@ -16,7 +15,7 @@ use KodiCMS\Pages\Widget\PagePart as PagePartWidget;
 
 class ModuleServiceProvider extends ServiceProvider {
 
-	public function boot(DispatcherContract $events)
+	public function boot()
 	{
 		Event::listen('config.loaded', function()
 		{
@@ -30,20 +29,20 @@ class ModuleServiceProvider extends ServiceProvider {
 			return new Meta();
 		});
 
-		$events->listen('view.page.edit', function ($page)
+		Event::listen('view.page.edit', function ($page)
 		{
 			echo view('pages::parts.list')->with('page', $page);
 		}, 999);
 
 
-		$events->listen('frontend.found', function($page) {
+		Event::listen('frontend.found', function($page) {
 			app()->singleton('frontpage', function () use ($page)
 			{
 				return $page;
 			});
 		}, 9999);
 
-		$events->listen('frontend.found', function($page) {
+		Event::listen('frontend.found', function($page) {
 			app('frontpage.meta')->setPage($page, true);
 
 			$layoutBlocks = Block::getLayoutBlocks();
@@ -83,6 +82,8 @@ class ModuleServiceProvider extends ServiceProvider {
 
 		Page::observe(new PageObserver);
 		PagePartModel::observe(new PagePartObserver);
+		
+		
 	}
 
 	public function register()

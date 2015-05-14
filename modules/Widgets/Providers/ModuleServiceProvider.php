@@ -1,6 +1,6 @@
 <?php namespace KodiCMS\Widgets\Providers;
 
-use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
+use Event;
 use KodiCMS\Widgets\Contracts\WidgetPaginator;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 use KodiCMS\CMS\Assets\Package;
@@ -20,11 +20,33 @@ class ModuleServiceProvider extends ServiceProvider
 
 	}
 
-	public function boot(DispatcherContract $events)
+	public function boot()
 	{
+		Page::creating(function($page)
+		{
+			$postData = Request::input('widgets', []);
+
+			if (!empty($postData['from_page_id']))
+			{
+				WidgetManagerDatabase::copyWidgets($postData['from_page_id'], $page->id);
+			}
+		});
+
+		Page::saving(function($page)
+		{
+			$postData = Request::input('widget', []);
+
+			foreach ($postData as $widgetId => $location)
+			{
+				WidgetManagerDatabase::updateWidgetOnPage($widgetId, $page->id, $location);
+			}
+
+			return true;
+		}, 1);
+
 		app('view')->addNamespace('snippets', snippets_path());
 
-		$events->listen('frontend.found', function($page) {
+		Event::listen('frontend.found', function($page) {
 			$this->app->singleton('layout.widgets', function($app) use($page)
 			{
 				return new PageWidgetCollection($page->getId());
@@ -36,7 +58,7 @@ class ModuleServiceProvider extends ServiceProvider
 			});
 		}, 100);
 
-		$events->listen('view.page.edit', function($page) {
+		Event::listen('view.page.edit', function($page) {
 			if (acl_check('widgets.index'))
 			{
 				$collection = new PageWidgetCollection($page->id);
@@ -50,7 +72,7 @@ class ModuleServiceProvider extends ServiceProvider
 			}
 		});
 
-		$events->listen('view.widget.edit', function ($widget)
+		Event::listen('view.widget.edit', function ($widget)
 		{
 			// TODO: вынести в виджеты
 			if ($widget->isRenderable())
@@ -76,7 +98,7 @@ class ModuleServiceProvider extends ServiceProvider
 			}
 		});
 
-		$events->listen('view.widget.edit.settings', function ($widget)
+		Event::listen('view.widget.edit.settings', function ($widget)
 		{
 			if($widget->toWidget() instanceof WidgetPaginator)
 			{
@@ -87,31 +109,12 @@ class ModuleServiceProvider extends ServiceProvider
 			}
 		});
 
-		$events->listen('view.widget.edit.footer', function ($widget)
+		Event::listen('view.widget.edit.footer', function ($widget)
 		{
 			if($widget->isHandler())
 			{
 				echo view('widgets::widgets.partials.handler', compact('widget'))
 					->render();
-			}
-		});
-
-		Page::creating(function($page) {
-			$postData = Request::input('widgets', []);
-
-			if (!empty($postData['from_page_id']))
-			{
-				WidgetManagerDatabase::copyWidgets($postData['from_page_id'], $page->id);
-			}
-		});
-
-		Page::updating(function($page) {
-
-			$postData = Request::input('widget', []);
-
-			foreach ($postData as $widgetId => $location)
-			{
-				WidgetManagerDatabase::updateWidgetOnPage($widgetId, $page->id, $location);
 			}
 		});
 	}
