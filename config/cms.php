@@ -7,7 +7,6 @@ return [
 	'modules' => ['API', 'CMS', 'Plugins', 'Pages', 'Users', 'Email', 'Cron', 'Widgets', 'Filemanager', 'Installer'],
 
 	'theme' => [
-		// TODO: разобраться с названием тем
 		'default' => 'default',
 		'list' => [
 			'default', 'asphalt', 'purple-hills', 'adminflare', 'dust', 'frost', 'fresh', 'silver', 'clean', 'white'
