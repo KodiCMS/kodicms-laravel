@@ -11,6 +11,18 @@
 				<span class="badge badge-success">{{ $key }}: <code class="label label-info">{{ $regex }}</code></span>
 			@endforeach
 			@endif
+
+			<span class="badge badge-default">Call:
+				<code class="label label-info">
+					<?php $method = array_get($params, 'method', $behavior->getRouter()->getDefaultMethod()); ?>
+
+					@if(strpos($method, '::') !== false)
+					{{ $method }}
+					@else
+					{{ get_class($behavior) }}::{{ $method }}
+					@endif
+				</code>
+			</span>
 		</div>
 	</div>
 	@endforeach

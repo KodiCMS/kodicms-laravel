@@ -86,18 +86,24 @@ class Router
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getDefaultMethod()
+	{
+		return 'execute';
+	}
+
+	/**
 	 * @param $uri
 	 * @return string
 	 */
 	final protected function matchRoute($uri)
 	{
-		$defaultMethod = 'execute';
-
 		foreach ($this->getRoutes() as $_uri => $params)
 		{
 			if (!isset($params['method']))
 			{
-				$params['method'] = $defaultMethod;
+				$params['method'] = $this->getDefaultMethod();
 			}
 
 			$expression = $this->compileRoute($_uri, array_get($params, 'regex'));
