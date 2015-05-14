@@ -82,13 +82,13 @@ class FrontendPage
 	 * @param FrontendPage $parentPage
 	 * @return stdClass
 	 */
-	public static function findByUri($uri, $includeHidden = true, FrontendPage $parentPage = null)
+	public static function findByUri($uri, FrontendPage $parentPage = null, $includeHidden = true)
 	{
 		$uri = trim($uri, '/');
 
 		$urls = preg_split('/\//', $uri, -1, PREG_SPLIT_NO_EMPTY);
 
-		if ($parentPage === null)
+		if (is_null($parentPage))
 		{
 			$urls = array_merge([''], $urls);
 		}
@@ -102,13 +102,14 @@ class FrontendPage
 		{
 			$url = ltrim($url . '/' . $pageSlug, '/');
 
-			if ($pageObject = self::findBySlug($pageSlug, $parentPage, $includeHidden))
+			if ($pageObject = static::findBySlug($pageSlug, $parentPage, $includeHidden))
 			{
-				if ($pageObject->hasBehavior() AND !is_null($behavior = BehaviorManager::load($pageObject->getBehavior(), $pageObject)))
+				if ($pageObject->hasBehavior() AND !is_null($behavior = BehaviorManager::load($pageObject->getBehavior())))
 				{
+					$behavior->setPage($pageObject);
 					$behavior->executeRoute(substr($uri, strlen($url)));
-					$pageObject->behaviorObject = $behavior;
 
+					$pageObject->behaviorObject = $behavior;
 					return $pageObject;
 				}
 			}

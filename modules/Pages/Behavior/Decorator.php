@@ -2,11 +2,11 @@
 
 use KodiCMS\CMS\Helpers\Callback;
 use KodiCMS\Pages\Contracts\BehaviorInterface;
+use KodiCMS\Pages\Exceptions\BehaviorException;
 use KodiCMS\Pages\Model\FrontendPage;
 
 abstract class Decorator implements BehaviorInterface
 {
-
 	/**
 	 * @var Router
 	 */
@@ -15,7 +15,7 @@ abstract class Decorator implements BehaviorInterface
 	/**
 	 * @var FrontendPage
 	 */
-	protected $page;
+	protected $page = null;
 
 	/**
 	 * @var array
@@ -46,6 +46,20 @@ abstract class Decorator implements BehaviorInterface
 		}
 
 		$this->router = new Router($routes);
+	}
+
+	/**
+	 * @param FrontendPage $page
+	 * @throws BehaviorException
+	 */
+	public function setPage(FrontendPage &$page)
+	{
+		if (!is_null($this->page))
+		{
+			throw new BehaviorException('You can\'t change behavior page');
+		}
+
+		$this->page = &$page;
 	}
 
 	/**
