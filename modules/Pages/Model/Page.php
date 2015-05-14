@@ -140,9 +140,12 @@ class Page extends Model
 	 */
 	public function getUri()
 	{
-		if ($parent = $this->parent()->first()) {
+		if ($parent = $this->parent()->first())
+		{
 			$uri = $parent->getUri() . '/' . $this->slug;
-		} else {
+		}
+		else
+		{
 			$uri = $this->slug;
 		}
 
@@ -163,7 +166,7 @@ class Page extends Model
 	 */
 	public function getPublicLink()
 	{
-		return link_to($this->getFrontendUrl(), UI::label(\UI::icon('globe') . ' ' . trans('pages::core.button.view_front')), [
+		return link_to($this->getFrontendUrl(), UI::label(UI::icon('globe') . ' ' . trans('pages::core.button.view_front')), [
 			'class' => 'item-preview', 'target' => '_blank'
 		]);
 	}
@@ -255,21 +258,33 @@ class Page extends Model
 		return BehaviorManager::load($this->behavior);
 	}
 
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
 	public function createdBy()
 	{
 		return $this->belongsTo('\KodiCMS\Users\Model\User', 'created_by_id');
 	}
 
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
 	public function updatedBy()
 	{
 		return $this->belongsTo('\KodiCMS\Users\Model\User', 'updated_by_id');
 	}
 
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
 	public function parent()
 	{
 		return $this->belongsTo('\KodiCMS\Pages\Model\Page', 'parent_id');
 	}
 
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
 	public function children()
 	{
 		return $this->hasMany('\KodiCMS\Pages\Model\Page', 'parent_id', 'id');
@@ -343,5 +358,13 @@ class Page extends Model
 		}
 
 		return $options;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLayoutAttribute()
+	{
+		return $this->getLayout();
 	}
 }

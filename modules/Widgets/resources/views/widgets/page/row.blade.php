@@ -20,7 +20,7 @@
 	<td>
 		@if(acl_check('widgets.location'))
 		<div class="input-group">
-			{!! Form::hidden('widget[' . $widget->getId() . '][block]', ! empty($block) ? $block : 0, ['class' => 'widget-blocks', 'data-layout' => $page->layout_file]) !!}
+			{!! Form::hidden('widget[' . $widget->getId() . '][block]', ! empty($block) ? $block : 0, ['class' => 'widget-blocks', 'data-layout' => $page->layout]) !!}
 
 			<div class="input-group-btn">
 				{!! link_to_route('backend.widget.location', '', [$widget->getId()], [

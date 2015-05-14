@@ -31,7 +31,8 @@ CMS.controllers.add('widget.get.edit', function() {
 });
 
 CMS.controllers.add('page.get.edit', function() {
-	var layout_file = PAGE['layout_file'];
+	var layout_file = PAGE.layout;
+
 	reload_blocks(layout_file);
 	$('body').on('get:api.layout.rebuild', function(e, response) {
 		reload_blocks(layout_file);
