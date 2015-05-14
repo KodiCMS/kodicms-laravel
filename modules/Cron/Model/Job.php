@@ -36,6 +36,11 @@ class Job extends Model
 	];
 
 	/**
+	 * @var array
+	 */
+	protected $attributes = ['crontime' => '* * * * *'];
+
+	/**
 	 * @return array
 	 */
 	public static function agents()

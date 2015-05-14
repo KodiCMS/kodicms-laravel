@@ -5,10 +5,10 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use KodiCMS\Cron\Model\Job;
 use KodiCMS\Cron\Services\JobCreator;
 use KodiCMS\Cron\Services\JobUpdator;
+use Assets;
 
 class CronController extends BackendController
 {
-
 	/**
 	 * @var string
 	 */
@@ -24,9 +24,12 @@ class CronController extends BackendController
 	public function getCreate()
 	{
 		$this->setTitle(trans('cron::core.title.cron.create'));
+		Assets::package('cron');
 
 		$job = new Job;
 		$action = 'backend.cron.create.post';
+
+		$this->templateScripts['JOB'] = $job->toArray();
 
 		$this->setContent('cron.form', compact('job', 'action'));
 	}
@@ -52,6 +55,10 @@ class CronController extends BackendController
 	public function getEdit($id)
 	{
 		$job = $this->getJob($id);
+
+		Assets::package('cron');
+		$this->templateScripts['JOB'] = $job->toArray();
+
 		$this->setTitle(trans('cron::core.title.cron.edit', [
 			'title' => $job->name
 		]));
