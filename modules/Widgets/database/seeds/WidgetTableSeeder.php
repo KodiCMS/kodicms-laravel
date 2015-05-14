@@ -39,15 +39,15 @@ class WidgetTableSeeder extends Seeder {
 				200
 			],
 			[
-				'Content',
+				'Demo data',
 				'content.blade',
-				'content',
+				'header',
 				'html',
 				'KodiCMS\Widgets\Widget\HTML',
 				[
-					'header' => 'Content'
+					'header' => 'KodiCMS demo site'
 				],
-				0
+				300
 			],
 			[
 				'Content',

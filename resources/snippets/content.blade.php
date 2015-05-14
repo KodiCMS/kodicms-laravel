@@ -1,23 +1,22 @@
 <div class="row">
-	<div class="col-lg-6">
-		<h4>Subheading</h4>
-		<p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+	<div class="col-md-12">
+		<div class="info animated fadeInDown">
+			@if($header)
+				<h2>{{ $header }}</h2>
+				<br /><br />
+			@endif
 
-		<h4>Subheading</h4>
-		<p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-		<h4>Subheading</h4>
-		<p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
-	</div>
-
-	<div class="col-lg-6">
-		<h4>Subheading</h4>
-		<p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-		<h4>Subheading</h4>
-		<p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-		<h4>Subheading</h4>
-		<p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+			<div class="row">
+				<div class="col-md-6">
+					<a class="btn btn-default btn-block btn-lg btn" href="/backend">Try admin panel</a>
+				</div>
+				<div class="col-md-6">
+					<ul class="list-unstyled">
+						<li>Username: <strong>admin@site.com</strong></li>
+						<li>Password: <strong>password</strong></li>
+					</ul>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
