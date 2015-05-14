@@ -616,20 +616,6 @@ class FrontendPage
 	}
 
 	/**
-	 *
-	 * @param string|array $key
-	 * @param string $value
-	 *
-	 * @return $this
-	 */
-	public function getMetaParam($key, $value = null, $field = null)
-	{
-		$this->_meta_params[$key] = $field === null ? $value : $this->parse_meta($field, $value);
-
-		return $this;
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getUri()
@@ -715,14 +701,6 @@ class FrontendPage
 	}
 
 	/**
-	 * @return array
-	 */
-	public function getMetaParams()
-	{
-		return $this->metaParams;
-	}
-
-	/**
 	 * @return bool
 	 */
 	public function isRedirect()
@@ -756,10 +734,29 @@ class FrontendPage
 		}
 		else
 		{
-			$this->metaParams[$key] = $field === null ? $value : $this->parseMeta($field, $value);
+			$this->metaParams[$key] = is_null($field) ? $value : $this->parseMeta($field, $value);
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getMetaParams()
+	{
+		return $this->metaParams;
+	}
+
+	/**
+	 * @param string $key
+	 * @param mixed $default
+	 *
+	 * @return $this
+	 */
+	public function getMetaParam($key, $default = null)
+	{
+		return array_get($this->metaParams, $key, $default);
 	}
 
 	/**
