@@ -18,7 +18,7 @@ class Widget extends Model
 	 * @var array
 	 */
 	protected $fillable = [
-		'name', 'description', 'type', 'class', 'template', 'settings'
+		'name', 'description', 'type', 'template', 'settings'
 	];
 
 	/**
@@ -30,7 +30,6 @@ class Widget extends Model
 		'name' => 'string',
 		'description' => 'string',
 		'type' => 'string',
-		'clas' => 'string',
 		'template' => 'string',
 		'settings' => 'array',
 	];

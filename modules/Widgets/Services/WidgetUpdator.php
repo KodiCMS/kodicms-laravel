@@ -33,7 +33,7 @@ class WidgetUpdator implements ModelUpdator
 	{
 		$widget = Widget::findOrFail($id);
 
-		$widget->update(array_except($data, ['type', 'class']));
+		$widget->update(array_except($data, ['type']));
 
 		return $widget;
 	}

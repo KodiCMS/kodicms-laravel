@@ -23,7 +23,6 @@ class WidgetTableSeeder extends Seeder {
 				null,
 				'header',
 				'page.menu',
-				'KodiCMS\Pages\Widget\PageMenu',
 				[
 					'header' => 'Sitename'
 				],
@@ -34,7 +33,6 @@ class WidgetTableSeeder extends Seeder {
 				null,
 				'header',
 				'page.breadcrumbs',
-				'KodiCMS\Pages\Widget\PageBreadcrumbs',
 				[],
 				200
 			],
@@ -43,7 +41,6 @@ class WidgetTableSeeder extends Seeder {
 				'content.blade',
 				'header',
 				'html',
-				'KodiCMS\Widgets\Widget\HTML',
 				[
 					'header' => 'KodiCMS demo site'
 				],
@@ -54,7 +51,6 @@ class WidgetTableSeeder extends Seeder {
 				null,
 				'content',
 				'page.list',
-				'KodiCMS\Pages\Widget\PageList',
 				[
 					'header' => 'Page list',
 					'include_user_object' => true,
@@ -67,7 +63,6 @@ class WidgetTableSeeder extends Seeder {
 				'footer.blade',
 				'footer',
 				'html',
-				'KodiCMS\Widgets\Widget\HTML',
 				[],
 				100
 			]
@@ -77,13 +72,12 @@ class WidgetTableSeeder extends Seeder {
 
 		foreach($widgets as $data)
 		{
-			list($name, $template, $block, $type, $class, $settings, $position) = $data;
+			list($name, $template, $block, $type, $settings, $position) = $data;
 
 			$widget = Widget::create([
 				'name' => $name,
 				'type' => $type,
 				'template' => $template,
-				'class' => $class,
 				'settings' => array_merge([
 
 				], $settings)
@@ -101,7 +95,6 @@ class WidgetTableSeeder extends Seeder {
 				$paginator = Widget::create([
 					'name' => 'Pagination for [' . $widget->name . ']',
 					'type' => 'paginator',
-					'class' => '\KodiCMS\Widgets\Widget\Paginator',
 					'settings' => [
 						'linked_widget_id' => $widget->id
 					]

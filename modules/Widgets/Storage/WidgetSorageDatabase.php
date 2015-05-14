@@ -25,8 +25,7 @@ class WidgetSorageDatabase implements WidgetStorage
 			'name' => $widget->getName(),
 			'description' => $widget->getDescription(),
 			'settings' => $widget->getSettings(),
-			'type' => $widget->getType(),
-			'class' => get_class($widget)
+			'type' => $widget->getType()
 		];
 
 		$creator = new WidgetCreator;
