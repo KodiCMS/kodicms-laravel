@@ -8,17 +8,17 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
 	/**
 	 * @var string
 	 */
-	private $name;
+	protected $name;
 
 	/**
 	 * @var string
 	 */
-	private $description;
+	protected $description;
 
 	/**
 	 * @var string
 	 */
-	private $type;
+	protected $type;
 
 	/**
 	 * @var string

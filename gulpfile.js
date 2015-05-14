@@ -45,6 +45,7 @@ elixir(function(mix) {
 		'cms/helpers.js',
 		'cms/ui.js',
 		'cms/api.js',
+		'cms/user.meta.js',
 		'cms/run.js'
 	], 'public/cms/js/backend.js');
 });

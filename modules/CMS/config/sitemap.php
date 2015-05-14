@@ -1,13 +1,6 @@
 <?php
 return [
 	[
-		'name' => 'Dashboard',
-		'label' => 'cms::core.title.dashboard',
-		'icon' => 'dashboard',
-		'url' => route('backend.dashboard'),
-		'priority' => 0,
-	],
-	[
 		'name' => 'Content',
 		'label' => 'cms::core.title.content',
 		'icon' => 'pencil-square-o',
