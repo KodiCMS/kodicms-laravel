@@ -5,8 +5,12 @@ use KodiCMS\Pages\Contracts\BehaviorInterface;
 use KodiCMS\Pages\Exceptions\BehaviorException;
 use KodiCMS\Pages\Model\FrontendPage;
 
-abstract class Decorator implements BehaviorInterface
+abstract class BehaviorAbstract implements BehaviorInterface
 {
+	const ROUTE_TYPE_DEFAULT 	= 'default';
+	const ROUTE_TYPE_PAGE 		= 'page';
+	const ROUTE_TYPE_CUSTOM		= 'custom';
+
 	/**
 	 * @var Router
 	 */
@@ -92,7 +96,16 @@ abstract class Decorator implements BehaviorInterface
 	 */
 	public function executeRoute($uri)
 	{
-		$method = $this->getRouter()->findRouteByUri($uri);
+		if (empty($uri))
+		{
+			return null;
+		}
+
+		if (is_null($method = $this->getRouter()->findRouteByUri($uri)))
+		{
+			$this->page = FrontendPage::findByUri($uri, $this->page);
+			return null;
+		}
 
 		if (strpos($method, '::') !== false)
 		{
@@ -120,5 +133,5 @@ abstract class Decorator implements BehaviorInterface
 		return $this->settings;
 	}
 
-	abstract public function execute();
+	final public function stub() {}
 }
