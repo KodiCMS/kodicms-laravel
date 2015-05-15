@@ -524,7 +524,8 @@ CMS.ui.add('flags', function () {
 }).add('noty', function() {
 	$.noty.defaults = $.extend($.noty.defaults, {
 		layout: 'topRight',
-		theme: 'bootstrapTheme'
+		theme: 'bootstrapTheme',
+		timeout: 3000
 	});
 })
 .add('i18nSetup', function() {
