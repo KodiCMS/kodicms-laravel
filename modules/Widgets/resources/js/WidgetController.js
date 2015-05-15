@@ -2,7 +2,7 @@ CMS.controllers.add('widget.get.edit', function() {
 
 	load_snippets();
 	var cache_enabled = function() {
-		var $caching_input = $('#caching');
+		var $caching_input = $('#cache');
 		var $cache_lifetime = $('#cache_lifetime');
 
 		$cache_lifetime.prop('disabled', !$caching_input.prop('checked'));
@@ -15,7 +15,7 @@ CMS.controllers.add('widget.get.edit', function() {
 		higlight_cache_time();
 	};
 
-	$('#caching').on('change', cache_enabled).change();
+	$('#cache').on('change', cache_enabled).change();
 
 	$('#cache_lifetime').on('keyup', function() {
 		higlight_cache_time();
@@ -30,29 +30,24 @@ CMS.controllers.add('widget.get.edit', function() {
 	};
 });
 
-CMS.controllers.add('page_edit', function() {
-	var layout_file = PAGE_OBJECT['layout'];
+CMS.controllers.add('page.get.edit', function() {
+	var layout_file = PAGE.layout;
+
 	reload_blocks(layout_file);
-	$('body').on('post:backend:api-layout.rebuild', function(e, response) {
+	$('body').on('get:api.layout.rebuild', function(e, response) {
 		reload_blocks(layout_file);
 	});
-
-	// Reload blocks on page layout change
-//	$('body').on('change', '#page_layout_file', function() {
-//		$('.widget-blocks').data('layout', $(this).val());
-//		reload_blocks($(this).val());
-//	});
 
 	$('body').on('click', '.popup-widget-item', function() {
 		var widget_id = $(this).data('id');
 
-		Api.put('widget', {
+		Api.put('/api.widget', {
 			widget_id: widget_id,
-			page_id: PAGE_ID
+			page_id: PAGE.id
 		}, function(response) {
 			window.location = '#widgets';
 			$.fancybox.close();
-			$('#widget-list tbody').append(response.response);
+			$('#widget-list tbody').append(response.content);
 			reload_blocks(layout_file);
 		});
 	});
@@ -173,13 +168,13 @@ function reload_blocks($layout) {
 function load_snippets(intervalID) {
 	clearInterval(intervalID);
 	$('#snippet-select').on('select2-opening', function(e, a) {
-		var response = Api.get('snippet.list', {}, false, false);
+		var response = Api.get('/api.snippet.list', {}, false, false);
 		var self = $(this);
-		if(response.response) {
+		if(response.content) {
 			$('option', this).remove();
 
-			for(key in response.response)
-				self.append($('<option>', {value: key, text: response.response[key]}));
+			for(key in response.content)
+				self.append($('<option>', {value: key, text: response.content[key]}));
 		}
 
 		self.off();

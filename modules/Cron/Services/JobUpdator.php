@@ -7,6 +7,11 @@ use Validator;
 class JobUpdator implements ModelUpdator
 {
 
+	/**
+	 * @param int $id
+	 * @param array $data
+	 * @return Validator
+	 */
 	public function validator($id, array $data)
 	{
 		return Validator::make($data, [
@@ -19,6 +24,11 @@ class JobUpdator implements ModelUpdator
 		], trans('cron::validation'));
 	}
 
+	/**
+	 * @param int $id
+	 * @param array $data
+	 * @return Job
+	 */
 	public function update($id, array $data)
 	{
 		$job = Job::findOrFail($id);

@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Pages\Observers;
 
+use Cache;
 use KodiCMS\CMS\Helpers\WYSIWYG;
 use KodiCMS\Pages\Model\PagePart;
 
@@ -32,11 +33,10 @@ class PagePartObserver
 			$part->content_html = $filter->apply($part->content);
 		}
 
-		return TRUE;
+		$this->clearCache($part->page_id);
 	}
 
 	/**
-	 * TODO: очищать кеш закешированых частей страниц
 	 * @param \KodiCMS\Pages\Model\PagePart $part
 	 */
 	public function saved($part)
@@ -45,11 +45,18 @@ class PagePartObserver
 	}
 
 	/**
-	 * TODO: очищать кеш закешированых частей страниц
 	 * @param \KodiCMS\Pages\Model\PagePart $part
 	 */
 	public function deleted($part)
 	{
+		$this->clearCache($part->page_id);
+	}
 
+	/**
+	 * @param int $pageId
+	 */
+	protected function clearCache($pageId)
+	{
+		Cache::forget("pageParts::{$pageId}");
 	}
 }

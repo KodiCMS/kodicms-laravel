@@ -1,11 +1,13 @@
 <?php namespace KodiCMS\Widgets\Contracts;
 
+use KodiCMS\Widgets\Contracts\Widget;
+
 interface WidgetRenderEngine
 {
 	/**
-	 * @param WidgetRenderable $widget
+	 * @param Widget $widget
 	 */
-	public function __construct(WidgetRenderable $widget, array $parameters = []);
+	public function __construct(Widget $widget, array $parameters = []);
 
 	/**
 	 * @return Widget
@@ -13,6 +15,4 @@ interface WidgetRenderEngine
 	public function getWidget();
 
 	public function render();
-
-	public function __toString();
 }

@@ -18,7 +18,7 @@ elixir(function(mix) {
 	mix.scripts([
 		'libs/jquery.min.js',
 		'libs/bootstrap-3.3.4/dist/js/bootstrap.js',
-		'libs/jquery.noty.packaged.min.js',
+		'libs/jquery.noty.packaged.js',
 		'libs/select2/select2.js',
 		'libs/validation/jquery.validate.js',
 		'libs/dropzone/dropzone.js',
@@ -28,7 +28,8 @@ elixir(function(mix) {
 		'libs/moment.js',
 		'libs/fastclick.js',
 		'libs/jquery.slimscroll.js',
-		'libs/jquery.query-object.js'
+		'libs/jquery.query-object.js',
+		'libs/i18next-1.8.0.js'
 	], 'public/cms/js/libraries.js', 'public/cms/');
 
 	mix.scripts([
@@ -44,6 +45,7 @@ elixir(function(mix) {
 		'cms/helpers.js',
 		'cms/ui.js',
 		'cms/api.js',
+		'cms/user.meta.js',
 		'cms/run.js'
 	], 'public/cms/js/backend.js');
 });

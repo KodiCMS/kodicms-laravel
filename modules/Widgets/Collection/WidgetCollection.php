@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Widgets\Collection;
 
+use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 use KodiCMS\Widgets\Contracts\WidgetCollection as WidgetCollectionInterface;
 use Iterator;
 
@@ -13,28 +14,23 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 	/**
 	 * @var array
 	 */
-	protected $registeredWidgetsIds = [];
-
-	/**
-	 * @var array
-	 */
 	protected $layoutBlocks = [];
 
 	/**
-	 * @param array $layoutBlocks
-	 */
-	public function __construct(array $layoutBlocks)
-	{
-		$this->layoutBlocks = $layoutBlocks;
-	}
-
-	/**
 	 * @param integer $id
-	 * @return WidgetDecorator
+	 * @return Widget|null
 	 */
 	public function getWidgetById($id)
 	{
-		return array_get($this->registeredWidgets, $id);
+		foreach ($this->registeredWidgets as $widget)
+		{
+			if ($widget->getObject()->getId() == $id)
+			{
+				return $widget;
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -46,17 +42,20 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 	}
 
 	/**
-	 * @param $block
+	 * @param string $block
 	 * @return array
 	 */
 	public function getWidgetsByBlock($block)
 	{
-		if(array_key_exists($block, $this->layoutBlocks))
+		$widgets = [];
+		foreach ($this->registeredWidgets as $widget)
 		{
-			return $this->layoutBlocks[$block];
+			if ($widget->getBlock() != $block) continue;
+
+			$widgets[] = $widget;
 		}
 
-		return [];
+		return $widgets;
 	}
 
 	/**
@@ -68,32 +67,63 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 	}
 
 	/**
-	 * @param array $widgets
+	 * @param WidgetInterface $widget
+	 * @param string $block
 	 * @return $this
 	 */
-	protected function registerWidgets(array $widgets)
+	public function addWidget(WidgetInterface $widget, $block, $position = 500)
 	{
-		foreach ($widgets as $id => $widget)
-		{
-			$this->registeredWidgets[$id] = $widget;
-		}
-
+		$this->registeredWidgets[] = new Widget($widget, $block, $position);
 		return $this;
 	}
 
-	protected function placeWidgetsToLayout()
+	/**
+	 * @param integet $id
+	 * @return bool
+	 */
+	public function removeWidget($id)
+	{
+		foreach ($this->registeredWidgets as $i => $widget)
+		{
+			if ($widget->getObject()->getId() == $id)
+			{
+				unset($this->registeredWidgets[$i]);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return void
+	 */
+	public function placeWidgetsToLayoutBlocks()
 	{
 		$this->sortWidgets();
 
-		foreach ($this->registeredWidgetsIds as $id)
+		foreach ($this->registeredWidgets as $widget)
 		{
-			$widget = $this->registeredWidgets[$id];
-
 			if(is_null($widget->getBlock())) continue;
 
-			$this->layoutBlocks[$widget->getBlock()][] = $widget;
+			$this->layoutBlocks[$widget->getBlock()][$widget->getPosition()] = $widget->getObject();
 		}
 
+		foreach ($this->registeredWidgets as $widget)
+		{
+			if (method_exists($widget->getObject(), 'onLoad'))
+			{
+				app()->call([$widget->getObject(), 'onLoad']);
+			}
+		}
+
+		foreach ($this->registeredWidgets as $widget)
+		{
+			if (method_exists($widget->getObject(), 'afterLoad'))
+			{
+				app()->call([$widget->getObject(), 'afterLoad']);
+			}
+		}
 	}
 
 	/**
@@ -101,57 +131,33 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 	 */
 	protected function sortWidgets()
 	{
-		$ids = array_keys($this->registeredWidgets);
-
 		$widgets = [];
 		$types = ['PRE' => [], '*named' => [], 'POST' => []];
 
-		foreach ($ids as $id)
+		foreach ($this->registeredWidgets as $i => $widget)
 		{
-			if (isset($types[$this->registeredWidgets[$id]->getBlock()]))
+			$block = $widget->getBlock();
+
+			if (array_key_exists($block, $types))
 			{
-				$types[$this->registeredWidgets[$id]->getBlock()][] = $id;
+				$types[$block][$i] = $widget;
 			}
 			else
 			{
-				$types['*named'][] = $id;
+				$types['*named'][$i] = $widget;
 			}
 		}
 
 		foreach ($types as $type => $ids)
 		{
-			foreach ($ids as $id)
+			foreach ($ids as $id => $widget)
 			{
-				$widgets[$id] = $this->registeredWidgets[$id];
-			}
-		}
-
-		$this->registeredWidgetsIds = array_keys($widgets);
-		$this->registeredWidgets = $widgets;
-
-		return $this;
-	}
-
-	/**
-	 * @return $this
-	 */
-	protected function buildWidgetCrumbs()
-	{
-		foreach ($this->registeredWidgetsIds as $id)
-		{
-			if (
-				($widget = $this->registeredWidgets[$id]) instanceof WidgetDecorator
-				AND
-				$this->registeredWidgets[$id]->hasBreadcrumbs()
-			)
-			{
-				$widget->changeBreadcrumbs($this->getBreadcrumbs());
+				$this->registeredWidgets[$i] = $widget;
 			}
 		}
 
 		return $this;
 	}
-
 
 	/**
 	 * (PHP 5 &gt;= 5.0.0)<br/>

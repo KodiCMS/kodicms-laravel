@@ -54,10 +54,10 @@
 'class' => 'form-control',
 'id' => 'textarea_content',
 'data-height' => 600,
-'data-readonly' => ($snippet->isReadOnly() OR ($snippet->isNew() AND !$snippet->isReadOnly())) ? 'on' : 'off'
+'data-readonly' => (!$snippet->isEditable() and !$snippet->isCreatable()) ? 'on' : 'off'
 ]) !!}
 
-@if(!$snippet->isNew() AND $snippet->isReadOnly())
+@if(!$snippet->isEditable() and !$snippet->isCreatable())
 	<div class="panel-default alert alert-danger alert-dark no-margin-b">
 		@lang('widgets::snippet.messages.snippet_not_writeable')
 	</div>

@@ -9,6 +9,18 @@ interface Widget {
 	public function __construct($name, $description = '');
 
 	/**
+	 * @return int
+	 */
+	public function getId();
+
+	/**
+	 * @param int $id
+	 * @throws WidgetException
+	 */
+	public function setId($id);
+
+
+	/**
 	 * @return string
 	 */
 	public function getType();
@@ -82,9 +94,4 @@ interface Widget {
 	 * @return mixed|null
 	 */
 	public function getParameter($name, $default = null);
-
-	/**
-	 * @return array
-	 */
-	public function prepareData();
 }

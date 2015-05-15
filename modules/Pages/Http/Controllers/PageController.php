@@ -51,6 +51,8 @@ class PageController extends BackendController
 		$creator = $page->createdBy()->first();
 		$pagesMap = $page->getSitemap();
 
+		$page->setAppends(['layout']);
+
 		$behaviorList = BehaviorManager::formChoices();
 
 		$this->setContent('pages.edit', compact('page', 'updator', 'creator', 'pagesMap', 'behaviorList'));

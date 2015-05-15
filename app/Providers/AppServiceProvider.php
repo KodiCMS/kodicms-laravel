@@ -12,8 +12,8 @@ class AppServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 		$path = storage_path().'/logs/query.log';
-		
-		\Event::listen('illuminate.query', function($sql, $bindings, $time) use($path) {
+
+		\DB::listen(function($sql, $bindings, $time) use($path) {
 			// Uncomment this if you want to include bindings to queries
 			$sql = str_replace(array('%', '?'), array('%%', '%s'), $sql);
 			$sql = vsprintf($sql, $bindings);

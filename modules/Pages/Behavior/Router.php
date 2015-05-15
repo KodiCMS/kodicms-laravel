@@ -31,10 +31,28 @@ class Router
 	protected $matchedRoute = null;
 
 	/**
+	 * @var null|string
+	 */
+	protected $uri = null;
+
+	/**
 	 * @param array $routes
 	 */
 	public function __construct(array $routes)
 	{
+		foreach($routes as $route => $params)
+		{
+			if (!array_key_exists('type', $params))
+			{
+				$routes[$route]['type'] = BehaviorAbstract::ROUTE_TYPE_DEFAULT;
+			}
+
+			if (!array_key_exists('method', $params))
+			{
+				$routes[$route]['method'] = $this->getDefaultMethod();
+			}
+		}
+
 		$this->routes = $routes;
 	}
 
@@ -53,6 +71,14 @@ class Router
 	public function getMatchedRoute()
 	{
 		return $this->matchedRoute;
+	}
+
+	/**
+	 * @return null|string
+	 */
+	public function getUri()
+	{
+		return $this->uri;
 	}
 
 	/**
@@ -75,29 +101,36 @@ class Router
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getDefaultMethod()
+	{
+		return 'stub';
+	}
+
+
+	/**
 	 * @param $uri
 	 * @return string
 	 */
 	public function findRouteByUri($uri)
 	{
+		$this->uri = $uri;
 		$method = $this->matchRoute($uri);
 
 		return $method;
 	}
-
 	/**
 	 * @param $uri
 	 * @return string
 	 */
 	final protected function matchRoute($uri)
 	{
-		$defaultMethod = 'execute';
-
 		foreach ($this->getRoutes() as $_uri => $params)
 		{
 			if (!isset($params['method']))
 			{
-				$params['method'] = $defaultMethod;
+				$params['method'] = $this->getDefaultMethod();
 			}
 
 			$expression = $this->compileRoute($_uri, array_get($params, 'regex'));
@@ -125,7 +158,7 @@ class Router
 
 		$this->parameters = preg_split('/\//', $uri, -1, PREG_SPLIT_NO_EMPTY);
 
-		return $defaultMethod;
+		return null;
 	}
 
 	/**

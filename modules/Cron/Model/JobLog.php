@@ -4,12 +4,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class JobLog extends Model
 {
-
+	/**
+	 * @var array
+	 */
 	protected $fillable = [
 		'job_id',
 		'status'
 	];
 
+	// TODO: вынести в отдельный Observer
 	protected static function boot()
 	{
 		parent::boot();
@@ -20,6 +23,9 @@ class JobLog extends Model
 		});
 	}
 
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
 	public function job()
 	{
 		return $this->belongsTo('KodiCMS\Cron\Model\Job');
@@ -30,6 +36,10 @@ class JobLog extends Model
 		return trans('cron::core.statuses.' . $this->status);
 	}
 
+	/**
+	 * @param integer $value
+	 * @throws \Exception
+	 */
 	public function setStatus($value)
 	{
 		if ( ! $this->exists)

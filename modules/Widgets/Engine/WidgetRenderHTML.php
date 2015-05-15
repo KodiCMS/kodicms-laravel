@@ -1,9 +1,10 @@
 <?php namespace KodiCMS\Widgets\Engine;
 
-use View;
+use Illuminate\View\View;
 use Cache;
-use KodiCMS\CMS\Model\File;
 use Illuminate\Cache\TaggableStore;
+use KodiCMS\Widgets\Helpers\ViewPHP;
+use KodiCMS\Widgets\Model\SnippetCollection;
 use KodiCMS\Widgets\Contracts\WidgetCacheable;
 
 class WidgetRenderHTML extends WidgetRenderAbstract
@@ -11,6 +12,12 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 	public function render()
 	{
 		$widget = $this->getWidget();
+
+		if (method_exists($widget, 'onRender'))
+		{
+			$widget->onRender($this);
+		}
+
 		if ($widget instanceof WidgetCacheable and $widget->isCacheEnabled())
 		{
 			if (Cache::getFacadeRoot()->store()->getStore() instanceof TaggableStore)
@@ -32,16 +39,20 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 		return $this->getContent();
 	}
 
+	/**
+	 * @return string
+	 */
 	protected function getContent()
 	{
 		$widget = $this->getWidget();
 		$widget->setParameters($this->parameters);
 
-		$widget->prepareData();
+		$preparedData = $widget->prepareData();
+		$preparedData['parameters'] = $widget->getParameters();
 
-		$allowHTMLComments = (bool)$widget->getParameter('comments', true);
+		$allowHTMLComments = (bool) $widget->getParameter('comments', true);
 
-		$preparedData = $widget->getParameters();
+
 		$preparedData['widgetId'] = $widget->getId();
 		$preparedData['settings'] = $widget->getSettings();
 		$preparedData['header'] = $widget->getSetting('header');
@@ -53,7 +64,7 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 			$html .= PHP_EOL . "<!--[Widget: {$widget->getName()}]-->" . PHP_EOL;
 		}
 
-		$html .= $this->getWidgetTemplate()->toView($preparedData)->render();
+		$html .= $this->getWidgetTemplate($preparedData)->render();
 
 		if ($allowHTMLComments)
 		{
@@ -64,21 +75,41 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 	}
 
 	/**
-	 * @return File
+	 * @param array $preparedData
+	 * @return View
 	 */
-	protected function getWidgetTemplate()
+	protected function getWidgetTemplate(array $preparedData)
 	{
 		$template = $this->getWidget()->getFrontendTemplate();
 
-		if (is_null($template))
+		// Если не указан шаблон и указан шаблон по умолчанию
+		if (is_null($template) and !is_null($template = $this->getWidget()->getDefaultFrontendTemplate()))
 		{
-			$template = $this->getWidget()->getDefaultFrontendTemplate();
+			if ($template instanceof View)
+			{
+				return $template->with($preparedData);
+			}
+
+			return view($template)->with($preparedData);
 		}
 
-		$template = 'test.blade';
+		if (!is_null($template))
+		{
+			if ($template instanceof View)
+			{
+				return $template->with($preparedData);
+			}
+			else if($template instanceof ViewPHP)
+			{
+				return $template->with($preparedData);
+			}
 
-		$snippet = new File($template, snippets_path(), true);
+			if ($snippet = (new SnippetCollection)->findFile($template))
+			{
+				return $snippet->toView($preparedData);
+			}
+		}
 
-		return $snippet;
+		return view('widgets::widgets.default', $preparedData);
 	}
 }

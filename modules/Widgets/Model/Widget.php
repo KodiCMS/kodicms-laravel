@@ -18,7 +18,7 @@ class Widget extends Model
 	 * @var array
 	 */
 	protected $fillable = [
-		'name', 'description', 'type', 'class', 'template', 'settings'
+		'name', 'description', 'type', 'template', 'settings'
 	];
 
 	/**
@@ -30,7 +30,6 @@ class Widget extends Model
 		'name' => 'string',
 		'description' => 'string',
 		'type' => 'string',
-		'clas' => 'string',
 		'template' => 'string',
 		'settings' => 'array',
 	];
@@ -84,6 +83,11 @@ class Widget extends Model
 		if (!is_null($this->widget = WidgetManagerDatabase::makeWidget($this->type, $this->name, $this->description, $this->settings)))
 		{
 			$this->widget->setId($this->id);
+
+			if($this->isRenderable())
+			{
+				$this->widget->setFrontendTemplate($this->template);
+			}
 		}
 		else
 		{

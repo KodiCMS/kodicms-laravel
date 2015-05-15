@@ -1,37 +1,39 @@
 <?php namespace KodiCMS\Pages\Helpers;
 
-use KodiCMS\Widgets\Contracts\Widget;
+use KodiCMS\Widgets\Collection\WidgetCollection;
 use KodiCMS\Widgets\Engine\WidgetRenderHTML;
 use View;
 
 class Block
 {
+
 	/**
-	 * Проверка блока на наличие в нем виджетов
-	 *
+	 * @var WidgetCollection
+	 */
+	protected $collection;
+
+	/**
+	 * @param WidgetCollection $collection
+	 */
+	public function __construct(WidgetCollection $collection)
+	{
+		$this->collection = $collection;
+		$this->collection->placeWidgetsToLayoutBlocks();
+	}
+
+	/**
 	 * @param type string|array
 	 * @return boolean
 	 */
-	public static function hasWidgets($name)
+	public function hasWidgets($name)
 	{
 		if (!is_array($name))
 		{
 			$name = [$name];
 		}
 
-		// TODO: реализовать получение списка виджетов для указанного блока
-		$blocks = [];
-		//$blocks = ....;
-
-		foreach ($name as $block)
-		{
-			if (in_array($block, $blocks))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		$blocks = $this->collection->getLayoutBlocks();
+		return !empty($blocks[$name]);
 	}
 
 	/**
@@ -40,25 +42,13 @@ class Block
 	 * @param string $name
 	 * @param array $params
 	 */
-	public static function run($name, array $params = [])
+	public function run($name, array $params = [])
 	{
-		if ($name == 'PRE' OR $name == 'POST')
-		{
-			return;
-		}
-
 		$widgets = static::getWidgetsByBlock($name, $params);
 
 		foreach ($widgets as $widget)
 		{
-			if ($widget instanceof View)
-			{
-				echo $widget->render();
-			}
-			else if ($widget instanceof Widget)
-			{
-				new WidgetRenderHTML($widget);
-			}
+			echo (new WidgetRenderHTML($widget->getObject()))->render();
 		}
 	}
 
@@ -82,23 +72,14 @@ class Block
 	 * @param array $params Дополнительные параметры доступные в виджете
 	 * @return array
 	 */
-	public static function getWidgetsByBlock($name, array $params = [])
+	public function getWidgetsByBlock($name, array $params = [])
 	{
-		$widgets = [];
-
-		// TODO: релизовать загрузки виджетов
-		//$widgets = ....;
+		$widgets = $this->collection->getWidgetsByBlock($name);
 
 		foreach ($widgets as $widget)
 		{
-			if ($widget instanceof View)
-			{
-				$widget->setParameters('params', $params);
-			}
-			else if ($widget instanceof Widget)
-			{
-				$widget->setParameters($params);
-			}
+			$widget = $widget->getObject();
+			$widget->setParameters($params);
 		}
 
 		return $widgets;
@@ -121,5 +102,18 @@ class Block
 	 *
 	 * @param string $name
 	 */
-	public static function def($name) {}
+	public function def($name) {}
+
+	/**
+	 * @param string $method
+	 * @param array $parameters
+	 * @return mixed
+	 */
+	public function __call($method, array $parameters)
+	{
+		if (method_exists($this->collection, $method))
+		{
+			return call_user_func_array([$this->collection, $method], $parameters);
+		}
+	}
 }

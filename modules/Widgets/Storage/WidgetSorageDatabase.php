@@ -2,7 +2,6 @@
 
 use KodiCMS\CMS\Exceptions\ValidationException;
 use KodiCMS\Widgets\Contracts\Widget;
-use KodiCMS\Widgets\Contracts\WidgetDatabase;
 use KodiCMS\Widgets\Contracts\WidgetStorage;
 use KodiCMS\Widgets\Model\Widget as WidgetModel;
 use KodiCMS\Widgets\Services\WidgetCreator;
@@ -11,22 +10,11 @@ use KodiCMS\Widgets\Services\WidgetUpdator;
 class WidgetSorageDatabase implements WidgetStorage
 {
 	/**
-	 * @return bool|WidgetDatabase
+	 * @return bool|Widget
 	 * @throws ValidationException
 	 * @throws \KodiCMS\Widgets\Exceptions\WidgetException
 	 */
 	public function create(Widget $widget)
-	{
-		return $this->_create($widget);
-	}
-
-	/**
-	 * @param WidgetDatabase $widget
-	 * @return bool|WidgetDatabase
-	 * @throws ValidationException
-	 * @throws \KodiCMS\Widgets\Exceptions\WidgetException
-	 */
-	protected function _create(WidgetDatabase $widget)
 	{
 		if ($widget->isExists())
 		{
@@ -37,8 +25,7 @@ class WidgetSorageDatabase implements WidgetStorage
 			'name' => $widget->getName(),
 			'description' => $widget->getDescription(),
 			'settings' => $widget->getSettings(),
-			'type' => $widget->getType(),
-			'class' => get_class($widget)
+			'type' => $widget->getType()
 		];
 
 		$creator = new WidgetCreator;
@@ -58,21 +45,11 @@ class WidgetSorageDatabase implements WidgetStorage
 	}
 
 	/**
-	 * @param WidgetDatabase $widget
+	 * @param Widget $widget
 	 * @return bool
 	 * @throws ValidationException
 	 */
 	public function update(Widget $widget)
-	{
-		return $this->_update($widget);
-	}
-
-	/**
-	 * @param WidgetDatabase $widget
-	 * @return bool
-	 * @throws ValidationException
-	 */
-	protected function _update(WidgetDatabase $widget)
 	{
 		if (!$widget->isExists())
 		{
@@ -99,19 +76,10 @@ class WidgetSorageDatabase implements WidgetStorage
 	}
 
 	/**
-	 * @param WidgetDatabase $widget
+	 * @param Widget $widget
 	 * @return bool
 	 */
 	public function delete(Widget $widget)
-	{
-		return $this->_delete($widget);
-	}
-
-	/**
-	 * @param WidgetDatabase $widget
-	 * @return bool
-	 */
-	protected function _delete(WidgetDatabase $widget)
 	{
 		if (!$this->widget->isExists())
 		{

@@ -4,10 +4,9 @@ return [
 	'title' => 'KodiCMS',
 	'backend_path' => env('ADMIN_DIR_NAME', 'backend'),
 
-	'modules' => ['API', 'CMS', 'Plugins', 'Pages', 'Users', 'Email', 'Cron', 'Widgets', 'Filemanager', 'Installer'],
+	'modules' => ['API', 'CMS', 'Plugins', 'Pages', 'Users', 'Email', 'Cron', 'Widgets', 'Filemanager', 'Installer', 'Dashboard'],
 
 	'theme' => [
-		// TODO: разобраться с названием тем
 		'default' => 'default',
 		'list' => [
 			'default', 'asphalt', 'purple-hills', 'adminflare', 'dust', 'frost', 'fresh', 'silver', 'clean', 'white'
@@ -53,7 +52,7 @@ return [
 	'default_code_editor' => 'ace',
 	'default_ace_theme' => 'textmate',
 	'locales' => [
-		'en' => 'English',
+		//'en' => 'English',
 		'ru' => 'Русский'
 	],
 	'date_format' => 'Y-m-d H:i:s',

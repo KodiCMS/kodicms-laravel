@@ -95,6 +95,14 @@ class FileCollection implements Iterator
 	}
 
 	/**
+	 * @return int
+	 */
+	public function getTotal()
+	{
+		return count($this->files);
+	}
+
+	/**
 	 * @param string $filename
 	 * @return bool
 	 */

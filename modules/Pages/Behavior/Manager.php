@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Pages\Behavior;
 
+use KodiCMS\Pages\Contracts\BehaviorInterface;
 use KodiCMS\Pages\Exceptions\BehaviorException;
 
 class Manager
@@ -19,12 +20,23 @@ class Manager
 		}
 	}
 
+	/**
+	 * @param $behavior
+	 * @return BehaviorInterface
+	 * @throws BehaviorException
+	 */
 	public static function load($behavior)
 	{
 		$behaviorParams = static::getBehavior($behavior);
 
+		if (is_null($behaviorParams))
+		{
+			return null;
+		}
+
 		$behaviorClass = $behaviorParams['class'];
-		if (!class_exists($behaviorClass))
+
+		if (!empty($behaviorClass) and !class_exists($behaviorClass))
 		{
 			throw new BehaviorException("Behavior class \"{$behaviorClass}\" not found!");
 		}

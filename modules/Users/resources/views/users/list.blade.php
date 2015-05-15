@@ -7,6 +7,7 @@
 		@endif
 	</div>
 
+	@if(count($users) > 0)
 	<table class="table table-primary table-striped table-hover">
 		<colgroup>
 			<col width="250px" />
@@ -49,6 +50,11 @@
 		@endforeach
 		</tbody>
 	</table>
+	@else
+	<div class="panel-body">
+		<h3>@lang('users::core.messages.users.empty')</h3>
+	</div>
+	@endif
 </div>
 
 {!! $users->render() !!}

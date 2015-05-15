@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\CMS\Providers;
 
 use CMS;
+use Event;
 use ModuleLoader;
 use KodiCMS\CMS\Helpers\DatabaseConfig;
 
@@ -36,6 +37,8 @@ class ConfigServiceProvider extends ServiceProvider {
 		{
 			app('config')->set($group, array_merge(config($group, []), $data));
 		}
+
+		Event::fire('config.loaded');
 	}
 
 	public function register()

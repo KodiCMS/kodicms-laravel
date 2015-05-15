@@ -1,6 +1,8 @@
 <?php namespace KodiCMS\Email\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use KodiCMS\Email\Support\EmailSender;
+use Mail;
 
 class EmailTemplate extends Model
 {
@@ -46,6 +48,11 @@ class EmailTemplate extends Model
 		});
 	}
 
+	public function scopeActive($query)
+	{
+		$query->whereStatus(static::ACTIVE);
+	}
+
 	public function getStatusStringAttribute()
 	{
 		return trans('email::core.statuses.' . $this->status);
@@ -65,6 +72,43 @@ class EmailTemplate extends Model
 			static::USE_DIRECT => trans('email::core.queue.0'),
 			static::USE_QUEUE  => trans('email::core.queue.1'),
 		];
+	}
+
+	public function send($options = [])
+	{
+		$options = $this->prepareOptions($options);
+		$this->prepareInnerValues($options);
+
+		if ($this->use_queue)
+		{
+			return $this->addToQueue($options);
+		} else
+		{
+			return EmailSender::send($this->message, $this, $this->message_type);
+		}
+	}
+
+	public function addToQueue($options = [])
+	{
+		return EmailQueue::addEmailTemplate($this, $options);
+	}
+
+	protected function prepareOptions($options = [])
+	{
+		$prepared = [];
+		foreach ($options as $key => $value)
+		{
+			$prepared['{' . $key . '}'] = $value;
+		}
+		return $prepared;
+	}
+
+	protected function prepareInnerValues($options = [])
+	{
+		foreach ($this->fillable as $field)
+		{
+			$this->$field = strtr($this->$field, $options);
+		}
 	}
 
 }

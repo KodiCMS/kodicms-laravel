@@ -7,6 +7,7 @@
 		@endif
 	</div>
 
+	@if(count($widgets) > 0)
 	<table class="table table-primary table-striped table-hover">
 		<colgroup>
 			<col width="250px" />
@@ -39,9 +40,9 @@
 				</td>
 				<td class="actions text-right">
 					@if (acl_check('widgets.delete'))
-						{!! link_to_route('backend.widget.delete', '', [$widget], [
-						'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-confirm'
-						]) !!}
+					{!! link_to_route('backend.widget.delete', '', [$widget], [
+					'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-confirm'
+					]) !!}
 					@endif
 				</td>
 				@else
@@ -81,9 +82,9 @@
 				<td class="cache">
 				@if ($widget->isCacheable())
 					@if ($widget->isCacheEnabled())
-					{!! UI::label('0', 'warning') !!}
+					{!! UI::label($widget->getCacheLifetime(), 'warning') !!}
 					@else
-					{!! UI::label($widget->getCacheLifetime(), 'success') !!}
+					{!! UI::label(0, 'success') !!}
 					@endif
 				@endif
 				</td>
@@ -104,6 +105,11 @@
 		@endforeach
 		</tbody>
 	</table>
+	@else
+	<div class="panel-body">
+		<h3>@lang('widgets::core.messages.empty')</h3>
+	</div>
+	@endif
 </div>
 
 {!! $widgets->render() !!}

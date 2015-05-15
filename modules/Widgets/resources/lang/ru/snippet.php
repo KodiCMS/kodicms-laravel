@@ -27,10 +27,11 @@ return [
 	],
 	'messages' => [
 		'snippet_not_writeable' => 'Сниппет в режиме только для чтения',
-		'directory_not_writeable' => 'Директория :dir не доступна для записи',
+		'directory_not_writeable' => 'Директория [:dir] не доступна для записи',
 		'not_found' => 'Шаблон не найден',
-		'deleted' => 'Снипет :name удален',
-		'updated' => 'Снипет :name обновлен',
-		'created' => 'Снипет создан'
+		'deleted' => 'Снипет [:name] удален',
+		'updated' => 'Снипет [:name] обновлен',
+		'created' => 'Снипет создан',
+		'empty' => 'У вас нет сниппетов'
 	]
 ];

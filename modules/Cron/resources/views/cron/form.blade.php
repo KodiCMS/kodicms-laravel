@@ -65,10 +65,13 @@
 	<div class="form-group">
 		<label class="control-label col-md-3" for="crontime">@lang('cron::core.field.crontime')</label>
 		<div class="col-md-9 form-inline">
+
+			<div id="selector" class="well well-sm"></div>
+
 			{!! Form::text('crontime', null, ['class' => 'form-control', 'id' => 'crontime']) !!}
 			<span class="help-inline">{!! link_to('http://ru.wikipedia.org/wiki/Cron', trans('cron::core.crontab.help'), ['target' => '_blank']) !!}</span>
 
-			<pre style="font-size: 16px; background: none; border: none;">
+			<pre style="font-size: 10px; background: none; border: none;">
 * * * * *
 | | | | --- @lang('cron::core.crontab.weekday')
 

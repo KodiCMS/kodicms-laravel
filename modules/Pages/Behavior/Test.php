@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\Pages\Behavior;
 
-// TODO: удалить
-class Test extends Decorator
+class Test extends BehaviorAbstract
 {
 	/**
 	 * @return array
@@ -9,21 +8,16 @@ class Test extends Decorator
 	public function routeList()
 	{
 		return [
-			'/<id>' => array(
-				'regex' => array(
+			'/<id>' => [
+				'regex' => [
 					'id' => '[0-9]+'
-				)
-			),
-			'/<slug>' => array(
-				'regex' => array(
+				]
+			],
+			'/<slug>' => [
+				'regex' => [
 					'slug' => '.*'
-				)
-			)
+				]
+			]
 		];
-	}
-
-	public function execute()
-	{
-
 	}
 }

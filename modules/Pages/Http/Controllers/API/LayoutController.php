@@ -1,15 +1,45 @@
 <?php namespace KodiCMS\Pages\Http\Controllers\API;
 
-use KodiCMS\API\Http\Controllers\System\Controller;
+use KodiCMS\CMS\Http\Controllers\API\AbstractFileController;
 use KodiCMS\Pages\Model\LayoutBlock;
 use KodiCMS\Pages\Model\LayoutCollection;
 
-class LayoutController extends Controller
+class LayoutController extends AbstractFileController
 {
 	/**
 	 * @var bool
 	 */
 	public $authRequired = TRUE;
+
+	/**
+	 * @var string
+	 */
+	public $moduleNamespace = 'pages::';
+
+	/**
+	 * @return LayoutCollection
+	 */
+	protected function getCollection()
+	{
+		return new LayoutCollection();
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function getSectionPrefix()
+	{
+		return 'layout';
+	}
+
+	/**
+	 * @param string $filename
+	 * @return string
+	 */
+	protected function getRedirectToEditUrl($filename)
+	{
+		return route('backend.layout.edit', [$filename]);
+	}
 
 	public function getRebuildBlocks()
 	{

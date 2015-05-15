@@ -54,7 +54,7 @@ class ACL
 
 		if ($user instanceof User) {
 			$user_id = $user->id;
-			$roles = $user->roles()->lists('name');
+			$roles = $user->getRoles()->lists('name');
 		} else {
 			$user_id = (int)$user;
 			$roles = ['login'];

@@ -30,7 +30,13 @@
 	</ul>
 </div>
 
+@if(!$page->hasLayout())
+<div class="alert alert-dark alert-danger">
+	{!! UI::icon('exclamation-triangle fa-fw') !!} {{ trans('pages::core.messages.layout_not_set') }}
+</div>
+@endif
 <div class="panel-heading">
+
 	<div class="form-group form-group-lg">
 		<label class="control-label col-md-2" for="title">@lang('pages::core.field.title')</label>
 		<div class="col-md-10">
@@ -116,9 +122,9 @@
 		])
 	</div>
 
-	@if(!is_null($page->getBehaviorObject()))
+	@if(!is_null($behavior = $page->getBehaviorObject()))
 	<div class="tab-pane fade" id="page-behavior-panel">
-		@include('pages::pages.partials.behavior', ['behavior' => $page->getBehaviorObject()])
+		@include('pages::pages.partials.behavior', ['behavior' => $behavior])
 	</div>
 	@endif
 </div>

@@ -34,12 +34,6 @@ class WidgetCreator implements ModelCreator
 	public function create(array $data)
 	{
 		$type = array_get($data, 'type');
-
-		if (is_null($data['class'] = WidgetManager::getClassNameByType($type)))
-		{
-			throw new WidgetException("Widget type [{$type}] not found");
-		}
-
 		return Widget::create($data);
 	}
 }

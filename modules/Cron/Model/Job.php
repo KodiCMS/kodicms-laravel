@@ -19,6 +19,9 @@ class Job extends Model
 
 	const MAX_ATEMTPS = 5;
 
+	/**
+	 * @var array
+	 */
 	protected $fillable = [
 		'name',
 		'task_name',
@@ -32,23 +35,14 @@ class Job extends Model
 		'attempts',
 	];
 
-	protected static function boot()
-	{
-		parent::boot();
+	/**
+	 * @var array
+	 */
+	protected $attributes = ['crontime' => '* * * * *'];
 
-		static::creating(function ($job)
-		{
-			$job->status = static::STATUS_NEW;
-		});
-		static::saving(function ($job)
-		{
-			if ($job->isDirty('interval', 'crontime', 'last_run'))
-			{
-				$job->setNextRun();
-			}
-		});
-	}
-
+	/**
+	 * @return array
+	 */
 	public static function agents()
 	{
 		return [
@@ -57,6 +51,9 @@ class Job extends Model
 		];
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getDates()
 	{
 		$dates = [
@@ -68,6 +65,9 @@ class Job extends Model
 		return array_merge(parent::getDates(), $dates);
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getTypes()
 	{
 		return array_map(function ($item)
@@ -87,14 +87,16 @@ class Job extends Model
 		{
 			return;
 		}
-		if ( ! empty($this->crontime))
+
+		if (!empty($this->crontime))
 		{
 			$this->next_run = Crontab::parse($this->crontime);
-		} else
+		}
+		else
 		{
-			if ( ! empty($this->interval))
+			if (!empty($this->interval))
 			{
-				$this->next_run = with(new Carbon())->addSeconds($this->interval);
+				$this->next_run = with(new Carbon())->addMinutes($this->interval);
 			}
 		}
 	}
@@ -104,6 +106,9 @@ class Job extends Model
 		return trans('cron::core.statuses.' . $this->status);
 	}
 
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
 	public function logs()
 	{
 		return $this->hasMany('KodiCMS\Cron\Model\JobLog');
@@ -112,7 +117,11 @@ class Job extends Model
 	public static function runAll()
 	{
 		$now = new Carbon;
-		$jobs = static::where('attempts', '<=', static::MAX_ATEMTPS)->where('date_start', '<=', $now)->where('date_end', '>=', $now)->where('next_run', '<', $now)->get();
+		$jobs = static::where('attempts', '<=', static::MAX_ATEMTPS)
+			->where('date_start', '<=', $now)
+			->where('date_end', '>=', $now)
+			->where('next_run', '<', $now)
+			->get();
 
 		foreach ($jobs as $job)
 		{
@@ -140,21 +149,24 @@ class Job extends Model
 			{
 				list($class, $method) = explode('@', $action);
 				$instance = app($class);
-				if ( ! method_exists($instance, $method))
+				if (!method_exists($instance, $method))
 				{
 					throw new \Exception('Invalid method ' . $method);
 				}
 				$instance->$method();
-			} else
+			}
+			else
 			{
 				Artisan::call($action);
 			}
-		} catch (\Exception $e)
+		}
+		catch (\Exception $e)
 		{
-			dd($e);
 			$this->failed($log);
+
 			return;
 		}
+
 		$this->completed($log);
 	}
 
@@ -175,5 +187,4 @@ class Job extends Model
 			'attempts' => $this->attempts + 1,
 		]);
 	}
-
 }

@@ -1,10 +1,15 @@
 <?php namespace KodiCMS\Pages\Behavior;
 
 use KodiCMS\CMS\Helpers\Callback;
+use KodiCMS\Pages\Contracts\BehaviorInterface;
+use KodiCMS\Pages\Exceptions\BehaviorException;
 use KodiCMS\Pages\Model\FrontendPage;
 
-abstract class Decorator
+abstract class BehaviorAbstract implements BehaviorInterface
 {
+	const ROUTE_TYPE_DEFAULT 	= 'default';
+	const ROUTE_TYPE_PAGE 		= 'page';
+	const ROUTE_TYPE_CUSTOM		= 'custom';
 
 	/**
 	 * @var Router
@@ -14,7 +19,7 @@ abstract class Decorator
 	/**
 	 * @var FrontendPage
 	 */
-	protected $page;
+	protected $page = null;
 
 	/**
 	 * @var array
@@ -48,6 +53,20 @@ abstract class Decorator
 	}
 
 	/**
+	 * @param FrontendPage $page
+	 * @throws BehaviorException
+	 */
+	public function setPage(FrontendPage &$page)
+	{
+		if (!is_null($this->page))
+		{
+			throw new BehaviorException('You can\'t change behavior page');
+		}
+
+		$this->page = &$page;
+	}
+
+	/**
 	 * @return FrontendPage
 	 */
 	public function getPage()
@@ -77,7 +96,16 @@ abstract class Decorator
 	 */
 	public function executeRoute($uri)
 	{
-		$method = $this->getRouter()->findRouteByUri($uri);
+		if (empty($uri))
+		{
+			return null;
+		}
+
+		if (is_null($method = $this->getRouter()->findRouteByUri($uri)))
+		{
+			$this->page = FrontendPage::findByUri($uri, $this->page);
+			return null;
+		}
 
 		if (strpos($method, '::') !== false)
 		{
@@ -105,5 +133,5 @@ abstract class Decorator
 		return $this->settings;
 	}
 
-	abstract public function execute();
+	final public function stub() {}
 }

@@ -257,9 +257,33 @@ class File
 	/**
 	 * @return bool
 	 */
+	public function isCreatable()
+	{
+		return $this->isNew() and !$this->isDirReadOnly();
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isEditable()
+	{
+		return !$this->isNew() and !$this->isReadOnly();
+	}
+
+	/**
+	 * @return bool
+	 */
 	public function isExists()
 	{
 		return !($this->file instanceof SplTempFileObject);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isDirReadOnly()
+	{
+		return !is_writable($this->getPath());
 	}
 
 	/**
@@ -507,6 +531,6 @@ class File
 	 */
 	public function __toString()
 	{
-		return (string)$this->getContent();
+		return (string) $this->getContent();
 	}
 }

@@ -14,7 +14,7 @@ return [
 		'blocks' => 'Блоки',
 		'readonly' => 'Только для чтения',
 		'not_set' => 'Не указан',
-		'inherit' => 'Наследуется (:layout)',
+		'inherit' => 'Наследуется [:layout]',
 		'settings' => 'Настройки',
 		'roles' => 'Роли'
 	],
@@ -27,8 +27,12 @@ return [
 		'actions' => 'Действия'
 	],
 	'messages' => [
-		'directory_not_writeable' => 'Директория :dir не доступна для записи',
+		'directory_not_writeable' => 'Директория [:dir] не доступна для записи',
 		'layout_not_writeable' => 'Шаблон в режиме только для чтения',
-		'not_found' => 'Шаблон не найден'
+		'not_found' => 'Шаблон не найден',
+		'empty' => 'У вас нет нет шаблонов',
+		'created' => 'Шаблон создан',
+		'updated' => 'Шаблон [:name] сохранен',
+		'deleted' => 'Шаблон [:name] удален'
 	]
 ];

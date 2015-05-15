@@ -18,7 +18,7 @@ class UserMetaController extends APIController
 	public function postData()
 	{
 		$key = $this->getRequiredParameter('key');
-		$value = $this->getRequiredParameter('value');
+		$value = $this->getParameter('value', null);
 		$user_id = $this->getParameter('uid');
 
 		$this->setContent(UserMeta::set($key, $value, $user_id));

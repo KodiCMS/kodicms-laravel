@@ -3,7 +3,7 @@
 use \KodiCMS\Pages\Model\FrontendPage;
 
 return [
-	'check_date' => TRUE,
+	'check_date' => false,
 
 	'cache' => [
 		'findByField' => \Carbon\Carbon::now()->addMinutes(10)

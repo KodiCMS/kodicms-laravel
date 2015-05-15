@@ -101,7 +101,7 @@ class TemplateController extends Controller
 		View::share('adminDir', \CMS::backendPath());
 		View::share('controllerAction', $this->getCurrentAction());
 		View::share('currentUser', $this->currentUser);
-		View::share('requestType', $this->request->input('type', $this->request->method()));
+		View::share('requestType', $this->requestType);
 	}
 
 	public function after()
@@ -141,6 +141,7 @@ class TemplateController extends Controller
 			'LOCALE' => Lang::getLocale(),
 			'ROUTE' => !is_null($this->getRouter()) ? $this->getRouter()->currentRouteAction() : null,
 			'ROUTE_PATH' => $this->getRouterPath(),
+			'REQUEST_TYPE' => $this->requestType,
 			'USER_ID' => \Auth::id(),
 			'MESSAGE_ERRORS' => view()->shared('errors')->getBag('default'),
 			'MESSAGE_SUCCESS' => (array) $this->session->get('success', []),

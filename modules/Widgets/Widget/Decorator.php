@@ -3,22 +3,22 @@
 use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 use KodiCMS\Widgets\Manager\WidgetManager;
 
-abstract class Decorator implements WidgetInterface
+abstract class Decorator implements WidgetInterface, \ArrayAccess
 {
 	/**
 	 * @var string
 	 */
-	private $name;
+	protected $name;
 
 	/**
 	 * @var string
 	 */
-	private $description;
+	protected $description;
 
 	/**
 	 * @var string
 	 */
-	private $type;
+	protected $type;
 
 	/**
 	 * @var string
@@ -46,6 +46,11 @@ abstract class Decorator implements WidgetInterface
 	protected $settings = [];
 
 	/**
+	 * @var int
+	 */
+	private $id;
+
+	/**
 	 * @param string $name
 	 * @param string $description
 	 */
@@ -54,6 +59,37 @@ abstract class Decorator implements WidgetInterface
 		$this->type = WidgetManager::getTypeByClassName(get_called_class());
 		$this->name = $name;
 		$this->description = $description;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isExists()
+	{
+		return strlen($this->getId()) > 0;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
+
+	/**
+	 * @param int $id
+	 * @throws WidgetException
+	 */
+	public function setId($id)
+	{
+		if ($this->isExists())
+		{
+			// TODO: написать правильный текст
+			throw new WidgetException('You can\'t change widget id');
+		}
+
+		$this->id = $id;
 	}
 
 	/**
@@ -115,6 +151,13 @@ abstract class Decorator implements WidgetInterface
 	 */
 	public function getParameter($name, $default = null)
 	{
+		$method = 'getParameter' . studly_case($name);
+
+		if (method_exists($this, $method))
+		{
+			return $this->{$method}($default);
+		}
+
 		return array_get($this->parameters, $name, $default);
 	}
 
@@ -163,7 +206,6 @@ abstract class Decorator implements WidgetInterface
 	 * Settings
 	 **********************************************************************************************************/
 	/**
-	 *
 	 * @param string $name
 	 * @return mixed
 	 */
@@ -200,6 +242,42 @@ abstract class Decorator implements WidgetInterface
 	}
 
 	/**
+	 * @param string $offset
+	 * @param mixed $value
+	 * @return void
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->setSetting($offset, $value);
+	}
+
+	/**
+	 * @param string $offset
+	 * @return bool
+	 */
+	public function offsetExists($offset)
+	{
+		return isset($this->settings[$offset]);
+	}
+
+	/**
+	 * @param $offset
+	 */
+	public function offsetUnset($offset)
+	{
+		unset($this->settings[$offset]);
+	}
+
+	/**
+	* @param string $offset
+	* @return mixed
+	*/
+	public function offsetGet($offset)
+	{
+		return $this->getSetting($offset);
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getSettings()
@@ -214,6 +292,13 @@ abstract class Decorator implements WidgetInterface
 	 */
 	public function getSetting($name, $default = null)
 	{
+		$method = 'getSetting' . studly_case($name);
+
+		if (method_exists($this, $method))
+		{
+			return $this->{$method}($default);
+		}
+
 		return array_get($this->settings, $name, $default);
 	}
 
@@ -275,28 +360,17 @@ abstract class Decorator implements WidgetInterface
 	}
 
 	/**
-	 * @return null|string
+	 * @return array
 	 */
-	public function renderSettingsTemplate()
+	public function toArray()
 	{
-		$template = $this->getSettingsTemplate();
-		if (empty($template))
-		{
-			return null;
-		}
-
-		$this->prepareSettingsData();
-
-		$data = $this->getSettings();
-		$data['widget'] = $this;
-
-		try
-		{
-			return view($template, $data)->render();
-		}
-		catch(\Exception $e)
-		{
-			return null;
-		}
+		return [
+			'id' => $this->getId(),
+			'type' => $this->getType(),
+			'name' => $this->getName(),
+			'description' => $this->getDescription(),
+			'settings' => $this->getSettings(),
+			'parameters' => $this->getParameters()
+		];
 	}
 }

@@ -1,29 +1,33 @@
+@section('scripts')
 <script type="text/javascript">
-	$(function() {
-		$('body').on('change', '#snippet-select', function() {
-			var $value = $(this).val();
-			if($value == 0)
-				$('#EditTemplateButton').hide();
-			else
-				$('#EditTemplateButton')
-					.show()
-					.css({display: 'inline-block'})
-					.attr('href', BASE_URL + '/snippet/edit/' + $value);
-		}).change();
+$(function() {
+	var editSnippetUrl = '{{ route('backend.snippet.edit', ['***']) }}';
+	$('body').on('change', '#snippet-select', function() {
+		var $value = $(this).val();
+		if($value == 0)
+			$('#EditTemplateButton')
+				.addClass('hidden');
+		else
+			$('#EditTemplateButton')
+				.removeClass('hidden')
+				.css({display: 'inline-block'})
+				.attr('href', editSnippetUrl.replace('***', $value));
+	}).change();
 
-		$('body').on('post:backend:api.snippet', update_snippets_list);
-		$('body').on('put:backend:api.snippet', update_snippets_list);
-	});
+	$('body').on('post:api.snippet.list', update_snippets_list);
+	$('body').on('put:api.snippet.list', update_snippets_list);
+});
 
-	function update_snippets_list(e, response) {
-		var select = $('#snippet-select');
+function update_snippets_list(e, response) {
+	var select = $('#snippet-select');
 
-		select
-			.append($('<option>', {value: response.name, text: response.name}))
-			.select2('val', response.name)
-			.change();
-	}
+	select
+		.append($('<option>', {value: response.name, text: response.name}))
+		.select2('val', response.name)
+		.change();
+}
 </script>
+@stop
 
 <?php
 if (empty($templates))
@@ -54,14 +58,14 @@ $hidden = empty($template) ? 'hidden' : '';
 
 				<div class="btn-group">
 					@if (acl_check('snippet.edit'))
-					{!! link_to_route('backend.snippet.edit', UI::hidden(trans('widgets::snippet.button.edit'), ['md', 'sm', 'xs']), [$template], [
+					{!! link_to_route('backend.snippet.edit', '', [$template], [
 						'data-icon' => 'edit', 'class' => 'btn popup fancybox.iframe btn-primary '.$hidden,
 						'id' => 'EditTemplateButton'
 					]) !!}
 					@endif
 
 					@if (acl_check('snippet.add'))
-					{!! link_to_route('backend.snippet.edit', UI::hidden(trans('widgets::snippet.button.add'), ['md', 'sm', 'xs']), [], [
+					{!! link_to_route('backend.snippet.create', '', [], [
 						'data-icon' => 'plus', 'class' => 'btn popup fancybox.iframe btn-success',
 						'id' => 'AddTemplateButton'
 					]) !!}

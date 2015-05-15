@@ -1,11 +1,12 @@
 <?php namespace KodiCMS\Widgets\Traits;
 
-use KodiCMS\Widgets\Engine\WidgetRenderHTML;
+use Illuminate\Contracts\View\View;
+use KodiCMS\Widgets\Contracts\WidgetRenderEngine;
 
 trait WidgetRender {
 
 	/**
-	 * @return string
+	 * @return string|View
 	 */
 	public function getFrontendTemplate()
 	{
@@ -13,11 +14,24 @@ trait WidgetRender {
 	}
 
 	/**
-	 * @return string
+	 * @return string|View
 	 */
 	public function getDefaultFrontendTemplate()
 	{
+		if (is_null($this->defaultFrontendTemplate))
+		{
+			return view('widgets::widgets.default');
+		}
+
 		return $this->defaultFrontendTemplate;
+	}
+
+	/**
+	 * @param string|View $template
+	 */
+	public function setFrontendTemplate($template)
+	{
+		$this->frontendTemplate = $template;
 	}
 
 	/**
@@ -36,12 +50,17 @@ trait WidgetRender {
 		return (array) $this->media_packages;
 	}
 
-	/**
-	 *
-	 * @return string
-	 */
-	public function __toString()
+	/**********************************************************************************************************
+	 * Events
+	 **********************************************************************************************************/
+	public function onLoad()
 	{
-		return (string) new WidgetRenderHTML($this);
+
 	}
+
+	public function onRender(WidgetRenderEngine $engine)
+	{
+
+	}
+
 }

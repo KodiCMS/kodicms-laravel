@@ -11,6 +11,7 @@ return [
 		'permissions' => 'Права доступа',
 		'cache' => 'Натсройки кеша',
 		'template' => 'Шаблон',
+		'copy_widgets' => 'Копирование виджетов'
 	],
 	'field' => [
 		'name' => 'Название',
@@ -28,7 +29,9 @@ return [
 		'remove_from_page' => 'Убран со страницы',
 		'hide' => 'Скрытый',
 		'before_page_render' => 'До загрузки страницы',
-		'after_page_render' => 'После загрузки страницы'
+		'after_page_render' => 'После загрузки страницы',
+		'dont_copy_widgets' => 'Не копировать',
+		'block' => 'Блок :block_name'
 	],
 	'settings' => [
 		'header' => 'Заголовок',
@@ -43,10 +46,17 @@ return [
 		'location' => 'Места использования',
 		'select_blocks' => 'Выбрать блоки',
 		'rebuild_blocks' => 'Обновить список',
-		'select_childs' => 'Выбрать внутренние'
+		'select_childs' => 'Выбрать внутренние',
+		'add_to_page' => 'Добавить',
+		'defaultTemplate' => 'Шаблон по умолчанию'
 	],
 	'messages' => [
+		'created' => 'Виджет создан',
+		'updated' => 'Виджет сохранен',
+		'deleted' => 'Виджет удален',
 		'corrupted' => 'Виджет поврежден и не может быть использован',
-		'is_handler' => 'Для использования виджета отправляйте ваши данные на URL <code>:url</code> или используйте роут <code>:route</code>'
+		'is_handler' => 'Для использования виджета отправляйте ваши данные на URL <code>:url</code> или используйте роут <code>:route</code>',
+		'empty' => 'У вас нет виджетов',
+		'all_widgets_placed' => 'Все виджеты размещены на текущей странице'
 	]
 ];

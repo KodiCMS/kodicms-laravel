@@ -15,7 +15,6 @@ class Widgets extends Migration
 			$table->text('description');
 
 			$table->string('type', 100);
-			$table->string('class');
 
 			$table->string('template', 100)->nullable();
 

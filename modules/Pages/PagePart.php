@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use KodiCMS\Pages\Model\FrontendPage;
 use KodiCMS\Pages\Model\PagePart as PagePartModel;
 use View;
+use Cache;
 
 class PagePart
 {
@@ -21,11 +22,11 @@ class PagePart
 	 */
 	public static function exists(FrontendPage $page, $part, $inherit = false)
 	{
-		static::loadPartsbyPageId($page->getId());
+		$parts = static::loadPartsbyPageId($page->getId());
 
-		if (isset(static::$cached[$page->getId()][$part]))
+		if (isset($parts[$page->getId()][$part]))
 		{
-			return true;
+			return $parts[$page->getId()][$part];
 		}
 		else if ($inherit !== false AND ($parent = $page->getParent()) instanceof FrontendPage)
 		{
@@ -39,7 +40,7 @@ class PagePart
 	 * @param FrontendPage $page
 	 * @param string $part
 	 * @param boolean $inherit
-	 * @return string
+	 * @return string|null
 	 */
 	public static function getContent(FrontendPage $page, $part = 'body', $inherit = false)
 	{
@@ -50,8 +51,9 @@ class PagePart
 		else if ($inherit !== false AND ($parent = $page->getParent()) instanceof FrontendPage)
 		{
 			return static::getContent($parent, $part, true);
-
 		}
+
+		return null;
 	}
 
 	/**
@@ -65,26 +67,18 @@ class PagePart
 
 		$pageId = ($page instanceof FrontendPage) ? $page->getId() : (int)$page;
 
-		static::loadPartsByPageId($pageId);
+		$parts = static::loadPartsByPageId($pageId);
 
-		if (empty(static::$cached[$pageId][$part]))
+		if (empty($parts[$pageId][$part]))
 		{
 			return null;
 		}
 
-		if (($part = static::$cached[$pageId][$part]) instanceof PagePartModel)
-		{
-			$html = $part->content_html;
-		}
-		else if (($view = static::$cached[$pageId][$part]) instanceof View)
-		{
-			$html = (string)$view;
-		}
-
-		return $html;
+		return array_get($parts, implode('.', [$pageId, $part, 'content_html']));
 	}
 
 	/**
+	 * TODO: добавить кеширование на основе тегов
 	 * @param integer $pageId
 	 * @return array|null
 	 */
@@ -92,9 +86,17 @@ class PagePart
 	{
 		if (!array_key_exists($pageId, static::$cached))
 		{
-			self::$cached[$pageId] = Cache::tags(PagePartModel::table())->remember("pageParts::{$pageId}", Carbon::now()->addHour(1), function () use ($pageId)
+			self::$cached[$pageId] = Cache::remember("pageParts::{$pageId}", Carbon::now()->addHour(1), function () use ($pageId)
 			{
-				return PagePartModel::select('name', 'content', 'content_html')->where('page_id', $pageId)->get();
+				$parts = PagePartModel::select('id', 'name', 'content', 'content_html')->where('page_id', $pageId)->get();
+
+				$return = [];
+				foreach($parts as $part)
+				{
+					$return[$pageId][$part->name] = $part->toArray();
+				}
+
+				return $return;
 			});
 		}
 

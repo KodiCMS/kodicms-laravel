@@ -7,7 +7,7 @@
 		]) !!}
 		@endif
 
-		@if (acl_check('layout.rebuild'))
+		@if ($collection->getTotal() > 0 and acl_check('layout.rebuild'))
 		{!! Form::button(trans('pages::layout.button.rebuild'), [
 			'data-icon' => 'refresh',
 			'class' => 'btn btn-inverse btn-xs',
@@ -21,6 +21,7 @@
 	</div>
 	@endif
 
+	@if($collection->getTotal() > 0)
 	<table class="table-primary table table-striped table-hover">
 		<colgroup>
 			<col />
@@ -39,7 +40,7 @@
 		</tr>
 		</thead>
 		<tbody>
-		<?php foreach ($collection as $layout): ?>
+		@foreach ($collection as $layout)
 		<tr id="layout_{{ $layout->getKey() }}">
 			<th class="name">
 				{!! UI::icon('desktop') !!}
@@ -56,7 +57,7 @@
 
 				@if (count($layout->getBlocks()) > 0)
 				<span class="text-muted text-normal text-sm">
-					@lang('pages::layout.label.blocks'): <span class="layout-block-list">
+					<strong>@lang('pages::layout.label.blocks'):</strong> <span class="layout-block-list">
 						<?php echo implode(', ', $layout->getBlocks()); ?>
 					</span>
 				</span>
@@ -80,7 +81,12 @@
 				@endif
 			</td>
 		</tr>
-		<?php endforeach; ?>
+		@endforeach
 		</tbody>
 	</table>
+	@else
+	<div class="panel-body">
+		<h3>@lang('pages::layout.messages.empty')</h3>
+	</div>
+	@endif
 </div>

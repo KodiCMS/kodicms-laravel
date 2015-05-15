@@ -1,2 +1,4 @@
 *
 !.gitignore
+!header.blade.php
+!content.blade.php

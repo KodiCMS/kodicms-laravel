@@ -21,7 +21,7 @@ class UsersTableSeeder extends Seeder
 		$maxRolesToAtach = count($roles) > 4 ? 4 : count($roles);
 
 		$faker = \Faker\Factory::create();
-		$totalUsers = 50;
+		$totalUsers = 5;
 
 		$user = User::create([
 			'email' => 'admin@site.com',

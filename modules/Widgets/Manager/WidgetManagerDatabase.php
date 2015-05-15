@@ -17,12 +17,27 @@ class WidgetManagerDatabase extends WidgetManager
 	{
 		$widgets = new Widget;
 
-		if(is_array($types) AND count($types) > 0)
+		if (is_array($types) AND count($types) > 0)
 		{
 			$widgets->whereIn('widgets.type', $types);
 		}
 
 		return static::buildWidgetCollection($widgets->get());
+	}
+
+	public static function getWidgetByTypeAndDsid(array $types = null, $dsId = null)
+	{
+		$widgets = static::getWidgetsByType($types);
+
+		if(is_null($dsId))
+		{
+			return $widgets;
+		}
+
+		return $widgets->filter(function($widget) use($dsId)
+		{
+			return $widget->ds_id == (int) $dsId;
+		});
 	}
 
 	/**
@@ -51,8 +66,27 @@ class WidgetManagerDatabase extends WidgetManager
 	}
 
 	/**
-	 * @param Collection $widgets
+	 * @param int $pageId
 	 * @return array
+	 */
+	public static function getPageWidgetBlocks($pageId)
+	{
+		$query = DB::table('page_widgets')
+			->where('page_id', $pageId)
+			->get();
+
+		$data = [];
+		foreach($query as $row)
+		{
+			$data[$row->widget_id] = [$row->block, $row->position];
+		}
+
+		return $data;
+	}
+
+	/**
+	 * @param Collection $widgets
+	 * @return Collection
 	 */
 	private static function buildWidgetCollection(Collection $widgets)
 	{
@@ -62,7 +96,10 @@ class WidgetManagerDatabase extends WidgetManager
 		})->filter(function($widget)
 		{
 			return !($widget instanceof WidgetCorrupt);
-		})->toArray();
+		})->keyBy(function($widget)
+		{
+			return $widget->getId();
+		});
 	}
 
 	/**
@@ -77,6 +114,25 @@ class WidgetManagerDatabase extends WidgetManager
 	/**
 	 * @param integer $id
 	 * @return array
+	 *
+	 * [
+	 * 	[ // занятые блоки для исключения из списков
+	 * 		(int) {$pageId} => [
+	 * 			(string) {$blockName},
+	 * 			(int) {$position},
+	 * 			(bool) {$isSetCrumbs}
+	 * 		]
+	 * 	],
+	 * 	[ // выбранные блоки для текущего виджета
+	 * 		(int) {$pageId} => [
+	 * 			(string){$block} => [
+	 * 				(string) {$blockName},
+	 * 				(int) {$position},
+	 * 				(bool) {$isSetCrumbs}
+	 * 			]
+	 * 		]
+	 * 	]
+	 * ]
 	 */
 	public static function getWidgetLocationById($id)
 	{
@@ -123,7 +179,7 @@ class WidgetManagerDatabase extends WidgetManager
 	 * // TODO: добавить установку хлебных крошек
 	 *
 	 * @param integer $widgetId
-	 * @param array $locations
+	 * @param array $locations [(int) {pageId} => ['block' => (string) '...', 'position' => (int) '...', 'set_crumbs' => (bool) '...']]
 	 */
 	public static function placeWidgetsOnPages($widgetId, array $locations)
 	{
@@ -153,6 +209,29 @@ class WidgetManagerDatabase extends WidgetManager
 			DB::table('page_widgets')
 				->where('widget_id', (int) $widgetId)
 				->insert($insertData);
+		}
+	}
+
+	/**
+	 * @param int $widgetId
+	 * @param int $pageId
+	 * @param array $location ['block' => (string) '...', 'position' => (int) '...', 'set_crumbs' => (bool) '...']
+	 */
+	public static function updateWidgetOnPage($widgetId, $pageId, array $location)
+	{
+		$query = DB::table('page_widgets')->where('widget_id', (int)$widgetId)->where('page_id', (int)$pageId);
+
+		if ($location['block'] < 0)
+		{
+			$query->delete();
+		}
+		else
+		{
+			$query->update([
+				'block' => $location['block'],
+				'position' => (int) array_get($location, 'position'),
+				'set_crumbs' => (bool) array_get($location, 'set_crumbs'),
+			]);
 		}
 	}
 }

@@ -1,22 +1,56 @@
 <?php namespace KodiCMS\Widgets\Collection;
 
+use Meta;
 use KodiCMS\Pages\Model\FrontendPage;
-use KodiCMS\Widgets\WidgetManager;
+use KodiCMS\Widgets\Contracts\WidgetRenderable;
+use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 
 class PageWidgetCollection extends WidgetCollection {
 
 	/**
-	 * @var FrontendPage
+	 * @param int $pageId
 	 */
-	protected $page;
-
-	public function __construct(FrontendPage $page)
+	public function __construct($pageId)
 	{
-		$this->page = $page;
+		$widgets = WidgetManagerDatabase::getWidgetsByPage($pageId);
+		$blocks = WidgetManagerDatabase::getPageWidgetBlocks($pageId);
 
-		$widgets = WidgetManager::getWidgetsByPage($page);
+		foreach($widgets as $widget)
+		{
+			$this->addWidget($widget, array_get($blocks, $widget->getId() .'.0'), array_get($blocks, $widget->getId() .'.1'));
+		}
+	}
 
-		$this->registeredWidgets($widgets);
-		$this->placeWidgetsToLayout();
+	/**
+	 * @return void
+	 */
+	public function placeWidgetsToLayoutBlocks()
+	{
+		foreach ($this->registeredWidgets as $widget)
+		{
+			if($widget->getObject() instanceof WidgetRenderable)
+			{
+				Meta::addPackage($widget->getObject()->getMediaPackages());
+			}
+		}
+
+		parent::placeWidgetsToLayoutBlocks();
+	}
+
+	/**
+	 * @return $this
+	 */
+	protected function buildWidgetCrumbs()
+	{
+		foreach ($this->registeredWidgets as $id => $widget)
+		{
+			$widget = $widget['object'];
+			if ($widget->hasBreadcrumbs())
+			{
+				$widget->changeBreadcrumbs($this->getBreadcrumbs());
+			}
+		}
+
+		return $this;
 	}
 }
