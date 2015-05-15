@@ -31,6 +31,9 @@
 		<li data-id="{{ $page->id }}">
 			<div class="tree-item">
 				<div class="title col-xs-7">
+					@if(!$page->hasLayout())
+					{!! UI::icon('exclamation-triangle fa-fw text-warning', ['title' => trans('pages::core.messages.layout_not_set')]) !!}
+					@endif
 					@if (!acl_check('page.edit'))
 					{!! UI::icon('lock fa-fw') !!}
 					<em title="/">{{ $page->title }}</em>

@@ -11,6 +11,10 @@
 				@endif
 			@endif
 
+			@if(!$child->hasLayout())
+				{!! UI::icon('exclamation-triangle fa-fw text-warning', ['title' => trans('pages::core.messages.layout_not_set')]) !!}
+			@endif
+
 			@if (!acl_check('page.edit'))
 				{!! UI::icon('lock fa-fw') !!} {{ $child->title }}
 			@else
