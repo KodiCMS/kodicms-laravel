@@ -1,5 +1,6 @@
 CMS.messages = {
 	init: function() {
+		if (typeof MESSAGE_ERRORS == 'undefined') return;
 		this.parse(MESSAGE_ERRORS, 'error');
 		this.parse(MESSAGE_SUCCESS);
 

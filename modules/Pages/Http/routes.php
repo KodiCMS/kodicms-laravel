@@ -1,6 +1,11 @@
 <?php
 Route::group(['prefix' => CMS::backendPath()], function () {
 
+	Route::get('page/wysiwyg/{id}', [
+		'as' => 'backend.pages.wysiwyg',
+		'uses' => 'PageWysiwygController@getPageWysiwyg'
+	]);
+
 	Route::controller('page', 'PageController', [
 		'getIndex' => 'backend.page.list',
 		'getCreate' => 'backend.page.create',
@@ -36,6 +41,8 @@ Route::get('/api.page.reorder', ['as' => 'api.page.reorder', 'uses' => 'API\Page
 Route::post('/api.page.reorder', ['as' => 'api.page.reorder', 'uses' => 'API\PageController@postReorder']);
 Route::get('/api.page.search', ['as' => 'api.page.search', 'uses' => 'API\PageController@getSearch']);
 Route::post('/api.page.changeStatus', ['as' => 'api.page.change_status', 'uses' => 'API\PageController@postChangeStatus']);
+
+Route::post('/api.page.widgets.reorder', ['as' => 'api.page.widgets.reorder', 'uses' => 'API\PageController@postWidgetsReorder']);
 
 app('router')->before(function() {
 	Route::get('{slug}', 'KodiCMS\Pages\Http\Controllers\FrontendController@run')->where('slug', '(.*)?');

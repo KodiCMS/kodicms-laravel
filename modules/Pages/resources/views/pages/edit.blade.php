@@ -39,7 +39,6 @@
 			]) !!}
 		</div>
 	</div>
-
 	@if ($page->id > 1)
 	<hr class="panel-wide" />
 	<div class="form-group form-group-sm">
@@ -82,6 +81,8 @@
 <div class="tab-content no-padding-vr">
 	<div class="tab-pane active" id="page-content-panel">
 		@event('view.page.edit', [$page])
+
+		<iframe src="{{ route('backend.pages.wysiwyg', [$page]) }}" style="width:100%;height:500px;border:none;"></iframe>
 
 		<div class="panel-body">
 			{!! $page->getPublicLink() !!}

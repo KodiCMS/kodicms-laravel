@@ -11,14 +11,15 @@ class WidgetController extends Controller {
 	{
 		$widgetId = (int) $this->getRequiredParameter('widget_id');
 		$pageId = (int) $this->getRequiredParameter('page_id');
+		$block = $this->getRequiredParameter('block');
 
 		$insert = DB::table('page_widgets')
-			->insert(['page_id' => $pageId, 'widget_id' => $widgetId]);
+			->insert(['page_id' => $pageId, 'widget_id' => $widgetId, 'block' => $block]);
 
 		$widget = Widget::findOrFail($widgetId);
 		$this->setContent(view('widgets::widgets.page.row', [
 			'widget' => $widget->toWidget(),
-			'block' => 0,
+			'block' => $block,
 			'position' => 500,
 			'page' => Page::findOrFail($pageId)
 		]));

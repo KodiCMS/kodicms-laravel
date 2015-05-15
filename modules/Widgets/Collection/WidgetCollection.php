@@ -152,7 +152,7 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 		{
 			foreach ($ids as $id => $widget)
 			{
-				$this->registeredWidgets[$i] = $widget;
+				$this->registeredWidgets[$id] = $widget;
 			}
 		}
 

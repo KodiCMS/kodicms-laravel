@@ -5,13 +5,14 @@ use KodiCMS\Pages\Model\FrontendPage;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Model\PageSitemap;
 use KodiCMS\Users\Model\UserMeta;
+use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 
 class PageController extends APIController
 {
 	/**
 	 * @var bool
 	 */
-	public $authRequired = TRUE;
+	public $authRequired = true;
 
 	public function getChildren()
 	{
@@ -29,11 +30,9 @@ class PageController extends APIController
 			return null;
 		}
 
-		$query = Page::where('parent_id', $parentId)
-			->orderBy('position', 'asc')
-			->orderBy('created_at', 'asc');
+		$query = Page::where('parent_id', $parentId)->orderBy('position', 'asc')->orderBy('created_at', 'asc');
 
-		$childrens = $query->get()->lists(NULL, 'id');
+		$childrens = $query->get()->lists(null, 'id');
 
 		foreach ($childrens as $id => $child)
 		{
@@ -48,13 +47,13 @@ class PageController extends APIController
 
 		return view('pages::pages.children', [
 			'childrens' => $childrens,
-			'level' => $level + 1
+			'level'     => $level + 1
 		])->render();
 	}
 
 	public function getReorder()
 	{
-		$pages = PageSitemap::get(TRUE)->asArray();
+		$pages = PageSitemap::get(true)->asArray();
 
 		$this->setContent(view('pages::pages.reorder', [
 			'pages' => $pages
@@ -89,33 +88,66 @@ class PageController extends APIController
 
 		$pages = new Page;
 
-		if (strlen($query) == 2 AND $query[0] == '.') {
+		if (strlen($query) == 2 AND $query[0] == '.')
+		{
 			$page_status = [
 				'd' => FrontendPage::STATUS_DRAFT,
 				'p' => FrontendPage::STATUS_PUBLISHED,
 				'h' => FrontendPage::STATUS_HIDDEN
 			];
 
-			if (isset($page_status[$query[1]])) {
+			if (isset($page_status[$query[1]]))
+			{
 				$pages->whereIn('status', $page_status[$query[1]]);
 			}
-		} else {
+		} else
+		{
 			$pages = $pages->searchByKeyword($query);
 		}
 
 		$childrens = [];
 		$pages = $pages->get();
 
-		foreach ($pages as $page) {
-			$page->isExpanded = FALSE;
-			$page->hasChildren = FALSE;
+		foreach ($pages as $page)
+		{
+			$page->isExpanded = false;
+			$page->hasChildren = false;
 
 			$childrens[] = $page;
 		}
 
 		$this->setContent((string)view('pages::pages.children', [
 			'childrens' => $childrens,
-			'level' => 0
+			'level'     => 0
 		]));
 	}
+
+	public function postWidgetsReorder()
+	{
+		$pageId = $this->getRequiredParameter('id');
+		$data = (array)$this->getRequiredParameter('data');
+
+		$page = Page::find($pageId);
+
+		$widgetsData = [];
+
+		foreach ($data as $block => $widgets)
+		{
+			foreach ($widgets as $position => $widgetId)
+			{
+				$location = [
+					'block'    => $block,
+					'position' => $position,
+				];
+				$widgetsData[$widgetId] = $location;
+			}
+		}
+		\Input::merge([
+			'widget' => $widgetsData,
+		]);
+
+		$page->save();
+		$this->setContent('GOOD');
+	}
+
 }
