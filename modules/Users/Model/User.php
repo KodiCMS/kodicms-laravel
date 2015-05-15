@@ -17,6 +17,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	use Authenticatable, CanResetPassword;
 
 	/**
+	 * @var array
+	 */
+	private static $loadedUserRoles = [];
+
+	/**
 	 * The database table used by the model.
 	 *
 	 * @var string
@@ -102,11 +107,27 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return $this->belongsToMany('KodiCMS\Users\Model\UserRole', 'roles_users', 'user_id', 'role_id');
 	}
 
+	/**
+	 * @return \Illuminate\Database\Eloquent\Collection
+	 */
+	public function getRoles()
+	{
+		if (array_key_exists($this->id, static::$loadedUserRoles))
+		{
+			return static::$loadedUserRoles[$this->id];
+		}
+
+		$roles = $this->roles()->get();
+		static::$loadedUserRoles[$this->id] = $roles;
+
+		return $roles;
+	}
+
 	public function hasRole($role, $allRequired = FALSE)
 	{
 		$status = TRUE;
 
-		$roles = $this->roles()->lists('name');
+		$roles = $this->getRoles()->lists('name');
 
 		if (is_array($role))
 		{
@@ -140,8 +161,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	public function getPermissionsByRoles()
 	{
-		$roles = $this->roles()
-			->get()
+		$roles = $this->getRoles()
 			->lists('name', 'id');
 
 		if(!empty($roles)) {

@@ -18,35 +18,38 @@ class PageController extends APIController
 		$this->setContent($this->_children((int)$this->getRequiredParameter('parent_id'), (int)$this->getParameter('level')));
 	}
 
-	protected function _children($parent_id, $level)
+	protected function _children($parentId, $level)
 	{
 		$expandedRows = UserMeta::get('expanded_pages', []);
 
-		$page = Page::find($parent_id);
+		$page = Page::find($parentId);
 
-		if (is_null($page)) {
-			return NULL;
+		if (is_null($page))
+		{
+			return null;
 		}
 
-		$query = Page::where('parent_id', $parent_id)
+		$query = Page::where('parent_id', $parentId)
 			->orderBy('position', 'asc')
 			->orderBy('created_at', 'asc');
 
 		$childrens = $query->get()->lists(NULL, 'id');
 
-		foreach ($childrens as $id => $child) {
+		foreach ($childrens as $id => $child)
+		{
 			$childrens[$id]->hasChildren = $child->hasChildren();
 			$childrens[$id]->isExpanded = in_array($child->id, $expandedRows);
 
-			if ($childrens[$id]->isExpanded === TRUE) {
+			if ($childrens[$id]->isExpanded === true)
+			{
 				$childrens[$id]->childrenRows = $this->_children($child->id, $level + 1);
 			}
 		}
 
-		return (string)view('pages::pages.children', [
+		return view('pages::pages.children', [
 			'childrens' => $childrens,
 			'level' => $level + 1
-		]);
+		])->render();
 	}
 
 	public function getReorder()

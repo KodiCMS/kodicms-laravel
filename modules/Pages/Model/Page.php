@@ -8,6 +8,16 @@ use UI;
 class Page extends Model
 {
 	/**
+	 * @var array
+	 */
+	private static $loadedPages = [];
+
+	/**
+	 * @var array
+	 */
+	private static $loadedUsers = [];
+
+	/**
 	 * Список статусов
 	 * @return array
 	 */
@@ -140,7 +150,7 @@ class Page extends Model
 	 */
 	public function getUri()
 	{
-		if ($parent = $this->parent()->first())
+		if ($parent = $this->parent())
 		{
 			$uri = $parent->getUri() . '/' . $this->slug;
 		}
@@ -172,12 +182,25 @@ class Page extends Model
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function hasLayout()
+	{
+		if (empty($this->layout_file) AND $parent = $this->parent())
+		{
+			return $parent->hasLayout();
+		}
+
+		return !empty($this->layout_file);
+	}
+
+	/**
 	 * Получение названия шаблона текущей страницы
 	 * @return string
 	 */
 	public function getLayout()
 	{
-		if (empty($this->layout_file) AND $parent = $this->parent()->first()) {
+		if (empty($this->layout_file) AND $parent = $this->parent()) {
 			return $parent->getLayout();
 		}
 
@@ -263,15 +286,15 @@ class Page extends Model
 	 */
 	public function createdBy()
 	{
-		return $this->belongsTo('\KodiCMS\Users\Model\User', 'created_by_id');
+		return $this->loadUserTableByField('created_by_id');
 	}
 
 	/**
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 * @return User
 	 */
 	public function updatedBy()
 	{
-		return $this->belongsTo('\KodiCMS\Users\Model\User', 'updated_by_id');
+		return $this->loadUserTableByField('updated_by_id');
 	}
 
 	/**
@@ -279,7 +302,15 @@ class Page extends Model
 	 */
 	public function parent()
 	{
-		return $this->belongsTo('\KodiCMS\Pages\Model\Page', 'parent_id');
+		if (array_key_exists($this->parent_id, static::$loadedPages))
+		{
+			return static::$loadedPages[$this->parent_id];
+		}
+
+		$parentPage = $this->belongsTo('\KodiCMS\Pages\Model\Page', 'parent_id')->first();
+		static::$loadedPages[$this->parent_id] = $parentPage;
+
+		return $parentPage;
 	}
 
 	/**
@@ -366,5 +397,22 @@ class Page extends Model
 	public function getLayoutAttribute()
 	{
 		return $this->getLayout();
+	}
+
+	/**
+	 * @param string $filed
+	 * @return User|null
+	 */
+	protected function loadUserTableByField($filed)
+	{
+		if (array_key_exists($this->{$filed}, static::$loadedUsers))
+		{
+			return static::$loadedUsers[$this->{$filed}];
+		}
+
+		$user = $this->belongsTo('\KodiCMS\Users\Model\User', $filed);
+		static::$loadedUsers[$this->{$filed}] = $user;
+
+		return $user;
 	}
 }
