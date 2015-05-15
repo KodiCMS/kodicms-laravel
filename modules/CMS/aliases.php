@@ -50,6 +50,6 @@ return [
 	'ACL'			=> 'KodiCMS\Users\ACL',
 	'CMS'			=> 'KodiCMS\CMS\Core',
 	'Assets'		=> 'KodiCMS\CMS\Assets\Core',
-	'WYSIWYG'		=> 'KodiCMS\CMS\Helpers\WYSIWYG',
+	'WYSIWYG'		=> 'KodiCMS\CMS\Wysiwyg\Manager',
 	'Date'			=> 'KodiCMS\CMS\Helpers\Date',
 ];

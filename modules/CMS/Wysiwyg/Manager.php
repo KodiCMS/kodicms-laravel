@@ -1,9 +1,9 @@
-<?php namespace KodiCMS\CMS\Helpers;
+<?php namespace KodiCMS\CMS\Wysiwyg;
 
 use Assets;
-use KodiCMS\CMS\Wysiwyg\DummyFilter;
+use KodiCMS\CMS\Contracts\WysiwygFilterInterface;
 
-class WYSIWYG
+class Manager
 {
 	const TYPE_HTML = 'html';
 	const TYPE_CODE = 'code';
@@ -27,7 +27,7 @@ class WYSIWYG
 	 */
 	public static function add($editorId, $name = null, $filter = null, $package = null, $type = self::TYPE_HTML)
 	{
-		self::$editors[$editorId] = [
+		static::$editors[$editorId] = [
 			'name' => $name === null ? studly_case($editorId) : $name,
 			'type' => $type == self::TYPE_HTML ? self::TYPE_HTML : self::TYPE_CODE,
 			'filter' => empty($filter) ? $editorId : $filter,
@@ -41,9 +41,9 @@ class WYSIWYG
 	 */
 	public static function remove($editorId)
 	{
-		if (isset(self::$editors[$editorId]))
+		if (isset(static::$editors[$editorId]))
 		{
-			unset(self::$editors[$editorId]);
+			unset(static::$editors[$editorId]);
 		}
 	}
 
@@ -52,7 +52,7 @@ class WYSIWYG
 	 */
 	public static function loadAll($type = null)
 	{
-		foreach (self::$editors as $editorId => $data)
+		foreach (static::$editors as $editorId => $data)
 		{
 			if ($type !== null AND is_string($type))
 			{
@@ -62,7 +62,7 @@ class WYSIWYG
 				}
 			}
 
-			self::$loaded[$editorId] = $data;
+			static::$loaded[$editorId] = $data;
 			Assets::package($data['package']);
 		}
 	}
@@ -71,21 +71,31 @@ class WYSIWYG
 	 * Get a instance of a filter
 	 * TODO: доработать вызов филтра, добавить интерфейс
 	 * @param $editorId
-	 * @return Filter_Decorator
+	 * @return WysiwygFilterInterface
 	 */
 	public static function getFilter($editorId)
 	{
-		if (isset(self::$editors[$editorId]))
+		if (isset(static::$editors[$editorId]))
 		{
-			$data = self::$editors[$editorId];
+			$data = static::$editors[$editorId];
 
-			if (class_exists($data['filter']))
+			if (class_exists($data['filter']) and in_array('KodiCMS\CMS\Contracts\WysiwygFilterInterface', class_implements($data['filter'])))
 			{
 				return new $data['filter'];
 			}
 		}
 
-		return new DummyFilter;
+		return new WysiwygDummyFilter;
+	}
+
+	/**
+	 * @param string $editorId
+	 * @param string $text
+	 * @return string
+	 */
+	public static function applyFilter($editorId, $text)
+	{
+		return static::getFilter($editorId)->apply($text);
 	}
 
 	/**
@@ -96,7 +106,7 @@ class WYSIWYG
 	{
 		$editors = ['' => trans('cms::core.helpers.not_select')];
 
-		foreach (self::$editors as $editorId => $data)
+		foreach (static::$editors as $editorId => $data)
 		{
 			if ($type !== null AND is_string($type))
 			{

@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Pages\Observers;
 
 use Cache;
-use KodiCMS\CMS\Helpers\WYSIWYG;
+use WYSIWYG;
 use KodiCMS\Pages\Model\PagePart;
 
 class PagePartObserver

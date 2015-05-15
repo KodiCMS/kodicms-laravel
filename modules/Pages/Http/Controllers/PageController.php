@@ -2,7 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use KodiCMS\CMS\Helpers\WYSIWYG;
+use WYSIWYG;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use Assets;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
