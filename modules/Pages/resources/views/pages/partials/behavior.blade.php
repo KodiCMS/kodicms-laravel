@@ -1,7 +1,6 @@
 <div class="panel-body no-padding">
-	@foreach ($behavior->getRouter()->getRoutes() as $route => $params)
+	@forelse ($behavior->getRouter()->getRoutes() as $route => $params)
 	<?php if(empty($route)) continue; ?>
-
 	<div class="panel no-margin-b">
 		<div class="panel-heading">
 			<code class="panel-title">{{ $page->getFrontendUrl() }}{{ $route }}</code>
@@ -25,5 +24,9 @@
 			</span>
 		</div>
 	</div>
-	@endforeach
+	@empty
+	<div class="note note-info">
+		<h4 class="no-margin">@lang('pages::core.messages.behavior_no_routes')</h4>
+	</div>
+	@endforelse
 </div>
