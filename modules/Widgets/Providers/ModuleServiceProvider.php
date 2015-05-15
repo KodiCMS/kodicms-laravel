@@ -38,7 +38,10 @@ class ModuleServiceProvider extends ServiceProvider
 
 			foreach ($postData as $widgetId => $location)
 			{
-				WidgetManagerDatabase::updateWidgetOnPage($widgetId, $page->id, $location);
+				if (array_key_exists('blokc', $location))
+				{
+					WidgetManagerDatabase::updateWidgetOnPage($widgetId, $page->id, $location);
+				}
 			}
 		});
 

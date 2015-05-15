@@ -18,7 +18,7 @@
 		@endif
 	</td>
 	<td>
-		@if(acl_check('widgets.location'))
+		@if(acl_check('widgets.location') and $page->hasLayout())
 		<div class="input-group">
 			{!! Form::hidden('widget[' . $widget->getId() . '][block]', ! empty($block) ? $block : 0, ['class' => 'widget-blocks', 'data-layout' => $page->layout]) !!}
 
@@ -29,7 +29,7 @@
 			</div>
 		</div>
 		@else
-		<span class="label label-success">{{ __('Block: :block_name', [':block_name' => $block]) }}</span>
+			{!! Form::text(null, $block, ['class' => 'form-control', 'disabled']) !!}
 		@endif
 	</td>
 </tr>

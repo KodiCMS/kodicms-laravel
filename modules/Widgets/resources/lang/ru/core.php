@@ -31,6 +31,7 @@ return [
 		'before_page_render' => 'До загрузки страницы',
 		'after_page_render' => 'После загрузки страницы',
 		'dont_copy_widgets' => 'Не копировать',
+		'block' => 'Блок :block_name'
 	],
 	'settings' => [
 		'header' => 'Заголовок',
