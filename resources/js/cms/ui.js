@@ -534,4 +534,7 @@ CMS.ui.add('flags', function () {
 		fallbackLng: [],
 		resGetPath: '/cms/js/locale/__lng__.json',
 	});
+})
+.add('momentJs', function() {
+	moment.locale(LOCALE);
 });

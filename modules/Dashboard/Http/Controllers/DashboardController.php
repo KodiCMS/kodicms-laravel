@@ -37,12 +37,13 @@ class DashboardController extends BackendController {
 		$placedWidgetsTypes = [];
 		foreach ($widgetSettings as $widget)
 		{
+			$widget = WidgetManagerDashboard::toWidget($widget);
+
 			if ($widget instanceof WidgetDashboard)
 			{
 				$placedWidgetsTypes[$widget->getType()] = $widget->isMultiple();
 			}
 		}
-
 
 		foreach ($types as $type => $data)
 		{
