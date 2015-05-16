@@ -1,7 +1,6 @@
 <?php
 
 use KodiCMS\CMS\Assets\Package;
-use WYSIWYG;
 
 Package::add('libraries')
 	->js(NULL, resources_url() . '/js/libraries.js');
