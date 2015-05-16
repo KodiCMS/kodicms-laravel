@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel {
 	protected $commands = [
 		'KodiCMS\CMS\Console\Commands\GenerateScriptTranslates',
 		'KodiCMS\CMS\Console\Commands\GenerateLocalePackage',
-		'KodiCMS\CMS\Console\Commands\ControllerMakeCommand'
+		'KodiCMS\CMS\Console\Commands\ControllerMakeCommand',
+		'KodiCMS\CMS\Console\Commands\PackagesList'
 	];
 
 	/**
