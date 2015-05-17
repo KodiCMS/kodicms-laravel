@@ -42,7 +42,9 @@ class PageWysiwygController extends TemplateController
 			return new BlockWysiwyg(app('layout.widgets'), $page);
 		});
 
-		$html = $frontendPage->getLayoutView()->render();
+		$html = $frontendPage->getLayoutView()
+			->with('page', $frontendPage)
+			->render();
 
 		$injectHTML = view('pages::pages.wysiwyg.system_blocks');
 		$matches = preg_split('/(<\/body>)/i', $html, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
