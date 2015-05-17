@@ -2,7 +2,7 @@
 
 use Assets;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Routing\Controller;
+use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 use KodiCMS\Pages\Helpers\BlockWysiwyg;
 use KodiCMS\Pages\Model\FrontendPage;
 use KodiCMS\Pages\Model\Page;
@@ -10,8 +10,13 @@ use KodiCMS\Widgets\Collection\PageWidgetCollection;
 use Meta;
 use Block;
 
-class PageWysiwygController extends Controller
+class PageWysiwygController extends TemplateController
 {
+	/**
+	 * @var bool
+	 */
+	protected $authRequired = true;
+
 	public function getPageWysiwyg($id)
 	{
 		Meta::addMeta([
@@ -24,13 +29,10 @@ class PageWysiwygController extends Controller
 			])
 			->addCss('fancy', resources_url() . '/libs/fancybox/jquery.fancybox.css')
 			->addPackage([
-				'jquery',
-				'sortable',
-				'page-wysiwyg',
-				'libraries',
-				'core',
-			])
-			->addToGroup('site-url', '<script type="text/javascript">var SITE_URL="' . url() . '";</script>');
+				'page-wysiwyg'
+			], true)
+			->addToGroup('site-url', '<script type="text/javascript">' . $this->getTemplateScriptsAsString() . '</script>');
+
 
 		$page = $this->getPage($id);
 		$frontendPage = new FrontendPage($page->toArray());
@@ -50,10 +52,17 @@ class PageWysiwygController extends Controller
 			return new BlockWysiwyg(app('layout.widgets'), $page);
 		});
 
-		Block::run('-1');
-		Block::run('0');
+		$html = $frontendPage->getLayoutView()->render();
 
-		return $frontendPage->getLayoutView()->render();
+		$injectHTML = view('pages::pages.wysiwyg.system_blocks');
+		$matches = preg_split('/(<\/body>)/i', $html, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+
+		if (count($matches) > 1)
+		{
+			$html = $matches[0] . $injectHTML->render() . $matches[1] . $matches[2];
+		}
+
+		return $html;
 	}
 
 	protected function getPage($id)

@@ -78,14 +78,5 @@ Package::add('ace')
 	->js('ace-library', resources_url() . '/libs/ace/src-min/ace.js', 'jquery')
 	->js(NULL, backend_resources_url() . '/js/ace.js', 'ace-library');
 
-Package::add('sortable')
-	->js('sortable-library', resources_url() . '/libs/sortable/Sortable.min.js', 'jquery')
-	->js(NULL, resources_url() . '/libs/sortable/jquery.binding.js', 'jquery');
-
-Package::add('page-wysiwyg')
-	->js(null, resources_url() . '/libs/page-wysiwyg/page-wysiwyg.js', 'jquery')
-	->css(null, resources_url() . '/libs/page-wysiwyg/style.css')
-	->css('font', '//fonts.googleapis.com/css?family=Roboto:300');
-
 WYSIWYG::add('ace', 'Ace', NULL, NULL, WYSIWYG::TYPE_CODE);
 WYSIWYG::add('ckeditor', 'CKEditor');

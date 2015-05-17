@@ -6,7 +6,3 @@
 <div class="panel-body no-padding">
 	<iframe src="{{ route('backend.pages.wysiwyg', [$page]) }}" style="width:100%;height:500px;border:none;"></iframe>
 </div>
-
-@section('scripts')
-	<script src="/backend/cms/js/PageWidgetController.js"></script>
-@stop

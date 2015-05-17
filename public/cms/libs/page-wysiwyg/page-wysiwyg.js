@@ -33,9 +33,8 @@ $(function() {
 	{
 		e.preventDefault();
 		var $widget = $(this).closest('.page-widget-placeholder');
-		save(function() {
-			$widget.appendTo(deletedContainer);
-		});
+		$widget.appendTo(deletedContainer);
+		save();
 	});
 
 	$('body').on('click', '.page-block-placeholder-buttons .add-widget', function ()
