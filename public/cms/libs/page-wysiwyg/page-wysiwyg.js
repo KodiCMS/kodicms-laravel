@@ -49,14 +49,9 @@ $(function() {
 			page_id: pageId,
 			block: block
 		}, function(response) {
-
 			$.fancybox.close();
 			window.location.reload();
 			return;
-
-			window.location = '#widgets';
-			$('#widget-list tbody').append(response.content);
-			reload_blocks(layout_file);
 		});
 	});
 });

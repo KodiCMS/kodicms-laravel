@@ -19,20 +19,10 @@ class PageWysiwygController extends TemplateController
 
 	public function getPageWysiwyg($id)
 	{
-		Meta::addMeta([
-			'name'    => 'page-id',
-			'data-id' => $id
-		])
-			->addMeta([
-				'name' => 'csrf-token',
-				'content' => csrf_token(),
-			])
-			->addCss('fancy', resources_url() . '/libs/fancybox/jquery.fancybox.css')
-			->addPackage([
-				'page-wysiwyg'
-			], true)
+		Meta::addMeta(['name'    => 'page-id', 'data-id' => $id])
+			->addMeta(['name' => 'csrf-token', 'content' => csrf_token()])
+			->addPackage(['page-wysiwyg'], true)
 			->addToGroup('site-url', '<script type="text/javascript">' . $this->getTemplateScriptsAsString() . '</script>');
-
 
 		$page = $this->getPage($id);
 		$frontendPage = new FrontendPage($page->toArray());
