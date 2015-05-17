@@ -42,8 +42,6 @@ Route::post('/api.page.reorder', ['as' => 'api.page.reorder', 'uses' => 'API\Pag
 Route::get('/api.page.search', ['as' => 'api.page.search', 'uses' => 'API\PageController@getSearch']);
 Route::post('/api.page.changeStatus', ['as' => 'api.page.change_status', 'uses' => 'API\PageController@postChangeStatus']);
 
-Route::post('/api.page.widgets.reorder', ['as' => 'api.page.widgets.reorder', 'uses' => 'API\PageController@postWidgetsReorder']);
-
 app('router')->before(function() {
 	Route::get('{slug}', 'KodiCMS\Pages\Http\Controllers\FrontendController@run')->where('slug', '(.*)?');
 });

@@ -17,7 +17,7 @@ class WidgetManagerDatabase extends WidgetManager
 	{
 		$widgets = new Widget;
 
-		if(is_array($types) AND count($types) > 0)
+		if (is_array($types) AND count($types) > 0)
 		{
 			$widgets->whereIn('widgets.type', $types);
 		}
@@ -114,6 +114,25 @@ class WidgetManagerDatabase extends WidgetManager
 	/**
 	 * @param integer $id
 	 * @return array
+	 *
+	 * [
+	 * 	[ // занятые блоки для исключения из списков
+	 * 		(int) {$pageId} => [
+	 * 			(string) {$blockName},
+	 * 			(int) {$position},
+	 * 			(bool) {$isSetCrumbs}
+	 * 		]
+	 * 	],
+	 * 	[ // выбранные блоки для текущего виджета
+	 * 		(int) {$pageId} => [
+	 * 			(string){$block} => [
+	 * 				(string) {$blockName},
+	 * 				(int) {$position},
+	 * 				(bool) {$isSetCrumbs}
+	 * 			]
+	 * 		]
+	 * 	]
+	 * ]
 	 */
 	public static function getWidgetLocationById($id)
 	{
@@ -160,7 +179,7 @@ class WidgetManagerDatabase extends WidgetManager
 	 * // TODO: добавить установку хлебных крошек
 	 *
 	 * @param integer $widgetId
-	 * @param array $locations
+	 * @param array $locations [(int) {pageId} => ['block' => (string) '...', 'position' => (int) '...', 'set_crumbs' => (bool) '...']]
 	 */
 	public static function placeWidgetsOnPages($widgetId, array $locations)
 	{
@@ -196,11 +215,11 @@ class WidgetManagerDatabase extends WidgetManager
 	/**
 	 * @param int $widgetId
 	 * @param int $pageId
-	 * @param array $location
+	 * @param array $location ['block' => (string) '...', 'position' => (int) '...', 'set_crumbs' => (bool) '...']
 	 */
 	public static function updateWidgetOnPage($widgetId, $pageId, array $location)
 	{
-		$query = DB::table('page_widgets')->where('widget_id', (int)$widgetId)->where('page_id', (int)$pageId);
+		$query = DB::table('page_widgets')->where('widget_id', (int) $widgetId)->where('page_id', (int)$pageId);
 
 		if ($location['block'] < 0)
 		{
@@ -210,7 +229,8 @@ class WidgetManagerDatabase extends WidgetManager
 		{
 			$query->update([
 				'block' => $location['block'],
-				'position' => (int) array_get($location, 'position')
+				'position' => (int) array_get($location, 'position'),
+				'set_crumbs' => (bool) array_get($location, 'set_crumbs'),
 			]);
 		}
 	}

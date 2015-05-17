@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Cron\Providers;
 
+use CMS;
 use Event;
 use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Cron\Model\Job;
@@ -14,11 +15,12 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConsoleCommand('cron.run', 'KodiCMS\Cron\Console\Commands\Run');
 		Event::listen('kernel.handled', function ()
 		{
-			if (config('job.agent', Job::AGENT_SYSTEM) === Job::AGENT_SYSTEM)
+			if (CMS::isInstalled() and config('job.agent', Job::AGENT_SYSTEM) === Job::AGENT_SYSTEM)
 			{
 				Job::runAll();
 			}
 		});
+
 		Event::listen('view.settings.bottom', function() {
 			$agents = Job::agents();
 			echo view('cron::cron.settings', compact('agents'));

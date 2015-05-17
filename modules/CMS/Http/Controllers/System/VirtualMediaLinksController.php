@@ -20,8 +20,6 @@ class VirtualMediaLinksController extends Controller
 			// Check if the browser sent an "if-none-match: <etag>" header, and tell if the file hasn't changed
 
 			// Set the proper headers to allow caching
-			$this->response;
-
 			return (new Response(file_get_contents($file)))
 				->header('Content-Type', File::mimeByExt($ext))
 				->header('last-modified', date('r', filemtime($file)));

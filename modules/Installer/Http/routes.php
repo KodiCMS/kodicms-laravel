@@ -1,8 +1,7 @@
 <?php
 
-
-
 app('router')->before(function() {
+	// TODO: решить проблему дублирования роута
 	Route::group(['namespace' => 'KodiCMS\CMS\Http\Controllers', 'prefix' => CMS::backendPath()], function () {
 		Route::get('cms/{file}.{ext}', 'System\VirtualMediaLinksController@find')
 			->where('file', '.*')

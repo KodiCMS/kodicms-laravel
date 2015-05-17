@@ -322,6 +322,14 @@ class Page extends Model
 	}
 
 	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function parts()
+	{
+		return $this->hasMany('\KodiCMS\Pages\Model\PagePart', 'page_id', 'id');
+	}
+
+	/**
 	 * @param array $pages
 	 * @return bool
 	 */
@@ -397,6 +405,14 @@ class Page extends Model
 	public function getLayoutAttribute()
 	{
 		return $this->getLayout();
+	}
+
+	/**
+	 * @return bool|FrontendPage
+	 */
+	public function toFrontendPage()
+	{
+		return FrontendPage::findById($this->id);
 	}
 
 	/**

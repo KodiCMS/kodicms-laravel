@@ -5,7 +5,7 @@ return [
 		'dashboard' => 'Рабочий стол'
 	],
 	'messages' => [
-		'no_widgets' => 'Нет виджетов'
+		'no_widgets' => 'Нет доступных виджетов'
 	],
 	'buttons' => [
 		'add_widget' => 'Добавить виджет',

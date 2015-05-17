@@ -50,7 +50,7 @@ abstract class Decorator extends WidgetDecorator implements WidgetDashboard, Wid
 	 */
 	public function isMultiple()
 	{
-		return $this->isMultiple();
+		return $this->multiple;
 	}
 
 	/**

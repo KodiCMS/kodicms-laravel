@@ -121,33 +121,4 @@ class PageController extends APIController
 			'level'     => 0
 		]));
 	}
-
-	public function postWidgetsReorder()
-	{
-		$pageId = $this->getRequiredParameter('id');
-		$data = (array)$this->getRequiredParameter('data');
-
-		$page = Page::find($pageId);
-
-		$widgetsData = [];
-
-		foreach ($data as $block => $widgets)
-		{
-			foreach ($widgets as $position => $widgetId)
-			{
-				$location = [
-					'block'    => $block,
-					'position' => $position,
-				];
-				$widgetsData[$widgetId] = $location;
-			}
-		}
-		\Input::merge([
-			'widget' => $widgetsData,
-		]);
-
-		$page->save();
-		$this->setContent('GOOD');
-	}
-
 }

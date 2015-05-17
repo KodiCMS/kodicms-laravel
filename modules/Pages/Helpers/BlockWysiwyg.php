@@ -15,7 +15,10 @@ class BlockWysiwyg extends Block
 		$this->page = $page;
 	}
 
-
+	/**
+	 * @param string $name
+	 * @param array $params
+	 */
 	public function run($name, array $params = [])
 	{
 		$widgets = static::getWidgetsByBlock($name, $params);
@@ -29,7 +32,7 @@ class BlockWysiwyg extends Block
 			'widgets' => $collection,
 			'name' => $name,
 			'page' => $this->page,
-		]);
+		])->render();
 	}
 
 }

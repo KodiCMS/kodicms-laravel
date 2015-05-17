@@ -1,9 +1,9 @@
-$(function ()
-{
+$(function() {
 	var block;
 	var pageId = $('meta[name="page-id"]').data('id');
 	var deletedContainer = $('.page-block-placeholder[data-name="-1"]');
-	var save = function ()
+
+	var save = function (callback)
 	{
 		var data = {};
 		$('.page-block-placeholder').each(function ()
@@ -18,8 +18,8 @@ $(function ()
 				data[name].push(id);
 			});
 		});
-		Api.post('/api.page.widgets.reorder', {data: data, id: pageId}, $.proxy(function(response) {
-		}, this));
+
+		Api.post('/api.page.widgets.reorder', {data: data, id: pageId}, $.proxy(callback, this));
 	};
 
 	$('.page-block-placeholder .sortable').sortable({
@@ -28,27 +28,33 @@ $(function ()
 		group: 'widgets',
 		onEnd: save
 	});
+
 	$(document).on('click', '.page-widget-placeholder .widget-remove', function (e)
 	{
 		e.preventDefault();
-		$(this).closest('.page-widget-placeholder').appendTo(deletedContainer);
-		save();
+		var $widget = $(this).closest('.page-widget-placeholder');
+		save(function() {
+			$widget.appendTo(deletedContainer);
+		});
 	});
+
 	$('body').on('click', '.page-block-placeholder-buttons .add-widget', function ()
 	{
 		block = $(this).closest('.page-block-placeholder').data('name');
 	});
+
 	$('body').on('click', '.popup-widget-item', function() {
 		var widget_id = $(this).data('id');
-
 		Api.put('/api.widget', {
 			widget_id: widget_id,
 			page_id: pageId,
 			block: block
 		}, function(response) {
+
 			$.fancybox.close();
 			window.location.reload();
 			return;
+
 			window.location = '#widgets';
 			$('#widget-list tbody').append(response.content);
 			reload_blocks(layout_file);

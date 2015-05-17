@@ -26,4 +26,33 @@ class WidgetController extends Controller {
 
 		$this->setMessage('Widget added to page');
 	}
+
+	public function postReorder()
+	{
+		$pageId = $this->getRequiredParameter('id');
+		$data = (array) $this->getRequiredParameter('data');
+
+		$page = Page::find($pageId);
+
+		$widgetsData = [];
+
+		foreach ($data as $block => $widgets)
+		{
+			foreach ($widgets as $position => $widgetId)
+			{
+				$location = [
+					'block'    => $block,
+					'position' => $position,
+				];
+				$widgetsData[$widgetId] = $location;
+			}
+		}
+
+		$this->request->merge([
+			'widget' => $widgetsData,
+		]);
+
+		$page->save();
+		$this->setContent(TRUE);
+	}
 }
