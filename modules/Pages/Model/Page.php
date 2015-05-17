@@ -375,7 +375,7 @@ class Page extends Model
 
 		if ($this->id != 1) {
 			$layout = NULL;
-			if ($parent = $this->parent()->first()) {
+			if ($parent = $this->parent()) {
 				$layout = $parent->getLayout();
 			}
 
