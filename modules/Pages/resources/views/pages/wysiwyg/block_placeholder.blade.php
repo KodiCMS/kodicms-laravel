@@ -8,10 +8,9 @@
 	</div>
 
 	<div class="page-block-placeholder-buttons pull-right">
-		{!! Form::button(trans('widgets::core.button.add_to_page'), [
-			'class' => 'btn btn-success btn-xs fancybox.ajax popup add-widget',
-			'data-icon' => 'plus fa-fw',
-			'href' => route('backend.widget.popup_list', [$page->getId()])
+		{!! link_to_route('backend.widget.popup_list', trans('widgets::core.button.add_to_page'), [$page->getId()], [
+			'class' => 'btn btn-success btn-xs popup add-widget',
+			'data-icon' => 'plus fa-fw', 'data-popup-type' => 'ajax'
 		]) !!}
 	</div>
 

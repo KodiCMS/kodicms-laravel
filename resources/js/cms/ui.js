@@ -256,62 +256,6 @@ CMS.ui.add('flags', function () {
 		dictRemoveFile: __("Remove file"),
 		dictMaxFilesExceeded: __("You can only upload {{maxFiles}} files."),
 	});
-}).add('fancybox', function () {
-	$(".fancybox-image").fancybox();
-}).add('popup', function () {
-	$(".popup").fancybox({
-		fitToView: true,
-		autoSize: false,
-		width: '99%',
-		height: '99%',
-		openEffect: 'none',
-		closeEffect: 'none',
-		beforeLoad: function () {
-			var url = this.href.split("?")[0];
-			var query_string = $.query.load(this.href).set('type', 'iframe').toString();
-
-			this.href = url + query_string;
-			var title = this.element.data('title');
-			if (title !== false) {
-				this.title = title ? title : this.element.html();
-			}
-
-			CMS.popup_target = this.element;
-		},
-		helpers: {
-			title: {
-				type: 'inside',
-				position: 'top'
-			}
-		}
-	});
-
-	var $form = $('form');
-	var $form_actions = $('.iframe .form-actions');
-	var method = $form.data('api-method');
-	var action = $form.data('api-url');
-
-	if((method && method.length > 0 && action && action.length > 0)) {
-		$('.btn-save', $form_actions).on('click', function (e) {
-			var $data = $form.serializeObject();
-			Api[method](action, $data);
-			e.preventDefault();
-		});
-
-		$('.btn-save-close', $form_actions).on('click', function (e) {
-			var $data = $('form').serializeObject();
-			Api[method](action, $data, function (response) {
-				(response.code == 200) && window.top.$.fancybox.close();
-			});
-
-			e.preventDefault();
-		});
-	}
-
-	$('.btn-close', $form_actions).on('click', function (e) {
-		window.top.$.fancybox.close();
-		e.preventDefault();
-	});
 }).add('select2', function () {
 	$('select').not('.no-script').select2();
 	$('.tags').select2({

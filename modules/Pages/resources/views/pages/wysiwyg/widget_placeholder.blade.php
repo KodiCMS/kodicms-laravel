@@ -4,7 +4,9 @@
 		{{ $widget->getName() }} <span class="text-muted">[{{ $widget->getTypeTitle() }}]</span>
 
 		<div class="pull-right page-widget-placeholder-actions">
-			<a href="{{ route('backend.widget.edit', [$widget->getId()]) }}" target="_blank">{!! UI::icon('wrench fa-fw'); !!}</a>
+			<a href="{{ route('backend.widget.edit', [$widget->getId()]) }}" class="popup" data-popup-parent="true">
+				{!! UI::icon('wrench fa-fw'); !!}
+			</a>
 			<a href="#" class="widget-remove">{!! UI::icon('times'); !!}</a>
 		</div>
 	</div>

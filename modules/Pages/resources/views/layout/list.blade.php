@@ -50,7 +50,7 @@
 
 				@if (acl_check('layout.edit') OR acl_check('layout.view'))
 				{!! link_to_route('backend.layout.edit', $layout->getName(), [$layout->getName()], [
-					'class' => $layout->isReadOnly() ? 'popup fancybox.iframe' : ''
+					'class' => $layout->isReadOnly() ? 'popup' : ''
 				]) !!}
 				@else
 				@endif
