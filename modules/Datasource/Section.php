@@ -1,10 +1,12 @@
 <?php namespace KodiCMS\Datasource;
 
+use DB;
+use KodiCMS\Support\Facades\FieldManager;
 use Schema;
 use KodiCMS\CMS\Traits\Settings;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 
-abstract class Section implements SectionInterface
+class Section implements SectionInterface
 {
 	use Settings;
 
@@ -16,7 +18,12 @@ abstract class Section implements SectionInterface
 	/**
 	 * @var array
 	 */
-	protected $fields = [];
+	protected $systemFields = [];
+
+	/**
+	 * @var array
+	 */
+	protected $customFields = [];
 
 	/**
 	 * @var string
@@ -73,9 +80,24 @@ abstract class Section implements SectionInterface
 	 */
 	protected $timestamps = false;
 
-	public function __construct()
+	/**
+	 * @param array $values
+	 */
+	public function __construct(array $values)
 	{
+		$settings = array_pull($values, 'settings', []);
 
+		foreach($values as $key => $value)
+		{
+			$this->{snake_case($key)} = $value;
+		}
+
+		$this->setSettings($settings);
+
+		if ($this->isLoaded())
+		{
+			$this->loadFieldsFromDatabase();
+		}
 	}
 
 	/**
@@ -83,7 +105,15 @@ abstract class Section implements SectionInterface
 	 */
 	public function getFields()
 	{
-		return $this->fields;
+		return $this->systemFields + $this->customFields;;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getSystemFieldsKeys()
+	{
+		return array_keys($this->getSystemFields());
 	}
 
 	/**
@@ -99,7 +129,7 @@ abstract class Section implements SectionInterface
 	 */
 	public function getTableName()
 	{
-		return $this->tableName;
+		return $this->tableName . $this->getId();
 	}
 
 	/**
@@ -198,18 +228,6 @@ abstract class Section implements SectionInterface
 		return $this->id > 0;
 	}
 
-	public function migrate()
-	{
-		$fields = $this->getFields();
-
-		Schema::create($this->getTableName(), function (Blueprint $table) use($fields) {
-			foreach($fields as $field)
-			{
-				$field->getDatabaseFieldType($table);
-			}
-		});
-	}
-
 	public function create(array $values)
 	{
 
@@ -225,14 +243,54 @@ abstract class Section implements SectionInterface
 
 	}
 
+	public function migrate()
+	{
+		$fields = $this->getFields();
+		$section = $this;
+
+		Schema::create($this->getTableName(), function (Blueprint $table) use($fields, $section) {
+			foreach($fields as $field)
+			{
+				$field->getDatabaseFieldType($table);
+				$field->migrate($section);
+			}
+		});
+	}
+
 	/**
 	 * @return array
 	 */
-	protected function getFieldTypes()
+	protected function loadFieldsFromDatabase()
+	{
+		$query = DB::table('datasource_fields')
+			->where('ds_id', $this->getId());
+
+		$systemFieldsKeys = $this->getSystemFieldsKeys();
+
+		foreach($query->get() as $item)
+		{
+			$field = FieldManager::make((array) $item);
+
+			if(in_array($item->key, $systemFieldsKeys))
+			{
+				$this->systemFields[$item->key] = $field;
+			}
+			else
+			{
+				$this->customFields[$item->key] = $field;
+			}
+		}
+
+		return $this->customFields;
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getSystemFields()
 	{
 		return [
-			new Fields\Primary('id'),
-			new Fields\String('header')
+			'id' => new Fields\Primary('id')
 		];
 	}
 }

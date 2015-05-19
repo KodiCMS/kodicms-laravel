@@ -6,24 +6,22 @@ use KodiCMS\Datasource\Contracts\DocumentInterface;
 use KodiCMS\Datasource\Contracts\FieldInterface;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Validation\Validator;
+use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\FieldManager;
 
-abstract class Decorator implements FieldInterface
+abstract class Field implements FieldInterface
 {
 	use Settings;
 
-	const DB_FIELD_PREFFIX = 'f_';
+	/**
+	 * @var string
+	 */
+	protected $tablePreffix = '';
 
 	/**
 	 * @var string
 	 */
 	protected $type;
-
-	/**
-	 * With table preffix
-	 *
-	 * @var string
-	 */
-	protected $dbKey;
 
 	/**
 	 * @var string
@@ -39,6 +37,11 @@ abstract class Decorator implements FieldInterface
 	 * @var array
 	 */
 	protected $settings = [];
+
+	/**
+	 * @var bool
+	 */
+	protected $isSystem = false;
 
 	/**
 	 * @var bool
@@ -66,13 +69,27 @@ abstract class Decorator implements FieldInterface
 	protected $template = null;
 
 	/**
+	 * @var null|SectionInterface
+	 */
+	protected $relatedSection = null;
+
+	/**
 	 * @param string $key
 	 * @param array $settings
 	 */
 	public function __construct($key, array $settings = [])
 	{
 		$this->setSettings($settings);
-		$this->setkey($key);
+
+		$this->key = $key;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getType()
+	{
+		return (new FieldManager)->getTypeByClassName(get_called_class());
 	}
 
 	/**
@@ -88,7 +105,7 @@ abstract class Decorator implements FieldInterface
 	 */
 	public function getDBKey()
 	{
-		return $this->dbKey;
+		return $this->getTablePreffix() . $this->key;
 	}
 
 	/**
@@ -129,6 +146,22 @@ abstract class Decorator implements FieldInterface
 	public function getDefaultValue()
 	{
 		return $this->default;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTablePreffix()
+	{
+		return $this->tablePreffix;
+	}
+
+	/**
+	 * @param string $tablePreffix
+	 */
+	public function setTablePreffix($tablePreffix)
+	{
+		$this->tablePreffix = $tablePreffix;
 	}
 
 	/**
@@ -254,7 +287,10 @@ abstract class Decorator implements FieldInterface
 	/**
 	 * @param Blueprint $table
 	 */
-	abstract public function getDatabaseFieldType(Blueprint $table);
+	public function getDatabaseFieldType(Blueprint $table)
+	{
+		$table->string($this->getDBKey());
+	}
 
 	/**
 	 * @return array
@@ -262,7 +298,7 @@ abstract class Decorator implements FieldInterface
 	public function toArray()
 	{
 		return [
-			'type' => '',
+			'type' => $this->getType(),
 			'key' => $this->getKey(),
 			'dbKey' => $this->getDBKey(),
 			'settings' => $this->getSettings(),
@@ -278,14 +314,5 @@ abstract class Decorator implements FieldInterface
 	public function __toString()
 	{
 		return (string) $this->getKey();
-	}
-
-	/**
-	 * @param string $key
-	 */
-	protected function setkey($key)
-	{
-		$this->key = $key;
-		$this->dbKey = static::DB_FIELD_PREFFIX . $key;
 	}
 }

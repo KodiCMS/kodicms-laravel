@@ -2,22 +2,55 @@
 
 use KodiCMS\Datasource\Exceptions\FieldException;
 
-class FieldManager {
+class FieldManager
+{
+	/**
+	 * @var array
+	 */
+	protected $config = [];
+
+	/**
+	 * @var array
+	 */
+	protected $types = [];
+
+	/**
+	 * @param array $config
+	 */
+	public function __construct(array $config)
+	{
+		$this->config = $config;
+
+		foreach ($this->config as $type => $data)
+		{
+			if (!FieldType::isValid($data)) continue;
+			$this->types[$type] = new FieldType($type, $data);
+		}
+	}
 
 	/**
 	 * @return array
 	 */
 	public function getAvailableTypes()
 	{
-		$types = [];
-		foreach (config('fields', []) as $type => $data)
-		{
-			if (!FieldType::isValid($data)) continue;
+		return $this->types;
+	}
 
-			$types[$type] = new FieldType($type, $data);
+	/**
+	 * @param string $class
+	 * @return string|null
+	 */
+	public function getTypeByClassName($class)
+	{
+		foreach ($this->getAvailableTypes() as $object)
+		{
+			if ($class == $object->getClass())
+			{
+				return $object->getType();
+			}
 		}
 
-		return $types;
+		return null;
 	}
 
 	/**
@@ -37,7 +70,12 @@ class FieldManager {
 		return null;
 	}
 
-	public function make($type, array $parameters = [])
+	/**
+	 * @param $type
+	 * @param array $settings
+	 * @throws FieldException
+	 */
+	public function make($type, array $settings = [])
 	{
 		$class = $this->getClassNameByType($type);
 
@@ -46,6 +84,6 @@ class FieldManager {
 			throw new FieldException("Field [{$type}] not found");
 		}
 
-		new $class($parameters);
+		return new $class($settings);
 	}
 }

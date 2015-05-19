@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 
-class Primary extends Decorator
+class Primary extends Field
 {
 	/**
 	 * @return string

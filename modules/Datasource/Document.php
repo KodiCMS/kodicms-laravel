@@ -2,7 +2,7 @@
 
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 
-abstract class Document implements DocumentInterface
+class Document implements DocumentInterface
 {
 
 }

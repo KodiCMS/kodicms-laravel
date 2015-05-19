@@ -2,7 +2,7 @@
 
 return [
 	'test' => [
-		'class' => 'KodiCMS\Datasource\Test',
-		'document' => 'KodiCMS\Datasource\TestDocument',
+		'class' => 'KodiCMS\Datasource\Test\Section',
+		'document' => 'KodiCMS\Datasource\Test\Document',
 	]
 ];

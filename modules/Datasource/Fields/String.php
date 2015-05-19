@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 
-class String extends Decorator
+class String extends Field
 {
 	/**
 	 * @var array
