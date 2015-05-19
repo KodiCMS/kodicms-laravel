@@ -83,6 +83,14 @@ trait Settings {
 	}
 
 	/**
+	 * @return array
+	 */
+	public function booleanSettings()
+	{
+		return [];
+	}
+
+	/**
 	 * @param string $name
 	 * @param mixed $default
 	 * @return mixed|null
@@ -132,6 +140,12 @@ trait Settings {
 	 */
 	public function setSettings(array $settings)
 	{
+		$booleans = $this->booleanSettings();
+		foreach ($booleans as $key)
+		{
+			$settings[$key] = !empty($settings[$key]) ? true : false;
+		}
+
 		foreach ($settings as $key => $value)
 		{
 			$this->setSetting($key, $value);
