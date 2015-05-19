@@ -107,11 +107,7 @@
 								{!! Form::password('install[password]', [
 									'class' => 'form-control', 'id' => 'password', 'required'
 								]) !!}
-							</div>
-						</div>
 
-						<div class="form-group">
-							<div class="col-md-offset-3 col-md-9 form-inline">
 								{!! Form::password('install[password_confirmation]', [
 									'class' => 'form-control', 'id' => 'password_confirmation', 'placeholder' => trans('installer::core.field.password_conform'), 'required'
 								]) !!}
@@ -144,17 +140,23 @@
 				<div class="form-group">
 					<label class="control-label col-md-3" for="admin_dir_name">@lang('installer::core.field.admin_dir_name')</label>
 					<div class="col-md-9 form-inline">
-						{!! Form::text('install[admin_dir_name]', array_get($data, 'admin_dir_name'), [
+						<div class="input-group">
+							<div class="input-group-addon">{{ url() }}/</div>
+							{!! Form::text('install[admin_dir_name]', array_get($data, 'admin_dir_name'), [
 							'class' => 'form-control', 'id' => 'admin_dir_name', 'size' => 20, 'maxlength' => 20, 'required'
-						]) !!}
+							]) !!}
+						</div>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="control-label col-md-3" for="url_suffix">@lang('installer::core.field.url_suffix')</label>
 					<div class="col-md-9 form-inline">
-						{!! Form::text('install[url_suffix]', array_get($data, 'url_suffix'), [
+						<div class="input-group">
+							<div class="input-group-addon">{{ url() }}/news</div>
+							{!! Form::text('install[url_suffix]', array_get($data, 'url_suffix'), [
 							'class' => 'form-control', 'id' => 'url_suffix', 'size' => 6, 'maxlength' => 6
-						]) !!}
+							]) !!}
+						</div>
 					</div>
 				</div>
 			</div>

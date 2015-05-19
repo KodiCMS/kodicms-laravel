@@ -5,7 +5,7 @@
 		</div>
 
 		<div class="col-xs-6 text-right">
-			<a class="btn btn-primary btn-labeled fancybox.ajax popup" href="{{ route('api.dashboard.widget.list') }}" id="add-widget">
+			<a class="btn btn-primary btn-labeled popup" data-popup-type="href" href="{{ route('api.dashboard.widget.list') }}" id="add-widget">
 				<span class="btn-label icon fa fa-cubes"></span>@lang('dashboard::core.buttons.add_widget')
 			</a>
 		</div>

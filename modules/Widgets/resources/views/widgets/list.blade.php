@@ -91,7 +91,7 @@
 				<td class="actions text-right">
 					@if (acl_check('widgets.location') and !$widget->isHandler())
 					{!! link_to_route('backend.widget.location', '', [$widget], [
-						'data-icon' => 'sitemap', 'class' => 'btn btn-xs btn-primary popup fancybox.iframe'
+						'data-icon' => 'sitemap', 'class' => 'btn btn-xs btn-primary popup'
 					]) !!}
 					@endif
 					@if (acl_check('widgets.delete'))

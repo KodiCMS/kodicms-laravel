@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	{!! Meta::addPackage('jquery')->build() !!}
+	{!!
+		Meta::addPackage(['jquery'])
+			->setFavicon(resources_url() . '/favicon.ico')
+			->build()
+	!!}
 
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-
-	<!-- Optional theme -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
 
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
@@ -46,12 +47,6 @@
 			border-top: 1px solid #e5e5e5;
 		}
 
-		/* Customize container */
-		@media (min-width: 768px) {
-			.container {
-				max-width: 730px;
-			}
-		}
 		.container-narrow > hr {
 			margin: 30px 0;
 		}
@@ -102,8 +97,13 @@
 
 		@block('content.before')
 
-		<div class="row marketing">
-			@block('content', ['comments' => false])
+		<div class="row">
+			<div class="col-md-4">
+				@block('sidebar')
+			</div>
+			<div class="col-md-8">
+				@block('content', ['comments' => false])
+			</div>
 		</div>
 
 		@block('content.after')

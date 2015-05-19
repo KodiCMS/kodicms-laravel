@@ -1,6 +1,11 @@
 <?php
 Route::group(['prefix' => CMS::backendPath()], function () {
 
+	Route::get('page/wysiwyg/{id}', [
+		'as' => 'backend.pages.wysiwyg',
+		'uses' => 'PageWysiwygController@getPageWysiwyg'
+	]);
+
 	Route::controller('page', 'PageController', [
 		'getIndex' => 'backend.page.list',
 		'getCreate' => 'backend.page.create',

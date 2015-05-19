@@ -219,7 +219,7 @@ class WidgetManagerDatabase extends WidgetManager
 	 */
 	public static function updateWidgetOnPage($widgetId, $pageId, array $location)
 	{
-		$query = DB::table('page_widgets')->where('widget_id', (int)$widgetId)->where('page_id', (int)$pageId);
+		$query = DB::table('page_widgets')->where('widget_id', (int) $widgetId)->where('page_id', (int)$pageId);
 
 		if ($location['block'] < 0)
 		{

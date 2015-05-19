@@ -61,7 +61,7 @@ var Dashboard = {
 				return;
 			}
 
-			$.fancybox.close();
+			Popup.close();
 			Dashboard.widgets.save_order();
 		},
 		remove: function(btn) {
@@ -85,6 +85,8 @@ var Dashboard = {
 
 CMS.controllers.add('dashboard.get.index', function () {
 	Dashboard.widgets.init();
+
+	$(window).resize(Popup.resize);
 
 	$('#add-widget').on('click', function(e) {
 		e.preventDefault();
@@ -138,13 +140,7 @@ CMS.controllers.add('dashboard.get.index', function () {
 
 function get_widget_settings(widget_id) {
 	Api.get('/api.dashboard.widget.settings', {id: widget_id}, function(response) {
-		$.fancybox({
-			fitToView	: true,
-			autoSize	: false,
-			width		: '99%',
-			height		: '99%',
-			content		: response.response
-		});
+		Popup.openHTML(response.response);
 	});
 }
 

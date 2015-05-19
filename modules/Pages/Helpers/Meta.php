@@ -185,12 +185,13 @@ class Meta
 
 	/**
 	 * @param string|array $name
+	 * @param bool $loadDependencies
 	 * @param bool $footer
 	 * @return $this
 	 */
-	public function addPackage($name, $footer = false)
+	public function addPackage($name, $loadDependencies = false, $footer = false)
 	{
-		Assets::package($name, $footer);
+		Assets::package($name, $loadDependencies, $footer);
 
 		return $this;
 	}

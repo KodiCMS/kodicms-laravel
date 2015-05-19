@@ -1,15 +1,13 @@
 <?php namespace KodiCMS\Pages\Http\Controllers;
 
 use CMS;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use KodiCMS\CMS\Http\Controllers\System\Controller;
+use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 use KodiCMS\Pages\Exceptions\LayoutNotFoundException;
 use KodiCMS\Pages\Exceptions\PageNotFoundException;
 use KodiCMS\Pages\Model\FrontendPage;
-use KodiCMS\Widgets\Collection\PageWidgetCollection;
 
-class FrontendController extends Controller
+class FrontendController extends TemplateController
 {
 	// TODO: использовать Dispacher для генерации событий
 	public function run($slug)

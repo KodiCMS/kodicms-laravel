@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Email\Http\Controllers;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use KodiCMS\CMS\Helpers\WYSIWYG;
+use WYSIWYG;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use KodiCMS\Email\Model\EmailTemplate;
 use KodiCMS\Email\Model\EmailType;

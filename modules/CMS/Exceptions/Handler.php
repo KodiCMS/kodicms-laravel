@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\CMS\Exceptions;
 
+use CMS;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
 use KodiCMS\API\Exceptions\Exception as APIException;
@@ -44,7 +45,7 @@ class Handler extends ExceptionHandler
 			return (new APIExceptionResponse(config('app.debug')))->createResponse($e);
 		}
 
-		if (config('app.debug'))
+		if (config('app.debug') or !CMS::isInstalled())
 		{
 			return $this->renderExceptionWithWhoops($e);
 		}

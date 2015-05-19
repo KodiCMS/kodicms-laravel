@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 use ModuleLoader;
 use KodiCMS\Installer\Support\ModuleInstaller;
+use Symfony\Component\Console\Input\InputOption;
 
 class ModuleMigrate extends Command
 {
@@ -25,8 +26,29 @@ class ModuleMigrate extends Command
 		$installer->resetModules();
 		$installer->migrateModules();
 
-		foreach ($installer->getOutputMessages() as $message) {
+		foreach ($installer->getOutputMessages() as $message)
+		{
 			$this->output->writeln($message);
 		}
+
+		// Finally, if the "seed" option has been given, we will re-run the database
+		// seed task to re-populate the database, which is convenient when adding
+		// a migration and a seed at the same time, as it is only this command.
+		if ($this->input->getOption('seed'))
+		{
+			$this->call('cms:modules:seed');
+		}
+	}
+
+	/**
+	 * Get the console command options.
+	 *
+	 * @return array
+	 */
+	protected function getOptions()
+	{
+		return [
+			['seed', null, InputOption::VALUE_NONE, 'Indicates if the seed task should be re-run.']
+		];
 	}
 }

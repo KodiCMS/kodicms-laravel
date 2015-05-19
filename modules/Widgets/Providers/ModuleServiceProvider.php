@@ -38,7 +38,7 @@ class ModuleServiceProvider extends ServiceProvider
 
 			foreach ($postData as $widgetId => $location)
 			{
-				if (array_key_exists('blokc', $location))
+				if (array_key_exists('block', $location))
 				{
 					WidgetManagerDatabase::updateWidgetOnPage($widgetId, $page->id, $location);
 				}
@@ -60,18 +60,25 @@ class ModuleServiceProvider extends ServiceProvider
 			});
 		}, 9000);
 
+//		Event::listen('view.page.edit', function($page)
+//		{
+//			if (acl_check('widgets.index'))
+//			{
+//				$collection = new PageWidgetCollection($page->id);
+//
+//				echo view('widgets::widgets.page.list')
+//					->with('page', $page)
+//					->with('pages', PageSitemap::get(true)->exclude([$page->id])->flatten())
+//					->with('widgetsCollection', $collection)
+//					->render();
+//			}
+//		});
+
 		Event::listen('view.page.edit', function($page)
 		{
-			if (acl_check('widgets.index'))
+			if (acl_check('widgets.index') and $page->hasLayout())
 			{
-				$collection = new PageWidgetCollection($page->id);
-
-				echo view('widgets::widgets.page.list')
-					->with('page', $page)
-					->with('pages', PageSitemap::get(true)->exclude([$page->id])->flatten())
-					->with('widgetsCollection', $collection)
-					->render();
-				;
+				echo view('widgets::widgets.page.iframe')->with('page', $page)->render();
 			}
 		});
 

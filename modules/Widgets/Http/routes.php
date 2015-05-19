@@ -28,6 +28,8 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 });
 
 Route::put('api.widget', ['as' => 'api.widget.place', 'uses' => 'API\WidgetController@putPlace']);
+Route::post('/api.page.widgets.reorder', ['as' => 'api.page.widgets.reorder', 'uses' => 'API\WidgetController@postReorder']);
+
 
 Route::post('api.snippet', ['as' => 'api.snippet.create', 'uses' => 'API\SnippetController@postCreate']);
 Route::put('api.snippet', ['as' => 'api.snippet.edit', 'uses' => 'API\SnippetController@postEdit']);

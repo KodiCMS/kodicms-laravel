@@ -369,7 +369,7 @@ class FrontendPage
 	 * @param \stdClass $pageData
 	 * @param FrontendPage $parentPage
 	 */
-	public function __construct(\stdClass $pageData, FrontendPage $parentPage = null)
+	public function __construct($pageData, FrontendPage $parentPage = null)
 	{
 		if (!is_null($parentPage))
 		{

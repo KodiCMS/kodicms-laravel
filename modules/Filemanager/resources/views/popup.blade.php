@@ -4,7 +4,7 @@
 		var params = $.extend({
 			lang: '{{ Lang::getLocale() }}',
 			url : '/api.filemanager',
-			height: 590,
+			height: CMS.content_height - 20,
 			resizable: false,
 			uiOptions: {
 				toolbar : [
@@ -25,7 +25,20 @@
 			@if (!acl_check('filemanager.edit')),allowShortcuts : false @endif
 		}, params);
 
-		return $('body').elfinder(params).elfinder('instance');
+		var elfinder = $('body').elfinder(params).elfinder('instance');
+
+		$(window).resize(function() {
+			var node = elfinder.getUI('node');
+			var h = CMS.content_height - 20;
+			node.height(h);
+			node.find('.elfinder-navbar')
+				.add(node.find('.elfinder-workzone'))
+				.add(node.find('.elfinder-cwd'))
+				.add(node.find('.elfinder-cwd-wrapper'))
+				.height(h - node.find('.elfinder-toolbar').height() - node.find('.elfinder-statusbar').height() )
+		});
+
+		return elfinder;
 	};
 
 	$(function() {
@@ -36,16 +49,6 @@
 					window.opener.CKEDITOR.tools.callFunction(funcNum, file.url);
 					window.close();
 				}
-			});
-
-			$(window).resize(function() {
-				var node = elfinder.getUI('node');
-				var h = cms.content_height + 100;
-				node.height(h);
-				node.find('.elfinder-navbar')
-						.add(node.find('.elfinder-cwd'))
-						.add(node.find('.elfinder-cwd-wrapper'))
-						.height(h - node.find('.elfinder-toolbar').height() - node.find('.elfinder-statusbar').height() )
 			});
 		}
 	});

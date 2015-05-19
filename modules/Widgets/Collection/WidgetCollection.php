@@ -131,30 +131,17 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator {
 	 */
 	protected function sortWidgets()
 	{
-		$widgets = [];
 		$types = ['PRE' => [], '*named' => [], 'POST' => []];
 
-		foreach ($this->registeredWidgets as $i => $widget)
+		uasort($this->registeredWidgets, function ($a, $b)
 		{
-			$block = $widget->getBlock();
+			if ($a->getPosition() == $b->getPosition())
+			{
+				return 0;
+			}
 
-			if (array_key_exists($block, $types))
-			{
-				$types[$block][$i] = $widget;
-			}
-			else
-			{
-				$types['*named'][$i] = $widget;
-			}
-		}
-
-		foreach ($types as $type => $ids)
-		{
-			foreach ($ids as $id => $widget)
-			{
-				$this->registeredWidgets[$i] = $widget;
-			}
-		}
+			return ($a->getPosition() < $b->getPosition()) ? -1 : 1;
+		});
 
 		return $this;
 	}

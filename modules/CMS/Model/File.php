@@ -512,7 +512,7 @@ class File
 	public function filterName($filename)
 	{
 		$filename = str_replace(File::$ext, '', $filename);
-		$filename = preg_replace('/[^a-zA-Z0-9\-\_]/', '-', strtolower($filename));
+		$filename = preg_replace('/[^a-zA-Z0-9\-\_\.]/', '-', strtolower($filename));
 		foreach (['-', '_', '\.'] as $separator)
 		{
 			$filename = preg_replace('/' . $separator . '+/', trim($separator, '\\'), $filename);

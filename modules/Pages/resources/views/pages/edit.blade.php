@@ -45,7 +45,6 @@
 			]) !!}
 		</div>
 	</div>
-
 	@if ($page->id > 1)
 	<hr class="panel-wide" />
 	<div class="form-group form-group-sm">

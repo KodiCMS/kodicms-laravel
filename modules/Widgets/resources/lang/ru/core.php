@@ -47,7 +47,7 @@ return [
 		'select_blocks' => 'Выбрать блоки',
 		'rebuild_blocks' => 'Обновить список',
 		'select_childs' => 'Выбрать внутренние',
-		'add_to_page' => 'Добавить',
+		'add_to_page' => 'Добавить виджет',
 		'defaultTemplate' => 'Шаблон по умолчанию'
 	],
 	'messages' => [

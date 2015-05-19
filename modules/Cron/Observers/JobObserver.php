@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\Cron\Observers;
 
+use KodiCMS\Cron\Model\Job;
+
 class JobObserver
 {
 	/**

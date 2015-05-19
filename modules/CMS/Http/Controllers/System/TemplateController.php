@@ -116,15 +116,7 @@ class TemplateController extends Controller
 			}
 			else
 			{
-				$scrpit = '';
-				foreach ($this->templateScripts as $var => $value)
-				{
-					$value = json_encode($value);
-
-					$scrpit .= "var {$var} = {$value};\n";
-				}
-
-				Assets::group('global', 'templateScripts', '<script type="text/javascript">' . $scrpit . '</script>', 'global');
+				Assets::group('global', 'templateScripts', '<script type="text/javascript">' . $this->getTemplateScriptsAsString() . '</script>', 'global');
 			}
 		}
 	}
@@ -146,6 +138,22 @@ class TemplateController extends Controller
 			'MESSAGE_ERRORS' => view()->shared('errors')->getBag('default'),
 			'MESSAGE_SUCCESS' => (array) $this->session->get('success', []),
 		];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTemplateScriptsAsString()
+	{
+		$scrpit = '';
+		foreach ($this->templateScripts as $var => $value)
+		{
+			$value = json_encode($value);
+
+			$scrpit .= "var {$var} = {$value};\n";
+		}
+
+		return $scrpit;
 	}
 
 	/**

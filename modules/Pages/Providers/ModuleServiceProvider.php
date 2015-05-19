@@ -89,8 +89,6 @@ class ModuleServiceProvider extends ServiceProvider {
 
 		Page::observe(new PageObserver);
 		PagePartModel::observe(new PagePartObserver);
-		
-		
 	}
 
 	public function register()
