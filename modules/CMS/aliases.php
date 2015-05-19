@@ -46,10 +46,10 @@ return [
 	'Frontpage' 	=> 'KodiCMS\Support\Facades\Frontpage',
 	'Meta'			=> 'KodiCMS\Support\Facades\FrontpageMeta',
 	'Block'			=> 'KodiCMS\Support\Facades\Block',
+	'WYSIWYG'		=> 'KodiCMS\Support\Facades\Wysiwyg',
 	'UI'			=> 'KodiCMS\CMS\Helpers\UI',
 	'ACL'			=> 'KodiCMS\Users\ACL',
 	'CMS'			=> 'KodiCMS\CMS\Core',
 	'Assets'		=> 'KodiCMS\CMS\Assets\Core',
-	'WYSIWYG'		=> 'KodiCMS\CMS\Wysiwyg\Manager',
 	'Date'			=> 'KodiCMS\CMS\Helpers\Date',
 ];

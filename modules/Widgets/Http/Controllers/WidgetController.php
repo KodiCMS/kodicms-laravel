@@ -160,7 +160,7 @@ class WidgetController extends BackendController {
 	public function getTemplate($id)
 	{
 		$widget = $this->getWidget($id);
-		WYSIWYG::loadAll(WYSIWYG::TYPE_CODE);
+		WYSIWYG::loadAll(WYSIWYG::code());
 
 		$template = $widget->getDefaultFrontendTemplate();
 

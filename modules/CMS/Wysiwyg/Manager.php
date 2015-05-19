@@ -1,33 +1,62 @@
 <?php namespace KodiCMS\CMS\Wysiwyg;
 
 use Assets;
+use ReflectionClass;
+use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Foundation\Application;
 use KodiCMS\CMS\Contracts\WysiwygFilterInterface;
 
-class Manager
-{
+
+class Manager {
+
 	const TYPE_HTML = 'html';
 	const TYPE_CODE = 'code';
 
-	/**
-	 * @var array
-	 */
-	protected static $editors = [];
 
 	/**
-	 * @var array
+	 * @var Application
 	 */
-	protected static $loaded = [];
+	protected $app;
 
 	/**
-	 * @param string $editorId
-	 * @param string|null $name
-	 * @param string|null $filter
-	 * @param string|null $package
-	 * @param string $type
+	 * @var
 	 */
-	public static function add($editorId, $name = null, $filter = null, $package = null, $type = self::TYPE_HTML)
+	protected $config;
+
+	/**
+	 * Available wysiwyg editors
+	 *
+	 * @var array
+	 */
+	protected $available = [];
+
+	/**
+	 * Loaded wysiwyg editors
+	 *
+	 * @var array
+	 */
+	protected $loaded = [];
+
+	/**
+	 * @param Application $app
+	 */
+	public function __construct(Application $app)
 	{
-		static::$editors[$editorId] = [
+		$this->app = $app;
+		
+		$this->config = $this->app['config'];
+	}
+
+	/**
+	 * @param string        $editorId
+	 * @param string | null $name
+	 * @param string | null $filter
+	 * @param string | null $package
+	 * @param string        $type
+	 */
+	public function add($editorId, $name = null, $filter = null, $package = null, $type = self::TYPE_HTML)
+	{
+		$this->available[$editorId] = [
 			'name' => $name === null ? studly_case($editorId) : $name,
 			'type' => $type == self::TYPE_HTML ? self::TYPE_HTML : self::TYPE_CODE,
 			'filter' => empty($filter) ? $editorId : $filter,
@@ -37,83 +66,141 @@ class Manager
 
 	/**
 	 * Remove a editor
+	 *
 	 * @param $editorId string
 	 */
-	public static function remove($editorId)
+	public function remove($editorId)
 	{
-		if (isset(static::$editors[$editorId]))
-		{
-			unset(static::$editors[$editorId]);
-		}
+		if (isset($this->loaded[$editorId])) unset($this->loaded[$editorId]);
+
+		if (isset($this->available[$editorId])) unset($this->available[$editorId]);
+
 	}
+
 
 	/**
 	 * @param string $type
 	 */
-	public static function loadAll($type = null)
+	public function loadAll($type = null)
 	{
-		foreach (static::$editors as $editorId => $data)
+		foreach ($this->available as $editorId => $data)
 		{
-			if ($type !== null AND is_string($type))
+			if ( ! is_null($type) AND is_string($type))
 			{
-				if ($type != $data['type'])
-				{
-					continue;
-				}
+				if ($type != $data['type']) continue;
 			}
 
-			static::$loaded[$editorId] = $data;
-			Assets::package($data['package']);
+			$this->load($editorId);
 		}
+	}
+
+	/**
+	 * @param string | null $type
+	 */
+	public function loadDefault($type = null)
+	{
+		if (is_null($type))
+		{
+			$this->load([
+				$this->config['default_html_editor'],
+				$this->config['default_code_editor']
+			]);
+
+			return;
+		}
+
+		$editorId = ($type === self::TYPE_HTML) ? $this->config['default_html_editor'] : $this->config['default_code_editor'];
+
+		$this->load($editorId);
+
+	}
+
+	/**
+	 * @param string|null $editorId
+	 * @return array|bool
+	 */
+	public function loaded($editorId = null)
+	{
+		if (is_null($editorId)) return $this->loaded;
+
+		return isset($this->loaded[$editorId]);
+	}
+
+
+	/**
+	 * @param $editorId
+	 * @return bool
+	 */
+	public function exists($editorId)
+	{
+		return isset($this->available[$editorId]);
+	}
+
+	/**
+	 * @param $editorId
+	 */
+	public function load($editorIds)
+	{
+
+		if (is_array($editorIds))
+		{
+			foreach ($editorIds as $editorId)
+			{
+				$this->boot($editorId);
+			}
+
+			return;
+		}
+
+		$this->boot($editorIds);
 	}
 
 	/**
 	 * Get a instance of a filter
 	 * TODO: доработать вызов филтра, добавить интерфейс
+	 *
 	 * @param $editorId
 	 * @return WysiwygFilterInterface
 	 */
-	public static function getFilter($editorId)
+	public function getFilter($editorId)
 	{
-		if (isset(static::$editors[$editorId]))
+		if (isset($this->available[$editorId]))
 		{
-			$data = static::$editors[$editorId];
+			$data = $this->available[$editorId];
 
-			if (class_exists($data['filter']) and in_array('KodiCMS\CMS\Contracts\WysiwygFilterInterface', class_implements($data['filter'])))
+			if (class_exists($data['filter']) and (new ReflectionClass($data['filter']))->implementsInterface(WysiwygFilterInterface::class))
 			{
-				return new $data['filter'];
+				return $this->app->make($data['filter']);
 			}
 		}
 
-		return new WysiwygDummyFilter;
+		return $this->app->make(WysiwygDummyFilter::class);
 	}
+
 
 	/**
 	 * @param string $editorId
 	 * @param string $text
 	 * @return string
 	 */
-	public static function applyFilter($editorId, $text)
+	public function applyFilter($editorId, $text)
 	{
-		return static::getFilter($editorId)->apply($text);
+		return $this->getFilter($editorId)->apply($text);
 	}
 
 	/**
 	 * @param string $type
 	 * @return array
 	 */
-	public static function htmlSelect($type = null)
+	public function htmlSelect($type = null)
 	{
 		$editors = ['' => trans('cms::core.helpers.not_select')];
 
-		foreach (static::$editors as $editorId => $data)
+		foreach ($this->available as $editorId => $data)
 		{
-			if ($type !== null AND is_string($type))
+			if ( ! is_null($type) AND is_string($type))
 			{
-				if ($type != $data['type'])
-				{
-					continue;
-				}
+				if ($type != $data['type']) continue;
 			}
 
 			$editors[$editorId] = $data['name'];
@@ -121,4 +208,38 @@ class Manager
 
 		return $editors;
 	}
+
+	/**
+	 * Return TYPE_CODE constant
+	 *
+	 * @return string
+	 */
+	public function code()
+	{
+		return static::TYPE_CODE;
+	}
+
+	/**
+	 * Return TYPE_HTML constant
+	 *
+	 * @return string
+	 */
+	public function html()
+	{
+		return static::TYPE_HTML;
+	}
+
+	/**
+	 * @param $editorId
+	 */
+	protected function boot($editorId)
+	{
+		if ($this->exists($editorId) and ! $this->loaded($editorId))
+		{
+			$this->loaded[$editorId] = $this->available[$editorId];
+
+			Assets::package($this->loaded[$editorId]['package']);
+		}
+	}
+
 }
