@@ -2,6 +2,7 @@
 
 
 use Illuminate\Support\Collection;
+use KodiCMS\Pages\Model\FrontendPage;
 use KodiCMS\Widgets\Collection\WidgetCollection;
 
 class BlockWysiwyg extends Block
@@ -9,7 +10,7 @@ class BlockWysiwyg extends Block
 
 	protected $page;
 
-	public function __construct(WidgetCollection $collection, $page)
+	public function __construct(WidgetCollection $collection, FrontendPage $page)
 	{
 		parent::__construct($collection);
 		$this->page = $page;

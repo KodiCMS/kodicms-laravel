@@ -46,7 +46,7 @@ CMS.controllers.add('page.get.edit', function() {
 			page_id: PAGE.id
 		}, function(response) {
 			window.location = '#widgets';
-			$.fancybox.close();
+			Popup.close();
 			$('#widget-list tbody').append(response.content);
 			reload_blocks(layout_file);
 		});

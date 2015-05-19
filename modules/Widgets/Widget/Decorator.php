@@ -106,6 +106,22 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
 	/**
 	 * @return string
 	 */
+	public function getTypeTitle()
+	{
+		foreach (WidgetManager::getAvailableTypes() as $group => $types)
+		{
+			if (isset($types[$this->type]))
+			{
+				return $types[$this->type];
+			}
+		}
+
+		return $this->type;
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getName()
 	{
 		return $this->name;

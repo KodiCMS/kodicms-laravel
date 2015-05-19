@@ -4,7 +4,7 @@
 		<div class="col-sm-10">
 			<div class="input-group">
 				{!! Form::text('name', NULL, [
-				'class' => 'form-control sluggify', 'id' => 'name'
+				'class' => 'form-control slugify', 'id' => 'name', 'data-separator' => "."
 				]) !!}
 				<span class="input-group-addon">{{ $layout->getExt() }}</span>
 			</div>

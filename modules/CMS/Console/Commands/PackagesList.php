@@ -19,7 +19,7 @@ class PackagesList extends Command {
 	 * @var array
 	 */
 	protected $headers = [
-		'Package', 'Scripts', 'Styles', 'Dependency'
+		'Package', 'Files', 'Dependency'
 	];
 
 	/**
@@ -31,32 +31,38 @@ class PackagesList extends Command {
 	{
 		$packages = [];
 
+		$i = 0;
 		foreach(Package::getAll() as $id => $package)
 		{
-			$row = [
-				'id' => $id,
-				'js' => [],
-				'css' => [],
-				'deps' => []
-			];
-
 			foreach($package as $file)
 			{
-				$row[$file['type']][] = $file['src'];
-				$row['deps'] += $file['deps'];
+				if(isset($packages[$id]))
+				{
+					$packages[$i]['id'] = '';
+					$packages[$i]['files'] = $file['src'];
+					$packages[$i]['deps'] = $file['deps'];
+
+					$i++;
+				}
+				else
+				{
+					$packages[$id]['id'] = $id;
+					$packages[$id]['files'] = $file['src'];
+					$packages[$id]['deps'] = $file['deps'];
+				}
 			}
 
-			$packages[$id] = $row;
-			$packages[] = new TableSeparator;
+			$packages[$i] = new TableSeparator;
+			$i++;
 		}
 
-		foreach($packages as $id => $data)
+		foreach($packages as $i => $data)
 		{
 			foreach($data as $key => $rows)
 			{
 				if (is_array($rows))
 				{
-					$packages[$id][$key] = '[' . implode('], [', $rows) . ']';
+					$packages[$i][$key] = implode(', ', $rows);
 				}
 			}
 		}

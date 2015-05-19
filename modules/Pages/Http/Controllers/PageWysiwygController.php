@@ -24,8 +24,7 @@ class PageWysiwygController extends TemplateController
 			->addPackage(['page-wysiwyg'], true)
 			->addToGroup('site-url', '<script type="text/javascript">' . $this->getTemplateScriptsAsString() . '</script>');
 
-		$page = $this->getPage($id);
-		$frontendPage = new FrontendPage($page->toArray());
+		$frontendPage = $this->getPage($id);
 
 		app()->singleton('frontpage', function () use ($frontendPage)
 		{
@@ -37,12 +36,14 @@ class PageWysiwygController extends TemplateController
 			return new PageWidgetCollection($frontendPage->getId());
 		});
 
-		app()->singleton('layout.block', function () use ($page)
+		app()->singleton('layout.block', function () use ($frontendPage)
 		{
-			return new BlockWysiwyg(app('layout.widgets'), $page);
+			return new BlockWysiwyg(app('layout.widgets'), $frontendPage);
 		});
 
-		$html = $frontendPage->getLayoutView()->render();
+		$html = $frontendPage->getLayoutView()
+			->with('page', $frontendPage)
+			->render();
 
 		$injectHTML = view('pages::pages.wysiwyg.system_blocks');
 		$matches = preg_split('/(<\/body>)/i', $html, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
@@ -59,7 +60,7 @@ class PageWysiwygController extends TemplateController
 	{
 		try
 		{
-			return Page::findOrFail($id);
+			return FrontendPage::findById($id);;
 		}
 		catch (ModelNotFoundException $e)
 		{

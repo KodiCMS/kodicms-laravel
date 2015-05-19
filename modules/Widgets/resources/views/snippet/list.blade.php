@@ -42,7 +42,7 @@
 
 				@if (acl_check('snippet.edit') OR acl_check('snippet.view'))
 				{!! link_to_route('backend.snippet.edit', $snippet->getName(), [$snippet->getName()], [
-				'class' => $snippet->isReadOnly() ? 'popup fancybox.iframe' : ''
+					'class' => $snippet->isReadOnly() ? 'popup' : ''
 				]) !!}
 				@else
 				@endif

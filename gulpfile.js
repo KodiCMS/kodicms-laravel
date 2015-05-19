@@ -22,7 +22,7 @@ elixir(function(mix) {
 		'libs/select2/select2.js',
 		'libs/validation/jquery.validate.js',
 		'libs/dropzone/dropzone.js',
-		'libs/fancybox/jquery.fancybox.js',
+		'libs/colorbox/jquery.colorbox.js',
 		'libs/datepicker/jquery.datetimepicker.js',
 		'libs/underscore-min.js',
 		'libs/moment.js',
@@ -44,6 +44,7 @@ elixir(function(mix) {
 		'cms/components/ui.js',
 		'cms/helpers.js',
 		'cms/ui.js',
+		'cms/popup.js',
 		'cms/api.js',
 		'cms/user.meta.js',
 		'cms/run.js'

@@ -30,9 +30,10 @@ $(function() {
 		var h = CMS.content_height - 20;
 		node.height(h);
 		node.find('.elfinder-navbar')
-				.add(node.find('.elfinder-cwd'))
-				.add(node.find('.elfinder-cwd-wrapper'))
-				.height(h - node.find('.elfinder-toolbar').height() - node.find('.elfinder-statusbar').height() )
+			.add(node.find('.elfinder-workzone'))
+			.add(node.find('.elfinder-cwd'))
+			.add(node.find('.elfinder-cwd-wrapper'))
+			.height(h - node.find('.elfinder-toolbar').height() - node.find('.elfinder-statusbar').height())
 	});
 });
 </script>

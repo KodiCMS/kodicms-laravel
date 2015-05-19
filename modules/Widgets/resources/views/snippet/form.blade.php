@@ -4,7 +4,7 @@
 		<div class="col-sm-10">
 			<div class="input-group">
 				{!! Form::text('name', NULL, [
-				'class' => 'form-control sluggify', 'id' => 'name'
+				'class' => 'form-control slugify', 'id' => 'name', 'data-separator' => "."
 				]) !!}
 				<span class="input-group-addon">{{ $snippet->getExt() }}</span>
 			</div>
@@ -40,7 +40,7 @@
 	<span class="panel-title">@lang('widgets::snippet.field.content')</span>
 	{!! UI::badge($snippet->getRelativePath()) !!}
 
-	@if ($snippet->isReadOnly() OR $snippet->isNew())
+	@if (!$snippet->isReadOnly() OR $snippet->isNew())
 		<div class="panel-heading-controls">
 			{!! Form::button(trans('widgets::snippet.button.filemanager'), [
 			'data-icon' => 'folder-open',

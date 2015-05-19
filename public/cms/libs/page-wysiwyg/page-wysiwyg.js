@@ -49,7 +49,7 @@ $(function() {
 			page_id: pageId,
 			block: block
 		}, function(response) {
-			$.fancybox.close();
+			Popup.close();
 			window.location.reload();
 			return;
 		});
