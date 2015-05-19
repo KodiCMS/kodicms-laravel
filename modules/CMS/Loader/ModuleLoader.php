@@ -17,12 +17,12 @@ class ModuleLoader
 	/**
 	 * @var  array   File path cache, used when caching is true
 	 */
-	protected static $files = [];
+	protected $files = [];
 
 	/**
 	 * @var bool
 	 */
-	protected static $filesChanged = false;
+	protected $filesChanged = false;
 
 	/**
 	 * @param array $modulesList
@@ -135,10 +135,10 @@ class ModuleLoader
 		// Create a partial path of the filename
 		$path = File::normalizePath($dir . DIRECTORY_SEPARATOR . $file . $ext);
 
-		if (isset(static::$files[$path . ($array ? '_array' : '_path')]))
+		if (isset($this->files[$path . ($array ? '_array' : '_path')]))
 		{
 			// This path has been cached
-			return static::$files[$path . ($array ? '_array' : '_path')];
+			return $this->files[$path . ($array ? '_array' : '_path')];
 		}
 
 		if ($array)
@@ -178,24 +178,24 @@ class ModuleLoader
 		}
 
 		// Add the path to the cache
-		static::$files[$path . ($array ? '_array' : '_path')] = $found;
+		$this->files[$path . ($array ? '_array' : '_path')] = $found;
 
 		// Files have been changed
-		static::$filesChanged = true;
+		$this->filesChanged = true;
 
 		return $found;
 	}
 
 	public function getFoundFilesFromCache()
 	{
-		static::$files = Cache::get('ModuleLoader::findFile', []);
+		$this->files = Cache::get('ModuleLoader::findFile', []);
 	}
 
 	public function cacheFoundFiles()
 	{
-		if (static::$filesChanged)
+		if ($this->filesChanged)
 		{
-			Cache::put('ModuleLoader::findFile', static::$files, Carbon::now()->addMinutes(10));
+			Cache::put('ModuleLoader::findFile', $this->files, Carbon::now()->addMinutes(10));
 		}
 	}
 }
