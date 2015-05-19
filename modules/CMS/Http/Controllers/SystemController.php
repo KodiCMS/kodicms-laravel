@@ -8,8 +8,8 @@ class SystemController extends System\BackendController {
 
 	public function settings()
 	{
-		$htmlEditors = WYSIWYG::htmlSelect(WYSIWYG::TYPE_HTML);
-		$codeEditors = WYSIWYG::htmlSelect(WYSIWYG::TYPE_CODE);
+		$htmlEditors = WYSIWYG::htmlSelect(WYSIWYG::html());
+		$codeEditors = WYSIWYG::htmlSelect(WYSIWYG::code());
 		$dateFormats = Date::getFormats();
 
 		// TODO: сделать вывод языков в нормальном формате
@@ -25,7 +25,7 @@ class SystemController extends System\BackendController {
 
 	public function phpInfo()
 	{
-		$this->autoRender = FALSE;
+		$this->autoRender = false;
 
 		phpinfo();
 	}
