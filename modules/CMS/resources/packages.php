@@ -78,5 +78,5 @@ Package::add('ace')
 	->js('ace-library', resources_url() . '/libs/ace/src-min/ace.js', 'jquery')
 	->js(NULL, backend_resources_url() . '/js/ace.js', 'ace-library');
 
-WYSIWYG::add('ace', 'Ace', NULL, NULL, WYSIWYG::TYPE_CODE);
+WYSIWYG::add('ace', 'Ace', NULL, NULL, WYSIWYG::code());
 WYSIWYG::add('ckeditor', 'CKEditor');

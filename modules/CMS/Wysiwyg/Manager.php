@@ -1,6 +1,8 @@
 <?php namespace KodiCMS\CMS\Wysiwyg;
 
 use Assets;
+use Config;
+use Illuminate\Contracts\Foundation\Application;
 use KodiCMS\CMS\Contracts\WysiwygFilterInterface;
 
 class Manager
@@ -11,12 +13,21 @@ class Manager
 	/**
 	 * @var array
 	 */
-	protected static $editors = [];
+	protected  $editors = [];
 
 	/**
 	 * @var array
 	 */
-	protected static $loaded = [];
+	protected  $loaded = [];
+
+
+	/**
+	 * @param Application $app
+     */
+	public function __construct()
+	{
+	}
+
 
 	/**
 	 * @param string $editorId
@@ -25,9 +36,9 @@ class Manager
 	 * @param string|null $package
 	 * @param string $type
 	 */
-	public static function add($editorId, $name = null, $filter = null, $package = null, $type = self::TYPE_HTML)
+	public function add($editorId, $name = null, $filter = null, $package = null, $type = self::TYPE_HTML)
 	{
-		static::$editors[$editorId] = [
+		$this->editors[$editorId] = [
 			'name' => $name === null ? studly_case($editorId) : $name,
 			'type' => $type == self::TYPE_HTML ? self::TYPE_HTML : self::TYPE_CODE,
 			'filter' => empty($filter) ? $editorId : $filter,
@@ -39,20 +50,21 @@ class Manager
 	 * Remove a editor
 	 * @param $editorId string
 	 */
-	public static function remove($editorId)
+	public function remove($editorId)
 	{
-		if (isset(static::$editors[$editorId]))
+		if (isset($this->editors[$editorId]))
 		{
-			unset(static::$editors[$editorId]);
+			unset($this->editors[$editorId]);
 		}
 	}
+
 
 	/**
 	 * @param string $type
 	 */
-	public static function loadAll($type = null)
+	public function loadAll($type = null)
 	{
-		foreach (static::$editors as $editorId => $data)
+		foreach ($this->editors as $editorId => $data)
 		{
 			if ($type !== null AND is_string($type))
 			{
@@ -62,10 +74,54 @@ class Manager
 				}
 			}
 
-			static::$loaded[$editorId] = $data;
-			Assets::package($data['package']);
+			$this->load($editorId);
 		}
 	}
+
+
+	/**
+	 *
+     */
+	public function loadDefault()
+	{
+		$editorId = Config::get('default_html_editor');
+
+		if( ! $this->isLoaded($editorId)) $this->load($editorId);
+
+	}
+
+
+	/**
+	 * @param string|null $editorId
+	 * @return array|bool
+     */
+	public function loaded($editorId = null)
+	{
+		if(is_null($editorId)) return $this->loaded;
+
+		return array_key_exists($editorId, $this->loaded);
+	}
+
+
+	/**
+	 * @param $editorId
+	 * @return bool
+     */
+	public function exists($editorId)
+	{
+		return array_key_exists($editorId, $this->editors);
+	}
+
+	/**
+	 * @param $editorId
+     */
+	public function load($editorId)
+	{
+		$this->loaded[$editorId] = $this->editors[$editorId];
+
+		Assets::package($this->loaded[$editorId]['package']);
+	}
+
 
 	/**
 	 * Get a instance of a filter
@@ -73,11 +129,11 @@ class Manager
 	 * @param $editorId
 	 * @return WysiwygFilterInterface
 	 */
-	public static function getFilter($editorId)
+	public function getFilter($editorId)
 	{
-		if (isset(static::$editors[$editorId]))
+		if (isset($this->editors[$editorId]))
 		{
-			$data = static::$editors[$editorId];
+			$data = $this->editors[$editorId];
 
 			if (class_exists($data['filter']) and in_array('KodiCMS\CMS\Contracts\WysiwygFilterInterface', class_implements($data['filter'])))
 			{
@@ -93,20 +149,20 @@ class Manager
 	 * @param string $text
 	 * @return string
 	 */
-	public static function applyFilter($editorId, $text)
+	public function applyFilter($editorId, $text)
 	{
-		return static::getFilter($editorId)->apply($text);
+		return $this->getFilter($editorId)->apply($text);
 	}
 
 	/**
 	 * @param string $type
 	 * @return array
 	 */
-	public static function htmlSelect($type = null)
+	public function htmlSelect($type = null)
 	{
 		$editors = ['' => trans('cms::core.helpers.not_select')];
 
-		foreach (static::$editors as $editorId => $data)
+		foreach ($this->editors as $editorId => $data)
 		{
 			if ($type !== null AND is_string($type))
 			{
@@ -120,5 +176,22 @@ class Manager
 		}
 
 		return $editors;
+	}
+
+
+	/**
+	 * @return string
+     */
+	public function code()
+	{
+		return static::TYPE_CODE;
+	}
+
+	/**
+	 * @return string
+     */
+	public function html()
+	{
+		return static::TYPE_HTML;
 	}
 }
