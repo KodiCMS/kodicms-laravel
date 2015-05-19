@@ -1,5 +1,12 @@
 <?php namespace KodiCMS\CMS\Helpers;
 
+
+/**
+ * Class Text
+ * TODO: Транслитирация только rus и lat? Китайцы не люди? )) Перепилить под интерфейс + классы транслитерации.
+ * TODO: И да... выпилить статику Greabock 20.05.2015
+ * @package KodiCMS\CMS\Helpers
+ */
 class Text
 {
 	/**
@@ -51,7 +58,7 @@ class Text
 				$metaSimilarity = max($metaSimilarity, similar_text(metaphone($n), metaphone($word)));
 			}
 		}
-		
+
 		foreach ($result as $n => $k) {
 			if (levenshtein(metaphone($k), metaphone($word)) <= $metaMinLevenshtein) {
 				if (similar_text(metaphone($k), metaphone($word)) >= $metaSimilarity) {
@@ -84,13 +91,13 @@ class Text
 		// IEC prefixes (binary)
 		if ($si == FALSE OR strpos($force_unit, 'i') !== FALSE)
 		{
-			$units = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB');
+			$units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
 			$mod   = 1024;
 		}
 		// SI prefixes (decimal)
 		else
 		{
-			$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
+			$units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB'];
 			$mod   = 1000;
 		}
 

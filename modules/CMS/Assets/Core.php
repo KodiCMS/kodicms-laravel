@@ -5,6 +5,12 @@ use Cache;
 use ModuleLoader;
 use Carbon\Carbon;
 
+/**
+ * Class Core
+ * TODO: убрать статику. Greabock 20.05.2015
+ *
+ * @package KodiCMS\CMS\Assets
+ */
 class Core
 {
 	/**

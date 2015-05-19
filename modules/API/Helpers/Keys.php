@@ -1,5 +1,12 @@
 <?php namespace KodiCMS\API\Helpers;
 
+/**
+ * Class Keys
+ * TODO: убрать статику. Greabock 20.05.2015
+ *
+ *
+ * @package KodiCMS\API\Helpers
+ */
 class Keys {
 
 	/**

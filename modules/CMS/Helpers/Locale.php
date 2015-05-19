@@ -1,5 +1,12 @@
 <?php namespace KodiCMS\CMS\Helpers;
 
+
+/**
+ * Class Locale
+ * TODO: вынести в хелпер-функции? Greabock 20.05.2015
+ *
+ * @package KodiCMS\CMS\Helpers
+ */
 class Locale
 {
 	/**

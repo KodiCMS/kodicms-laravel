@@ -2,6 +2,12 @@
 
 use HTML;
 
+/**
+ * Class Package
+ * TODO: убрать статику. Greabock 20.05.2015
+ *
+ * @package KodiCMS\CMS\Assets
+ */
 class Package implements \Iterator
 {
 	/**

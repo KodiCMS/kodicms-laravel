@@ -1,5 +1,11 @@
 <?php namespace KodiCMS\CMS\Helpers;
 
+/**
+ * Class UI
+ * TODO: Выпилить статику... Greabock 20.05.2015
+ *
+ * @package KodiCMS\CMS\Helpers
+ */
 class UI
 {
 

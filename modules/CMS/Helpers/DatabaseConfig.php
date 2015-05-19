@@ -4,6 +4,13 @@
 use DB;
 use Cache;
 
+/**
+ * Class DatabaseConfig
+ * TODO: убрать статику. DB и Cache перевести на IoC. Greabock 20.05.2015
+ *
+ *
+ * @package KodiCMS\CMS\Helpers
+ */
 class DatabaseConfig
 {
 	/**

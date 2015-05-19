@@ -5,6 +5,8 @@ use KodiCMS\CMS\Traits\Accessor;
 
 /**
  * Class Item
+ * TODO: убрать... хотя нет, тут нормально... Greabock 20.05.2015
+ *
  * @package KodiCMS\CMS\Breadcrumbs
  */
 class Item

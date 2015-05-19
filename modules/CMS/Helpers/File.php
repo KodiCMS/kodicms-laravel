@@ -2,6 +2,7 @@
 
 /**
  * File helper class.
+ * TODO: убрать статику. Greabock 20.05.2015
  */
 class File
 {
