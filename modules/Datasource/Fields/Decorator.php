@@ -2,7 +2,10 @@
 
 use Illuminate\Database\Eloquent\Builder;
 use KodiCMS\CMS\Traits\Settings;
+use KodiCMS\Datasource\Contracts\DocumentInterface;
 use KodiCMS\Datasource\Contracts\FieldInterface;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Validation\Validator;
 
 abstract class Decorator implements FieldInterface
 {
@@ -72,13 +75,6 @@ abstract class Decorator implements FieldInterface
 		$this->setkey($key);
 	}
 
-	public function validationRules()
-	{
-		return [
-
-		];
-	}
-
 	/**
 	 * @return string
 	 */
@@ -127,9 +123,12 @@ abstract class Decorator implements FieldInterface
 		return $this->isSearchable;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function getDefaultValue()
 	{
-
+		return $this->default;
 	}
 
 	/**
@@ -137,50 +136,7 @@ abstract class Decorator implements FieldInterface
 	 */
 	public function setVisibleStatus($status)
 	{
-		$this->isVisible = (bool) $status;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function toArray()
-	{
-		return [
-			'type' => '',
-			'key' => $this->getKey(),
-			'dbKey' => $this->getDBKey(),
-			'settings' => $this->getSettings(),
-			'title' => $this->getTitle(),
-			'required' => $this->isRequired(),
-			'visible' => $this->isVisible()
-		];
-	}
-
-	/**
-	 * @param Builder $query
-	 */
-	public function querySelectColumn(Builder $query)
-	{
-		$query->selectRaw("{$this->getDBKey()} as {$this->getKey()}");
-	}
-
-	/**
-	 * @param Builder $query
-	 * @param string $dir
-	 */
-	public function queryOrderBy(Builder $query, $dir = 'asc')
-	{
-		$query->orderBy($this->getKey(), $dir);
-	}
-
-	/**
-	 * @param Builder $query
-	 * @param $condition
-	 * @param $value
-	 */
-	public function queryWhereCondition(Builder $query, $condition, $value)
-	{
-		$query->where($this->getKey(), $condition, $value);
+		$this->isVisible = (bool)$status;
 	}
 
 	/**
@@ -211,10 +167,118 @@ abstract class Decorator implements FieldInterface
 	}
 
 	/**************************************************************************
-	 * EVENTS
+	 * Events
+	 **************************************************************************/
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param array $values
+	 */
+	public function onSetDocmuentValue(DocumentInterface $document, array $values)
+	{
+		$document->setFieldValue($this->getKey(), array_get($values, $this->getKey()));
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param Validator $validator
+	 * @param $value
+	 */
+	public function onValidateDocument(DocumentInterface $document, Validator $validator, $value)
+	{
+
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param $value
+	 */
+	public function onDocumentCreate(DocumentInterface $document, $value)
+	{
+
+	}
+
+	/**
+	 * @param DocumentInterface $oldDocument
+	 * @param DocumentInterface $document
+	 * @param $value
+	 */
+	public function onDocumentUpdate(DocumentInterface $oldDocument, DocumentInterface $document, $value)
+	{
+
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 */
+	public function onDocumentRemove(DocumentInterface $document)
+	{
+
+	}
+
+	/**************************************************************************
+	 * Template
 	 **************************************************************************/
 
 
+	/**************************************************************************
+	 * Database
+	 **************************************************************************/
+	/**
+	 * @param Builder $query
+	 */
+	public function querySelectColumn(Builder $query)
+	{
+		$query->selectRaw("{$this->getDBKey()} as {$this->getKey()}");
+	}
+
+	/**
+	 * @param Builder $query
+	 * @param string $dir
+	 */
+	public function queryOrderBy(Builder $query, $dir = 'asc')
+	{
+		$query->orderBy($this->getKey(), $dir);
+	}
+
+	/**
+	 * @param Builder $query
+	 * @param $condition
+	 * @param $value
+	 */
+	public function queryWhereCondition(Builder $query, $condition, $value)
+	{
+		$query->where($this->getKey(), $condition, $value);
+	}
+
+	/**
+	 * @param Blueprint $table
+	 */
+	abstract public function getDatabaseFieldType(Blueprint $table);
+
+	/**
+	 * @return array
+	 */
+	public function toArray()
+	{
+		return [
+			'type' => '',
+			'key' => $this->getKey(),
+			'dbKey' => $this->getDBKey(),
+			'settings' => $this->getSettings(),
+			'title' => $this->getTitle(),
+			'required' => $this->isRequired(),
+			'visible' => $this->isVisible()
+		];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return (string) $this->getKey();
+	}
 
 	/**
 	 * @param string $key
