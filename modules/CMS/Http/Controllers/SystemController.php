@@ -25,7 +25,7 @@ class SystemController extends System\BackendController {
 
 	public function phpInfo()
 	{
-		$this->autoRender = FALSE;
+		$this->autoRender = false;
 
 		phpinfo();
 	}

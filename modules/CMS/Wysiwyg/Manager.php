@@ -7,21 +7,20 @@ use Illuminate\Contracts\Foundation\Application;
 use KodiCMS\CMS\Contracts\WysiwygFilterInterface;
 
 
-class Manager
-{
+class Manager {
+
 	const TYPE_HTML = 'html';
 	const TYPE_CODE = 'code';
 
 
 	/**
 	 * @var Application
-     */
+	 */
 	protected $app;
 
 	/**
-	 *
 	 * @var
-     */
+	 */
 	protected $config;
 
 	/**
@@ -29,30 +28,31 @@ class Manager
 	 *
 	 * @var array
 	 */
-	protected  $available = [];
+	protected $available = [];
 
 	/**
 	 * Loaded wysiwyg editors
 	 *
 	 * @var array
 	 */
-	protected  $loaded = [];
+	protected $loaded = [];
 
 	/**
 	 * @param Application $app
-     */
+	 */
 	public function __construct(Application $app)
 	{
 		$this->app = $app;
+		
 		$this->config = $this->app['config'];
 	}
 
 	/**
-	 * @param string $editorId
+	 * @param string        $editorId
 	 * @param string | null $name
 	 * @param string | null $filter
 	 * @param string | null $package
-	 * @param string $type
+	 * @param string        $type
 	 */
 	public function add($editorId, $name = null, $filter = null, $package = null, $type = self::TYPE_HTML)
 	{
@@ -66,6 +66,7 @@ class Manager
 
 	/**
 	 * Remove a editor
+	 *
 	 * @param $editorId string
 	 */
 	public function remove($editorId)
@@ -95,10 +96,10 @@ class Manager
 
 	/**
 	 * @param string | null $type
-     */
+	 */
 	public function loadDefault($type = null)
 	{
-		if(is_null($type))
+		if (is_null($type))
 		{
 			$this->load([
 				$this->config['default_html_editor'],
@@ -117,10 +118,10 @@ class Manager
 	/**
 	 * @param string|null $editorId
 	 * @return array|bool
-     */
+	 */
 	public function loaded($editorId = null)
 	{
-		if(is_null($editorId)) return $this->loaded;
+		if (is_null($editorId)) return $this->loaded;
 
 		return isset($this->loaded[$editorId]);
 	}
@@ -129,7 +130,7 @@ class Manager
 	/**
 	 * @param $editorId
 	 * @return bool
-     */
+	 */
 	public function exists($editorId)
 	{
 		return isset($this->available[$editorId]);
@@ -137,13 +138,13 @@ class Manager
 
 	/**
 	 * @param $editorId
-     */
+	 */
 	public function load($editorIds)
 	{
 
-		if(is_array($editorIds))
+		if (is_array($editorIds))
 		{
-			foreach($editorIds as $editorId)
+			foreach ($editorIds as $editorId)
 			{
 				$this->boot($editorId);
 			}
@@ -151,28 +152,13 @@ class Manager
 			return;
 		}
 
-		$this->loaded[$editorIds] = $this->available[$editorIds];
-
-		Assets::package($this->loaded[$editorIds]['package']);
+		$this->boot($editorIds);
 	}
-
-	/**
-	 * @param $editorId
-     */
-	protected function boot($editorId)
-	{
-		if($this->exists($editorId) and ! $this->loaded($editorId))
-		{
-			$this->loaded[$editorId] = $this->available[$editorId];
-
-			Assets::package($this->loaded[$editorId]['package']);
-		}
-	}
-
 
 	/**
 	 * Get a instance of a filter
 	 * TODO: доработать вызов филтра, добавить интерфейс
+	 *
 	 * @param $editorId
 	 * @return WysiwygFilterInterface
 	 */
@@ -182,7 +168,7 @@ class Manager
 		{
 			$data = $this->available[$editorId];
 
-			if ( class_exists($data['filter']) and (new ReflectionClass($data['filter']))->implementsInterface(WysiwygFilterInterface::class))
+			if (class_exists($data['filter']) and (new ReflectionClass($data['filter']))->implementsInterface(WysiwygFilterInterface::class))
 			{
 				return $this->app->make($data['filter']);
 			}
@@ -190,6 +176,7 @@ class Manager
 
 		return $this->app->make(WysiwygDummyFilter::class);
 	}
+
 
 	/**
 	 * @param string $editorId
@@ -240,6 +227,19 @@ class Manager
 	public function html()
 	{
 		return static::TYPE_HTML;
+	}
+
+	/**
+	 * @param $editorId
+	 */
+	protected function boot($editorId)
+	{
+		if ($this->exists($editorId) and ! $this->loaded($editorId))
+		{
+			$this->loaded[$editorId] = $this->available[$editorId];
+
+			Assets::package($this->loaded[$editorId]['package']);
+		}
 	}
 
 }
