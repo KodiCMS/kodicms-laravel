@@ -3,6 +3,12 @@
 use Carbon\Carbon;
 use DateTimeZone;
 
+/**
+ * Class Date
+ * TODO: убрать статику. Greabock 20.05.2015
+ *
+ * @package KodiCMS\CMS\Helpers
+ */
 class Date
 {
 

@@ -3,6 +3,12 @@
 use Closure;
 use Illuminate\Container\Container;
 
+/**
+ * Class Core
+ * TODO: убрать статику. Greabock 20.05.2015
+ *
+ * @package KodiCMS\CMS
+ */
 class Core extends Container {
 
 	const VERSION 	= '14.0.0';

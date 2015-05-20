@@ -21,6 +21,8 @@ class Collection implements \Countable, \Iterator
 	protected $items = [];
 
 	/**
+	 * TODO: это, как если бы гардеробщица рожала гардеробы, вместо того, чтобы хранить шубы.  Убрать.
+	 *
 	 * @param array $options
 	 * @return Manager
 	 */

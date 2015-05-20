@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Dashboard\Http\Controllers\API;
 
 use KodiCMS\API\Http\Controllers\System\Controller;
-use KodiCMS\CMS\Assets\Package;
+use Package;
 use KodiCMS\Dashboard\Contracts\WidgetDashboard;
 use KodiCMS\Dashboard\Dashboard;
 use KodiCMS\Dashboard\WidgetRenderDashboardHTML;

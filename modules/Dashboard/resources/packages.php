@@ -1,7 +1,5 @@
 <?php
 
-use KodiCMS\CMS\Assets\Package;
-
 Package::add('weather')
 	->js(NULL, resources_url() . '/libs/weather/weather.js', 'jquery');
 
