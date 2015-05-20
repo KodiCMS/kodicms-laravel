@@ -3,7 +3,7 @@
 use Event;
 use KodiCMS\Widgets\Contracts\WidgetPaginator;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
-use KodiCMS\CMS\Assets\Package;
+use Package;
 use Request;
 use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Pages\Helpers\Block;

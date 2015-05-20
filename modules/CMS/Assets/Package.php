@@ -1,29 +1,30 @@
 <?php namespace KodiCMS\CMS\Assets;
 
 use HTML;
+use Iterator;
+
 
 /**
  * Class Package
- * TODO: убрать статику. Greabock 20.05.2015
  *
  * @package KodiCMS\CMS\Assets
  */
-class Package implements \Iterator
+class Package implements Iterator
 {
 	/**
 	 * @var array
 	 */
-	protected static $list = [];
+	protected $list = [];
 
 	/**
 	 * Добавление пакета
 	 *
-	 * @param string $name
+	 * @param string $handle
 	 * @return Package
 	 */
-	public static function add($name)
+	public function add($handle)
 	{
-		return new static($name);
+		return new static($handle, $this);
 	}
 
 	/**
@@ -32,9 +33,9 @@ class Package implements \Iterator
 	 * @param string $name
 	 * @return Package|NULL
 	 */
-	public static function load($name)
+	public function load($name)
 	{
-		$package = array_get(static::$list, $name);
+		$package = array_get($this->list, $name);
 
 		return $package;
 	}
@@ -43,16 +44,16 @@ class Package implements \Iterator
 	 * Получение списка всех пакетов
 	 * @return array
 	 */
-	public static function getAll()
+	public function getAll()
 	{
-		return static::$list;
+		return $this->list;
 	}
 
 	/**
 	 * @param array|string $names
 	 * @return array
 	 */
-	public static function getScripts($names)
+	public function getScripts($names)
 	{
 		if (!is_array($names))
 		{
@@ -63,7 +64,7 @@ class Package implements \Iterator
 
 		foreach ($names as $name)
 		{
-			$package = static::load($name);
+			$package = $this->load($name);
 
 			if ($package === null)
 			{
@@ -87,9 +88,9 @@ class Package implements \Iterator
 	/**
 	 * @return array
 	 */
-	public static function getHTMLSelectChoice()
+	public function getHTMLSelectChoice()
 	{
-		$options = array_keys(static::$list);
+		$options = array_keys($this->list);
 
 		return array_combine($options, $options);
 	}
@@ -116,10 +117,13 @@ class Package implements \Iterator
 	/**
 	 * @param string $handle
 	 */
-	public function __construct($handle)
+	public function __construct($handle = null , $parent = null)
 	{
+		if(is_null($handle) || is_null($parent)) return;
+
 		$this->handle = $handle;
-		static::$list[$handle] = $this;
+
+		$parent->list[$handle] = $this;
 	}
 
 	/**
@@ -189,26 +193,41 @@ class Package implements \Iterator
 		return $string;
 	}
 
+	/**
+	 * @return void
+	 */
 	function rewind()
 	{
 		$this->position = 0;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	function current()
 	{
 		return $this->data[$this->position];
 	}
 
+	/**
+	 * @return int
+	 */
 	function key()
 	{
 		return $this->position;
 	}
 
+	/**
+	 * @return void
+	 */
 	function next()
 	{
 		++$this->position;
 	}
 
+	/**
+	 * @return bool
+	 */
 	function valid()
 	{
 		return isset($this->data[$this->position]);

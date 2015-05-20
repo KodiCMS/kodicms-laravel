@@ -47,9 +47,11 @@ return [
 	'Meta'			=> 'KodiCMS\Support\Facades\FrontpageMeta',
 	'Block'			=> 'KodiCMS\Support\Facades\Block',
 	'WYSIWYG'		=> 'KodiCMS\Support\Facades\Wysiwyg',
+	'Keys'          => 'KodiCMS\Support\Facades\KeysHelper',
+	'Package'       => 'KodiCMS\Support\Facades\Package',
 	'UI'			=> 'KodiCMS\CMS\Helpers\UI',
 	'ACL'			=> 'KodiCMS\Users\ACL',
 	'CMS'			=> 'KodiCMS\CMS\Core',
-	'Assets'		=> 'KodiCMS\CMS\Assets\Core',
+	'Assets'		=> 'KodiCMS\Support\Facades\Assets',
 	'Date'			=> 'KodiCMS\CMS\Helpers\Date',
 ];

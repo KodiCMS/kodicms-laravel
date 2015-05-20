@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\API\Model;
 
 use Illuminate\Database\Eloquent\Model;
-use KodiCMS\API\Helpers\Keys;
+use Keys;
 
 class ApiKey extends Model {
 
@@ -30,7 +30,7 @@ class ApiKey extends Model {
 	 * @param string $description
 	 * @return integer|null
 	 */
-	public function geterateKey($description = '')
+	public function generateKey($description = '')
 	{
 		$key = $this->create([
 			'id' => Keys::generate(),
@@ -54,7 +54,7 @@ class ApiKey extends Model {
 		}
 
 		$key = $this->update([
-			'id' => self::generate_key()
+			'id' => $this->generateKey()
 		]);
 
 		return $key->id;

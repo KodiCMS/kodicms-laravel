@@ -1,6 +1,5 @@
 <?php
 
-use KodiCMS\CMS\Assets\Package;
 
 Package::add('sortable')
 	->js('sortable-library', resources_url() . '/libs/sortable/Sortable.min.js', 'jquery')

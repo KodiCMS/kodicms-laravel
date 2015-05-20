@@ -2,8 +2,6 @@
 
 /**
  * Class Keys
- * TODO: убрать статику. Greabock 20.05.2015
- *
  *
  * @package KodiCMS\API\Helpers
  */
@@ -12,7 +10,7 @@ class Keys {
 	/**
 	 * @return string
 	 */
-	public static function generate()
+	public function generate()
 	{
 		$microTime = microtime();
 		list($a_dec, $a_sec) = explode(' ', $microTime);
@@ -20,21 +18,21 @@ class Keys {
 		$dec_hex = dechex($a_dec * 1000000);
 		$sec_hex = dechex($a_sec);
 
-		$dec_hex = static::_ensure_length($dec_hex, 5);
-		$sec_hex = static::_ensure_length($sec_hex, 6);
+		$dec_hex = $this->ensureLength($dec_hex, 5);
+		$sec_hex = $this->ensureLength($sec_hex, 6);
 
 		$guid = '';
 		$guid .= $dec_hex;
-		$guid .= static::_create_guid_section(3);
+		$guid .= $this->createGuidSection(3);
 		$guid .= '-';
-		$guid .= static::_create_guid_section(4);
+		$guid .= $this->createGuidSection(4);
 		$guid .= '-';
-		$guid .= static::_create_guid_section(4);
+		$guid .= $this->createGuidSection(4);
 		$guid .= '-';
-		$guid .= static::_create_guid_section(4);
+		$guid .= $this->createGuidSection(4);
 		$guid .= '-';
 		$guid .= $sec_hex;
-		$guid .= static::_create_guid_section(6);
+		$guid .= $this->createGuidSection(6);
 
 		return $guid;
 	}
@@ -43,7 +41,7 @@ class Keys {
 	 * @param string $characters
 	 * @return string
 	 */
-	private static function _create_guid_section($characters)
+	protected function createGuidSection($characters)
 	{
 		$characters = (int) $characters;
 		$return = '';
@@ -61,7 +59,7 @@ class Keys {
 	 * @param string $length
 	 * @return string
 	 */
-	private static function _ensure_length($string, $length)
+	protected function ensureLength($string, $length)
 	{
 		$length = (int) $length;
 		$strlen = strlen($string);
