@@ -4,11 +4,22 @@ use DB;
 use Config;
 use KodiCMS\Installer\Installer;
 use Illuminate\Console\GeneratorCommand;
+use League\Flysystem\Exception;
 use Symfony\Component\Console\Input\InputOption;
+use KodiCMS\Installer\Exceptions\InstallDatabaseException;
 
 class Install extends GeneratorCommand
 {
 
+    /**
+     * DB configs
+     */
+    protected $configsDB = [
+        'host' => 'DB_HOST',
+        'database' => 'DB_DATABASE',
+        'username' => 'DB_USERNAME',
+        'password' => 'DB_PASSWORD'
+    ];
 	/**
 	 * The console command name.
 	 */
@@ -63,18 +74,35 @@ class Install extends GeneratorCommand
 			return $this->error('.env file already exists!');
 		}
 
+        $this->makeDirectory($path);
+
         if($this->isDefaultOptions() && $this->confirm('Do you want enter the options? [yes:no]'))
         {
-            $this->comment(PHP_EOL.'Press enter to set default value'.PHP_EOL);
-
-            foreach($this->getOptions() as $o)
+            $db = true;
+            do
             {
-                $oVal =  $this->ask('Set '.$o[0].'('.$o[4].'): ',$o[4]);
-                $this->input->setOption($o[0],$oVal);
-            }
+                $this->askOptions($db);
+
+                $config = [];
+
+                foreach($this->configsDB as $key=>$option)
+                {
+                    $config[$key] = $this->option($option);
+                }
+
+                try{
+                    $this->checkConnection($config);
+                    $db = true;
+                }catch (\PDOException $e) {
+                    $db = false;
+                    $this->comment($e->getMessage());
+                    $this->error('Connection failed!!!');
+                }
+
+            } while( ! ($db || !$this->confirm('Do you want repeat enter? [yes:no]') ) );
         }
 
-		$this->makeDirectory($path);
+
 
 
 		if($this->files->put($path, $this->buildEnvFile()))
@@ -84,6 +112,8 @@ class Install extends GeneratorCommand
 			$this->seed();
 		}
 	}
+
+
 
 	/**
 	 * Миграция данных
@@ -171,9 +201,9 @@ class Install extends GeneratorCommand
 	}
 
     /**
-     * Chehk is default options
+     * Cheсk is default options
      */
-    public function isDefaultOptions()
+    private function isDefaultOptions()
     {
         foreach($this->getOptions() as $dOption)
         {
@@ -187,4 +217,38 @@ class Install extends GeneratorCommand
     }
 
 
+    /**
+     * ask the option
+     */
+    private function askOptions($db){
+
+        $this->comment(PHP_EOL.'Press enter to set default value'.PHP_EOL);
+
+        foreach($this->getOptions() as $option)
+        {
+            if( !$db && $this->input->hasOption($option[0]) )
+            {
+                $defVal = $this->option($option[0]);
+            }else{
+                $defVal = $option[4];
+            }
+
+            $optionVal =  $this->ask('Set '.$option[0].'('.$defVal.'): ',$defVal);
+            $this->input->setOption($option[0],$optionVal);
+        }
+    }
+
+
+    /**
+     * Check connection
+     */
+    private function checkConnection($config)
+    {
+        $dsn = "mysql:host=".$config["host"].";dbname=".$config["database"].";charset=utf8";
+        $opt = array(
+            \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
+        );
+        $pdo = new \PDO($dsn,$config["username"],$config["password"], $opt);
+    }
 }
