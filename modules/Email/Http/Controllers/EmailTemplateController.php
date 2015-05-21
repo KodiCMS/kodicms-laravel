@@ -1,6 +1,8 @@
 <?php namespace KodiCMS\Email\Http\Controllers;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use KodiCMS\Email\Repository\EmailEventRepository;
+use KodiCMS\Email\Repository\EmailTemplateRepository;
 use WYSIWYG;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use KodiCMS\Email\Model\EmailTemplate;
@@ -13,19 +15,19 @@ class EmailTemplateController extends BackendController
 
 	public $moduleNamespace = 'email::';
 
-	public function getIndex()
+	public function getIndex(EmailTemplateRepository $repository)
 	{
-		$emailTemplates = EmailTemplate::paginate();
+		$emailTemplates = $repository->paginate();
 
 		$this->setContent('email.template.list', compact('emailTemplates'));
 	}
 
-	public function getCreate()
+	public function getCreate(EmailTemplateRepository $repository, EmailEventRepository $emailEventRepository)
 	{
 		WYSIWYG::loadAll();
 		$this->setTitle(trans('email::core.title.templates.create'));
 
-		$emailTemplate = new EmailTemplate;
+		$emailTemplate = $repository->instance();
 
 		$emailTemplate->message_type = EmailTemplate::TYPE_HTML;
 		$emailTemplate->subject = '{site_title}';
@@ -35,76 +37,72 @@ class EmailTemplateController extends BackendController
 
 		$action = 'backend.email.template.create.post';
 
-		$emailTypes = EmailType::all()->lists('fullName', 'id');
+		$emailEvents = $emailEventRepository->eventsList();
 
-		$this->setContent('email.template.form', compact('emailTemplate', 'action', 'emailTypes'));
+		$this->setContent('email.template.form', compact('emailTemplate', 'action', 'emailEvents'));
 	}
 
-	public function postCreate(EmailTemplateCreator $emailTemplateCreator)
+	public function postCreate(EmailTemplateRepository $repository)
 	{
 		$data = $this->request->all();
 
-		$validator = $emailTemplateCreator->validator($data);
+		$validator = $repository->validator($data);
 
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
+		if ($validator->fails())
+		{
+			$this->throwValidationException($this->request, $validator);
 		}
 
-		$emailTemplate = $emailTemplateCreator->create($data);
+		$emailTemplate = $repository->create($data);
 
-		return $this->smartRedirect([$emailTemplate])
-			->with('success', trans('email::core.messages.templates.created', ['title' => $emailTemplate->subject]));
+		return $this->smartRedirect([$emailTemplate])->with('success', trans('email::core.messages.templates.created', ['title' => $emailTemplate->subject]));
 	}
 
-	public function getEdit($id)
+	public function getEdit(EmailTemplateRepository $repository, EmailEventRepository $emailEventRepository, $id)
 	{
 		WYSIWYG::loadAll();
-		$emailTemplate = $this->getEmailTemplate($id);
+		$emailTemplate = $this->getEmailTemplate($repository, $id);
 		$this->setTitle(trans('email::core.title.templates.edit', [
 			'title' => $emailTemplate->subject
 		]));
 		$action = 'backend.email.template.edit.post';
 
-		$emailTypes = EmailType::all()->lists('fullName', 'id');
+		$emailEvents = $emailEventRepository->eventsList();
 
-		$this->setContent('email.template.form', compact('emailTemplate', 'action', 'emailTypes'));
+		$this->setContent('email.template.form', compact('emailTemplate', 'action', 'emailEvents'));
 	}
 
-	public function postEdit(EmailTemplateUpdator $emailTemplateUpdator, $id)
+	public function postEdit(EmailTemplateRepository $repository, $id)
 	{
 		$data = $this->request->all();
 
-		$validator = $emailTemplateUpdator->validator($id, $data);
+		$validator = $repository->validator($data);
 
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
+		if ($validator->fails())
+		{
+			$this->throwValidationException($this->request, $validator);
 		}
 
-		$emailTemplate = $emailTemplateUpdator->update($id, $data);
+		$emailTemplate = $repository->update($id, $data);
 
-		return $this->smartRedirect([$emailTemplate])
-			->with('success', trans('email::core.messages.templates.updated', ['title' => $emailTemplate->subject]));
+		return $this->smartRedirect([$emailTemplate])->with('success', trans('email::core.messages.templates.updated', ['title' => $emailTemplate->subject]));
 	}
 
-	public function getDelete($id)
+	public function getDelete(EmailTemplateRepository $repository, $id)
 	{
-		$emailTemplate = $this->getEmailTemplate($id);
+		$emailTemplate = $this->getEmailTemplate($repository, $id);
 		$emailTemplate->delete();
 
-		return $this->smartRedirect()
-			->with('success', trans('email::core.messages.templates.deleted', ['title' => $emailTemplate->subject]));
+		return $this->smartRedirect()->with('success', trans('email::core.messages.templates.deleted', ['title' => $emailTemplate->subject]));
 	}
 
-	protected function getEmailTemplate($id)
+	protected function getEmailTemplate(EmailTemplateRepository $repository, $id)
 	{
-		try {
-			return EmailTemplate::findOrFail($id);
-		}
-		catch (ModelNotFoundException $e) {
+		try
+		{
+			return $repository->findOrFail($id);
+		} catch (ModelNotFoundException $e)
+		{
 			$this->throwFailException($this->smartRedirect()->withErrors(trans('email::core.messages.templates.not_found')));
 		}
 		return null;

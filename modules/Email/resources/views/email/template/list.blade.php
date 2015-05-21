@@ -19,7 +19,7 @@
 		<thead>
 		<tr>
 			<th>@lang('email::core.field.templates.subject')</th>
-			<th>@lang('email::core.field.templates.email_type')</th>
+			<th>@lang('email::core.field.templates.email_event')</th>
 			<th class="hidden-xs">@lang('email::core.field.templates.email_from')</th>
 			<th class="hidden-xs">@lang('email::core.field.templates.email_to')</th>
 			<th class="hidden-xs">@lang('email::core.field.templates.status')</th>
@@ -36,11 +36,11 @@
 						{!! UI::icon('lock') !!} {{ $emailTemplate->subject }}
 					@endif
 				</td>
-				<td class="email-type">
-					@if (acl_check('email.type.edit'))
-						{!! link_to_route('backend.email.type.edit', $emailTemplate->type->name, [$emailTemplate->type]) !!}
+				<td class="email-event">
+					@if (acl_check('email.event.edit'))
+						{!! link_to_route('backend.email.event.edit', $emailTemplate->event->name, [$emailTemplate->event]) !!}
 					@else
-						{!! UI::icon('lock') !!} {{ $emailTemplate->type->name }}
+						{!! UI::icon('lock') !!} {{ $emailTemplate->event->name }}
 					@endif
 				</td>
 				<td class="email-from hidden-xs">

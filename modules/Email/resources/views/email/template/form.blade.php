@@ -21,13 +21,13 @@
 	</div>
 
 	<div class="form-group">
-		<label class="control-label col-md-3" for="email_type_id">@lang('email::core.field.templates.email_type')</label>
+		<label class="control-label col-md-3" for="email_event_id">@lang('email::core.field.templates.email_event')</label>
 		<div class="col-md-6">
 			<div class="input-group">
-				{!! Form::select('email_type_id', $emailTypes, null, ['id' => 'email_type_id']) !!}
+				{!! Form::select('email_event_id', $emailEvents, null, ['id' => 'email_event_id']) !!}
 				@if (acl_check('email.type.create'))
 					<div class="input-group-btn">
-						{!! link_to_route('backend.email.type.create', trans('email::core.button.types.create'), [], [
+						{!! link_to_route('backend.email.event.create', trans('email::core.button.events.create'), [], [
 							'class' => 'btn btn-primary', 'data-icon' => 'plus'
 						]) !!}
 					</div>

@@ -1,10 +1,20 @@
-<?php namespace KodiCMS\Email\database\seeds;
+<?php namespace KodiCMS\Users\database\seeds;
 
 use Illuminate\Database\Seeder;
-use KodiCMS\Email\Model\EmailType;
+use KodiCMS\Email\Repository\EmailEventRepository;
 
-class EmailTypesTableSeeder extends Seeder
+class EmailEventsTableSeeder extends Seeder
 {
+
+	/**
+	 * @var EmailEventRepository
+	 */
+	protected $repository;
+
+	function __construct()
+	{
+		$this->repository = app('KodiCMS\Email\Repository\EmailEventRepository');
+	}
 
 	/**
 	 * Run the database seeds.
@@ -13,11 +23,7 @@ class EmailTypesTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		\DB::statement('SET FOREIGN_KEY_CHECKS=0');
-		\DB::table('email_types')->truncate();
-		\DB::statement('SET FOREIGN_KEY_CHECKS=1');
-
-		EmailType::create([
+		$this->repository->create([
 			'code'   => 'user_request_password',
 			'name'   => 'Запрос на восстановление пароля',
 			'fields' => [
@@ -28,7 +34,7 @@ class EmailTypesTableSeeder extends Seeder
 			]
 		]);
 
-		EmailType::create([
+		$this->repository->create([
 			'code'   => 'user_new_password',
 			'name'   => 'Новый пароль',
 			'fields' => [

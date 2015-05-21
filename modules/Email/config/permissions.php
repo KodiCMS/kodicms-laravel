@@ -1,10 +1,10 @@
 <?php
 return [
 	'email' => [
-		'type.list',
-		'type.create',
-		'type.edit',
-		'type.delete',
+		'event.list',
+		'event.create',
+		'event.edit',
+		'event.delete',
 
 		'template.list',
 		'template.create',

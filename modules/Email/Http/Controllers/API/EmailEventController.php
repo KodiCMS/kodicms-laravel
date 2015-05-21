@@ -2,22 +2,23 @@
 
 use KodiCMS\API\Http\Controllers\System\Controller;
 use KodiCMS\Email\Model\EmailType;
+use KodiCMS\Email\Repository\EmailEventRepository;
 use KodiCMS\Email\Support\EmailSender;
 use Mail;
 
-class EmailTypeController extends Controller
+class EmailEventController extends Controller
 {
 	/**
 	 * @var bool
 	 */
 	public $authRequired = true;
 
-	public function getOptions()
+	public function getOptions(EmailEventRepository $repository)
 	{
 		$uid = $this->getRequiredParameter('uid', 'required|numeric');
 
-		$emailType = EmailType::findOrFail($uid);
-		$options = array_merge($emailType->fields, config('email.default_template_data'));
+		$emailEvent = $repository->findOrFail($uid);
+		$options = array_merge($emailEvent->fields, config('email.default_template_data'));
 
 		$this->setContent($options);
 	}

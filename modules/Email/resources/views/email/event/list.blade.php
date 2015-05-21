@@ -1,7 +1,7 @@
 <div class="panel">
 	<div class="panel-heading">
-		@if (acl_check('email.type.create'))
-			{!! link_to_route('backend.email.type.create', trans('email::core.button.types.create'), [], [
+		@if (acl_check('email.event.create'))
+			{!! link_to_route('backend.email.event.create', trans('email::core.button.events.create'), [], [
 				'class' => 'btn btn-primary', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
 			]) !!}
 		@endif
@@ -17,27 +17,27 @@
 		</colgroup>
 		<thead>
 		<tr>
-			<th>@lang('email::core.field.types.name')</th>
-			<th class="hidden-xs">@lang('email::core.field.types.code')</th>
+			<th>@lang('email::core.field.events.name')</th>
+			<th class="hidden-xs">@lang('email::core.field.events.code')</th>
 			<th class="text-right">@lang('email::core.field.actions')</th>
 		</tr>
 		</thead>
 		<tbody>
-		@foreach ($emailTypes as $emailType)
+		@foreach ($emailEvents as $emailEvent)
 			<tr class="item">
 				<td class="email-name">
-					@if (acl_check('email.type.edit'))
-						{!! link_to_route('backend.email.type.edit', $emailType->name, [$emailType]) !!}
+					@if (acl_check('email.event.edit'))
+						{!! link_to_route('backend.email.event.edit', $emailEvent->name, [$emailEvent]) !!}
 					@else
-						{!! UI::icon('lock') !!} {{ $emailType->name }}
+						{!! UI::icon('lock') !!} {{ $emailEvent->name }}
 					@endif
 				</td>
 				<td class="email-code hidden-xs">
-					{!! UI::label($emailType->code) !!}
+					{!! UI::label($emailEvent->code) !!}
 				</td>
 				<td class="actions text-right">
-					@if (acl_check('email.type.delete'))
-						{!! link_to_route('backend.email.type.delete', '', [$emailType], [
+					@if (acl_check('email.event.delete'))
+						{!! link_to_route('backend.email.event.delete', '', [$emailEvent], [
 							'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
 						]) !!}
 					@endif
@@ -48,4 +48,4 @@
 	</table>
 </div>
 
-{!! $emailTypes->render() !!}
+{!! $emailEvents->render() !!}
