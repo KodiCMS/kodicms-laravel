@@ -2,6 +2,7 @@
 
 use KodiCMS\API\Http\Controllers\System\Controller;
 use KodiCMS\Email\Model\EmailType;
+use KodiCMS\Email\Support\EmailSender;
 use Mail;
 
 class EmailTypeController extends Controller
@@ -27,16 +28,13 @@ class EmailTypeController extends Controller
 		$to = $this->getRequiredParameter('to');
 		$body = $this->getRequiredParameter('message');
 
-		try
-		{
-			$sended = Mail::send('email::email.messages.email', compact('body'), function ($message) use ($subject, $to)
-			{
-				$message->to($to)->subject($subject);
-			});
-		} catch (\Exception $e)
-		{
-			$sended = false;
-		}
+		$parameters = new \stdClass;
+		$parameters->subject = $subject;
+		$parameters->email_to = $to;
+		$parameters->email_from = config('mail.default');
+
+		$sended = EmailSender::send($body, $parameters);
+
 		$this->setContent([
 			'send' => $sended,
 		]);
