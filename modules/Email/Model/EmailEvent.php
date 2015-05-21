@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class EmailType extends Model
+class EmailEvent extends Model
 {
 
 	protected $fillable = [
@@ -17,7 +17,7 @@ class EmailType extends Model
 
 	public function templates()
 	{
-		return $this->hasMany('KodiCMS\Email\Model\EmailTemplate', 'email_type_id');
+		return $this->hasMany('KodiCMS\Email\Model\EmailTemplate', 'email_event_id');
 	}
 
 	public function getFullNameAttribute()

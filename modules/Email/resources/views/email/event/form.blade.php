@@ -1,5 +1,5 @@
-{!! Form::model($emailType, [
-	'route' => [$action, $emailType],
+{!! Form::model($emailEvent, [
+	'route' => [$action, $emailEvent],
 	'class' => 'form-horizontal panel'
 ]) !!}
 <div class="panel-heading">
@@ -7,7 +7,7 @@
 </div>
 <div class="panel-body">
 	<div class="form-group form-group-lg">
-		<label class="control-label col-md-3" for="name">@lang('email::core.field.types.name')</label>
+		<label class="control-label col-md-3" for="name">@lang('email::core.field.events.name')</label>
 		<div class="col-md-9">
 			{!! Form::text('name', NULL, [
 				'class' => 'form-control', 'id' => 'name'
@@ -16,9 +16,9 @@
 	</div>
 
 	<div class="form-group">
-		<label class="control-label col-md-3" for="code">@lang('email::core.field.types.code')</label>
+		<label class="control-label col-md-3" for="code">@lang('email::core.field.events.code')</label>
 		<div class="col-md-9">
-			@if ($emailType->exists)
+			@if ($emailEvent->exists)
 				{!! Form::text('code', NULL, [
 					'class' => 'form-control', 'id' => 'code', 'readonly', 'disabled'
 				]) !!}
@@ -37,12 +37,12 @@
 <div class="panel-body">
 	@include('cms::helpers.rows', [
 		'field' => 'fields',
-		'data'  => $emailType->fields,
+		'data'  => $emailEvent->fields,
 	])
 </div>
 
 <div class="form-actions panel-footer">
-	@include('cms::app.partials.actionButtons', ['route' => 'backend.email.type.list'])
+	@include('cms::app.partials.actionButtons', ['route' => 'backend.email.event.list'])
 </div>
 {!! Form::close() !!}
-@include('email::email.type.templates', ['emailType' => $emailType])
+@include('email::email.event.templates', ['emailEvent' => $emailEvent])

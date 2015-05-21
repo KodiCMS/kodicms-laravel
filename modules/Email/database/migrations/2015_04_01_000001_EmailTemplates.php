@@ -11,8 +11,8 @@ class EmailTemplates extends Migration
 			$table->increments('id');
 			$table->timestamps();
 
-			$table->unsignedInteger('email_type_id');
-			$table->foreign('email_type_id')->references('id')->on('email_types')->onDelete('cascade');
+			$table->unsignedInteger('email_event_id');
+			$table->foreign('email_event_id')->references('id')->on('email_events')->onDelete('cascade');
 
 			$table->tinyInteger('status');
 

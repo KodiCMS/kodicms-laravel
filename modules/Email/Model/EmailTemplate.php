@@ -17,7 +17,7 @@ class EmailTemplate extends Model
 	const USE_DIRECT = 0;
 
 	protected $fillable = [
-		'email_type_id',
+		'email_event_id',
 		'status',
 		'use_queue',
 		'email_from',
@@ -30,9 +30,9 @@ class EmailTemplate extends Model
 		'reply_to',
 	];
 
-	public function type()
+	public function event()
 	{
-		return $this->belongsTo('KodiCMS\Email\Model\EmailType', 'email_type_id');
+		return $this->belongsTo('KodiCMS\Email\Model\EmailEvent', 'email_event_id');
 	}
 
 	protected static function boot()

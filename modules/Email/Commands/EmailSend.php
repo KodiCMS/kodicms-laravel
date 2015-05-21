@@ -2,9 +2,9 @@
 
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use KodiCMS\Email\Model\EmailType;
+use KodiCMS\Email\Model\EmailEvent;
 
-class EmailTypeSend implements SelfHandling
+class EmailSend implements SelfHandling
 {
 
 	protected $code;
@@ -18,12 +18,12 @@ class EmailTypeSend implements SelfHandling
 
 	public function handle()
 	{
-		$emailType = EmailType::whereCode($this->code)->first();
-		if (is_null($emailType))
+		$emailEvent = EmailEvent::whereCode($this->code)->first();
+		if (is_null($emailEvent))
 		{
-			throw (new ModelNotFoundException)->setModel('KodiCMS\Email\Model\EmailType');
+			throw (new ModelNotFoundException)->setModel('KodiCMS\Email\Model\EmailEvent');
 		}
-		$emailType->send($this->options);
+		$emailEvent->send($this->options);
 	}
 
 }

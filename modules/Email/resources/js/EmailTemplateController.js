@@ -1,6 +1,6 @@
 CMS.controllers.add(['email.template.get.create', 'email.template.get.edit'], function()
 {
-	$('#email_type_id').on('change', function () {
+	$('#email_event_id').on('change', function () {
 		show_options($(this).val());
 	});
 
@@ -37,9 +37,9 @@ CMS.controllers.add(['email.template.get.create', 'email.template.get.edit'], fu
 		}
 	});
 
-	show_options($('#email_type_id').val());
+	show_options($('#email_event_id').val());
 	function show_options(id) {
-		Api.get('/api.email-types.options', {uid: id}, function (resp) {
+		Api.get('/api.email-events.options', {uid: id}, function (resp) {
 			var cont = $('#field_description .col-md-9').empty();
 			var ul = $('<ul class="list-unstyled" />').appendTo(cont);
 			if (resp.content) {

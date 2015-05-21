@@ -1,11 +1,28 @@
-<?php namespace KodiCMS\Email\database\seeds;
+<?php namespace KodiCMS\Users\database\seeds;
 
 use Illuminate\Database\Seeder;
 use KodiCMS\Email\Model\EmailTemplate;
 use KodiCMS\Email\Model\EmailType;
+use KodiCMS\Email\Repository\EmailEventRepository;
+use KodiCMS\Email\Repository\EmailTemplateRepository;
 
 class EmailTemplatesTableSeeder extends Seeder
 {
+
+	/**
+	 * @var EmailTemplateRepository
+	 */
+	protected $emailTemplateRepository;
+	/**
+	 * @var EmailEventRepository
+	 */
+	protected $emailEventRepository;
+
+	function __construct()
+	{
+		$this->emailTemplateRepository = app('KodiCMS\Email\Repository\EmailTemplateRepository');
+		$this->emailEventRepository = app('KodiCMS\Email\Repository\EmailEventRepository');
+	}
 
 	/**
 	 * Run the database seeds.
@@ -14,14 +31,10 @@ class EmailTemplatesTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		\DB::statement('SET FOREIGN_KEY_CHECKS=0');
-		\DB::table('email_templates')->truncate();
-		\DB::statement('SET FOREIGN_KEY_CHECKS=1');
-		
-		$emailType = EmailType::whereCode('user_request_password')->first();
-		EmailTemplate::create([
+		$emailEvent = $this->emailEventRepository->query()->whereCode('user_request_password')->first();
+		$this->emailTemplateRepository->create([
 			'status' => 1,
-			'email_type_id' => $emailType->id,
+			'email_event_id' => $emailEvent->id,
 			'email_from' => '{default_email}',
 			'email_to' => '{email}',
 			'subject' => '{site_title}: Ссылка для восстановления пароля',
@@ -29,10 +42,10 @@ class EmailTemplatesTableSeeder extends Seeder
 			'message_type' => 'html',
 		]);
 
-		$emailType2 = EmailType::whereCode('user_new_password')->first();
-		EmailTemplate::create([
+		$emailEvent2 = $this->emailEventRepository->query()->whereCode('user_new_password')->first();
+		$this->emailTemplateRepository->create([
 			'status' => 1,
-			'email_type_id' => $emailType2->id,
+			'email_event_id' => $emailEvent2->id,
 			'email_from' => '{email_from}',
 			'email_to' => '{email}',
 			'subject' => '{site_title}: Новый пароль от вашего аккаунта',

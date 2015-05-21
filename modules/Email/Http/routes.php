@@ -8,13 +8,13 @@ Route::group(['prefix' => \CMS::backendPath()], function () {
 	Route::post('/email/template/{id}/edit', ['as' => 'backend.email.template.edit.post', 'uses' => 'EmailTemplateController@postEdit']);
 	Route::get('/email/template/{id}/delete', ['as' => 'backend.email.template.delete', 'uses' => 'EmailTemplateController@getDelete']);
 
-	Route::get('/email/type', ['as' => 'backend.email.type.list', 'uses' => 'EmailTypeController@getIndex']);
-	Route::get('/email/type/create', ['as' => 'backend.email.type.create', 'uses' => 'EmailTypeController@getCreate']);
-	Route::post('/email/type/create', ['as' => 'backend.email.type.create.post', 'uses' => 'EmailTypeController@postCreate']);
-	Route::get('/email/type/{id}/edit', ['as' => 'backend.email.type.edit', 'uses' => 'EmailTypeController@getEdit']);
-	Route::post('/email/type/{id}/edit', ['as' => 'backend.email.type.edit.post', 'uses' => 'EmailTypeController@postEdit']);
-	Route::get('/email/type/{id}/delete', ['as' => 'backend.email.type.delete', 'uses' => 'EmailTypeController@getDelete']);
+	Route::get('/email/event', ['as' => 'backend.email.event.list', 'uses' => 'EmailEventController@getIndex']);
+	Route::get('/email/event/create', ['as' => 'backend.email.event.create', 'uses' => 'EmailEventController@getCreate']);
+	Route::post('/email/event/create', ['as' => 'backend.email.event.create.post', 'uses' => 'EmailEventController@postCreate']);
+	Route::get('/email/event/{id}/edit', ['as' => 'backend.email.event.edit', 'uses' => 'EmailEventController@getEdit']);
+	Route::post('/email/event/{id}/edit', ['as' => 'backend.email.event.edit.post', 'uses' => 'EmailEventController@postEdit']);
+	Route::get('/email/event/{id}/delete', ['as' => 'backend.email.event.delete', 'uses' => 'EmailEventController@getDelete']);
 });
 
-Route::get('/api.email-types.options', ['as' => 'api.email.type.options', 'uses' => 'API\EmailTypeController@getOptions']);
-Route::post('/api.email.send', ['as' => 'api.email.send', 'uses' => 'API\EmailTypeController@postSend']);
+Route::get('/api.email-events.options', ['as' => 'api.email.event.options', 'uses' => 'API\EmailEventController@getOptions']);
+Route::post('/api.email.send', ['as' => 'api.email.send', 'uses' => 'API\EmailEventController@postSend']);
