@@ -3,7 +3,7 @@
 use KodiCMS\CMS\Http\Controllers\System\Controller;
 use KodiCMS\Datasource\DatasourceManager;
 
-class SectionController extends Controller
+class DatasourceController extends Controller
 {
 	public function getIndex($dsId)
 	{
