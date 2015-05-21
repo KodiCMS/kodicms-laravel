@@ -2,7 +2,6 @@
 
 use Event;
 use KodiCMS\CMS\Providers\ServiceProvider;
-use Validator;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -23,7 +22,6 @@ class ModuleServiceProvider extends ServiceProvider
 			];
 			echo view('email::email.settings', compact('drivers'))->render();
 		});
-
 	}
 
 }
