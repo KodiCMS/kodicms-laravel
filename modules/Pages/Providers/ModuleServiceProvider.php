@@ -3,17 +3,13 @@
 use Blade;
 use Block;
 use Event;
-use Illuminate\Support\Debug\Dumper;
 use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 use KodiCMS\Pages\Helpers\Meta;
-use KodiCMS\Pages\Model\LayoutBlock;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Model\PagePart as PagePartModel;
-use KodiCMS\Pages\PagePart;
 use KodiCMS\Pages\Observers\PageObserver;
 use KodiCMS\Pages\Observers\PagePartObserver;
-use KodiCMS\Pages\Widget\PagePart as PagePartWidget;
 
 class ModuleServiceProvider extends ServiceProvider {
 
@@ -49,23 +45,10 @@ class ModuleServiceProvider extends ServiceProvider {
 		{
 			app('frontpage.meta')->setPage($page, true);
 
-			$layoutBlocks = (new LayoutBlock)->getBlocksGroupedByLayouts($page->getLayout());
-
-			foreach ($layoutBlocks as $name => $blocks)
-			{
-				foreach($blocks as $block)
-				{
-					if (!($part = PagePart::exists($page, $block)))
-					{
-						continue;
-					}
-
-					$partWidget = new PagePartWidget($part['name']);
-					$partWidget->setContent($part['content_html']);
-					Block::addWidget($partWidget, $block);
-				}
-			}
 		}, 8000);
+
+		Event::listen('frontend.found', 'KodiCMS\Pages\Listeners\PlacePagePartsToBlocksEventHandler', 7000);
+
 
 		Blade::extend(function ($view, $compiler)
 		{
