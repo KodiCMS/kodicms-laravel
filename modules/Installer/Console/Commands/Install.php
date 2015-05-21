@@ -63,7 +63,19 @@ class Install extends GeneratorCommand
 			return $this->error('.env file already exists!');
 		}
 
+        if($this->isDefaultOptions() && $this->confirm('Do you want enter the options? [yes:no]'))
+        {
+            $this->comment(PHP_EOL.'Press enter to set default value'.PHP_EOL);
+
+            foreach($this->getOptions() as $o)
+            {
+                $oVal =  $this->ask('Set '.$o[0].'('.$o[4].'): ',$o[4]);
+                $this->input->setOption($o[0],$oVal);
+            }
+        }
+
 		$this->makeDirectory($path);
+
 
 		if($this->files->put($path, $this->buildEnvFile()))
 		{
@@ -157,4 +169,22 @@ class Install extends GeneratorCommand
 	{
 		return [];
 	}
+
+    /**
+     * Chehk is default options
+     */
+    public function isDefaultOptions()
+    {
+        foreach($this->getOptions() as $dOption)
+        {
+            if($this->option($dOption[0])!=$dOption[4])
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
 }
