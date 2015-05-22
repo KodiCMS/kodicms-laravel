@@ -40,10 +40,12 @@ class SectionType implements SectionTypeInterface
 	 */
 	public function __construct($type, array $settings)
 	{
-		foreach(array_only($settings, ['class', 'type', 'title', 'document']) as $key => $value)
+		foreach(array_only($settings, ['class', 'title', 'document']) as $key => $value)
 		{
 			$this->{$key} = $value;
 		}
+
+		$this->type = $type;
 	}
 
 	/**
@@ -65,7 +67,7 @@ class SectionType implements SectionTypeInterface
 	/**
 	 * @return string
 	 */
-	public function getClassName()
+	public function getClass()
 	{
 		return $this->class;
 	}
@@ -75,7 +77,7 @@ class SectionType implements SectionTypeInterface
 	 */
 	public function getDocumentClassName()
 	{
-		if($this->isDocumentClassExists())
+		if ($this->isDocumentClassExists())
 		{
 			return $this->document;
 		}

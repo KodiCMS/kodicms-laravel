@@ -22,6 +22,40 @@ class DatasourceManager {
 	}
 
 	/**
+	 * @param $type
+	 * @return SectionType|null
+	 */
+	public function getTypeObject($type)
+	{
+		foreach ($this->getAvailableSectionTypes() as $object)
+		{
+			if ($type == $object->getType())
+			{
+				return $object;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * @param string $type
+	 * @return string|null
+	 */
+	public function getClassNameByType($type)
+	{
+		foreach ($this->getAvailableSectionTypes() as $object)
+		{
+			if ($type == $object->getType())
+			{
+				return $object->getClass();
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * @param string $type
 	 * @return bool
 	 */

@@ -1,17 +1,21 @@
 <?php namespace KodiCMS\Datasource\Fields;
 
-use Illuminate\Database\Eloquent\Builder;
+use FieldManager;
 use KodiCMS\CMS\Traits\Settings;
+use Illuminate\Database\Eloquent\Builder;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 use KodiCMS\Datasource\Contracts\FieldInterface;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Validation\Validator;
 use KodiCMS\Datasource\Contracts\SectionInterface;
-use KodiCMS\Datasource\FieldManager;
+use KodiCMS\Datasource\Model\Field as FieldModel;
+use KodiCMS\Datasource\Model\Section;
 
 abstract class Field implements FieldInterface
 {
-	use Settings;
+	use Settings {
+		setSetting as protected setSettingTrait;
+	}
 
 	/**
 	 * @var string
@@ -19,49 +23,9 @@ abstract class Field implements FieldInterface
 	protected $tablePreffix = '';
 
 	/**
-	 * @var string
+	 * @var FieldModel
 	 */
-	protected $type;
-
-	/**
-	 * @var string
-	 */
-	protected $key;
-
-	/**
-	 * @var string
-	 */
-	protected $title;
-
-	/**
-	 * @var array
-	 */
-	protected $settings = [];
-
-	/**
-	 * @var bool
-	 */
-	protected $isSystem = false;
-
-	/**
-	 * @var bool
-	 */
-	protected $isRequired = true;
-
-	/**
-	 * @var bool
-	 */
-	protected $isIndexable = false;
-
-	/**
-	 * @var bool
-	 */
-	protected $isSearchable = false;
-
-	/**
-	 * @var bool
-	 */
-	protected $isVisible = true;
+	protected $model;
 
 	/**
 	 * @var string
@@ -74,14 +38,40 @@ abstract class Field implements FieldInterface
 	protected $relatedSection = null;
 
 	/**
-	 * @param string $key
-	 * @param array $settings
+	 * @var array|mixed
 	 */
-	public function __construct($key, array $settings = [])
-	{
-		$this->setSettings($settings);
+	protected $settings = [];
 
-		$this->key = $key;
+	/**
+	 * @param FieldModel $model
+	 * @param array $attributes
+	 */
+	public function __construct(FieldModel $model = null, array $attributes = [])
+	{
+		if (is_null($model))
+		{
+			$attributes['type'] = FieldManager::getTypeByClassName(get_called_class());
+			$model = new FieldModel($attributes);
+		}
+
+		$this->model = $model;
+		$this->settings = $model->settings;
+	}
+
+	/**
+	 * @return FieldModel
+	 */
+	public function getModel()
+	{
+		return $this->model;
+	}
+
+	/**
+	 * @return integer
+	 */
+	public function getId()
+	{
+		return $this->model->id;
 	}
 
 	/**
@@ -89,7 +79,7 @@ abstract class Field implements FieldInterface
 	 */
 	public function getType()
 	{
-		return (new FieldManager)->getTypeByClassName(get_called_class());
+		return $this->model->type;
 	}
 
 	/**
@@ -97,7 +87,7 @@ abstract class Field implements FieldInterface
 	 */
 	public function getKey()
 	{
-		return $this->key;
+		return $this->model->key;
 	}
 
 	/**
@@ -105,15 +95,15 @@ abstract class Field implements FieldInterface
 	 */
 	public function getDBKey()
 	{
-		return $this->getTablePreffix() . $this->key;
+		return $this->getTablePreffix() . $this->getKey();
 	}
 
 	/**
-	 * @return string
+	 * @return bool
 	 */
-	public function getTitle()
+	public function isSystem()
 	{
-		return $this->title;
+		return (bool) $this->model->is_system;
 	}
 
 	/**
@@ -121,7 +111,7 @@ abstract class Field implements FieldInterface
 	 */
 	public function isRequired()
 	{
-		return $this->isRequired;
+		return $this->getSetting('is_required', false);
 	}
 
 	/**
@@ -129,7 +119,7 @@ abstract class Field implements FieldInterface
 	 */
 	public function isVisibled()
 	{
-		return $this->isVisibled;
+		return $this->getSetting('is_visible', false);
 	}
 
 	/**
@@ -137,7 +127,7 @@ abstract class Field implements FieldInterface
 	 */
 	public function isSearchable()
 	{
-		return $this->isSearchable;
+		return $this->getSetting('is_searchable', false);
 	}
 
 	/**
@@ -145,7 +135,7 @@ abstract class Field implements FieldInterface
 	 */
 	public function getDefaultValue()
 	{
-		return $this->default;
+		return $this->model->getSetting('default_value', false);
 	}
 
 	/**
@@ -169,7 +159,7 @@ abstract class Field implements FieldInterface
 	 */
 	public function setVisibleStatus($status)
 	{
-		$this->isVisible = (bool)$status;
+		$this->is_visible = (bool) $status;
 	}
 
 	/**
@@ -287,32 +277,32 @@ abstract class Field implements FieldInterface
 	/**
 	 * @param Blueprint $table
 	 */
-	public function getDatabaseFieldType(Blueprint $table)
+	public function setDatabaseFieldType(Blueprint $table)
 	{
 		$table->string($this->getDBKey());
 	}
 
 	/**
-	 * @return array
+	 * @param integer $sectionId
 	 */
-	public function toArray()
+	public function attachToSection($sectionId)
 	{
-		return [
-			'type' => $this->getType(),
-			'key' => $this->getKey(),
-			'dbKey' => $this->getDBKey(),
-			'settings' => $this->getSettings(),
-			'title' => $this->getTitle(),
-			'required' => $this->isRequired(),
-			'visible' => $this->isVisible()
-		];
+		$section = Section::findOrFail($sectionId);
+
+		$this->model->update([
+			'ds_id' => $section->id
+		]);
 	}
 
 	/**
-	 * @return string
+	 * @param string $name
+	 * @param mixed $value
+	 * @return $this
 	 */
-	public function __toString()
+	public function setSetting($name, $value = null)
 	{
-		return (string) $this->getKey();
+		$return = $this->setSettingTrait($name, $value);
+		$this->model->settings = $this->settings;
+		return $return;
 	}
 }

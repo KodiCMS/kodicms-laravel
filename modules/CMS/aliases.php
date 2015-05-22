@@ -53,6 +53,6 @@ return [
 	'WYSIWYG'			=> 'KodiCMS\CMS\Wysiwyg\Manager',
 	'Date'				=> 'KodiCMS\CMS\Helpers\Date',
 
-	'DatasourceManager' => 'KodiCMS\Datasource\DatasourceManager',
-	'FieldManager' 		=> 'KodiCMS\Datasource\FieldManager',
+	'DatasourceManager' => 'KodiCMS\Support\Facades\DatasourceManager',
+	'FieldManager' 		=> 'KodiCMS\Support\Facades\FieldManager',
 ];

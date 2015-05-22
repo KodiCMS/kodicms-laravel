@@ -15,13 +15,15 @@ class DatasourceFields extends Migration
 			$table->string('key');
 			$table->string('type');
 
-			$table->string('title');
+			$table->string('name');
 			$table->string('related_ds')->index();
 
 			$table->json('settings');
 			$table->integer('position')->default(0);
 
 			$table->unique(['ds_id', 'key']);
+
+			$table->timestamps();
 		});
 	}
 

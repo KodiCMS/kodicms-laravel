@@ -15,7 +15,7 @@ class Primary extends Field
 	/**
 	 * @param Blueprint $table
 	 */
-	public function getDatabaseFieldType(Blueprint $table)
+	public function setDatabaseFieldType(Blueprint $table)
 	{
 		$table->increments($this->getDBKey());
 	}

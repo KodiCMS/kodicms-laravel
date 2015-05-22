@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\Datasource\Test;
+<?php namespace KodiCMS\Datasource\Sections\Test;
 
 class Document extends \KodiCMS\Datasource\Document {
 

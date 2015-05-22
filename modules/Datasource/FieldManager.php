@@ -1,6 +1,9 @@
 <?php namespace KodiCMS\Datasource;
 
+use Schema;
 use KodiCMS\Datasource\Exceptions\FieldException;
+use KodiCMS\Datasource\Model\Field;
+use KodiCMS\Datasource\Model\Section;
 
 class FieldManager
 {
@@ -68,22 +71,5 @@ class FieldManager
 		}
 
 		return null;
-	}
-
-	/**
-	 * @param $type
-	 * @param array $settings
-	 * @throws FieldException
-	 */
-	public function make($type, array $settings = [])
-	{
-		$class = $this->getClassNameByType($type);
-
-		if (is_null($class))
-		{
-			throw new FieldException("Field [{$type}] not found");
-		}
-
-		return new $class($settings);
 	}
 }

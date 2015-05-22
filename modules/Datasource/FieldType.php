@@ -41,6 +41,8 @@ class FieldType implements FieldTypeInterface
 		{
 			$this->{$key} = $value;
 		}
+
+		$this->type = $type;
 	}
 
 	/**
@@ -54,7 +56,7 @@ class FieldType implements FieldTypeInterface
 	/**
 	 * @return string
 	 */
-	public function getClassName()
+	public function getClass()
 	{
 		return $this->class;
 	}
