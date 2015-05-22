@@ -12,6 +12,6 @@ class InstallerController extends Controller
 
 		$post = array_only($post, ['db_host', 'db_username', 'db_password', 'db_database', 'db_prefix']);
 
-		$this->setContent((new Installer)->checkDatabaseConnection($post));
+		$this->setContent(Installer::createDatabaseConnection($post));
 	}
 }

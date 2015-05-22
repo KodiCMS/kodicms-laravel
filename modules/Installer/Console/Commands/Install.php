@@ -15,10 +15,10 @@ class Install extends GeneratorCommand
      * DB configs
      */
     protected $configsDB = [
-        'host' => 'DB_HOST',
-        'database' => 'DB_DATABASE',
-        'username' => 'DB_USERNAME',
-        'password' => 'DB_PASSWORD'
+        'db_host' => 'DB_HOST',
+        'db_database' => 'DB_DATABASE',
+        'db_username' => 'DB_USERNAME',
+        'db_password' => 'DB_PASSWORD'
     ];
 	/**
 	 * The console command name.
@@ -90,8 +90,9 @@ class Install extends GeneratorCommand
                     $config[$key] = $this->option($option);
                 }
 
+                var_dump($config);
                 try{
-                    $this->checkConnection($config);
+                    Installer::createDatabaseConnection($config);
                     $db = true;
                 }catch (\PDOException $e) {
                     $db = false;
@@ -102,12 +103,10 @@ class Install extends GeneratorCommand
             } while( ! ($db || !$this->confirm('Do you want repeat enter? [yes:no]') ) );
         }
 
+        if($this->files->put($path, $this->buildEnvFile()))
+        {
 
-
-
-		if($this->files->put($path, $this->buildEnvFile()))
-		{
-			$this->info('.env file created successfully.');
+            $this->info('.env file created successfully.');
 			$this->migrate();
 			$this->seed();
 		}
@@ -120,22 +119,6 @@ class Install extends GeneratorCommand
 	 */
 	public function migrate()
 	{
-		// Сбрасываем подключение к БД
-		DB::purge();
-
-		$configs = [
-			'host' => 'DB_HOST',
-			'database' => 'DB_DATABASE',
-			'username' => 'DB_USERNAME',
-			'password' => 'DB_PASSWORD'
-		];
-
-		// Обновляем данные подключения к БД
-		foreach($configs as $key => $env)
-		{
-			Config::set("database.connections.mysql.{$key}", array_get($this->getEnvironment(), $env));
-		}
-
 		$this->call('cms:modules:migrate');
 	}
 
@@ -242,13 +225,13 @@ class Install extends GeneratorCommand
     /**
      * Check connection
      */
-    private function checkConnection($config)
-    {
-        $dsn = "mysql:host=".$config["host"].";dbname=".$config["database"].";charset=utf8";
-        $opt = array(
-            \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
-        );
-        $pdo = new \PDO($dsn,$config["username"],$config["password"], $opt);
-    }
+//    private function checkConnection($config)
+//    {
+//        $dsn = "mysql:host=".$config["host"].";dbname=".$config["database"].";charset=utf8";
+//        $opt = array(
+//            \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+//            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
+//        );
+//        $pdo = new \PDO($dsn,$config["username"],$config["password"], $opt);
+//    }
 }
