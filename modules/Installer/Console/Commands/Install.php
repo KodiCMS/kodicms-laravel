@@ -220,18 +220,4 @@ class Install extends GeneratorCommand
             $this->input->setOption($option[0],$optionVal);
         }
     }
-
-
-    /**
-     * Check connection
-     */
-//    private function checkConnection($config)
-//    {
-//        $dsn = "mysql:host=".$config["host"].";dbname=".$config["database"].";charset=utf8";
-//        $opt = array(
-//            \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-//            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
-//        );
-//        $pdo = new \PDO($dsn,$config["username"],$config["password"], $opt);
-//    }
 }
