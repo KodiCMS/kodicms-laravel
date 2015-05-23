@@ -109,7 +109,7 @@ class Install extends GeneratorCommand
             $this->migrate();
 
 
-            if(confirm("Do you want add seed data?"))
+            if($this->confirm("Do you want add seed data?"))
             {
                 $this->seed();
             }
