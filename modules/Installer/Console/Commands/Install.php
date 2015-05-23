@@ -106,9 +106,14 @@ class Install extends GeneratorCommand
 
         if (!$createEnv || $this->files->put($path, $this->buildEnvFile())) {
 
-            $this->info(PHP_EOL.'.env file created successfully.'.PHP_EOL);
             $this->migrate();
-            $this->seed();
+
+
+            if(confirm("Do you want add seed data?"))
+            {
+                $this->seed();
+            }
+
         }
     }
 
