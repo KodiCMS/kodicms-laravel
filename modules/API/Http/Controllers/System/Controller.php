@@ -13,6 +13,11 @@ use Validator;
 abstract class Controller extends BaseController
 {
 	/**
+	 * @var bool
+	 */
+	protected $authRequired = true;
+
+	/**
 	 * Массив возвращаемых значений, будет преобразован в формат JSON
 	 * @var array
 	 */
