@@ -95,7 +95,7 @@ class WidgetController extends BackendController {
 		$this->breadcrumbs->add($widget->getType());
 
 		$this->setTitle(trans('widgets::core.title.edit', [
-			'name' => $widget->name
+			'name' => $widget->getName()
 		]));
 
 		$settingsView = (new WidgetRenderSettingsHTML($widget->toWidget()))->render();
