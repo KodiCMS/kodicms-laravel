@@ -36,7 +36,7 @@ class AppModuleContainer extends ModuleContainer
 	 */
 	public function getRoutesPath()
 	{
-		return $this->getPath(['App', 'Http', 'routes.php']);
+		return $this->getPath(['app', 'Http', 'routes.php']);
 	}
 
 	/**
@@ -44,7 +44,7 @@ class AppModuleContainer extends ModuleContainer
 	 */
 	public function getServiceProviderPath()
 	{
-		return $this->getPath(['App', 'Providers', 'ModuleServiceProvider.php']);
+		return $this->getPath(['app', 'Providers', 'ModuleServiceProvider.php']);
 	}
 
 	/**
