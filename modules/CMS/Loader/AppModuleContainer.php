@@ -5,7 +5,7 @@ class AppModuleContainer extends ModuleContainer
 	/**
 	 * @var string
 	 */
-	protected $namespace = 'App';
+	protected $namespace = '';
 
 	/**
 	 * @return $this
