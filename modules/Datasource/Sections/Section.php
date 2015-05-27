@@ -162,10 +162,11 @@ class Section implements SectionInterface
 
 		if (!Schema::hasColumn($field->getDBKey()))
 		{
+
+			$field->attachToSection($sectionId);
 			Schema::table($this->getTableName(), function ($table) use($field, $sectionId)
 			{
 				$field->setDatabaseFieldType($table);
-				$field->attachToSection($sectionId);
 			});
 		}
 	}
