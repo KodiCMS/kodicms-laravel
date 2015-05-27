@@ -851,13 +851,9 @@ class FrontendPage
 
 				if ($param !== null)
 				{
-					if (strpos($param, 'site.') !== false)
+					if (strpos($param, 'cms.') !== false)
 					{
-						$parts[] = config('app.' . substr($param, 5), $default);
-					}
-					else if (strpos($param, 'ctx.') !== false)
-					{
-						$parts[] = app('ctx')->get(substr($param, 4));
+						$parts[] = config('cms.' . substr($param, 5), $default);
 					}
 					else if (strpos($param, 'parent.') !== false AND $this->getParent() instanceof FrontendPage AND method_exists($this, ($method = 'get' . ucfirst(substr($param, 7))))
 					)
