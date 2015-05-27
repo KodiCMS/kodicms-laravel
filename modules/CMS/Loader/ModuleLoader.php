@@ -39,7 +39,7 @@ class ModuleLoader
 			$this->addModule($moduleName, $modulePath);
 		}
 
-		$this->addModule('App', base_path('App'));
+		$this->addModule('App', base_path());
 	}
 
 	/**
@@ -104,6 +104,26 @@ class ModuleLoader
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @param string|array|null $sub
+	 * @return array
+	 */
+	public function getPaths($sub = null)
+	{
+		$paths = [];
+
+		foreach ($this->getRegisteredModules() as $module)
+		{
+			if (is_dir($dir = $module->getPath($sub)))
+			{
+				// This path has a file, add it to the list
+				$paths[] = $dir;
+			}
+		}
+
+		return $paths;
 	}
 
 	/**

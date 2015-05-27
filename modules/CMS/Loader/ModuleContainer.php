@@ -13,27 +13,27 @@ class ModuleContainer implements ModuleContainerInterface
 	/**
 	 * @var string
 	 */
-	protected $_path;
+	protected $path;
 
 	/**
 	 * @var string
 	 */
-	protected $_name;
+	protected $name;
 
 	/**
 	 * @var bool
 	 */
-	protected $_isRegistered = false;
+	protected $isRegistered = false;
 
 	/**
 	 * @var bool
 	 */
-	protected $_isBooted = false;
+	protected $isBooted = false;
 
 	/**
 	 * @var string
 	 */
-	protected $_namespace = 'KodiCMS';
+	protected $namespace = 'KodiCMS';
 
 	/**
 	 * This namespace is applied to the controller routes in your routes file.
@@ -56,11 +56,11 @@ class ModuleContainer implements ModuleContainerInterface
 			$modulePath = base_path('modules/' . $moduleName);
 		}
 
-		$this->_path = File::normalizePath($modulePath);
-		$this->_name = $moduleName;
+		$this->path = File::normalizePath($modulePath);
+		$this->name = $moduleName;
 		if (!is_null($namespace))
 		{
-			$this->_namespace = $namespace;
+			$this->namespace = $namespace;
 		}
 	}
 
@@ -69,7 +69,7 @@ class ModuleContainer implements ModuleContainerInterface
 	 */
 	public function getName()
 	{
-		return $this->_name;
+		return $this->name;
 	}
 
 	/**
@@ -77,7 +77,7 @@ class ModuleContainer implements ModuleContainerInterface
 	 */
 	public function getNamespace()
 	{
-		return $this->_namespace . '\\' . $this->getName();
+		return $this->namespace . '\\' . $this->getName();
 	}
 
 	/**
@@ -89,17 +89,17 @@ class ModuleContainer implements ModuleContainerInterface
 	}
 
 	/**
-	 * @param strimg|null $sub
+	 * @param strimg|array|null $sub
 	 * @return string
 	 */
 	public function getPath($sub = null)
 	{
-		$path = $this->_path;
 		if (is_array($sub))
 		{
 			$sub = implode(DIRECTORY_SEPARATOR, $sub);
 		}
 
+		$path = $this->path;
 		if (!is_null($sub))
 		{
 			$path .= DIRECTORY_SEPARATOR . $sub;
@@ -161,12 +161,12 @@ class ModuleContainer implements ModuleContainerInterface
 	 */
 	public function boot()
 	{
-		if (!$this->_isBooted)
+		if (!$this->isBooted)
 		{
 			$this->loadViews();
 			$this->loadTranslations();
 			$this->loadAssets();
-			$this->_isBooted = true;
+			$this->isBooted = true;
 		}
 
 		return $this;
@@ -177,7 +177,7 @@ class ModuleContainer implements ModuleContainerInterface
 	 */
 	public function register()
 	{
-		if (!$this->_isRegistered)
+		if (!$this->isRegistered)
 		{
 			$serviceProviderPath = $this->getServiceProviderPath();
 			if (is_file($serviceProviderPath))
@@ -185,7 +185,7 @@ class ModuleContainer implements ModuleContainerInterface
 				App::register($this->getNamespace() . '\Providers\ModuleServiceProvider');
 			}
 
-			$this->_isRegistered = true;
+			$this->isRegistered = true;
 		}
 
 		return $this;
@@ -196,7 +196,7 @@ class ModuleContainer implements ModuleContainerInterface
 	 */
 	public function loadRoutes(Router $router)
 	{
-		if(!CMS::isInstalled())
+		if (!CMS::isInstalled())
 		{
 			return;
 		}
@@ -240,8 +240,7 @@ class ModuleContainer implements ModuleContainerInterface
 	 */
 	protected function includeRoutes(Router $router)
 	{
-		$routesFile = $this->getRoutesPath();
-		if (is_file($routesFile))
+		if (is_file($routesFile = $this->getRoutesPath()))
 		{
 			$router->group(['namespace' => $this->getControllerNamespace()], function ($router) use ($routesFile)
 			{
@@ -252,8 +251,7 @@ class ModuleContainer implements ModuleContainerInterface
 
 	protected function loadAssets()
 	{
-		$packagesFile = $this->getAssetsPackagesPath();
-		if (is_file($packagesFile))
+		if (is_file($packagesFile = $this->getAssetsPackagesPath()))
 		{
 			require $packagesFile;
 		}

@@ -9,9 +9,9 @@ class ModuleContainer extends Loader\ModuleContainer
 	 */
 	public function register()
 	{
-		if (!$this->_isRegistered)
+		if (!$this->isRegistered)
 		{
-			$this->_isRegistered = true;
+			$this->isRegistered = true;
 		}
 
 		return $this;
