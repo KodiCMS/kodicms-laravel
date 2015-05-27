@@ -124,7 +124,7 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
 	 */
 	public function getName()
 	{
-		return $this->name;
+		return e($this->name);
 	}
 
 	/**
@@ -132,7 +132,7 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
 	 */
 	public function getDescription()
 	{
-		return $this->description;
+		return e($this->description);
 	}
 
 	/**
