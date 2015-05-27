@@ -82,9 +82,9 @@
 	<div class="form-group">
 		<label class="control-label col-md-3">@lang('cms::system.label.settings.session_storage')</label>
 		<div class="col-md-9">
-			{!! Form::select('config[session][driver]', [
+			{!! Form::select(null, [
 				'file' => 'File', 'database' => 'Database', 'cookie' => 'Cookie', 'apc' => 'APC'
-			], config('session.driver')) !!}
+			], config('session.driver'), ['disabled']) !!}
 		</div>
 	</div>
 </div>
