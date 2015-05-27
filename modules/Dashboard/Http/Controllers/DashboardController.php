@@ -22,13 +22,6 @@ class DashboardController extends BackendController {
 		$this->setContent('dashboard', compact('widgets'));
 	}
 
-	public function getWidgetSettings($id)
-	{
-		$widget = Dashboard::getWidgetById($id);
-
-		return $this->setContent('partials.settings', compact('widget'));
-	}
-
 	public function getWidgetList()
 	{
 		$widgetSettings = Dashboard::getSettings();

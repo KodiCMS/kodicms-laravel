@@ -25,7 +25,14 @@
 ]) !!}
 &nbsp;&nbsp;&nbsp;&nbsp;
 
-{!! link_to_route(isset($route) ? $route : NULL, UI::hidden(trans('cms::core.button.cancel')), [], [
+@if(isset($route))
+{!! link_to_route($route, UI::hidden(trans('cms::core.button.cancel')), [], [
 	'data-icon' => 'ban',
 	'class' => 'btn btn-close btn-sm btn-outline'
 ]) !!}
+@else
+{!! link_to(null, UI::hidden(trans('cms::core.button.cancel')), [
+	'data-icon' => 'ban',
+	'class' => 'btn btn-close btn-sm btn-outline'
+]) !!}
+@endif

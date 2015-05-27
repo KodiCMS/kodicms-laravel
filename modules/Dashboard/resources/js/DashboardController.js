@@ -115,38 +115,30 @@ CMS.controllers.add('dashboard.get.index', function () {
 		e.preventDefault();
 	});
 
-	$('body').on('click', '.dashboard-widget .widget_settings', function(e) {
+	$('body').on('click', '.dashboard-widget .settings', function(e) {
 		var $cont = $(this).closest('.dashboard-widget');
 
 		get_widget_settings($cont.data('id'));
 		e.preventDefault();
 	});
 
-	$('body').on('submit', 'form.widget-settings', function(e) {
-		var $self = $(this);
-		var widget_id = $self.find('input[name="id"]').val();
+	$('body').on('post::api.dashboard.widget', function(e, response) {
+		var $cont = $('.dashboard-widget[data-id="' + response.widgetId + '"]');
+		$cont.replaceWith(response.content);
 
-		Api.post($self.attr('action'), $self.serialize(), function(response) {
-			var $cont = $('.dashboard-widget[data-id="' + widget_id + '"]');
-			$cont.replaceWith(response.response);
-
-			if(response.update_settings)
-				get_widget_settings(widget_id);
-		});
-
-		e.preventDefault();
+		if(response.updateSettingsPage)
+			get_widget_settings(response.widgetId);
 	});
 });
 
 function get_widget_settings(widget_id) {
-	Api.get('/api.dashboard.widget.settings', {id: widget_id}, function(response) {
-		Popup.openHTML(response.response);
+	Api.get('/api.dashboard.widget', {id: widget_id}, function(response) {
+		Popup.openHTML(response.content);
 	});
 }
 
 function getScript(url) {
-	if($('script[src="' + url + '"]').length > 0)
-		return;
+	if($('script[src="' + url + '"]').length > 0) return;
 
 	var script = document.createElement('script');
 	script.type = "text/javascript";

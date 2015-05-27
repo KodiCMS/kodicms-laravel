@@ -52,7 +52,6 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 
 		$allowHTMLComments = (bool) $widget->getParameter('comments', true);
 
-
 		$preparedData['widgetId'] = $widget->getId();
 		$preparedData['settings'] = $widget->getSettings();
 		$preparedData['header'] = $widget->getSetting('header');

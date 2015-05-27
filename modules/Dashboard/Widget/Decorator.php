@@ -10,7 +10,6 @@ abstract class Decorator extends WidgetDecorator implements WidgetDashboard, Wid
 {
 	use WidgetRender;
 
-
 	/**
 	 * @var bool
 	 */
@@ -25,6 +24,11 @@ abstract class Decorator extends WidgetDecorator implements WidgetDashboard, Wid
 	 * @var bool
 	 */
 	protected $multiple = false;
+
+	/**
+	 * @var array
+	 */
+	protected $mediaPackages = [];
 
 	/**
 	 * @var array
@@ -76,6 +80,15 @@ abstract class Decorator extends WidgetDecorator implements WidgetDashboard, Wid
 	{
 		return $this->size;
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getMediaPackages()
+	{
+		return $this->mediaPackages;
+	}
+
 
 	/**
 	 * @return array

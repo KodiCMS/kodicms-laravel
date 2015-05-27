@@ -18,12 +18,12 @@ class Dashboard
 	{
 		$widget = array_get(static::getSettings($userId), $widgetId);
 
-		if (!($widget instanceof WidgetDashboard))
+		if (is_null($widget = WidgetManagerDashboard::toWidget($widget)) or !($widget instanceof WidgetDashboard))
 		{
 			return null;
 		}
 
-		return WidgetManagerDashboard::toWidget($widget);
+		return $widget;
 	}
 
 	/**

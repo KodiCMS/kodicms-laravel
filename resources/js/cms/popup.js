@@ -84,7 +84,6 @@ CMS.ui.add('popup', function ()
 		var params = $(this).data('popup-params');
 		var parent = $(this).data('popup-parent');
 
-		console.log(type, params, parent);
 		switch (type)
 		{
 			case 'html':
@@ -100,20 +99,18 @@ CMS.ui.add('popup', function ()
 	});
 
 	var $form = $('form');
-	var $form_actions = $('.iframe .form-actions');
+	var $form_actions = $('.iframe .form-actions').add('.form-popup');
 	var method = $form.data('api-method');
 	var action = $form.data('api-url');
 
 	if((method && method.length > 0 && action && action.length > 0)) {
 		$('.btn-save', $form_actions).on('click', function (e) {
-			var $data = $form.serializeObject();
-			Api[method](action, $data);
+			Api[method](action, $form);
 			e.preventDefault();
 		});
 
 		$('.btn-save-close', $form_actions).on('click', function (e) {
-			var $data = $('form').serializeObject();
-			Api[method](action, $data, function (response) {
+			Api[method](action, $form, function (response) {
 				(response.code == 200) &&Popup.close();
 			});
 

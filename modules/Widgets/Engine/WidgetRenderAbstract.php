@@ -13,7 +13,7 @@ abstract class WidgetRenderAbstract implements WidgetRenderEngine
 	/**
 	 * @var array
 	 */
-	protected $parameters;
+	protected $parameters = [];
 
 	/**
 	 * @param Widget $widget
@@ -22,7 +22,7 @@ abstract class WidgetRenderAbstract implements WidgetRenderEngine
 	public function __construct(Widget $widget, array $parameters = [])
 	{
 		$this->setWidget($widget);
-		$this->parameters = $parameters;
+		$this->parameters = array_merge($this->parameters, $parameters);
 	}
 
 	/**

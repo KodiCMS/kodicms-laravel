@@ -6,6 +6,13 @@ use KodiCMS\Widgets\Engine\WidgetRenderHTML;
 class WidgetRenderDashboardHTML extends WidgetRenderHTML
 {
 	/**
+	 * @var array
+	 */
+	protected $parameters = [
+		'comments' => false
+	];
+
+	/**
 	 * @param array $preparedData
 	 * @return View
 	 */

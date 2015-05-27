@@ -2,22 +2,27 @@
 	.dashboard-widget {
 		height: 100%;
 
-		> .close {
+		> .close, > .settings {
 			display: none;
 			padding: 3px 3px 0 0;
 			font-size: 14px;
 		}
 		
-		&:hover > .close {
+		&:hover > .close, &:hover > .settings {
 			display: inline-block;
 		}
 		
 		button.settings {
-			padding: 0;
 			cursor: pointer;
 			background: transparent;
 			border: 0;
 			-webkit-appearance: none;
+			float: right;
+			line-height: 1;
+			color: #000;
+			text-shadow: 0 1px 0 #fff;
+			opacity: .2;
+			filter: alpha(opacity=20);
 		}
 	}
 }

@@ -2,7 +2,8 @@
 
 return [
 	'title' => [
-		'dashboard' => 'Рабочий стол'
+		'dashboard' => 'Рабочий стол',
+		'widget_settings' => 'Настройки'
 	],
 	'messages' => [
 		'no_widgets' => 'Нет доступных виджетов'

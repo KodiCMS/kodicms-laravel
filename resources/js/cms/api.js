@@ -45,7 +45,7 @@ var Api = {
 			data = Api.serializeObject(data);
 		}
 
-		if(typeof(data) == 'object' && method != 'GET') {
+		if(typeof(data) == 'object' && method.toLowerCase() != 'get') {
 			data = JSON.stringify(data);
 		}
 
@@ -59,15 +59,14 @@ var Api = {
 			.done(function(response) {
 				this._response = response;
 
-				if(response.code != 200) {
+				if(response.code != 200)
 					return Api.exception(response, callback);
-				}
 
 				if(response.message)
 					CMS.messages.show(response.message, 'success', 'fa fa-exclamation-triangle');
 
 				var $event = method + url.replace(SITE_URL, ":").replace(/\//g, ':');
-				window.top.$('body').trigger($event.toLowerCase(), [this._response.content]);
+				window.top.$('body').trigger($event.toLowerCase(), [this._response]);
 
 				if(typeof(callback) == 'function') callback(this._response);
 			})
@@ -155,11 +154,13 @@ var Api = {
 				break;
 			case 301: // Redirect
 			case 302: // Redirect
-				if(REQUEST_TYPE == 'iframe')
+				if(REQUEST_TYPE == 'iframe') {
 					var pos = response.targetUrl.indexOf('?');
-				if(pos != -1) {
-					response.targetUrl += '&type=iframe';
-				} else response.targetUrl += '?type=iframe';
+					if(pos != -1) {
+						response.targetUrl += '&type=iframe';
+					} else response.targetUrl += '?type=iframe';
+				}
+
 				window.location.href = response.targetUrl;
 				break;
 			case 403: // ERROR_UNAUTHORIZED
