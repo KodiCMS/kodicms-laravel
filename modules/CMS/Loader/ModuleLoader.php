@@ -39,7 +39,7 @@ class ModuleLoader
 			$this->addModule($moduleName, $modulePath);
 		}
 
-		$this->addModule('App', base_path());
+		$this->addModule('App', base_path('App'));
 	}
 
 	/**
