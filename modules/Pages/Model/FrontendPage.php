@@ -26,7 +26,7 @@ class FrontendPage
 	 * @param $field
 	 * @param $value
 	 * @param FrontendPage $parentPage
-	 * @param bool $includeHidden
+	 * @param boolean|array $includeHidden
 	 * @return bool|FrontendPage
 	 */
 	public static function findByField($field, $value, FrontendPage $parentPage = null, $includeHidden = true)
@@ -78,7 +78,7 @@ class FrontendPage
 
 	/**
 	 * @param string $uri
-	 * @param bool $includeHidden
+	 * @param boolean|array $includeHidden
 	 * @param FrontendPage $parentPage
 	 * @return stdClass
 	 */
@@ -127,7 +127,7 @@ class FrontendPage
 	/**
 	 * @param $slug
 	 * @param FrontendPage $parentPage
-	 * @param bool $includeHidden
+	 * @param boolean|array $includeHidden
 	 * @return bool|FrontendPage
 	 */
 	public static function findBySlug($slug, FrontendPage $parentPage = null, $includeHidden = true)
@@ -137,7 +137,7 @@ class FrontendPage
 
 	/**
 	 * @param $id
-	 * @param bool $includeHidden
+	 * @param boolean|array $includeHidden
 	 * @return bool|FrontendPage
 	 */
 	public static function findById($id, $includeHidden = true)
@@ -214,16 +214,20 @@ class FrontendPage
 	}
 
 	/**
-	 * @param boolean $includeHidden
+	 * @param boolean|array $includeHidden
 	 * @return array
 	 */
 	public static function getStatuses($includeHidden = false)
 	{
 		$statuses = [static::STATUS_PUBLISHED];
 
-		if ($includeHidden)
+		if ($includeHidden === true)
 		{
 			$statuses[] = static::STATUS_HIDDEN;
+		}
+		else if (is_array($includeHidden))
+		{
+			$statuses = array_merge($statuses, $includeHidden);
 		}
 
 		return $statuses;
