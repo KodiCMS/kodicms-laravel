@@ -5,7 +5,6 @@ use KodiCMS\API\Model\ApiKey;
 
 class GenerateKey extends Command
 {
-
 	/**
 	 * The console command name.
 	 */
@@ -19,7 +18,7 @@ class GenerateKey extends Command
 	{
 		$this->output->writeln('<info>Generating KodiCMS API key...</info>');
 
-		$id = (new ApiKey())->geterateKey();
+		$id = ApiKey::generateKey();
 
 		if(!is_null($id)) {
 			$this->output->writeln("<info>New API key generated: {$id}</info>");

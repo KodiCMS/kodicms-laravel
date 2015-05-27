@@ -30,9 +30,9 @@ class ApiKey extends Model {
 	 * @param string $description
 	 * @return integer|null
 	 */
-	public function generateKey($description = '')
+	public static function generateKey($description = '')
 	{
-		$key = $this->create([
+		$key = static::create([
 			'id' => Keys::generate(),
 			'description' => $description
 		]);
@@ -44,17 +44,17 @@ class ApiKey extends Model {
 	 * @param $oldKey
 	 * @return bool|integer
 	 */
-	public function refresh($oldKey)
+	public static function refresh($oldKey)
 	{
-		$this->where('id', $oldKey)->first();
+		$key = static::where('id', $oldKey)->first();
 
-		if (!$this->exists)
+		if (!$key->exists)
 		{
-			return FALSE;
+			return false;
 		}
 
-		$key = $this->update([
-			'id' => $this->generateKey()
+		$key->update([
+			'id' => static::generateKey()
 		]);
 
 		return $key->id;
