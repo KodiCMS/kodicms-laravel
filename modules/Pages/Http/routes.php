@@ -1,6 +1,8 @@
 <?php
-Route::group(['prefix' => CMS::backendPath()], function () {
 
+use KodiCMS\CMS\Helpers\URL;
+
+Route::group(['prefix' => CMS::backendPath()], function () {
 	Route::get('page/wysiwyg/{id}', [
 		'as' => 'backend.pages.wysiwyg',
 		'uses' => 'PageWysiwygController@getPageWysiwyg'
@@ -43,5 +45,17 @@ Route::get('/api.page.search', ['as' => 'api.page.search', 'uses' => 'API\PageCo
 Route::post('/api.page.changeStatus', ['as' => 'api.page.change_status', 'uses' => 'API\PageController@postChangeStatus']);
 
 app('router')->before(function() {
-	Route::get('{slug}', 'KodiCMS\Pages\Http\Controllers\FrontendController@run')->where('slug', '(.*)?');
+	// TODO: добавить возвожность использовать суффикс
+	/*Route::get('{slug}{suffix}', [
+		'as' => 'frontend.url',
+		'uses' => 'KodiCMS\Pages\Http\Controllers\FrontendController@run'
+	])
+		->where('slug', '(.*)?')
+		->where('suffix', URL::getSuffix());*/
+
+	Route::get('{slug}', [
+		'as' => 'frontend.url',
+		'uses' => 'KodiCMS\Pages\Http\Controllers\FrontendController@run'
+	])
+		->where('slug', '(.*)?');
 });

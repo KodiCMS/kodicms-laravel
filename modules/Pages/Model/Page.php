@@ -1,9 +1,10 @@
 <?php namespace KodiCMS\Pages\Model;
 
-use Illuminate\Database\Eloquent\Model;
-use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 use DB;
 use UI;
+use KodiCMS\CMS\Helpers\URL;
+use Illuminate\Database\Eloquent\Model;
+use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 
 class Page extends Model
 {
@@ -167,7 +168,7 @@ class Page extends Model
 	 */
 	public function getFrontendUrl()
 	{
-		return url($this->getUri());
+		return URL::frontend($this->getUri());
 	}
 
 	/**
