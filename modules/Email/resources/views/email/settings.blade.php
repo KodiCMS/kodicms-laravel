@@ -1,4 +1,6 @@
 @section('scripts')
+	@parent
+
 <script type="text/javascript">
 var show_button = true;
 var current_driver = '';
@@ -84,6 +86,8 @@ function test_email_button_visible() {
 }
 </script>
 @stop
+
+
 <div class="panel-heading" data-icon="envelope">
 	<span class="panel-title">@lang('email::core.settings.title')</span>
 </div>
