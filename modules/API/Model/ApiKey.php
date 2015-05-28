@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\API\Model;
 
-use Illuminate\Database\Eloquent\Model;
 use Keys;
+use Illuminate\Database\Eloquent\Model;
 
 class ApiKey extends Model {
 
@@ -30,7 +30,7 @@ class ApiKey extends Model {
 	 * @param string $description
 	 * @return integer|null
 	 */
-	public static function generateKey($description = '')
+	public static function generate($description = '')
 	{
 		$key = static::create([
 			'id' => Keys::generate(),
@@ -54,7 +54,7 @@ class ApiKey extends Model {
 		}
 
 		$key->update([
-			'id' => static::generateKey()
+			'id' => Keys::generate()
 		]);
 
 		return $key->id;
@@ -67,8 +67,7 @@ class ApiKey extends Model {
 	 */
 	public function isValid($key)
 	{
-		return $this
-			->where('id', e($key))
+		return static::where('id', e($key))
 			->first()
 			->exists;
 	}
