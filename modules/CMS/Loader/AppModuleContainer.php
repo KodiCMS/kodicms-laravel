@@ -55,4 +55,12 @@ class AppModuleContainer extends ModuleContainer
 	{
 		return [];
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getPublishPath()
+	{
+		return [];
+	}
 }

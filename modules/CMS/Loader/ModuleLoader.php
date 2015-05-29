@@ -8,11 +8,10 @@ use KodiCMS\CMS\Helpers\File;
 
 class ModuleLoader
 {
-
 	/**
 	 * @var array
 	 */
-	protected $_registeredModules = [];
+	protected $registeredModules = [];
 
 	/**
 	 * @var  array   File path cache, used when caching is true
@@ -47,7 +46,16 @@ class ModuleLoader
 	 */
 	public function getRegisteredModules()
 	{
-		return $this->_registeredModules;
+		return $this->registeredModules;
+	}
+
+	/**
+	 * @param string $name
+	 * @return ModuleContainerInterface|null
+	 */
+	public function getRegisteredModule($name)
+	{
+		return array_get($this->registeredModules, $name);
 	}
 
 	/**
@@ -73,7 +81,7 @@ class ModuleLoader
 			throw new ModuleLoaderException("Container module [{$moduleContainerClass}] must be implements of ModuleContainerInterface");
 		}
 
-		$this->_registeredModules[] = $moduleContainer;
+		$this->registeredModules[] = $moduleContainer;
 
 		return $this;
 	}

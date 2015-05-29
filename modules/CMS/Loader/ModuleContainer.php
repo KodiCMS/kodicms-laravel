@@ -236,6 +236,20 @@ class ModuleContainer implements ModuleContainerInterface
 	}
 
 	/**
+	 * @return array
+	 */
+	public function getPublishPath()
+	{
+		if (!is_dir($this->getViewsPath())) return [];
+
+		$namespace = strtolower($this->getName());
+
+		return [
+			$this->getViewsPath() => base_path("/resources/views/module/{$namespace}")
+		];
+	}
+
+	/**
 	 * @param Router $router
 	 */
 	protected function includeRoutes(Router $router)
@@ -266,7 +280,7 @@ class ModuleContainer implements ModuleContainerInterface
 	{
 		$namespace = strtolower($this->getName());
 
-		if (is_dir($appPath = base_path() . '/resources/views/module/' . $namespace))
+		if (is_dir($appPath = base_path("/resources/views/module/{$namespace}")))
 		{
 			app('view')->addNamespace($namespace, $appPath);
 		}

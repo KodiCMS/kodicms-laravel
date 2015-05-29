@@ -27,6 +27,7 @@ password: **password**
  * `layout:rebuild_blocks` - индексация размеченых блоков в шаблонах
  * `api:generate_key` - генерация нового API ключа
  * `cms:install` - создание .env файла, миграция и добавление сидов (в будущем данная команда будет создавать файл и производить миграцию)
+ * `cms:modules:publish` - публикация `view` шаблонов
  * `cms:modules:migrate` - создание таблиц в БД
  * `cms:modules:seed` - заполнение таблиц тестовыми данными
  * `cms:generate:translate:js` - генерация JS языковых файлов
