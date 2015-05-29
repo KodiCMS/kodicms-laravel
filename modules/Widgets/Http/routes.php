@@ -28,9 +28,10 @@ Route::group(['prefix' => CMS::backendPath()], function ()
 });
 
 RouteAPI::put('widget', ['as' => 'api.widget.place', 'uses' => 'API\WidgetController@putPlace']);
-RouteAPI::post('page.widgets.reorder', ['as' => 'api.page.widgets.reorder', 'uses' => 'API\WidgetController@postReorder']);
 
+RouteAPI::post('page.widgets.reorder', ['as' => 'api.page.widgets.reorder', 'uses' => 'API\WidgetController@postReorder']);
 
 RouteAPI::post('snippet', ['as' => 'api.snippet.create', 'uses' => 'API\SnippetController@postCreate']);
 RouteAPI::put('snippet', ['as' => 'api.snippet.edit', 'uses' => 'API\SnippetController@postEdit']);
 RouteAPI::get('snippet.list', ['as' => 'api.snippet.list', 'uses' => 'API\SnippetController@getList']);
+RouteAPI::get('snippet.xeditable', ['as' => 'api.snippet.xeditable', 'uses' => 'API\SnippetController@getListForXEditable']);

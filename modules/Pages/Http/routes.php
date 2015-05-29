@@ -32,6 +32,7 @@ RouteAPI::post('layout', ['as' => 'api.layout.create', 'uses' => 'API\LayoutCont
 RouteAPI::put('layout', ['as' => 'api.layout.edit', 'uses' => 'API\LayoutController@postEdit']);
 RouteAPI::get('layout.rebuild', ['as' => 'api.layout.rebuild.get', 'uses' => 'API\LayoutController@getRebuildBlocks']);
 RouteAPI::get('layout.blocks', ['as' => 'api.layout.rebuild.get', 'uses' => 'API\LayoutController@getBlocks']);
+RouteAPI::get('layout.xeditable', ['as' => 'api.layout.xeditable', 'uses' => 'API\LayoutController@getListForXEditable']);
 
 RouteAPI::get('page.part', ['as' => 'api.page.part.get', 'uses' => 'API\PagePartController@getByPageId']);
 RouteAPI::post('page.part', ['as' => 'api.page.part.post', 'uses' => 'API\PagePartController@create']);
