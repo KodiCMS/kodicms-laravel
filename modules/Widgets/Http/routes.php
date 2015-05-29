@@ -1,7 +1,7 @@
 <?php
 
-Route::group(['prefix' => CMS::backendPath()], function () {
-
+Route::group(['prefix' => CMS::backendPath()], function ()
+{
 	Route::controller('snippets', 'SnippetController', [
 		'getIndex' => 'backend.snippet.list',
 		'getCreate' => 'backend.snippet.create',
@@ -27,10 +27,10 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 	Route::get('handler/{$id}', ['as' => 'widget.handler', 'uses' => 'HandlerController@handle']);
 });
 
-Route::put('api.widget', ['as' => 'api.widget.place', 'uses' => 'API\WidgetController@putPlace']);
-Route::post('/api.page.widgets.reorder', ['as' => 'api.page.widgets.reorder', 'uses' => 'API\WidgetController@postReorder']);
+RouteAPI::put('widget', ['as' => 'api.widget.place', 'uses' => 'API\WidgetController@putPlace']);
+RouteAPI::post('page.widgets.reorder', ['as' => 'api.page.widgets.reorder', 'uses' => 'API\WidgetController@postReorder']);
 
 
-Route::post('api.snippet', ['as' => 'api.snippet.create', 'uses' => 'API\SnippetController@postCreate']);
-Route::put('api.snippet', ['as' => 'api.snippet.edit', 'uses' => 'API\SnippetController@postEdit']);
-Route::get('api.snippet.list', ['as' => 'api.snippet.list', 'uses' => 'API\SnippetController@getList']);
+RouteAPI::post('snippet', ['as' => 'api.snippet.create', 'uses' => 'API\SnippetController@postCreate']);
+RouteAPI::put('snippet', ['as' => 'api.snippet.edit', 'uses' => 'API\SnippetController@postEdit']);
+RouteAPI::get('snippet.list', ['as' => 'api.snippet.list', 'uses' => 'API\SnippetController@getList']);

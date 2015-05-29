@@ -1,7 +1,7 @@
 <?php
 
-Route::group(['prefix' => \CMS::backendPath()], function () {
-
+Route::group(['prefix' => \CMS::backendPath()], function ()
+{
 	Route::get('user/{id}/edit', ['as' => 'backend.user.edit', 'uses' => 'UserController@getEdit'])->where('id', '[0-9]+');
 	Route::post('user/{id}/edit', ['as' => 'backend.user.edit.post', 'uses' => 'UserController@postEdit'])->where('id', '[0-9]+');
 	Route::get('user/{id}/delete', ['as' => 'backend.user.delete', 'uses' => 'UserController@getDelete'])->where('id', '[0-9]+');
@@ -36,11 +36,11 @@ Route::group(['prefix' => \CMS::backendPath()], function () {
 	]);
 });
 
-Route::get('/api.user.list', ['as' => 'api.user.list.get', 'uses' => 'API\UserController@getUsers']);
-Route::get('/api.user.like', ['as' => 'api.user.like.get', 'uses' => 'API\UserController@getLike']);
-Route::get('/api.user.roles', ['as' => 'api.user.roles.get', 'uses' => 'API\UserController@getRoles']);
-Route::get('/api.roles', ['as' => 'api.roles.get', 'uses' => 'API\RoleController@getAll']);
+RouteAPI::get('api.user.list', ['as' => 'api.user.list.get', 'uses' => 'API\UserController@getUsers']);
+RouteAPI::get('api.user.like', ['as' => 'api.user.like.get', 'uses' => 'API\UserController@getLike']);
+RouteAPI::get('api.user.roles', ['as' => 'api.user.roles.get', 'uses' => 'API\UserController@getRoles']);
+RouteAPI::get('api.roles', ['as' => 'api.roles.get', 'uses' => 'API\RoleController@getAll']);
 
-Route::get('/api.user.meta', ['as' => 'api.user.meta.get', 'uses' => 'API\UserMetaController@getData']);
-Route::post('/api.user.meta', ['as' => 'api.user.meta.post', 'uses' => 'API\UserMetaController@postData']);
-Route::delete('/api.user.meta', ['as' => 'api.user.meta.delete', 'uses' => 'API\UserMetaController@deleteData']);
+RouteAPI::get('api.user.meta', ['as' => 'api.user.meta.get', 'uses' => 'API\UserMetaController@getData']);
+RouteAPI::post('api.user.meta', ['as' => 'api.user.meta.post', 'uses' => 'API\UserMetaController@postData']);
+RouteAPI::delete('api.user.meta', ['as' => 'api.user.meta.delete', 'uses' => 'API\UserMetaController@deleteData']);

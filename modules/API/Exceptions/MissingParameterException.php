@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\API\Exceptions;
 
+use KodiCMS\API\Http\Response;
 use Illuminate\Validation\Validator;
 
 class MissingParameterException extends Exception {

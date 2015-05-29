@@ -1,14 +1,14 @@
 <?php namespace KodiCMS\API\Http\Controllers\System;
 
-use BadMethodCallException;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-use KodiCMS\API\Exceptions\MissingParameterException;
-use KodiCMS\API\Exceptions\Response;
-use KodiCMS\API\Exceptions\ValidationException;
-use KodiCMS\CMS\Http\Controllers\System\Controller as BaseController;
 use Validator;
+use KodiCMS\API\Http\Response;
+use Illuminate\View\View;
+use BadMethodCallException;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use KodiCMS\API\Exceptions\ValidationException;
+use KodiCMS\API\Exceptions\MissingParameterException;
+use KodiCMS\CMS\Http\Controllers\System\Controller as BaseController;
 
 abstract class Controller extends BaseController
 {
@@ -21,7 +21,7 @@ abstract class Controller extends BaseController
 	 * Массив возвращаемых значений, будет преобразован в формат JSON
 	 * @var array
 	 */
-	public $jsonResponse = ['content' => null];
+	public $responseArray = ['content' => null];
 
 	/**
 	 * @var array
@@ -68,7 +68,7 @@ abstract class Controller extends BaseController
 	 */
 	public function setMessage($message)
 	{
-		$this->jsonResponse['message'] = $message;
+		$this->responseArray['message'] = $message;
 	}
 
 	/**
@@ -76,7 +76,7 @@ abstract class Controller extends BaseController
 	 */
 	public function setErrors(array $errors)
 	{
-		$this->jsonResponse['errors'] = $errors;
+		$this->responseArray['errors'] = $errors;
 	}
 
 	/**
@@ -89,7 +89,7 @@ abstract class Controller extends BaseController
 			$data = $data->render();
 		}
 
-		$this->jsonResponse['content'] = $data;
+		$this->responseArray['content'] = $data;
 	}
 
 	/**
@@ -129,9 +129,9 @@ abstract class Controller extends BaseController
 	 */
 	public function callAction($method, $parameters)
 	{
-		$this->jsonResponse['type'] = Response::TYPE_CONTENT;
-		$this->jsonResponse['method'] = $this->request->method();
-		$this->jsonResponse['code'] = Response::NO_ERROR;
+		$this->responseArray['type'] = Response::TYPE_CONTENT;
+		$this->responseArray['method'] = $this->request->method();
+		$this->responseArray['code'] = Response::NO_ERROR;
 
 		if (isset($this->requiredFields[$method]) AND is_array($this->requiredFields[$method]))
 		{
@@ -144,14 +144,12 @@ abstract class Controller extends BaseController
 
 		if ($response instanceof RedirectResponse)
 		{
-			$this->jsonResponse['type'] = Response::TYPE_REDIRECT;
-			$this->jsonResponse['targetUrl'] = $response->getTargetUrl();
-			$this->jsonResponse['code'] = $response->getStatusCode();
+			$this->responseArray['type'] = Response::TYPE_REDIRECT;
+			$this->responseArray['targetUrl'] = $response->getTargetUrl();
+			$this->responseArray['code'] = $response->getStatusCode();
 		}
 
-		$this->response->header('Content-Type', 'application/json');
-
-		return $this->jsonResponse;
+		return (new Response(config('app.debug')))->createResponse($this->responseArray);
 	}
 
 	/**
@@ -178,7 +176,7 @@ abstract class Controller extends BaseController
 	 */
 	public function __set($key, $value)
 	{
-		$this->jsonResponse[$key] = $value;
+		$this->responseArray[$key] = $value;
 	}
 
 	/**
@@ -187,7 +185,7 @@ abstract class Controller extends BaseController
 	 */
 	public function __get($key)
 	{
-		return $this->jsonResponse[$key];
+		return $this->responseArray[$key];
 	}
 
 	/**
@@ -196,7 +194,7 @@ abstract class Controller extends BaseController
 	 */
 	public function __isset($key)
 	{
-		return isset($this->jsonResponse[$key]);
+		return isset($this->responseArray[$key]);
 	}
 
 	/**
@@ -204,7 +202,7 @@ abstract class Controller extends BaseController
 	 */
 	public function __unset($key)
 	{
-		unset($this->jsonResponse[$key]);
+		unset($this->responseArray[$key]);
 	}
 
 	/**
@@ -233,7 +231,7 @@ abstract class Controller extends BaseController
 	{
 		if ($request->ajax())
 		{
-			return new JsonResponse($errors, 422);
+			return (new Response(config('app.debug')))->createResponse($errors, 422);
 		}
 
 		return redirect()->to($this->getRedirectUrl())->withInput($request->input())->withErrors($errors, $this->errorBag());

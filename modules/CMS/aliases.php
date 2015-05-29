@@ -49,6 +49,7 @@ return [
 	'WYSIWYG'		=> 'KodiCMS\Support\Facades\Wysiwyg',
 	'Keys'          => 'KodiCMS\Support\Facades\KeysHelper',
 	'Package'       => 'KodiCMS\Support\Facades\Package',
+	'RouteAPI'      => 'KodiCMS\Support\Facades\RouteAPI',
 	'UI'			=> 'KodiCMS\CMS\Helpers\UI',
 	'ACL'			=> 'KodiCMS\Users\ACL',
 	'CMS'			=> 'KodiCMS\CMS\Core',

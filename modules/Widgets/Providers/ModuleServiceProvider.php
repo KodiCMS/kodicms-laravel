@@ -1,17 +1,16 @@
 <?php namespace KodiCMS\Widgets\Providers;
 
 use Event;
-use KodiCMS\Widgets\Contracts\WidgetPaginator;
-use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 use Package;
 use Request;
-use KodiCMS\CMS\Providers\ServiceProvider;
-use KodiCMS\Pages\Helpers\Block;
 use KodiCMS\Pages\Model\Page;
-use KodiCMS\Pages\Model\PageSitemap;
-use KodiCMS\Widgets\Collection\PageWidgetCollection;
+use KodiCMS\Pages\Helpers\Block;
 use KodiCMS\Widgets\Manager\WidgetManager;
+use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Widgets\Model\SnippetCollection;
+use KodiCMS\Widgets\Contracts\WidgetPaginator;
+use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
+use KodiCMS\Widgets\Collection\PageWidgetCollection;
 
 class ModuleServiceProvider extends ServiceProvider
 {

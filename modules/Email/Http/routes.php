@@ -16,5 +16,5 @@ Route::group(['prefix' => \CMS::backendPath()], function () {
 	Route::get('/email/event/{id}/delete', ['as' => 'backend.email.event.delete', 'uses' => 'EmailEventController@getDelete']);
 });
 
-Route::get('/api.email-events.options', ['as' => 'api.email.event.options', 'uses' => 'API\EmailEventController@getOptions']);
-Route::post('/api.email.send', ['as' => 'api.email.send', 'uses' => 'API\EmailEventController@postSend']);
+RouteAPI::get('email-events.options', ['as' => 'api.email.event.options', 'uses' => 'API\EmailEventController@getOptions']);
+RouteAPI::post('email.send', ['as' => 'api.email.send', 'uses' => 'API\EmailEventController@postSend']);

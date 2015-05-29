@@ -1,12 +1,12 @@
 <?php namespace KodiCMS\CMS\Exceptions;
 
 use CMS;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
+use KodiCMS\API\Http\Response as APIResponse;
 use KodiCMS\API\Exceptions\Exception as APIException;
-use KodiCMS\API\Exceptions\Response as APIExceptionResponse;
-use Symfony\Component\Debug\ExceptionHandler as SymfonyDisplayer;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Debug\ExceptionHandler as SymfonyDisplayer;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -42,7 +42,7 @@ class Handler extends ExceptionHandler
 	{
 		if ($request->ajax() OR ($e instanceof APIException))
 		{
-			return (new APIExceptionResponse(config('app.debug')))->createResponse($e);
+			return (new APIResponse(config('app.debug')))->createExceptionResponse($e);
 		}
 
 		if (config('app.debug') or !CMS::isInstalled())

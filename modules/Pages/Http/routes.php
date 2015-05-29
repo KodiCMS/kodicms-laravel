@@ -2,7 +2,8 @@
 
 use KodiCMS\CMS\Helpers\URL;
 
-Route::group(['prefix' => CMS::backendPath()], function () {
+Route::group(['prefix' => CMS::backendPath()], function ()
+{
 	Route::get('page/wysiwyg/{id}', [
 		'as' => 'backend.pages.wysiwyg',
 		'uses' => 'PageWysiwygController@getPageWysiwyg'
@@ -27,24 +28,25 @@ Route::group(['prefix' => CMS::backendPath()], function () {
 	]);
 });
 
-Route::post('api.layout', ['as' => 'api.layout.create', 'uses' => 'API\LayoutController@postCreate']);
-Route::put('api.layout', ['as' => 'api.layout.edit', 'uses' => 'API\LayoutController@postEdit']);
-Route::get('/api.layout.rebuild', ['as' => 'api.layout.rebuild.get', 'uses' => 'API\LayoutController@getRebuildBlocks']);
-Route::get('/api.layout.blocks', ['as' => 'api.layout.rebuild.get', 'uses' => 'API\LayoutController@getBlocks']);
+RouteAPI::post('layout', ['as' => 'api.layout.create', 'uses' => 'API\LayoutController@postCreate']);
+RouteAPI::put('layout', ['as' => 'api.layout.edit', 'uses' => 'API\LayoutController@postEdit']);
+RouteAPI::get('layout.rebuild', ['as' => 'api.layout.rebuild.get', 'uses' => 'API\LayoutController@getRebuildBlocks']);
+RouteAPI::get('layout.blocks', ['as' => 'api.layout.rebuild.get', 'uses' => 'API\LayoutController@getBlocks']);
 
-Route::get('/api.page.part', ['as' => 'api.page.part.get', 'uses' => 'API\PagePartController@getByPageId']);
-Route::post('/api.page.part', ['as' => 'api.page.part.post', 'uses' => 'API\PagePartController@create']);
-Route::put('/api.page.part/{id}', ['as' => 'api.page.part.put', 'uses' => 'API\PagePartController@update'])->where('id', '[0-9]+');
-Route::delete('/api.page.part/{id}', ['as' => 'api.page.part.delete', 'uses' => 'API\PagePartController@delete'])->where('id', '[0-9]+');
-Route::post('/api.page.part.reorder', ['as' => 'api.page.part.reorder', 'uses' => 'API\PagePartController@reorder']);
+RouteAPI::get('page.part', ['as' => 'api.page.part.get', 'uses' => 'API\PagePartController@getByPageId']);
+RouteAPI::post('page.part', ['as' => 'api.page.part.post', 'uses' => 'API\PagePartController@create']);
+RouteAPI::put('page.part/{id}', ['as' => 'api.page.part.put', 'uses' => 'API\PagePartController@update'])->where('id', '[0-9]+');
+RouteAPI::delete('page.part/{id}', ['as' => 'api.page.part.delete', 'uses' => 'API\PagePartController@delete'])->where('id', '[0-9]+');
+RouteAPI::post('page.part.reorder', ['as' => 'api.page.part.reorder', 'uses' => 'API\PagePartController@reorder']);
 
-Route::get('/api.page.children', ['as' => 'api.page.children', 'uses' => 'API\PageController@getChildren']);
-Route::get('/api.page.reorder', ['as' => 'api.page.reorder', 'uses' => 'API\PageController@getReorder']);
-Route::post('/api.page.reorder', ['as' => 'api.page.reorder', 'uses' => 'API\PageController@postReorder']);
-Route::get('/api.page.search', ['as' => 'api.page.search', 'uses' => 'API\PageController@getSearch']);
-Route::post('/api.page.changeStatus', ['as' => 'api.page.change_status', 'uses' => 'API\PageController@postChangeStatus']);
+RouteAPI::get('page.children', ['as' => 'api.page.children', 'uses' => 'API\PageController@getChildren']);
+RouteAPI::get('page.reorder', ['as' => 'api.page.reorder', 'uses' => 'API\PageController@getReorder']);
+RouteAPI::post('page.reorder', ['as' => 'api.page.reorder', 'uses' => 'API\PageController@postReorder']);
+RouteAPI::get('page.search', ['as' => 'api.page.search', 'uses' => 'API\PageController@getSearch']);
+RouteAPI::post('page.changeStatus', ['as' => 'api.page.change_status', 'uses' => 'API\PageController@postChangeStatus']);
 
-app('router')->before(function() {
+app('router')->before(function()
+{
 	// TODO: добавить возвожность использовать суффикс
 	/*Route::get('{slug}{suffix}', [
 		'as' => 'frontend.url',
