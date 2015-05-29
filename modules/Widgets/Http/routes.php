@@ -29,6 +29,8 @@ Route::group(['prefix' => CMS::backendPath()], function ()
 
 RouteAPI::put('widget', ['as' => 'api.widget.place', 'uses' => 'API\WidgetController@putPlace']);
 
+RouteAPI::post('widget.set.template', ['as' => 'api.widget.set.template', 'uses' => 'API\WidgetController@setTemplate']);
+
 RouteAPI::post('page.widgets.reorder', ['as' => 'api.page.widgets.reorder', 'uses' => 'API\WidgetController@postReorder']);
 
 RouteAPI::post('snippet', ['as' => 'api.snippet.create', 'uses' => 'API\SnippetController@postCreate']);
