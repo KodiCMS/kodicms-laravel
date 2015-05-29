@@ -1,10 +1,11 @@
 <?php namespace KodiCMS\API\Http\Controllers\System;
 
 use Validator;
-use KodiCMS\API\Http\Response;
 use Illuminate\View\View;
 use BadMethodCallException;
 use Illuminate\Http\Request;
+use KodiCMS\API\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use KodiCMS\API\Exceptions\ValidationException;
 use KodiCMS\API\Exceptions\MissingParameterException;
@@ -147,6 +148,10 @@ abstract class Controller extends BaseController
 			$this->responseArray['type'] = Response::TYPE_REDIRECT;
 			$this->responseArray['targetUrl'] = $response->getTargetUrl();
 			$this->responseArray['code'] = $response->getStatusCode();
+		}
+		else if ($response instanceof JsonResponse)
+		{
+			return $response;
 		}
 
 		return (new Response(config('app.debug')))->createResponse($this->responseArray);
