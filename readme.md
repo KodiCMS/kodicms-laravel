@@ -31,7 +31,7 @@ password: **password**
  * `cms:modules:migrate` - создание таблиц в БД
  * `cms:modules:seed` - заполнение таблиц тестовыми данными
  * `cms:generate:translate:js` - генерация JS языковых файлов
- * `cms:generate:locale` - генерация пакета lang файлов для перевода. Файлы будут скопированы в `/resources/lang/packages`
+ * `cms:modules:locale:publish` - генерация пакета lang файлов для перевода. Файлы будут скопированы в `/resources/lang/packages`
  * `cms:make:controller` - создание контроллера (`cms:make:controller TestController --module=cms --type=backend` создаст контроллер в модуле `modules\CMS`. Существует два типа контроллеров `[api, backend]`)
  * `cms:packages:list` - список всех media пакетов
 
