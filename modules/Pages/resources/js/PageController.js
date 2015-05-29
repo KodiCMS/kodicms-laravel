@@ -142,11 +142,11 @@ CMS.controllers.add('page.get.index', function() {
 
 		return false;
 	});
-	
+
 	var editable_status = {
 		selector: '.editable-status',
 		type: 'select2',
-		title: __('Page status'),
+		title: i18n.t('pages.core.field.status'),
 		send: 'always',
 		highlight: false,
 		ajaxOptions: {
@@ -165,7 +165,7 @@ CMS.controllers.add('page.get.index', function() {
 		source: PAGE_STATUSES,
 		select2: {
 			width: 200,
-			placeholder: __('Page status')
+			placeholder: i18n.t('pages.core.field.status')
 		}
 	};
 	
