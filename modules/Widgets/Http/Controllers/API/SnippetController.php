@@ -42,6 +42,6 @@ class SnippetController extends AbstractFileController
 
 	public function getList()
 	{
-		$this->setContent($snippets = (new SnippetCollection)->getHTMLSelectChoices());
+		$this->setContent($this->collection->getHTMLSelectChoices());
 	}
 }
