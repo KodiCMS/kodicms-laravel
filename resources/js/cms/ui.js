@@ -450,7 +450,7 @@ CMS.ui.add('flags', function () {
 				$(this).remove();
 			});
 
-			$('li a', $tabs_ul).on('click', function () {
+			$('li a', $tabs_ul).on('click', function() {
 				window.location.hash = $(this).attr('href');
 			});
 		}
@@ -470,13 +470,6 @@ CMS.ui.add('flags', function () {
 		layout: 'topRight',
 		theme: 'bootstrapTheme',
 		timeout: 3000
-	});
-})
-.add('i18nSetup', function() {
-	i18n.init({
-		lng: LOCALE,
-		fallbackLng: [],
-		resGetPath: '/cms/js/locale/__lng__.json',
 	});
 })
 .add('momentJs', function() {

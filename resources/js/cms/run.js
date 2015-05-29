@@ -5,14 +5,29 @@ $(function() {
 		}
 	});
 
-	CMS.ui.init();
-	KodiCMS.start(null, CMS.settings);
+	try {
+		i18n.init({
+			lng: LOCALE,
+			fallbackLng: 'ru',
+			useLocalStorage: true,
+			localStorageExpirationTime: 86400000, // in ms, default 1 week
+			resGetPath: '/cms/js/locale/__lng__.json'
+		}, runApplication);
+	} catch (err) {
+		runApplication();
+	}
 
-	CMS.controllers.call();
+	function runApplication()
+	{
+		CMS.ui.init();
+		KodiCMS.start(null, CMS.settings);
 
-	setTimeout(function() {
-		CMS.notifications.init();
-	}, 1500);
+		CMS.controllers.call();
 
-	CMS.messages.init();
+		setTimeout(function() {
+			CMS.notifications.init();
+		}, 1500);
+
+		CMS.messages.init();
+	}
 });
