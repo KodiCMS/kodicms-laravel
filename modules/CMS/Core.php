@@ -63,7 +63,7 @@ class Core extends Container {
 
 	public function __construct()
 	{
-		register_shutdown_function([$this, 'shutdown_handler']);
+		register_shutdown_function([$this, 'shutdownHandler']);
 	}
 
 	public function shutdown(Closure $callback)
@@ -71,7 +71,7 @@ class Core extends Container {
 		$this->shutdowsCalbbacks[] = $callback;
 	}
 
-	public function shutdown_handler()
+	public function shutdownHandler()
 	{
 		foreach($this->shutdowsCalbbacks as $callback)
 		{
