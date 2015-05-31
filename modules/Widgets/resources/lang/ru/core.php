@@ -11,7 +11,7 @@ return [
 		'permissions' => 'Права доступа',
 		'cache' => 'Настройки кеша',
 		'template' => 'Шаблон',
-		'copy_widgets' => 'Копирование виджетов'
+		'copy_widgets' => 'Копирование виджетов',
 	],
 	'field' => [
 		'name' => 'Название',
@@ -39,7 +39,8 @@ return [
 		'cache' => 'Кешировать',
 		'cache_tags' => 'Теги',
 		'cache_lifetime' => 'Время жизни кеша',
-		'template_parameters' => 'Параметры шаблона'
+		'template_parameters' => 'Параметры шаблона',
+		'related_widgets' => 'Загрузить виджеты в шаблон',
 	],
 	'button' => [
 		'create' => 'Создать',

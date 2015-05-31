@@ -1,8 +1,9 @@
 <?php namespace KodiCMS\Widgets\Widget;
 
 use KodiCMS\CMS\Traits\Settings;
-use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
+use Illuminate\Support\Collection;
 use KodiCMS\Widgets\Manager\WidgetManager;
+use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 
 abstract class Decorator implements WidgetInterface, \ArrayAccess
 {
@@ -49,6 +50,11 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
 	protected $settings = [];
 
 	/**
+	 * @var Collection
+	 */
+	protected $relatedWidgets;
+
+	/**
 	 * @var int
 	 */
 	private $id;
@@ -62,6 +68,7 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
 		$this->type = WidgetManager::getTypeByClassName(get_called_class());
 		$this->name = $name;
 		$this->description = $description;
+		$this->relatedWidgets = new Collection;
 	}
 
 	/**
@@ -149,6 +156,22 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
 	public function setRoles(array $roles)
 	{
 		$this->settings['roles'] = array_unique($roles);
+	}
+
+	/**
+	 * @return Collection
+	 */
+	public function getRalatedWidgets()
+	{
+		return $this->relatedWidgets;
+	}
+
+	/**
+	 * @param Collection $widgets
+	 */
+	public function setRalatedWidgets(Collection $widgets)
+	{
+		$this->relatedWidgets = $widgets;
 	}
 
 	/**********************************************************************************************************

@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Dashboard\Widget;
 
+use Illuminate\Support\Collection;
 use KodiCMS\Dashboard\Contracts\WidgetDashboard;
 use KodiCMS\Dashboard\WidgetManagerDashboard;
 use KodiCMS\Widgets\Contracts\WidgetRenderable;
@@ -47,6 +48,7 @@ abstract class Decorator extends WidgetDecorator implements WidgetDashboard, Wid
 	public function __construct($name, $description = '')
 	{
 		$this->type = WidgetManagerDashboard::getTypeByClassName(get_called_class());
+		$this->relatedWidgets = new Collection;
 	}
 
 	/**

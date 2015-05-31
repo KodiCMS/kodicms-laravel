@@ -1,13 +1,16 @@
 <?php namespace KodiCMS\Widgets\Providers;
 
 use Event;
+use Blade;
 use Package;
 use Request;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Helpers\Block;
+use KodiCMS\Widgets\Model\Widget;
 use KodiCMS\Widgets\Manager\WidgetManager;
 use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Widgets\Model\SnippetCollection;
+use KodiCMS\Widgets\Observers\WidgetObserver;
 use KodiCMS\Widgets\Contracts\WidgetPaginator;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 use KodiCMS\Widgets\Collection\PageWidgetCollection;
@@ -83,14 +86,16 @@ class ModuleServiceProvider extends ServiceProvider
 
 		Event::listen('view.widget.edit', function ($widget)
 		{
-			// TODO: вынести в виджеты
 			if ($widget->isRenderable())
 			{
 				$commentKeys = WidgetManager::getTemplateKeysByType($widget->type);
 				$snippets = (new SnippetCollection())->getHTMLSelectChoices();
 				$assetsPackages = Package::getHTMLSelectChoice();
+				$widgetList = Widget::where('id', '!=', $widget->id)->lists('name', 'id');
 
-				echo view('widgets::widgets.partials.renderable', compact('widget', 'commentKeys', 'snippets', 'assetsPackages'))->render();
+				echo view('widgets::widgets.partials.renderable', compact(
+					'widget', 'commentKeys', 'snippets', 'assetsPackages', 'widgetList'
+				))->render();
 			}
 
 			if ($widget->isCacheable() AND acl_check('widgets.cache'))
@@ -126,5 +131,13 @@ class ModuleServiceProvider extends ServiceProvider
 					->render();
 			}
 		});
+
+		Blade::extend(function ($view, $compiler)
+		{
+			$pattern = $compiler->createMatcher('widget');
+			return preg_replace($pattern, '$1<?php echo (new \KodiCMS\Widgets\Engine\WidgetRenderHTML$2)->render(); ?>', $view);
+		});
+
+		Widget::observe(new WidgetObserver);
 	}
 }

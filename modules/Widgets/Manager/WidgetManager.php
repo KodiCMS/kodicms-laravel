@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Widgets\Manager;
 
+use Illuminate\Support\Collection;
 use KodiCMS\Widgets\Contracts\Widget;
 use KodiCMS\Widgets\Contracts\WidgetManager as WidgetManagerInterface;
 
@@ -169,6 +170,24 @@ class WidgetManager implements WidgetManagerInterface
 		}
 
 		return null;
+	}
+
+	/**
+	 * @param Collection $widgets
+	 * @return Collection
+	 */
+	public static function buildWidgetCollection(Collection $widgets)
+	{
+		return $widgets->map(function($widget)
+		{
+			return $widget->toWidget();
+		})->filter(function($widget)
+		{
+			return !($widget instanceof WidgetCorrupt);
+		})->keyBy(function($widget)
+		{
+			return $widget->getId();
+		});
 	}
 
 	/**

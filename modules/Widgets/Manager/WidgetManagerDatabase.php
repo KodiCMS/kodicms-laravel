@@ -1,9 +1,6 @@
 <?php namespace KodiCMS\Widgets\Manager;
 
 use DB;
-use Illuminate\Database\Eloquent\Collection;
-use KodiCMS\Pages\Model\FrontendPage;
-use KodiCMS\Widgets\Contracts\WidgetCorrupt;
 use KodiCMS\Widgets\Model\Widget;
 
 class WidgetManagerDatabase extends WidgetManager
@@ -60,7 +57,7 @@ class WidgetManagerDatabase extends WidgetManager
 		{
 			$q->where('pages.id', (int) $pageId);
 
-		})->get();
+		})->with('related')->get();
 
 		return static::buildWidgetCollection($widgets);
 	}
@@ -82,24 +79,6 @@ class WidgetManagerDatabase extends WidgetManager
 		}
 
 		return $data;
-	}
-
-	/**
-	 * @param Collection $widgets
-	 * @return Collection
-	 */
-	private static function buildWidgetCollection(Collection $widgets)
-	{
-		return $widgets->map(function($widget)
-		{
-			return $widget->toWidget();
-		})->filter(function($widget)
-		{
-			return !($widget instanceof WidgetCorrupt);
-		})->keyBy(function($widget)
-		{
-			return $widget->getId();
-		});
 	}
 
 	/**

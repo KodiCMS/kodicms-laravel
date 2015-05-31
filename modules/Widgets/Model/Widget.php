@@ -84,10 +84,12 @@ class Widget extends Model
 		{
 			$this->widget->setId($this->id);
 
-			if($this->isRenderable())
+			if ($this->isRenderable())
 			{
 				$this->widget->setFrontendTemplate($this->template);
 			}
+
+			$this->widget->setRalatedWidgets($this->related);
 		}
 		else
 		{
@@ -192,6 +194,14 @@ class Widget extends Model
 	public function pages()
 	{
 		return $this->belongsToMany('KodiCMS\Pages\Model\Page', 'page_widgets', 'widget_id', 'page_id');
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\hasManyThrough
+	 */
+	public function related()
+	{
+		return $this->belongsToMany('\KodiCMS\Widgets\Model\Widget', 'related_widgets', 'to_widget_id', 'id');
 	}
 
 	/**

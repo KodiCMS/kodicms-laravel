@@ -91,7 +91,6 @@ class WidgetController extends BackendController {
 	public function getEdit($id)
 	{
 		$widget = $this->getWidget($id);
-
 		$this->breadcrumbs->add($widget->getType());
 
 		$this->setTitle(trans('widgets::core.title.edit', [
@@ -99,7 +98,7 @@ class WidgetController extends BackendController {
 		]));
 
 		$settingsView = (new WidgetRenderSettingsHTML($widget->toWidget()))->render();
-		$this->setContent('widgets.edit', compact('widget', 'settingsView', 'assetsPackages', 'usersRoles'));
+		$this->setContent('widgets.edit', compact('widget', 'settingsView', 'usersRoles'));
 	}
 
 	public function postEdit($id, WidgetUpdator $updator)

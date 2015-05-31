@@ -1,4 +1,5 @@
 @section('scripts')
+	@parent
 <script type="text/javascript">
 $(function() {
 	var editSnippetUrl = '{{ route('backend.snippet.edit', ['***']) }}';
@@ -12,7 +13,9 @@ $(function() {
 				.removeClass('hidden')
 				.css({display: 'inline-block'})
 				.attr('href', editSnippetUrl.replace('***', $value));
-	}).change();
+	});
+
+	$('#snippet-select').change();
 
 	$('body').on('post:api.snippet.list', update_snippets_list);
 	$('body').on('put:api.snippet.list', update_snippets_list);
@@ -21,6 +24,7 @@ $(function() {
 function update_snippets_list(e, response) {
 	var select = $('#snippet-select');
 
+	console.log(response);
 	select
 		.append($('<option>', {value: response.name, text: response.name}))
 		.select2('val', response.name)
