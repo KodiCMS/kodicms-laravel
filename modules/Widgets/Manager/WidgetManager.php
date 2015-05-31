@@ -125,6 +125,7 @@ class WidgetManager implements WidgetManagerInterface
 		$keys[] = '[array] $settings';
 		$keys[] = '[int] $widgetId';
 		$keys[] = '[string] $header';
+		$keys[] = '[array] $relatedWidgets';
 
 		return $keys;
 	}
