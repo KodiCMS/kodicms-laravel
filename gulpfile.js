@@ -16,21 +16,21 @@ elixir(function(mix) {
 		.less('common.less', 'public/cms/css');
 
 	mix.scripts([
-		'libs/jquery/dist/jquery.js',
-		'libs/bootstrap/dist/js/bootstrap.js',
-		'libs/noty/js/noty/packaged/jquery.noty.packaged.js',
-		'libs/select2/dist/js/select2.full.js',
-		'libs/colorbox/jquery.colorbox.js',
-		'libs/jquery-validation/dist/jquery.validate.js',
-		'libs/jquery-validation/dist/additional-methods.js',
-		'libs/dropzone/dist/dropzone.js',
-		'libs/datetimepicker/jquery.datetimepicker.js',
-		'libs/underscore/underscore.js',
-		'libs/moment/moment.js',
-		'libs/fastclick/lib/fastclick.js',
-		'libs/slimScroll/jquery.slimscroll.js',
-		'libs/jquery-query-object/jquery.query-object.js',
-		'libs/i18next/i18next.js'
+		'libs/jquery/js/jquery.min.js',
+		'libs/bootstrap/js/bootstrap.js',
+		'libs/noty/js/jquery.noty.packaged.js',
+		'libs/select2/js/select2.full.js',
+		'libs/jquery-colorbox/js/jquery.colorbox-min.js',
+		'libs/jquery-validation/js/jquery.validate.js',
+		'libs/jquery-validation/js/additional-methods.js',
+		'libs/dropzone/js/dropzone.min.js',
+		'libs/datetimepicker/js/jquery.datetimepicker.js',
+		'libs/underscore/js/underscore-min.js',
+		'libs/moment/js/moment.min.js',
+		'libs/fastclick/js/fastclick.js',
+		'libs/slimScroll/js/jquery.slimscroll.min.js',
+		'libs/jquery-query-object/js/jquery.query-object.js',
+		'libs/i18next/js/i18next.min.js'
 	], 'public/cms/js/libraries.js', 'public/cms/');
 
 	mix.scripts([

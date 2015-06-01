@@ -1,0 +1,127 @@
+{
+	"name" : "KodiCMS",
+	"version": "0.1",
+	"dependencies" : {
+		"backbone" : "latest",
+		"bootstrap": "latest",
+		"ckeditor": "latest",
+		"colorbox": "latest",
+		"datetimepicker": "latest",
+		"dropzone": "latest",
+		"fastclick": "latest",
+		"fontawesome": "latest",
+		"gridster": "latest",
+		"i18next": "latest",
+		"jquery": "latest",
+		"jquery.cookie": "latest",
+		"jquery.steps": "latest",
+		"jquery-query-object": "latest",
+		"jquery-ui": "latest",
+		"jquery-validation": "latest",
+		"moment": "latest",
+		"nestable": "latest",
+		"noty": "latest",
+		"select2": "latest",
+		"slimScroll": "latest",
+		"Sortable": "latest",
+		"underscore": "latest",
+		"x-editable": "latest"
+	},
+	"install" : {
+		"base":  "public/cms/libs",
+		"path" : {
+			"js": "{name}/js",
+			"map": "{name}/js",
+			"less": "{name}/less",
+			"css": "{name}/css",
+			"eot": "{name}/fonts",
+			"svg": "{name}/fonts",
+			"ttf": "{name}/fonts",
+			"woff": "{name}/fonts",
+			"woff2": "{name}/fonts",
+			"otf": "{name}/fonts",
+			"gif": "{name}/images",
+			"png": "{name}/images",
+			"jpg": "{name}/images"
+		},
+		"sources" : {
+			"backbone" : [
+				"bower_components/backbone/backbone-min.js",
+				"bower_components/backbone/backbone-min.map"
+			],
+			"underscore" : [
+				"bower_components/underscore/underscore-min.js",
+				"bower_components/underscore/underscore-min.map"
+			],
+			"bootstrap": [
+				"bower_components/bootstrap/dist/css/**",
+				"bower_components/bootstrap/dist/js/**",
+				"bower_components/bootstrap/fonts/**",
+				"bower_components/bootstrap/less/**"
+			],
+			"datetimepicker": [
+				"bower_components/datetimepicker/jquery.datetimepicker.css",
+				"bower_components/datetimepicker/jquery.datetimepicker.js"
+			],
+			"fontawesome": [
+				"bower_components/fontawesome/css/**",
+				"bower_components/fontawesome/fonts/**",
+				"bower_components/fontawesome/less/**"
+			],
+			"gridster": [
+				"bower_components/gridster/dist/**"
+			],
+			"dropzone": [
+				"bower_components/dropzone/dist/min/**"
+			],
+			"i18next": [
+				"bower_components/i18next/i18next.min.js"
+			],
+			"jquery": [
+				"bower_components/jquery/dist/jquery.min.js",
+				"bower_components/jquery/dist/jquery.min.map"
+			],
+			"jquery.steps": [
+				"bower_components/jquery.steps/build/jquery.steps.min.js"
+			],
+			"jquery-query-object": [
+				"bower_components/jquery-query-object/jquery.query-object.js"
+			],
+			"jquery-ui": [
+				"bower_components/jquery-ui/jquery-ui.min.js",
+				"bower_components/jquery-ui/themes/smoothness/*.*"
+			],
+			"jquery-validation": [
+				"bower_components/jquery-validation/dist/*.*",
+				"bower_components/jquery-validation/src/localization/**"
+			],
+			"moment": [
+				"bower_components/moment/min/*.*",
+				"bower_components/moment/locale/**"
+			],
+			"nestable": [
+				"bower_components/nestable/jquery.nestable.js"
+			],
+			"noty": [
+				"bower_components/noty/js/noty/packaged/*.*"
+			],
+			"select2": [
+				"bower_components/select2/dist/css/*.*",
+				"bower_components/select2/dist/js/**"
+			],
+			"Sortable": [
+				"bower_components/Sortable/jquery.binding.js",
+				"bower_components/Sortable/Sortable.min.js"
+			],
+			"x-editable": [
+				"bower_components/x-editable/dist/bootstrap3-editable/css/**",
+				"bower_components/x-editable/dist/bootstrap3-editable/img/**",
+				"bower_components/x-editable/dist/bootstrap3-editable/js/**"
+			],
+			"colorbox": [
+				"bower_components/colorbox/jquery.colorbox.js",
+				"bower_components/colorbox/jquery.colorbox-min.js"
+			]
+		}
+	}
+}
