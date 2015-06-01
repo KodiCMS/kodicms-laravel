@@ -1,5 +1,4 @@
 <?php
 
-
 Package::add('cron')
-	->js(NULL, resources_url() . '/libs/jquery-cron-min.js', 'jquery');
+	->js(NULL, resources_url() . '/libs/jquery-cron/jquery-cron-min.js', 'jquery');

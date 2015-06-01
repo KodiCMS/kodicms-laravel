@@ -1476,7 +1476,6 @@
 	};
 }).call(this);
 
-
 (function() {
 	var tabdrop;
 

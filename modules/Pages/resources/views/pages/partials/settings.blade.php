@@ -19,7 +19,7 @@ if ((acl_check('layout.edit') OR acl_check('layout.view')) AND ! empty($layout_n
 			@lang('pages::core.field.parent_id')
 		</label>
 		<div class="col-md-6">
-			{!! Form::select('parent_id', $pagesMap, NULL, ['class' => 'form-control']) !!}
+			{!! Form::select('parent_id', $pagesMap) !!}
 		</div>
 	</div>
 	@endif
@@ -29,7 +29,7 @@ if ((acl_check('layout.edit') OR acl_check('layout.view')) AND ! empty($layout_n
 			@lang('pages::core.field.layout_file')
 		</label>
 		<div class="col-md-6">
-			{!! Form::select('layout_file', $page->getLayoutList(), NULL, ['class' => 'form-control']) !!}
+			{!! Form::select('layout_file', $page->getLayoutList()) !!}
 		</div>
 
 		<div class="col-md-3">
@@ -49,7 +49,7 @@ if ((acl_check('layout.edit') OR acl_check('layout.view')) AND ! empty($layout_n
 			@lang('pages::core.field.behavior')
 		</label>
 		<div class="col-md-6">
-			{!! Form::select('behavior', $behaviorList, NULL, ['class' => 'form-control']) !!}
+			{!! Form::select('behavior', $behaviorList) !!}
 			<div id="behavor_options"></div>
 		</div>
 	</div>
@@ -62,7 +62,7 @@ if ((acl_check('layout.edit') OR acl_check('layout.view')) AND ! empty($layout_n
 			@lang('pages::core.field.status')
 		</label>
 		<div class="col-md-6">
-			{!! Form::select('status', $page->getStatusList(), NULL, ['class' => 'form-control']) !!}
+			{!! Form::select('status', $page->getStatusList()) !!}
 		</div>
 	</div>
 	<hr class="panel-wide" />
@@ -74,7 +74,7 @@ if ((acl_check('layout.edit') OR acl_check('layout.view')) AND ! empty($layout_n
 			@lang('pages::core.field.published_at')
 		</label>
 		<div class="col-md-6">
-			{!! Form::text('published_at', NULL, ['class' => 'form-control datetimepicker']) !!}
+			{!! Form::text('published_at', null, ['class' => 'form-control datetimepicker']) !!}
 		</div>
 	</div>
 	<hr class="panel-wide" />

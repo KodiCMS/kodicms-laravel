@@ -140,32 +140,25 @@
         {
             var data,
                 depth = 0,
-				array = [],
                 list  = this;
                 step  = function(level, depth)
                 {
-                    var items = level.children(list.options.itemNodeName),
-						position = 0;
-
+                    var array = [ ],
+                        items = level.children(list.options.itemNodeName);
                     items.each(function()
                     {
                         var li   = $(this),
-                            sub  = li.children(list.options.listNodeName),
-							parent_id = level.parent().data('id');
-							
-							array.push({
-								parent_id: parseInt(parent_id ? parent_id : list.options.parent_id),
-								id: li.data('id'),
-								position: position++
-							});
-
+                            item = $.extend({}, li.data()),
+                            sub  = li.children(list.options.listNodeName);
                         if (sub.length) {
-                            step(sub, depth + 1);
+                            item.children = step(sub, depth + 1);
                         }
+                        array.push(item);
                     });
+                    return array;
                 };
-            step(list.el.find(list.options.listNodeName).first(), depth);
-            return array;
+            data = step(list.el.find(list.options.listNodeName).first(), depth);
+            return data;
         },
 
         serialise: function()

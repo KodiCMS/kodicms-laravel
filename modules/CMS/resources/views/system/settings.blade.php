@@ -41,7 +41,7 @@
 	<div class="form-group">
 		<label class="control-label col-md-3">@lang('cms::system.label.settings.date_format')</label>
 		<div class="col-md-3">
-			{!! Form::select('config[cms][date_format]', $dateFormats, config('cms.date_format')) !!}
+			{!! Form::select('config[cms][date_format]', $dateFormats, config('cms.date_format'), ['class' => 'form-control']) !!}
 		</div>
 	</div>
 </div>
@@ -52,7 +52,7 @@
 	<div class="form-group">
 		<label class="control-label col-md-3">@lang('cms::system.label.settings.debug_mode')</label>
 		<div class="col-md-2">
-			<?php echo Form::select('config[app][debug]', ['No', 'Yes'], config('app.debug')); ?>
+			<?php echo Form::select('config[app][debug]', ['No', 'Yes'], config('app.debug'), ['class' => 'form-control']); ?>
 		</div>
 	</div>
 </div>
@@ -63,14 +63,14 @@
 	<div class="form-group">
 		<label class="control-label col-md-3">@lang('cms::system.label.settings.html_editor')</label>
 		<div class="col-md-9">
-			<?php echo Form::select('config[cms][default_html_editor]', $htmlEditors, config('cms.default_html_editor')); ?>
+			<?php echo Form::select('config[cms][default_html_editor]', $htmlEditors, config('cms.default_html_editor'), ['class' => 'form-control']); ?>
 		</div>
 	</div>
 
 	<div class="form-group">
 		<label class="control-label col-md-3">@lang('cms::system.label.settings.code_editor')</label>
 		<div class="col-md-9">
-			<?php echo Form::select('config[cms][default_code_editor]', $codeEditors, config('cms.default_code_editor')); ?>
+			<?php echo Form::select('config[cms][default_code_editor]', $codeEditors, config('cms.default_code_editor'), ['class' => 'form-control']); ?>
 		</div>
 	</div>
 </div>
@@ -84,7 +84,7 @@
 		<div class="col-md-9">
 			{!! Form::select(null, [
 				'file' => 'File', 'database' => 'Database', 'cookie' => 'Cookie', 'apc' => 'APC'
-			], config('session.driver'), ['disabled']) !!}
+			], config('session.driver'), ['disabled', 'class' => 'form-control']) !!}
 		</div>
 	</div>
 </div>

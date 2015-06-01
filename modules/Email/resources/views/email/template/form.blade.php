@@ -9,14 +9,14 @@
 	<div class="form-group">
 		<label class="control-label col-md-3" for="status">@lang('email::core.field.templates.status')</label>
 		<div class="col-md-3">
-			{!! Form::select('status', $emailTemplate->statuses()) !!}
+			{!! Form::select('status', $emailTemplate->statuses(), null, ['class' => 'form-control']) !!}
 		</div>
 	</div>
 
 	<div class="form-group">
 		<label class="control-label col-md-3" for="use_queue">@lang('email::core.field.templates.use_queue')</label>
 		<div class="col-md-3">
-			{!! Form::select('use_queue', $emailTemplate->queueStatuses()) !!}
+			{!! Form::select('use_queue', $emailTemplate->queueStatuses(), null, ['class' => 'form-control']) !!}
 		</div>
 	</div>
 
@@ -24,7 +24,7 @@
 		<label class="control-label col-md-3" for="email_event_id">@lang('email::core.field.templates.email_event')</label>
 		<div class="col-md-6">
 			<div class="input-group">
-				{!! Form::select('email_event_id', $emailEvents, null, ['id' => 'email_event_id']) !!}
+				{!! Form::select('email_event_id', $emailEvents, null, ['id' => 'email_event_id', 'class' => 'form-control']) !!}
 				@if (acl_check('email.type.create'))
 					<div class="input-group-btn">
 						{!! link_to_route('backend.email.event.create', trans('email::core.button.events.create'), [], [
