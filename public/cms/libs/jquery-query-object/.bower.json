@@ -1,0 +1,15 @@
+{
+  "name": "jquery-query-object",
+  "homepage": "https://github.com/alrusdi/jquery-plugin-query-object",
+  "version": "2.2.2",
+  "_release": "2.2.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.2.2",
+    "commit": "58fdbb09c962a73ef9acc31ae428187d3661605c"
+  },
+  "_source": "git://github.com/alrusdi/jquery-plugin-query-object.git",
+  "_target": "~2.2.2",
+  "_originalSource": "jquery-query-object",
+  "_direct": true
+}

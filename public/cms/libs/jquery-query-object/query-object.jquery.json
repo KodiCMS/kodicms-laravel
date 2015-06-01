@@ -1,0 +1,39 @@
+{
+  "name": "query-object",
+  "title": "Query String Modification and Creation for jQuery",
+  "description": "Query String Modification and Creation for jQuery",
+  "keywords": [
+    "query",
+    "parameter",
+    "window.location.search",
+	"querystring",
+	"deserialize",
+	"serialize"
+  ],
+  "version": "2.2.2",
+  "author": {
+  	"email": "blair.mitchelmore@gmail.com",
+    "name": "Blair Mitchelmore",
+    "url": "https://github.com/blairmitchelmore"
+  },
+  "licenses": [
+    {
+      "type": "WTFPL",
+      "url": "http://sam.zoy.org/wtfpl/"
+    }
+  ],
+  "bugs": "https://github.com/alrusdi/jquery-plugin-query-object/issues",
+  "homepage": "https://github.com/alrusdi/jquery-plugin-query-object",
+  "docs": "https://github.com/alrusdi/jquery-plugin-query-object",
+  "download": "https://github.com/alrusdi/jquery-plugin-query-object/archive/master.zip",
+  "dependencies": {
+    "jquery": ">=1.4"
+  },
+  "maintainers" : [
+ {
+	"name": "Alexander Alrusdi",
+	"email": "alrusdi@gmail.com",
+	"url": "https://github.com/alrusdi"
+}
+  ]
+}
