@@ -44,7 +44,7 @@ Package::add('editable')
 	->css(NULL, resources_url() . '/libs/x-editable/css/bootstrap-editable.css');
 
 Package::add('nestable')
-	->js(NULL, resources_url() . '/libs/nestable/jquery.nestable.js', 'jquery');
+	->js(NULL, resources_url() . '/libs/nestable/js/jquery.nestable.js', 'jquery');
 
 Package::add('steps')
 	->js(NULL, resources_url() . '/libs/jquery.steps/js/jquery.steps.min.js', 'jquery');
