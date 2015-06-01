@@ -46,81 +46,81 @@
 		},
 		"sources" : {
 			"backbone" : [
-				"bower_components/backbone/backbone-min.js",
-				"bower_components/backbone/backbone-min.map"
+				"public/libs/backbone/backbone-min.js",
+				"public/libs/backbone/backbone-min.map"
 			],
 			"underscore" : [
-				"bower_components/underscore/underscore-min.js",
-				"bower_components/underscore/underscore-min.map"
+				"public/libs/underscore/underscore-min.js",
+				"public/libs/underscore/underscore-min.map"
 			],
 			"bootstrap": [
-				"bower_components/bootstrap/dist/css/**",
-				"bower_components/bootstrap/dist/js/**",
-				"bower_components/bootstrap/fonts/**",
-				"bower_components/bootstrap/less/**"
+				"public/libs/bootstrap/dist/css/**",
+				"public/libs/bootstrap/dist/js/**",
+				"public/libs/bootstrap/fonts/**",
+				"public/libs/bootstrap/less/**"
 			],
 			"datetimepicker": [
-				"bower_components/datetimepicker/jquery.datetimepicker.css",
-				"bower_components/datetimepicker/jquery.datetimepicker.js"
+				"public/libs/datetimepicker/jquery.datetimepicker.css",
+				"public/libs/datetimepicker/jquery.datetimepicker.js"
 			],
 			"fontawesome": [
-				"bower_components/fontawesome/css/**",
-				"bower_components/fontawesome/fonts/**",
-				"bower_components/fontawesome/less/**"
+				"public/libs/fontawesome/css/**",
+				"public/libs/fontawesome/fonts/**",
+				"public/libs/fontawesome/less/**"
 			],
 			"gridster": [
-				"bower_components/gridster/dist/**"
+				"public/libs/gridster/dist/**"
 			],
 			"dropzone": [
-				"bower_components/dropzone/dist/min/**"
+				"public/libs/dropzone/dist/min/**"
 			],
 			"i18next": [
-				"bower_components/i18next/i18next.min.js"
+				"public/libs/i18next/i18next.min.js"
 			],
 			"jquery": [
-				"bower_components/jquery/dist/jquery.min.js",
-				"bower_components/jquery/dist/jquery.min.map"
+				"public/libs/jquery/dist/jquery.min.js",
+				"public/libs/jquery/dist/jquery.min.map"
 			],
 			"jquery.steps": [
-				"bower_components/jquery.steps/build/jquery.steps.min.js"
+				"public/libs/jquery.steps/build/jquery.steps.min.js"
 			],
 			"jquery-query-object": [
-				"bower_components/jquery-query-object/jquery.query-object.js"
+				"public/libs/jquery-query-object/jquery.query-object.js"
 			],
 			"jquery-ui": [
-				"bower_components/jquery-ui/jquery-ui.min.js",
-				"bower_components/jquery-ui/themes/smoothness/*.*"
+				"public/libs/jquery-ui/jquery-ui.min.js",
+				"public/libs/jquery-ui/themes/smoothness/*.*"
 			],
 			"jquery-validation": [
-				"bower_components/jquery-validation/dist/*.*",
-				"bower_components/jquery-validation/src/localization/**"
+				"public/libs/jquery-validation/dist/*.*",
+				"public/libs/jquery-validation/src/localization/**"
 			],
 			"moment": [
-				"bower_components/moment/min/*.*",
-				"bower_components/moment/locale/**"
+				"public/libs/moment/min/*.*",
+				"public/libs/moment/locale/**"
 			],
 			"nestable": [
-				"bower_components/nestable/jquery.nestable.js"
+				"public/libs/nestable/jquery.nestable.js"
 			],
 			"noty": [
-				"bower_components/noty/js/noty/packaged/*.*"
+				"public/libs/noty/js/noty/packaged/*.*"
 			],
 			"select2": [
-				"bower_components/select2/dist/css/*.*",
-				"bower_components/select2/dist/js/**"
+				"public/libs/select2/dist/css/*.*",
+				"public/libs/select2/dist/js/**"
 			],
 			"Sortable": [
-				"bower_components/Sortable/jquery.binding.js",
-				"bower_components/Sortable/Sortable.min.js"
+				"public/libs/Sortable/jquery.binding.js",
+				"public/libs/Sortable/Sortable.min.js"
 			],
 			"x-editable": [
-				"bower_components/x-editable/dist/bootstrap3-editable/css/**",
-				"bower_components/x-editable/dist/bootstrap3-editable/img/**",
-				"bower_components/x-editable/dist/bootstrap3-editable/js/**"
+				"public/libs/x-editable/dist/bootstrap3-editable/css/**",
+				"public/libs/x-editable/dist/bootstrap3-editable/img/**",
+				"public/libs/x-editable/dist/bootstrap3-editable/js/**"
 			],
 			"colorbox": [
-				"bower_components/colorbox/jquery.colorbox.js",
-				"bower_components/colorbox/jquery.colorbox-min.js"
+				"public/libs/colorbox/jquery.colorbox.js",
+				"public/libs/colorbox/jquery.colorbox-min.js"
 			]
 		}
 	}
