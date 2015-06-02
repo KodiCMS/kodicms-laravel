@@ -72,15 +72,22 @@
 
 			$container.on('click', '.add-row', function(e) {
 				e.preventDefault();
-				var $description = prompt("Please enter key description");
 
-				if(!$description) return;
+				bootbox.prompt(i18n.t('api.core.messages.new_key'), function(result) {
+					if(result === null) {
+						return true;
+					} else if (result.length > 0) {
+						Api.put('/api.key', {description: result}, function(response) {
+							if(response.content) {
+								var $row = clone_row($container);
+								fill_row($row, response.content, result);
+							}
+						});
 
-				Api.put('/api.key', {description: $description}, function(response) {
-					if(response.content) {
-						var $row = clone_row($container);
-						fill_row($row, response.content, $description);
+						return true;
 					}
+
+					return false;
 				});
 			});
 
