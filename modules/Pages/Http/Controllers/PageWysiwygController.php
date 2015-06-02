@@ -1,14 +1,13 @@
 <?php namespace KodiCMS\Pages\Http\Controllers;
 
-use Assets;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use KodiCMS\CMS\Http\Controllers\System\TemplateController;
-use KodiCMS\Pages\Helpers\BlockWysiwyg;
-use KodiCMS\Pages\Model\FrontendPage;
-use KodiCMS\Pages\Model\Page;
-use KodiCMS\Widgets\Collection\PageWidgetCollection;
 use Meta;
 use Block;
+use Assets;
+use KodiCMS\Pages\Model\FrontendPage;
+use KodiCMS\Pages\Helpers\BlockWysiwyg;
+use KodiCMS\Widgets\Collection\PageWidgetCollection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 
 class PageWysiwygController extends TemplateController
 {
