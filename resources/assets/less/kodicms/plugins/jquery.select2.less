@@ -418,10 +418,10 @@
 	 */
 
 	.select2-selection__choice {
-	  color: @input-color;
-	  background: @btn-default-bg;
-	  border: 1px solid @btn-default-border;
-	  border-radius: 4px;
+	  background-color: @btn-primary-bg;
+	  color: @btn-primary-color;
+	  border-radius: @border-radius-small;
+	  border: 1px solid @btn-primary-border;
 	  cursor: default;
 	  float: left;
 	  margin: (@padding-base-vertical - 1) 0 0 @padding-base-horizontal/2;
@@ -444,7 +444,7 @@
 	}
 
 	.select2-selection__choice__remove {
-	  color: #999;
+	  color: @btn-primary-color;
 	  cursor: pointer;
 	  display: inline-block;
 	  font-weight: bold;
