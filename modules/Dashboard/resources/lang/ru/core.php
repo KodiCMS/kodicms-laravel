@@ -10,6 +10,10 @@ return [
 	],
 	'buttons' => [
 		'add_widget' => 'Добавить виджет',
-		'place_widget' => 'Установить'
+		'place_widget' => 'Установить',
+		'draggable' => [
+			'enabled' => 'Вкл.',
+			'disabled' => 'Выкл.'
+		]
 	]
 ];

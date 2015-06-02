@@ -45,6 +45,16 @@ var Dashboard = {
 				}
 			}).data('gridster');
 
+			$('input[name="draggable"]').on('change', $.proxy(function(e) {
+				if($(e.target).is(':checked')) {
+					this.gridster.enable().enable_resize();
+					$('.remove_widget').show();
+				} else {
+					this.gridster.disable().disable_resize();
+					$('.remove_widget').hide();
+				}
+			}, this)).change();
+
 			$('.dashboard-widget').each(function() {
 				var $cont = $(this);
 				$cont.trigger('widget_init', [$cont.width(), $cont.height()]);
