@@ -42,7 +42,7 @@ class BaseRepository
 	}
 
 	/**
-	 * @param $id
+	 * @param integer $id
 	 * @return Model|null
 	 */
 	public function find($id)
@@ -51,7 +51,7 @@ class BaseRepository
 	}
 
 	/**
-	 * @param $id
+	 * @param integer $id
 	 * @return Model
 	 * @throws ModelNotFoundException
 	 */
@@ -90,7 +90,7 @@ class BaseRepository
 	 * @param array|null $rules
 	 * @return \Illuminate\Validation\Validator
 	 */
-	public function validator($data = [], $rules = null)
+	public function validator(array $data = [], $rules = null)
 	{
 		if (is_null($rules))
 		{
@@ -103,17 +103,17 @@ class BaseRepository
 	 * @param array $data
 	 * @return Model
 	 */
-	public function create($data = [])
+	public function create(array $data = [])
 	{
 		return $this->model->create($data);
 	}
 
 	/**
-	 * @param $id
+	 * @param integer $id
 	 * @param array $data
 	 * @return Model
 	 */
-	public function update($id, $data = [])
+	public function update($id, array $data = [])
 	{
 		$instance = $this->find($id);
 		$instance->update($data);
@@ -121,7 +121,7 @@ class BaseRepository
 	}
 
 	/**
-	 * @param $id
+	 * @param integer $id
 	 * @return bool
 	 * @throws \Exception
 	 */

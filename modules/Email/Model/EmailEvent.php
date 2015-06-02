@@ -4,32 +4,50 @@ use Illuminate\Database\Eloquent\Model;
 
 class EmailEvent extends Model
 {
-
+	/**
+	 * @var array
+	 */
 	protected $fillable = [
 		'code',
 		'name',
 		'fields',
 	];
 
+	/**
+	 * @var array
+	 */
 	protected $casts = [
 		'fields' => 'array',
 	];
 
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
 	public function templates()
 	{
 		return $this->hasMany('KodiCMS\Email\Model\EmailTemplate', 'email_event_id');
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getFullNameAttribute()
 	{
 		return $this->name . ' (' . $this->code . ')';
 	}
 
+	/**
+	 * @param string $code
+	 * @return EmailEvent
+	 */
 	public static function get($code)
 	{
 		return static::whereCode($code)->first();
 	}
 
+	/**
+	 * @return array
+	 */
 	public function defaultOptions()
 	{
 		$now = \Carbon\Carbon::create();
@@ -43,7 +61,10 @@ class EmailEvent extends Model
 		];
 	}
 
-	public function send($options = [])
+	/**
+	 * @param array $options
+	 */
+	public function send(array $options = [])
 	{
 		$options = array_merge($options, $this->defaultOptions());
 		$templates = $this->templates()->active()->get();

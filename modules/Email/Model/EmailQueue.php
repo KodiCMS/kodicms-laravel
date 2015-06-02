@@ -11,6 +11,9 @@ class EmailQueue extends Model
 	const STATUS_SENT = 'sent';
 	const STATUS_FAILED = 'failed';
 
+	/**
+	 * @var array
+	 */
 	protected $fillable = [
 		'status',
 		'parameters',
@@ -19,6 +22,9 @@ class EmailQueue extends Model
 		'attempts',
 	];
 
+	/**
+	 * @var array
+	 */
 	protected $casts = [
 		'parameters' => 'object',
 	];
@@ -34,8 +40,12 @@ class EmailQueue extends Model
 		});
 	}
 
-
-	public static function addEmailTemplate($emailTemplate, $options = [])
+	/**
+	 * @param EmailTemplate $emailTemplate
+	 * @param array $options
+	 * @return static
+	 */
+	public static function addEmailTemplate(EmailTemplate $emailTemplate, array $options = [])
 	{
 		$parameters = array_only($emailTemplate->toArray(), [
 			'email_from',
@@ -45,6 +55,7 @@ class EmailQueue extends Model
 			'bcc',
 			'reply_to',
 		]);
+
 		return static::create([
 			'parameters'   => $parameters,
 			'message_type' => $emailTemplate->message_type,
@@ -108,5 +119,4 @@ class EmailQueue extends Model
 	{
 		static::notPending()->old()->delete();
 	}
-
 } 

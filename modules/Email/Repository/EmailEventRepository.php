@@ -5,13 +5,19 @@ use KodiCMS\Email\Model\EmailEvent;
 
 class EmailEventRepository extends BaseRepository
 {
-
+	/**
+	 * @param EmailEvent $model
+	 */
 	function __construct(EmailEvent $model)
 	{
 		parent::__construct($model);
 	}
 
-	public function validatorOnCreate($data = [])
+	/**
+	 * @param array $data
+	 * @return \Illuminate\Validation\Validator
+	 */
+	public function validatorOnCreate(array $data = [])
 	{
 		return $this->validator($data, [
 			'name' => 'required',
@@ -19,16 +25,22 @@ class EmailEventRepository extends BaseRepository
 		]);
 	}
 
-	public function validatorOnUpdate($data = [])
+	/**
+	 * @param array $data
+	 * @return \Illuminate\Validation\Validator
+	 */
+	public function validatorOnUpdate(array $data = [])
 	{
 		return $this->validator($data, [
 			'name' => 'required',
 		]);
 	}
 
+	/**
+	 * @return array
+	 */
 	public function eventsList()
 	{
 		return $this->all()->lists('fullName', 'id');
 	}
-
 }

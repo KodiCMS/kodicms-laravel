@@ -5,7 +5,9 @@ use KodiCMS\Email\Model\EmailTemplate;
 
 class EmailTemplateRepository extends BaseRepository
 {
-
+	/**
+	 * @var array
+	 */
 	protected $validationRules = [
 		'status' => 'required|boolean',
 		'use_queue' => 'required|boolean',
@@ -16,6 +18,9 @@ class EmailTemplateRepository extends BaseRepository
 		'email_event_id' => 'required|exists:email_events,id',
 	];
 
+	/**
+	 * @param EmailTemplate $model
+	 */
 	function __construct(EmailTemplate $model)
 	{
 		parent::__construct($model);

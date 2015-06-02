@@ -16,6 +16,9 @@ class EmailTemplate extends Model
 	const USE_QUEUE = 1;
 	const USE_DIRECT = 0;
 
+	/**
+	 * @var array
+	 */
 	protected $fillable = [
 		'email_event_id',
 		'status',
@@ -30,6 +33,9 @@ class EmailTemplate extends Model
 		'reply_to',
 	];
 
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
 	public function event()
 	{
 		return $this->belongsTo('KodiCMS\Email\Model\EmailEvent', 'email_event_id');
@@ -53,11 +59,17 @@ class EmailTemplate extends Model
 		$query->whereStatus(static::ACTIVE);
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getStatusStringAttribute()
 	{
 		return trans('email::core.statuses.' . $this->status);
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function statuses()
 	{
 		return [
@@ -66,6 +78,9 @@ class EmailTemplate extends Model
 		];
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function queueStatuses()
 	{
 		return [
@@ -82,33 +97,45 @@ class EmailTemplate extends Model
 		if ($this->use_queue)
 		{
 			return $this->addToQueue($options);
-		} else
+		}
+		else
 		{
 			return EmailSender::send($this->message, $this, $this->message_type);
 		}
 	}
 
-	public function addToQueue($options = [])
+	/**
+	 * @param array $options
+	 * @return static
+	 */
+	public function addToQueue(array $options = [])
 	{
 		return EmailQueue::addEmailTemplate($this, $options);
 	}
 
-	protected function prepareOptions($options = [])
+	/**
+	 * @param array $options
+	 * @return array
+	 */
+	protected function prepareOptions(array $options = [])
 	{
 		$prepared = [];
 		foreach ($options as $key => $value)
 		{
 			$prepared['{' . $key . '}'] = $value;
 		}
+
 		return $prepared;
 	}
 
-	protected function prepareInnerValues($options = [])
+	/**
+	 * @param array $options
+	 */
+	protected function prepareInnerValues(array $options = [])
 	{
 		foreach ($this->fillable as $field)
 		{
 			$this->$field = strtr($this->$field, $options);
 		}
 	}
-
 }

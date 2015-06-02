@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Email\Http\Controllers\API;
 
 use KodiCMS\API\Http\Controllers\System\Controller;
+use KodiCMS\Email\Model\EmailTemplate;
 use KodiCMS\Email\Model\EmailType;
 use KodiCMS\Email\Repository\EmailEventRepository;
 use KodiCMS\Email\Support\EmailSender;
@@ -9,10 +10,8 @@ use Mail;
 class EmailEventController extends Controller
 {
 	/**
-	 * @var bool
+	 * @param EmailEventRepository $repository
 	 */
-	public $authRequired = true;
-
 	public function getOptions(EmailEventRepository $repository)
 	{
 		$uid = $this->getRequiredParameter('uid', 'required|numeric');
@@ -29,16 +28,12 @@ class EmailEventController extends Controller
 		$to = $this->getRequiredParameter('to');
 		$body = $this->getRequiredParameter('message');
 
-		$parameters = new \stdClass;
+		$parameters = new EmailTemplate;
 		$parameters->subject = $subject;
 		$parameters->email_to = $to;
 		$parameters->email_from = config('mail.default');
 
-		$sended = EmailSender::send($body, $parameters);
-
-		$this->setContent([
-			'send' => $sended,
-		]);
+		$this->setContent(['send' => EmailSender::send($body, $parameters)]);
 	}
 
 }

@@ -6,10 +6,20 @@ use KodiCMS\Email\Model\EmailEvent;
 
 class EmailSend implements SelfHandling
 {
-
+	/**
+	 * @var string
+	 */
 	protected $code;
-	protected $options;
 
+	/**
+	 * @var array
+	 */
+	protected $options = [];
+
+	/**
+	 * @param string $code
+	 * @param array $options
+	 */
 	function __construct($code, $options = [])
 	{
 		$this->code = $code;
@@ -23,6 +33,7 @@ class EmailSend implements SelfHandling
 		{
 			throw (new ModelNotFoundException)->setModel('KodiCMS\Email\Model\EmailEvent');
 		}
+
 		$emailEvent->send($this->options);
 	}
 

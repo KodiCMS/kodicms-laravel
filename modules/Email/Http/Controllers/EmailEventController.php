@@ -9,9 +9,14 @@ use KodiCMS\Email\Services\EmailTypeUpdator;
 
 class EmailEventController extends BackendController
 {
-
+	/**
+	 * @var string
+	 */
 	public $moduleNamespace = 'email::';
 
+	/**
+	 * @param EmailEventRepository $repository
+	 */
 	public function getIndex(EmailEventRepository $repository)
 	{
 		$emailEvents = $repository->paginate();
@@ -19,6 +24,9 @@ class EmailEventController extends BackendController
 		$this->setContent('email.event.list', compact('emailEvents'));
 	}
 
+	/**
+	 * @param EmailEventRepository $repository
+	 */
 	public function getCreate(EmailEventRepository $repository)
 	{
 		$this->setTitle(trans('email::core.title.events.create'));
@@ -29,6 +37,10 @@ class EmailEventController extends BackendController
 		$this->setContent('email.event.form', compact('emailEvent', 'action'));
 	}
 
+	/**
+	 * @param EmailEventRepository $repository
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
 	public function postCreate(EmailEventRepository $repository)
 	{
 		$data = $this->request->all();
@@ -46,6 +58,10 @@ class EmailEventController extends BackendController
 		return $this->smartRedirect([$emailEvent])->with('success', trans('email::core.messages.events.created', ['title' => $emailEvent->name]));
 	}
 
+	/**
+	 * @param EmailEventRepository $repository
+	 * @param $id
+	 */
 	public function getEdit(EmailEventRepository $repository, $id)
 	{
 		$emailEvent = $this->getEmailType($repository, $id);
@@ -57,6 +73,11 @@ class EmailEventController extends BackendController
 		$this->setContent('email.event.form', compact('emailEvent', 'action'));
 	}
 
+	/**
+	 * @param EmailEventRepository $repository
+	 * @param integer $id
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
 	public function postEdit(EmailEventRepository $repository, $id)
 	{
 		$data = $this->request->all();
@@ -74,6 +95,12 @@ class EmailEventController extends BackendController
 		return $this->smartRedirect([$emailEvent])->with('success', trans('email::core.messages.events.updated', ['title' => $emailEvent->name]));
 	}
 
+	/**
+	 * @param EmailEventRepository $repository
+	 * @param integer $id
+	 * @return \Illuminate\Http\RedirectResponse
+	 * @throws \Exception
+	 */
 	public function getDelete(EmailEventRepository $repository, $id)
 	{
 		$emailEvent = $this->getEmailType($repository, $id);
@@ -82,18 +109,27 @@ class EmailEventController extends BackendController
 		return $this->smartRedirect()->with('success', trans('email::core.messages.events.deleted', ['title' => $emailEvent->name]));
 	}
 
+	/**
+	 * @param EmailEventRepository $repository
+	 * @param integer $id
+	 * @return \Illuminate\Database\Eloquent\Model|null
+	 */
 	protected function getEmailType(EmailEventRepository $repository, $id)
 	{
 		try
 		{
 			return $repository->findOrFail($id);
-		} catch (ModelNotFoundException $e)
+		}
+		catch (ModelNotFoundException $e)
 		{
 			$this->throwFailException($this->smartRedirect()->withErrors(trans('email::core.messages.events.not_found')));
 		}
 		return null;
 	}
 
+	/**
+	 * @param array $data
+	 */
 	protected function formatFields(&$data)
 	{
 		$fields = array_get($data, 'fields', []);
@@ -104,5 +140,4 @@ class EmailEventController extends BackendController
 		$value = array_unique(array_filter($value));
 		array_set($data, 'fields', $value);
 	}
-
 }

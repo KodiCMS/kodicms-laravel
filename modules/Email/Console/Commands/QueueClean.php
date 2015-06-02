@@ -11,8 +11,10 @@ class QueueClean extends Command
 	 */
 	protected $name = 'cms:email:queue-clean';
 
+	/**
+	 * @var string
+	 */
 	protected $description = 'Clean old queued emails';
-
 
 	/**
 	 * Execute the console command.
@@ -22,5 +24,4 @@ class QueueClean extends Command
 		EmailQueue::cleanOld();
 		$this->info('All done');
 	}
-
 }

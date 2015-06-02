@@ -12,9 +12,14 @@ use KodiCMS\Email\Services\EmailTemplateUpdator;
 
 class EmailTemplateController extends BackendController
 {
-
+	/**
+	 * @var string
+	 */
 	public $moduleNamespace = 'email::';
 
+	/**
+	 * @param EmailTemplateRepository $repository
+	 */
 	public function getIndex(EmailTemplateRepository $repository)
 	{
 		$emailTemplates = $repository->paginate();
@@ -22,6 +27,10 @@ class EmailTemplateController extends BackendController
 		$this->setContent('email.template.list', compact('emailTemplates'));
 	}
 
+	/**
+	 * @param EmailTemplateRepository $repository
+	 * @param EmailEventRepository $emailEventRepository
+	 */
 	public function getCreate(EmailTemplateRepository $repository, EmailEventRepository $emailEventRepository)
 	{
 		WYSIWYG::loadAll();
@@ -42,6 +51,10 @@ class EmailTemplateController extends BackendController
 		$this->setContent('email.template.form', compact('emailTemplate', 'action', 'emailEvents'));
 	}
 
+	/**
+	 * @param EmailTemplateRepository $repository
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
 	public function postCreate(EmailTemplateRepository $repository)
 	{
 		$data = $this->request->all();
@@ -58,6 +71,11 @@ class EmailTemplateController extends BackendController
 		return $this->smartRedirect([$emailTemplate])->with('success', trans('email::core.messages.templates.created', ['title' => $emailTemplate->subject]));
 	}
 
+	/**
+	 * @param EmailTemplateRepository $repository
+	 * @param EmailEventRepository $emailEventRepository
+	 * @param integer $id
+	 */
 	public function getEdit(EmailTemplateRepository $repository, EmailEventRepository $emailEventRepository, $id)
 	{
 		WYSIWYG::loadAll();
@@ -72,6 +90,11 @@ class EmailTemplateController extends BackendController
 		$this->setContent('email.template.form', compact('emailTemplate', 'action', 'emailEvents'));
 	}
 
+	/**
+	 * @param EmailTemplateRepository $repository
+	 * @param integer $id
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
 	public function postEdit(EmailTemplateRepository $repository, $id)
 	{
 		$data = $this->request->all();
@@ -88,6 +111,12 @@ class EmailTemplateController extends BackendController
 		return $this->smartRedirect([$emailTemplate])->with('success', trans('email::core.messages.templates.updated', ['title' => $emailTemplate->subject]));
 	}
 
+	/**
+	 * @param EmailTemplateRepository $repository
+	 * @param integer $id
+	 * @return \Illuminate\Http\RedirectResponse
+	 * @throws \Exception
+	 */
 	public function getDelete(EmailTemplateRepository $repository, $id)
 	{
 		$emailTemplate = $this->getEmailTemplate($repository, $id);
@@ -96,15 +125,22 @@ class EmailTemplateController extends BackendController
 		return $this->smartRedirect()->with('success', trans('email::core.messages.templates.deleted', ['title' => $emailTemplate->subject]));
 	}
 
+	/**
+	 * @param EmailTemplateRepository $repository
+	 * @param integer $id
+	 * @return \Illuminate\Database\Eloquent\Model|null
+	 */
 	protected function getEmailTemplate(EmailTemplateRepository $repository, $id)
 	{
 		try
 		{
 			return $repository->findOrFail($id);
-		} catch (ModelNotFoundException $e)
+		}
+		catch (ModelNotFoundException $e)
 		{
 			$this->throwFailException($this->smartRedirect()->withErrors(trans('email::core.messages.templates.not_found')));
 		}
+
 		return null;
 	}
 
