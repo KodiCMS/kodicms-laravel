@@ -83,12 +83,7 @@ class BackendController extends TemplateController
 		$this->templateScripts['DEFAULT_CODE_EDITOR'] = config('cms.default_code_editor', '');
 
 		Assets::package(['libraries', 'core']);
-
-		$file = $this->getRouterController();
-		if (ModuleLoader::findFile('resources/js', $file, 'js')) {
-			Assets::js('controller.' . $file, backend_resources_url() . '/js/' . $file . '.js', 'core', false);
-		}
-
-		$this->includeMedia('backendEvents', 'js/backendEvents', 'js');
+		$this->includeModuleMediaFile($this->getRouterController());
+		$this->includeMergedMediaFile('backendEvents', 'js/backendEvents', 'js');
 	}
 }
