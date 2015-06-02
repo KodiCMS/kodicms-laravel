@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\API\Console\Commands;
 
+use DatabaseConfig;
 use KodiCMS\API\Model\ApiKey;
 use Illuminate\Console\Command;
-use KodiCMS\CMS\Helpers\DatabaseConfig;
 
 class GenerateKey extends Command
 {
@@ -20,7 +20,7 @@ class GenerateKey extends Command
 		$this->output->writeln('<info>Generating KodiCMS API key...</info>');
 
 		$key = ApiKey::generate();
-		DatabaseConfig::save(['cms' => ['api_key' => $key]]);
+		DatabaseConfig::set('cms', 'api_key', $key);
 
 		if (!is_null($key))
 		{

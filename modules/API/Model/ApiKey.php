@@ -48,7 +48,7 @@ class ApiKey extends Model {
 	{
 		$key = static::where('id', $oldKey)->first();
 
-		if (!$key->exists)
+		if (is_null($key) or !$key->exists)
 		{
 			return false;
 		}
@@ -65,7 +65,7 @@ class ApiKey extends Model {
 	 * @param string $key
 	 * @return bool
 	 */
-	public function isValid($key)
+	public static function isValid($key)
 	{
 		return static::where('id', e($key))
 			->first()

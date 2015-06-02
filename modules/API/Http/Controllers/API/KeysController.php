@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\API\Http\Controllers\API;
 
+use DatabaseConfig;
 use KodiCMS\API\Model\ApiKey;
-use KodiCMS\CMS\Helpers\DatabaseConfig;
 use KodiCMS\API\Exceptions\PermissionException;
 use KodiCMS\API\Http\Controllers\System\Controller;
 
@@ -16,7 +16,7 @@ class KeysController extends Controller
 
 		$key = config('cms.api_key');
 
-		if (is_null($key))
+		if (is_null($key) or !ApiKey::isValid($key))
 		{
 			$key = ApiKey::generate();
 		}
@@ -25,7 +25,7 @@ class KeysController extends Controller
 			$key = ApiKey::refresh($key);
 		}
 
-		DatabaseConfig::save(['cms' => ['api_key' => $key]]);
+		DatabaseConfig::set('cms', 'api_key', $key);
 
 		$this->setContent($key);
 	}
