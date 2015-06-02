@@ -9,6 +9,15 @@ use KodiCMS\Widgets\Engine\WidgetRenderSettingsHTML;
 
 class DashboardController extends Controller
 {
+	/**
+	 * @var array
+	 */
+	protected $permissions = [
+		'getWidgetSettings' => 'backend.dashboard.manage',
+		'putWidget' => 'backend.dashboard.manage',
+		'postWidget' => 'backend.dashboard.manage',
+		'deleteWidget' => 'backend.dashboard.manage',
+	];
 
 	public function putWidget()
 	{

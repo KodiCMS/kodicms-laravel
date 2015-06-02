@@ -4,6 +4,7 @@
 			<h1 data-icon="dashboard">@lang('dashboard::core.title.dashboard')</h1>
 		</div>
 
+		@if(acl_check('backend.dashboard.manage'))
 		<div class="col-xs-6 text-right">
 			{!! Form::checkbox('draggable', 1, 0, [
 				'class' => 'form-switcher', 'data-size' => 'mini', 'id' => 'cache',
@@ -16,6 +17,7 @@
 				<span class="btn-label icon fa fa-cubes"></span>@lang('dashboard::core.buttons.add_widget')
 			</a>
 		</div>
+		@endif
 	</div>
 </div>
 

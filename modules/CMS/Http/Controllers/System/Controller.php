@@ -190,7 +190,13 @@ abstract class Controller extends BaseController
 			return $this->denyAccess(trans('users::core.messages.auth.deny_access'), true);
 		}
 
-		if (!in_array($this->getCurrentAction(), $this->allowedActions) AND !acl_check(array_get($this->permissions, $this->getCurrentAction()))
+		$currentPermission = array_get($this->permissions, $this->getCurrentAction());
+		if (
+			!in_array($this->getCurrentAction(), $this->allowedActions)
+		and
+			!is_null($currentPermission)
+		and
+			!acl_check($currentPermission)
 		)
 		{
 			return $this->denyAccess(trans('users::core.messages.auth.no_permissions'));

@@ -88,7 +88,8 @@ class Section extends ItemDecorator implements \Countable, \Iterator
 	{
 		$priority = (int) $priority;
 
-		if (!acl_check($page->getPermissions()))
+		$permissions = $page->getPermissions();
+		if (!empty($permissions) and !acl_check($permissions))
 		{
 			return $this;
 		}

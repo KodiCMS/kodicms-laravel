@@ -23,6 +23,11 @@ class ACL
 	protected $permissionsList = [];
 
 	/**
+	 * @var array
+	 */
+	protected $actions = [];
+
+	/**
 	 * @var \Illuminate\Contracts\Auth\Authenticatable|null
 	 */
 	protected $currentUser;
@@ -48,7 +53,8 @@ class ACL
 
 			foreach ($actions as $action)
 			{
-				$this->permissionsList[$title][$module . '::' . $action] = trans($module . '::permissions.' . $action);
+				$this->permissionsList[$title][$action] = trans($module . '::permissions.' . $action);
+				$this->actions[] = $action;
 			}
 		}
 	}
@@ -93,7 +99,6 @@ class ACL
 
 	/**
 	 * Проверка прав на доступ
-	 * TODO: необходимо придумать способ проверки прав доступа к разделу
 	 *
 	 * @param string $action
 	 * @param User $user
@@ -104,6 +109,11 @@ class ACL
 		if ($user === null)
 		{
 			$user = $this->getCurrentUser();
+		}
+
+		if (!in_array($action, $this->actions))
+		{
+			return static::ALLOW;
 		}
 
 		if (!($user instanceof User))

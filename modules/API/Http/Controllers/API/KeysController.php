@@ -9,7 +9,7 @@ class KeysController extends Controller
 {
 	public function getKeys()
 	{
-		if (!acl_check('system.api.view_keys'))
+		if (!acl_check('api.view_keys'))
 		{
 			throw new PermissionException;
 		}
@@ -24,7 +24,7 @@ class KeysController extends Controller
 
 	public function putKey()
 	{
-		if (!acl_check('system.api.create_keys'))
+		if (!acl_check('api.create_keys'))
 		{
 			throw new PermissionException;
 		}
@@ -35,7 +35,7 @@ class KeysController extends Controller
 
 	public function deleteKey()
 	{
-		if (!acl_check('system.api.delete_keys'))
+		if (!acl_check('api.delete_keys'))
 		{
 			throw new PermissionException;
 		}
@@ -53,7 +53,7 @@ class KeysController extends Controller
 
 	public function postRefresh()
 	{
-		if (!acl_check('system.api.refresh_key'))
+		if (!acl_check('api.refresh_key'))
 		{
 			throw new PermissionException;
 		}
