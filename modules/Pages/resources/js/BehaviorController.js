@@ -9,6 +9,7 @@ CMS.controllers.add(['page.get.edit', 'page.get.create'], function () {
 			});
 		} else {
 			$cont.removeClass('well well-sm');
+			$('#behavor_options').empty();
 		}
 	};	
 
