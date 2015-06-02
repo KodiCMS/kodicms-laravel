@@ -17,6 +17,7 @@ $slugify = !isset($slugify) ? TRUE : (bool) $slugify;
 ?>
 
 @section('scripts')
+	@parent
 <script type="text/javascript">
 	var ROWS_DATA = {!! json_encode($data) !!};
 
@@ -57,7 +58,7 @@ $slugify = !isset($slugify) ? TRUE : (bool) $slugify;
 	<div class="<?php if (!empty($label)): ?>col-xs-9<?php else: ?>col-xs-12<?php endif; ?>">
 		<div class="row-helper hidden padding-xs-vr">
 			<div class="input-group">
-				<input type="text" name="{{ $field }}[key][]" disabled="disabled" class="form-control @if($slugify) slug @endif row-key" data-separator="_" placeholder="{{ trans('cms::core.helpers.key') }}">
+				<input type="text" name="{{ $field }}[key][]" disabled="disabled" class="form-control @if($slugify) slugify @endif row-key" data-separator="_" placeholder="{{ trans('cms::core.helpers.key') }}">
 				<span class="input-group-addon"> - </span>
 				<input type="text" name="{{ $field }}[value][]" disabled="disabled" class="form-control row-value" placeholder="{{ trans('cms::core.helpers.description') }}">
 				<div class="input-group-btn">
