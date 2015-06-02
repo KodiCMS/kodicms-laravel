@@ -9,7 +9,7 @@ return [
 		'settings' => 'Настройки',
 		'assets' => 'Медиа пакеты',
 		'permissions' => 'Права доступа',
-		'cache' => 'Настройки кеша',
+		'cache' => 'Кеширование',
 		'template' => 'Шаблон',
 		'copy_widgets' => 'Копирование виджетов',
 	],
@@ -36,7 +36,6 @@ return [
 	'settings' => [
 		'header' => 'Заголовок',
 		'assets_package' => 'Медиа пакеты',
-		'cache' => 'Кешировать',
 		'cache_tags' => 'Теги',
 		'cache_lifetime' => 'Время жизни кеша',
 		'template_parameters' => 'Параметры шаблона',
@@ -49,7 +48,11 @@ return [
 		'rebuild_blocks' => 'Обновить список',
 		'select_childs' => 'Выбрать внутренние',
 		'add_to_page' => 'Добавить виджет',
-		'defaultTemplate' => 'Шаблон по умолчанию'
+		'defaultTemplate' => 'Шаблон по умолчанию',
+		'cache' => [
+			'enabled' => 'Включено',
+			'disabled' => 'Выключено'
+		]
 	],
 	'messages' => [
 		'created' => 'Виджет создан',
