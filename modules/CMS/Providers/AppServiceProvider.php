@@ -15,12 +15,15 @@ class AppServiceProvider extends ServiceProvider {
 	{
 		ModuleLoader::bootModules();
 
-		$this->app['cms']->shutdown(function () {
+		$this->app['cms']->shutdown(function ()
+		{
 			ModuleLoader::cacheFoundFiles();
 		});
 
-		Blade::extend(function ($view, $compiler) {
+		Blade::extend(function ($view, $compiler)
+		{
 			$pattern = $compiler->createMatcher('event');
+
 			return preg_replace($pattern, '$1<?php event$2; ?>', $view);
 		});
 	}
