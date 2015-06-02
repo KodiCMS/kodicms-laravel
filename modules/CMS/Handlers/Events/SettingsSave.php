@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\CMS\Handlers\Events;
 
 
-use KodiCMS\CMS\Helpers\DatabaseConfig;
+use DatabaseConfig;
 
 class SettingsSave {
 
