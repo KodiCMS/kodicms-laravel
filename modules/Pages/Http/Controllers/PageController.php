@@ -77,10 +77,10 @@ class PageController extends BackendController
 			->with('success', trans('pages::core.messages.updated', ['title' => $page->title]));
 	}
 
-	public function getCreate($parent_id = NULL)
+	public function getCreate($parentId = NULL)
 	{
 		$page = new Page([
-			'parent_id' => $parent_id,
+			'parent_id' => $parentId,
 			'published_at' => new Carbon
 		]);
 		$this->setTitle(trans('pages::core.title.pages.create'));
@@ -92,7 +92,7 @@ class PageController extends BackendController
 		$this->setContent('pages.create', compact('page', 'pagesMap', 'behaviorList'));
 	}
 
-	public function postCreate(PageCreator $page, $parent_id = NULL)
+	public function postCreate(PageCreator $page)
 	{
 		$data = $this->request->all();
 
