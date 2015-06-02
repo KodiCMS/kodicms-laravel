@@ -1515,9 +1515,24 @@
 
 
 (function() {
-	$.fn.check=function(){return this.each(function(){this.checked=true})}
-	$.fn.uncheck=function(){return this.each(function(){this.checked=false})};
-	$.fn.checked=function(){return this.prop("checked")}
+	$.fn.toggleCheck = function () {
+		return this.each(function () {
+			this.checked = !this.checked;
+		})
+	}
+	$.fn.check = function () {
+		return this.each(function () {
+			this.checked = true
+		})
+	}
+	$.fn.uncheck = function () {
+		return this.each(function () {
+			this.checked = false
+		})
+	};
+	$.fn.checked = function () {
+		return this.prop("checked")
+	}
 
 	$.fn.tabs = function () {
 		return $('li a', this).on('click', function() {

@@ -262,7 +262,6 @@ CMS.ui.add('flags', function () {
 		width: 'style'
 	})
 
-	console.log($.fn.select2.defaults);
 	$('select').not('.no-script').select2();
 
 	$('.tags').select2({
@@ -456,9 +455,9 @@ CMS.ui.add('flags', function () {
 				$(this).remove();
 			});
 
-			$('li a', $tabs_ul).on('click', function() {
-				window.location.hash = $(this).attr('href');
-			});
+			//$('li a', $tabs_ul).on('click', function() {
+			//	window.location.hash = $(this).attr('href');
+			//});
 		}
 	});
 
