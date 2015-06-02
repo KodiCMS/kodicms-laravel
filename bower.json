@@ -122,7 +122,8 @@
 			],
 			"colorbox": [
 				"public/libs/colorbox/jquery.colorbox.js",
-				"public/libs/colorbox/jquery.colorbox-min.js"
+				"public/libs/colorbox/jquery.colorbox-min.js",
+				"public/libs/colorbox/example3/images/*.*"
 			]
 		}
 	}
