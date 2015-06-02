@@ -1,17 +1,17 @@
 CMS.controllers.add(['user.get.edit', 'user.get.create'], function () {
-	$('input[name="user_roles"]').select2({
+	$('select[name="user_roles[]"]').select2({
 		placeholder: __("Click to get list of roles"),
 		minimumInputLength: 0,
 		multiple: true,
 		ajax: {
 			url: '/api.roles',
+			dataType: 'json',
 			data: function(query, pageNumber, context) {
 				return {
 					key: query
 				}
 			},
-			dataType: 'json',
-			results: function (resp, page) {
+			processResults: function (resp, page) {
 				var roles = [];
 				if(resp.content) {
 					for(i in resp.content) {
@@ -33,15 +33,12 @@ CMS.controllers.add(['user.get.edit', 'user.get.create'], function () {
 			}
 
 			Api.get('/api.user.roles', {
-					uid: USER.id
+				uid: USER.id
 			}, function(resp, page) {
 				var roles = [];
 				if(resp.content) {
 					for(i in resp.content) {
-						roles.push({
-							id: resp.content[i]['id'],
-							text: resp.content[i]['name']
-						});
+						roles.push({id: resp.content[i]['id'], text: resp.content[i]['name']});
 					}
 				}
 

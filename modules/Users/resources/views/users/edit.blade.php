@@ -81,11 +81,11 @@
 	<span class="panel-title">@lang('users::core.tab.roles')</span>
 </div>
 <div class="panel-body">
-	<div class="row-fluid">
-		{!! Form::hidden('user_roles', (int) $user->id, array(
-				'class' => 'col-md-12'
-		)) !!}
-		<p class="help-block">@lang('users::core.rule.roles')</p>
+	<div class="form-group">
+		<div class="col-md-12">
+			{!! Form::select('user_roles[]', [], [], ['class' => 'form-control']) !!}
+			<p class="help-block">@lang('users::core.rule.roles')</p>
+		</div>
 	</div>
 </div>
 @endif
