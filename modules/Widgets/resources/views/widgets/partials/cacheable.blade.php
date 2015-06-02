@@ -37,8 +37,8 @@
 		<div class="form-group">
 			<label class="control-label col-xs-3">@lang('widgets::core.settings.cache_tags')</label>
 			<div class="col-xs-9">
-				{!! Form::textarea('settings[cache_tags][]', $widget->getCacheTagsAsString(), [
-				'class' => 'tags'
+				{!! Form::select('settings[cache_tags][]', $widget->getHTMLSelectCacheTags(), $widget->getCacheTags(), [
+					'class' => 'tags form-control', 'multiple'
 				]) !!}
 			</div>
 		</div>

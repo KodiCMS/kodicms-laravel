@@ -257,18 +257,17 @@ CMS.ui.add('flags', function () {
 		dictMaxFilesExceeded: __("You can only upload {{maxFiles}} files."),
 	});
 }).add('select2', function () {
-	$('select').not('.no-script').select2({
+	var defaultSettings = {
 		theme: "bootstrap",
 		width: 'style'
-	});
+	};
 
-	$('.tags').select2({
-		theme: "bootstrap",
-		width: 'style',
-		tags: [],
-		minimumInputLength: 0,
+	$('select').not('.no-script').select2(defaultSettings);
+
+	$('.tags').select2($.extend(defaultSettings, {
+		tags: true,
 		tokenSeparators: [',', ' ', ';']
-	});
+	}));
 }).add('ajax_form', function () {
 	$('body').on('submit', 'form.form-ajax', function () {
 		var $self = $(this),
