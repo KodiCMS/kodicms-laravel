@@ -3,6 +3,6 @@
 </div>
 <div class="panel-body panel-spoiler roles-spoiler">
 	{!! Form::select('settings[roles][]', $usersRoles, $widget->getRoles(), [
-		'class' => 'form-control'
+		'class' => 'form-control', 'multiple'
 	]) !!}
 </div>

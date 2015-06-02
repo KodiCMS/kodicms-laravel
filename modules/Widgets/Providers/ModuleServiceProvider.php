@@ -2,6 +2,7 @@
 
 use Event;
 use Blade;
+use KodiCMS\Users\Model\UserRole;
 use Package;
 use Request;
 use KodiCMS\Pages\Model\Page;
@@ -105,9 +106,7 @@ class ModuleServiceProvider extends ServiceProvider
 
 			if (acl_check('widgets.roles') AND !$widget->isHandler())
 			{
-				// TODO: добавить загрузку списка ролей
-				$usersRoles = [];
-
+				$usersRoles = UserRole::lists('name', 'id');
 				echo view('widgets::widgets.partials.permissions', compact('widget', 'usersRoles'))->render();
 			}
 		});
