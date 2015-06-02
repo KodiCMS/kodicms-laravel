@@ -8,10 +8,11 @@ use KodiCMS\Users\Model\User;
 use KodiCMS\CMS\Helpers\File;
 use KodiCMS\CMS\Helpers\Text;
 use Illuminate\Database\Query\Builder;
+use KodiCMS\Pages\Contracts\BehaviorPageInterface;
 use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 
-class FrontendPage
+class FrontendPage implements BehaviorPageInterface
 {
 	const STATUS_DRAFT     = 1;
 	const STATUS_PUBLISHED = 100;
@@ -926,6 +927,15 @@ class FrontendPage
 		}
 
 		return $query;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getBehaviorSettings()
+	{
+		$settings = PageBehaviorSettings::where('page_id', $this->getId())->first();
+		return is_null($settings) ? [] : $settings->settings;
 	}
 
 	/**

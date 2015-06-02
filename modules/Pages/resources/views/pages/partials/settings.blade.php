@@ -39,7 +39,6 @@ if ((acl_check('layout.edit') OR acl_check('layout.view')) AND ! empty($layout_n
 			{!! UI::label(trans('pages::core.label.page.layout_not_set'), 'danger') !!}
 			@endif
 		</div>
-
 	</div>
 
 	<hr class="panel-wide" />
@@ -49,8 +48,10 @@ if ((acl_check('layout.edit') OR acl_check('layout.view')) AND ! empty($layout_n
 			@lang('pages::core.field.behavior')
 		</label>
 		<div class="col-md-6">
-			{!! Form::select('behavior', $behaviorList) !!}
-			<div id="behavor_options"></div>
+			<div id="behavor_options_container">
+				{!! Form::select('behavior', $behaviorList) !!}
+				<div id="behavor_options"></div>
+			</div>
 		</div>
 	</div>
 

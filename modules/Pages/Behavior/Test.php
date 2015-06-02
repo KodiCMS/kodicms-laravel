@@ -3,6 +3,11 @@
 class Test extends BehaviorAbstract
 {
 	/**
+	 * @var null|string
+	 */
+	protected $settingsTemplate = 'pages::behavior.test';
+
+	/**
 	 * @return array
 	 */
 	public function routeList()

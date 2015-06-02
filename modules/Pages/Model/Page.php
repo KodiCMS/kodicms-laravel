@@ -4,9 +4,10 @@ use DB;
 use UI;
 use KodiCMS\CMS\Helpers\URL;
 use Illuminate\Database\Eloquent\Model;
+use KodiCMS\Pages\Contracts\BehaviorPageInterface;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 
-class Page extends Model
+class Page extends Model implements BehaviorPageInterface
 {
 	/**
 	 * @var array
@@ -328,6 +329,27 @@ class Page extends Model
 	public function parts()
 	{
 		return $this->hasMany('\KodiCMS\Pages\Model\PagePart', 'page_id', 'id');
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\HasOne
+	 */
+	public function behaviorSettings()
+	{
+		return $this->hasOne('\KodiCMS\Pages\Model\PageBehaviorSettings', 'page_id', 'id');
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getBehaviorSettings()
+	{
+		if(!is_null($settings = $this->behaviorSettings()->first()))
+		{
+			return $settings->settings;
+		}
+
+		return [];
 	}
 
 	/**

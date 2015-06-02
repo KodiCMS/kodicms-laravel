@@ -40,6 +40,8 @@ RouteAPI::put('page.part/{id}', ['as' => 'api.page.part.put', 'uses' => 'API\Pag
 RouteAPI::delete('page.part/{id}', ['as' => 'api.page.part.delete', 'uses' => 'API\PagePartController@delete'])->where('id', '[0-9]+');
 RouteAPI::post('page.part.reorder', ['as' => 'api.page.part.reorder', 'uses' => 'API\PagePartController@reorder']);
 
+RouteAPI::get('page.behavior.settings', ['as' => 'api.page.behavior.settings', 'uses' => 'API\PageBehaviorController@getSettings']);
+
 RouteAPI::get('page.children', ['as' => 'api.page.children', 'uses' => 'API\PageController@getChildren']);
 RouteAPI::get('page.reorder', ['as' => 'api.page.reorder', 'uses' => 'API\PageController@getReorder']);
 RouteAPI::post('page.reorder', ['as' => 'api.page.reorder', 'uses' => 'API\PageController@postReorder']);

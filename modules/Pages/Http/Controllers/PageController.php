@@ -1,17 +1,14 @@
 <?php namespace KodiCMS\Pages\Http\Controllers;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use WYSIWYG;
-use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use Assets;
-use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
-use KodiCMS\Pages\Helpers\BlockWysiwyg;
-use KodiCMS\Pages\Model\FrontendPage;
+use WYSIWYG;
+use Carbon\Carbon;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Services\PageCreator;
 use KodiCMS\Pages\Services\PageUpdator;
-use KodiCMS\Widgets\Collection\PageWidgetCollection;
+use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class PageController extends BackendController
 {
@@ -41,6 +38,7 @@ class PageController extends BackendController
 	public function getEdit($id)
 	{
 		Assets::package(['backbone', 'jquery-ui']);
+		$this->includeModuleMediaFile('BehaviorController');
 		WYSIWYG::loadAll();
 
 		$page = $this->getPage($id);
@@ -57,6 +55,7 @@ class PageController extends BackendController
 		$page->setAppends(['layout']);
 
 		$behaviorList = BehaviorManager::formChoices();
+
 
 		$this->setContent('pages.edit', compact('page', 'updator', 'creator', 'pagesMap', 'behaviorList'));
 	}
@@ -88,6 +87,7 @@ class PageController extends BackendController
 
 		$pagesMap = $page->getSitemap();
 		$behaviorList = BehaviorManager::formChoices();
+		$this->includeModuleMediaFile('BehaviorController');
 
 		$this->setContent('pages.create', compact('page', 'pagesMap', 'behaviorList'));
 	}
