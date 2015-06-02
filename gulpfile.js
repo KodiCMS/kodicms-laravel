@@ -21,6 +21,7 @@ elixir(function(mix) {
 		'libs/noty/js/jquery.noty.packaged.js',
 		'libs/select2/js/select2.full.js',
 		'libs/jquery-colorbox/js/jquery.colorbox-min.js',
+		'libs/bootstrap-toggle/js/bootstrap-toggle.min.js',
 		'libs/jquery-validation/js/jquery.validate.js',
 		'libs/jquery-validation/js/additional-methods.js',
 		'libs/dropzone/js/dropzone.min.js',

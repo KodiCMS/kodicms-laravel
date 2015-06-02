@@ -479,4 +479,7 @@ CMS.ui.add('flags', function () {
 })
 .add('momentJs', function() {
 	moment.locale(LOCALE);
+})
+.add('switcher', function() {
+	$(".form-switcher").bootstrapToggle();
 });
