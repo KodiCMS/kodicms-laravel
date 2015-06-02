@@ -1,10 +1,11 @@
 <?php namespace KodiCMS\Users\Http\Controllers;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use KodiCMS\CMS\Http\Controllers\System\BackendController;
+use ACL;
 use KodiCMS\Users\Model\UserRole;
 use KodiCMS\Users\Services\RoleCreator;
 use KodiCMS\Users\Services\RoleUpdator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class RoleController extends BackendController
 {
@@ -24,7 +25,7 @@ class RoleController extends BackendController
 		$role = new UserRole;
 		$this->setTitle(trans('users::role.title.create'));
 
-		$permissions = \ACL::getPermissions();
+		$permissions = ACL::getPermissionsList();
 		$this->setContent('roles.create', compact('role', 'permissions'));
 	}
 
@@ -53,7 +54,7 @@ class RoleController extends BackendController
 			'name' => ucfirst($role->name)
 		]));
 
-		$permissions = \ACL::getPermissions();
+		$permissions = ACL::getPermissionsList();
 		$selectedPermissions = $role->permissions()->lists('action');
 
 		$this->setContent('roles.edit', compact('role', 'permissions', 'selectedPermissions'));

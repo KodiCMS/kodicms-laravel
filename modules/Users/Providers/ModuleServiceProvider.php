@@ -1,11 +1,12 @@
 <?php namespace KodiCMS\Users\Providers;
 
-use KodiCMS\CMS\Providers\ServiceProvider;
+use Event;
+use KodiCMS\Users\ACL;
 use KodiCMS\Users\Model\User;
 use KodiCMS\Users\Model\UserRole;
 use KodiCMS\Users\Observers\RoleObserver;
 use KodiCMS\Users\Observers\UserObserver;
-use Event;
+use KodiCMS\CMS\Providers\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider {
 
@@ -14,11 +15,13 @@ class ModuleServiceProvider extends ServiceProvider {
 		User::observe(new UserObserver);
 		UserRole::observe(new RoleObserver);
 
-		Event::listen('view.navbar.right.after', function() {
+		Event::listen('view.navbar.right.after', function ()
+		{
 			echo view('users::parts.navbar');
 		});
 
-		Event::listen('view.menu', function($navigation) {
+		Event::listen('view.menu', function ($navigation)
+		{
 			echo view('users::parts.navigation');
 		}, 999);
 	}
@@ -29,5 +32,10 @@ class ModuleServiceProvider extends ServiceProvider {
 			'Illuminate\Contracts\Auth\Registrar',
 			'KodiCMS\Users\Services\UserCreator'
 		);
+
+		$this->app->singleton('acl', function ()
+		{
+			return new ACL(config('permissions', []));
+		});
 	}
 }

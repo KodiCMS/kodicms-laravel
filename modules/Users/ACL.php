@@ -1,11 +1,12 @@
 <?php namespace KodiCMS\Users;
 
+use Lang;
 use KodiCMS\Users\Model\User as User;
 
 class ACL
 {
-	const DENY  = FALSE;
-	const ALLOW = TRUE;
+	const DENY  = false;
+	const ALLOW = true;
 
 	const ADMIN_USER = 1;
 	const ADMIN_ROLE = 'administrator';
@@ -17,54 +18,77 @@ class ACL
 	protected static $permissions = [];
 
 	/**
-	 * Получение спсика доступных прав из конфига
-	 *
-	 * @return array
+	 * @var array
 	 */
-	public static function getPermissions()
-	{
-		$permissions = [];
+	protected $permissionsList = [];
 
-		foreach (config('permissions', []) as $module => $actions) {
+	/**
+	 * @var \Illuminate\Contracts\Auth\Authenticatable|null
+	 */
+	protected $currentUser;
+
+	/**
+	 * @param array $permissions
+	 */
+	public function __construct(array $permissions = [])
+	{
+		$this->currentUser = auth()->user();
+
+		foreach ($permissions as $module => $actions)
+		{
 			$langKey = $module . '::' . 'permissions.title';
-			if (\Lang::has($langKey)) {
+			if (Lang::has($langKey))
+			{
 				$title = trans($langKey);
-			} else {
+			}
+			else
+			{
 				$title = ucfirst($module);
 			}
 
-			foreach ($actions as $action) {
-				$permissions[$title][$module . '::' . $action] = trans($module . '::permissions.' . $action);
+			foreach ($actions as $action)
+			{
+				$this->permissionsList[$title][$module . '::' . $action] = trans($module . '::permissions.' . $action);
 			}
 		}
-
-		return $permissions;
 	}
 
 	/**
-	 *
+	 * @return array
+	 */
+	public function getPermissionsList()
+	{
+		return $this->permissionsList;
+	}
+
+	/**
 	 * @param User $user
 	 * @return boolean
 	 */
-	public static function isAdmin($user = NULL)
+	public function userIsAdmin($user = null)
 	{
-		if ($user === NULL) {
-			$user = static::getCurrentUser();
+		if ($user === null)
+		{
+			$user = $this->getCurrentUser();
 		}
 
-		if ($user instanceof User) {
+		if ($user instanceof User)
+		{
 			$user_id = $user->id;
 			$roles = $user->getRoles()->lists('name');
-		} else {
+		}
+		else
+		{
 			$user_id = (int)$user;
 			$roles = ['login'];
 		}
 
-		if ($user_id == static::ADMIN_USER OR in_array(static::ADMIN_ROLE, $roles)) {
-			return TRUE;
+		if ($user_id == static::ADMIN_USER OR in_array(static::ADMIN_ROLE, $roles))
+		{
+			return true;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -75,30 +99,36 @@ class ACL
 	 * @param User $user
 	 * @return boolean
 	 */
-	public static function check($action, User $user = NULL)
+	public function check($action, User $user = null)
 	{
-		if ($user === NULL) {
-			$user = static::getCurrentUser();
+		if ($user === null)
+		{
+			$user = $this->getCurrentUser();
 		}
 
-		if (!($user instanceof User)) {
+		if (!($user instanceof User))
+		{
 			return static::DENY;
 		}
 
-		if (empty($action)) {
+		if (empty($action))
+		{
 			return static::ALLOW;
 		}
 
-		if (static::isAdmin($user)) {
+		if ($this->userIsAdmin($user))
+		{
 			return static::ALLOW;
 		}
 
-		if (is_array($action)) {
+		if (is_array($action))
+		{
 			$action = strtolower(implode('.', $action));
 		}
 
-		if (!isset(static::$permissions[$user->id])) {
-			static::setPermissions($user);
+		if (!isset(static::$permissions[$user->id]))
+		{
+			$this->setPermissions($user);
 		}
 
 		return isset(static::$permissions[$user->id][$action]);
@@ -111,32 +141,33 @@ class ACL
 	 * @param User $user
 	 * @return boolean
 	 */
-	public static function checkArray(array $actions, User $user = NULL)
+	public function checkByArray(array $actions, User $user = null)
 	{
-		foreach ($actions as $action) {
-			if (static::check($action, $user)) {
-				return TRUE;
+		foreach ($actions as $action)
+		{
+			if ($this->check($action, $user))
+			{
+				return true;
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
 	 * Загрузка прав доступа для пользователя
-	 *
 	 * @param User $user
 	 */
-	protected static function setPermissions(User $user)
+	protected function setPermissions(User $user)
 	{
-		static::$permissions[$user->id] = array_flip($user->getAllowedPermissions());
+		static::$permissions[$user->id] = array_flip($user->getPermissionsByRoles());
 	}
 
 	/**
 	 * @return \Illuminate\Contracts\Auth\Authenticatable|null
 	 */
-	protected static function getCurrentUser()
+	protected function getCurrentUser()
 	{
-		return auth()->user();
+		return $this->currentUser;
 	}
 }

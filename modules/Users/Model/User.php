@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Users\Model;
 
+use ACL;
 use Carbon\Carbon;
 use KodiCMS\Users\Helpers\Gravatar;
 use Illuminate\Auth\Authenticatable;
@@ -181,7 +182,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	{
 		$permissions = [];
 
-		foreach (\ACL::getPermissions() as $sectionTitle => $actions) {
+		foreach (ACL::getPermissionsList() as $sectionTitle => $actions) {
 			foreach ($actions as $action => $title) {
 				if (acl_check($action, $this)) {
 					$permissions[$sectionTitle][$action] = $title;

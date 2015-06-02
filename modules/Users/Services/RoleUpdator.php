@@ -37,8 +37,12 @@ class RoleUpdator implements ModelUpdator
 			'name', 'description'
 		]));
 
-		if ($role->id > 2 AND isset($data['permissions'])) {
-			$permissions = (array) $data['permissions'];
+		if ($role->id > 2) {
+			$permissions = [];
+			if (isset($data['permissions']))
+			{
+				$permissions = (array)$data['permissions'];
+			}
 			$role->attachPermissions($permissions);
 		}
 

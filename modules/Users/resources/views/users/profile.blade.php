@@ -31,20 +31,16 @@
 				<div class="panel-heading">
 					<span class="panel-title">@lang('users::core.title.permissions')</span>
 				</div>
-				<div class="panel-body">
+				<div class="panel-body no-padding tabbable">
 					@foreach($permissions as $section => $actions)
 					<div class="panel-heading">
 						<span class="panel-title">{{ ucfirst($section) }}</span>
 					</div>
-					<table class="table table-noborder">
-						<tbody>
+					<ul class="list-group no-margin-b">
 						@foreach($actions as $action => $description)
-						<tr>
-							<td data-icon="check text-success" class="">{{ $description }}</td>
-						</tr>
+						<li class="list-group-item" data-icon="check text-success">{{ $description }}</li>
 						@endforeach
-						</tbody>
-					</table>
+					</ul>
 					@endforeach
 				</div>
 				@endif

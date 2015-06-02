@@ -3,7 +3,7 @@ CMS.controllers.add(['role.get.edit', 'role.get.add'], function () {
 		var $list = $(this)
 			.closest('table')
 			.find('input')
-			.check();
+			.toggleCheck();
 
 		e.preventDefault();
 	});

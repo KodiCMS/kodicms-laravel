@@ -1,7 +1,7 @@
 <div class="panel-heading">
 	<span class="panel-title">@lang('users::role.tab.permissions')</span>
 </div>
-<div class="panel-body tabbable" id="permissions-list">
+<div class="panel-body tabbable no-padding" id="permissions-list">
 	@foreach($permissions as $module => $actions)
 	<div class="panel-heading">
 		<span class="panel-title">{{ $module }}</span>

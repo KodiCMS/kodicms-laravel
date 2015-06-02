@@ -43,6 +43,7 @@ return [
 	 * KodiCMS aliases...
 	 */
 	'ModuleLoader' 	=> 'KodiCMS\Support\Facades\ModuleLoader',
+	'ACL'			=> 'KodiCMS\Support\Facades\ACL',
 	'DatabaseConfig' => 'KodiCMS\Support\Facades\DatabaseConfig',
 	'Frontpage' 	=> 'KodiCMS\Support\Facades\Frontpage',
 	'Meta'			=> 'KodiCMS\Support\Facades\FrontpageMeta',
@@ -52,7 +53,6 @@ return [
 	'Package'       => 'KodiCMS\Support\Facades\Package',
 	'RouteAPI'      => 'KodiCMS\Support\Facades\RouteAPI',
 	'UI'			=> 'KodiCMS\CMS\Helpers\UI',
-	'ACL'			=> 'KodiCMS\Users\ACL',
 	'CMS'			=> 'KodiCMS\CMS\Core',
 	'Assets'		=> 'KodiCMS\Support\Facades\Assets',
 	'Date'			=> 'KodiCMS\CMS\Helpers\Date',
