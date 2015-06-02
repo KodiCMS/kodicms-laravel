@@ -91,7 +91,6 @@ class Package implements Iterator
 	public function getHTMLSelectChoice()
 	{
 		$options = array_keys($this->list);
-
 		return array_combine($options, $options);
 	}
 
@@ -115,9 +114,10 @@ class Package implements Iterator
 	private $position = 0;
 
 	/**
-	 * @param string $handle
+	 * @param string|null $handle
+	 * @param string|null $parent
 	 */
-	public function __construct($handle = null , $parent = null)
+	public function __construct($handle = null, $parent = null)
 	{
 		if(is_null($handle) || is_null($parent)) return;
 

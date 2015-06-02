@@ -8,12 +8,15 @@ use Package as PackageManager;
 
 /**
  * Class Core
- * TODO: убрать статику. Greabock 20.05.2015
- *
  * @package KodiCMS\CMS\Assets
  */
 class Core
 {
+	/**
+	 * @var array
+	 */
+	protected static $loadedPackages = [];
+
 	/**
 	 * @var  array  CSS assets
 	 */
@@ -37,20 +40,20 @@ class Core
 	 */
 	public function package($names, $loadDependencies = false, $footer = false)
 	{
-		if (!is_array($names))
-		{
-			$names = [$names];
-		}
+		$names = (array) $names;
 
 		foreach ($names as $name)
 		{
+			if(in_array($name, static::$loadedPackages)) continue;
+
 			$package = PackageManager::load($name);
 
 			if ($package === null) continue;
+			static::$loadedPackages[] = $name;
 
 			foreach ($package as $item)
 			{
-				if($loadDependencies === true AND isset($item['deps']) AND is_array($item['deps']))
+				if ($loadDependencies === true AND isset($item['deps']) AND is_array($item['deps']))
 				{
 					$this->package($item['deps'], true);
 				}
@@ -85,16 +88,10 @@ class Core
 	public function css($handle = null, $src = null, $deps = null, $attrs = null)
 	{
 		// Return all CSS assets, sorted by dependencies
-		if ($handle === null)
-		{
-			return $this->allCss();
-		}
+		if ($handle === null) return $this->allCss();
 
 		// Return individual asset
-		if ($src === null)
-		{
-			return $this->getCss($handle);
-		}
+		if ($src === null) return $this->getCss($handle);
 
 		// Set default media attribute
 		if (!isset($attrs['media']))
@@ -102,7 +99,13 @@ class Core
 			$attrs['media'] = 'all';
 		}
 
-		return $this->css[$handle] = ['src' => $src, 'deps' => (array)$deps, 'attrs' => $attrs, 'handle' => $handle, 'type' => 'css'];
+		return $this->css[$handle] = [
+			'src' => $src,
+			'deps' => (array)$deps,
+			'attrs' => $attrs,
+			'handle' => $handle,
+			'type' => 'css'
+		];
 	}
 
 	/**
@@ -113,10 +116,7 @@ class Core
 	 */
 	public function getCss($handle)
 	{
-		if (!isset($this->css[$handle]))
-		{
-			return false;
-		}
+		if (!isset($this->css[$handle])) return false;
 
 		$asset = $this->css[$handle];
 
@@ -130,10 +130,7 @@ class Core
 	 */
 	public function allCss()
 	{
-		if (empty($this->css))
-		{
-			return false;
-		}
+		if (empty($this->css)) return false;
 
 		foreach ($this->sort($this->css) as $handle => $data)
 		{
@@ -151,10 +148,7 @@ class Core
 	 */
 	public function removeCss($handle = null)
 	{
-		if ($handle === null)
-		{
-			return $this->$css = [];
-		}
+		if ($handle === null) return $this->css = [];
 
 		unset($this->css[$handle]);
 	}
@@ -172,17 +166,16 @@ class Core
 	 */
 	public function js($handle = false, $src = null, $deps = null, $footer = false)
 	{
-		if (is_bool($handle))
-		{
-			return $this->allJs($handle);
-		}
+		if (is_bool($handle)) return $this->allJs($handle);
+		if ($src === null) return $this->getJs($handle);
 
-		if ($src === null)
-		{
-			return $this->getJs($handle);
-		}
-
-		return $this->js[$handle] = ['src' => $src, 'deps' => (array)$deps, 'footer' => (bool)$footer, 'handle' => $handle, 'type' => 'js'];
+		return $this->js[$handle] = [
+			'src' => $src,
+			'deps' => (array)$deps,
+			'footer' => (bool)$footer,
+			'handle' => $handle,
+			'type' => 'js'
+		];
 	}
 
 	/**
@@ -193,11 +186,7 @@ class Core
 	 */
 	public function getJs($handle)
 	{
-		if (!isset($this->js[$handle]))
-		{
-			return false;
-		}
-
+		if (!isset($this->js[$handle])) return false;
 		$asset = $this->js[$handle];
 
 		return HTML::script($asset['src']);
@@ -211,10 +200,7 @@ class Core
 	 */
 	public function allJs($footer = false)
 	{
-		if (empty($this->js))
-		{
-			return false;
-		}
+		if (empty($this->js)) return false;
 
 		$assets = [];
 
@@ -226,10 +212,7 @@ class Core
 			}
 		}
 
-		if (empty($assets))
-		{
-			return false;
-		}
+		if (empty($assets)) return false;
 
 		foreach ($this->sort($assets) as $handle => $data)
 		{
@@ -247,10 +230,7 @@ class Core
 	 */
 	public function removeJs($handle = null)
 	{
-		if ($handle === null)
-		{
-			return $this->js = [];
-		}
+		if ($handle === null) return $this->js = [];
 
 		if ($handle === true OR $handle === false)
 		{
@@ -279,15 +259,8 @@ class Core
 	 */
 	public function group($group, $handle = null, $content = null, $deps = null)
 	{
-		if ($handle === null)
-		{
-			return $this->allGroup($group);
-		}
-
-		if ($content === null)
-		{
-			return $this->getGroup($group, $handle);
-		}
+		if ($handle === null) return $this->allGroup($group);
+		if ($content === null) return $this->getGroup($group, $handle);
 
 		return $this->groups[$group][$handle] = ['content' => $content, 'deps' => (array)$deps,];
 	}
@@ -317,10 +290,7 @@ class Core
 	 */
 	public function allGroup($group)
 	{
-		if (!isset($this->groups[$group]))
-		{
-			return false;
-		}
+		if (!isset($this->groups[$group])) return false;
 
 		foreach ($this->sort($this->groups[$group]) as $handle => $data)
 		{
@@ -339,15 +309,11 @@ class Core
 	 */
 	public function removeGroup($group = null, $handle = null)
 	{
-		if ($group === null)
-		{
-			return $this->groups = [];
-		}
+		if ($group === null) return $this->groups = [];
 
 		if ($handle === null)
 		{
 			unset($this->groups[$group]);
-
 			return;
 		}
 
