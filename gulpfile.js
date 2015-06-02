@@ -31,6 +31,7 @@ elixir(function(mix) {
 		'libs/fastclick/js/fastclick.js',
 		'libs/slimScroll/js/jquery.slimscroll.min.js',
 		'libs/jquery-query-object/js/jquery.query-object.js',
+		'libs/bootbox.js/js/bootbox.js',
 		'libs/i18next/js/i18next.min.js'
 	], 'public/cms/js/libraries.js', 'public/cms/');
 

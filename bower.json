@@ -26,7 +26,8 @@
 		"Sortable": "latest",
 		"underscore": "latest",
 		"x-editable": "latest",
-		"bootstrap-toggle": "latest"
+		"bootstrap-toggle": "latest",
+		"bootbox": "latest"
 	},
 	"install" : {
 		"base":  "public/cms/libs",
