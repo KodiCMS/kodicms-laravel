@@ -16,7 +16,7 @@ class FrontendController extends TemplateController
 		Assets::package(['libraries', 'core']);
 
 		$this->includeModuleMediaFile($this->getRouterController());
-		$this->includeMergedMediaFile('frontendEvents', 'js/frontendEvents', 'js');
+		$this->includeMergedMediaFile('frontendEvents', 'js/frontendEvents');
 	}
 
 	public function after()

@@ -84,6 +84,6 @@ class BackendController extends TemplateController
 
 		Assets::package(['libraries', 'core']);
 		$this->includeModuleMediaFile($this->getRouterController());
-		$this->includeMergedMediaFile('backendEvents', 'js/backendEvents', 'js');
+		$this->includeMergedMediaFile('backendEvents', 'js/backendEvents');
 	}
 }
