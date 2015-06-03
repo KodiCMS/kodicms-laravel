@@ -24,6 +24,7 @@ return [
 		'password_confirm' => 'Подтверждение пароля',
 		'last_login' => 'Последний вход',
 		'locale' => 'Язык системы',
+		'default_locale' => 'Язык системы по умолчанию (:locale)',
 		'roles' => 'Роли',
 		'actions' => 'Действия',
 		'auth' => [

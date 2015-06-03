@@ -38,7 +38,7 @@
 	<div class="form-group">
 		<label class="control-label col-md-3" for="locale">@lang('users::core.field.locale')</label>
 		<div class="col-md-4">
-			{!! Form::select('locale', config('cms.locales', []), NULL, [
+			{!! Form::select('locale', $locales, null, [
 				'class' => 'form-control', 'id' => 'locale'
 			]) !!}
 		</div>

@@ -277,7 +277,7 @@ abstract class Controller extends BaseController
 			$this->currentUser = $auth->user();
 			if (auth()->check())
 			{
-				Lang::setLocale($this->currentUser->locale);
+				Lang::setLocale($this->currentUser->getLocale());
 			}
 		}
 	}

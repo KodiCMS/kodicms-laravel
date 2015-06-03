@@ -9,11 +9,21 @@
  */
 class Locale
 {
+	const DEFAULT_LOCALE = 'sys';
+
 	/**
 	 * @return array
 	 */
 	public static function getAvailable()
 	{
 		return config('cms.locales', []);
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getSystemDefault()
+	{
+		return config('app.locale', 'ru');
 	}
 }

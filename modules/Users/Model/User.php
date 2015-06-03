@@ -2,6 +2,7 @@
 
 use ACL;
 use Carbon\Carbon;
+use KodiCMS\Support\Helpers\Locale;
 use KodiCMS\Users\Helpers\Gravatar;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
@@ -72,9 +73,27 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return (new Carbon())->createFromTimestamp($date)->diffForHumans();
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getCurrentTheme()
 	{
 		return UserMeta::get('cms_theme', config('cms.theme.default'), $this->id);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAvailableLocales()
+	{
+		$locales = Locale::getAvailable();
+		$systemDefault = Locale::getSystemDefault();
+
+		$locales[Locale::DEFAULT_LOCALE] = trans('users::core.field.default_locale', [
+			'locale' => array_get($locales, $systemDefault, $systemDefault)
+		]);
+
+		return $locales;
 	}
 
 	/**
@@ -196,12 +215,18 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	/**
 	 * @return string
 	 */
-	public function getLocaleAttribute()
+	public function getLocale()
 	{
-		if(!empty($this->attributes['locale'])) {
-			return $this->attributes['locale'];
+		if (!empty($this->attributes['locale']))
+		{
+			$locale = $this->attributes['locale'];
+
+			if ($locale != Locale::DEFAULT_LOCALE)
+			{
+				return $locale;
+			}
 		}
 
-		return config('app.locale');
+		return Locale::getSystemDefault();
 	}
 }

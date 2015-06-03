@@ -73,8 +73,9 @@ class UserController extends BackendController
 
 		$availableLocales = Locale::getAvailable();
 		$rolesList = UserRole::lists('name', 'id');
+		$locales = $user->getAvailableLocales();
 
-		$this->setContent('users.create', compact('user', 'availableLocales', 'rolesList'));
+		$this->setContent('users.create', compact('user', 'availableLocales', 'rolesList', 'locales'));
 	}
 
 	public function postCreate(UserCreator $user)
@@ -107,8 +108,9 @@ class UserController extends BackendController
 
 		$rolesList = UserRole::lists('name', 'id');
 		$userRoles = $user->roles()->lists('id');
+		$locales = $user->getAvailableLocales();
 
-		$this->setContent('users.edit', compact('user', 'availableLocales', 'rolesList', 'userRoles'));
+		$this->setContent('users.edit', compact('user', 'availableLocales', 'rolesList', 'userRoles', 'locales'));
 	}
 
 	public function postEdit(UserUpdator $user, $id)
