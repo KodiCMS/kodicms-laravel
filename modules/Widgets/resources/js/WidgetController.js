@@ -92,12 +92,12 @@ CMS.controllers.add('widget.get.location', function() {
 		var value = $('input[name="select_for_all"]').val();
 		if(!value.length) return false;
 
-		$('input.widget-blocks').each(function() {
+		$('select.widget-blocks').each(function() {
 			var $options = $(this).data('blocks');
 			for(i in $options) {
 				var $option = $options[i];
 				if($option['id'].indexOf(value) > -1 || $option['text'].indexOf(value) > -1)
-					$(this).select2("data", $option);
+					$(this).val($option['id']).trigger('change');
 			}
 		});
 
@@ -107,17 +107,20 @@ CMS.controllers.add('widget.get.location', function() {
 	$('.set_to_inner_pages').on('click', function() {
 		var cont = $(this).closest('tr');
 
-		var block_name = cont.find('.widget-blocks').select2("data")['id'];
+		var block_name = cont.find('.widget-blocks').val();
 		var position = cont.find('input.widget-position').val();
 		var id = cont.data('id');
 
 		$('.table tbody tr[data-parent-id="'+id+'"]').each(function() {
-			var $select = $(this).find('input.widget-blocks');
+			var $select = $(this).find('select.widget-blocks');
 			var $options = $select.data('blocks');
+
 			for(i in $options) {
 				var $option = $options[i];
-				if($option['id'].indexOf(block_name) > -1)
-					$select.select2("data", $option);
+				if($option['id'] == block_name) {
+					$select.val($option['id']).trigger('change');
+				}
+
 			}
 
 			$(this).find('input.widget-position').val(position);
@@ -161,7 +164,7 @@ function reload_blocks($layout) {
 		LAYOUT_BLOCKS = resp.content;
 
 		$('.widget-blocks').each(function() {
-			var cb = $(this).val();
+			var cb = $(this).data('value');
 			var $layout = $(this).data('layout');
 			if( ! LAYOUT_BLOCKS[$layout]) return;
 
@@ -187,8 +190,9 @@ function reload_blocks($layout) {
 					formatSelection: format_dropdown_block,
 					formatResult: format_dropdown_block
 				})
-				.select2('val', cb)
-				.data('blocks', blocks);
+				.val(cb)
+				.data('blocks', blocks)
+				.trigger('change');
 		});
 	});
 }

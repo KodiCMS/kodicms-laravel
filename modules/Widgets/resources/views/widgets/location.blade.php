@@ -67,7 +67,11 @@ function recurse_pages($pages, $spaces = 0, $layouts_blocks = [], $page_widgets 
 		{
 			$data .= '<div class="input-group">';
 		}
-		$data .= Form::hidden('blocks['.$page['id'].'][block]', $current_block, ['class' => 'widget-blocks form-control', 'data-layout' => $page['layout_file']]);
+		$data .= Form::select('blocks['.$page['id'].'][block]', [], $current_block, [
+			'class' => 'widget-blocks form-control',
+			'data-layout' => $page['layout_file'],
+			'data-value' => $current_block
+		]);
 		if (!empty($page['childs']))
 		{
 			$data .= "<div class=\"input-group-btn\">" . Form::button(NULL, [
