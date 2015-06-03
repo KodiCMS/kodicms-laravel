@@ -161,6 +161,7 @@ CMS.controllers.add('page.get.index', function() {
 
 			Api.get('/api.page.search', form.serialize(), function(resp) {
 				$('#page-search-list').html(resp.content);
+				CMS.ui.init('icon');
 			});
 
 		} else {
@@ -197,7 +198,7 @@ CMS.controllers.add('page.get.index', function() {
 		}
 	};
 	
-	$('#page-tree-list').editable(editable_status);
+	$('#page-tree-list, #page-search-list').editable(editable_status);
 });
 
 
