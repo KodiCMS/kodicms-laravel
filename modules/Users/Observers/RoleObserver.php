@@ -41,6 +41,7 @@ class RoleObserver {
 	 */
 	public function deleted($role)
 	{
+		$role->users()->detach();
 		$role->permissions()->delete();
 	}
 
