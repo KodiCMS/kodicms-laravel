@@ -2,10 +2,10 @@ var Popup = {
 	_target: null,
 	_defaults: {
 		fixed: true,
-		width: '99%',
-		height: '99%',
-		maxWidth:'99%',
-		maxHeight:'99%',
+		width: '95%',
+		height: '95%',
+		maxWidth:'95%',
+		maxHeight:'95%',
 		transition: 'fade',
 		speed: 100,
 		close: '<i class="fa fa-times fa-fw" />',
@@ -67,8 +67,8 @@ var Popup = {
 		if (this._resizeTimer) clearTimeout(this._resizeTimer);
 		this._resizeTimer = setTimeout(function() {
 			$.colorbox.resize({
-				width: '99%',
-				height: '99%',
+				width: '95%',
+				height: '95%',
 				speed: 100
 			});
 		}, 500);
