@@ -52,7 +52,7 @@
 	</table>
 	@else
 	<div class="panel-body">
-		<h3>@lang('users::core.messages.users.empty')</h3>
+		<h3>@lang('users::core.messages.user.empty')</h3>
 	</div>
 	@endif
 </div>
