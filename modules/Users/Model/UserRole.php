@@ -75,6 +75,6 @@ class UserRole extends Model
 	 */
 	public function users()
 	{
-		return $this->belongsToMany('KodiCMS\Users\Model\User', 'users_roles', 'user_id');
+		return $this->belongsToMany('KodiCMS\Users\Model\User', 'roles_users', 'user_id');
 	}
 }
