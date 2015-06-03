@@ -26,11 +26,11 @@ return [
 	'Illuminate\Translation\TranslationServiceProvider',
 	'Illuminate\Validation\ValidationServiceProvider',
 	'Illuminate\View\ViewServiceProvider',
-	'Illuminate\Html\HtmlServiceProvider',
 
 	/*
 	 * KodiCMS Service Providers...
 	 */
+	'KodiCMS\Support\Html\HtmlServiceProvider',
 	'KodiCMS\CMS\Providers\ModuleServiceProvider',
 	'KodiCMS\CMS\Providers\RouteServiceProvider',
 	'KodiCMS\CMS\Providers\EventServiceProvider',
