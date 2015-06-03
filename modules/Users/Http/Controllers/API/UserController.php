@@ -5,8 +5,6 @@ use KodiCMS\Users\Model\User;
 
 class UserController extends APIController
 {
-	public $authRequired = true;
-
 	public function getRoles()
 	{
 		$userId = $this->getParameter('uid');

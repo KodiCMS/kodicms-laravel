@@ -5,8 +5,6 @@ use KodiCMS\Users\Model\UserMeta;
 
 class UserMetaController extends APIController
 {
-	public $authRequired = TRUE;
-
 	public function getData()
 	{
 		$key = $this->getRequiredParameter('key');

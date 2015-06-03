@@ -5,8 +5,6 @@ use KodiCMS\Users\Model\UserRole;
 
 class RoleController extends APIController
 {
-	public $authRequired = TRUE;
-
 	public function getAll()
 	{
 		$this->setContent(UserRole::get());
