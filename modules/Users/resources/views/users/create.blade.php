@@ -75,7 +75,7 @@
 <div class="panel-body">
 	<div class="form-group">
 		<div class="col-md-12">
-			{!! Form::select('user_roles[]', [], [], ['class' => 'form-control']) !!}
+			{!! Form::select('user_roles[]', $rolesList, null, ['class' => 'form-control', 'multiple']) !!}
 			<p class="help-block">@lang('users::core.rule.roles')</p>
 		</div>
 	</div>

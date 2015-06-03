@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Users\Http\Controllers;
 
 use KodiCMS\Users\Model\User;
+use KodiCMS\Users\Model\UserRole;
 use KodiCMS\Support\Helpers\Locale;
 use KodiCMS\Users\Services\UserCreator;
 use KodiCMS\Users\Services\UserUpdator;
@@ -71,8 +72,9 @@ class UserController extends BackendController
 		$this->templateScripts['USER'] = $user;
 
 		$availableLocales = Locale::getAvailable();
+		$rolesList = UserRole::lists('name', 'id');
 
-		$this->setContent('users.create', compact('user', 'availableLocales'));
+		$this->setContent('users.create', compact('user', 'availableLocales', 'rolesList'));
 	}
 
 	public function postCreate(UserCreator $user)
@@ -103,7 +105,10 @@ class UserController extends BackendController
 
 		$availableLocales = Locale::getAvailable();
 
-		$this->setContent('users.edit', compact('user', 'availableLocales'));
+		$rolesList = UserRole::lists('name', 'id');
+		$userRoles = $user->roles()->lists('id');
+
+		$this->setContent('users.edit', compact('user', 'availableLocales', 'rolesList', 'userRoles'));
 	}
 
 	public function postEdit(UserUpdator $user, $id)
