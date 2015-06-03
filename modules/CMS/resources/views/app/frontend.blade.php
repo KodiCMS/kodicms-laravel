@@ -11,13 +11,14 @@
 
 	{!! Assets::group('global', 'templateScripts') !!}
 	{!! Assets::css() !!}
+	{!! Assets::js() !!}
+	{!! Assets::group('global', 'frontendEvents') !!}
+	@yield('scripts')
 </head>
 <body id="body.{{ $bodyId or 'backend' }}" class="{{ $theme or 'theme-default' }}">
 	{!! $content or NULL !!}
 
-
-	{!! Assets::js() !!}
-	{!! Assets::group('global', 'frontendEvents') !!}
-	@yield('scripts')
+	{!! Assets::js(true) !!}
+	@yield('footer_scripts')
 </body>
 </html>

@@ -11,6 +11,9 @@
 
 		{!! Assets::group('global', 'templateScripts') !!}
 		{!! Assets::css() !!}
+		{!! Assets::js() !!}
+		{!! Assets::group('global', 'backendEvents') !!}
+		@yield('scripts')
 	</head>
 	<body id="body.{{ $bodyId or 'backend' }}" class="{{ $requestType }} theme-{{ $theme or 'default' }} main-menu-fixed">
 		<div id="main-wrapper">
@@ -38,8 +41,7 @@
 			</div>
 		</div>
 
-		{!! Assets::js() !!}
-		{!! Assets::group('global', 'backendEvents') !!}
-		@yield('scripts')
+		{!! Assets::js(true) !!}
+		@yield('footer_scripts')
 	</body>
 </html>
