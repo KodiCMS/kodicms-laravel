@@ -1,9 +1,12 @@
-CMS.controllers.add(['role.get.edit', 'role.get.add'], function () {
+CMS.controllers.add(['role.get.edit', 'role.get.create'], function () {
 	$('.panel').on('click', '.check_all', function(e) {
-		var $list = $(this)
+		var $inputs = $(this)
 			.closest('table')
-			.find('input')
-			.toggleCheck();
+			.find('input');
+
+		$inputs.each(function() {
+			$(this).prop('checked', !$(this).prop('checked')).change();
+		})
 
 		e.preventDefault();
 	});
