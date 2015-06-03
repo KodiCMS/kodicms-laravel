@@ -148,14 +148,10 @@ class PageObserver
 	 */
 	public function deleted($page)
 	{
-		// Все дочерние страницы перекидываем в корень
-		// TODO: спрашивать у пользователя нужно ли удалять все внутренние страницы
-		//Page::where('parent_id', $page->id)->delete();
-		Page::where('parent_id', $page->id)->update([
-			'parent_id' => 1
-		]);
-
+		// TODO: подумать что лучше делать с дочерними страницами при удалении предка
+		$page->children()->delete();
 		$page->behaviorSettings()->delete();
+		$page->parts()->delete();
 
 		$this->clearCache($page);
 	}
