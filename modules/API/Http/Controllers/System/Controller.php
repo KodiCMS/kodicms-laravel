@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\API\Http\Controllers\System;
 
+use KodiCMS\API\Exceptions\AuthenticateException;
+use KodiCMS\API\Exceptions\PermissionException;
 use Validator;
 use Illuminate\View\View;
 use BadMethodCallException;
@@ -119,6 +121,21 @@ abstract class Controller extends BaseController
 		}
 
 		return true;
+	}
+
+	/**
+	 * @param string|array|null $message
+	 * @param bool $redirect
+	 * @return Response
+	 */
+	public function denyAccess($message = null, $redirect = false)
+	{
+		if (auth()->guest())
+		{
+			throw new AuthenticateException($message);
+		}
+
+		throw new PermissionException(array_get($this->permissions, $this->getCurrentAction()), $message);
 	}
 
 	/**

@@ -2,6 +2,7 @@
 
 use DatabaseConfig;
 use KodiCMS\API\Model\ApiKey;
+use KodiCMS\API\Exceptions\Exception;
 use KodiCMS\API\Exceptions\PermissionException;
 use KodiCMS\API\Http\Controllers\System\Controller;
 
@@ -11,7 +12,7 @@ class KeysController extends Controller
 	{
 		if (!acl_check('api.view_keys'))
 		{
-			throw new PermissionException;
+			throw new PermissionException('api.view_keys');
 		}
 
 		$keys = ApiKey::lists('description', 'id');
@@ -26,7 +27,7 @@ class KeysController extends Controller
 	{
 		if (!acl_check('api.create_keys'))
 		{
-			throw new PermissionException;
+			throw new PermissionException('api.create_keys');
 		}
 
 		$description = $this->getRequiredParameter('description');
@@ -37,7 +38,7 @@ class KeysController extends Controller
 	{
 		if (!acl_check('api.delete_keys'))
 		{
-			throw new PermissionException;
+			throw new PermissionException('api.delete_keys');
 		}
 
 		$systemKey = config('cms.api_key');
@@ -45,7 +46,7 @@ class KeysController extends Controller
 
 		if ($key == $systemKey)
 		{
-			throw new PermissionException;
+			throw new Exception(trans('api.core.messages.system_api_remove'));
 		}
 
 		$this->setContent((bool) ApiKey::where('id', $key)->delete());
@@ -55,7 +56,7 @@ class KeysController extends Controller
 	{
 		if (!acl_check('api.refresh_key'))
 		{
-			throw new PermissionException;
+			throw new PermissionException('api.refresh_key');
 		}
 
 		$key = config('cms.api_key');
