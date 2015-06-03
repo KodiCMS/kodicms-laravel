@@ -49,8 +49,14 @@ CMS.ui.add('flags', function () {
 	});
 }).add('btn-confirm', function () {
 	$('body').on('click', '.btn-confirm', function (e) {
-		if (!confirm(__('Are you sure?')))
-			e.preventDefault();
+		var $btn = $(this);
+
+		var message = i18n.t('cms.core.messages.are_you_sure');
+		if($btn.data('message')) {
+			message = $btn.data('message');
+		}
+
+		return confirm(message);
 	});
 }).add('calculate_height', function () {
 	CMS.calculateContentHeight();
@@ -482,4 +488,7 @@ CMS.ui.add('flags', function () {
 })
 .add('switcher', function() {
 	$(".form-switcher").bootstrapToggle();
+})
+.add('bootbox', function() {
+	bootbox.setLocale(LOCALE);
 });

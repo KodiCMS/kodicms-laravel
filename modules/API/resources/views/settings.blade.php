@@ -69,12 +69,16 @@
 
 <script type="text/javascript">
 	$(function(){
-		$('body').on('click', '#refresh-api-key', function() {
-			Api.post('/api.refresh.key', null, function(response) {
-				$('#api-key').val(response.content);
-			});
+		$('body').on('click', '#refresh-api-key', function(e) {
+			e.preventDefault();
 
-			return false;
+			bootbox.confirm(i18n.t('api.core.messages.are_you_sure'), function(result) {
+				if(!result) return;
+
+				Api.post('/api.refresh.key', null, function(response) {
+					$('#api-key').val(response.content);
+				});
+			});
 		});
 
 		var keys = Api.get('/api.keys', {}, function(response) {
