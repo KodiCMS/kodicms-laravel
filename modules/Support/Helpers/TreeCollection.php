@@ -1,7 +1,6 @@
-<?php namespace KodiCMS\CMS\Helpers;
+<?php namespace KodiCMS\Support\Helpers;
 
-
-class Sitemap implements \RecursiveIterator
+class TreeCollection implements \RecursiveIterator
 {
 	private $position = 0;
 
@@ -66,9 +65,12 @@ class Sitemap implements \RecursiveIterator
 	 */
 	public function children()
 	{
-		if (!empty($this->elements[0]['childs'])) {
+		if (!empty($this->elements[0]['childs']))
+		{
 			$this->elements = $this->elements[0]['childs'];
-		} else {
+		}
+		else
+		{
 			$this->elements = [];
 		}
 
@@ -82,9 +84,10 @@ class Sitemap implements \RecursiveIterator
 	 * @param boolean $removeChilds
 	 * @return $this
 	 */
-	public function exclude(array $ids, $removeChilds = TRUE)
+	public function exclude(array $ids, $removeChilds = true)
 	{
-		if (!empty($ids)) {
+		if (!empty($ids))
+		{
 			$array = $this->elements;
 			$this->_exclude($array, $ids, $removeChilds);
 			$this->elements = $array;
@@ -100,11 +103,14 @@ class Sitemap implements \RecursiveIterator
 	 * @param boolean $childs Показывать дочерние эелементы
 	 * @return array
 	 */
-	public function asArray($childs = TRUE)
+	public function asArray($childs = true)
 	{
-		if ($childs === FALSE) {
-			foreach ($this->elements as & $row) {
-				if (isset($row['childs'])) {
+		if ($childs === false)
+		{
+			foreach ($this->elements as & $row)
+			{
+				if (isset($row['childs']))
+				{
 					unset($row['childs']);
 				}
 			}
@@ -119,7 +125,7 @@ class Sitemap implements \RecursiveIterator
 	 * @param boolean $childs Показывать дочерние эелементы
 	 * @return array
 	 */
-	public function flatten($childs = TRUE)
+	public function flatten($childs = true)
 	{
 		return $this->_flatten($this->elements, $childs);
 	}
@@ -131,7 +137,8 @@ class Sitemap implements \RecursiveIterator
 	 */
 	public function breadcrumbs()
 	{
-		if (isset($this->elements[0])) {
+		if (isset($this->elements[0]))
+		{
 			return array_reverse($this->_breadcrumbs($this->elements[0]));
 		}
 
@@ -146,20 +153,25 @@ class Sitemap implements \RecursiveIterator
 	 * @param bool $emptyValue
 	 * @return array
 	 */
-	public function selectChoices($titleKey = 'title', $level = TRUE, $emptyValue = FALSE)
+	public function selectChoices($titleKey = 'title', $level = true, $emptyValue = false)
 	{
 		$array = $this->flatten();
 
 		$options = [];
 
-		if ($emptyValue !== FALSE) {
+		if ($emptyValue !== false)
+		{
 			$options[] = $emptyValue;
 		}
 
-		foreach ($array as $row) {
-			if ($level === TRUE) {
+		foreach ($array as $row)
+		{
+			if ($level === true)
+			{
 				$levelString = str_repeat('- ', array_get($row, 'level', 0) * 2);
-			} else {
+			}
+			else
+			{
 				$levelString = '';
 			}
 
@@ -178,15 +190,19 @@ class Sitemap implements \RecursiveIterator
 	protected function _find($array, $key, $value)
 	{
 		$found = [];
-		foreach ($array as $row) {
-			if ($row[$key] == $value) {
+		foreach ($array as $row)
+		{
+			if ($row[$key] == $value)
+			{
 				return [$row];
 			}
 
-			if (!empty($row['childs'])) {
+			if (!empty($row['childs']))
+			{
 				$found = $this->_find($row['childs'], $key, $value);
 
-				if (!empty($found)) {
+				if (!empty($found))
+				{
 					return $found;
 				}
 			}
@@ -204,7 +220,8 @@ class Sitemap implements \RecursiveIterator
 	{
 		$crumbs[] = $data;
 
-		if (!empty($data['parent'])) {
+		if (!empty($data['parent']))
+		{
 			$this->_breadcrumbs($data['parent'], $crumbs);
 		}
 
@@ -214,25 +231,30 @@ class Sitemap implements \RecursiveIterator
 	/**
 	 * @param array $array
 	 * @param array $ids
-	 * @param boolean $remove_childs
+	 * @param boolean $removeChilds
 	 * @return array
 	 */
-	protected function _exclude(&$array, array $ids, $remove_childs = TRUE)
+	protected function _exclude(&$array, array $ids, $removeChilds = true)
 	{
-		foreach ($array as $i => & $row) {
-			if (in_array($row['id'], $ids)) {
+		foreach ($array as $i => & $row)
+		{
+			if (in_array($row['id'], $ids))
+			{
 				unset($array[$i]);
 
-				if ($remove_childs !== TRUE AND !empty($row['childs'])) {
-					foreach ($row['childs'] as $child) {
+				if ($removeChilds !== true AND !empty($row['childs']))
+				{
+					foreach ($row['childs'] as $child)
+					{
 						$array[] = $child;
 					}
 				}
 			}
 
-			if (!empty($row['childs'])) {
+			if (!empty($row['childs']))
+			{
 				$childs = $row['childs'];
-				$this->_exclude($childs, $ids, $remove_childs);
+				$this->_exclude($childs, $ids, $removeChilds);
 				$row['childs'] = $childs;
 				unset($childs);
 			}
@@ -242,33 +264,35 @@ class Sitemap implements \RecursiveIterator
 	}
 
 	/**
-	 *
 	 * @param array $array
 	 * @param string $key
 	 * @param mixed $value
 	 */
 	protected function _filter(& $array, $key, $value)
 	{
-		foreach ($array as $i => $row) {
-			if (isset($row[$key]) AND $row[$key] == $value) {
+		foreach ($array as $i => $row)
+		{
+			if (isset($row[$key]) AND $row[$key] == $value)
+			{
 				unset($array[$i]);
 			}
 		}
 	}
 
 	/**
-	 *
 	 * @param array $array
 	 * @param boolean $childs
 	 * @param array $return
 	 * @return array
 	 */
-	protected function _flatten(array $array, $childs = TRUE, & $return = [])
+	protected function _flatten(array $array, $childs = true, & $return = [])
 	{
-		foreach ($array as $row) {
+		foreach ($array as $row)
+		{
 			$return[$row['id']] = $row;
 
-			if ($childs !== FALSE AND !empty($row['childs'])) {
+			if ($childs !== false AND !empty($row['childs']))
+			{
 				$this->_flatten($row['childs'], $childs, $return);
 			}
 

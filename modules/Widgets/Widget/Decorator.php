@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Widgets\Widget;
 
-use KodiCMS\CMS\Traits\Settings;
 use Illuminate\Support\Collection;
+use KodiCMS\Support\Traits\Settings;
 use KodiCMS\Widgets\Manager\WidgetManager;
 use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 

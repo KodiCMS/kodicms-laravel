@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\CMS\Traits;
+<?php namespace KodiCMS\Support\Traits;
 
 trait Settings {
 

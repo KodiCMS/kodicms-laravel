@@ -1,12 +1,12 @@
 <?php namespace KodiCMS\CMS\Loader;
 
+use CMS;
 use Cache;
 use Carbon\Carbon;
-use CMS;
+use Illuminate\Routing\Router;
+use KodiCMS\Support\Helpers\File;
 use Illuminate\Support\Facades\App;
 use KodiCMS\CMS\Contracts\ModuleContainerInterface;
-use KodiCMS\CMS\Helpers\File;
-use Illuminate\Routing\Router;
 
 class ModuleContainer implements ModuleContainerInterface
 {

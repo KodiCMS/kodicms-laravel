@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\CMS\Helpers;
+<?php namespace KodiCMS\Support\Helpers;
 
 
 /**

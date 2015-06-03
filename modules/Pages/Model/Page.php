@@ -2,7 +2,7 @@
 
 use DB;
 use UI;
-use KodiCMS\CMS\Helpers\URL;
+use KodiCMS\Support\Helpers\URL;
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Pages\Contracts\BehaviorPageInterface;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;

@@ -1,7 +1,7 @@
-<?php namespace KodiCMS\CMS\Helpers;
+<?php namespace KodiCMS\Support\Helpers;
 
-use Carbon\Carbon;
 use DateTimeZone;
+use Carbon\Carbon;
 
 /**
  * Class Date

@@ -3,6 +3,22 @@
 class HtmlBuilder extends \Illuminate\Html\HtmlBuilder {
 
 	/**
+	 * Build a single attribute element.
+	 *
+	 * @param  string  $key
+	 * @param  string  $value
+	 * @return string
+	 */
+	protected function attributeElement($key, $value)
+	{
+		if (is_numeric($key)) $key = $value;
+
+		if (is_array($value)) $value = implode(' ', $value);
+
+		if ( ! is_null($value)) return $key.'="'.e($value).'"';
+	}
+
+	/**
 	 * Generate a HTML link.
 	 *
 	 * @param  string  $url

@@ -1,10 +1,9 @@
-<?php namespace KodiCMS\CMS\Helpers;
+<?php namespace KodiCMS\Support\Helpers;
 
 use ReflectionMethod;
 
 /**
  * Class Callback
- * TODO: убрать статику. Greabock 20.05.2015
  *
  * @package KodiCMS\CMS\Helpers
  */
@@ -31,11 +30,11 @@ class Callback
 		}
 		elseif (strpos($callback, '::') === false)
 		{
-			return static::invoke_function($callback, $params);
+			return static::invokeFunction($callback, $params);
 		}
 		else
 		{
-			return static::invoke_static_class($callback, $params);
+			return static::invokeStaticClass($callback, $params);
 		}
 	}
 
@@ -45,7 +44,7 @@ class Callback
 	 * @param array $params
 	 * @return mixed
 	 */
-	public static function invoke_static_class($callback, array $params = null)
+	public static function invokeStaticClass($callback, array $params = null)
 	{
 		// Split the class and method of the rule
 		list($class, $method) = explode('::', $callback, 2);
@@ -69,7 +68,7 @@ class Callback
 	 * @param array $params
 	 * @return mixed
 	 */
-	public static function invoke_function($callback, array $params = null)
+	public static function invokeFunction($callback, array $params = null)
 	{
 		$class = new ReflectionFunction($callback);
 

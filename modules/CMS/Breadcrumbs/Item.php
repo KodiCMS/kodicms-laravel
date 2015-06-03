@@ -1,11 +1,10 @@
 <?php namespace KodiCMS\CMS\Breadcrumbs;
 
+use KodiCMS\Support\Traits\Accessor;
 use KodiCMS\API\Exceptions\Exception;
-use KodiCMS\CMS\Traits\Accessor;
 
 /**
  * Class Item
- * TODO: убрать... хотя нет, тут нормально... Greabock 20.05.2015
  *
  * @package KodiCMS\CMS\Breadcrumbs
  */

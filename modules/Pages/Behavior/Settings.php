@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Pages\Behavior;
 
 use KodiCMS\Pages\Contracts\BehaviorInterface;
-use KodiCMS\CMS\Traits\Settings as SettingsTrait;
+use KodiCMS\Support\Traits\Settings as SettingsTrait;
 use KodiCMS\Pages\Contracts\BehaviorSettingsInterface;
 
 class Settings implements BehaviorSettingsInterface

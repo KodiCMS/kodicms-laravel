@@ -1,17 +1,17 @@
 <?php namespace KodiCMS\CMS\Model;
 
-use Carbon\Carbon;
-use KodiCMS\CMS\Exceptions\Exception;
-use KodiCMS\CMS\Exceptions\FileModelException;
-use KodiCMS\CMS\Exceptions\FileValidationException;
-use KodiCMS\CMS\Helpers\File as FileSystem;
-use KodiCMS\CMS\Helpers\Text;
+use View;
+use Date;
+use Validator;
 use SplFileInfo;
+use Carbon\Carbon;
 use SplFileObject;
 use SplTempFileObject;
-use Validator;
-use Date;
-use View;
+use KodiCMS\Support\Helpers\Text;
+use KodiCMS\CMS\Exceptions\Exception;
+use KodiCMS\CMS\Exceptions\FileModelException;
+use KodiCMS\Support\Helpers\File as FileSystem;
+use KodiCMS\CMS\Exceptions\FileValidationException;
 
 class File
 {

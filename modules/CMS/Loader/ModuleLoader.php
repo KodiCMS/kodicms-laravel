@@ -1,10 +1,10 @@
 <?php namespace KodiCMS\CMS\Loader;
 
 use Carbon\Carbon;
+use KodiCMS\Support\Helpers\File;
 use Illuminate\Support\Facades\Cache;
-use KodiCMS\CMS\Contracts\ModuleContainerInterface;
 use KodiCMS\CMS\Exceptions\ModuleLoaderException;
-use KodiCMS\CMS\Helpers\File;
+use KodiCMS\CMS\Contracts\ModuleContainerInterface;
 
 class ModuleLoader
 {

@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\CMS\Http\Controllers;
 
 use Date;
-use KodiCMS\CMS\Helpers\Locale;
 use WYSIWYG;
+use KodiCMS\Support\Helpers\Locale;
 
 class SystemController extends System\BackendController {
 

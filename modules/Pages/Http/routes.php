@@ -1,6 +1,6 @@
 <?php
 
-use KodiCMS\CMS\Helpers\URL;
+use KodiCMS\Support\Helpers\URL;
 
 Route::group(['prefix' => CMS::backendPath()], function ()
 {

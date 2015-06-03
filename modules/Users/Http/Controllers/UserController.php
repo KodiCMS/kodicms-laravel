@@ -1,11 +1,11 @@
 <?php namespace KodiCMS\Users\Http\Controllers;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use KodiCMS\CMS\Helpers\Locale;
-use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use KodiCMS\Users\Model\User;
+use KodiCMS\Support\Helpers\Locale;
 use KodiCMS\Users\Services\UserCreator;
 use KodiCMS\Users\Services\UserUpdator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class UserController extends BackendController
 {

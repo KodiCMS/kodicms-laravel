@@ -1,19 +1,13 @@
 <?php namespace KodiCMS\Pages\Http\Controllers\API;
 
-use KodiCMS\API\Http\Controllers\System\Controller as APIController;
-use KodiCMS\Pages\Model\FrontendPage;
 use KodiCMS\Pages\Model\Page;
-use KodiCMS\Pages\Model\PageSitemap;
 use KodiCMS\Users\Model\UserMeta;
-use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
+use KodiCMS\Pages\Model\PageSitemap;
+use KodiCMS\Pages\Model\FrontendPage;
+use KodiCMS\API\Http\Controllers\System\Controller as APIController;
 
 class PageController extends APIController
 {
-	/**
-	 * @var bool
-	 */
-	public $authRequired = true;
-
 	public function getChildren()
 	{
 		$this->setContent($this->_children((int)$this->getRequiredParameter('parent_id'), (int)$this->getParameter('level')));

@@ -1,9 +1,8 @@
 <?php namespace KodiCMS\CMS\Model;
 
 use Iterator;
-use KodiCMS\CMS\Exceptions\FileValidationException;
-use KodiCMS\CMS\Helpers\File as FileSystem;
 use SplFileInfo;
+use KodiCMS\Support\Helpers\File as FileSystem;
 
 class FileCollection implements Iterator
 {
