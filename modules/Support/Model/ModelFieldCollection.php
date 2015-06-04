@@ -1,8 +1,9 @@
 <?php namespace KodiCMS\Support\Model;
 
 use Illuminate\Database\Eloquent\Model;
-use KodiCMS\Support\Model\Contracts\ModelFieldCollectionInterface;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use KodiCMS\Support\Model\Contracts\ModelFieldInterface;
+use KodiCMS\Support\Model\Contracts\ModelFieldCollectionInterface;
 
 class ModelFieldCollection implements \Iterator
 {
@@ -67,9 +68,18 @@ class ModelFieldCollection implements \Iterator
 			return null;
 		}
 
-		if (!is_null($related) and method_exists($field, 'getRelatedModel') and (($model = $field->getRelatedModel()) instanceof Model))
+		if (!is_null($related) and method_exists($field, 'getRelatedModel'))
 		{
-			return $model->getField($related);
+			$relationship = $field->getRelatedModel();
+
+			if($relationship instanceof Model)
+			{
+				return $relationship->getField($related);
+			}
+			else if($relationship instanceof Relation)
+			{
+				return $relationship->getResults()->getField($related);
+			}
 		}
 
 		return $field;

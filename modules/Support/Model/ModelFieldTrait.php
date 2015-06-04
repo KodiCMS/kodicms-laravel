@@ -9,14 +9,33 @@ trait ModelFieldTrait
 	 */
 	protected $fieldCollection = null;
 
+	/**
+	 * @param string $name
+	 * @param array $attributes
+	 * @return string
+	 */
 	public function renderFormField($name, array $attributes = [])
 	{
 		if (!is_null($field = $this->getField($name)))
 		{
-			return $field->renderFormField($attributes);
+			return $field->render($attributes);
 		}
 
-		return (new TextField($name))->setModel($this)->renderFormField($attributes);
+		return (new TextField($name))->setModel($this)->render($attributes);
+	}
+
+	/**
+	 * @param string $name
+	 * @param array $attributes
+	 * @param string|null $title
+	 * @return string
+	 */
+	public function renderFormLabel($name, array $attributes = [], $title = null)
+	{
+		if (!is_null($field = $this->getField($name)))
+		{
+			return $field->getLabel()->render($attributes, $title);
+		}
 	}
 
 	/**

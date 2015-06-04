@@ -6,11 +6,11 @@ abstract class KodiCMSField extends ModelField
 {
 	protected function boot()
 	{
-		$this->getFieldAttributes()->setAttributes([
+		$this->setAttributes([
 			'class' => ['form-control']
 		]);
 
-		$this->getLabelAttributes()->setAttributes([
+		$this->getLabel()->setAttributes([
 			'class' => ['control-label', 'col-md-3']
 		]);
 	}

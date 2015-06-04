@@ -1,22 +1,11 @@
-<?php namespace KodiCMS\Support\Model;
+<?php namespace KodiCMS\Support\Traits;
 
-class ModelFieldAttributes
+trait HtmlAttributes
 {
 	/**
 	 * @var array
 	 */
 	private $attributes = [];
-
-	/**
-	 * @param array|null $attributes
-	 */
-	public function __construct(array $attributes = null)
-	{
-		if (!is_null($attributes))
-		{
-			$this->setAttributes($attributes);
-		}
-	}
 
 	/**
 	 * @return array

@@ -27,7 +27,19 @@ interface ModelFieldInterface {
 	/**
 	 * @return string
 	 */
-	public function getName();
+	public function getTitle();
+
+	/**
+	 * @param sreing|null $prefix
+	 * @return string
+	 */
+	public function getName($prefix = null);
+
+	/**
+	 * @param array $attributes
+	 * @return $this
+	 */
+	public function getLabel(array $attributes = null);
 
 	/**
 	 * @param string $prefix
@@ -40,31 +52,8 @@ interface ModelFieldInterface {
 	public function setModel(Model $model);
 
 	/**
-	 * @param string $key
-	 * @param string|array $attribute
-	 */
-	public function setAttribute($key, $attribute);
-
-	/**
-	 * @param array $attributes
-	 */
-	public function setAttributes(array $attributes);
-
-	/**
-	 * @return array
-	 */
-	public function getAttributes();
-
-	/**
 	 * @param array $attributes
 	 * @return string
 	 */
-	public function renderFormField(array $attributes = []);
-
-	/**
-	 * @param array $attributes
-	 * @param null|string $title
-	 * @return string
-	 */
-	public function renderFormLabel(array $attributes = [], $title = null);
+	public function render(array $attributes = []);
 }

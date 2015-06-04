@@ -4,11 +4,12 @@ use Form;
 use KodiCMS\Support\Traits\Settings;
 use KodiCMS\Support\Helpers\Callback;
 use Illuminate\Database\Eloquent\Model;
+use KodiCMS\Support\Traits\HtmlAttributes;
 use KodiCMS\Support\Model\Contracts\ModelFieldInterface;
 
 abstract class ModelField implements ModelFieldInterface
 {
-	use Settings;
+	use Settings, HtmlAttributes;
 
 	/**
 	 * @var int
@@ -56,14 +57,9 @@ abstract class ModelField implements ModelFieldInterface
 	protected $settings = [];
 
 	/**
-	 * @var ModelFieldAttributes
+	 * @var ModelFieldLabel
 	 */
-	protected $fieldAttributes;
-
-	/**
-	 * @var ModelFieldAttributes
-	 */
-	protected $labelAttributes;
+	protected $label;
 
 	/**
 	 * @param string $key
@@ -74,15 +70,20 @@ abstract class ModelField implements ModelFieldInterface
 	{
 		$this->key = $key;
 		$this->modelKey = $key;
-		$this->title = ucwords(str_replace(['_'], ' ', $key));
 
 		if (!is_null($settings))
 		{
 			$this->setSettings($settings);
 		}
 
-		$this->fieldAttributes = new ModelFieldAttributes($attributes);
-		$this->labelAttributes = new ModelFieldAttributes;
+		$this->title = ucwords(str_replace(['_'], ' ', $key));
+
+		if (!is_null($attributes))
+		{
+			$this->setAttributes($attributes);
+		}
+
+		$this->label = new ModelFieldLabel($this);
 
 		$this->boot();
 	}
@@ -92,7 +93,7 @@ abstract class ModelField implements ModelFieldInterface
 	 */
 	public function getId()
 	{
-		return $this->getFieldAttributes()->getAttribute('id', $this->model->getTable() . '_' . $this->getKey());
+		return $this->getAttribute('id', $this->model->getTable() . '_' . $this->getKey());
 	}
 
 	/**
@@ -171,6 +172,21 @@ abstract class ModelField implements ModelFieldInterface
 	}
 
 	/**
+	 * @param array $attributes
+	 * @return $this
+	 */
+	public function getLabel(array $attributes = null)
+	{
+		if (!is_null($attributes))
+		{
+			$this->label->setAttributes($attributes);
+		}
+
+		return $this->label;
+	}
+
+	/**
+	 * @param sreing|null $prefix
 	 * @return string
 	 */
 	public function getName($prefix = null)
@@ -181,22 +197,6 @@ abstract class ModelField implements ModelFieldInterface
 		}
 
 		return empty($this->prefix) ? $this->getKey() : $this->prefix . '[' . $this->getKey() . ']';
-	}
-
-	/**
-	 * @return ModelFieldAttributes
-	 */
-	public function getFieldAttributes()
-	{
-		return $this->fieldAttributes;
-	}
-
-	/**
-	 * @return ModelFieldAttributes
-	 */
-	public function getLabelAttributes()
-	{
-		return $this->labelAttributes;
 	}
 
 	/**
@@ -254,77 +254,25 @@ abstract class ModelField implements ModelFieldInterface
 		return $this;
 	}
 
-
-	/**
-	 * @param string $key
-	 * @param array|string $attribute
-	 * @return $this
-	 */
-	public function setAttribute($key, $attribute)
-	{
-		$this->getFieldAttributes()->setAttribute($key, $attribute);
-
-		return $this;
-	}
-
-	/**
-	 * @param array $attributes
-	 * @return $this
-	 */
-	public function setAttributes(array $attributes)
-	{
-		$this->getFieldAttributes()->setAttributes($attributes);
-
-		return $this;
-	}
-
-	/**
-	 * @param array $attributes
-	 * @return $this
-	 */
-	public function setLabelAttributes(array $attributes)
-	{
-		$this->getLabelAttributes()->setAttributes($attributes);
-
-		return $this;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getAttributes()
-	{
-		return $this->getFieldAttributes()->getAttributes();
-	}
-
-	/**
-	 * @param array $attributes
-	 * @param null|string $title
-	 * @return string
-	 */
-	public function renderFormLabel(array $attributes = [], $title = null)
-	{
-		$this->getLabelAttributes()->setAttributes($attributes);
-
-		if (is_null($title))
-		{
-			$title = $this->getTitle();
-		}
-
-		return $this->getFormFieldLabel($this->getId(), $title, $this->getLabelAttributes()->getAttributes());
-	}
-
 	/**
 	 * @param array $attributes
 	 * @return string
 	 */
-	public function renderFormField(array $attributes = [])
+	public function render(array $attributes = [])
 	{
 		$this->beforeRender();
 
-		$this->getFieldAttributes()->setAttributes($attributes);
+		$this->setAttributes($attributes);
 
 		return $this->getFormFieldHTML($this->getName(), $this->getValue(), $this->getAttributes());
+	}
+
+	/**
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return (string) $this->render();
 	}
 
 	protected function boot()
@@ -344,15 +292,4 @@ abstract class ModelField implements ModelFieldInterface
 	 * @return mixed
 	 */
 	abstract protected function getFormFieldHTML($name, $value, array $attributes);
-
-	/**
-	 * @param $id
-	 * @param $title
-	 * @param array $attributes
-	 * @return mixed
-	 */
-	protected function getFormFieldLabel($id, $title, array $attributes)
-	{
-		return Form::label($id, $title, $attributes);
-	}
 }
