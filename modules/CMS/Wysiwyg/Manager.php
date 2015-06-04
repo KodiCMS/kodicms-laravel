@@ -2,7 +2,6 @@
 
 use Assets;
 use ReflectionClass;
-use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use KodiCMS\CMS\Contracts\WysiwygFilterInterface;
 
