@@ -9,31 +9,39 @@ class Filter implements ArrayAccess
 	/**
 	 * Creates a new Filter instance.
 	 *
-	 * @param   array $array array to use for filter
+	 * @param array $array array to filter
+	 * @param array|null $rules rules [field => [...], rules, [...]]
 	 * @return  Filter
 	 */
-	public static function make(array $array, array $rules)
+	public static function make(array $array, array $rules = null)
 	{
 		return new static($array, $rules);
 	}
 
-	// Array to filter
-	protected $data = [];
+	/**
+	 * Array to filter
+	 *
+	 * @var array
+	 */
+	protected $filterArray = [];
 
-	// Field rules
+	/**
+	 * Field rules
+	 *
+	 * @var array
+	 */
 	protected $rules = [];
 
 	/**
 	 * Sets the unique "any field" key and creates an ArrayObject from the
 	 * passed array.
 	 *
-	 * @param   array $array array to filter
-	 * @param array $rules rules [field => array(..., rules, ...)]
-	 * @return  void
+	 * @param array $array array to filter
+	 * @param array|null $rules rules [field => [...], rules, [...]]
 	 */
 	public function __construct(array $array, array $rules = null)
 	{
-		$this->data = $array;
+		$this->filterArray = $array;
 
 		if (!empty($rules))
 		{
@@ -49,9 +57,9 @@ class Filter implements ArrayAccess
 	 *
 	 * @return  array
 	 */
-	public function getData()
+	public function getArray()
 	{
-		return $this->data;
+		return $this->filterArray;
 	}
 
 	/**
@@ -93,7 +101,7 @@ class Filter implements ArrayAccess
 	/**
 	 * Filters a values
 	 */
-	public function run()
+	public function filter()
 	{
 		$rules = $this->rules;
 
@@ -110,12 +118,12 @@ class Filter implements ArrayAccess
 			}
 			elseif (!$this->offsetExists($field) AND !empty($data['default']))
 			{
-				array_set($this->data, $field, $data['default']);
+				array_set($this->filterArray, $field, $data['default']);
 				continue;
 			}
 
 			$value = $this->filterFieldValue($field, $value, $data['rules']);
-			array_set($this->data, $field, $value);
+			array_set($this->filterArray, $field, $value);
 		}
 
 		return $this;
@@ -171,7 +179,7 @@ class Filter implements ArrayAccess
 	 */
 	public function offsetSet($offset, $value)
 	{
-		array_set($this->data, $offset, $value);
+		array_set($this->filterArray, $offset, $value);
 	}
 
 	/**
@@ -183,7 +191,7 @@ class Filter implements ArrayAccess
 	 */
 	public function offsetExists($offset)
 	{
-		return array_get($this->data, $offset, '!isset') != '!isset';
+		return array_get($this->filterArray, $offset, '!isset') != '!isset';
 	}
 
 	/**
@@ -208,6 +216,6 @@ class Filter implements ArrayAccess
 	 */
 	public function offsetGet($offset)
 	{
-		return array_get($this->data, $offset);
+		return array_get($this->filterArray, $offset);
 	}
 }
