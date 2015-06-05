@@ -236,19 +236,28 @@ CMS.controllers.add(['page.get.create', 'page.get.edit'], function() {
 		});
 	});
 
-	$('input[name="is_redirect"]').on('change', function() {
+	var $redirectCheckbox = $('input[name="is_redirect"]');
+
+	$redirectCheckbox.on('change', function() {
 		show_redirect_field($(this))
 	});
 
-	show_redirect_field($('input[name="is_redirect"]'));
+	$('#redirect-container').on('click', function (e) {
+		if(!$(e.target).is(':input, label') && !$redirectCheckbox.is(':checked'))
+			$redirectCheckbox.trigger('click')
+	});
+
+	show_redirect_field($redirectCheckbox);
 	function show_redirect_field(input) {
 		var cont = $('#redirect-to-container'),
 			meta_cont = $('#page-meta-panel-li');
 
 		if (input.is(':checked')) {
+			input.closest('.form-group').removeClass('no-margin-b');
 			cont.show();
 			meta_cont.hide();
 		} else {
+			input.closest('.form-group').addClass('no-margin-b');
 			cont.hide();
 			meta_cont.show();
 		}

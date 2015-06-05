@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Support\Model;
 
+use KodiCMS\Support\Model\Fields\CheckboxField;
 use KodiCMS\Support\Model\Fields\TextField;
 
 trait ModelFieldTrait
@@ -14,14 +15,29 @@ trait ModelFieldTrait
 	 * @param array $attributes
 	 * @return string
 	 */
-	public function renderFormField($name, array $attributes = [])
+	public function renderField($name, array $attributes = [])
 	{
-		if (!is_null($field = $this->getField($name)))
+		if (is_null($field = $this->getField($name)))
 		{
-			return $field->render($attributes);
+			$field = $this->makeFormField($name);
 		}
 
-		return (new TextField($name))->setModel($this)->render($attributes);
+		return $field->renderGroup($attributes);
+	}
+
+	/**
+	 * @param string $name
+	 * @param array $attributes
+	 * @return string
+	 */
+	public function renderFormField($name, array $attributes = [])
+	{
+		if (is_null($field = $this->getField($name)))
+		{
+			$field = $this->makeFormField($name);
+		}
+
+		return $field->render($attributes);
 	}
 
 	/**
@@ -34,7 +50,7 @@ trait ModelFieldTrait
 	{
 		if (!is_null($field = $this->getField($name)))
 		{
-			return $field->getLabel()->render($attributes, $title);
+			return $field->renderLabel($attributes, $title);
 		}
 	}
 
@@ -66,6 +82,43 @@ trait ModelFieldTrait
 		}
 
 		return $this->fieldCollection;
+	}
+
+	/**
+	 * @param string $key
+	 * @return string
+	 */
+	protected function makeFormField($key)
+	{
+		if ($this->hasCast($key))
+		{
+			$type = $this->getCastType($key);
+
+			switch($type)
+			{
+				case 'bool':
+				case 'boolean':
+					return (new CheckboxField($key))->setModel($this);
+				case 'object':
+					break;
+				case 'array':
+				case 'json':
+					break;
+
+				case 'collection':
+					break;
+				case 'int':
+				case 'integer':
+				case 'real':
+				case 'float':
+				case 'double':
+				case 'string':
+				default:
+					break;
+			}
+		}
+
+		return (new TextField($key))->setModel($this);
 	}
 
 	/**

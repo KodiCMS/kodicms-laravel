@@ -6,6 +6,16 @@ use KodiCMS\Support\Helpers\Callback;
 
 class SelectField extends KodiCMSField
 {
+	protected function boot()
+	{
+		parent::boot();
+
+		$this->getGroup()
+			->setSettings([
+				'fieldCol' => 'col-md-6'
+			]);
+	}
+
 	/**
 	 * @param string $key
 	 * @param mixed $value

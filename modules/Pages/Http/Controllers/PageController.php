@@ -50,14 +50,9 @@ class PageController extends BackendController
 
 		$updator = $page->updatedBy()->first();
 		$creator = $page->createdBy()->first();
-		$pagesMap = $page->getSitemap();
-
 		$page->setAppends(['layout']);
 
-		$behaviorList = BehaviorManager::formChoices();
-
-
-		$this->setContent('pages.edit', compact('page', 'updator', 'creator', 'pagesMap', 'behaviorList'));
+		$this->setContent('pages.edit', compact('page', 'updator', 'creator'));
 	}
 
 	public function postEdit(PageUpdator $page, $id)
@@ -84,9 +79,6 @@ class PageController extends BackendController
 			'published_at' => new Carbon
 		]);
 		$this->setTitle(trans('pages::core.title.pages.create'));
-
-		$pagesMap = $page->getSitemap();
-		$behaviorList = BehaviorManager::formChoices();
 		$this->includeModuleMediaFile('BehaviorController');
 
 		$this->setContent('pages.create', compact('page', 'pagesMap', 'behaviorList'));

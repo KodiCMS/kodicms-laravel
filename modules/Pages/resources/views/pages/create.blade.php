@@ -24,51 +24,15 @@
 </div>
 
 <div class="panel-heading">
-	<div class="form-group form-group-lg">
-		<label class="control-label col-md-2" for="title">@lang('pages::core.field.title')</label>
-		<div class="col-md-10">
-			{!! Form::text('title', NULL, [
-				'class' => 'form-control slug-generator', 'id' => 'title'
-			]) !!}
-		</div>
-	</div>
+	{!! $page->renderField('title') !!}
 
 	<hr class="panel-wide" />
-	<div class="form-group form-group-sm">
-		<label class="control-label col-md-2" for="slug">
-			@lang('pages::core.field.slug')
-		</label>
-		<div class="col-md-10">
-			{!! Form::text('slug', NULL, [
-				'class' => 'form-control slugify', 'id' => 'slug'
-			]) !!}
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-md-offset-2 col-md-10">
-			<div class="checkbox-inline">
-				{!! Form::checkbox('is_redirect', 1, NULL, [
-					'id' => 'is_redirect'
-				]) !!}
+	{!! $page->renderField('slug') !!}
 
-				<label for="is_redirect">
-					@lang('pages::core.field.is_redirect')
-				</label>
-			</div>
-		</div>
+	<div class="well well-sm no-margin-b" id="redirect-container">
+		{!! $page->renderField('is_redirect') !!}
+		{!! $page->renderField('redirect_url') !!}
 	</div>
-
-	<div class="form-group" id="redirect-to-container">
-		<label class="control-label col-md-2" for="redirect_url">
-			@lang('pages::core.field.redirect_url')
-		</label>
-		<div class="col-md-10">
-			{!! Form::text('redirect_url', NULL, [
-				'class' => 'form-control', 'id' => 'redirect_url'
-			]) !!}
-		</div>
-	</div>
-
 </div>
 <hr class="no-margin-vr" />
 <div class="tab-content no-padding-vr">
@@ -82,9 +46,7 @@
 
 	<div class="tab-pane fade" id="page-options-panel">
 		@include('pages::pages.partials.settings', [
-			'page' => $page,
-			'pagesMap' => $pagesMap,
-			'behaviorList' => $behaviorList
+			'page' => $page
 		])
 	</div>
 </div>

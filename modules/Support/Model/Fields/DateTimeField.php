@@ -9,5 +9,10 @@ class DateTimeField extends TextField
 		$this->setAttributes([
 			'class' => 'datetimepicker'
 		]);
+
+		$this->getGroup()
+			->setSettings([
+				'fieldCol' => 'col-md-3'
+			]);
 	}
 }
