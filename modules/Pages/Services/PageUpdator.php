@@ -42,6 +42,11 @@ class PageUpdator implements ModelUpdator
 	{
 		$page = Page::findOrFail($id);
 
+		if (!isset($data['is_redirect']))
+		{
+			$data['is_redirect'] = 0;
+		}
+
 		// TODO: фильтровать входные данные через модель
 		$page
 			->update(array_only($data, [
