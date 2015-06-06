@@ -7,7 +7,7 @@ Package::add('libraries')
 	->js("moment-{$locale}", resources_url() . "/libs/moment/js/{$locale}.js", 'libraries');
 
 Package::add('core')
-	->css('global', resources_url() . '/css/common.css')
+	->css('global', resources_url() . '/css/app.css')
 	->js(NULL, resources_url() . '/js/backend.js', 'libraries');
 
 Package::add('jquery')
