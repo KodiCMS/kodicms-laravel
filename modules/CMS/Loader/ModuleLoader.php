@@ -90,7 +90,7 @@ class ModuleLoader
 
 		if (is_null($moduleContainerClass))
 		{
-			$moduleContainerClass = '\\' . $namespace . '\\' . $moduleName . '\\ModuleContainer';
+			$moduleContainerClass = '\\' . $namespace . '\\ModuleContainer';
 		}
 
 		$defaultModuleClass  = '\\KodiCMS\\CMS\\Loader\\' . $moduleName . 'ModuleContainer';
