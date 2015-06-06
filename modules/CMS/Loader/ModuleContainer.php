@@ -42,7 +42,7 @@ class ModuleContainer implements ModuleContainerInterface
 	 *
 	 * @var string
 	 */
-	protected $_controllerNamespacePrefix = 'Http\\Controllers';
+	protected $controllerNamespacePrefix = 'Http\\Controllers';
 
 	/**
 	 * @param string $moduleName
@@ -77,7 +77,7 @@ class ModuleContainer implements ModuleContainerInterface
 	 */
 	public function getNamespace()
 	{
-		return $this->namespace . '\\' . $this->getName();
+		return $this->namespace;
 	}
 
 	/**
@@ -85,7 +85,7 @@ class ModuleContainer implements ModuleContainerInterface
 	 */
 	public function getControllerNamespace()
 	{
-		return $this->getNamespace() . '\\' . $this->_controllerNamespacePrefix;
+		return $this->getNamespace() . '\\' . $this->controllerNamespacePrefix;
 	}
 
 	/**

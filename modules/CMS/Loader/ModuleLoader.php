@@ -30,15 +30,28 @@ class ModuleLoader
 	{
 		foreach ($modulesList as $moduleName => $modulePath)
 		{
-			if (is_numeric($moduleName))
+			$moduleNamespace = null;
+
+			if (is_array($modulePath))
+			{
+				$moduleNamespace = array_get($modulePath, 'namespace');
+				$modulePath = array_get($modulePath, 'path');
+			}
+			else if (is_numeric($moduleName))
 			{
 				$moduleName = $modulePath;
 				$modulePath = null;
 			}
-			$this->addModule($moduleName, $modulePath);
+
+			if (is_null($modulePath))
+			{
+				$modulePath = base_path('modules/' . $moduleName);
+			}
+
+			$this->addModule($moduleName, $modulePath, $moduleNamespace);
 		}
 
-		$this->addModule('App', base_path());
+		$this->addModule('App', base_path(), '');
 	}
 
 	/**
@@ -62,16 +75,31 @@ class ModuleLoader
 	 * @param string $moduleName
 	 * @param string|null $modulePath
 	 * @param string|null $namespace
+	 * @param string|null $moduleContainerClass
 	 * @return $this
 	 * @throws ModuleLoaderException
 	 */
-	public function addModule($moduleName, $modulePath = null, $namespace = null)
+	public function addModule($moduleName, $modulePath = null, $namespace = null, $moduleContainerClass = null)
 	{
-		$moduleContainerClass = '\\KodiCMS\\' . $moduleName . '\\ModuleContainer';
-		$moduleClass = '\\KodiCMS\\CMS\\Loader\\' . $moduleName . 'ModuleContainer';
+		if (is_null($namespace))
+		{
+			$namespace = 'KodiCMS\\' . $moduleName;
+		}
+
+		$namespace = trim($namespace, '\\');
+
+		if (is_null($moduleContainerClass))
+		{
+			$moduleContainerClass = '\\' . $namespace . '\\' . $moduleName . '\\ModuleContainer';
+		}
+
+		$defaultModuleClass  = '\\KodiCMS\\CMS\\Loader\\' . $moduleName . 'ModuleContainer';
+
 		if (!class_exists($moduleContainerClass))
 		{
-			$moduleContainerClass = class_exists($moduleClass) ? $moduleClass : '\\KodiCMS\\CMS\\Loader\\ModuleContainer';
+			$moduleContainerClass = class_exists($defaultModuleClass)
+				? $defaultModuleClass
+				: '\\KodiCMS\\CMS\\Loader\\ModuleContainer';
 		}
 
 		$moduleContainer = new $moduleContainerClass($moduleName, $modulePath, $namespace);
@@ -81,7 +109,7 @@ class ModuleLoader
 			throw new ModuleLoaderException("Container module [{$moduleContainerClass}] must be implements of ModuleContainerInterface");
 		}
 
-		$this->registeredModules[] = $moduleContainer;
+		$this->registeredModules[$moduleName] = $moduleContainer;
 
 		return $this;
 	}
