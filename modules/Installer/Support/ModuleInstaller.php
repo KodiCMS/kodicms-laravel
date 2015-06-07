@@ -44,7 +44,8 @@ class ModuleInstaller {
 	protected function init()
 	{
 		$firstUp = !Schema::hasTable('migrations');
-		if ($firstUp) {
+		if ($firstUp)
+		{
 			$this->_repository->createRepository();
 			$this->output('Migration table created successfully.');
 		}
@@ -63,7 +64,8 @@ class ModuleInstaller {
 	{
 		$this->output('Starting process of migration...');
 
-		foreach ($this->_modules as $module) {
+		foreach ($this->_modules as $module)
+		{
 			$this->migrateModule($module);
 		}
 
@@ -81,8 +83,9 @@ class ModuleInstaller {
 		$this->_migrator->run($module->getPath(['database', 'migrations']));
 
 		$this->output($module->getName());
-		foreach ($this->_migrator->getNotes() as $note) {
-			$this->output(' - '.$note);
+		foreach ($this->_migrator->getNotes() as $note)
+		{
+			$this->output(' - ' . $note);
 		}
 
 		return $this;
@@ -95,26 +98,12 @@ class ModuleInstaller {
 	{
 		$this->output('Starting process of reseting...');
 
-		foreach ($this->_modules as $module) {
-			$this->resetModule($module);
+		foreach ($this->_modules as $module)
+		{
+			$this->addModuleToReset($module);
 		}
 
-		/*
-         * Rollback modules
-         */
-		while (true) {
-			$count = $this->_migrator->rollback();
-
-			foreach ($this->_migrator->getNotes() as $note) {
-				$this->output($note);
-			}
-
-			if ($count == 0) {
-				break;
-			}
-		}
-
-		return $this;
+		return $this->rollbackModules();
 	}
 
 	/**
@@ -123,10 +112,33 @@ class ModuleInstaller {
 	 * @param ModuleContainer $module
 	 * @return $this
 	 */
-	public function resetModule(ModuleContainer $module)
+	public function addModuleToReset(ModuleContainer $module)
 	{
 		$path = $module->getPath(['database', 'migrations']);
 		$this->_migrator->requireFiles($path, $this->_migrator->getMigrationFiles($path));
+
+		return $this;
+	}
+
+	/**
+	 * @return $this
+	 */
+	public function rollbackModules()
+	{
+		while (true)
+		{
+			$count = $this->_migrator->rollback();
+
+			foreach ($this->_migrator->getNotes() as $note)
+			{
+				$this->output($note);
+			}
+
+			if ($count == 0)
+			{
+				break;
+			}
+		}
 
 		return $this;
 	}

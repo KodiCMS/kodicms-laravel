@@ -32,6 +32,7 @@ return [
 	 */
 	'KodiCMS\Support\Html\HtmlServiceProvider',
 	'KodiCMS\CMS\Providers\ModuleServiceProvider',
+	'KodiCMS\Plugins\Providers\PluginServiceProvider',
 	'KodiCMS\CMS\Providers\RouteServiceProvider',
 	'KodiCMS\CMS\Providers\EventServiceProvider',
 	'KodiCMS\CMS\Providers\BusServiceProvider',

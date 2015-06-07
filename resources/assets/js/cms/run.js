@@ -10,6 +10,8 @@ $(function() {
 			lng: LOCALE,
 			fallbackLng: 'ru',
 			useLocalStorage: true,
+			interpolationPrefix: ':',
+			interpolationSuffix: '',
 			localStorageExpirationTime: 86400000, // in ms, default 1 week
 			resGetPath: '/cms/js/locale/__lng__.json'
 		}, runApplication);

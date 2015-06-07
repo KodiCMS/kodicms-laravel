@@ -63,21 +63,11 @@ class ModuleLoader
 	}
 
 	/**
-	 * @param string $name
-	 * @return ModuleContainerInterface|null
-	 */
-	public function getRegisteredModule($name)
-	{
-		return array_get($this->registeredModules, $name);
-	}
-
-	/**
 	 * @param string $moduleName
 	 * @param string|null $modulePath
 	 * @param string|null $namespace
 	 * @param string|null $moduleContainerClass
 	 * @return $this
-	 * @throws ModuleLoaderException
 	 */
 	public function addModule($moduleName, $modulePath = null, $namespace = null, $moduleContainerClass = null)
 	{
@@ -93,7 +83,7 @@ class ModuleLoader
 			$moduleContainerClass = '\\' . $namespace . '\\ModuleContainer';
 		}
 
-		$defaultModuleClass  = '\\KodiCMS\\CMS\\Loader\\' . $moduleName . 'ModuleContainer';
+		$defaultModuleClass = '\\KodiCMS\\CMS\\Loader\\' . $moduleName . 'ModuleContainer';
 
 		if (!class_exists($moduleContainerClass))
 		{
@@ -104,14 +94,17 @@ class ModuleLoader
 
 		$moduleContainer = new $moduleContainerClass($moduleName, $modulePath, $namespace);
 
-		if (!($moduleContainer instanceof ModuleContainerInterface))
-		{
-			throw new ModuleLoaderException("Container module [{$moduleContainerClass}] must be implements of ModuleContainerInterface");
-		}
-
-		$this->registeredModules[$moduleName] = $moduleContainer;
+		$this->registerModule($moduleContainer);
 
 		return $this;
+	}
+
+	/**
+	 * @param ModuleContainerInterface $module
+	 */
+	public function registerModule(ModuleContainerInterface $module)
+	{
+		$this->registeredModules[] = $module;
 	}
 
 	/**

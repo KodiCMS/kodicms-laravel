@@ -6,9 +6,11 @@ use Carbon\Carbon;
 use Illuminate\Routing\Router;
 use KodiCMS\Support\Helpers\File;
 use Illuminate\Support\Facades\App;
+use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Contracts\Support\Arrayable;
 use KodiCMS\CMS\Contracts\ModuleContainerInterface;
 
-class ModuleContainer implements ModuleContainerInterface
+class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 {
 	/**
 	 * @var string
@@ -53,7 +55,7 @@ class ModuleContainer implements ModuleContainerInterface
 	{
 		if (empty($modulePath))
 		{
-			$modulePath = base_path('modules/' . $moduleName);
+			$modulePath = $this->getDefaultModulePath($moduleName);
 		}
 
 		$this->path = File::normalizePath($modulePath);
@@ -62,6 +64,15 @@ class ModuleContainer implements ModuleContainerInterface
 		{
 			$this->namespace = $namespace;
 		}
+	}
+
+	/**
+	 * @param string $moduleName
+	 * @return string
+	 */
+	protected function getDefaultModulePath($moduleName)
+	{
+		return base_path('modules/' . $moduleName);
 	}
 
 	/**
@@ -242,12 +253,42 @@ class ModuleContainer implements ModuleContainerInterface
 	{
 		if (!is_dir($this->getViewsPath())) return [];
 
-		$namespace = strtolower($this->getName());
-
 		return [
-			$this->getViewsPath() => base_path("/resources/views/module/{$namespace}")
+			$this->getViewsPath() => $this->publishViewPath()
 		];
 	}
+
+	/**
+	 * Get the instance as an array.
+	 *
+	 * @return array
+	 */
+	public function toArray()
+	{
+		return [
+			'path' => $this->getPath(),
+			'publishPath' => $this->getPublishPath(),
+			'localePath' => $this->getLocalePath(),
+			'viewsPath' => $this->getViewsPath(),
+			'configPath' => $this->getConfigPath(),
+			'routesPath' => $this->getRoutesPath(),
+			'assetsPath' => $this->getAssetsPackagesPath(),
+			'namespace' => $this->getNamespace(),
+			'name' => $this->getName(),
+		];
+	}
+
+	/**
+	 * Convert the object to its JSON representation.
+	 *
+	 * @param  int  $options
+	 * @return string
+	 */
+	public function toJson($options = 0)
+	{
+		return json_encode($this->toArray(), $options);
+	}
+
 
 	/**
 	 * @param Router $router
@@ -280,12 +321,20 @@ class ModuleContainer implements ModuleContainerInterface
 	{
 		$namespace = strtolower($this->getName());
 
-		if (is_dir($appPath = base_path("/resources/views/module/{$namespace}")))
+		if (is_dir($appPath = $this->publishViewPath()))
 		{
 			app('view')->addNamespace($namespace, $appPath);
 		}
 
 		app('view')->addNamespace($namespace, $this->getViewsPath());
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function publishViewPath()
+	{
+		return base_path("/resources/views/modules/{$this->getName()}");
 	}
 
 	/**

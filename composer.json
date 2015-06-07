@@ -24,7 +24,8 @@
 		],
 		"psr-4": {
 			"App\\"	       : "app/",
-			"KodiCMS\\"    : "modules/"
+			"KodiCMS\\"    : "modules/",
+			"Plugins\\"     : "plugins/"
 		},
 		"files": [
 			"modules/Users/helpers.php",
