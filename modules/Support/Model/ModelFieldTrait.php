@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Support\Model;
 
-use KodiCMS\Support\Model\Fields\CheckboxField;
 use KodiCMS\Support\Model\Fields\TextField;
+use KodiCMS\Support\Model\Fields\CheckboxField;
 
 trait ModelFieldTrait
 {

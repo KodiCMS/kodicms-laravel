@@ -64,22 +64,16 @@ class UserController extends BackendController
 	public function getCreate(UserRepository $repository)
 	{
 		$user = $repository->instance();
-
 		$this->setTitle(trans('users::core.title.create'));
 		$this->templateScripts['USER'] = $user;
 
-		$availableLocales = Locale::getAvailable();
-		$rolesList = UserRole::lists('name', 'id');
-		$locales = $user->getAvailableLocales();
-
-		$this->setContent('users.create', compact('user', 'availableLocales', 'rolesList', 'locales'));
+		$this->setContent('users.create', compact('user'));
 	}
 
 	public function postCreate(UserRepository $repository)
 	{
 		$data = $this->request->all();
 		$repository->validateOnCreate($data);
-
 		$user = $repository->create($data);
 
 		return $this->smartRedirect([$user])
@@ -94,13 +88,7 @@ class UserController extends BackendController
 		]));
 		$this->templateScripts['USER'] = $user;
 
-		$availableLocales = Locale::getAvailable();
-
-		$rolesList = UserRole::lists('name', 'id');
-		$userRoles = $user->roles()->lists('id');
-		$locales = $user->getAvailableLocales();
-
-		$this->setContent('users.edit', compact('user', 'availableLocales', 'rolesList', 'userRoles', 'locales'));
+		$this->setContent('users.edit', compact('user'));
 	}
 
 	public function postEdit(UserRepository $repository, $id)

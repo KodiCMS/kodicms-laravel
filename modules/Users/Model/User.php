@@ -6,9 +6,11 @@ use KodiCMS\Support\Helpers\Locale;
 use KodiCMS\Users\Helpers\Gravatar;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use KodiCMS\Support\Model\ModelFieldTrait;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use KodiCMS\Users\Model\FieldCollections\UserFieldCollection;
 
 /**
  * Class User
@@ -16,7 +18,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
-	use Authenticatable, CanResetPassword;
+	use Authenticatable, CanResetPassword, ModelFieldTrait;
 
 	/**
 	 * @var array
@@ -63,6 +65,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 * @var array
 	 */
 	protected $permissions = [];
+
+	/**
+	 * @return array
+	 */
+	protected function fieldCollection()
+	{
+		return new UserFieldCollection;
+	}
 
 	/**
 	 * @param integer $date

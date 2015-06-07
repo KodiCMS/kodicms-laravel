@@ -5,6 +5,7 @@ use KodiCMS\Support\Traits\Settings;
 use KodiCMS\Support\Helpers\Callback;
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Support\Traits\HtmlAttributes;
+use Illuminate\Database\Eloquent\Collection;
 use KodiCMS\Support\Model\Contracts\ModelFieldInterface;
 
 abstract class ModelField implements ModelFieldInterface
@@ -60,6 +61,11 @@ abstract class ModelField implements ModelFieldInterface
 	 * @var array
 	 */
 	protected $settings = [];
+
+	/**
+	 * @var bool
+	 */
+	protected $hasInputGroups = false;
 
 	/**
 	 * @param string $key
@@ -191,6 +197,83 @@ abstract class ModelField implements ModelFieldInterface
 		}
 
 		return $this->group;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function hasAddInputGroup()
+	{
+		return $this->hasInputGroups;
+	}
+
+	/**
+	 * @param string $text
+	 * @return $this
+	 */
+	public function setSettingAppend($text)
+	{
+		$this->hasInputGroups = true;
+		$this->settings['append'] = $text;
+
+		return $this;
+	}
+
+	/**
+	 * @param string $text
+	 * @return $this
+	 */
+	public function setSettingPrepend($text)
+	{
+		$this->hasInputGroups = true;
+		$this->settings['prepend'] = $text;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSettingAppend()
+	{
+		return $this->addInputGroup(array_get($this->settings, 'append'));
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSettingPrepend()
+	{
+		return $this->addInputGroup(array_get($this->settings, 'prepend'));
+	}
+
+	/**
+	 * @param string $text
+	 * @return null|string
+	 */
+	public function addInputGroup($text)
+	{
+		if (empty($text))
+		{
+			return null;
+		}
+
+		$this->hasInputGroups = true;
+
+		return '<span class="input-group-addon">' . $text . '</span>';
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSettingHelpText()
+	{
+		if (empty($this->settings['helpText']))
+		{
+			return null;
+		}
+
+		return '<span class="help-block">' . $this->settings['helpText'] . '</span>';
 	}
 
 	/**
@@ -370,6 +453,10 @@ abstract class ModelField implements ModelFieldInterface
 		if ($value instanceof Model)
 		{
 			$value = $value->getAttribute($value->getKeyName());
+		}
+		else if ($value instanceof Collection)
+		{
+			$value = $value->lists('id');
 		}
 
 		return $value;
