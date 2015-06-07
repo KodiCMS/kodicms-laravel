@@ -36,11 +36,15 @@
 			<td class="description">
 				{{ $role->description }}
 			</td>
-			<td class="actions text-center">
+			<td class="actions text-right">
 				@if ($role->id > 2 AND acl_check('roles.delete'))
-				{!! link_to_route('backend.role.delete', '', [$role], [
-					'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
-				]) !!}
+				{!! Form::open(['route' => ['backend.role.delete', $role]]) !!}
+					{!! Form::button('', [
+						'type' => 'submit',
+						'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
+						])
+					!!}
+				{!! Form::close() !!}
 				@endif
 			</td>
 		</tr>

@@ -120,7 +120,7 @@ class WidgetController extends BackendController {
 			->with('success', trans('widgets::core.messages.updated', ['name' => $widget->name]));
 	}
 
-	public function getDelete($id)
+	public function postDelete($id)
 	{
 		$widget = $this->getWidget($id);
 		$widget->delete();

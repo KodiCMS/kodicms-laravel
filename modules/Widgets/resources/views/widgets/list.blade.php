@@ -95,9 +95,13 @@
 					]) !!}
 					@endif
 					@if (acl_check('widgets.delete'))
-					{!! link_to_route('backend.widget.delete', '', [$widget], [
-						'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
-					]) !!}
+					{!! Form::open(['route' => ['backend.widget.delete', $widget], 'style' => 'display: inline-block']) !!}
+						{!! Form::button('', [
+							'type' => 'submit',
+							'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
+							])
+						!!}
+					{!! Form::close() !!}
 					@endif
 				</td>
 				@endif

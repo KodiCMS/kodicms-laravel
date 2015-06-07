@@ -101,7 +101,7 @@ class EmailEventController extends BackendController
 	 * @return \Illuminate\Http\RedirectResponse
 	 * @throws \Exception
 	 */
-	public function getDelete(EmailEventRepository $repository, $id)
+	public function postDelete(EmailEventRepository $repository, $id)
 	{
 		$emailEvent = $this->getEmailType($repository, $id);
 		$emailEvent->delete();

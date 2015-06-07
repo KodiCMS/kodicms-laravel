@@ -6,7 +6,7 @@ Route::group(['prefix' => \CMS::backendPath()], function () {
 	Route::post('/cron/create', ['as' => 'backend.cron.create.post', 'uses' => 'CronController@postCreate']);
 	Route::get('/cron/{id}/edit', ['as' => 'backend.cron.edit', 'uses' => 'CronController@getEdit']);
 	Route::post('/cron/{id}/edit', ['as' => 'backend.cron.edit.post', 'uses' => 'CronController@postEdit']);
-	Route::get('/cron/{id}/delete', ['as' => 'backend.cron.delete', 'uses' => 'CronController@getDelete']);
+	Route::post('/cron/{id}/delete', ['as' => 'backend.cron.delete', 'uses' => 'CronController@postDelete']);
 
 	Route::get('/cron/{id}/run', ['as' => 'backend.cron.run', 'uses' => 'CronController@getRun']);
 });

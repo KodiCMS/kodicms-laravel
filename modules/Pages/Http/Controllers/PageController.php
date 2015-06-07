@@ -102,7 +102,7 @@ class PageController extends BackendController
 			->with('success', trans('pages::core.messages.created', ['title' => $page->title]));
 	}
 
-	public function getDelete($id)
+	public function postDelete($id)
 	{
 		$page = $this->getPage($id);
 		$page->delete();

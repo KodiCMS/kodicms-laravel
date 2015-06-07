@@ -84,7 +84,7 @@ class CronController extends BackendController
 			->with('success', trans('cron::core.messages.updated', ['title' => $job->name]));
 	}
 
-	public function getDelete($id)
+	public function postDelete($id)
 	{
 		$job = $this->getJob($id);
 		$job->delete();

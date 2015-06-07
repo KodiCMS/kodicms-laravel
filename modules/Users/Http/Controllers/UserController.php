@@ -131,7 +131,7 @@ class UserController extends BackendController
 			->with('success', trans('users::core.messages.user.updated', ['name' => $user->username]));
 	}
 
-	public function getDelete($id)
+	public function postDelete($id)
 	{
 		$user = $this->getUser($id);
 		$user->delete();

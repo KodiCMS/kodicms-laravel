@@ -54,9 +54,12 @@
 				</td>
 				<td class="actions text-right">
 					@if (acl_check('email.template.delete'))
-						{!! link_to_route('backend.email.template.delete', '', [$emailTemplate], [
+					{!! Form::open(['route' => ['backend.email.template.delete', $emailTemplate]]) !!}
+						{!! Form::button('', [
+							'type' => 'submit',
 							'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
 						]) !!}
+					{!! Form::close() !!}
 					@endif
 				</td>
 			</tr>

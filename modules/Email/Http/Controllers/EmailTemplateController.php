@@ -117,7 +117,7 @@ class EmailTemplateController extends BackendController
 	 * @return \Illuminate\Http\RedirectResponse
 	 * @throws \Exception
 	 */
-	public function getDelete(EmailTemplateRepository $repository, $id)
+	public function postDelete(EmailTemplateRepository $repository, $id)
 	{
 		$emailTemplate = $this->getEmailTemplate($repository, $id);
 		$emailTemplate->delete();

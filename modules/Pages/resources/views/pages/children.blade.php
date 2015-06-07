@@ -39,7 +39,6 @@
 				<?php echo $child->getStatus(); ?>
 			</div>
 			<div class="actions col-xs-1 text-right">
-				<div class="btn-group">
 					@if (acl_check('page.create'))
 					{!! link_to_route('backend.page.create', '', ['parent_id' => $child->id], [
 						'data-icon' => 'plus', 'class' => 'btn btn-default btn-xs'
@@ -47,11 +46,13 @@
 					@endif
 
 					@if (acl_check('page.delete'))
-					{!! link_to_route('backend.page.delete', '', ['id' => $child->id], [
-						'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-confirm btn-danger'
-					]) !!}
+					{!! Form::open(['route' => ['backend.page.delete', $child], 'style' => 'display: inline-block']) !!}
+						{!! Form::button('', [
+							'type' => 'submit',
+							'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
+							]) !!}
+					{!! Form::close() !!}
 					@endif
-				</div>
 			</div>
 
 			<div class="clearfix"></div>

@@ -4,7 +4,7 @@ Route::group(['prefix' => \CMS::backendPath()], function ()
 {
 	Route::get('user/{id}/edit', ['as' => 'backend.user.edit', 'uses' => 'UserController@getEdit'])->where('id', '[0-9]+');
 	Route::post('user/{id}/edit', ['as' => 'backend.user.edit.post', 'uses' => 'UserController@postEdit'])->where('id', '[0-9]+');
-	Route::get('user/{id}/delete', ['as' => 'backend.user.delete', 'uses' => 'UserController@getDelete'])->where('id', '[0-9]+');
+	Route::post('user/{id}/delete', ['as' => 'backend.user.delete', 'uses' => 'UserController@postDelete'])->where('id', '[0-9]+');
 	Route::get('user/{id}/profile', ['as' => 'backend.user.profile', 'uses' => 'UserController@getProfile'])->where('id', '[0-9]+');
 	Route::get('user/profile', ['as' => 'backend.user.current_profile', 'uses' => 'UserController@getProfile']);
 
@@ -16,7 +16,7 @@ Route::group(['prefix' => \CMS::backendPath()], function ()
 
 	Route::get('role/{id}/edit', ['as' => 'backend.role.edit', 'uses' => 'RoleController@getEdit'])->where('id', '[0-9]+');
 	Route::post('role/{id}/edit', ['as' => 'backend.role.edit.post', 'uses' => 'RoleController@postEdit'])->where('id', '[0-9]+');
-	Route::get('role/{id}/delete', ['as' => 'backend.role.delete', 'uses' => 'RoleController@getDelete'])->where('id', '[0-9]+');
+	Route::post('role/{id}/delete', ['as' => 'backend.role.delete', 'uses' => 'RoleController@postDelete'])->where('id', '[0-9]+');
 
 	Route::controller('role', 'RoleController', [
 		'getIndex' => 'backend.role.list',

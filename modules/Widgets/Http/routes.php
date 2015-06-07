@@ -8,7 +8,7 @@ Route::group(['prefix' => CMS::backendPath()], function ()
 		'postCreate' => 'backend.snippet.create.post',
 		'getEdit' => 'backend.snippet.edit',
 		'postEdit' => 'backend.snippet.edit.post',
-		'getDelete' => 'backend.snippet.delete',
+		'postDelete' => 'backend.snippet.delete',
 	]);
 
 	Route::controller('widget', 'WidgetController', [
@@ -20,7 +20,7 @@ Route::group(['prefix' => CMS::backendPath()], function ()
 		'postCreate' => 'backend.widget.create.post',
 		'getEdit' => 'backend.widget.edit',
 		'postEdit' => 'backend.widget.edit.post',
-		'getDelete' => 'backend.widget.delete',
+		'postDelete' => 'backend.widget.delete',
 		'getPopupList' => 'backend.widget.popup_list'
 	]);
 

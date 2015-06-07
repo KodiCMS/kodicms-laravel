@@ -37,9 +37,12 @@
 				</td>
 				<td class="actions text-right">
 					@if (acl_check('email.event.delete'))
-						{!! link_to_route('backend.email.event.delete', '', [$emailEvent], [
+					{!! Form::open(['route' => ['backend.email.event.delete', $emailEvent]]) !!}
+						{!! Form::button('', [
+							'type' => 'submit',
 							'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
 						]) !!}
+					{!! Form::close() !!}
 					@endif
 				</td>
 			</tr>

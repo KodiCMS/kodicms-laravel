@@ -110,7 +110,7 @@ abstract class AbstractFileController extends System\BackendController {
 			->with('success', trans("{$this->moduleNamespace}{$this->sectionPrefix}.messages.updated", ['name' => $file->getName()]));
 	}
 
-	public function getDelete($filename)
+	public function postDelete($filename)
 	{
 		$this->autoRender = FALSE;
 

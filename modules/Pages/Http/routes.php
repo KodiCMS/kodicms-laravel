@@ -15,7 +15,7 @@ Route::group(['prefix' => CMS::backendPath()], function ()
 		'postCreate' => 'backend.page.create.post',
 		'getEdit' => 'backend.page.edit',
 		'postEdit' => 'backend.page.edit.post',
-		'getDelete' => 'backend.page.delete',
+		'postDelete' => 'backend.page.delete',
 	]);
 
 	Route::controller('layouts', 'LayoutController', [
@@ -24,7 +24,7 @@ Route::group(['prefix' => CMS::backendPath()], function ()
 		'postCreate' => 'backend.layout.create.post',
 		'getEdit' => 'backend.layout.edit',
 		'postEdit' => 'backend.layout.edit.post',
-		'getDelete' => 'backend.layout.delete',
+		'postDelete' => 'backend.layout.delete',
 	]);
 });
 

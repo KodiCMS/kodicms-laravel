@@ -58,10 +58,13 @@
 			</td>
 			<td class="actions text-right">
 				@if (acl_check('snippet.delete'))
-					{!! link_to_route('backend.snippet.delete', '', [$snippet->getName()], [
-					'data-icon' => 'times fa-inverse',
-					'class' => 'btn btn-danger btn-xs btn-confirm'
-					]) !!}
+				{!! Form::open(['route' => ['backend.snippet.delete', $snippet->getName()]]) !!}
+					{!! Form::button('', [
+						'type' => 'submit',
+						'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
+						])
+					!!}
+				{!! Form::close() !!}
 				@endif
 			</td>
 		</tr>

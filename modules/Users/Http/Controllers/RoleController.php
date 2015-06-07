@@ -79,7 +79,7 @@ class RoleController extends BackendController
 			->with('success', trans('users::role.messages.updated', ['name' => $role->name]));
 	}
 
-	public function getDelete($id)
+	public function postDelete($id)
 	{
 		$role = $this->getRole($id);
 		$role->delete();
