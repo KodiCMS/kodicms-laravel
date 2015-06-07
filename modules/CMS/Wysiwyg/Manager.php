@@ -94,6 +94,22 @@ class Manager {
 	}
 
 	/**
+	 * @return string|null
+	 */
+	public function getDefaultHTMLEditor()
+	{
+		return $this->config['default_html_editor'];
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getDefaultCodeEditor()
+	{
+		return $this->config['default_code_editor'];
+	}
+
+	/**
 	 * @param string | null $type
 	 */
 	public function loadDefault($type = null)
@@ -140,7 +156,6 @@ class Manager {
 	 */
 	public function load($editorIds)
 	{
-
 		if (is_array($editorIds))
 		{
 			foreach ($editorIds as $editorId)
