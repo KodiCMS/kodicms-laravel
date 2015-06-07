@@ -3,12 +3,6 @@
 interface Widget {
 
 	/**
-	 * @param string $name
-	 * @param string $description
-	 */
-	public function __construct($name, $description = '');
-
-	/**
 	 * @return int
 	 */
 	public function getId();
