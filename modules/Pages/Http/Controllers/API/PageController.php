@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Pages\Http\Controllers\API;
 
 use KodiCMS\Pages\Model\Page;
+use KodiCMS\Pages\Repository\PageRepository;
 use KodiCMS\Users\Model\UserMeta;
 use KodiCMS\Pages\Model\PageSitemap;
 use KodiCMS\Pages\Model\FrontendPage;
@@ -8,25 +9,35 @@ use KodiCMS\API\Http\Controllers\System\Controller as APIController;
 
 class PageController extends APIController
 {
-	public function getChildren()
+	/**
+	 * @param PageRepository $repository
+	 */
+	public function getChildren(PageRepository $repository)
 	{
-		$this->setContent($this->_children((int)$this->getRequiredParameter('parent_id'), (int)$this->getParameter('level')));
+		$parentId = (int) $this->getRequiredParameter('parent_id');
+		$level = (int) $this->getParameter('level');
+
+		$this->setContent($this->_children($repository, $parentId, $level));
 	}
 
-	protected function _children($parentId, $level)
+	/**
+	 * @param PageRepository $repository
+	 * @param integer $parentId
+	 * @param integer $level
+	 * @return null|string
+	 */
+	protected function _children(PageRepository $repository, $parentId, $level)
 	{
 		$expandedRows = UserMeta::get('expanded_pages', []);
 
-		$page = Page::find($parentId);
+		$page = $repository->find($parentId);
 
 		if (is_null($page))
 		{
 			return null;
 		}
 
-		$query = Page::where('parent_id', $parentId)->orderBy('position', 'asc')->orderBy('created_at', 'asc');
-
-		$childrens = $query->get()->lists(null, 'id');
+		$childrens = $repository->getChildrenByPageId($parentId);
 
 		foreach ($childrens as $id => $child)
 		{
@@ -35,7 +46,7 @@ class PageController extends APIController
 
 			if ($childrens[$id]->isExpanded === true)
 			{
-				$childrens[$id]->childrenRows = $this->_children($child->id, $level + 1);
+				$childrens[$id]->childrenRows = $this->_children($repository, $child->id, $level + 1);
 			}
 		}
 
@@ -45,62 +56,54 @@ class PageController extends APIController
 		])->render();
 	}
 
-	public function getReorder()
+	/**
+	 * @param PageRepository $repository
+	 */
+	public function getReorder(PageRepository $repository)
 	{
-		$pages = PageSitemap::get(true)->asArray();
+		$pages = $repository->getSitemap(true)->asArray();
 
 		$this->setContent(view('pages::pages.reorder', [
 			'pages' => $pages
 		]));
 	}
 
-	public function postReorder()
+	/**
+	 * @param PageRepository $repository
+	 */
+	public function postReorder(PageRepository $repository)
 	{
 		$pages = $this->getRequiredParameter('pids', []);
 
 		if (empty($pages)) return;
 
-		$this->setContent((new Page)->reorder($pages));
+		$this->setContent($repository->reorder($pages));
 	}
 
-	public function postChangeStatus()
+	/**
+	 * @param PageRepository $repository
+	 */
+	public function postChangeStatus(PageRepository $repository)
 	{
-		$page_id = $this->getRequiredParameter('page_id');
+		$pageId = $this->getRequiredParameter('page_id');
 		$value = $this->getRequiredParameter('value');
 
-		$page = Page::find($page_id);
-		$page->update([
+		$page = $repository->update($pageId, [
 			'status' => $value
 		]);
 
 		$this->setContent($page->getStatus());
 	}
 
-	public function getSearch()
+	/**
+	 * @param PageRepository $repository
+	 */
+	public function getSearch(PageRepository $repository)
 	{
 		$query = trim($this->getRequiredParameter('search'));
 
-		$pages = new Page;
-
-		if (strlen($query) == 2 AND $query[0] == '.')
-		{
-			$page_status = [
-				'd' => FrontendPage::STATUS_DRAFT,
-				'p' => FrontendPage::STATUS_PUBLISHED,
-				'h' => FrontendPage::STATUS_HIDDEN
-			];
-
-			if (isset($page_status[$query[1]]))
-			{
-				$pages->whereIn('status', $page_status[$query[1]]);
-			}
-		} else
-		{
-			$pages = $pages->searchByKeyword($query);
-		}
-
+		$pages = $repository->searchByKeyword($query);
 		$childrens = [];
-		$pages = $pages->get();
 
 		foreach ($pages as $page)
 		{
@@ -110,7 +113,7 @@ class PageController extends APIController
 			$childrens[] = $page;
 		}
 
-		$this->setContent((string)view('pages::pages.children', [
+		$this->setContent(view('pages::pages.children', [
 			'childrens' => $childrens,
 			'level'     => 0
 		]));

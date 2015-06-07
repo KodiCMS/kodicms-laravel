@@ -87,6 +87,23 @@ class Page extends Model implements BehaviorPageInterface
 	public $childrenRows = NULL;
 
 	/**
+	 * @param array $attributes
+	 */
+	public function __construct(array $attributes = [])
+	{
+		parent::__construct($attributes);
+		$this->addObservableEvents(['reordering', 'reordered']);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getNotFoundMessage()
+	{
+		return trans('pages::core.messages.not_found');
+	}
+
+	/**
 	 * @return array
 	 */
 	protected function fieldCollection()
@@ -102,6 +119,9 @@ class Page extends Model implements BehaviorPageInterface
 		return ['breadcrumb', 'meta_title', 'meta_keywords', 'meta_description'];
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getRobotsList()
 	{
 		return [
@@ -110,15 +130,6 @@ class Page extends Model implements BehaviorPageInterface
 			'NOINDEX, FOLLOW' => 'NOINDEX, FOLLOW',
 			'NOINDEX, NOFOLLOW' => 'NOINDEX, NOFOLLOW'
 		];
-	}
-
-	/**
-	 * @param array $attributes
-	 */
-	public function __construct(array $attributes = [])
-	{
-		parent::__construct($attributes);
-		$this->addObservableEvents(['reordering', 'reordered']);
 	}
 
 	/**

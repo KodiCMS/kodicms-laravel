@@ -15,25 +15,31 @@ class EmailEventRepository extends BaseRepository
 
 	/**
 	 * @param array $data
-	 * @return \Illuminate\Validation\Validator
+	 * @return bool
+	 * @throws \KodiCMS\CMS\Exceptions\ValidationException
 	 */
-	public function validatorOnCreate(array $data = [])
+	public function validateOnCreate(array $data = [])
 	{
-		return $this->validator($data, [
+		$validator = $this->validator($data, [
 			'name' => 'required',
 			'code' => 'required',
 		]);
+
+		return $this->_validate($validator);
 	}
 
 	/**
 	 * @param array $data
-	 * @return \Illuminate\Validation\Validator
+	 * @return bool
+	 * @throws \KodiCMS\CMS\Exceptions\ValidationException
 	 */
-	public function validatorOnUpdate(array $data = [])
+	public function validateOnUpdate(array $data = [])
 	{
-		return $this->validator($data, [
+		$validator = $this->validator($data, [
 			'name' => 'required',
 		]);
+
+		return $this->_validate($validator);
 	}
 
 	/**

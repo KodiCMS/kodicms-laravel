@@ -1,38 +1,53 @@
 <?php namespace KodiCMS\Pages\Http\Controllers\API;
 
+use KodiCMS\Pages\Repository\PagePartRepository;
 use KodiCMS\API\Http\Controllers\System\Controller;
-use KodiCMS\Pages\Model\PagePart;
 
 class PagePartController extends Controller
 {
-	public function getByPageId()
+	/**
+	 * @param PagePartRepository $repository
+	 */
+	public function getByPageId(PagePartRepository $repository)
 	{
 		$pageId = $this->getRequiredParameter('pid');
-
-		$parts = PagePart::where('page_id', (int) $pageId)->get();
+		$parts = $repository->findByPageId($pageId);
 
 		$this->setContent($parts->toArray());
 	}
 
-	public function create()
+	/**
+	 * @param PagePartRepository $repository
+	 */
+	public function create(PagePartRepository $repository)
 	{
-		$part = PagePart::create($this->request->all());
+		$part = $repository->create($this->request->all());
 		$this->setContent($part->toArray());
 	}
 
-	public function update($id)
+	/**
+	 * @param PagePartRepository $repository
+	 * @param integer $id
+	 */
+	public function update(PagePartRepository $repository, $id)
 	{
-		$part = PagePart::findOrFail($id);
-		$part->update($this->request->all());
+		$part = $repository->update($id, $this->request->all());
 		$this->setContent($part->toArray());
 	}
 
-	public function delete($id)
+	/**
+	 * @param PagePartRepository $repository
+	 * @param integer $id
+	 */
+	public function delete(PagePartRepository $repository, $id)
 	{
-		PagePart::findOrFail($id)->delete();
+		$repository->delete($id);
 	}
 
-	public function reorder()
+	/**
+	 * @param PagePartRepository $repository
+	 */
+	public function reorder(PagePartRepository $repository)
 	{
 		if (!acl_check('parts.reorder'))
 		{
@@ -40,7 +55,6 @@ class PagePartController extends Controller
 		}
 
 		$ids = $this->getParameter('ids', []);
-		$part = new PagePart;
-		$part->reorder($ids);
+		$repository->reorder($ids);
 	}
 }

@@ -4,8 +4,11 @@ use UI;
 use View;
 use Assets;
 use ModuleLoader;
-use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
+use KodiCMS\Support\Helpers\Callback;
+use KodiCMS\CMS\Exceptions\ValidationException;
 use KodiCMS\CMS\Navigation\Collection as Navigation;
+use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BackendController extends TemplateController
 {
@@ -85,5 +88,38 @@ class BackendController extends TemplateController
 		Assets::package(['libraries', 'core']);
 		$this->includeModuleMediaFile($this->getRouterController());
 		$this->includeMergedMediaFile('backendEvents', 'js/backendEvents');
+	}
+
+	/**
+	 * Execute an action on the controller.
+	 *
+	 * @param  string  $method
+	 * @param  array   $parameters
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function callAction($method, $parameters)
+	{
+		try
+		{
+			return parent::callAction($method, $parameters);
+		}
+		catch (ModelNotFoundException $e)
+		{
+			$model = $e->getModel();
+			if (method_exists($model, 'getNotFoundMessage'))
+			{
+				$message = Callback::invoke($model . '@' . 'getNotFoundMessage');
+			}
+			else
+			{
+				$message = $e->getMessage();
+			}
+
+			$this->throwFailException($this->smartRedirect()->withErrors($message));
+		}
+		catch (ValidationException $e)
+		{
+			$this->throwValidationException($this->request, $e->getValidator());
+		}
 	}
 }

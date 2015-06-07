@@ -18,7 +18,7 @@ class Callback
 	 * @param array $binding
 	 * @return mixed
 	 */
-	public static function invoke($callback, array $parameters = null, array $binding = [])
+	public static function invoke($callback, array $parameters = [], array $binding = [])
 	{
 		if ($callback instanceof Closure)
 		{
@@ -48,7 +48,7 @@ class Callback
 	 * @param array $binding
 	 * @return mixed
 	 */
-	public static function invokeFunction(array $callback, array $parameters = null, array $binding = [])
+	public static function invokeFunction(array $callback, array $parameters = [], array $binding = [])
 	{
 		foreach ($callback as $i => $value)
 		{
@@ -73,7 +73,7 @@ class Callback
 	 * @param array $parameters
 	 * @return mixed
 	 */
-	public static function invokeClosure(Closure $callback, array $parameters = null)
+	public static function invokeClosure(Closure $callback, array $parameters = [])
 	{
 		return call_user_func_array($callback, $parameters);
 	}
@@ -84,7 +84,7 @@ class Callback
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public static function invokeClassMethod($callback, array $parameters = null)
+	public static function invokeClassMethod($callback, array $parameters = [])
 	{
 		list($class, $method) = explode('@', $callback);
 		$instance = app($class);

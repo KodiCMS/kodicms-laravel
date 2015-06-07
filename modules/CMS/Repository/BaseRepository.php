@@ -1,8 +1,9 @@
 <?php namespace KodiCMS\CMS\Repository;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Validator;
+use Illuminate\Database\Eloquent\Model;
+use KodiCMS\CMS\Exceptions\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BaseRepository
 {
@@ -69,11 +70,13 @@ class BaseRepository
 	}
 
 	/**
+	 * @param array $attributes
 	 * @return Model
 	 */
-	public function instance()
+	public function instance(array $attributes = [])
 	{
-		return new $this->model;
+		$model = $this->model;
+		return new $model($attributes);
 	}
 
 	/**
@@ -87,16 +90,33 @@ class BaseRepository
 
 	/**
 	 * @param array $data
-	 * @param array|null $rules
+	 * @param null $rules
+	 * @param array $messages
+	 * @param array $customAttributes
 	 * @return \Illuminate\Validation\Validator
 	 */
-	public function validator(array $data = [], $rules = null)
+	public function validator(array $data = [], $rules = null, array $messages = [], array $customAttributes = [])
 	{
 		if (is_null($rules))
 		{
 			$rules = $this->validationRules;
 		}
-		return Validator::make($data, $rules);
+
+		return Validator::make($data, $rules, $messages, $customAttributes);
+	}
+
+	/**
+	 * @param array $data
+	 * @param null $rules
+	 * @param array $messages
+	 * @param array $customAttributes
+	 * @return bool
+	 * @throws ValidationException
+	 */
+	public function validate(array $data = [], $rules = null, array $messages = [], array $customAttributes = [])
+	{
+		$validator = $this->validator($data, $rules, $messages, $customAttributes);
+		return $this->_validate($validator);
 	}
 
 	/**
@@ -115,19 +135,35 @@ class BaseRepository
 	 */
 	public function update($id, array $data = [])
 	{
-		$instance = $this->find($id);
+		$instance = $this->findOrFail($id);
 		$instance->update($data);
 		return $instance;
 	}
 
 	/**
 	 * @param integer $id
-	 * @return bool
+	 * @return Model
 	 * @throws \Exception
 	 */
 	public function delete($id)
 	{
-		return $this->find($id)->delete();
+		$model = $this->findOrFail($id);
+		$model->delete();
+		return $model;
 	}
 
+	/**
+	 * @param \Illuminate\Validation\Validator $validator
+	 * @return bool
+	 * @throws ValidationException
+	 */
+	protected function _validate(\Illuminate\Validation\Validator $validator)
+	{
+		if ($validator->fails())
+		{
+			throw (new ValidationException)->setValidator($validator);
+		}
+
+		return true;
+	}
 } 

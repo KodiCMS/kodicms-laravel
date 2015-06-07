@@ -16,31 +16,6 @@ class EmailTemplate extends Model
 	const USE_QUEUE = 1;
 	const USE_DIRECT = 0;
 
-	/**
-	 * @var array
-	 */
-	protected $fillable = [
-		'email_event_id',
-		'status',
-		'use_queue',
-		'email_from',
-		'email_to',
-		'subject',
-		'message',
-		'message_type',
-		'cc',
-		'bcc',
-		'reply_to',
-	];
-
-	/**
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-	 */
-	public function event()
-	{
-		return $this->belongsTo('KodiCMS\Email\Model\EmailEvent', 'email_event_id');
-	}
-
 	protected static function boot()
 	{
 		parent::boot();
@@ -52,19 +27,6 @@ class EmailTemplate extends Model
 				$emailTemplate->message_type = 'html';
 			}
 		});
-	}
-
-	public function scopeActive($query)
-	{
-		$query->whereStatus(static::ACTIVE);
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getStatusStringAttribute()
-	{
-		return trans('email::core.statuses.' . $this->status);
 	}
 
 	/**
@@ -87,6 +49,52 @@ class EmailTemplate extends Model
 			static::USE_DIRECT => trans('email::core.queue.0'),
 			static::USE_QUEUE  => trans('email::core.queue.1'),
 		];
+	}
+
+	/**
+	 * @var array
+	 */
+	protected $fillable = [
+		'email_event_id',
+		'status',
+		'use_queue',
+		'email_from',
+		'email_to',
+		'subject',
+		'message',
+		'message_type',
+		'cc',
+		'bcc',
+		'reply_to',
+	];
+
+	/**
+	 * @return string
+	 */
+	public function getNotFoundMessage()
+	{
+		return trans('email::core.messages.templates.not_found');
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
+	public function event()
+	{
+		return $this->belongsTo('KodiCMS\Email\Model\EmailEvent', 'email_event_id');
+	}
+
+	public function scopeActive($query)
+	{
+		$query->whereStatus(static::ACTIVE);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getStatusStringAttribute()
+	{
+		return trans('email::core.statuses.' . $this->status);
 	}
 
 	public function send($options = [])

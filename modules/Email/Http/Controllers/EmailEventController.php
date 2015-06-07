@@ -1,11 +1,8 @@
 <?php namespace KodiCMS\Email\Http\Controllers;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use KodiCMS\Email\Model\EmailType;
 use KodiCMS\Email\Repository\EmailEventRepository;
-use KodiCMS\Email\Services\EmailTypeCreator;
-use KodiCMS\Email\Services\EmailTypeUpdator;
+use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class EmailEventController extends BackendController
 {
@@ -20,7 +17,6 @@ class EmailEventController extends BackendController
 	public function getIndex(EmailEventRepository $repository)
 	{
 		$emailEvents = $repository->paginate();
-
 		$this->setContent('email.event.list', compact('emailEvents'));
 	}
 
@@ -45,13 +41,7 @@ class EmailEventController extends BackendController
 	{
 		$data = $this->request->all();
 		$this->formatFields($data);
-
-		$validator = $repository->validatorOnCreate($data);
-
-		if ($validator->fails())
-		{
-			$this->throwValidationException($this->request, $validator);
-		}
+		$repository->validateOnCreate($data);
 
 		$emailEvent = $repository->create($data);
 
@@ -64,12 +54,13 @@ class EmailEventController extends BackendController
 	 */
 	public function getEdit(EmailEventRepository $repository, $id)
 	{
-		$emailEvent = $this->getEmailType($repository, $id);
+		$emailEvent = $repository->findOrFail($id);
+
 		$this->setTitle(trans('email::core.title.events.edit', [
 			'title' => $emailEvent->name
 		]));
-		$action = 'backend.email.event.edit.post';
 
+		$action = 'backend.email.event.edit.post';
 		$this->setContent('email.event.form', compact('emailEvent', 'action'));
 	}
 
@@ -82,13 +73,7 @@ class EmailEventController extends BackendController
 	{
 		$data = $this->request->all();
 		$this->formatFields($data);
-
-		$validator = $repository->validatorOnUpdate($data);
-
-		if ($validator->fails())
-		{
-			$this->throwValidationException($this->request, $validator);
-		}
+		$repository->validateOnUpdate($data);
 
 		$emailEvent = $repository->update($id, $data);
 
@@ -103,28 +88,10 @@ class EmailEventController extends BackendController
 	 */
 	public function postDelete(EmailEventRepository $repository, $id)
 	{
-		$emailEvent = $this->getEmailType($repository, $id);
-		$emailEvent->delete();
-
-		return $this->smartRedirect()->with('success', trans('email::core.messages.events.deleted', ['title' => $emailEvent->name]));
-	}
-
-	/**
-	 * @param EmailEventRepository $repository
-	 * @param integer $id
-	 * @return \Illuminate\Database\Eloquent\Model|null
-	 */
-	protected function getEmailType(EmailEventRepository $repository, $id)
-	{
-		try
-		{
-			return $repository->findOrFail($id);
-		}
-		catch (ModelNotFoundException $e)
-		{
-			$this->throwFailException($this->smartRedirect()->withErrors(trans('email::core.messages.events.not_found')));
-		}
-		return null;
+		$emailEvent = $repository->delete($id);
+		return $this->smartRedirect()->with('success', trans('email::core.messages.events.deleted', [
+			'title' => $emailEvent->name
+		]));
 	}
 
 	/**

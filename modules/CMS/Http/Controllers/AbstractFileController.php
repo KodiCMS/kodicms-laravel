@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\CMS\Http\Controllers;
 
-use KodiCMS\CMS\Model\FileCollection;
 use WYSIWYG;
 use KodiCMS\Users\Model\UserRole;
+use KodiCMS\CMS\Model\FileCollection;
 
 abstract class AbstractFileController extends System\BackendController {
 

@@ -21,6 +21,14 @@ class EmailEvent extends Model
 	];
 
 	/**
+	 * @return string
+	 */
+	public function getNotFoundMessage()
+	{
+		return trans('email::core.messages.events.not_found');
+	}
+
+	/**
 	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
 	 */
 	public function templates()

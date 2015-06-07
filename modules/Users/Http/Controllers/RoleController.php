@@ -1,10 +1,7 @@
 <?php namespace KodiCMS\Users\Http\Controllers;
 
 use ACL;
-use KodiCMS\Users\Model\UserRole;
-use KodiCMS\Users\Services\RoleCreator;
-use KodiCMS\Users\Services\RoleUpdator;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use KodiCMS\Users\Repository\UserRoleRepository;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class RoleController extends BackendController
@@ -14,42 +11,34 @@ class RoleController extends BackendController
 	 */
 	public $moduleNamespace = 'users::';
 
-	public function getIndex()
+	public function getIndex(UserRoleRepository $repository)
 	{
-		$roles = UserRole::paginate();
+		$roles = $repository->paginate();
 		$this->setContent('roles.list', compact('roles'));
 	}
 
-	public function getCreate()
+	public function getCreate(UserRoleRepository $repository)
 	{
-		$role = new UserRole;
+		$role = $repository->instance();
 		$this->setTitle(trans('users::role.title.create'));
 
 		$permissions = ACL::getPermissionsList();
 		$this->setContent('roles.create', compact('role', 'permissions'));
 	}
 
-	public function postCreate(RoleCreator $role)
+	public function postCreate(UserRoleRepository $repository)
 	{
 		$data = $this->request->all();
-
-		$validator = $role->validator($data);
-
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
-		}
-
-		$role = $role->create($data);
+		$repository->validateOnCreate($data);
+		$role = $repository->create($data);
 
 		return $this->smartRedirect([$role])
 			->with('success', trans('users::role.messages.created', ['name' => $role->name]));
 	}
 
-	public function getEdit($id)
+	public function getEdit(UserRoleRepository $repository, $id)
 	{
-		$role = $this->getRole($id);
+		$role = $repository->findOrFail($id);
 		$this->setTitle(trans('users::role.title.edit', [
 			'name' => ucfirst($role->name)
 		]));
@@ -61,45 +50,20 @@ class RoleController extends BackendController
 		$this->setContent('roles.edit', compact('role', 'permissions', 'selectedPermissions', 'users'));
 	}
 
-	public function postEdit(RoleUpdator $role, $id)
+	public function postEdit(UserRoleRepository $repository, $id)
 	{
 		$data = $this->request->all();
-
-		$validator = $role->validator($id, $data);
-
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
-		}
-
-		$role = $role->update($id, $data);
+		$repository->validateOnUpdate($id, $data);
+		$role = $repository->update($id, $data);
 
 		return $this->smartRedirect([$role])
 			->with('success', trans('users::role.messages.updated', ['name' => $role->name]));
 	}
 
-	public function postDelete($id)
+	public function postDelete(UserRoleRepository $repository, $id)
 	{
-		$role = $this->getRole($id);
-		$role->delete();
-
+		$role = $repository->delete($id);
 		return $this->smartRedirect()
 			->with('success', trans('users::role.messages.deleted', ['name' => $role->name]));
-	}
-
-	/**
-	 * @param integer $id
-	 * @return UserRole
-	 * @throws HttpResponseException
-	 */
-	protected function getRole($id)
-	{
-		try {
-			return UserRole::findOrFail($id);
-		}
-		catch (ModelNotFoundException $e) {
-			$this->throwFailException($this->smartRedirect()->withErrors(trans('users::role.messages.not_found')));
-		}
 	}
 }

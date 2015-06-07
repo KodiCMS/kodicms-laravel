@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Pages\Http\Controllers;
 
-use KodiCMS\CMS\Http\Controllers\AbstractFileController;
 use KodiCMS\Pages\Model\LayoutCollection;
+use KodiCMS\CMS\Http\Controllers\AbstractFileController;
 
 class LayoutController extends AbstractFileController
 {
