@@ -11,7 +11,8 @@ class Plugins extends Migration
 			$table->timestamps();
 
 			$table->increments('id');
-			$table->string('key');
+			$table->string('name');
+			$table->string('path');
 			$table->json('settings');
 		});
 	}

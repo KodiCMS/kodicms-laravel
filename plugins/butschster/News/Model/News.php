@@ -1,8 +1,8 @@
-<?php namespace Plugins\News\Model;
+<?php namespace Plugins\butschster\News\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Support\Model\ModelFieldTrait;
-use Plugins\News\Model\FieldCollections\NewsFieldCollection;
+use Plugins\butschster\News\Model\FieldCollections\NewsFieldCollection;
 
 class News extends Model
 {
@@ -53,6 +53,6 @@ class News extends Model
 	 */
 	public function content()
 	{
-		return $this->hasOne('\Plugins\News\Model\NewsContent');
+		return $this->hasOne('\Plugins\butschster\News\Model\NewsContent');
 	}
 }

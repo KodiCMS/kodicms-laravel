@@ -1,4 +1,4 @@
-<?php namespace Plugins\News\database\seeds;
+<?php namespace Plugins\butschster\News\database\seeds;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;

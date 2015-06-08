@@ -42,6 +42,7 @@ abstract class BasePluginContainer extends ModuleContainer
 	{
 		parent::__construct($moduleName, $modulePath, $namespace);
 
+		$this->name = strtolower($moduleName);
 		$this->details = array_merge($this->defaultDetails(), $this->details());
 
 		if (!isset($this->details['title']))
@@ -188,7 +189,8 @@ abstract class BasePluginContainer extends ModuleContainer
 		}
 
 		Plugin::create([
-			'key' => $this->getName(),
+			'name' => $this->getName(),
+			'path' => $this->getPath(),
 			'settings' => $this->getSettings()
 		]);
 
@@ -213,7 +215,7 @@ abstract class BasePluginContainer extends ModuleContainer
 			throw new PluginContainerException("Plugin is not activated");
 		}
 
-		if (is_null($plugin = Plugin::where('key', $this->getName())))
+		if (is_null($plugin = Plugin::where('name', $this->getName())))
 		{
 			throw new PluginContainerException("Plugin not found");
 		}
@@ -239,7 +241,7 @@ abstract class BasePluginContainer extends ModuleContainer
 	{
 		$this->setSettings($settings);
 
-		$model = Plugin::where('key', $this->getName())->first();
+		$model = Plugin::where('name', $this->getName())->first();
 
 		if (!is_null($model))
 		{

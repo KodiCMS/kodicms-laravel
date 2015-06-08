@@ -1,11 +1,11 @@
-<?php namespace Plugins\News\Observers;
+<?php namespace Plugins\butschster\News\Observers;
 
-use Plugins\News\Model\News;
+use Plugins\butschster\News\Model\News;
 
 class NewsObserver
 {
 	/**
-	 * @param \Plugins\News\Model\News $news
+	 * @param \Plugins\butschster\News\Model\News $news
 	 * @return void
 	 */
 	public function creating($news)
@@ -14,7 +14,7 @@ class NewsObserver
 	}
 
 	/**
-	 * @param \Plugins\News\Model\News $news
+	 * @param \Plugins\butschster\News\Model\News $news
 	 * @return void
 	 */
 	public function deleted($news)

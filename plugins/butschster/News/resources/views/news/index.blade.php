@@ -1,7 +1,7 @@
 <div class="panel">
 	<div class="panel-heading">
 		@if (acl_check('news.add'))
-		{!! link_to_route('backend.news.create', trans('news::core.button.create'), [], [
+		{!! link_to_route('backend.news.create', trans('butschster:news::core.button.create'), [], [
 			'class' => 'btn btn-primary', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
 		]) !!}
 		@endif
@@ -16,9 +16,9 @@
 			</colgroup>
 			<thead>
 			<tr>
-				<th>@lang('news::core.field.title')</th>
-				<th>@lang('news::core.field.slug')</th>
-				<th>@lang('news::core.field.actions')</th>
+				<th>@lang('butschster:news::core.field.title')</th>
+				<th>@lang('butschster:news::core.field.slug')</th>
+				<th>@lang('butschster:news::core.field.actions')</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -49,7 +49,7 @@
 		</table>
 	@else
 		<div class="panel-body">
-			<h3>@lang('news::core.messages.empty')</h3>
+			<h3>@lang('butschster:news::core.messages.empty')</h3>
 		</div>
 	@endif
 </div>

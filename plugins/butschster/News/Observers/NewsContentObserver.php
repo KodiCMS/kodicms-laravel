@@ -1,12 +1,12 @@
-<?php namespace Plugins\News\Observers;
+<?php namespace Plugins\butschster\News\Observers;
 
 use WYSIWYG;
-use Plugins\News\Model\NewsContent;
+use Plugins\butschster\News\Model\NewsContent;
 
 class NewsContentObserver
 {
 	/**
-	 * @param \Plugins\News\Model\NewsContent $newsContent
+	 * @param \Plugins\butschster\News\Model\NewsContent $newsContent
 	 * @return void
 	 */
 	public function creating($newsContent)

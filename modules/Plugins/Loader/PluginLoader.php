@@ -74,12 +74,15 @@ class PluginLoader {
 	{
 		foreach ($this->files->directories($this->getPath()) as $directory)
 		{
-			if (is_null($class = $this->initPlugin($directory)))
+			foreach ($this->files->directories($directory) as $plugin)
 			{
-				continue;
-			}
+				if (is_null($class = $this->initPlugin($plugin)))
+				{
+					continue;
+				}
 
-			$this->foundPlugins[] = $class;
+				$this->foundPlugins[] = $class;
+			}
 		}
 
 		return $this->foundPlugins;
@@ -163,8 +166,10 @@ class PluginLoader {
 	protected function initPlugin($directory)
 	{
 		$pluginName = pathinfo($directory, PATHINFO_BASENAME);
-		$namespace = "Plugins\\{$pluginName}";
-		$class= "{$namespace}\\PluginContainer";
+		$vendorName = pathinfo(pathinfo($directory, PATHINFO_DIRNAME), PATHINFO_BASENAME);
+
+		$namespace = "Plugins\\{$vendorName}\\{$pluginName}";
+		$class = "{$namespace}\\PluginContainer";
 
 		if (!class_exists($class))
 		{
@@ -176,7 +181,7 @@ class PluginLoader {
 			return $this->activated[$class];
 		}
 
-		return new $class($pluginName, $directory, $namespace);
+		return new $class($vendorName . ':' . $pluginName, $directory, $namespace);
 	}
 
 	/**
@@ -188,11 +193,10 @@ class PluginLoader {
 
 		foreach ($activated as $model)
 		{
-			$directory = $this->getPath() . DIRECTORY_SEPARATOR . $model->key;
 			if (
-				$this->files->isDirectory($directory)
+				$this->files->isDirectory($model->path)
 				and
-				!is_null($pluginContainer = $this->initPlugin($directory))
+				!is_null($pluginContainer = $this->initPlugin($model->path))
 			)
 			{
 				$this->activated[get_class($pluginContainer)] = $pluginContainer;

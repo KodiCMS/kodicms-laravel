@@ -33,7 +33,7 @@ class PluginController extends Controller
 		$name = $this->getRequiredParameter('name');
 		$removeTable = $this->getParameter('remove_data');
 
-		if(is_null($plugin = PluginLoader::getPluginContainer($name)))
+		if (is_null($plugin = PluginLoader::getPluginContainer($name)))
 		{
 			throw new PluginContainerException("Plugin [{$name}] not found");
 		}

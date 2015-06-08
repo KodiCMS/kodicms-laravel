@@ -1,4 +1,4 @@
-<?php namespace Plugins\News\Model\FieldCollections;
+<?php namespace Plugins\butschster\News\Model\FieldCollections;
 
 use KodiCMS\Support\Model\Fields\WYSIWYGField;
 use KodiCMS\Support\Model\Contracts\ModelFieldsInterface;
@@ -12,10 +12,10 @@ class NewsContentFieldCollection implements ModelFieldsInterface
 	{
 		return [
 			(new WYSIWYGField('content'))
-				->setTitle(trans('news::core.field.content')),
+				->setTitle(trans('butschster:news::core.field.content')),
 
 			(new WYSIWYGField('description'))
-				->setTitle(trans('news::core.field.description'))
+				->setTitle(trans('butschster:news::core.field.description'))
 		];
 	}
 }

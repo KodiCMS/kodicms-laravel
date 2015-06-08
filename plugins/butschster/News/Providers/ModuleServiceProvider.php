@@ -1,9 +1,9 @@
-<?php namespace Plugins\News\Providers;
+<?php namespace Plugins\butschster\News\Providers;
 
-use Plugins\News\Model\News;
-use Plugins\News\Model\NewsContent;
-use Plugins\News\Observers\NewsContentObserver;
-use Plugins\News\Observers\NewsObserver;
+use Plugins\butschster\News\Model\News;
+use Plugins\butschster\News\Model\NewsContent;
+use Plugins\butschster\News\Observers\NewsContentObserver;
+use Plugins\butschster\News\Observers\NewsObserver;
 use KodiCMS\CMS\Providers\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider {

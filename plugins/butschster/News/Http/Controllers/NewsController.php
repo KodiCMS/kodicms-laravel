@@ -1,8 +1,8 @@
-<?php namespace Plugins\News\Http\Controllers;
+<?php namespace Plugins\butschster\News\Http\Controllers;
 
 use WYSIWYG;
-use Plugins\News\Model\News;
-use Plugins\News\Repository\NewsRepository;
+use Plugins\butschster\News\Model\News;
+use Plugins\butschster\News\Repository\NewsRepository;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class NewsController extends BackendController
@@ -10,7 +10,7 @@ class NewsController extends BackendController
 	/**
 	 * @var string
 	 */
-	public $moduleNamespace = 'news::';
+	public $moduleNamespace = 'butschster:news::';
 
 	/**
 	 * @param NewsRepository $repository
@@ -28,7 +28,7 @@ class NewsController extends BackendController
 	public function getEdit(NewsRepository $repository, $id)
 	{
 		$news = $repository->findOrFail($id);
-		$this->setTitle(trans('news::core.title.edit', [
+		$this->setTitle(trans('butschster:news::core.title.edit', [
 			'title' => $news->title
 		]));
 
@@ -48,7 +48,7 @@ class NewsController extends BackendController
 		$news = $repository->update($id, $data);
 
 		return $this->smartRedirect([$news])
-			->with('success', trans('news::core.messages.updated', ['title' => $news->title]));
+			->with('success', trans('butschster:news::core.messages.updated', ['title' => $news->title]));
 	}
 
 	/**
@@ -57,7 +57,7 @@ class NewsController extends BackendController
 	public function getCreate(NewsRepository $repository)
 	{
 		$news = $repository->instance();
-		$this->setTitle(trans('news::core.title.create'));
+		$this->setTitle(trans('butschster:news::core.title.create'));
 		$this->setContent('news.create', compact('news'));
 	}
 
@@ -72,7 +72,7 @@ class NewsController extends BackendController
 		$news = $repository->create($data);
 
 		return $this->smartRedirect([$news])
-			->with('success', trans('news::core.messages.created', ['title' => $news->title]));
+			->with('success', trans('butschster:news::core.messages.created', ['title' => $news->title]));
 	}
 
 	/**
@@ -84,6 +84,6 @@ class NewsController extends BackendController
 	{
 		$news = $repository->delete($id);
 		return $this->smartRedirect()
-			->with('success', trans('news::core.messages.deleted', ['title' => $news->title]));
+			->with('success', trans('butschster:news::core.messages.deleted', ['title' => $news->title]));
 	}
 }

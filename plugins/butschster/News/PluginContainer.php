@@ -1,4 +1,4 @@
-<?php namespace Plugins\News;
+<?php namespace Plugins\butschster\News;
 
 use KodiCMS\Plugins\Loader\BasePluginContainer;
 
@@ -12,7 +12,7 @@ class PluginContainer extends BasePluginContainer
 			'author' => 'Pavel Buchnev',
 			'icon' => 'newspaper-o',
 			'required_cms_version' => '12.0.0',
-			'settings_template' => 'news::news.settings'
+			'settings_template' => 'butschster:news::news.settings'
 		];
 	}
 }

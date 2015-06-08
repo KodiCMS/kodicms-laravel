@@ -25,7 +25,7 @@
 		"psr-4": {
 			"App\\"	       : "app/",
 			"KodiCMS\\"    : "modules/",
-			"Plugins\\"     : "plugins/"
+			"Plugins\\"    : "plugins/"
 		},
 		"files": [
 			"modules/Users/helpers.php",
@@ -55,7 +55,7 @@
 		"preferred-install": "dist"
 	},
 	"installer-paths" : {
-		"plugins/{$name}" : ["type:kodicms-plugin"],
-		"modules/{$name}" : ["type:kodicms-module"]
+		"plugins/{$vendor}/{$name}" : ["type:kodicms-plugin"],
+		"modules/{$name}"           : ["type:kodicms-module"]
 	}
 }

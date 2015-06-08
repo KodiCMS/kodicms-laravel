@@ -16,7 +16,7 @@ class Plugin extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['key', 'settings'];
+	protected $fillable = ['name', 'path', 'settings'];
 
 	/**
 	 * The attributes that should be casted to native types.
@@ -25,7 +25,8 @@ class Plugin extends Model
 	 */
 	protected $casts = [
 		'id' => 'integer',
-		'key' => 'string',
+		'name' => 'string',
+		'path' => 'string',
 		'settings' => 'array'
 	];
 }
