@@ -1,7 +1,5 @@
 <?php namespace KodiCMS\Users\Http\Controllers;
 
-use KodiCMS\Users\Model\UserRole;
-use KodiCMS\Support\Helpers\Locale;
 use KodiCMS\Users\Repository\UserRepository;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
