@@ -132,7 +132,7 @@ abstract class AbstractFileController extends System\BackendController {
 	 */
 	public function getFile($filename = NULL)
 	{
-		WYSIWYG::loadAll();
+		WYSIWYG::loadAllEditors();
 
 		if (is_null($filename))
 		{

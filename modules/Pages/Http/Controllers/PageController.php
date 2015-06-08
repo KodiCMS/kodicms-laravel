@@ -43,7 +43,7 @@ class PageController extends BackendController
 	{
 		Assets::package(['backbone', 'jquery-ui']);
 		$this->includeModuleMediaFile('BehaviorController');
-		WYSIWYG::loadAll();
+		WYSIWYG::loadAllEditors();
 
 		$page = $repository->findOrFail($id);
 		$this->setTitle(trans('pages::core.title.pages.edit', [

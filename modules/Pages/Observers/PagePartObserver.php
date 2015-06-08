@@ -29,8 +29,7 @@ class PagePartObserver
 
 		if (!is_null($part->wysiwyg))
 		{
-			$filter = WYSIWYG::getFilter($part->wysiwyg);
-			$part->content_html = $filter->apply($part->content);
+			$part->content_html = WYSIWYG::applyFilter($part->wysiwyg, $part->content);
 		}
 
 		$this->clearCache($part->page_id);

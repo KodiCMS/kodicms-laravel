@@ -29,7 +29,7 @@ class EmailTemplateController extends BackendController
 	 */
 	public function getCreate(EmailTemplateRepository $repository, EmailEventRepository $emailEventRepository)
 	{
-		WYSIWYG::loadAll();
+		WYSIWYG::loadAllEditors();
 		$this->setTitle(trans('email::core.title.templates.create'));
 
 		$emailTemplate = $repository->instance([
@@ -68,7 +68,7 @@ class EmailTemplateController extends BackendController
 	 */
 	public function getEdit(EmailTemplateRepository $repository, EmailEventRepository $emailEventRepository, $id)
 	{
-		WYSIWYG::loadAll();
+		WYSIWYG::loadAllEditors();
 		$emailTemplate = $repository->findOrFail($id);
 
 		$this->setTitle(trans('email::core.title.templates.edit', [

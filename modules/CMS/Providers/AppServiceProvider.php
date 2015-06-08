@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\CMS\Providers;
 
 use Blade;
-use WYSIWYG;
 use ModuleLoader;
 
 class AppServiceProvider extends ServiceProvider {
