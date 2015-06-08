@@ -16,7 +16,8 @@ class Kernel extends ConsoleKernel {
 		'KodiCMS\CMS\Console\Commands\ControllerMakeCommand',
 		'KodiCMS\CMS\Console\Commands\ModulePublishCommand',
 		'KodiCMS\CMS\Console\Commands\PackagesList',
-		'KodiCMS\CMS\Console\Commands\ModulesList'
+		'KodiCMS\CMS\Console\Commands\ModulesList',
+		'KodiCMS\CMS\Console\Commands\WysiwygList'
 	];
 
 	/**

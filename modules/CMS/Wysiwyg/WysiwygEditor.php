@@ -1,10 +1,11 @@
 <?php namespace KodiCMS\CMS\Wysiwyg;
 
 use Assets;
+use Illuminate\Contracts\Support\Arrayable;
 use KodiCMS\CMS\Contracts\WysiwygEditorInterface;
 use KodiCMS\CMS\Contracts\WysiwygFilterInterface;
 
-class WysiwygEditor implements WysiwygEditorInterface {
+class WysiwygEditor implements WysiwygEditorInterface, Arrayable {
 
 	/**
 	 * @var string
@@ -45,6 +46,8 @@ class WysiwygEditor implements WysiwygEditorInterface {
 	 */
 	public function __construct($id, $name = null, $filter = null, $package = null, $type = null)
 	{
+		$this->id = $id;
+
 		$this->name = $name === null
 			? studly_case($id)
 			: $name;
@@ -115,6 +118,22 @@ class WysiwygEditor implements WysiwygEditorInterface {
 	{
 		Assets::package($this->packageName);
 		return $this->used = true;
+	}
+
+	/**
+	 * Get the instance as an array.
+	 *
+	 * @return array
+	 */
+	public function toArray()
+	{
+		return [
+			'id' => $this->getId(),
+			'name' => $this->getName(),
+			'type' => $this->getType(),
+			'assetPackage' => $this->packageName,
+			'filter' => get_class($this->getFilter())
+		];
 	}
 
 	/**
