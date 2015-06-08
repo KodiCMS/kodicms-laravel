@@ -2,8 +2,7 @@
 
 use WYSIWYG;
 use Plugins\News\Model\News;
-use Plugins\News\Services\NewsCreator;
-use Plugins\News\Services\NewsUpdator;
+use Plugins\News\Repository\NewsRepository;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class NewsController extends BackendController
@@ -13,95 +12,78 @@ class NewsController extends BackendController
 	 */
 	public $moduleNamespace = 'news::';
 
-	public function getIndex()
+	/**
+	 * @param NewsRepository $repository
+	 */
+	public function getIndex(NewsRepository $repository)
 	{
-		$newsList = News::paginate();
-
+		$newsList = $repository->paginate();
 		$this->setContent('news.index', compact('newsList'));
 	}
 
-	public function getEdit($id)
+	/**
+	 * @param NewsRepository $repository
+	 * @param integer $id
+	 */
+	public function getEdit(NewsRepository $repository, $id)
 	{
-		WYSIWYG::loadDefaultHTMLEditor();
-
-		$news = $this->getNews($id);
+		$news = $repository->findOrFail($id);
 		$this->setTitle(trans('news::core.title.edit', [
 			'title' => $news->title
 		]));
 
 		$this->templateScripts['NEWS'] = $news;
-
 		$this->setContent('news.edit', compact('news'));
 	}
 
-	public function postEdit(NewsUpdator $newsUpdator, $id)
+	/**
+	 * @param NewsRepository $repository
+	 * @param integer $id
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function postEdit(NewsRepository $repository, $id)
 	{
 		$data = $this->request->all();
-		$validator = $newsUpdator->validator($id, $data);
-
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
-		}
-
-		$news = $newsUpdator->update($id, $data);
+		$repository->validateOnUpdate($id, $data);
+		$news = $repository->update($id, $data);
 
 		return $this->smartRedirect([$news])
 			->with('success', trans('news::core.messages.updated', ['title' => $news->title]));
 	}
 
-	public function getCreate()
+	/**
+	 * @param NewsRepository $repository
+	 */
+	public function getCreate(NewsRepository $repository)
 	{
-		WYSIWYG::loadDefaultHTMLEditor();
-
-		$news = new News();
-
+		$news = $repository->instance();
 		$this->setTitle(trans('news::core.title.create'));
 		$this->setContent('news.create', compact('news'));
 	}
 
-	public function postCreate(NewsCreator $newsCreator)
+	/**
+	 * @param NewsRepository $repository
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function postCreate(NewsRepository $repository)
 	{
 		$data = $this->request->all();
-
-		$validator = $newsCreator->validator($data);
-
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
-		}
-
-		$news = $newsCreator->create($data);
+		$repository->validateOnCreate($data);
+		$news = $repository->create($data);
 
 		return $this->smartRedirect([$news])
 			->with('success', trans('news::core.messages.created', ['title' => $news->title]));
 	}
 
-	public function getDelete($id)
-	{
-		$news = $this->getNews($id);
-
-		$news->delete();
-
-		return $this->smartRedirect()->with('success', trans('news::core.messages.deleted', ['title' => $news->title]));
-	}
-
 	/**
+	 * @param NewsRepository $repository
 	 * @param integer $id
-	 * @return Page
-	 * @throws HttpResponseException
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
-	protected function getNews($id)
+	public function getDelete(NewsRepository $repository, $id)
 	{
-		try
-		{
-			return News::findOrFail($id);
-		}
-		catch (ModelNotFoundException $e)
-		{
-			$this->throwFailException($this->smartRedirect()->withErrors(trans('news::core.messages.not_found')));
-		}
+		$news = $repository->delete($id);
+		return $this->smartRedirect()
+			->with('success', trans('news::core.messages.deleted', ['title' => $news->title]));
 	}
 }

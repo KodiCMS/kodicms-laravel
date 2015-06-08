@@ -48,6 +48,9 @@ class News extends Model
 		return $this->belongsTo('\KodiCMS\Users\Model\User', 'user_id');
 	}
 
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\HasOne
+	 */
 	public function content()
 	{
 		return $this->hasOne('\Plugins\News\Model\NewsContent');

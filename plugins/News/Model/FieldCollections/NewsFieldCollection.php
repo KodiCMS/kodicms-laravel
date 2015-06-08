@@ -3,6 +3,7 @@
 use KodiCMS\Support\Model\Fields\SlugField;
 use KodiCMS\Support\Model\Fields\TextField;
 use KodiCMS\Support\Model\Fields\UserField;
+use KodiCMS\Support\Model\Fields\RelatedField;
 use KodiCMS\Support\Model\Fields\DateTimeField;
 use KodiCMS\Support\Model\Contracts\ModelFieldsInterface;
 
@@ -32,6 +33,9 @@ class NewsFieldCollection implements ModelFieldsInterface
 
 			// Update date
 			(new DateTimeField('updated_at'))->setTitle(trans('news::core.field.updated_at')),
+
+			// Related content
+			new RelatedField('content')
 		];
 	}
 }

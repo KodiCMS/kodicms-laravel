@@ -1,9 +1,14 @@
 <?php namespace Plugins\News\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use KodiCMS\Support\Model\ModelFieldTrait;
+use Plugins\News\Model\FieldCollections\NewsContentFieldCollection;
 
 class NewsContent extends Model
 {
+
+	use ModelFieldTrait;
+
 	/**
 	 * The primary key for the model.
 	 *
@@ -40,6 +45,14 @@ class NewsContent extends Model
 	protected $casts = [
 		'news_id' => 'integer'
 	];
+
+	/**
+	 * @return array
+	 */
+	protected function fieldCollection()
+	{
+		return new NewsContentFieldCollection;
+	}
 
 	/**
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
