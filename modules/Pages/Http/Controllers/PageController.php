@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\Pages\Http\Controllers;
 
 use Assets;
-use WYSIWYG;
 use Carbon\Carbon;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Repository\PageRepository;
@@ -43,7 +42,6 @@ class PageController extends BackendController
 	{
 		Assets::package(['backbone', 'jquery-ui']);
 		$this->includeModuleMediaFile('BehaviorController');
-		WYSIWYG::loadAllEditors();
 
 		$page = $repository->findOrFail($id);
 		$this->setTitle(trans('pages::core.title.pages.edit', [

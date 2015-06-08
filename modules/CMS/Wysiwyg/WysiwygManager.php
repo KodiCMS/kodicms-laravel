@@ -37,7 +37,7 @@ class WysiwygManager {
 	/**
 	 * @return string|null
 	 */
-	public function getDefaultHTMLEditor()
+	public function getDefaultHTMLEditorId()
 	{
 		return $this->config['cms.default_html_editor'];
 	}
@@ -45,7 +45,7 @@ class WysiwygManager {
 	/**
 	 * @return string|null
 	 */
-	public function getDefaultCodeEditor()
+	public function getDefaultCodeEditorId()
 	{
 		return $this->config['cms.default_code_editor'];
 	}
@@ -125,6 +125,7 @@ class WysiwygManager {
 	}
 
 	/**
+	 * Получения списка доступных редакторов в системе
 	 * @return array
 	 */
 	public function getAvailable()
@@ -133,6 +134,7 @@ class WysiwygManager {
 	}
 
 	/**
+	 * Получения списка доступных редакторов определенного типа
 	 * @param string $type
 	 * @return array
 	 */
@@ -152,6 +154,8 @@ class WysiwygManager {
 	}
 
 	/**
+	 * Получение объекта редактора
+	 *
 	 * @param $editorId
 	 * @return WysiwygEditor|null
 	 */
@@ -161,23 +165,8 @@ class WysiwygManager {
 	}
 
 	/**
-	 * Remove a editor
-	 *
-	 * @param $editorId string
+	 * Загрузить в шаблон все редакторы
 	 */
-	public function remove($editorId)
-	{
-		if ($this->isLoaded($editorId))
-		{
-			unset($this->loaded[$editorId]);
-		}
-
-		if (isset($this->available[$editorId]))
-		{
-			unset($this->available[$editorId]);
-		}
-	}
-
 	public function loadAllEditors()
 	{
 		foreach($this->getAvailable() as $editorId => $editor)
@@ -187,46 +176,55 @@ class WysiwygManager {
 	}
 
 	/**
-	 * @param string $type
+	 * Загрузить в шаблон редакторы кода
 	 */
-	public function loadEditorsByType($type)
+	public function loadCodeEditors()
 	{
-		$editors = $this->getAvailableByType($type);
-
-		foreach($editors as $editorId => $editor)
+		foreach($this->getAvailableByType(static::TYPE_HTML) as $editorId => $editor)
 		{
 			$this->loadEditor($editorId);
 		}
 	}
 
 	/**
-	 * @param string|null $type
+	 * Загрузить в шаблон редакторы текса
 	 */
-	public function loadDefaultEditors($type = null)
+	public function loadHTMLEditors()
 	{
-		if (is_null($type))
+		foreach($this->getAvailableByType(static::TYPE_HTML) as $editorId => $editor)
 		{
-			$defaultEditors = [
-				$this->getDefaultHTMLEditor(),
-				$this->getDefaultCodeEditor()
-			];
-
-			foreach($defaultEditors as $editorId)
-			{
-				$this->loadEditor($editorId);
-			}
-
-			return;
+			$this->loadEditor($editorId);
 		}
-
-		$editorId = ($type === static::TYPE_HTML)
-			? $this->getDefaultHTMLEditor()
-			: $this->getDefaultCodeEditor();
-
-		$this->loadEditor($editorId);
 	}
 
 	/**
+	 * Загрузить в шаблон редактор текста по умолчанию
+	 */
+	public function loadDefaultHTMLEditor()
+	{
+		$this->loadEditor($this->getDefaultHTMLEditorId());
+	}
+
+	/**
+	 * Загрузить в шаблон редактор кода по умолчанию
+	 */
+	public function loadDefaultCodeEditor()
+	{
+		$this->loadEditor($this->getDefaultCodeEditorId());
+	}
+
+	/**
+	 * Загрузить в шаблон редакторы по умолчанию
+	 */
+	public function loadDefaultEditors()
+	{
+		$this->loadDefaultHTMLEditor();
+		$this->loadDefaultCodeEditor();
+	}
+
+	/**
+	 * Загрузить редактор в шаблон по идентификатору
+	 *
 	 * @param string $editorId
 	 * @return bool
 	 */
@@ -252,6 +250,8 @@ class WysiwygManager {
 
 
 	/**
+	 * Применить фильтр используемый редактором к тексту
+	 *
 	 * @param string $editorId
 	 * @param string $text
 	 * @return string string
@@ -268,16 +268,37 @@ class WysiwygManager {
 	}
 
 	/**
+	 * Получение списка редакторов для выпадающего списка
+	 *
 	 * @param string $type
 	 * @return array
 	 */
 	public function htmlSelect($type = null)
 	{
-		$options = ['' => trans('cms::core.helpers.not_select')];
-
 		$editors = is_null($type)
 			? $this->getAvailable()
 			: $this->getAvailableByType($type);
+
+		return $this->makeHTMLselect($editors);
+	}
+
+	/**
+	 * Получение списка редакторов для выпадающего спсика подключеных в шаблон
+	 *
+	 * @return array
+	 */
+	public function usedHtmlSelect()
+	{
+		return $this->makeHTMLselect($this->getUsed());
+	}
+
+	/**
+	 * @param array $editors
+	 * @return array
+	 */
+	protected function makeHTMLselect(array $editors)
+	{
+		$options = ['' => trans('cms::core.helpers.not_select')];
 
 		foreach ($editors as $editorId => $editor)
 		{

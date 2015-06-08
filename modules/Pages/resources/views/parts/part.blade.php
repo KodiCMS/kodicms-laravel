@@ -35,7 +35,7 @@
 						<label>
 							@lang('pages::part.label.editor')&nbsp;&nbsp;&nbsp;
 							<select class="item-filter" name="part_filter">
-								@foreach (WYSIWYG::htmlSelect() as $editor => $name)
+								@foreach (WYSIWYG::usedHtmlSelect() as $editor => $name)
 								<option value="{{ $editor }}" <% if (wysiwyg == "{{ $editor }}") { print('selected="selected"')} %> >{{ $name }}</option>
 								@endforeach
 							</select>
@@ -61,7 +61,7 @@
 				@else
 				@lang('pages::part.label.editor')&nbsp;&nbsp;&nbsp;
 				<select class="item-filter" name="part_filter">
-				@foreach (WYSIWYG::htmlSelect() as $editor => $name)
+				@foreach (WYSIWYG::usedHtmlSelect() as $editor => $name)
 					<option value="{{ $editor }}" <% if (wysiwyg == "{{ $editor }}") { print('selected="selected"')} %>>{{ $name }}</option>
 				@endforeach
 			</select>

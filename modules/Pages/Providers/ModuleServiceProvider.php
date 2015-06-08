@@ -3,6 +3,7 @@
 use Blade;
 use Block;
 use Event;
+use WYSIWYG;
 use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 use KodiCMS\Pages\Helpers\Meta;
@@ -29,6 +30,7 @@ class ModuleServiceProvider extends ServiceProvider {
 
 		Event::listen('view.page.edit', function ($page)
 		{
+			WYSIWYG::loadAllEditors();
 			echo view('pages::parts.list')->with('page', $page);
 		}, 999);
 

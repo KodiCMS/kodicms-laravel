@@ -22,7 +22,7 @@ class NewsController extends BackendController
 
 	public function getEdit($id)
 	{
-		WYSIWYG::loadDefaultEditors();
+		WYSIWYG::loadDefaultHTMLEditor();
 
 		$news = $this->getNews($id);
 		$this->setTitle(trans('news::core.title.edit', [
@@ -53,7 +53,7 @@ class NewsController extends BackendController
 
 	public function getCreate()
 	{
-		WYSIWYG::loadDefaultEditors();
+		WYSIWYG::loadDefaultHTMLEditor();
 
 		$news = new News();
 

@@ -18,7 +18,7 @@ class WYSIWYGField extends TextAreaField
 
 	protected function addScriptToView()
 	{
-		WYSIWYG::loadAllEditors(WYSIWYG::html());
+		WYSIWYG::loadHTMLEditors();
 		$id = $this->getId();
 		view()->startSection('scripts', "<script>CMS.filters.switchOn('{$id}', DEFAULT_HTML_EDITOR)</script>");
 	}

@@ -148,7 +148,7 @@ class WidgetController extends BackendController {
 	public function getTemplate(WidgetRepository $repository, $id)
 	{
 		$widget = $repository->findOrFail($id);
-		WYSIWYG::loadAllEditors(WYSIWYG::code());
+		WYSIWYG::loadCodeEditors();;
 
 		$template = $widget->getDefaultFrontendTemplate();
 
