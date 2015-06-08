@@ -18,6 +18,8 @@ class PluginServiceProvider extends ServiceProvider {
 
 	public function register()
 	{
+		$this->registerConsoleCommand('console.plugins.list', 'KodiCMS\Plugins\Console\Commands\PluginsList');
+
 		$this->app->singleton('plugin.installer', function($app)
 		{
 			return new PluginInstaller($app['db'], $app['files']);
