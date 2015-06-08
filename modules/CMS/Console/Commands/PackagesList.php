@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\CMS\Console\Commands;
 
-use Illuminate\Console\Command;
 use Package;
+use Illuminate\Console\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
 
 class PackagesList extends Command {

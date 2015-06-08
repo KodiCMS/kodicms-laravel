@@ -41,8 +41,8 @@ class ModulesList extends Command {
 			foreach($module->toArray() as $key => $value)
 			{
 				$modules[] = [
-					$key,
-					stripslashes(json_encode($value))
+					studly_case($key),
+					is_string($value) ? $value : stripslashes(json_encode($value))
 				];
 			}
 
