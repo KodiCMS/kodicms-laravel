@@ -10,11 +10,8 @@
 </div>
 <hr />
 <div class="panel-body">
-	<h3>Description</h3>
-	{!! Form::textarea('content[description]', $news->content->description, ['id' => 'content_description', 'data-height' => 200]) !!}
-
-	<h3>Content</h3>
-	{!! Form::textarea('content[content]', $news->content->content, ['id' => 'content_text', 'data-height' => 400]) !!}
+	{!! $news->renderField('content::description') !!}
+	{!! $news->renderField('content::content') !!}
 </div>
 <div class="form-actions panel-footer">
 	@include('cms::app.partials.actionButtons', ['route' => 'backend.news.list'])
