@@ -8,6 +8,17 @@
 		}) %>
 		</div>
 		<% } %>
+
+		<% if (isActivated && settings_template) { %>
+		@if (acl_check('plugins.settings'))
+
+		<a href="<%= settingsUrl %>" class="btn btn-default btn-sm pull-right">
+			<span class="hidden-xs hidden-sm" data-icon="cog">@lang('plugins::core.button.settings')</span>
+		</a>
+
+		@endif
+		<% } %>
+
 		<h5 class="pull-left" <% if (icon) { %>data-icon="<%= icon %> fa-lg"<% } %>>
 			<%= title %>
 			<small>@lang('plugins::core.detail.version'): <strong><%= version %></strong></small>

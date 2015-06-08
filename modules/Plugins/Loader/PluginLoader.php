@@ -184,10 +184,11 @@ class PluginLoader {
 	 */
 	protected function loadActivated()
 	{
-		$activated = Plugin::lists('key', 'id');
-		foreach ($activated as $pluginId => $key)
+		$activated = Plugin::get();
+
+		foreach ($activated as $model)
 		{
-			$directory = $this->getPath() . DIRECTORY_SEPARATOR . $key;
+			$directory = $this->getPath() . DIRECTORY_SEPARATOR . $model->key;
 			if (
 				$this->files->isDirectory($directory)
 				and
@@ -198,6 +199,7 @@ class PluginLoader {
 				ModuleLoader::registerModule($pluginContainer);
 
 				$pluginContainer->checkActivation();
+				$pluginContainer->setSettings($model->settings);
 			}
 		}
 	}

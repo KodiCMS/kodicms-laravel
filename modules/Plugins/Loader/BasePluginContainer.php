@@ -5,7 +5,6 @@ use KodiCMS\CMS\Core as CMS;
 use KodiCMS\Plugins\Model\Plugin;
 use KodiCMS\Support\Traits\Settings;
 use KodiCMS\CMS\Loader\ModuleContainer;
-use KodiCMS\Installer\Support\ModuleInstaller;
 use KodiCMS\Plugins\Exceptions\PluginContainerException;
 use KodiCMS\Support\Facades\PluginLoader as PluginLoaderFacade;
 
@@ -52,6 +51,16 @@ abstract class BasePluginContainer extends ModuleContainer
 
 		$this->isInstallable = $this->checkPluginVersion();
 		$this->isActivated = in_array($this, PluginLoaderFacade::getActivated());
+
+		$this->setSettings($this->defaultSettings());
+	}
+
+	/**
+	 * @return array
+	 */
+	public function defaultSettings()
+	{
+		return [];
 	}
 
 	/**
@@ -92,6 +101,29 @@ abstract class BasePluginContainer extends ModuleContainer
 	public function isInstallable()
 	{
 		return $this->isInstallable;
+	}
+
+	/**
+	 * @return \Illuminate\View\View|null
+	 */
+	public function getSettingsTemplate()
+	{
+		if ($this->hasSettingsPage())
+		{
+			return view($this->details['settings_template'], [
+				'plugin' => $this
+			]);
+		}
+
+		return null;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function hasSettingsPage()
+	{
+		return (bool) array_get($this->details, 'settings_template', false);
 	}
 
 	/**
@@ -201,6 +233,21 @@ abstract class BasePluginContainer extends ModuleContainer
 	}
 
 	/**
+	 * @param array $settings
+	 */
+	public function saveSettings(array $settings)
+	{
+		$this->setSettings($settings);
+
+		$model = Plugin::where('key', $this->getName())->first();
+
+		if (!is_null($model))
+		{
+			$model->update(['settings' => $this->getSettings()]);
+		}
+	}
+
+	/**
 	 * @return bool
 	 */
 	protected function checkPluginVersion()
@@ -218,6 +265,7 @@ abstract class BasePluginContainer extends ModuleContainer
 		$details['isInstallable'] = $this->isInstallable();
 		$details['isActivated'] = $this->isActivated();
 		$details['settings'] = $this->getSettings();
+		$details['settingsUrl'] = route('backend.plugins.settings.get', [$this->getName()]);
 
 		return array_merge(parent::toArray(), $details);
 	}
@@ -239,6 +287,18 @@ abstract class BasePluginContainer extends ModuleContainer
 		return base_path("/resources/views/plugins/{$this->getName()}");
 	}
 
+	protected function loadViews()
+	{
+		$namespace = strtolower($this->getName());
+
+		if (is_dir($appPath = $this->publishViewPath()))
+		{
+			app('view')->addNamespace($namespace, $appPath);
+		}
+
+		app('view')->addNamespace($namespace, $this->getViewsPath());
+	}
+
 	/**
 	 * @return array
 	 */
@@ -250,7 +310,8 @@ abstract class BasePluginContainer extends ModuleContainer
 			'author' 				=> null,
 			'icon' 					=> 'puzzle-piece',
 			'version' 				=> '0.0.0',
-			'required_cms_version'  => '0.0.0'
+			'required_cms_version'  => '0.0.0',
+			'settings_template'		=> false
 		];
 	}
 
