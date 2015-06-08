@@ -1,13 +1,21 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
+use KodiCMS\Plugins\Loader\PluginSchema;
 use Illuminate\Database\Schema\Blueprint;
 
-class News extends Migration
+class News extends PluginSchema
 {
+	/**
+	 * @return string
+	 */
+	public function getTableName()
+	{
+		return 'news';
+	}
+
 	public function up()
 	{
-		Schema::create('news', function (Blueprint $table) {
+		Schema::create($this->getTableName(), function (Blueprint $table) {
 			$table->timestamps();
 
 			$table->increments('id');
@@ -19,6 +27,6 @@ class News extends Migration
 
 	public function down()
 	{
-		Schema::dropIfExists('news');
+		Schema::dropIfExists($this->getTableName());
 	}
 }

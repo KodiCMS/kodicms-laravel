@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\Plugins\Providers;
 
-use KodiCMS\API\Exceptions\Exception;
 use KodiCMS\Plugins\Loader\PluginLoader;
 use KodiCMS\CMS\Providers\ServiceProvider;
+use KodiCMS\Plugins\Loader\PluginInstaller;
 
 class PluginServiceProvider extends ServiceProvider {
 
@@ -18,7 +18,10 @@ class PluginServiceProvider extends ServiceProvider {
 
 	public function register()
 	{
-
+		$this->app->singleton('plugin.installer', function($app)
+		{
+			return new PluginInstaller($app['db'], $app['files']);
+		});
 	}
 
 	public function boot()

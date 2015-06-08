@@ -119,6 +119,14 @@ abstract class BasePluginContainer extends ModuleContainer
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getSchemasPath()
+	{
+		return $this->getPath(['database', 'schemas']);
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function checkActivation()
@@ -152,9 +160,7 @@ abstract class BasePluginContainer extends ModuleContainer
 			'settings' => $this->getSettings()
 		]);
 
-		$installer = new ModuleInstaller([]);
-		$installer->migrateModule($this);
-		$installer->seedModule($this);
+		app('plugin.installer')->installSchemas($this->getSchemasPath());
 
 		event('plugin.activate', [$this->getName()]);
 
@@ -184,10 +190,7 @@ abstract class BasePluginContainer extends ModuleContainer
 
 		if ($removeTable)
 		{
-			// TODO сделать удаление данных из БД
-			$installer = new ModuleInstaller([]);
-			$installer->addModuleToReset($this);
-			$installer->rollbackModules();
+			app('plugin.installer')->dropSchemas($this->getSchemasPath());
 		}
 
 		event('plugin.deactivate', [$this->getName()]);
