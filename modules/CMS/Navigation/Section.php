@@ -143,7 +143,8 @@ class Section extends ItemDecorator implements \Countable, \Iterator
 			}
 
 			$uri = substr($currentUri, $len);
-			if (!empty($url) AND strpos($uri, $url) !== FALSE) {
+			$pos = strpos($uri, $url);
+			if (!empty($url) AND $pos !== false and $pos < 5) {
 				$page->setStatus(TRUE);
 
 				Collection::setCurrentPage($page);
