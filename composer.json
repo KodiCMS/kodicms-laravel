@@ -53,5 +53,9 @@
 	},
 	"config": {
 		"preferred-install": "dist"
+	},
+	"installer-paths" : {
+		"plugins/{$name}" : ["type:kodicms-plugin"],
+		"modules/{$name}" : ["type:kodicms-module"]
 	}
 }
