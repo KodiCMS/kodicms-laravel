@@ -13,7 +13,7 @@ $(function() {
 			interpolationPrefix: ':',
 			interpolationSuffix: '',
 			localStorageExpirationTime: 86400000, // in ms, default 1 week
-			resGetPath: '/cms/js/locale/__lng__.json'
+			resGetPath: '/cms/js/locale/:lng.json'
 		}, runApplication);
 	} catch (err) {
 		runApplication();
