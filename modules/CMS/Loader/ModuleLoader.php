@@ -3,7 +3,7 @@
 use Carbon\Carbon;
 use KodiCMS\Support\Helpers\File;
 use Illuminate\Support\Facades\Cache;
-use KodiCMS\CMS\Exceptions\ModuleLoaderException;
+use Illuminate\Contracts\Foundation\Application;
 use KodiCMS\CMS\Contracts\ModuleContainerInterface;
 
 class ModuleLoader
@@ -108,13 +108,14 @@ class ModuleLoader
 	}
 
 	/**
+	 * @param Application $app
 	 * @return $this
 	 */
-	public function bootModules()
+	public function bootModules(Application $app)
 	{
 		foreach ($this->getRegisteredModules() as $module)
 		{
-			$module->boot();
+			$module->boot($app);
 		}
 
 		$this->getFoundFilesFromCache();
@@ -123,13 +124,14 @@ class ModuleLoader
 	}
 
 	/**
+	 * @param Application $app
 	 * @return $this
 	 */
-	public function registerModules()
+	public function registerModules(Application $app)
 	{
 		foreach ($this->getRegisteredModules() as $module)
 		{
-			$module->register();
+			$module->register($app);
 		}
 
 		return $this;

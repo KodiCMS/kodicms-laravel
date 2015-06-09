@@ -5,9 +5,10 @@ use CMS;
 class ModuleContainer extends Loader\ModuleContainer
 {
 	/**
+	 * @param \Illuminate\Foundation\Application $app
 	 * @return $this
 	 */
-	public function register()
+	public function register($app)
 	{
 		if (!$this->isRegistered)
 		{

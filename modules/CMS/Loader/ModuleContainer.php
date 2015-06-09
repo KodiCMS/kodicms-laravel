@@ -60,10 +60,8 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 
 		$this->path = File::normalizePath($modulePath);
 		$this->name = $moduleName;
-		if (!is_null($namespace))
-		{
-			$this->namespace = $namespace;
-		}
+
+		$this->setNamespace($namespace);
 	}
 
 	/**
@@ -168,9 +166,10 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 	}
 
 	/**
+	 * @param \Illuminate\Foundation\Application $app
 	 * @return $this
 	 */
-	public function boot()
+	public function boot($app)
 	{
 		if (!$this->isBooted)
 		{
@@ -184,9 +183,10 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 	}
 
 	/**
+	 * @param \Illuminate\Foundation\Application $app
 	 * @return $this
 	 */
-	public function register()
+	public function register($app)
 	{
 		if (!$this->isRegistered)
 		{
@@ -346,6 +346,17 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 	{
 		$namespace = strtolower($this->getName());
 		app('translator')->addNamespace($namespace, $this->getLocalePath());
+	}
+
+	/**
+	 * @param string|null $namespace
+	 */
+	protected function setNamespace($namespace = null)
+	{
+		if (!is_null($namespace))
+		{
+			$this->namespace = $namespace;
+		}
 	}
 
 	/**

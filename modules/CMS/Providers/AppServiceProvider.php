@@ -12,7 +12,7 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		ModuleLoader::bootModules();
+		ModuleLoader::bootModules($this->app);
 
 		$this->app['cms']->shutdown(function ()
 		{
@@ -38,7 +38,7 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		ModuleLoader::registerModules();
+		ModuleLoader::registerModules($this->app);
 	}
 
 }

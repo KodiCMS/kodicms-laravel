@@ -8,9 +8,10 @@ class AppModuleContainer extends ModuleContainer
 	protected $namespace = '';
 
 	/**
+	 * @param \Illuminate\Foundation\Application $app
 	 * @return $this
 	 */
-	public function boot()
+	public function boot($app)
 	{
 		if (!$this->isBooted)
 		{
@@ -22,9 +23,10 @@ class AppModuleContainer extends ModuleContainer
 	}
 
 	/**
+	 * @param \Illuminate\Foundation\Application $app
 	 * @return $this
 	 */
-	public function register()
+	public function register($app)
 	{
 		$this->isRegistered = true;
 
