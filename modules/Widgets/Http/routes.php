@@ -24,7 +24,7 @@ Route::group(['prefix' => CMS::backendPath()], function ()
 		'getPopupList' => 'backend.widget.popup_list'
 	]);
 
-	Route::get('handler/{$id}', ['as' => 'widget.handler', 'uses' => 'HandlerController@handle']);
+	Route::get('handler/{handler}', ['as' => 'widget.handler', 'uses' => 'HandlerController@getHandle']);
 });
 
 RouteAPI::put('widget', ['as' => 'api.widget.place', 'uses' => 'API\WidgetController@putPlace']);
