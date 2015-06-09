@@ -9,5 +9,8 @@ return [
 		'label' => [
 			'format' => 'Формат фремени'
 		]
+	],
+	'kodicms_rss' => [
+		'title' => 'Обновления KodiCMS'
 	]
 ];

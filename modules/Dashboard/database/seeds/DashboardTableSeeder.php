@@ -20,12 +20,12 @@ class DashboardTableSeeder extends Seeder
 					[
 						'user_id' => $user->id,
 						'key' => Dashboard::WIDGET_SETTINGS_KEY,
-						'value' => '{"555608fdd8cd4":{"id":"555608fdd8cd4","type":"mini_calendar","settings":[],"parameters":[]},"55560bdf5e7bc":{"id":"55560bdf5e7bc","type":"cache_button","settings":[],"parameters":[]}}'
+						'value' => '{"555608fdd8cd4":{"id":"555608fdd8cd4","type":"mini_calendar","settings":[],"parameters":[]},"55560bdf5e7bc":{"id":"55560bdf5e7bc","type":"cache_button","settings":[],"parameters":[]},"5576d12c0c268":{"id":"5576d12c0c268","type":"kodicms_rss","settings":[],"parameters":[]}}'
 					],
 					[
 						'user_id' => $user->id,
 						'key' => Dashboard::WIDGET_BLOCKS_KEY,
-						'value' => '[{"col":3,"row":1,"sizex":3,"sizey":1,"max-sizex":5,"max-sizey":1,"min-sizex":3,"min-sizey":1,"widget_id":"555608fdd8cd4"},{"col":1,"row":1,"sizex":2,"sizey":1,"max-sizex":2,"max-sizey":1,"min-sizex":2,"min-sizey":1,"widget_id":"55560bdf5e7bc"}]'
+						'value' => '[{"col":3,"row":1,"sizex":3,"sizey":1,"max-sizex":5,"max-sizey":1,"min-sizex":3,"min-sizey":1,"widget_id":"555608fdd8cd4"},{"col":1,"row":1,"sizex":2,"sizey":1,"max-sizex":2,"max-sizey":1,"min-sizex":2,"min-sizey":1,"widget_id":"55560bdf5e7bc"},{"col":1,"row":2,"sizex":5,"sizey":3,"max-sizex":5,"max-sizey":3,"min-sizex":3,"min-sizey":3,"widget_id":"5576d12c0c268"}]'
 					]
 				]);
 		}

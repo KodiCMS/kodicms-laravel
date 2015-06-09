@@ -10,5 +10,10 @@ return [
 		'title' => trans('dashboard::types.mini_calendar.title'),
 		'class' => '\KodiCMS\Dashboard\Widget\MiniCalendar',
 		'icon' => 'calendar'
+	],
+	'kodicms_rss' => [
+		'title' => trans('dashboard::types.kodicms_rss.title'),
+		'class' => '\KodiCMS\Dashboard\Widget\KodiCMSRss',
+		'icon' => 'github-alt'
 	]
 ];
