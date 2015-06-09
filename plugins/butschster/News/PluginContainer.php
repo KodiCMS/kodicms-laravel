@@ -11,7 +11,7 @@ class PluginContainer extends BasePluginContainer
 			'description' => 'News section',
 			'author' => 'Pavel Buchnev',
 			'icon' => 'newspaper-o',
-			'required_cms_version' => '12.0.0',
+			'required_cms_version' => '0.0.0',
 			'settings_template' => 'butschster:news::news.settings'
 		];
 	}
