@@ -166,7 +166,7 @@ class FrontendPage implements BehaviorPageInterface
 			$slugs->where('published_at', '<=', DB::raw('NOW()'));
 		}
 
-		$slugs = $slugs->get()->lists('slug', 'id');
+		$slugs = $slugs->get()->lists('slug', 'id')->all();
 
 		$newSlugs = [];
 		foreach ($uriSlugs as $slug)

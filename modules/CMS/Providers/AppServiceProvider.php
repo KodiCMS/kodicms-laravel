@@ -19,11 +19,9 @@ class AppServiceProvider extends ServiceProvider {
 			ModuleLoader::cacheFoundFiles();
 		});
 
-		Blade::extend(function ($view, $compiler)
+		Blade::directive('event', function($expression)
 		{
-			$pattern = $compiler->createMatcher('event');
-
-			return preg_replace($pattern, '$1<?php event$2; ?>', $view);
+			return "<?php event{$expression}; ?>";
 		});
 	}
 

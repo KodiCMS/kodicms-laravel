@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\Email\Commands;
+<?php namespace KodiCMS\Email\Jobs;
 
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

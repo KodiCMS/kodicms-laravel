@@ -82,7 +82,7 @@ class Paginator extends Decorator implements WidgetRenderable
 		$select = $widgets->map(function($widget)
 		{
 			return $widget->toArray();
-		})->lists('name', 'id');
+		})->lists('name', 'id')->all();
 
 		return compact('widgets', 'select');
 	}

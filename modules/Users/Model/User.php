@@ -157,7 +157,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	{
 		$status = TRUE;
 
-		$roles = $this->getRoles()->lists('name');
+		$roles = $this->getRoles()->lists('name')->all();
 
 		if (is_array($role))
 		{
@@ -192,13 +192,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	public function getPermissionsByRoles()
 	{
 		$roles = $this->getRoles()
-			->lists('name', 'id');
+			->lists('name', 'id')
+			->all();
 
 		if(!empty($roles)) {
 			$permissions = (new RolePermission())
 				->whereIn('role_id', array_keys($roles))
 				->get()
-				->lists('action');
+				->lists('action')
+				->all();
 		}
 
 		return array_unique($permissions);

@@ -77,7 +77,10 @@ class RelatedField extends SelectField
 
 		if (empty($return) and !is_null($value))
 		{
-			$return = $this->getRelatedModel()->getRelated()->lists($this->valueField, $this->keyField);
+			$return = $this->getRelatedModel()
+				->getRelated()
+				->lists($this->valueField, $this->keyField)
+				->all();
 		}
 
 		return $return;

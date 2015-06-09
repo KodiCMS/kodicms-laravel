@@ -72,11 +72,13 @@ class PageRepository extends BaseRepository
 	public function getChildrenByPageId($pageId)
 	{
 		return $this->model
+			->select()
 			->where('parent_id', (int) $pageId)
 			->orderBy('position', 'asc')
 			->orderBy('created_at', 'asc')
 			->get()
-			->lists(null, 'id');
+			->keyBy('id')
+			->all();
 	}
 
 

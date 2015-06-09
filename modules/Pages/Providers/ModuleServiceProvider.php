@@ -52,24 +52,19 @@ class ModuleServiceProvider extends ServiceProvider {
 		Event::listen('frontend.found', 'KodiCMS\Pages\Listeners\PlacePagePartsToBlocksEventHandler', 7000);
 
 
-		Blade::extend(function ($view, $compiler)
+		Blade::directive('meta', function($expression)
 		{
-			$pattern = $compiler->createMatcher('meta');
-
-			return preg_replace($pattern, '$1<?php meta$2; ?>', $view);
+			return "<?php meta{$expression}; ?>";
 		});
 
-		Blade::extend(function ($view, $compiler)
+		Blade::directive('block', function($expression)
 		{
-			$pattern = $compiler->createMatcher('block');
-
-			return preg_replace($pattern, '$1<?php Block::run$2; ?>', $view);
+			return "<?php Block::run{$expression}; ?>";
 		});
 
-		Blade::extend(function ($view, $compiler)
+		Blade::directive('part', function($expression)
 		{
-			$pattern = $compiler->createMatcher('part');
-			return preg_replace($pattern, '$1<?php echo \KodiCMS\Pages\PagePart::getContent$2; ?>', $view);
+			return "<?php echo \\KodiCMS\\Pages\\PagePart::getContent{$expression}; ?>";
 		});
 
 		Page::observe(new PageObserver);

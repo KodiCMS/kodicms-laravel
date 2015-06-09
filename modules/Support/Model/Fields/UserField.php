@@ -21,6 +21,6 @@ class UserField extends RelatedField
 	 */
 	public function getOptions($key, $value)
 	{
-		return User::lists($this->valueField, $this->keyField);
+		return User::lists($this->valueField, $this->keyField)->all();
 	}
 }

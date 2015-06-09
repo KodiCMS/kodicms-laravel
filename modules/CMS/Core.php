@@ -11,7 +11,7 @@ use Illuminate\Container\Container;
  */
 class Core extends Container {
 
-	const VERSION 	= '14.0.0';
+	const VERSION 	= '0.0.1 alpha';
 	const NAME		= 'KodiCMS';
 	const WEBSITE	= 'http://kodicms.ru';
 

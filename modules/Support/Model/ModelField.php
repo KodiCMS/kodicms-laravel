@@ -456,7 +456,7 @@ abstract class ModelField implements ModelFieldInterface
 		}
 		else if ($value instanceof Collection)
 		{
-			$value = $value->lists('id');
+			$value = $value->lists('id')->all();
 		}
 
 		return $value;

@@ -43,7 +43,7 @@ abstract class AbstractFileController extends System\BackendController {
 	public function getCreate()
 	{
 		$file = $this->getFile();
-		$roles = UserRole::lists('name', 'name');
+		$roles = UserRole::lists('name', 'name')->all();
 
 		$this->setTitle(trans("{$this->moduleNamespace}{$this->sectionPrefix}.title.create"));
 		$this->templateScripts['FILE'] = $file->toArray();
@@ -77,7 +77,7 @@ abstract class AbstractFileController extends System\BackendController {
 	public function getEdit($filename)
 	{
 		$file = $this->getFile($filename);
-		$roles = UserRole::lists('name', 'name');
+		$roles = UserRole::lists('name', 'name')->all();
 
 		$this->setTitle(trans("{$this->moduleNamespace}{$this->sectionPrefix}.title.edit", [
 			'name' => $file->getName()

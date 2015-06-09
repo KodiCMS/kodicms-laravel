@@ -18,7 +18,7 @@ return [
 	'label' => [
 		'about' => [
 			'cms' => 'Версия системы',
-			'framework' => 'Используемый фреймворк',
+			'framework' => 'Фреймворк',
 			'php_version' => 'Версия PHP',
 			'environment' => 'Текущее окружение',
 			'host' => 'Хост',

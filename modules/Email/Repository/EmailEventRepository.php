@@ -47,6 +47,6 @@ class EmailEventRepository extends BaseRepository
 	 */
 	public function eventsList()
 	{
-		return $this->all()->lists('fullName', 'id');
+		return $this->all()->lists('fullName', 'id')->all();
 	}
 }

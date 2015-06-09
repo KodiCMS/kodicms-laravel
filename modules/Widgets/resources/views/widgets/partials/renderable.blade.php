@@ -41,7 +41,7 @@ $defaultTemplateButton = $widget->getDefaultFrontendTemplate()
 	<div class="form-group">
 		<div class="col-xs-12">
 			<label class="control-label">@lang('widgets::core.settings.related_widgets')</label>
-			{!! Form::select('relatedWidgets[]', $widgetList, $widget->getRalatedWidgets()->lists('id'), [
+			{!! Form::select('relatedWidgets[]', $widgetList, $widget->getRalatedWidgets()->lists('id')->all(), [
 				'class' => 'form-control', 'multiple'
 			]) !!}
 		</div>

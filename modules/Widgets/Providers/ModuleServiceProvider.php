@@ -92,7 +92,7 @@ class ModuleServiceProvider extends ServiceProvider
 				$commentKeys = WidgetManager::getTemplateKeysByType($widget->type);
 				$snippets = (new SnippetCollection())->getHTMLSelectChoices();
 				$assetsPackages = Package::getHTMLSelectChoice();
-				$widgetList = Widget::where('id', '!=', $widget->id)->lists('name', 'id');
+				$widgetList = Widget::where('id', '!=', $widget->id)->lists('name', 'id')->all();
 
 				echo view('widgets::widgets.partials.renderable', compact(
 					'widget', 'commentKeys', 'snippets', 'assetsPackages', 'widgetList'
@@ -106,7 +106,7 @@ class ModuleServiceProvider extends ServiceProvider
 
 			if (acl_check('widgets.roles') AND !$widget->isHandler())
 			{
-				$usersRoles = UserRole::lists('name', 'id');
+				$usersRoles = UserRole::lists('name', 'id')->all();
 				echo view('widgets::widgets.partials.permissions', compact('widget', 'usersRoles'))->render();
 			}
 		});
@@ -131,10 +131,9 @@ class ModuleServiceProvider extends ServiceProvider
 			}
 		});
 
-		Blade::extend(function ($view, $compiler)
+		Blade::directive('widget', function($expression)
 		{
-			$pattern = $compiler->createMatcher('widget');
-			return preg_replace($pattern, '$1<?php echo (new \KodiCMS\Widgets\Engine\WidgetRenderHTML$2)->render(); ?>', $view);
+			return "<?php echo (new \\KodiCMS\\Widgets\\Engine\\WidgetRenderHTML{$expression})->render(); ?>";
 		});
 
 		Widget::observe(new WidgetObserver);

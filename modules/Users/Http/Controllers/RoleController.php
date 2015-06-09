@@ -44,7 +44,7 @@ class RoleController extends BackendController
 		]));
 
 		$permissions = ACL::getPermissionsList();
-		$selectedPermissions = $role->permissions()->lists('action');
+		$selectedPermissions = $role->permissions()->lists('action')->all();
 
 		$users = $role->users()->with('roles')->paginate();
 		$this->setContent('roles.edit', compact('role', 'permissions', 'selectedPermissions', 'users'));

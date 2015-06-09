@@ -15,7 +15,7 @@ class KeysController extends Controller
 			throw new PermissionException('api.view_keys');
 		}
 
-		$keys = ApiKey::lists('description', 'id');
+		$keys = ApiKey::lists('description', 'id')->all();
 		$systemKey = config('cms.api_key');
 
 		unset($keys[$systemKey]);

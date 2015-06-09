@@ -17,7 +17,7 @@ class UsersTableSeeder extends Seeder
 		\DB::table('users')->truncate();
 		\DB::table('roles_users')->truncate();
 
-		$roles = UserRole::get()->lists('id');
+		$roles = UserRole::get()->lists('id')->all();
 		$maxRolesToAtach = count($roles) > 4 ? 4 : count($roles);
 
 		$faker = \Faker\Factory::create();
