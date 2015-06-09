@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\CMS\Http\Controllers;
 
 use Date;
+use KodiCMS\CMS\Helpers\Updater;
 use WYSIWYG;
 use KodiCMS\Support\Helpers\Locale;
 
@@ -28,5 +29,14 @@ class SystemController extends System\BackendController {
 		$this->autoRender = false;
 
 		phpinfo();
+	}
+
+	public function update()
+	{
+		$updater = new Updater();
+		$repositoryVersion = $updater->getRemoteVersion();
+		$hasNewVersion = $updater->hasNewVersion();
+
+		$this->setContent('system.update', compact('repositoryVersion', 'hasNewVersion'));
 	}
 }

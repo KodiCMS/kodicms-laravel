@@ -70,4 +70,8 @@ return [
 		'd F Y H:i',
 		'l, j-S F Y'
 	),
+	'update' => [
+		'repository' => 'KodiCMS/kodicms-laravel',
+		'branch' => 'dev'
+	]
 ];

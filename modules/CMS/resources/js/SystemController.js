@@ -24,3 +24,9 @@ CMS.controllers.add('system.settings', function () {
 		editor.setTheme("ace/theme/" + theme);
 	}
 });
+
+CMS.controllers.add('system.update', function() {
+	Api.get('/api.updates.check', {}, function(response) {
+		$('#files').html(response.content);
+	});
+});
