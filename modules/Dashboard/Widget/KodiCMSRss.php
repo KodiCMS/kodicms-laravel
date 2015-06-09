@@ -8,10 +8,10 @@ class KodiCMSRss extends Decorator
 	 * @var array
 	 */
 	protected $size = [
-		'x' => 3,
-		'y' => 3,
-		'max_size' => [5, 3],
-		'min_size' => [3, 3]
+		'x' => 5,
+		'y' => 2,
+		'max_size' => [5, 10],
+		'min_size' => [3, 2]
 	];
 
 	/**

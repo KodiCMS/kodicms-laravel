@@ -1,6 +1,4 @@
 <div class="panel dashboard-widget rss-feed-widget" data-id="{{ $widget->getId() }}">
-
-
 	<div class="panel-heading">
 		<span class="panel-title" data-icon="rss">@lang('dashboard::types.kodicms_rss.title')</span>
 		<div class="panel-heading-controls">
@@ -17,5 +15,7 @@
 	</ul>
 </div>
 <script type="text/javascript">
-	$(function(){$('.rss-feed-widget[data-id="{{ $widget->getId() }}"] .list-group').slimScroll({height: 270});})
+$(function(){
+	Scroll.addToWidget('.rss-feed-widget[data-id="{{ $widget->getId() }}"]', '.list-group', ['.panel-heading']);
+})
 </script>

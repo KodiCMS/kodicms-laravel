@@ -48,6 +48,7 @@ elixir(function(mix) {
 		'cms/helpers.js',
 		'cms/ui.js',
 		'cms/popup.js',
+		'cms/scroll.js',
 		'cms/api.js',
 		'cms/user.meta.js',
 		'cms/run.js'
