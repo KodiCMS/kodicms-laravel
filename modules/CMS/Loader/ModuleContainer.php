@@ -325,10 +325,10 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 
 		if (is_dir($appPath = $this->publishViewPath()))
 		{
-			app('view')->addNamespace($namespace, $appPath);
+			view()->addNamespace($namespace, $appPath);
 		}
 
-		app('view')->addNamespace($namespace, $this->getViewsPath());
+		view()->addNamespace($namespace, $this->getViewsPath());
 	}
 
 	/**

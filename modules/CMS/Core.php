@@ -42,7 +42,7 @@ class Core extends Container {
 	 */
 	public static function backendResourcesPath()
 	{
-		return public_path('cms/');
+		return public_path('cms' . DIRECTORY_SEPARATOR);
 	}
 
 	/**
@@ -58,7 +58,7 @@ class Core extends Container {
 	 */
 	public static function backendResourcesURL()
 	{
-		return url(static::backendPath() . '/cms');
+		return url(static::backendPath() . DIRECTORY_SEPARATOR .'cms');
 	}
 
 	public function __construct()

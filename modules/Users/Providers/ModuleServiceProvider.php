@@ -17,12 +17,12 @@ class ModuleServiceProvider extends ServiceProvider {
 
 		Event::listen('view.navbar.right.after', function ()
 		{
-			echo view('users::parts.navbar');
+			echo view('users::parts.navbar')->render();
 		});
 
 		Event::listen('view.menu', function ($navigation)
 		{
-			echo view('users::parts.navigation');
+			echo view('users::parts.navigation')->render();
 		}, 999);
 	}
 
