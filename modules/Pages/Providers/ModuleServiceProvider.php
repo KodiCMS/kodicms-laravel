@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Pages\Providers;
 
+use Route;
 use Blade;
 use Block;
 use Event;

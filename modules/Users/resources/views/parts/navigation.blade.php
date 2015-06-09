@@ -16,7 +16,7 @@
 				'class' => 'btn btn-xs btn-warning btn-outline dark'
 			]) !!}
 
-			<a href="{{ route('auth.logout') }}"
+			<a href="{{ route('backend.auth.logout') }}"
 			   data-icon="power-off"
 			   class="btn btn-xs btn-danger btn-outline dark"></a>
 		</div>

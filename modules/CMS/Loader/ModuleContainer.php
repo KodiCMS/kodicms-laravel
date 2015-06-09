@@ -190,6 +190,8 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 	{
 		if (!$this->isRegistered)
 		{
+			$this->loadSystemRoutes($app['router']);
+
 			$serviceProviderPath = $this->getServiceProviderPath();
 			if (is_file($serviceProviderPath))
 			{
@@ -346,6 +348,14 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 	{
 		$namespace = strtolower($this->getName());
 		app('translator')->addNamespace($namespace, $this->getLocalePath());
+	}
+
+	/**
+	 * @param Router $router
+	 */
+	protected function loadSystemRoutes(Router $router)
+	{
+
 	}
 
 	/**

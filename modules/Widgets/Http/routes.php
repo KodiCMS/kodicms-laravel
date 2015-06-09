@@ -1,39 +1,39 @@
 <?php
 
-Route::group(['prefix' => CMS::backendPath()], function ()
+Route::group(['prefix' => CMS::backendPath(), 'as' => 'backend.'], function ()
 {
 	Route::controller('snippets', 'SnippetController', [
-		'getIndex' => 'backend.snippet.list',
-		'getCreate' => 'backend.snippet.create',
-		'postCreate' => 'backend.snippet.create.post',
-		'getEdit' => 'backend.snippet.edit',
-		'postEdit' => 'backend.snippet.edit.post',
-		'postDelete' => 'backend.snippet.delete',
+		'getIndex' => 'snippet.list',
+		'getCreate' => 'snippet.create',
+		'postCreate' => 'snippet.create.post',
+		'getEdit' => 'snippet.edit',
+		'postEdit' => 'snippet.edit.post',
+		'postDelete' => 'snippet.delete',
 	]);
 
 	Route::controller('widget', 'WidgetController', [
-		'getIndex' => 'backend.widget.list',
-		'getLocation' => 'backend.widget.location',
-		'postLocation' => 'backend.widget.location.post',
-		'getTemplate' => 'backend.widget.template',
-		'getCreate' => 'backend.widget.create',
-		'postCreate' => 'backend.widget.create.post',
-		'getEdit' => 'backend.widget.edit',
-		'postEdit' => 'backend.widget.edit.post',
-		'postDelete' => 'backend.widget.delete',
-		'getPopupList' => 'backend.widget.popup_list'
+		'getIndex' => 'widget.list',
+		'getLocation' => 'widget.location',
+		'postLocation' => 'widget.location.post',
+		'getTemplate' => 'widget.template',
+		'getCreate' => 'widget.create',
+		'postCreate' => 'widget.create.post',
+		'getEdit' => 'widget.edit',
+		'postEdit' => 'widget.edit.post',
+		'postDelete' => 'widget.delete',
+		'getPopupList' => 'widget.popup_list'
 	]);
-
-	Route::get('handler/{handler}', ['as' => 'widget.handler', 'uses' => 'HandlerController@getHandle']);
 });
 
-RouteAPI::put('widget', ['as' => 'api.widget.place', 'uses' => 'API\WidgetController@putPlace']);
+Route::group(['as' => 'api.'], function ()
+{
+	RouteAPI::put('widget', ['as' => 'widget.place', 'uses' => 'API\WidgetController@putPlace']);
+	RouteAPI::post('widget.set.template', ['as' => 'widget.set.template', 'uses' => 'API\WidgetController@setTemplate']);
+	RouteAPI::post('page.widgets.reorder', ['as' => 'page.widgets.reorder', 'uses' => 'API\WidgetController@postReorder']);
+	RouteAPI::post('snippet', ['as' => 'snippet.create', 'uses' => 'API\SnippetController@postCreate']);
+	RouteAPI::put('snippet', ['as' => 'snippet.edit', 'uses' => 'API\SnippetController@postEdit']);
+	RouteAPI::get('snippet.list', ['as' => 'snippet.list', 'uses' => 'API\SnippetController@getList']);
+	RouteAPI::get('snippet.xeditable', ['as' => 'snippet.xeditable', 'uses' => 'API\SnippetController@getListForXEditable']);
+});
 
-RouteAPI::post('widget.set.template', ['as' => 'api.widget.set.template', 'uses' => 'API\WidgetController@setTemplate']);
-
-RouteAPI::post('page.widgets.reorder', ['as' => 'api.page.widgets.reorder', 'uses' => 'API\WidgetController@postReorder']);
-
-RouteAPI::post('snippet', ['as' => 'api.snippet.create', 'uses' => 'API\SnippetController@postCreate']);
-RouteAPI::put('snippet', ['as' => 'api.snippet.edit', 'uses' => 'API\SnippetController@postEdit']);
-RouteAPI::get('snippet.list', ['as' => 'api.snippet.list', 'uses' => 'API\SnippetController@getList']);
-RouteAPI::get('snippet.xeditable', ['as' => 'api.snippet.xeditable', 'uses' => 'API\SnippetController@getListForXEditable']);
+Route::get('handler/{handler}', ['as' => 'widget.handler', 'uses' => 'HandlerController@getHandle']);

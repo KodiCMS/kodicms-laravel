@@ -3,7 +3,7 @@
 		{!! HTML::image( CMS::resourcesURL() . '/images/logo-color.png') !!}
 	</a>
 
-	{!! HTML::linkRoute('auth.login', trans('users::core.button.login'), [], [
+	{!! HTML::linkRoute('backend.auth.login', trans('users::core.button.login'), [], [
 		'class' => 'btn btn-default', 'data-icon' => 'chevron-left'
 	]) !!}
 
@@ -11,7 +11,7 @@
 </div>
 
 <div class="page-signin-alt">
-	{!! Form::open(['route' => 'auth.password.post', 'class' => 'panel', 'id' => 'signin-form_id']) !!}
+	{!! Form::open(['route' => 'backend.auth.password.post', 'class' => 'panel', 'id' => 'signin-form_id']) !!}
 	@if (count($errors) > 0)
 		<ul class="alert alert-danger alert-dark list-unstyled">
 			@foreach ($errors->all() as $error)

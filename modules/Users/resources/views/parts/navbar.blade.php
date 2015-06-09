@@ -22,7 +22,7 @@
 			</div>
 		</li>
 		<li class="user-footer">
-			<a href="{{ route('auth.logout') }}"
+			<a href="{{ route('backend.auth.logout') }}"
 			   data-icon="power-off text-danger"
 			   class="btn btn-default btn-xs text-bold pull-right">@lang('users::core.button.logout')</a>
 		</li>

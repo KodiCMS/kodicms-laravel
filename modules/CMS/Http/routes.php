@@ -1,22 +1,15 @@
 <?php
 
-Route::group(['prefix' => CMS::backendPath()], function ()
+Route::group(['prefix' => CMS::backendPath(), 'as' => 'backend.'], function ()
 {
-	Route::get('/settings', ['as' => 'backend.settings', 'uses' => 'SystemController@settings']);
-	Route::get('/about', ['as' => 'backend.about', 'uses' => 'SystemController@about']);
-
-	Route::get('/phpinfo', ['as' => 'backend.phpinfo', 'uses' => 'SystemController@phpInfo']);
+	Route::get('/settings', ['as' => 'settings', 'uses' => 'SystemController@settings']);
+	Route::get('/about', ['as' => 'about', 'uses' => 'SystemController@about']);
+	Route::get('/update', ['as' => 'update', 'uses' => 'SystemController@update']);
+	Route::get('/phpinfo', ['as' => 'phpinfo', 'uses' => 'SystemController@phpInfo']);
 });
 
-RouteAPI::post('settings.update', ['as' => 'api.settings.update', 'uses' => 'API\SettingsController@post']);
-RouteAPI::delete('cache.clear', ['as' => 'api.cache.clear', 'uses' => 'API\CacheController@deleteClear']);
-
-app('router')->before(function()
+Route::group(['as' => 'api.'], function ()
 {
-	Route::group(['namespace' => 'KodiCMS\CMS\Http\Controllers', 'prefix' => CMS::backendPath()], function ()
-	{
-		Route::get('cms/{file}.{ext}', 'System\VirtualMediaLinksController@find')
-			->where('file', '.*')
-			->where('ext', '(css|js|png|jpg|gif|otf|eot|svg|ttf|woff)');
-	});
+	RouteAPI::post('settings.update', ['as' => 'settings.update', 'uses' => 'API\SettingsController@post']);
+	RouteAPI::delete('cache.clear', ['as' => 'cache.clear', 'uses' => 'API\CacheController@deleteClear']);
 });
