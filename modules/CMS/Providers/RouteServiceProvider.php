@@ -30,6 +30,16 @@ class RouteServiceProvider extends BaseRouteServiceProvider
 	}
 
 	/**
+	 * Load the cached routes for the application.
+	 *
+	 * @return void
+	 */
+	protected function loadCachedRoutes()
+	{
+		require $this->app->getCachedRoutesPath();
+	}
+
+	/**
 	 * Define the routes for the application.
 	 *
 	 * @param  \Illuminate\Routing\Router $router
