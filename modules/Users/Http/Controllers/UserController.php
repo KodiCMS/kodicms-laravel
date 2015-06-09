@@ -48,7 +48,8 @@ class UserController extends BackendController
 
 	public function getProfile(UserRepository $repository, $id = NULL)
 	{
-		$user = $repository->findOrFail($id);
+
+		$user = $repository->findOrFail($id ?: $this->currentUser->id);
 		$roles = $user->roles;
 		$permissions = $user->getAllowedPermissions();
 
