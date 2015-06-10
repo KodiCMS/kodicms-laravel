@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Plugins\Loader;
 
 use DB;
+use Artisan;
 use ModuleLoader;
 use KodiCMS\Plugins\Model\Plugin;
 use Illuminate\Filesystem\Filesystem;
@@ -133,6 +134,11 @@ class PluginLoader {
 		{
 			$status = $plugin->activate();
 
+			if (app()->routesAreCached())
+			{
+				Artisan::call('route:cache');
+			}
+
 			$plugin->checkActivation();
 			$this->activated[get_class($plugin)] = $plugin;
 		}
@@ -151,6 +157,11 @@ class PluginLoader {
 		if (!is_null($plugin = $this->getPluginContainer($name)))
 		{
 			$status = $plugin->deactivate($removeTable);
+
+			if (app()->routesAreCached())
+			{
+				Artisan::call('route:cache');
+			}
 
 			$plugin->checkActivation();
 			unset($this->activated[get_class($plugin)]);
