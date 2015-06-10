@@ -1,7 +1,4 @@
 <div class="panel">
-	<div class="panel-heading">
-		<span class="panel-title">@lang('cms::core.title.update')</span>
-	</div>
 	<div class="panel-body">
 		@if ($hasNewVersion)
 		<h3>{!! trans('cms::core.messages.new_version', ['version' => $repositoryVersion]) !!}</h3>
@@ -9,10 +6,16 @@
 		<h3>@lang('cms::core.messages.no_new_version')</h3>
 		@endif
 
-		<div class="note note-warning">
-			{!! UI::icon('lightbulb-o fa-lg') !!} @lang('cms::core.messages.update_information')
-		</div>
+		<br />
+		{!! HTML::link($issueUrl, trans('cms::core.button.bug_report'), [
+			'class' => 'btn btn-labeled btn-danger', 'data-icon' => 'bug fa-lg', 'target' => '_blank'
+		]) !!}
+	</div>
 
-		<div id="files"></div>
+	<div id="files"></div>
+
+	<hr class="no-margin-b" />
+	<div class="note note-warning no-margin-b">
+		{!! UI::icon('lightbulb-o fa-lg') !!} @lang('cms::core.messages.update_information')
 	</div>
 </div>

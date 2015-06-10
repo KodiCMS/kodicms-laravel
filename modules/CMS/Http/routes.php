@@ -11,6 +11,7 @@ Route::group(['prefix' => CMS::backendPath(), 'as' => 'backend.'], function ()
 Route::group(['as' => 'api.'], function ()
 {
 	RouteAPI::get('updates.check', ['as' => 'update.check', 'uses' => 'API\UpdateController@checkRemoteFiles']);
+	RouteAPI::get('updates.diff', ['as' => 'update.check', 'uses' => 'API\UpdateController@diffFiles']);
 	RouteAPI::post('settings.update', ['as' => 'settings.update', 'uses' => 'API\SettingsController@post']);
 	RouteAPI::delete('cache.clear', ['as' => 'cache.clear', 'uses' => 'API\CacheController@deleteClear']);
 });

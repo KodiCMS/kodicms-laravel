@@ -27,7 +27,8 @@
 		"underscore": "latest",
 		"x-editable": "latest",
 		"bootstrap-toggle": "latest",
-		"bootbox": "latest"
+		"bootbox": "latest",
+		"jsdiff": "latest"
 	},
 	"install" : {
 		"base":  "public/cms/libs",

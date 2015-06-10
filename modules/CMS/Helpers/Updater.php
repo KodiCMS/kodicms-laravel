@@ -6,10 +6,11 @@ use Cache;
 use KodiCMS\CMS\Core;
 use KodiCMS\Support\Helpers\Text;
 
-class Updater {
+class Updater
+{
 
-	const VERSION_NEW = -1;
-	const VERSION_OLD = 1;
+	const VERSION_NEW     = -1;
+	const VERSION_OLD     = 1;
 	const VERSION_CURRENT = 0;
 
 	const CACHE_KEY = 'update::cache';
@@ -75,9 +76,11 @@ class Updater {
 	 */
 	public function checkVersion()
 	{
-		$version = Cache::remember(static::CACHE_KEY_VERSION, 60, function() {
+		$version = Cache::remember(static::CACHE_KEY_VERSION, Carbon::now()->addHours(24), function ()
+		{
 			$response = self::request('https://raw.githubusercontent.com/:rep/:branch/modules/CMS/Core.php');
 			preg_match('/const VERSION[ ]?[\t]?\=[ ]?[\t]?[\'|"]([0-9a-z. ]+)\'\;/i', $response, $matches);
+
 			return $matches[1];
 		});
 
@@ -92,16 +95,13 @@ class Updater {
 	 */
 	public function checkFiles()
 	{
-		$cachedFiles = Cache::remember(static::CACHE_KEY, Carbon::now()->addHours(6), function() {
+		$cachedFiles = Cache::remember(static::CACHE_KEY, Carbon::now()->addHours(6), function ()
+		{
 
 			$response = $this->request('https://api.github.com/repos/:rep/git/trees/:branch?recursive=true');
 			$response = json_decode($response, true);
 
-			$files = [
-				'new_files' => [],
-				'diff_files' => [],
-				'third_party_plugins' => [],
-			];
+			$files = ['new_files' => [], 'diff_files' => [], 'third_party_plugins' => [],];
 
 			if (isset($response['tree']))
 			{
@@ -111,7 +111,7 @@ class Updater {
 
 					if (!file_exists($filePath))
 					{
-						$files['new_files'][] = $this->buildRemoteUrl('https://raw.githubusercontent.com/:rep/:branch/' . $row['path']);
+						$files['new_files'][] = $this->getFileUrlByPath($row['path']);
 						continue;
 					}
 
@@ -122,10 +122,7 @@ class Updater {
 
 						if ($diff > 1 OR $diff < -1)
 						{
-							$files['diff_files'][] = [
-								'diff' => Text::bytes($diff),
-								'url' => $this->buildRemoteUrl('https://raw.githubusercontent.com/:rep/:branch/' . $row['path'])
-							];
+							$files['diff_files'][] = ['diff' => Text::bytes($diff), 'path' => $row['path'], 'url' => $this->buildRemoteUrl('https://raw.githubusercontent.com/:rep/:branch/' . $row['path'])];
 						}
 					}
 				}
@@ -135,6 +132,23 @@ class Updater {
 		});
 
 		return $cachedFiles;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function newIssueUrl()
+	{
+		return $this->buildRemoteUrl('https://github.com/:rep/issues/new');
+	}
+
+	/**
+	 * @param $path
+	 * @return string
+	 */
+	public function getFileUrlByPath($path)
+	{
+		return $this->buildRemoteUrl('https://raw.githubusercontent.com/:rep/:branch/' . $path);
 	}
 
 	/**
@@ -148,7 +162,18 @@ class Updater {
 	}
 
 	/**
-	 *
+	 * @param $path
+	 * @return string
+	 */
+	public function getRemoteFileContent($path)
+	{
+		return Cache::remember(md5($path), Carbon::now()->addMinutes(10), function () use($path)
+		{
+			return $this->request($this->getFileUrlByPath($path));
+		});
+	}
+
+	/**
 	 * @param string $url
 	 * @return string
 	 */
@@ -161,7 +186,6 @@ class Updater {
 	}
 
 	/**
-	 *
 	 * @param string $url
 	 * @return string
 	 */

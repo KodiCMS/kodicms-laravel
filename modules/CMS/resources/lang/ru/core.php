@@ -24,6 +24,7 @@ return [
 		'create'       => 'Создать',
 		'create_close' => 'Создать и закрыть',
 		'cancel'       => 'Отмена',
+		'bug_report'   => 'Сообщить об ошибке'
 	],
 	'helpers'    => [
 		'not_select'  => 'Не выбран',

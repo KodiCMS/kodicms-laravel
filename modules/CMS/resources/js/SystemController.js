@@ -26,7 +26,57 @@ CMS.controllers.add('system.settings', function () {
 });
 
 CMS.controllers.add('system.update', function() {
-	Api.get('/api.updates.check', {}, function(response) {
+	Api.get('/api.updates.check', {}, function (response) {
 		$('#files').html(response.content);
+		CMS.ui.init('icon')
 	});
+
+	$('#files').on('click', '.show-diff', function () {
+		var $li = $(this).closest('.list-group-item');
+		var path = $li.data('path');
+		if (!path) return false;
+
+		Api.get('/api.updates.diff', {path: path}, function (response) {
+			$('.diff-container').remove();
+
+			$('<li class="diff-container list-group-item no-padding" />')
+				.html(response.content)
+				.insertAfter($li);
+
+			diff();
+		});
+	});
+
+	function diff() {
+		var a = document.getElementById('localFile');
+		var b = document.getElementById('remoteFile');
+		var result = document.getElementById('resultDiff');
+
+		var diff = JsDiff.diffLines(a.textContent, b.textContent);
+		var fragment = document.createDocumentFragment();
+
+		for (var i = 0; i < diff.length; i++) {
+
+			if (diff[i].added && diff[i + 1] && diff[i + 1].removed) {
+				var swap = diff[i];
+				diff[i] = diff[i + 1];
+				diff[i + 1] = swap;
+			}
+
+			var node;
+			if (diff[i].removed) {
+				node = document.createElement('del');
+				node.appendChild(document.createTextNode(diff[i].value));
+			} else if (diff[i].added) {
+				node = document.createElement('ins');
+				node.appendChild(document.createTextNode(diff[i].value));
+			} else {
+				node = document.createTextNode('...\n');
+			}
+			fragment.appendChild(node);
+		}
+
+		result.textContent = '';
+		result.appendChild(fragment);
+	}
 });

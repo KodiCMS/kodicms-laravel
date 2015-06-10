@@ -1,8 +1,9 @@
 <?php namespace KodiCMS\CMS\Http\Controllers;
 
 use Date;
-use KodiCMS\CMS\Helpers\Updater;
+use Assets;
 use WYSIWYG;
+use KodiCMS\CMS\Helpers\Updater;
 use KodiCMS\Support\Helpers\Locale;
 
 class SystemController extends System\BackendController {
@@ -33,10 +34,13 @@ class SystemController extends System\BackendController {
 
 	public function update()
 	{
+		Assets::package('diff');
 		$updater = new Updater();
 		$repositoryVersion = $updater->getRemoteVersion();
 		$hasNewVersion = $updater->hasNewVersion();
 
-		$this->setContent('system.update', compact('repositoryVersion', 'hasNewVersion'));
+		$issueUrl = $updater->newIssueUrl();
+
+		$this->setContent('system.update', compact('repositoryVersion', 'hasNewVersion', 'issueUrl'));
 	}
 }

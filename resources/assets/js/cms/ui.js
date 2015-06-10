@@ -434,7 +434,10 @@ CMS.ui.add('flags', function () {
 	});
 }).add('icon', function () {
 	$('*[data-icon]').add('*[data-icon-prepend]').each(function () {
-		$(this).html('<i class="fa fa-' + $(this).data('icon') + '"></i> ' + $(this).html());
+		var cls = $(this).data('icon');
+		if($(this).hasClass('btn-labeled')) cls += ' btn-label icon';
+
+		$(this).html('<i class="fa fa-' + cls + '"></i> ' + $(this).html());
 		$(this).removeAttr('data-icon-prepend').removeAttr('data-icon');
 	});
 
