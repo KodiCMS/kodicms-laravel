@@ -48,8 +48,8 @@ CMS.controllers.add('system.update', function() {
 	});
 
 	function diff() {
-		var a = document.getElementById('localFile');
-		var b = document.getElementById('remoteFile');
+		var b = document.getElementById('localFile');
+		var a = document.getElementById('remoteFile');
 		var result = document.getElementById('resultDiff');
 
 		var diff = JsDiff.diffLines(a.textContent, b.textContent);
@@ -77,6 +77,9 @@ CMS.controllers.add('system.update', function() {
 		}
 
 		result.textContent = '';
-		result.appendChild(fragment);
+		if(fragment.childNodes.length > 1)
+			result.appendChild(fragment);
+		else
+			$('.diff-container').remove();
 	}
 });
