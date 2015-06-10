@@ -130,7 +130,7 @@ class PluginLoader {
 	public function activatePlugin($name)
 	{
 		$status = false;
-		if (!is_null($plugin = $this->getPluginContainer($name)))
+		if (!$this->isActivated($name) and !is_null($plugin = $this->getPluginContainer($name)))
 		{
 			$status = $plugin->activate();
 
@@ -154,7 +154,7 @@ class PluginLoader {
 	public function deactivatePlugin($name, $removeTable = false)
 	{
 		$status = false;
-		if (!is_null($plugin = $this->getPluginContainer($name)))
+		if ($this->isActivated($name) and !is_null($plugin = $this->getPluginContainer($name)))
 		{
 			$status = $plugin->deactivate($removeTable);
 

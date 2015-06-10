@@ -18,7 +18,9 @@ class PluginServiceProvider extends ServiceProvider {
 
 	public function register()
 	{
-		$this->registerConsoleCommand('console.plugins.list', 'KodiCMS\Plugins\Console\Commands\PluginsList');
+		$this->registerConsoleCommand('console.plugins.list', \KodiCMS\Plugins\Console\Commands\PluginsList::class);
+		$this->registerConsoleCommand('console.plugins.activate', \KodiCMS\Plugins\Console\Commands\PluginActivate::class);
+		$this->registerConsoleCommand('console.plugins.deactivate', \KodiCMS\Plugins\Console\Commands\PluginDeactivate::class);
 
 		$this->app->singleton('plugin.installer', function($app)
 		{
