@@ -81,9 +81,8 @@ CMS.controllers.add('plugin.get.index', function () {
 				button.html('<span class="fa fa-play-circle" />');
 			}
 
-
+			CMS.loader.hide();
 			CMS.ui.init('icon');
-
 			return this;
 		},
 
@@ -127,5 +126,6 @@ CMS.controllers.add('plugin.get.index', function () {
 		}
 	});
 
+	CMS.loader.show('#pluginsMap');
 	new PluginsViews();
 });

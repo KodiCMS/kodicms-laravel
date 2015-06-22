@@ -26,15 +26,20 @@ CMS.controllers.add('system.settings', function () {
 });
 
 CMS.controllers.add('system.update', function() {
+	CMS.loader.show('#files');
+
 	Api.get('/api.updates.check', {}, function (response) {
+		CMS.loader.hide();
 		$('#files').html(response.content);
 		CMS.ui.init('icon')
-	});
+	})
 
 	$('#files').on('click', '.show-diff', function () {
 		var $li = $(this).closest('.list-group-item');
 		var path = $li.data('path');
 		if (!path) return false;
+
+		CMS.loader.show('#files');
 
 		Api.get('/api.updates.diff', {path: path}, function (response) {
 			$('.diff-container').remove();
@@ -43,6 +48,7 @@ CMS.controllers.add('system.update', function() {
 				.html(response.content)
 				.insertAfter($li);
 
+			CMS.loader.hide();
 			diff();
 		});
 	});

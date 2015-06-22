@@ -1,41 +1,19 @@
 var Api = {
 	_response: null,
 	get: function(uri, data, callback, async) {
-		var request = this.request('GET', uri, data, callback, async);
-
-		if(async === false)
-			this._response = request.responseJSON;
-
-		return this.response();
+		return this.request('GET', uri, data, callback, async);
 	},
 	post: function(uri, data, callback, async) {
-		var request = this.request('POST', uri, data, callback, async);
-
-		if(async === false)
-			this._response = request.responseJSON;
-
-		return this.response();
+		return this.request('POST', uri, data, callback, async);
 	},
 	put: function(uri, data, callback, async) {
-		var request = this.request('PUT', uri, data, callback, async);
-
-		if(async === false)
-			this._response = request.responseJSON;
-
-		return this.response();
+		return this.request('PUT', uri, data, callback, async);
 	},
 	'delete': function(uri, data, callback, async) {
-		var request = this.request('DELETE', uri, data, callback, async);
-
-		if(async === false)
-			this._response = request.responseJSON;
-
-		return this.response();
+		return this.request('DELETE', uri, data, callback, async);
 	},
 	request: function(method, uri, data, callback, async) {
-		url = uri;
-
-		var obj = new Object();
+		var url = uri;
 
 		$.ajaxSetup({
 			contentType : 'application/json'
@@ -75,8 +53,7 @@ var Api = {
 			});
 	},
 	serializeObject: function(form) {
-		var self = form,
-			json = {},
+		var json = {},
 			push_counters = {},
 			patterns = {
 				"validate": /^[a-zA-Z][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/,

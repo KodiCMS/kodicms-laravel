@@ -22,6 +22,8 @@ var Page = {
 		Api.post('/api.user.meta', {key: this.cacheKey, value: _.uniq(this._expandedPages)});
 	},
 	loadChildren: function(parent_id, level, $container, $expander) {
+		CMS.loader.show('#page-tree');
+
 		Api.get('/api.page.children', {parent_id: parent_id, level: level}, $.proxy(function(response) {
 			$container.append(response.content);
 			if($expander) {
@@ -36,6 +38,7 @@ var Page = {
 				}
 			}
 
+			CMS.loader.hide();
 			CMS.ui.init('icon');
 		}, this));
 	},
@@ -159,8 +162,11 @@ CMS.controllers.add('page.get.index', function() {
 		if ($('#page-seacrh-input').val() !== '') {
 			$('#page-tree-list').hide();
 
+			CMS.loader.show('#page-search-list');
+
 			Api.get('/api.page.search', form.serialize(), function(resp) {
 				$('#page-search-list').html(resp.content);
+				CMS.loader.hide();
 				CMS.ui.init('icon');
 			});
 
