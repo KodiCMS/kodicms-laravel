@@ -28,11 +28,6 @@ class ModuleServiceProvider extends ServiceProvider {
 
 	public function register()
 	{
-		$this->app->bind(
-			'Illuminate\Contracts\Auth\Registrar',
-			'KodiCMS\Users\Services\UserCreator'
-		);
-
 		$this->app->singleton('acl', function ()
 		{
 			return new ACL(config('permissions', []));

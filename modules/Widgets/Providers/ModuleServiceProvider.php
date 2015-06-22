@@ -2,11 +2,11 @@
 
 use Event;
 use Blade;
-use KodiCMS\Users\Model\UserRole;
 use Package;
 use Request;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Helpers\Block;
+use KodiCMS\Users\Model\UserRole;
 use KodiCMS\Widgets\Model\Widget;
 use KodiCMS\Widgets\Manager\WidgetManager;
 use KodiCMS\CMS\Providers\ServiceProvider;

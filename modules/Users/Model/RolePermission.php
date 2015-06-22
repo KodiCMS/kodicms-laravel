@@ -29,6 +29,6 @@ class RolePermission extends Model
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	 */
 	public function role() {
-		return $this->belongsTo('KodiCMS\Users\Model\UserRole');
+		return $this->belongsTo(UserRole::class);
 	}
 }

@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Collection;
 use KodiCMS\Widgets\Contracts\Widget;
+use KodiCMS\Widgets\Contracts\WidgetCorrupt;
+use KodiCMS\Widgets\Contracts\WidgetHandler;
+use KodiCMS\Widgets\Contracts\WidgetCacheable;
+use KodiCMS\Widgets\Contracts\WidgetRenderable;
 use KodiCMS\Widgets\Contracts\WidgetManager as WidgetManagerInterface;
 
 class WidgetManager implements WidgetManagerInterface
@@ -42,7 +46,7 @@ class WidgetManager implements WidgetManagerInterface
 		}
 
 		$interfaces = class_implements($class);
-		return in_array('KodiCMS\Widgets\Contracts\WidgetCorrupt', $interfaces) or !in_array('KodiCMS\Widgets\Contracts\Widget', $interfaces);
+		return in_array(WidgetCorrupt::class, $interfaces) or !in_array(Widget::class, $interfaces);
 	}
 
 	/**
@@ -53,7 +57,7 @@ class WidgetManager implements WidgetManagerInterface
 	 */
 	public static function isHandler($class)
 	{
-		return static::isClassExists($class) and in_array('KodiCMS\Widgets\Contracts\WidgetHandler', class_implements($class));
+		return static::isClassExists($class) and in_array(WidgetHandler::class, class_implements($class));
 	}
 
 	/**
@@ -62,7 +66,7 @@ class WidgetManager implements WidgetManagerInterface
 	 */
 	public static function isRenderable($class)
 	{
-		return static::isClassExists($class) and in_array('KodiCMS\Widgets\Contracts\WidgetRenderable', class_implements($class));
+		return static::isClassExists($class) and in_array(WidgetRenderable::class, class_implements($class));
 	}
 
 	/**
@@ -71,7 +75,7 @@ class WidgetManager implements WidgetManagerInterface
 	 */
 	public static function isCacheable($class)
 	{
-		return static::isClassExists($class) and in_array('KodiCMS\Widgets\Contracts\WidgetCacheable', class_implements($class));
+		return static::isClassExists($class) and in_array(WidgetCacheable::class, class_implements($class));
 	}
 
 	/**

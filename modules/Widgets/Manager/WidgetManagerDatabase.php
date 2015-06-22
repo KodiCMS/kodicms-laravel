@@ -8,7 +8,8 @@ class WidgetManagerDatabase extends WidgetManager
 
 	/**
 	 * @param array $types
-	 * @return array
+	 *
+	 * @return \Illuminate\Support\Collection
 	 */
 	public static function getWidgetsByType(array $types = null)
 	{
@@ -22,6 +23,12 @@ class WidgetManagerDatabase extends WidgetManager
 		return static::buildWidgetCollection($widgets->get());
 	}
 
+	/**
+	 * @param array         $types
+	 * @param null|integer  $dsId
+	 *
+	 * @return \Illuminate\Support\Collection
+	 */
 	public static function getWidgetByTypeAndDsid(array $types = null, $dsId = null)
 	{
 		$widgets = static::getWidgetsByType($types);
@@ -38,7 +45,7 @@ class WidgetManagerDatabase extends WidgetManager
 	}
 
 	/**
-	 * @return array
+	 * @return \Illuminate\Support\Collection
 	 */
 	public static function getAllWidgets()
 	{
@@ -49,7 +56,8 @@ class WidgetManagerDatabase extends WidgetManager
 
 	/**
 	 * @param int $pageId
-	 * @return array
+	 *
+	 * @return \Illuminate\Support\Collection
 	 */
 	public static function getWidgetsByPage($pageId)
 	{
@@ -64,6 +72,7 @@ class WidgetManagerDatabase extends WidgetManager
 
 	/**
 	 * @param int $pageId
+	 *
 	 * @return array
 	 */
 	public static function getPageWidgetBlocks($pageId)
@@ -83,7 +92,7 @@ class WidgetManagerDatabase extends WidgetManager
 
 	/**
 	 * @param $id
-	 * @return mixed
+	 * @return \KodiCMS\Widgets\Contracts\Widget
 	 */
 	public static function getWidgetById($id)
 	{

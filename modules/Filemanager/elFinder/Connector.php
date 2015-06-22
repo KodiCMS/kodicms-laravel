@@ -4,8 +4,8 @@ use Illuminate\Http\Request;
 
 class Connector
 {
-	const FILE_SYSTEM = '\KodiCMS\Filemanager\elFinder\VolumeLocalFileSystem';
-	const FTP         = '\KodiCMS\Filemanager\elFinder\VolumeFTP';
+	const FILE_SYSTEM = VolumeLocalFileSystem::class;
+	const FTP         = VolumeFTP::class;
 
 	/**
 	 * elFinder instance
@@ -33,10 +33,11 @@ class Connector
 	 * @param $elFinder
 	 * @param bool $debug
 	 */
-	public function __construct($elFinder, $debug = FALSE)
+	public function __construct($elFinder, $debug = false)
 	{
 		$this->elFinder = $elFinder;
-		if ($debug) {
+		if ($debug)
+		{
 			$this->header = 'Content-Type: text/html; charset=utf-8';
 		}
 	}
@@ -53,41 +54,46 @@ class Connector
 		$cmd = isset($src['cmd']) ? $src['cmd'] : '';
 		$args = [];
 
-		if (!function_exists('json_encode')) {
+		if (!function_exists('json_encode'))
+		{
 			$error = $this->elFinder->error(elFinder::ERROR_CONF, elFinder::ERROR_CONF_NO_JSON);
-			$this->output(['error' => '{"error":["' . implode('","', $error) . '"]}', 'raw' => TRUE]);
+			$this->output(['error' => '{"error":["' . implode('","', $error) . '"]}', 'raw' => true]);
 		}
 
-		if (!$this->elFinder->loaded()) {
+		if (!$this->elFinder->loaded())
+		{
 			$this->output(['error' => $this->elFinder->error(elFinder::ERROR_CONF, elFinder::ERROR_CONF_NO_VOL), 'debug' => $this->elFinder->mountErrors]);
 		}
 
 		// telepat_mode: on
-		if (!$cmd && $isPost) {
+		if (!$cmd && $isPost)
+		{
 			$this->output(['error' => $this->elFinder->error(elFinder::ERROR_UPLOAD, elFinder::ERROR_UPLOAD_TOTAL_SIZE), 'header' => 'Content-Type: text/html']);
 		}
 		// telepat_mode: off
 
-		if (!$this->elFinder->commandExists($cmd)) {
+		if (!$this->elFinder->commandExists($cmd))
+		{
 			$this->output(['error' => $this->elFinder->error(elFinder::ERROR_UNKNOWN_CMD)]);
 		}
 
 		// collect required arguments to exec command
-		foreach ($this->elFinder->commandArgsList($cmd) as $name => $req) {
-			$arg = $name == 'FILES'
-				? $_FILES
-				: (isset($src[$name]) ? $src[$name] : '');
+		foreach ($this->elFinder->commandArgsList($cmd) as $name => $req)
+		{
+			$arg = $name == 'FILES' ? $_FILES : (isset($src[$name]) ? $src[$name] : '');
 
-			if (!is_array($arg)) {
+			if (!is_array($arg))
+			{
 				$arg = trim($arg);
 			}
-			if ($req && (!isset($arg) || $arg === '')) {
+			if ($req && (!isset($arg) || $arg === ''))
+			{
 				$this->output(['error' => $this->elFinder->error(elFinder::ERROR_INV_PARAMS, $cmd)]);
 			}
 			$args[$name] = $arg;
 		}
 
-		$args['debug'] = isset($src['debug']) ? !!$src['debug'] : FALSE;
+		$args['debug'] = isset($src['debug']) ? !!$src['debug'] : false;
 
 		$this->output($this->elFinder->exec($cmd, $this->input_filter($args)));
 	}
@@ -103,27 +109,40 @@ class Connector
 	{
 		$header = isset($data['header']) ? $data['header'] : $this->header;
 		unset($data['header']);
-		if ($header) {
-			if (is_array($header)) {
-				foreach ($header as $h) {
+
+		if ($header)
+		{
+			if (is_array($header))
+			{
+				foreach ($header as $h)
+				{
 					header($h);
 				}
-			} else {
+			}
+			else
+			{
 				header($header);
 			}
 		}
 
-		if (isset($data['pointer'])) {
+		if (isset($data['pointer']))
+		{
 			rewind($data['pointer']);
 			fpassthru($data['pointer']);
-			if (!empty($data['volume'])) {
+			if (!empty($data['volume']))
+			{
 				$data['volume']->close($data['pointer'], $data['info']['hash']);
 			}
 			exit();
-		} else {
-			if (!empty($data['raw']) && !empty($data['error'])) {
+		}
+		else
+		{
+			if (!empty($data['raw']) && !empty($data['error']))
+			{
 				exit($data['error']);
-			} else {
+			}
+			else
+			{
 				exit(json_encode($data));
 			}
 		}
@@ -139,17 +158,12 @@ class Connector
 	 */
 	private function input_filter($args)
 	{
-		static $magic_quotes_gpc = NULL;
-
-		if ($magic_quotes_gpc === NULL)
-			$magic_quotes_gpc = (version_compare(PHP_VERSION, '5.4', '<') && get_magic_quotes_gpc());
-
-		if (is_array($args)) {
+		if (is_array($args))
+		{
 			return array_map([& $this, 'input_filter'], $args);
 		}
-		$res = str_replace("\0", '', $args);
-		$magic_quotes_gpc && ($res = stripslashes($res));
 
+		$res = str_replace("\0", '', $args);
 		return $res;
 	}
-}// END class 
+}

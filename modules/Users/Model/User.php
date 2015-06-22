@@ -134,7 +134,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	public function roles()
 	{
-		return $this->belongsToMany('KodiCMS\Users\Model\UserRole', 'roles_users', 'user_id', 'role_id');
+		return $this->belongsToMany(UserRole::class, 'roles_users', 'user_id', 'role_id');
 	}
 
 	/**

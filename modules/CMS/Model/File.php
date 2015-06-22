@@ -73,7 +73,7 @@ class File
 		}
 		else if ($filename instanceof SplFileInfo)
 		{
-			$this->file = new SplFileObject($file->getRealPath());
+			$this->file = new SplFileObject($filename->getRealPath());
 		}
 		else if (!is_null($filename))
 		{
@@ -496,12 +496,12 @@ class File
 	}
 
 	/**
-	 * @param array $paramters
+	 * @param array $parameters
 	 * @return View
 	 */
-	public function toView(array $paramters = [])
+	public function toView(array $parameters = [])
 	{
-		return view()->file($this->getRealPath())->with($paramters);
+		return view()->file($this->getRealPath())->with($parameters);
 	}
 
 	/**

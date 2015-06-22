@@ -2,6 +2,7 @@
 
 use DB;
 use UI;
+use KodiCMS\Users\Model\User;
 use KodiCMS\Support\Helpers\URL;
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Support\Model\ModelFieldTrait;
@@ -333,7 +334,7 @@ class Page extends Model implements BehaviorPageInterface
 	 */
 	public function parent()
 	{
-		return $this->belongsTo('\KodiCMS\Pages\Model\Page', 'parent_id');
+		return $this->belongsTo(Page::class, 'parent_id');
 	}
 
 	/**
@@ -341,7 +342,7 @@ class Page extends Model implements BehaviorPageInterface
 	 */
 	public function children()
 	{
-		return $this->hasMany('\KodiCMS\Pages\Model\Page', 'parent_id', 'id');
+		return $this->hasMany(Page::class, 'parent_id', 'id');
 	}
 
 	/**
@@ -349,7 +350,7 @@ class Page extends Model implements BehaviorPageInterface
 	 */
 	public function parts()
 	{
-		return $this->hasMany('\KodiCMS\Pages\Model\PagePart', 'page_id', 'id');
+		return $this->hasMany(PagePart::class, 'page_id', 'id');
 	}
 
 	/**
@@ -357,7 +358,7 @@ class Page extends Model implements BehaviorPageInterface
 	 */
 	public function behaviorSettings()
 	{
-		return $this->hasOne('\KodiCMS\Pages\Model\PageBehaviorSettings', 'page_id', 'id');
+		return $this->hasOne(PageBehaviorSettings::class, 'page_id', 'id');
 	}
 
 	/**
@@ -470,6 +471,6 @@ class Page extends Model implements BehaviorPageInterface
 			return static::$loadedUsers[$this->{$filed}];
 		}
 
-		return static::$loadedUsers[$this->{$filed}] = $this->belongsTo('\KodiCMS\Users\Model\User', $filed);
+		return static::$loadedUsers[$this->{$filed}] = $this->belongsTo(User::class, $filed);
 	}
 }

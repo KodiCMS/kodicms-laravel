@@ -105,7 +105,6 @@ class Meta
 	public function addCss($handle, $src, $deps = null, array $attrs = null)
 	{
 		Assets::css($handle, $src, $deps, $attrs);
-
 		return $this;
 	}
 
@@ -167,7 +166,6 @@ class Meta
 	public function addToGroup($handle, $content, $params = [], $deps = null)
 	{
 		Assets::group('FRONTEND', $handle, strtr($content, $params), $deps);
-
 		return $this;
 	}
 
@@ -179,7 +177,6 @@ class Meta
 	public function removeFromGroup($handle = null)
 	{
 		Assets::removeGroup('FRONTEND', $handle);
-
 		return $this;
 	}
 

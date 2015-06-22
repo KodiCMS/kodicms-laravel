@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\Email\Jobs;
 
+use KodiCMS\Email\Model\EmailEvent;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use KodiCMS\Email\Model\EmailEvent;
 
 class EmailSend implements SelfHandling
 {
@@ -29,9 +29,10 @@ class EmailSend implements SelfHandling
 	public function handle()
 	{
 		$emailEvent = EmailEvent::whereCode($this->code)->first();
+
 		if (is_null($emailEvent))
 		{
-			throw (new ModelNotFoundException)->setModel('KodiCMS\Email\Model\EmailEvent');
+			throw (new ModelNotFoundException)->setModel(EmailEvent::class);
 		}
 
 		$emailEvent->send($this->options);

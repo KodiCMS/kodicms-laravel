@@ -5,13 +5,15 @@ use Blade;
 use Block;
 use Event;
 use WYSIWYG;
-use KodiCMS\CMS\Providers\ServiceProvider;
-use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
-use KodiCMS\Pages\Helpers\Meta;
 use KodiCMS\Pages\Model\Page;
-use KodiCMS\Pages\Model\PagePart as PagePartModel;
+use KodiCMS\Pages\Helpers\Meta;
 use KodiCMS\Pages\Observers\PageObserver;
+use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Pages\Observers\PagePartObserver;
+use KodiCMS\Pages\Model\PagePart as PagePartModel;
+use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
+use KodiCMS\Pages\Console\Commands\RebuldLayoutBlocks;
+use KodiCMS\Pages\Listeners\PlacePagePartsToBlocksEventHandler;
 
 class ModuleServiceProvider extends ServiceProvider {
 
@@ -50,7 +52,7 @@ class ModuleServiceProvider extends ServiceProvider {
 
 		}, 8000);
 
-		Event::listen('frontend.found', 'KodiCMS\Pages\Listeners\PlacePagePartsToBlocksEventHandler', 7000);
+		Event::listen('frontend.found', PlacePagePartsToBlocksEventHandler::class, 7000);
 
 
 		Blade::directive('meta', function($expression)
@@ -74,6 +76,6 @@ class ModuleServiceProvider extends ServiceProvider {
 
 	public function register()
 	{
-		$this->registerConsoleCommand('layout.generate.key', '\KodiCMS\Pages\Console\Commands\RebuldLayoutBlocks');
+		$this->registerConsoleCommand('layout.generate.key', RebuldLayoutBlocks::class);
 	}
 }

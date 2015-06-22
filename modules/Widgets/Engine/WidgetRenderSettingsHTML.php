@@ -5,6 +5,9 @@ use KodiCMS\Widgets\Contracts\WidgetRenderable;
 
 class WidgetRenderSettingsHTML extends WidgetRenderAbstract
 {
+	/**
+	 * @return string
+	 */
 	public function render()
 	{
 		$widget = $this->getWidget();

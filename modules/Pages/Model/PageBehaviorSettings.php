@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\Pages\Model;
 
 use Illuminate\Database\Eloquent\Model;
-use KodiCMS\Pages\Behavior\Settings;
 
 class PageBehaviorSettings extends Model
 {
@@ -55,6 +54,6 @@ class PageBehaviorSettings extends Model
 	 */
 	public function page()
 	{
-		return $this->belongsTo('\KodiCMS\Pages\Model\Page', 'page_id');
+		return $this->belongsTo(Page::class, 'page_id');
 	}
 }

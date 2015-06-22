@@ -1,10 +1,10 @@
 <?php namespace KodiCMS\Dashboard\Http\Controllers;
 
-use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use Assets;
-use KodiCMS\Dashboard\Contracts\WidgetDashboard;
 use KodiCMS\Dashboard\Dashboard;
 use KodiCMS\Dashboard\WidgetManagerDashboard;
+use KodiCMS\Dashboard\Contracts\WidgetDashboard;
+use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class DashboardController extends BackendController {
 

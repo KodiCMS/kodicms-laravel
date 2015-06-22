@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => \CMS::backendPath(), 'as' => 'backend.'], function () {
+Route::group(['prefix' => CMS::backendPath(), 'as' => 'backend.'], function () {
 	Route::get('/cron', ['as' => 'cron.list', 'uses' => 'CronController@getIndex']);
 	Route::get('/cron/create', ['as' => 'cron.create', 'uses' => 'CronController@getCreate']);
 	Route::post('/cron/create', ['as' => 'cron.create.post', 'uses' => 'CronController@postCreate']);

@@ -913,6 +913,7 @@ class FrontendPage implements BehaviorPageInterface
 	}
 
 	/**
+	 * @param bool $includeHidden
 	 * @return Builder
 	 */
 	public function getChildrenQuery($includeHidden = false)

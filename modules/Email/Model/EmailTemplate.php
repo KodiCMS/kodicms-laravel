@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\Email\Model;
 
-use Illuminate\Database\Eloquent\Model;
-use KodiCMS\Email\Support\EmailSender;
 use Mail;
+use KodiCMS\Email\Support\EmailSender;
+use Illuminate\Database\Eloquent\Model;
 
 class EmailTemplate extends Model
 {
@@ -81,7 +81,7 @@ class EmailTemplate extends Model
 	 */
 	public function event()
 	{
-		return $this->belongsTo('KodiCMS\Email\Model\EmailEvent', 'email_event_id');
+		return $this->belongsTo(EmailEvent::class, 'email_event_id');
 	}
 
 	public function scopeActive($query)

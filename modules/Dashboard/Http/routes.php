@@ -12,4 +12,3 @@ Route::group(['as' => 'api.dashboard.widget.'], function ()
 	RouteAPI::post('dashboard.widget', ['as' => 'post', 'uses' => 'API\DashboardController@postWidget']);
 	RouteAPI::delete('dashboard.widget', ['as' => 'delete', 'uses' => 'API\DashboardController@deleteWidget']);
 });
-

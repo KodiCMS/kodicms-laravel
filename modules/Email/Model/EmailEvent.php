@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Email\Model;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class EmailEvent extends Model
@@ -33,7 +34,7 @@ class EmailEvent extends Model
 	 */
 	public function templates()
 	{
-		return $this->hasMany('KodiCMS\Email\Model\EmailTemplate', 'email_event_id');
+		return $this->hasMany(EmailTemplate::class, 'email_event_id');
 	}
 
 	/**
@@ -41,7 +42,7 @@ class EmailEvent extends Model
 	 */
 	public function getFullNameAttribute()
 	{
-		return $this->name . ' (' . $this->code . ')';
+		return "{$this->name} ({$this->code})" ;
 	}
 
 	/**
@@ -58,7 +59,7 @@ class EmailEvent extends Model
 	 */
 	public function defaultOptions()
 	{
-		$now = \Carbon\Carbon::create();
+		$now = Carbon::create();
 		return [
 			'default_email'    => config('mail.default'),
 			'site_title'       => config('cms.title'),
@@ -81,5 +82,4 @@ class EmailEvent extends Model
 			$template->send($options);
 		}
 	}
-
 }

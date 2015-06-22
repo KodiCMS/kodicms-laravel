@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Email\Repository;
 
-use KodiCMS\CMS\Repository\BaseRepository;
 use KodiCMS\Email\Model\EmailTemplate;
+use KodiCMS\CMS\Repository\BaseRepository;
 
 class EmailTemplateRepository extends BaseRepository
 {
