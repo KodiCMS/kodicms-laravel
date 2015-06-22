@@ -27,18 +27,18 @@ $app = new Illuminate\Foundation\Application(
 */
 
 $app->singleton(
-	'Illuminate\Contracts\Http\Kernel',
-	'KodiCMS\CMS\Http\Kernel'
+	Illuminate\Contracts\Http\Kernel::class,
+	KodiCMS\CMS\Http\Kernel::class
 );
 
 $app->singleton(
-	'Illuminate\Contracts\Console\Kernel',
-	'KodiCMS\CMS\Console\Kernel'
+	Illuminate\Contracts\Console\Kernel::class,
+	KodiCMS\CMS\Console\Kernel::class
 );
 
 $app->singleton(
-	'Illuminate\Contracts\Debug\ExceptionHandler',
-	'KodiCMS\CMS\Exceptions\Handler'
+	Illuminate\Contracts\Debug\ExceptionHandler::class,
+	KodiCMS\CMS\Exceptions\Handler::class
 );
 
 /*

@@ -3,6 +3,7 @@
 use CMS;
 use Illuminate\Http\Response;
 use KodiCMS\API\Http\Response as APIResponse;
+use KodiCMS\CMS\Http\Controllers\ErrorController;
 use KodiCMS\API\Exceptions\Exception as APIException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Debug\ExceptionHandler as SymfonyDisplayer;
@@ -16,7 +17,9 @@ class Handler extends ExceptionHandler
 	 *
 	 * @var array
 	 */
-	protected $dontReport = ['Symfony\Component\HttpKernel\Exception\HttpException'];
+	protected $dontReport = [
+		HttpException::class
+	];
 
 	/**
 	 * Report or log an exception.
@@ -87,7 +90,7 @@ class Handler extends ExceptionHandler
 	{
 		try
 		{
-			$controller = app()->make('\KodiCMS\CMS\Http\Controllers\ErrorController');
+			$controller = app()->make(ErrorController::class);
 			if (method_exists($controller, 'error' . $code))
 			{
 				$action = 'error' . $code;

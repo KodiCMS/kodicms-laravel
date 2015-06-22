@@ -1,11 +1,10 @@
 <?php namespace KodiCMS\Users\Http\Controllers\Auth;
 
-use KodiCMS\CMS\Http\Controllers\System\FrontendController;
+use Illuminate\Http\Response;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Foundation\Auth\ResetsPasswords;
-use Illuminate\Http\Response;
-
+use KodiCMS\CMS\Http\Controllers\System\FrontendController;
 
 class PasswordController extends FrontendController {
 

@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Widgets\Engine;
 
-use Illuminate\View\View;
 use Cache;
+use Illuminate\View\View;
 use Illuminate\Cache\TaggableStore;
 use KodiCMS\Widgets\Helpers\ViewPHP;
 use KodiCMS\Widgets\Manager\WidgetManager;

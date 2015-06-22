@@ -111,7 +111,7 @@ return [
 		/*
 		 * App Service Providers must be here...
 		 */
-		'App\Providers\AppServiceProvider',
+		App\Providers\AppServiceProvider::class,
 	]),
 
 	/*

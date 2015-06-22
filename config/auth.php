@@ -28,7 +28,7 @@ return [
 	|
 	*/
 
-	'model' => 'KodiCMS\Users\Model\User',
+	'model' => KodiCMS\Users\Model\User::class,
 
 	/*
 	|--------------------------------------------------------------------------
