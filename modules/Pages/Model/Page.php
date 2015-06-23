@@ -235,7 +235,7 @@ class Page extends Model implements BehaviorPageInterface
 		return (bool) DB::table($this->table)
 			->selectRaw('COUNT(*) as total')
 			->where('parent_id', $this->id)
-			->pluck('total') > 0;
+			->value('total') > 0;
 	}
 
 	/**
