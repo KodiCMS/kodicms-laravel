@@ -21,6 +21,7 @@ class ModuleServiceProvider extends ServiceProvider
 				'sendmail' => 'Sendmail',
 				'mailgun'  => 'Mailgun',
 				'mandrill' => 'Mandrill',
+				'log'      => 'Log',
 			];
 
 			echo view('email::email.settings', compact('drivers'))->render();

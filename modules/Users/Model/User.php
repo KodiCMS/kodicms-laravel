@@ -8,9 +8,9 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Support\Model\ModelFieldTrait;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use KodiCMS\Users\Model\FieldCollections\UserFieldCollection;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use KodiCMS\Users\Model\FieldCollections\UserFieldCollection;
 
 /**
  * Class User
@@ -138,6 +138,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 
 	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\hasMany
+	 */
+	public function reflinks()
+	{
+		return $this->hasMany(UserReflink::class);
+	}
+
+	/**
 	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
 	public function getRoles()
@@ -153,10 +161,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return $roles;
 	}
 
+	/**
+	 * @param string|array $role
+	 * @param bool         $allRequired
+	 *
+	 * @return bool
+	 */
 	public function hasRole($role, $allRequired = FALSE)
 	{
-		$status = TRUE;
-
 		$roles = $this->getRoles()->lists('name')->all();
 
 		if (is_array($role))
@@ -167,13 +179,13 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 				// If the user doesn't have the role
 				if (!in_array($_role, $roles)) {
 					// Set the status false and get outta here
-					$status = FALSE;
+					$status = false;
 
 					if ($allRequired) {
 						break;
 					}
 				} elseif (!$allRequired) {
-					$status = TRUE;
+					$status = true;
 					break;
 				}
 			}

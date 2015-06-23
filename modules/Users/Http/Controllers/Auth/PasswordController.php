@@ -1,8 +1,9 @@
 <?php namespace KodiCMS\Users\Http\Controllers\Auth;
 
-use Illuminate\Http\Response;
+use Bus;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
+use KodiCMS\Users\Jobs\ReflinkForgotPassword;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use KodiCMS\CMS\Http\Controllers\System\FrontendController;
 
@@ -50,5 +51,13 @@ class PasswordController extends FrontendController {
 	{
 		$this->setContent('auth.password')
 			->with('status', $this->session->get('status'));
+	}
+
+	public function postEmail()
+	{
+		$this->validate($this->request, ['email' => 'required|email']);
+		Bus::dispatch(new ReflinkForgotPassword($this->request->only('email')));
+
+		return redirect()->back()->with('status', trans($response));
 	}
 }

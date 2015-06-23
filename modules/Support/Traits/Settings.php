@@ -163,4 +163,14 @@ trait Settings {
 		$this->settings = [];
 		return $this->setSettings($settings);
 	}
+
+	/**
+	 * Get the instance as an array.
+	 *
+	 * @return array
+	 */
+	public function toArray()
+	{
+		return $this->getSettings();
+	}
 }

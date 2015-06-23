@@ -7,11 +7,14 @@ use KodiCMS\Users\Model\UserRole;
 use KodiCMS\Users\Observers\RoleObserver;
 use KodiCMS\Users\Observers\UserObserver;
 use KodiCMS\CMS\Providers\ServiceProvider;
+use KodiCMS\Users\Console\Commands\CleanReflinks;
 
 class ModuleServiceProvider extends ServiceProvider {
 
 	public function boot()
 	{
+		$this->registerConsoleCommand('reflinks.clean', CleanReflinks::class);
+
 		User::observe(new UserObserver);
 		UserRole::observe(new RoleObserver);
 

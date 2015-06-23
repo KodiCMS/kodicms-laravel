@@ -97,6 +97,11 @@ class EmailTemplate extends Model
 		return trans('email::core.statuses.' . $this->status);
 	}
 
+	/**
+	 * @param array $options
+	 *
+	 * @return bool|EmailTemplate
+	 */
 	public function send($options = [])
 	{
 		$options = $this->prepareOptions($options);
