@@ -1,4 +1,4 @@
-<div class="frontend-header">
+<div class="frontend-header no-padding">
 	<a href="/" class="logo">
 		{!! HTML::image( CMS::resourcesURL() . '/images/logo-color.png') !!}
 	</a>

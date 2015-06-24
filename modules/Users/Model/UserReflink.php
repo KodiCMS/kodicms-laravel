@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\Users\Model;
 
 use Illuminate\Database\Eloquent\Model;
-use KodiCMS\Users\Exceptions\ReflinkException;
 
 class UserReflink extends Model
 {
@@ -17,7 +16,7 @@ class UserReflink extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['type', 'code', 'properties'];
+	protected $fillable = ['token', 'handler', 'properties', 'user_id'];
 
 	/**
 	 * The attributes that should be casted to native types.
@@ -26,17 +25,17 @@ class UserReflink extends Model
 	 */
 	protected $casts = [
 		'user_id' => 'integer',
-		'type' => 'string',
-		'code' => 'string',
-		'properties' => 'array'
+		'handler' => 'string',
+		'token' => 'string',
+		'properties' => 'json'
 	];
 
 	/**
 	 * @return string
 	 */
-	public function linkCode()
+	public function linkToken()
 	{
-		return route('reflink.code', ['code' => $this->code]);
+		return route('reflink.token', ['token' => $this->token]);
 	}
 
 	/**

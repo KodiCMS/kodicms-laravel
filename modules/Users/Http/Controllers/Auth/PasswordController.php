@@ -1,12 +1,9 @@
 <?php namespace KodiCMS\Users\Http\Controllers\Auth;
 
-use Bus;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Auth\PasswordBroker;
-use KodiCMS\CMS\Exceptions\Exception;
-use KodiCMS\Users\Jobs\ReflinkForgotPassword;
-use Illuminate\Foundation\Auth\ResetsPasswords;
+use Reflinks;
+use Password;
 use KodiCMS\CMS\Http\Controllers\System\FrontendController;
+use KodiCMS\Users\Reflinks\Generators\ForgotPasswordGenerator;
 
 class PasswordController extends FrontendController {
 
@@ -15,31 +12,8 @@ class PasswordController extends FrontendController {
 	 */
 	public $moduleNamespace = 'users::';
 
-	/*
-	|--------------------------------------------------------------------------
-	| Password Reset Controller
-	|--------------------------------------------------------------------------
-	|
-	| This controller is responsible for handling password reset requests
-	| and uses a simple trait to include this behavior. You're free to
-	| explore this trait and override any methods you wish to tweak.
-	|
-	*/
-
-	use ResetsPasswords;
-
-
-	/**
-	 * Create a new password controller instance.
-	 *
-	 * @param Guard $auth
-	 * @param PasswordBroker $passwords
-	 */
-	public function boot(Guard $auth, PasswordBroker $passwords)
+	public function boot()
 	{
-		$this->auth = $auth;
-		$this->passwords = $passwords;
-
 		$this->middleware('guest');
 	}
 
@@ -57,30 +31,17 @@ class PasswordController extends FrontendController {
 	public function postEmail()
 	{
 		$this->validate($this->request, ['email' => 'required|email']);
-		try
+
+		$response = Reflinks::generateToken(new ForgotPasswordGenerator($this->request->input('email')));
+
+		switch ($response)
 		{
-			Bus::dispatch(new ReflinkForgotPassword($this->request->only('email')));
-			return redirect()->back()->with('status', trans('passwords.sent'));
-		}
-		catch(Exception $e)
-		{
-			return redirect()->back()->withErrors($e->getMessage());
+			case Reflinks::TOKEN_GENERATED:
+				return back()->with('status', trans(Password::RESET_LINK_SENT));
+			default:
+				return redirect()->back()
+					->withInput($this->request->only('email'))
+					->withErrors(['email' => trans($response)]);
 		}
 	}
-
-	/**
-	 * Display the password reset view for the given token.
-	 *
-	 * @param  string  $token
-	 * @return \Illuminate\Http\Response
-	 */
-	public function getReset($token = null)
-	{
-		if (is_null($token)) {
-			throw new NotFoundHttpException;
-		}
-
-		return view('auth.reset')->with('token', $token);
-	}
-
 }

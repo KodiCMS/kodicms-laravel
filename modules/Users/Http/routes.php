@@ -51,9 +51,9 @@ RouteAPI::get('api.roles', ['as' => 'api.roles.get', 'uses' => 'API\RoleControll
 
 Route::group(['prefix' => 'reflink', 'as' => 'reflink.'], function ()
 {
-	Route::get('', ['as' => 'form', 'uses' => 'KodiCMS\Users\Http\Controllers\ReflinkController@getForm']);
-	Route::post('', ['as' => 'form.post', 'uses' => 'KodiCMS\Users\Http\Controllers\ReflinkController@postForm']);
-	Route::get('complete', ['as' => 'complete', 'uses' => 'KodiCMS\Users\Http\Controllers\ReflinkController@complete']);
-	Route::get('{code}', ['as' => 'code', 'uses' => 'KodiCMS\Users\Http\Controllers\ReflinkController@handle'])
-		->where('code', '[a-z0-9]+');
+	Route::get('', ['as' => 'form', 'uses' => 'ReflinkController@getForm']);
+	Route::post('', ['as' => 'form.post', 'uses' => 'ReflinkController@postForm']);
+	Route::get('complete', ['as' => 'complete', 'uses' => 'ReflinkController@complete']);
+	Route::get('{token}', ['as' => 'token', 'uses' => 'ReflinkController@handle'])
+		->where('token', '[a-z0-9]+');
 });

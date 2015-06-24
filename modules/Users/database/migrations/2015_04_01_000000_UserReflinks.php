@@ -11,8 +11,8 @@ class UserReflinks extends Migration
 			$table->increments('id');
 
 			$table->integer('user_id')->index();
-			$table->string('type', 255);
-			$table->string('code', 50)->unique();
+			$table->string('handler', 255);
+			$table->string('token', 100)->unique();
 			$table->json('properties');
 			$table->timestamps();
 		});

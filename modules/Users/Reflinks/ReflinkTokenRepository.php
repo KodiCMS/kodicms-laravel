@@ -1,6 +1,5 @@
 <?php namespace KodiCMS\Users\Reflinks;
 
-use KodiCMS\Users\Contracts\ReflinkInterface;
 use KodiCMS\Users\Model\User;
 use KodiCMS\Users\Model\UserReflink;
 
@@ -39,20 +38,22 @@ class ReflinkTokenRepository
 
 	/**
 	 * @param User $user
-	 * @param ReflinkInterface $type
+	 * @param string $handler
 	 * @param array $properties
 	 * @return string
 	 */
-	public function create(User $user, ReflinkInterface $type, array $properties = [])
+	public function create(User $user, $handler, array $properties = [])
 	{
-		$this->deleteExisting($user, get_class($type));
+		$this->deleteExisting($user, $handler);
 
 		// We will create a new, random token for the user so that we can e-mail them
 		// a safe link to the password reset form. Then we will insert a record in
 		// the database so that we can verify the token within the actual reset.
 		$token = $this->createNewToken();
 
-		return $this->getModel()->insert($this->getPayload($user->id, get_class($type), $properties, $token));
+
+
+		return$this->getModel()->create($this->getPayload($user->id, $handler, $properties, $token));
 	}
 
 	/**
@@ -72,9 +73,8 @@ class ReflinkTokenRepository
 	 */
 	public function exists($token)
 	{
-		$token = (array) $this->load($token);
-
-		return $token && !$this->tokenExpired($token);
+		$token = $this->load($token);
+		return $token && !$this->tokenExpired($token->toArray());
 	}
 
 	/**
@@ -116,30 +116,30 @@ class ReflinkTokenRepository
 
 	/**
 	 * @param User $user
-	 * @param string $type
+	 * @param string $handler
 	 * @return int
 	 */
-	protected function deleteExisting(User $user, $type)
+	protected function deleteExisting(User $user, $handler)
 	{
 		return $this->getModel()
 			->where('user_id', $user->id)
-			->where('type', $type)
+			->where('handler', $handler)
 			->delete();
 	}
 
 	/**
 	 * @param integer $userId
-	 * @param string $type
+	 * @param string $handler
 	 * @param array $properties
 	 * @param string $token
 	 * @return array
 	 */
-	protected function getPayload($userId, $type, array $properties, $token)
+	protected function getPayload($userId, $handler, array $properties, $token)
 	{
 		return [
 			'user_id' => $userId,
 			'token' => $token,
-			'type' => $type,
+			'handler' => $handler,
 			'properties' => $properties
 		];
 	}

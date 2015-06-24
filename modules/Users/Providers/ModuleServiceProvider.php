@@ -8,7 +8,7 @@ use KodiCMS\Users\Model\UserRole;
 use KodiCMS\Users\Observers\RoleObserver;
 use KodiCMS\Users\Observers\UserObserver;
 use KodiCMS\CMS\Providers\ServiceProvider;
-use KodiCMS\Users\Reflinks\ReflinkBroker;
+use KodiCMS\Users\Reflinks\ReflinksBroker;
 use KodiCMS\Users\Reflinks\ReflinkTokenRepository;
 use KodiCMS\Users\Console\Commands\deleteExpiredReflinks;
 
@@ -63,18 +63,9 @@ class ModuleServiceProvider extends ServiceProvider {
 	protected function registerTokenRepository()
 	{
 		$this->app->singleton('reflink.tokens', function ($app) {
-
-			$connection = $app['db']->connection();
-
-			// The database token repository is an implementation of the token repository
-			// interface, and is responsible for the actual storing of auth tokens and
-			// their e-mail addresses. We will inject this table and hash key to it.
-			$table = (new UserReflink)->getTable();
-
 			$key = $app['config']['app.key'];
-
 			$expire = 60;
-			return new ReflinkTokenRepository($connection, $table, $key, $expire);
+			return new ReflinkTokenRepository($key, $expire);
 		});
 	}
 }

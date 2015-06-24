@@ -1,30 +1,30 @@
 <?php namespace KodiCMS\Users\Reflinks;
 
 use KodiCMS\CMS\Exceptions\Exception;
-use KodiCMS\Users\Contracts\ReflinkInterface;
-use KodiCMS\Users\Model\User;
+use KodiCMS\Users\Exceptions\ReflinkException;
+use KodiCMS\Users\Contracts\ReflinkGeneratorInterface;
 
 class ReflinksBroker {
 
 	/**
 	 * @var string
 	 */
-	const INVALID_TOKEN = 'reflinks::messages.invalid_token';
+	const INVALID_TOKEN = 'users::reflinks.messages.invalid_token';
 
 	/**
 	 * @var string
 	 */
-	const TOKEN_NOT_GENERATED = 'reflinks::messages.token_not_generated';
+	const TOKEN_NOT_GENERATED = 'users::reflinks.messages.token_not_generated';
 
 	/**
 	 * @var string
 	 */
-	const TOKEN_GENERATED = 'reflinks::messages.token_generated';
+	const TOKEN_GENERATED = 'users::reflinks.messages.token_generated';
 
 	/**
 	 * @var string
 	 */
-	const TOKEN_HANDLED = 'reflinks::messages.token_handled';
+	const TOKEN_HANDLED = 'users::reflinks.messages.token_handled';
 
 	/**
 	 * @var ReflinkTokenRepository $tokens
@@ -40,34 +40,44 @@ class ReflinksBroker {
 	}
 
 	/**
-	 * @param User $user
-	 * @param ReflinkInterface $type
-	 * @param array $properties
+	 * @param ReflinkGeneratorInterface $generator
 	 * @return string
 	 */
-	public function generateToken(User $user, ReflinkInterface $type, array $properties = [])
+	public function generateToken(ReflinkGeneratorInterface $generator)
 	{
 		try
 		{
-			if($token = $this->tokens->create($user, $type, $properties))
+			if (is_null($user = $generator->getUser()))
 			{
-				if (method_exists($type, 'generate'))
-				{
-					$type->generate($token);
-				}
+				throw new ReflinkException(trans('users::reflinks.messages.user_not_found'));
+			}
+
+			if ($token = $this->tokens->create(
+				$user,
+				$generator->getHandlerClass(),
+				$generator->getProperties()
+			))
+			{
+				$generator->tokenGenerated($token);
 
 				return static::TOKEN_GENERATED;
 			}
 
 			return static::TOKEN_NOT_GENERATED;
 		}
-		catch(Exception $e)
+		catch (Exception $e)
 		{
 			return $e->getMessage();
 		}
-
 	}
 
+	/**
+	 * @param string $token
+	 *
+	 * @return string
+	 * @throws ReflinkException
+	 * @throws \Exception
+	 */
 	public function handle($token)
 	{
 		if (!$this->tokens->exists($token))
@@ -76,34 +86,27 @@ class ReflinksBroker {
 		}
 
 		$reflink = $this->tokens->load($token);
-		$reflinkClass = $reflink->type;
+		$reflinkHandlerClass = $reflink->handler;
 
-		if (empty($reflinkClass))
+		if (empty($reflinkHandlerClass))
 		{
-			throw new ReflinkException("Reflink token [{$token}] hasn't type");
+			throw new ReflinkException("Reflink token [{$token}] hasn't handler");
 		}
-		else if (!class_exists($reflinkClass))
+		else if (!class_exists($reflinkHandlerClass))
 		{
-			throw new ReflinkException("Class [{$reflinkClass}] is not found");
+			throw new ReflinkException("Class [{$reflinkHandlerClass}] is not found");
 		}
 
 		try
 		{
-			if ((new $reflinkClass())->handle($reflink))
-			{
-				$reflink->delete();
-			}
+			$handler = app()->make($reflinkHandlerClass, [$reflink]);
 
-			$redirectUrl = array_get($reflink->properties, 'redirectUrl');
+			app()->call([$handler, 'handle']);
+			$reflink->delete();
 
-			if (filter_input($redirectUrl, FILTER_VALIDATE_URL))
-			{
-				return $redirectUrl;
-			}
-
-			return static::TOKEN_HANDLED;
+			return $handler;
 		}
-		catch(Exception $e)
+		catch (Exception $e)
 		{
 			return $e->getMessage();
 		}
