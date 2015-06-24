@@ -3,6 +3,7 @@
 use Bus;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
+use KodiCMS\CMS\Exceptions\Exception;
 use KodiCMS\Users\Jobs\ReflinkForgotPassword;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use KodiCMS\CMS\Http\Controllers\System\FrontendController;
@@ -56,8 +57,30 @@ class PasswordController extends FrontendController {
 	public function postEmail()
 	{
 		$this->validate($this->request, ['email' => 'required|email']);
-		Bus::dispatch(new ReflinkForgotPassword($this->request->only('email')));
-
-		return redirect()->back()->with('status', trans($response));
+		try
+		{
+			Bus::dispatch(new ReflinkForgotPassword($this->request->only('email')));
+			return redirect()->back()->with('status', trans('passwords.sent'));
+		}
+		catch(Exception $e)
+		{
+			return redirect()->back()->withErrors($e->getMessage());
+		}
 	}
+
+	/**
+	 * Display the password reset view for the given token.
+	 *
+	 * @param  string  $token
+	 * @return \Illuminate\Http\Response
+	 */
+	public function getReset($token = null)
+	{
+		if (is_null($token)) {
+			throw new NotFoundHttpException;
+		}
+
+		return view('auth.reset')->with('token', $token);
+	}
+
 }

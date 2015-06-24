@@ -5,15 +5,6 @@ use KodiCMS\Users\Exceptions\ReflinkException;
 
 class UserReflink extends Model
 {
-	public static function cleanOld()
-	{
-		$model = new static();
-
-		$model
-			->whereRaw('created_ad < CURDATE() - INTERVAL 1 DAY')
-			->delete();
-	}
-
 	/**
 	 * The database table used by the model.
 	 *
@@ -43,9 +34,17 @@ class UserReflink extends Model
 	/**
 	 * @return string
 	 */
+	public function linkCode()
+	{
+		return route('reflink.code', ['code' => $this->code]);
+	}
+
+	/**
+	 * @return string
+	 */
 	public function link()
 	{
-		return route('reflink', ['code' => $this->code]);
+		return route('reflink.form');
 	}
 
 	/**
@@ -54,47 +53,5 @@ class UserReflink extends Model
 	public function user()
 	{
 		return $this->belongsTo(User::class);
-	}
-
-	/**
-	 * @param User   $user
-	 * @param string $type
-	 * @param array  $properties
-	 *
-	 * @return static
-	 * @throws ReflinkException
-	 */
-	public function generate(User $user, $type, array $properties = [])
-	{
-		if (!$user->exists)
-		{
-			throw new ReflinkException("User not loaded");
-		}
-
-		$refLink = $user
-			->reflinks()
-			->where('type', $type)
-			->whereRaw('created_at > CURDATE() - INTERVAL 1 HOUR')
-			->get()
-			->first();
-
-		if (is_null($refLink))
-		{
-			$refLink = static::create([
-				'code' => uniqid(TRUE) . sha1(microtime()),
-				'type' => $type,
-				'properties' => $properties
-			]);
-
-			$refLink->user()->associate($user)->save();
-		}
-		else
-		{
-			$refLink->update([
-				'properties' => $properties
-			]);
-		}
-
-		return $refLink;
 	}
 }

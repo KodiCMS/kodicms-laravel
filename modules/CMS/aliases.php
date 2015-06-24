@@ -57,4 +57,5 @@ return [
 	'UI'				=> KodiCMS\Support\Helpers\UI::class,
 	'Assets'			=> KodiCMS\Support\Facades\Assets::class,
 	'Date'				=> KodiCMS\Support\Helpers\Date::class,
+	'Reflinks'			=> KodiCMS\Support\Facades\Reflinks::class,
 ];

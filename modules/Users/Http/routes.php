@@ -21,7 +21,7 @@ Route::group(['prefix' => CMS::backendPath(), 'as' => 'backend.'], function ()
 	Route::controller('role', 'RoleController', [
 		'getIndex' => 'role.list',
 		'getCreate' => 'role.create',
-		'postCreate' => 'role.create.post',
+		'postCreate' => 'role.create.post'
 	]);
 
 	Route::controller('auth', 'Auth\AuthController', [
@@ -48,3 +48,12 @@ Route::group(['as' => 'api.user.'], function ()
 });
 
 RouteAPI::get('api.roles', ['as' => 'api.roles.get', 'uses' => 'API\RoleController@getAll']);
+
+Route::group(['prefix' => 'reflink', 'as' => 'reflink.'], function ()
+{
+	Route::get('', ['as' => 'form', 'uses' => 'KodiCMS\Users\Http\Controllers\ReflinkController@getForm']);
+	Route::post('', ['as' => 'form.post', 'uses' => 'KodiCMS\Users\Http\Controllers\ReflinkController@postForm']);
+	Route::get('complete', ['as' => 'complete', 'uses' => 'KodiCMS\Users\Http\Controllers\ReflinkController@complete']);
+	Route::get('{code}', ['as' => 'code', 'uses' => 'KodiCMS\Users\Http\Controllers\ReflinkController@handle'])
+		->where('code', '[a-z0-9]+');
+});

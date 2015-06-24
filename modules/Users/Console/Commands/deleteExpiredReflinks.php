@@ -1,9 +1,8 @@
 <?php namespace KodiCMS\Users\Console\Commands;
 
 use Illuminate\Console\Command;
-use KodiCMS\Users\Model\UserReflink;
 
-class CleanReflinks extends Command
+class deleteExpiredReflinks extends Command
 {
 
 	/**
@@ -16,7 +15,8 @@ class CleanReflinks extends Command
 	 */
 	public function fire()
 	{
-		UserReflink::cleanOld();
+		app('reflink.tokens')->deleteExpired();
+
 		$this->info('All done');
 	}
 }
