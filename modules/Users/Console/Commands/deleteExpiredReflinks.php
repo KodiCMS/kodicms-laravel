@@ -2,13 +2,13 @@
 
 use Illuminate\Console\Command;
 
-class deleteExpiredReflinks extends Command
+class DeleteExpiredReflinks extends Command
 {
 
 	/**
 	 * The console command name.
 	 */
-	protected $name = 'cms:reflinks:clean';
+	protected $name = 'cms:reflinks:delete_expired';
 
 	/**
 	 * Execute the console command.
