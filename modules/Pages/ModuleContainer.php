@@ -11,6 +11,11 @@ class ModuleContainer extends \KodiCMS\CMS\Loader\ModuleContainer
 	 */
 	protected function loadSystemRoutes(Router $router)
 	{
+		if (!CMS::isInstalled())
+		{
+			return;
+		}
+
 		Route::before(function()
 		{
 			Route::get('{slug}', ['as' => 'frontend.url', 'uses' => 'KodiCMS\Pages\Http\Controllers\FrontendController@run'])
