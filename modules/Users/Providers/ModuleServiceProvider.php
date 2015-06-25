@@ -10,13 +10,13 @@ use KodiCMS\Users\Observers\UserObserver;
 use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Users\Reflinks\ReflinksBroker;
 use KodiCMS\Users\Reflinks\ReflinkTokenRepository;
-use KodiCMS\Users\Console\Commands\deleteExpiredReflinks;
+use KodiCMS\Users\Console\Commands\DeleteExpiredReflinks;
 
 class ModuleServiceProvider extends ServiceProvider {
 
 	public function boot()
 	{
-		$this->registerConsoleCommand('reflinks.clean', deleteExpiredReflinks::class);
+		$this->registerConsoleCommand('reflinks.clean', DeleteExpiredReflinks::class);
 
 		User::observe(new UserObserver);
 		UserRole::observe(new RoleObserver);
