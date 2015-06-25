@@ -53,7 +53,7 @@ class ModuleLocalePublish extends Command {
 			}
 		}
 
-		$langDirectory = base_path('/resources/lang/packages');
+		$langDirectory = base_path('/resources/lang/vendor');
 
 		foreach ($data as $namespace => $locales)
 		{
@@ -61,7 +61,7 @@ class ModuleLocalePublish extends Command {
 			{
 				$filename = pathinfo($file, PATHINFO_FILENAME);
 
-				$fileDir = $langDirectory . DIRECTORY_SEPARATOR . $newLocale . DIRECTORY_SEPARATOR . $namespace;
+				$fileDir = $langDirectory . DIRECTORY_SEPARATOR . $namespace . DIRECTORY_SEPARATOR . $newLocale;
 				if (!$files->exists($fileDir))
 				{
 					$files->makeDirectory($fileDir, 0755, true);
