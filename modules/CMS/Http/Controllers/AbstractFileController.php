@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\CMS\Http\Controllers;
 
-use KodiCMS\CMS\Model\FileCollection;
 use WYSIWYG;
 use KodiCMS\Users\Model\UserRole;
+use KodiCMS\CMS\Model\FileCollection;
 
 abstract class AbstractFileController extends System\BackendController {
 
@@ -43,7 +43,7 @@ abstract class AbstractFileController extends System\BackendController {
 	public function getCreate()
 	{
 		$file = $this->getFile();
-		$roles = UserRole::lists('name', 'name');
+		$roles = UserRole::lists('name', 'name')->all();
 
 		$this->setTitle(trans("{$this->moduleNamespace}{$this->sectionPrefix}.title.create"));
 		$this->templateScripts['FILE'] = $file->toArray();
@@ -77,7 +77,7 @@ abstract class AbstractFileController extends System\BackendController {
 	public function getEdit($filename)
 	{
 		$file = $this->getFile($filename);
-		$roles = UserRole::lists('name', 'name');
+		$roles = UserRole::lists('name', 'name')->all();
 
 		$this->setTitle(trans("{$this->moduleNamespace}{$this->sectionPrefix}.title.edit", [
 			'name' => $file->getName()
@@ -110,7 +110,7 @@ abstract class AbstractFileController extends System\BackendController {
 			->with('success', trans("{$this->moduleNamespace}{$this->sectionPrefix}.messages.updated", ['name' => $file->getName()]));
 	}
 
-	public function getDelete($filename)
+	public function postDelete($filename)
 	{
 		$this->autoRender = FALSE;
 
@@ -132,7 +132,7 @@ abstract class AbstractFileController extends System\BackendController {
 	 */
 	public function getFile($filename = NULL)
 	{
-		WYSIWYG::loadAll();
+		WYSIWYG::loadAllEditors();
 
 		if (is_null($filename))
 		{

@@ -10,8 +10,7 @@ class SectionType implements SectionTypeInterface
 	 */
 	public static function isValid(array $settings)
 	{
-		if(!isset($settings['class'])) return false;
-		return true;
+		return isset($settings['class']);
 	}
 
 	/**

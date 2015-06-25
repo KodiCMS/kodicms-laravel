@@ -5,11 +5,14 @@ use Illuminate\Database\Schema\Blueprint;
 class String extends Field
 {
 	/**
-	 * @var array
+	 * @return array
 	 */
-	protected $settings = [
-		'lenght' => 255
-	];
+	public function defaultSettings()
+	{
+		return [
+			'lenght' => 255
+		];
+	}
 
 	/**
 	 * @return int

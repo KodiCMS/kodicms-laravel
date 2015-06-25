@@ -49,7 +49,7 @@ class AuthController extends FrontendController {
 		$this->redirectPath = CMS::backendPath();
 		$this->redirectAfterLogout = CMS::backendPath() . '/auth/login';
 
-		$this->beforeFilter('@checkPermissions', ['except' => 'getLogout']);
+		$this->beforeFilter('@checkPermissions', ['except' => ['getLogout']]);
 	}
 
 	/**
@@ -59,6 +59,11 @@ class AuthController extends FrontendController {
 	 */
 	public function getLogin()
 	{
+		if ($this->auth->check())
+		{
+			return redirect()->intended($this->redirectPath());
+		}
+
 		$this->setContent('auth.login');
 	}
 
@@ -102,7 +107,8 @@ class AuthController extends FrontendController {
 	 */
 	public function checkPermissions(Route $router, Request $request)
 	{
-		if ($this->auth->check() AND $this->currentUser->hasRole('login')) {
+		if ($this->auth->check() AND !is_null($this->currentUser) AND $this->currentUser->hasRole('login'))
+		{
 			return redirect($this->redirectPath);
 		}
 	}

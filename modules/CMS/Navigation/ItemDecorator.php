@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\CMS\Navigation;
 
-use KodiCMS\CMS\Helpers\UI;
-use KodiCMS\CMS\Traits\Accessor;
+use UI;
+use KodiCMS\Support\Traits\Accessor;
 
 class ItemDecorator
 {

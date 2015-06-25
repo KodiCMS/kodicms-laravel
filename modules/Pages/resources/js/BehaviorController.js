@@ -1,16 +1,21 @@
-cms.init.add(['page.get.edit'], function () {
+CMS.controllers.add(['page.get.edit', 'page.get.create'], function () {
 	var loadBehaviorData = function(behaviorId) {
-		Api.get('behavior.settings', {id: behaviorId, page_id: PAGE_ID}, function(resp) {
-			$('#behavor_options').html(resp.response);
-		});
+		var $cont = $('#behavor_options_container');
+		if(behaviorId.length > 0) {
+			var pageId = ((typeof PAGE != 'undefined')&&PAGE.id)||null
+			Api.get('/api.page.behavior.settings', {pid: pageId, behavior: behaviorId}, function(resp) {
+				$('#behavor_options').html(resp.content);
+				$cont.addClass('well well-sm');
+			});
+		} else {
+			$cont.removeClass('well well-sm');
+			$('#behavor_options').empty();
+		}
 	};	
 
-	var behaviorId = $('select[name="page[behavior_id]"]').change(function() {
-		var id = $('option:selected', this).val();
-
-		loadBehaviorData(id);
+	var behaviorId = $('select[name="behavior"]').on('change', function() {
+		loadBehaviorData($(this).val());
 	}).find('option:selected').val();
 
-	if(behaviorId.length > 0)
-		loadBehaviorData(behaviorId);
+	loadBehaviorData(behaviorId);
 });

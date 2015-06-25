@@ -83,7 +83,7 @@ class PageMenu extends Decorator implements WidgetCacheable
 		$linkedWidgets = WidgetManagerDatabase::getWidgetByTypeAndDsid()->map(function($widget)
 		{
 			return $widget->toArray();
-		})->lists('name', 'id');
+		})->lists('name', 'id')->all();
 
 		$pageSitemap = PageSitemap::get(true);
 

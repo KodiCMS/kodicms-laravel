@@ -11,8 +11,10 @@ class Run extends Command
 	 */
 	protected $name = 'cms:cron:run';
 
+	/**
+	 * @var string
+	 */
 	protected $description = 'Run all cron tasks';
-
 
 	/**
 	 * Execute the console command.

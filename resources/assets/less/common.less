@@ -1,14 +1,14 @@
-@import (less) "../../../public/cms/libs/colorbox/colorbox.css";
-@import (less) "../../../public/cms/libs/dropzone/min/basic.min.css";
-@import (less) "../../../public/cms/libs/dropzone/min/dropzone.min.css";
-@import (less) "../../../public/cms/libs/datepicker/jquery.datetimepicker.css";
+@import (less) "../../../public/cms/libs/dropzone/css/basic.min.css";
+@import (less) "../../../public/cms/libs/dropzone/css/dropzone.min.css";
+@import (less) "../../../public/cms/libs/datetimepicker/css/jquery.datetimepicker.css";
+@import (less) "../../../public/cms/libs/select2/css/select2.min.css";
 
 @font-face {
 	font-family: 'Open Sans';
 	font-style: italic;
 	font-weight: 400;
 	src: local('Open Sans Italic'), local('Open-Sans-Italic'),
-		url('../libs/open-sans/OpenSans-Italic.ttf') format('truetype');
+		url('../fonts/open-sans/OpenSans-Italic.ttf') format('truetype');
 }
 
 @font-face {
@@ -16,7 +16,7 @@
 	font-style: bold;
 	font-weight: 700;
 	src: local('Open Sans Bold'), local('Open-Sans-Bold'),
-		url('../libs/open-sans/OpenSans-Bold.ttf') format('truetype');
+		url('../fonts/open-sans/OpenSans-Bold.ttf') format('truetype');
 }
 
 @font-face {
@@ -24,14 +24,14 @@
 	font-style: normal;
 	font-weight: 400;
 	src: local('Open Sans Regular'), local('Open-Sans-Regular'),
-		url('../libs/open-sans/OpenSans-Regular.ttf') format('truetype');
+		url('../fonts/open-sans/OpenSans-Regular.ttf') format('truetype');
 }
 
-@import "../../../public/cms/libs/bootstrap-3.3.4/less/bootstrap";
-@import "../../../public/cms/libs/fontawesome/less/font-awesome";
+@import "../../../public/cms/libs/bootstrap/less/bootstrap";
+@import "../../../public/cms/libs/font-awesome/less/font-awesome";
 @import "kodicms/pixel-admin";
 
-@fa-font-path: 				"../libs/fontawesome/fonts";
+@fa-font-path: 				"../libs/font-awesome/fonts";
 @font-size-base:			13px;
 @border-radius-base:        0;
 @border-radius-large:       0;
@@ -43,3 +43,4 @@
 @import "custom/dashboard";
 @import "custom/weather";
 @import "custom/installer";
+@import "custom/colorbox";

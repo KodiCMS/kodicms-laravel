@@ -1,13 +1,23 @@
 <?php namespace KodiCMS\Dashboard\Http\Controllers\API;
 
-use KodiCMS\API\Http\Controllers\System\Controller;
-use KodiCMS\CMS\Assets\Package;
-use KodiCMS\Dashboard\Contracts\WidgetDashboard;
+use Package;
 use KodiCMS\Dashboard\Dashboard;
+use KodiCMS\Dashboard\Contracts\WidgetDashboard;
 use KodiCMS\Dashboard\WidgetRenderDashboardHTML;
+use KodiCMS\API\Http\Controllers\System\Controller;
+use KodiCMS\Widgets\Engine\WidgetRenderSettingsHTML;
 
 class DashboardController extends Controller
 {
+	/**
+	 * @var array
+	 */
+	protected $permissions = [
+		'getWidgetSettings' => 'backend.dashboard.manage',
+		'putWidget' => 'backend.dashboard.manage',
+		'postWidget' => 'backend.dashboard.manage',
+		'deleteWidget' => 'backend.dashboard.manage',
+	];
 
 	public function putWidget()
 	{
@@ -23,7 +33,18 @@ class DashboardController extends Controller
 		$this->size = $widget->getSize();
 		$this->id = $widget->getId();
 
-		$this->setContent((new WidgetRenderDashboardHTML($widget))->render());
+		$this->setContent(view('dashboard::partials.temp_block', [
+			'widget' => (new WidgetRenderDashboardHTML($widget))
+		])->render());
+	}
+
+	public function getWidgetSettings()
+	{
+		$widgetId = $this->getRequiredParameter('id');
+		$widget = Dashboard::getWidgetById($widgetId);
+
+		$settingsView = (new WidgetRenderSettingsHTML($widget))->render();
+		$this->setContent(view('dashboard::partials.settings', compact('widget', 'settingsView'))->render());
 	}
 
 	public function deleteWidget()
@@ -39,9 +60,13 @@ class DashboardController extends Controller
 
 		$widget = Dashboard::updateWidget($widgetId, $settings);
 
-		if($widget instanceof WidgetDashboard)
+		if ($widget instanceof WidgetDashboard)
 		{
-			$this->reloadPage = $widget->isUpdateSettingsPage();
+			$this->updateSettingsPage = $widget->isUpdateSettingsPage();
+			$this->widgetId = $widgetId;
+			$this->setContent(view('dashboard::partials.temp_block', [
+				'widget' => (new WidgetRenderDashboardHTML($widget))
+			])->render());
 		}
 	}
 }

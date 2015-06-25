@@ -1,7 +1,9 @@
 <?php namespace KodiCMS\Widgets\Model;
 
 use DB;
+use KodiCMS\Pages\Model\Page;
 use Illuminate\Database\Eloquent\Model;
+use KodiCMS\Widgets\Widget\Temp as TempWidget;
 use KodiCMS\Widgets\Exceptions\WidgetException;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 
@@ -84,15 +86,17 @@ class Widget extends Model
 		{
 			$this->widget->setId($this->id);
 
-			if($this->isRenderable())
+			if ($this->isRenderable())
 			{
 				$this->widget->setFrontendTemplate($this->template);
 			}
+
+			$this->widget->setRalatedWidgets($this->related);
 		}
 		else
 		{
 			// TODO: возможно стоит переделать
-			$this->widget = new \KodiCMS\Widgets\Widget\Temp($this->name, $this->description);
+			$this->widget = new TempWidget($this->name, $this->description);
 		}
 
 		static::$cachedWidgets[$this->id] = $this->widget;
@@ -191,7 +195,15 @@ class Widget extends Model
 	 */
 	public function pages()
 	{
-		return $this->belongsToMany('KodiCMS\Pages\Model\Page', 'page_widgets', 'widget_id', 'page_id');
+		return $this->belongsToMany(Page::class, 'page_widgets', 'widget_id', 'page_id');
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\hasManyThrough
+	 */
+	public function related()
+	{
+		return $this->belongsToMany(Widget::class, 'related_widgets', 'to_widget_id', 'id');
 	}
 
 	/**

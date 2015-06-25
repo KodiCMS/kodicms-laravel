@@ -1,5 +1,12 @@
 <?php namespace KodiCMS\Datasource;
 
+use Schema;
+use FieldManager;
+use KodiCMS\Datasource\Contracts\FieldInterface;
+use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\Fields\Field;
+use KodiCMS\Datasource\Model\Section;
+
 class DatasourceManager {
 
 	/**
@@ -90,12 +97,80 @@ class DatasourceManager {
 	}
 
 	/**
+	 * @param SectionInterface $section
+	 */
+	public function createTableSection(SectionInterface $section)
+	{
+		$this->dropSectionTable($section);
+
+		Schema::create($section->getTableName(), function ($table) use($section)
+		{
+			foreach ($section->systemFields() as $field)
+			{
+				$model = $field->getModel()->fill(['is_system' => true]);
+				if($field = $section->getModel()->fields()->save($model))
+				{
+					$field->toField()->setDatabaseFieldType($table);
+				}
+			}
+		});
+	}
+
+	/**
+	 * @param SectionInterface $section
+	 */
+	public function dropSectionTable(SectionInterface $section)
+	{
+		Schema::dropIfExists($section->getTableName());
+	}
+
+	/**
+	 * @param SectionInterface $section
+	 * @param FieldInterface $field
+	 */
+	public function addNewField(SectionInterface $section, FieldInterface $field)
+	{
+		$model = $field->getModel();
+		if($field = $section->getModel()->fields()->save($model))
+		{
+			FieldManager::addFieldToSectionTable($section, $field->toField());
+		}
+	}
+
+	/**
+	 * @param SectionInterface $section
+	 * @param FieldInterface|Field|integer $fieldId
+	 */
+	public function attachField(SectionInterface $section, $fieldId)
+	{
+		if ($fieldId instanceof FieldInterface)
+		{
+			$field = $fieldId;
+		}
+		else if (is_integer($fieldId))
+		{
+			$field = Field::find($fieldId)->toField();
+		}
+		elseif ($fieldId instanceof Field)
+		{
+			$field = $fieldId->toField();
+		}
+
+		FieldManager::attachFieldToSection($section, $field);
+	}
+
+	/**
 	 * @param integer $sectionId
 	 * @param integer $folderId
+	 * @return bool
 	 */
-	public function moveSectioToFolde($sectionId, $folderId)
+	public function moveSectionToFolder($sectionId, $folderId)
 	{
+		Section::findOrFail($sectionId)->update([
+			'folder_id' => (int) $folderId
+		]);
 
+		return true;
 	}
 
 	/**

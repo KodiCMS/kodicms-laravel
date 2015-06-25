@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\API\Model;
 
+use Keys;
 use Illuminate\Database\Eloquent\Model;
-use KodiCMS\API\Helpers\Keys;
 
 class ApiKey extends Model {
 
@@ -30,9 +30,9 @@ class ApiKey extends Model {
 	 * @param string $description
 	 * @return integer|null
 	 */
-	public function geterateKey($description = '')
+	public static function generate($description = '')
 	{
-		$key = $this->create([
+		$key = static::create([
 			'id' => Keys::generate(),
 			'description' => $description
 		]);
@@ -44,17 +44,17 @@ class ApiKey extends Model {
 	 * @param $oldKey
 	 * @return bool|integer
 	 */
-	public function refresh($oldKey)
+	public static function refresh($oldKey)
 	{
-		$this->where('id', $oldKey)->first();
+		$key = static::where('id', $oldKey)->first();
 
-		if (!$this->exists)
+		if (is_null($key) or !$key->exists)
 		{
-			return FALSE;
+			return false;
 		}
 
-		$key = $this->update([
-			'id' => self::generate_key()
+		$key->update([
+			'id' => Keys::generate()
 		]);
 
 		return $key->id;
@@ -65,10 +65,9 @@ class ApiKey extends Model {
 	 * @param string $key
 	 * @return bool
 	 */
-	public function isValid($key)
+	public static function isValid($key)
 	{
-		return $this
-			->where('id', e($key))
+		return static::where('id', e($key))
 			->first()
 			->exists;
 	}

@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\CMS\Console\Commands;
 
+use CMS;
 use ModuleLoader;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
@@ -14,9 +15,8 @@ class GenerateScriptTranslates extends Command {
 	protected $name = 'cms:generate:translate:js';
 
 	/**
-	 * Execute the console command.
-	 *
-	 * @return mixed
+	 * @param Filesystem $files
+	 * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
 	 */
 	public function fire(Filesystem $files)
 	{
@@ -36,18 +36,26 @@ class GenerateScriptTranslates extends Command {
 			}
 		}
 
-		$langDirectory = \CMS::backendResourcesPath() . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'locale';
+		$langDirectory = CMS::backendResourcesPath() . 'js' . DIRECTORY_SEPARATOR . 'locale';
 
 		if(!$files->exists($langDirectory))
 		{
 			$files->makeDirectory($langDirectory, 0755, TRUE);
 		}
 
+		$this->output->progressStart(count($data));
+
 		foreach($data as $locale => $translates)
 		{
 			$data = json_encode($translates);
-			$files->put($langDirectory . DIRECTORY_SEPARATOR . $locale . '.json', $data);
+			$file = $langDirectory . DIRECTORY_SEPARATOR . $locale . '.json';
+			$files->put($file, $data);
+
+			$this->output->progressAdvance();
+			$this->line("<info>File [{$file}]</info> for locale: [{$locale}] created");
 		}
+
+		$this->output->progressFinish();
 	}
 
 }

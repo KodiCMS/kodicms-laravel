@@ -1,14 +1,13 @@
 <?php namespace KodiCMS\Pages\Http\Controllers;
 
-use Assets;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use KodiCMS\CMS\Http\Controllers\System\TemplateController;
-use KodiCMS\Pages\Helpers\BlockWysiwyg;
-use KodiCMS\Pages\Model\FrontendPage;
-use KodiCMS\Pages\Model\Page;
-use KodiCMS\Widgets\Collection\PageWidgetCollection;
 use Meta;
 use Block;
+use Assets;
+use KodiCMS\Pages\Model\FrontendPage;
+use KodiCMS\Pages\Helpers\BlockWysiwyg;
+use KodiCMS\Widgets\Collection\PageWidgetCollection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 
 class PageWysiwygController extends TemplateController
 {
@@ -19,7 +18,7 @@ class PageWysiwygController extends TemplateController
 
 	public function getPageWysiwyg($id)
 	{
-		Meta::addMeta(['name'    => 'page-id', 'data-id' => $id])
+		Meta::addMeta(['name' => 'page-id', 'data-id' => $id])
 			->addMeta(['name' => 'csrf-token', 'content' => csrf_token()])
 			->addPackage(['page-wysiwyg'], true)
 			->addToGroup('site-url', '<script type="text/javascript">' . $this->getTemplateScriptsAsString() . '</script>');
@@ -60,7 +59,7 @@ class PageWysiwygController extends TemplateController
 	{
 		try
 		{
-			return FrontendPage::findById($id);;
+			return FrontendPage::findById($id, [FrontendPage::STATUS_HIDDEN, FrontendPage::STATUS_DRAFT]);
 		}
 		catch (ModelNotFoundException $e)
 		{

@@ -8,10 +8,7 @@ class PageBehaviorSetting extends Migration
 	public function up()
 	{
 		Schema::create('page_behavior_settings', function (Blueprint $table) {
-			$table->unsignedInteger('page_id')
-				->index();
-			$table->string('behavior');
-
+			$table->unsignedInteger('page_id')->index()->unique();
 			$table->json('settings');
 		});
 	}

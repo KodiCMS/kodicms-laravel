@@ -4,23 +4,33 @@ use HTML;
 use Cache;
 use ModuleLoader;
 use Carbon\Carbon;
+use Package as PackageManager;
 
+/**
+ * Class Core
+ * @package KodiCMS\CMS\Assets
+ */
 class Core
 {
 	/**
+	 * @var array
+	 */
+	protected static $loadedPackages = [];
+
+	/**
 	 * @var  array  CSS assets
 	 */
-	protected static $css = [];
+	protected $css = [];
 
 	/**
 	 * @var  array  Javascript assets
 	 */
-	protected static $js = [];
+	protected $js = [];
 
 	/**
 	 * @var  array  Other asset groups (meta data, links, etc...)
 	 */
-	protected static $groups = [];
+	protected $groups = [];
 
 	/**
 	 * @param string|array $names
@@ -28,34 +38,34 @@ class Core
 	 * @param bool $footer
 	 * @return bool
 	 */
-	public static function package($names, $loadDependencies = false, $footer = false)
+	public function package($names, $loadDependencies = false, $footer = false)
 	{
-		if (!is_array($names))
-		{
-			$names = [$names];
-		}
+		$names = (array) $names;
 
 		foreach ($names as $name)
 		{
-			$package = Package::load($name);
+			if(in_array($name, static::$loadedPackages)) continue;
+
+			$package = PackageManager::load($name);
 
 			if ($package === null) continue;
+			static::$loadedPackages[] = $name;
 
 			foreach ($package as $item)
 			{
-				if($loadDependencies === true AND isset($item['deps']) AND is_array($item['deps']))
+				if ($loadDependencies === true AND isset($item['deps']) AND is_array($item['deps']))
 				{
-					static::package($item['deps'], true);
+					$this->package($item['deps'], true);
 				}
 
 				switch ($item['type'])
 				{
 					case 'css':
-						static::$css[$item['handle']] = $item;
+						$this->css[$item['handle']] = $item;
 						break;
 					case 'js':
 						$item['footer'] = (bool)$footer;
-						static::$js[$item['handle']] = $item;
+						$this->js[$item['handle']] = $item;
 						break;
 				}
 			}
@@ -75,19 +85,13 @@ class Core
 	 * @param   array    Attributes for the <link /> element
 	 * @return  mixed    Setting returns asset array, getting returns asset HTML
 	 */
-	public static function css($handle = null, $src = null, $deps = null, $attrs = null)
+	public function css($handle = null, $src = null, $deps = null, $attrs = null)
 	{
 		// Return all CSS assets, sorted by dependencies
-		if ($handle === null)
-		{
-			return static::allCss();
-		}
+		if ($handle === null) return $this->allCss();
 
 		// Return individual asset
-		if ($src === null)
-		{
-			return static::getCss($handle);
-		}
+		if ($src === null) return $this->getCss($handle);
 
 		// Set default media attribute
 		if (!isset($attrs['media']))
@@ -95,7 +99,13 @@ class Core
 			$attrs['media'] = 'all';
 		}
 
-		return static::$css[$handle] = ['src' => $src, 'deps' => (array)$deps, 'attrs' => $attrs, 'handle' => $handle, 'type' => 'css'];
+		return $this->css[$handle] = [
+			'src' => $src,
+			'deps' => (array)$deps,
+			'attrs' => $attrs,
+			'handle' => $handle,
+			'type' => 'css'
+		];
 	}
 
 	/**
@@ -104,14 +114,11 @@ class Core
 	 * @param   string   Asset name
 	 * @return  string   Asset HTML
 	 */
-	public static function getCss($handle)
+	public function getCss($handle)
 	{
-		if (!isset(static::$css[$handle]))
-		{
-			return false;
-		}
+		if (!isset($this->css[$handle])) return false;
 
-		$asset = static::$css[$handle];
+		$asset = $this->css[$handle];
 
 		return HTML::style($asset['src'], $asset['attrs']);
 	}
@@ -121,16 +128,13 @@ class Core
 	 *
 	 * @return   string   Asset HTML
 	 */
-	public static function allCss()
+	public function allCss()
 	{
-		if (empty(static::$css))
-		{
-			return false;
-		}
+		if (empty($this->css)) return false;
 
-		foreach (static::sort(static::$css) as $handle => $data)
+		foreach ($this->sort($this->css) as $handle => $data)
 		{
-			$assets[] = static::getCss($handle);
+			$assets[] = $this->getCss($handle);
 		}
 
 		return implode("", $assets);
@@ -142,14 +146,11 @@ class Core
 	 * @param   mixed   Asset name, or `NULL` to remove all
 	 * @return  mixed   Empty array or void
 	 */
-	public static function removeCss($handle = null)
+	public function removeCss($handle = null)
 	{
-		if ($handle === null)
-		{
-			return static::$css = [];
-		}
+		if ($handle === null) return $this->css = [];
 
-		unset(static::$css[$handle]);
+		unset($this->css[$handle]);
 	}
 
 	/**
@@ -163,19 +164,18 @@ class Core
 	 * @param   bool     Whether to show in header or footer
 	 * @return  mixed    Setting returns asset array, getting returns asset HTML
 	 */
-	public static function js($handle = false, $src = null, $deps = null, $footer = false)
+	public function js($handle = false, $src = null, $deps = null, $footer = false)
 	{
-		if (is_bool($handle))
-		{
-			return static::allJs($handle);
-		}
+		if (is_bool($handle)) return $this->allJs($handle);
+		if ($src === null) return $this->getJs($handle);
 
-		if ($src === null)
-		{
-			return static::getJs($handle);
-		}
-
-		return static::$js[$handle] = ['src' => $src, 'deps' => (array)$deps, 'footer' => (bool)$footer, 'handle' => $handle, 'type' => 'js'];
+		return $this->js[$handle] = [
+			'src' => $src,
+			'deps' => (array)$deps,
+			'footer' => (bool)$footer,
+			'handle' => $handle,
+			'type' => 'js'
+		];
 	}
 
 	/**
@@ -184,14 +184,10 @@ class Core
 	 * @param   string   Asset name
 	 * @return  string   Asset HTML
 	 */
-	public static function getJs($handle)
+	public function getJs($handle)
 	{
-		if (!isset(static::$js[$handle]))
-		{
-			return false;
-		}
-
-		$asset = static::$js[$handle];
+		if (!isset($this->js[$handle])) return false;
+		$asset = $this->js[$handle];
 
 		return HTML::script($asset['src']);
 	}
@@ -202,16 +198,13 @@ class Core
 	 * @param   bool   FALSE for head, TRUE for footer
 	 * @return  string Asset HTML
 	 */
-	public static function allJs($footer = false)
+	public function allJs($footer = false)
 	{
-		if (empty(static::$js))
-		{
-			return false;
-		}
+		if (empty($this->js)) return false;
 
 		$assets = [];
 
-		foreach (static::$js as $handle => $data)
+		foreach ($this->js as $handle => $data)
 		{
 			if ($data['footer'] === $footer)
 			{
@@ -219,14 +212,11 @@ class Core
 			}
 		}
 
-		if (empty($assets))
-		{
-			return false;
-		}
+		if (empty($assets)) return false;
 
-		foreach (static::sort($assets) as $handle => $data)
+		foreach ($this->sort($assets) as $handle => $data)
 		{
-			$sorted[] = static::getJs($handle);
+			$sorted[] = $this->getJs($handle);
 		}
 
 		return implode("", $sorted);
@@ -238,27 +228,24 @@ class Core
 	 * @param   mixed   Remove all if `NULL`, section if `TRUE` or `FALSE`, asset if `string`
 	 * @return  mixed   Empty array or void
 	 */
-	public static function removeJs($handle = null)
+	public function removeJs($handle = null)
 	{
-		if ($handle === null)
-		{
-			return static::$js = [];
-		}
+		if ($handle === null) return $this->js = [];
 
 		if ($handle === true OR $handle === false)
 		{
-			foreach (static::$js as $handle => $data)
+			foreach ($this->js as $handle => $data)
 			{
 				if ($data['footer'] === $handle)
 				{
-					unset(static::$js[$handle]);
+					unset($this->js[$handle]);
 				}
 			}
 
 			return;
 		}
 
-		unset(static::$js[$handle]);
+		unset($this->js[$handle]);
 	}
 
 	/**
@@ -270,19 +257,12 @@ class Core
 	 * @param   mixed    Dependencies
 	 * @return  mixed    Setting returns asset array, getting returns asset content
 	 */
-	public static function group($group, $handle = null, $content = null, $deps = null)
+	public function group($group, $handle = null, $content = null, $deps = null)
 	{
-		if ($handle === null)
-		{
-			return static::allGroup($group);
-		}
+		if ($handle === null) return $this->allGroup($group);
+		if ($content === null) return $this->getGroup($group, $handle);
 
-		if ($content === null)
-		{
-			return static::getGroup($group, $handle);
-		}
-
-		return static::$groups[$group][$handle] = ['content' => $content, 'deps' => (array)$deps,];
+		return $this->groups[$group][$handle] = ['content' => $content, 'deps' => (array)$deps,];
 	}
 
 	/**
@@ -292,14 +272,14 @@ class Core
 	 * @param   string   Asset name
 	 * @return  string   Asset content
 	 */
-	public static function getGroup($group, $handle)
+	public function getGroup($group, $handle)
 	{
-		if (!isset(static::$groups[$group]) OR !isset(static::$groups[$group][$handle]))
+		if (!isset($this->groups[$group]) OR !isset($this->groups[$group][$handle]))
 		{
 			return false;
 		}
 
-		return static::$groups[$group][$handle]['content'];
+		return $this->groups[$group][$handle]['content'];
 	}
 
 	/**
@@ -308,16 +288,13 @@ class Core
 	 * @param  string   Group name
 	 * @return string   Assets content
 	 */
-	public static function allGroup($group)
+	public function allGroup($group)
 	{
-		if (!isset(static::$groups[$group]))
-		{
-			return false;
-		}
+		if (!isset($this->groups[$group])) return false;
 
-		foreach (static::sort(static::$groups[$group]) as $handle => $data)
+		foreach ($this->sort($this->groups[$group]) as $handle => $data)
 		{
-			$assets[] = static::getGroup($group, $handle);
+			$assets[] = $this->getGroup($group, $handle);
 		}
 
 		return implode("", $assets);
@@ -330,21 +307,17 @@ class Core
 	 * @param   string   Asset name
 	 * @return  mixed    Empty array or void
 	 */
-	public static function removeGroup($group = null, $handle = null)
+	public function removeGroup($group = null, $handle = null)
 	{
-		if ($group === null)
-		{
-			return static::$groups = [];
-		}
+		if ($group === null) return $this->groups = [];
 
 		if ($handle === null)
 		{
-			unset(static::$groups[$group]);
-
+			unset($this->groups[$group]);
 			return;
 		}
 
-		unset(static::$groups[$group][$handle]);
+		unset($this->$groups[$group][$handle]);
 	}
 
 	/**
@@ -353,7 +326,7 @@ class Core
 	 * @param   array   Array of assets
 	 * @return  array   Sorted array of assets
 	 */
-	protected static function sort($assets)
+	protected function sort($assets)
 	{
 		$original = $assets;
 		$sorted = [];
@@ -397,7 +370,7 @@ class Core
 	 * @param string $ext
 	 * @return string
 	 */
-	public static function mergeFiles($path, $ext)
+	public function mergeFiles($path, $ext)
 	{
 		$cacheKey = 'assets::merge::' . md5($path) . '::' . $ext;
 
@@ -422,10 +395,4 @@ class Core
 		return $content;
 	}
 
-	/**
-	 * Enforce static usage
-	 */
-	private function __contruct(){}
-
-	private function __clone(){}
 }

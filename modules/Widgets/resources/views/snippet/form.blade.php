@@ -19,7 +19,7 @@
 	<div class="form-group">
 		<label class="col-md-3 control-label">@lang('widgets::snippet.label.wysiwyg')</label>
 		<div class="col-md-9">
-			{!! Form::select('editor', WYSIWYG::htmlSelect(), NULL, [
+			{!! Form::select('editor', WYSIWYG::usedHtmlSelect(), NULL, [
 				'class' => 'form-control'
 			]) !!}
 		</div>

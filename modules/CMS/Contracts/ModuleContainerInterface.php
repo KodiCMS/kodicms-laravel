@@ -65,6 +65,11 @@ interface ModuleContainerInterface
 	/**
 	 * @return array
 	 */
+	public function getPublishPath();
+
+	/**
+	 * @return array
+	 */
 	public function loadConfig();
 
 	/**

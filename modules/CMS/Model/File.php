@@ -1,17 +1,17 @@
 <?php namespace KodiCMS\CMS\Model;
 
-use Carbon\Carbon;
-use KodiCMS\CMS\Exceptions\Exception;
-use KodiCMS\CMS\Exceptions\FileModelException;
-use KodiCMS\CMS\Exceptions\FileValidationException;
-use KodiCMS\CMS\Helpers\File as FileSystem;
-use KodiCMS\CMS\Helpers\Text;
+use View;
+use Date;
+use Validator;
 use SplFileInfo;
+use Carbon\Carbon;
 use SplFileObject;
 use SplTempFileObject;
-use Validator;
-use Date;
-use View;
+use KodiCMS\Support\Helpers\Text;
+use KodiCMS\CMS\Exceptions\Exception;
+use KodiCMS\CMS\Exceptions\FileModelException;
+use KodiCMS\Support\Helpers\File as FileSystem;
+use KodiCMS\CMS\Exceptions\FileValidationException;
 
 class File
 {
@@ -73,7 +73,7 @@ class File
 		}
 		else if ($filename instanceof SplFileInfo)
 		{
-			$this->file = new SplFileObject($file->getRealPath());
+			$this->file = new SplFileObject($filename->getRealPath());
 		}
 		else if (!is_null($filename))
 		{
@@ -496,12 +496,12 @@ class File
 	}
 
 	/**
-	 * @param array $paramters
+	 * @param array $parameters
 	 * @return View
 	 */
-	public function toView(array $paramters = [])
+	public function toView(array $parameters = [])
 	{
-		return view()->file($this->getRealPath())->with($paramters);
+		return view()->file($this->getRealPath())->with($parameters);
 	}
 
 	/**

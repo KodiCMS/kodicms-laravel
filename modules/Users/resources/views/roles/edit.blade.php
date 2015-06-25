@@ -37,3 +37,8 @@
 	@include('cms::app.partials.actionButtons', ['route' => 'backend.role.list'])
 </div>
 {!! Form::close() !!}
+
+<div class="panel-heading">
+	<span class="panel-title">@lang('users::core.title.list')</span>
+</div>
+@include('users::users.list', ['users' => $users])

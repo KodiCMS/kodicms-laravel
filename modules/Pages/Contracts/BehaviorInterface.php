@@ -27,4 +27,9 @@ interface BehaviorInterface {
 	 * @return Settings
 	 */
 	public function getSettings();
+
+	/**
+	 * @return string
+	 */
+	public function getSettingsTemplate();
 }

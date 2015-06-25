@@ -1,17 +1,20 @@
 <?php namespace KodiCMS\Widgets\Providers;
 
 use Event;
+use Blade;
+use Package;
+use Request;
+use KodiCMS\Pages\Model\Page;
+use KodiCMS\Pages\Helpers\Block;
+use KodiCMS\Users\Model\UserRole;
+use KodiCMS\Widgets\Model\Widget;
+use KodiCMS\Widgets\Manager\WidgetManager;
+use KodiCMS\CMS\Providers\ServiceProvider;
+use KodiCMS\Widgets\Model\SnippetCollection;
+use KodiCMS\Widgets\Observers\WidgetObserver;
 use KodiCMS\Widgets\Contracts\WidgetPaginator;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
-use KodiCMS\CMS\Assets\Package;
-use Request;
-use KodiCMS\CMS\Providers\ServiceProvider;
-use KodiCMS\Pages\Helpers\Block;
-use KodiCMS\Pages\Model\Page;
-use KodiCMS\Pages\Model\PageSitemap;
 use KodiCMS\Widgets\Collection\PageWidgetCollection;
-use KodiCMS\Widgets\Manager\WidgetManager;
-use KodiCMS\Widgets\Model\SnippetCollection;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -84,14 +87,16 @@ class ModuleServiceProvider extends ServiceProvider
 
 		Event::listen('view.widget.edit', function ($widget)
 		{
-			// TODO: вынести в виджеты
 			if ($widget->isRenderable())
 			{
 				$commentKeys = WidgetManager::getTemplateKeysByType($widget->type);
 				$snippets = (new SnippetCollection())->getHTMLSelectChoices();
 				$assetsPackages = Package::getHTMLSelectChoice();
+				$widgetList = Widget::where('id', '!=', $widget->id)->lists('name', 'id')->all();
 
-				echo view('widgets::widgets.partials.renderable', compact('widget', 'commentKeys', 'snippets', 'assetsPackages'))->render();
+				echo view('widgets::widgets.partials.renderable', compact(
+					'widget', 'commentKeys', 'snippets', 'assetsPackages', 'widgetList'
+				))->render();
 			}
 
 			if ($widget->isCacheable() AND acl_check('widgets.cache'))
@@ -101,9 +106,7 @@ class ModuleServiceProvider extends ServiceProvider
 
 			if (acl_check('widgets.roles') AND !$widget->isHandler())
 			{
-				// TODO: добавить загрузку списка ролей
-				$usersRoles = [];
-
+				$usersRoles = UserRole::lists('name', 'id')->all();
 				echo view('widgets::widgets.partials.permissions', compact('widget', 'usersRoles'))->render();
 			}
 		});
@@ -127,5 +130,12 @@ class ModuleServiceProvider extends ServiceProvider
 					->render();
 			}
 		});
+
+		Blade::directive('widget', function($expression)
+		{
+			return "<?php echo (new \\KodiCMS\\Widgets\\Engine\\WidgetRenderHTML{$expression})->render(); ?>";
+		});
+
+		Widget::observe(new WidgetObserver);
 	}
 }

@@ -2,6 +2,12 @@
 
 use Illuminate\Support\Facades\Facade as BaseFacade;
 
+/**
+ * Class Facade
+ * TODO: Перенести в контракты? Greabock 20.05.2015
+ *
+ * @package KodiCMS\CMS\Breadcrumbs
+ */
 class Facade extends BaseFacade
 {
 	/**

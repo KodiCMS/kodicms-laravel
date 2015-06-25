@@ -8,7 +8,7 @@
 	"license": "MIT",
 	"type": "project",
 	"require": {
-		"laravel/framework": "5.0.*",
+		"laravel/framework": "5.1.*",
 		"illuminate/html": "~5.0",
 		"filp/whoops": "~1.0",
 		"fzaninotto/faker": "dev-master",
@@ -24,7 +24,8 @@
 		],
 		"psr-4": {
 			"App\\"	       : "app/",
-			"KodiCMS\\"    : "modules/"
+			"KodiCMS\\"    : "modules/",
+			"Plugins\\"    : "plugins/"
 		},
 		"files": [
 			"modules/Users/helpers.php",
@@ -52,5 +53,9 @@
 	},
 	"config": {
 		"preferred-install": "dist"
+	},
+	"installer-paths" : {
+		"plugins/{$vendor}/{$name}" : ["type:kodicms-plugin"],
+		"modules/{$name}"           : ["type:kodicms-module"]
 	}
 }

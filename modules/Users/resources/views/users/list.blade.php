@@ -29,7 +29,7 @@
 		@foreach ($users as $user)
 		<tr class="item">
 			<td class="name">
-				{!! $user->gravatar(20, NULL, array('class' => 'img-circle')) !!}
+				{!! $user->getAvatar(20, ['class' => 'img-circle']) !!}
 				{!! link_to_route('backend.user.profile', $user->username, [$user]) !!}
 			</td>
 			<td class="email hidden-xs">{!! UI::label(HTML::mailto($user->email)) !!}</td>
@@ -40,11 +40,14 @@
 			</td>
 			<td class="last_login hidden-xs">{{ $user->last_login }}</td>
 			<td class="actions text-right">
-			@if ($user->id > 1 AND acl_check('users.delete'))
-				{!! link_to_route('backend.user.delete', '', [$user], [
-					'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
-				]) !!}
-			@endif
+				@if ($user->id > 1 AND acl_check('users.delete'))
+				{!! Form::open(['route' => ['backend.user.delete', $user]]) !!}
+					{!! Form::button('', [
+						'type' => 'submit',
+						'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
+					]) !!}
+				{!! Form::close() !!}
+				@endif
 			</td>
 		</tr>
 		@endforeach
@@ -52,7 +55,7 @@
 	</table>
 	@else
 	<div class="panel-body">
-		<h3>@lang('users::core.messages.users.empty')</h3>
+		<h3>@lang('users::core.messages.user.empty')</h3>
 	</div>
 	@endif
 </div>

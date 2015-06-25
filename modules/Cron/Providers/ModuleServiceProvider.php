@@ -2,17 +2,17 @@
 
 use CMS;
 use Event;
-use KodiCMS\CMS\Providers\ServiceProvider;
-use KodiCMS\Cron\Model\Job;
-use KodiCMS\Cron\Observers\JobObserver;
 use Validator;
+use KodiCMS\Cron\Model\Job;
+use KodiCMS\Cron\Console\Commands\Run;
+use KodiCMS\Cron\Observers\JobObserver;
+use KodiCMS\CMS\Providers\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-
 	public function register()
 	{
-		$this->registerConsoleCommand('cron.run', 'KodiCMS\Cron\Console\Commands\Run');
+		$this->registerConsoleCommand('cron.run', Run::class);
 		Event::listen('kernel.handled', function ()
 		{
 			if (CMS::isInstalled() and config('job.agent', Job::AGENT_SYSTEM) === Job::AGENT_SYSTEM)
@@ -31,7 +31,6 @@ class ModuleServiceProvider extends ServiceProvider
 	public function boot()
 	{
 		Job::observe(new JobObserver);
-
 		Validator::extend('crontab', 'KodiCMS\Cron\Support\Validator@validateCrontab');
 	}
 }

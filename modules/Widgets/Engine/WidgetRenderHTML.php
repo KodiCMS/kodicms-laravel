@@ -1,9 +1,10 @@
 <?php namespace KodiCMS\Widgets\Engine;
 
-use Illuminate\View\View;
 use Cache;
+use Illuminate\View\View;
 use Illuminate\Cache\TaggableStore;
 use KodiCMS\Widgets\Helpers\ViewPHP;
+use KodiCMS\Widgets\Manager\WidgetManager;
 use KodiCMS\Widgets\Model\SnippetCollection;
 use KodiCMS\Widgets\Contracts\WidgetCacheable;
 
@@ -52,10 +53,11 @@ class WidgetRenderHTML extends WidgetRenderAbstract
 
 		$allowHTMLComments = (bool) $widget->getParameter('comments', true);
 
-
 		$preparedData['widgetId'] = $widget->getId();
 		$preparedData['settings'] = $widget->getSettings();
 		$preparedData['header'] = $widget->getSetting('header');
+
+		$preparedData['relatedWidgets'] = WidgetManager::buildWidgetCollection($widget->getRalatedWidgets());
 
 		$html = '';
 

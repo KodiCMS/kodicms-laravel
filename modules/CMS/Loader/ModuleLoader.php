@@ -1,28 +1,27 @@
 <?php namespace KodiCMS\CMS\Loader;
 
 use Carbon\Carbon;
+use KodiCMS\Support\Helpers\File;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Contracts\Foundation\Application;
 use KodiCMS\CMS\Contracts\ModuleContainerInterface;
-use KodiCMS\CMS\Exceptions\ModuleLoaderException;
-use KodiCMS\CMS\Helpers\File;
 
 class ModuleLoader
 {
-
 	/**
 	 * @var array
 	 */
-	protected $_registeredModules = [];
+	protected $registeredModules = [];
 
 	/**
 	 * @var  array   File path cache, used when caching is true
 	 */
-	protected static $files = [];
+	protected $files = [];
 
 	/**
 	 * @var bool
 	 */
-	protected static $filesChanged = false;
+	protected $filesChanged = false;
 
 	/**
 	 * @param array $modulesList
@@ -31,15 +30,28 @@ class ModuleLoader
 	{
 		foreach ($modulesList as $moduleName => $modulePath)
 		{
-			if (is_numeric($moduleName))
+			$moduleNamespace = null;
+
+			if (is_array($modulePath))
+			{
+				$moduleNamespace = array_get($modulePath, 'namespace');
+				$modulePath = array_get($modulePath, 'path');
+			}
+			else if (is_numeric($moduleName))
 			{
 				$moduleName = $modulePath;
 				$modulePath = null;
 			}
-			$this->addModule($moduleName, $modulePath);
+
+			if (is_null($modulePath))
+			{
+				$modulePath = base_path('modules/' . $moduleName);
+			}
+
+			$this->addModule($moduleName, $modulePath, $moduleNamespace);
 		}
 
-		$this->addModule('App', base_path());
+		$this->addModule('App', base_path(), '');
 	}
 
 	/**
@@ -47,45 +59,63 @@ class ModuleLoader
 	 */
 	public function getRegisteredModules()
 	{
-		return $this->_registeredModules;
+		return $this->registeredModules;
 	}
 
 	/**
 	 * @param string $moduleName
 	 * @param string|null $modulePath
 	 * @param string|null $namespace
+	 * @param string|null $moduleContainerClass
 	 * @return $this
-	 * @throws ModuleLoaderException
 	 */
-	public function addModule($moduleName, $modulePath = null, $namespace = null)
+	public function addModule($moduleName, $modulePath = null, $namespace = null, $moduleContainerClass = null)
 	{
-		$moduleContainerClass = '\\KodiCMS\\' . $moduleName . '\\ModuleContainer';
-		$moduleClass = '\\KodiCMS\\CMS\\Loader\\' . $moduleName . 'ModuleContainer';
+		if (is_null($namespace))
+		{
+			$namespace = 'KodiCMS\\' . $moduleName;
+		}
+
+		$namespace = trim($namespace, '\\');
+
+		if (is_null($moduleContainerClass))
+		{
+			$moduleContainerClass = '\\' . $namespace . '\\ModuleContainer';
+		}
+
+		$defaultModuleClass = '\\KodiCMS\\CMS\\Loader\\' . $moduleName . 'ModuleContainer';
+
 		if (!class_exists($moduleContainerClass))
 		{
-			$moduleContainerClass = class_exists($moduleClass) ? $moduleClass : '\\KodiCMS\\CMS\\Loader\\ModuleContainer';
+			$moduleContainerClass = class_exists($defaultModuleClass)
+				? $defaultModuleClass
+				: '\\KodiCMS\\CMS\\Loader\\ModuleContainer';
 		}
 
 		$moduleContainer = new $moduleContainerClass($moduleName, $modulePath, $namespace);
 
-		if (!($moduleContainer instanceof ModuleContainerInterface))
-		{
-			throw new ModuleLoaderException("Container module [{$moduleContainerClass}] must be implements of ModuleContainerInterface");
-		}
-
-		$this->_registeredModules[] = $moduleContainer;
+		$this->registerModule($moduleContainer);
 
 		return $this;
 	}
 
 	/**
+	 * @param ModuleContainerInterface $module
+	 */
+	public function registerModule(ModuleContainerInterface $module)
+	{
+		$this->registeredModules[] = $module;
+	}
+
+	/**
+	 * @param Application $app
 	 * @return $this
 	 */
-	public function bootModules()
+	public function bootModules(Application $app)
 	{
 		foreach ($this->getRegisteredModules() as $module)
 		{
-			$module->boot();
+			$module->boot($app);
 		}
 
 		$this->getFoundFilesFromCache();
@@ -94,16 +124,37 @@ class ModuleLoader
 	}
 
 	/**
+	 * @param Application $app
 	 * @return $this
 	 */
-	public function registerModules()
+	public function registerModules(Application $app)
 	{
 		foreach ($this->getRegisteredModules() as $module)
 		{
-			$module->register();
+			$module->register($app);
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @param string|array|null $sub
+	 * @return array
+	 */
+	public function getPaths($sub = null)
+	{
+		$paths = [];
+
+		foreach ($this->getRegisteredModules() as $module)
+		{
+			if (is_dir($dir = $module->getPath($sub)))
+			{
+				// This path has a file, add it to the list
+				$paths[] = $dir;
+			}
+		}
+
+		return $paths;
 	}
 
 	/**
@@ -135,10 +186,10 @@ class ModuleLoader
 		// Create a partial path of the filename
 		$path = File::normalizePath($dir . DIRECTORY_SEPARATOR . $file . $ext);
 
-		if (isset(static::$files[$path . ($array ? '_array' : '_path')]))
+		if (isset($this->files[$path . ($array ? '_array' : '_path')]))
 		{
 			// This path has been cached
-			return static::$files[$path . ($array ? '_array' : '_path')];
+			return $this->files[$path . ($array ? '_array' : '_path')];
 		}
 
 		if ($array)
@@ -178,24 +229,24 @@ class ModuleLoader
 		}
 
 		// Add the path to the cache
-		static::$files[$path . ($array ? '_array' : '_path')] = $found;
+		$this->files[$path . ($array ? '_array' : '_path')] = $found;
 
 		// Files have been changed
-		static::$filesChanged = true;
+		$this->filesChanged = true;
 
 		return $found;
 	}
 
 	public function getFoundFilesFromCache()
 	{
-		static::$files = Cache::get('ModuleLoader::findFile', []);
+		$this->files = Cache::get('ModuleLoader::findFile', []);
 	}
 
 	public function cacheFoundFiles()
 	{
-		if (static::$filesChanged)
+		if ($this->filesChanged)
 		{
-			Cache::put('ModuleLoader::findFile', static::$files, Carbon::now()->addMinutes(10));
+			Cache::put('ModuleLoader::findFile', $this->files, Carbon::now()->addMinutes(10));
 		}
 	}
 }

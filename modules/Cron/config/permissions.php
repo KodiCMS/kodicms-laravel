@@ -1,10 +1,10 @@
 <?php
 return [
 	'cron' => [
-		'cron.list',
-		'cron.create',
-		'cron.edit',
-		'cron.delete',
-		'cron.run',
+		'backend.cron.list',
+		'backend.cron.create',
+		'backend.cron.edit',
+		'backend.cron.delete',
+		'backend.cron.run',
 	]
 ];

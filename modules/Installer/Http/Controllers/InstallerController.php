@@ -1,12 +1,12 @@
 <?php namespace KodiCMS\Installer\Http\Controllers;
 
-use KodiCMS\Installer\EnvironmentTester;
-use KodiCMS\Installer\Exceptions\InstallValidationException;
 use Lang;
 use Date;
-use KodiCMS\CMS\Http\Controllers\System\FrontendController;
 use Assets;
 use KodiCMS\Installer\Installer;
+use KodiCMS\Installer\EnvironmentTester;
+use KodiCMS\Installer\Exceptions\InstallValidationException;
+use KodiCMS\CMS\Http\Controllers\System\FrontendController;
 
 class InstallerController extends FrontendController {
 

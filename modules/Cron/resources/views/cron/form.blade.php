@@ -26,7 +26,7 @@
 	<div class="form-group">
 		<label class="control-label col-md-3">@lang('cron::core.field.task_name')</label>
 		<div class="col-md-9">
-			{!! Form::select('task_name', $job->getTypes()) !!}
+			{!! Form::select('task_name', $job->getTypes(), null, ['class' => 'form-control']) !!}
 		</div>
 	</div>
 </div>

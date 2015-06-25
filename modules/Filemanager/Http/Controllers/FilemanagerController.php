@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Filemanager\Http\Controllers;
 
-use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use Assets;
+use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class FilemanagerController extends BackendController
 {
@@ -13,7 +13,6 @@ class FilemanagerController extends BackendController
 	public function show()
 	{
 		Assets::package(array('elfinder', 'jquery-ui', 'ace'));
-
 		$this->setContent('filemanager');
 	}
 

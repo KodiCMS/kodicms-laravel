@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\CMS\Providers;
 
 use Blade;
-use WYSIWYG;
 use ModuleLoader;
 
 class AppServiceProvider extends ServiceProvider {
@@ -13,15 +12,16 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		ModuleLoader::bootModules();
+		ModuleLoader::bootModules($this->app);
 
-		$this->app['cms']->shutdown(function () {
+		$this->app['cms']->shutdown(function ()
+		{
 			ModuleLoader::cacheFoundFiles();
 		});
 
-		Blade::extend(function ($view, $compiler) {
-			$pattern = $compiler->createMatcher('event');
-			return preg_replace($pattern, '$1<?php event$2; ?>', $view);
+		Blade::directive('event', function($expression)
+		{
+			return "<?php event{$expression}; ?>";
 		});
 	}
 
@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		ModuleLoader::registerModules();
+		ModuleLoader::registerModules($this->app);
 	}
 
 }

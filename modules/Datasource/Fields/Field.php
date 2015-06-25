@@ -1,15 +1,14 @@
 <?php namespace KodiCMS\Datasource\Fields;
 
 use FieldManager;
-use KodiCMS\CMS\Traits\Settings;
-use Illuminate\Database\Eloquent\Builder;
-use KodiCMS\Datasource\Contracts\DocumentInterface;
-use KodiCMS\Datasource\Contracts\FieldInterface;
-use Illuminate\Database\Schema\Blueprint;
+use KodiCMS\Support\Traits\Settings;
 use Illuminate\Validation\Validator;
-use KodiCMS\Datasource\Contracts\SectionInterface;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Schema\Blueprint;
+use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Model\Field as FieldModel;
-use KodiCMS\Datasource\Model\Section;
+use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\Contracts\DocumentInterface;
 
 abstract class Field implements FieldInterface
 {
@@ -55,7 +54,22 @@ abstract class Field implements FieldInterface
 		}
 
 		$this->model = $model;
-		$this->settings = $model->settings;
+		if (!empty($model->settings))
+		{
+			$this->settings = $model->settings;
+		}
+		else
+		{
+			$this->setSettings($this->defaultSettings());
+		}
+	}
+
+	/**
+	 * @return array
+	 */
+	public function defaultSettings()
+	{
+		return [];
 	}
 
 	/**
@@ -240,9 +254,18 @@ abstract class Field implements FieldInterface
 	}
 
 	/**************************************************************************
-	 * Template
+	 * System
 	 **************************************************************************/
+	/**
+	 * @return FieldInterface
+	 * @throws \KodiCMS\Datasource\Exceptions\FieldException
+	 */
+	public function create()
+	{
+		$field = $this->getModel()->create();
 
+		return $field->toField();
+	}
 
 	/**************************************************************************
 	 * Database
@@ -281,19 +304,6 @@ abstract class Field implements FieldInterface
 	{
 		$table->string($this->getDBKey());
 	}
-
-	/**
-	 * @param integer $sectionId
-	 */
-	public function attachToSection($sectionId)
-	{
-		$section = Section::findOrFail($sectionId);
-
-		$this->model->update([
-			'ds_id' => $section->id
-		]);
-	}
-
 	/**
 	 * @param string $name
 	 * @param mixed $value

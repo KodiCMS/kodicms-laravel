@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Email\database\seeds;
 
+use DB;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,9 +12,9 @@ class DatabaseSeeder extends Seeder
 	 */
 	public function run()
 	{
-		Model::unguard();
-
-		$this->call('\KodiCMS\Email\database\seeds\EmailTypesTableSeeder');
-		$this->call('\KodiCMS\Email\database\seeds\EmailTemplatesTableSeeder');
+		DB::statement('SET FOREIGN_KEY_CHECKS=0');
+		DB::table('email_templates')->truncate();
+		DB::table('email_events')->truncate();
+		DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 }

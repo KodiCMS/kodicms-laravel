@@ -23,6 +23,4 @@
 </div>
 @endif
 
-@section('scripts')
 <script type="text/javascript">$(function() { CMS.ui.init('icon'); });</script>
-@stop

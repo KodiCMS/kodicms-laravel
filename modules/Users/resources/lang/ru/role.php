@@ -16,7 +16,11 @@ return [
 	],
 	'button' => [
 		'create' => 'Добавить роль',
-		'select_all_permissions' => 'Выбрать все'
+		'select_all_permissions' => 'Выбрать все',
+		'permissions' => [
+			'grant' => 'Разрешено',
+			'denied' => 'Запрещено'
+		]
 	],
 	'messages' => [
 		'not_found'	=> 'Роль не найдена',

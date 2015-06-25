@@ -29,7 +29,7 @@
 		</thead>
 		<tbody>
 		@foreach ($widgets as $widget)
-			<tr class="widget @if($widget->isCorrupt()) bg-danger @endif" id="{{ $widget->id }}">
+			<tr class="widget @if($widget->isCorrupt()) bg-danger @endif" data-id="{{ $widget->id }}">
 				@if($widget->isCorrupt())
 				<th data-icon="lock">{{ $widget->name }}</th>
 				<td class="type">
@@ -76,7 +76,7 @@
 				</td>
 				<td class="template">
 					@if ($widget->isRenderable())
-					<span class="editable-template label label-info" data-value="{{ $widget->template or 0 }}">{{ $widget->template }}</span>
+					<span class="editable-template label label-info" data-value="{{ $widget->template or null }}">{{ $widget->template }}</span>
 					@endif
 				</td>
 				<td class="cache">
@@ -95,9 +95,13 @@
 					]) !!}
 					@endif
 					@if (acl_check('widgets.delete'))
-					{!! link_to_route('backend.widget.delete', '', [$widget], [
-						'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
-					]) !!}
+					{!! Form::open(['route' => ['backend.widget.delete', $widget], 'style' => 'display: inline-block']) !!}
+						{!! Form::button('', [
+							'type' => 'submit',
+							'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
+							])
+						!!}
+					{!! Form::close() !!}
 					@endif
 				</td>
 				@endif

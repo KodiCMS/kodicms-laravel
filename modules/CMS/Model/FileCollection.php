@@ -1,9 +1,8 @@
 <?php namespace KodiCMS\CMS\Model;
 
 use Iterator;
-use KodiCMS\CMS\Exceptions\FileValidationException;
-use KodiCMS\CMS\Helpers\File as FileSystem;
 use SplFileInfo;
+use KodiCMS\Support\Helpers\File as FileSystem;
 
 class FileCollection implements Iterator
 {
@@ -30,8 +29,11 @@ class FileCollection implements Iterator
 	/**
 	 * @var string
 	 */
-	protected $fileClass = '\\KodiCMS\CMS\Model\File';
+	protected $fileClass = File::class;
 
+	/**
+	 * @param string $directory
+	 */
 	public function __construct($directory)
 	{
 		$this->directory = new SplFileInfo($directory);

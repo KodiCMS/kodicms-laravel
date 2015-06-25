@@ -26,6 +26,14 @@ trait WidgetCache {
 	/**
 	 * @return array
 	 */
+	public function getHTMLSelectCacheTags()
+	{
+		return array_combine($this->getCacheTags(), $this->getCacheTags());
+	}
+
+	/**
+	 * @return array
+	 */
 	public function getCacheTags()
 	{
 		return $this->getSetting('cache_tags', []);

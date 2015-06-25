@@ -17,7 +17,11 @@ class PageWidgetCollection extends WidgetCollection {
 
 		foreach($widgets as $widget)
 		{
-			$this->addWidget($widget, array_get($blocks, $widget->getId() .'.0'), array_get($blocks, $widget->getId() .'.1'));
+			$this->addWidget(
+				$widget,
+				array_get($blocks, $widget->getId() .'.0'),
+				array_get($blocks, $widget->getId() .'.1')
+			);
 		}
 	}
 

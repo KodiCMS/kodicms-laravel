@@ -1,0 +1,3 @@
+{!! $widget->render() !!}
+
+@yield('scripts')

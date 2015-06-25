@@ -1,12 +1,19 @@
 <?php namespace KodiCMS\Pages\Model;
 
-use Illuminate\Database\Eloquent\Model;
-use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 use DB;
 use UI;
+use KodiCMS\Users\Model\User;
+use KodiCMS\Support\Helpers\URL;
+use Illuminate\Database\Eloquent\Model;
+use KodiCMS\Support\Model\ModelFieldTrait;
+use KodiCMS\Pages\Contracts\BehaviorPageInterface;
+use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
+use KodiCMS\Pages\Model\FieldCollections\PageFieldCollection;
 
-class Page extends Model
+class Page extends Model implements BehaviorPageInterface
 {
+	use ModelFieldTrait;
+
 	/**
 	 * @var array
 	 */
@@ -66,13 +73,6 @@ class Page extends Model
 	];
 
 	/**
-	 * @var array
-	 */
-	protected $metaFields = [
-		'breadcrumb', 'meta_title', 'meta_keywords', 'meta_description'
-	];
-
-	/**
 	 * @var boolean
 	 */
 	public $isExpanded = FALSE;
@@ -88,13 +88,41 @@ class Page extends Model
 	public $childrenRows = NULL;
 
 	/**
+	 * @param array $attributes
+	 */
+	public function __construct(array $attributes = [])
+	{
+		parent::__construct($attributes);
+		$this->addObservableEvents(['reordering', 'reordered']);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getNotFoundMessage()
+	{
+		return trans('pages::core.messages.not_found');
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function fieldCollection()
+	{
+		return new PageFieldCollection;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getMetaFields()
 	{
-		return $this->metaFields;
+		return ['breadcrumb', 'meta_title', 'meta_keywords', 'meta_description'];
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getRobotsList()
 	{
 		return [
@@ -103,15 +131,6 @@ class Page extends Model
 			'NOINDEX, FOLLOW' => 'NOINDEX, FOLLOW',
 			'NOINDEX, NOFOLLOW' => 'NOINDEX, NOFOLLOW'
 		];
-	}
-
-	/**
-	 * @param array $attributes
-	 */
-	public function __construct(array $attributes = [])
-	{
-		parent::__construct($attributes);
-		$this->addObservableEvents(['reordering', 'reordered']);
 	}
 
 	/**
@@ -150,7 +169,7 @@ class Page extends Model
 	 */
 	public function getUri()
 	{
-		if ($parent = $this->parent())
+		if ($parent = $this->parentPage())
 		{
 			$uri = $parent->getUri() . '/' . $this->slug;
 		}
@@ -167,7 +186,7 @@ class Page extends Model
 	 */
 	public function getFrontendUrl()
 	{
-		return url($this->getUri());
+		return URL::frontend($this->getUri());
 	}
 
 	/**
@@ -186,7 +205,7 @@ class Page extends Model
 	 */
 	public function hasLayout()
 	{
-		if (empty($this->layout_file) AND $parent = $this->parent())
+		if (empty($this->layout_file) AND $parent = $this->parentPage())
 		{
 			return $parent->hasLayout();
 		}
@@ -200,7 +219,7 @@ class Page extends Model
 	 */
 	public function getLayout()
 	{
-		if (empty($this->layout_file) AND $parent = $this->parent()) {
+		if (empty($this->layout_file) AND $parent = $this->parentPage()) {
 			return $parent->getLayout();
 		}
 
@@ -216,7 +235,7 @@ class Page extends Model
 		return (bool) DB::table($this->table)
 			->selectRaw('COUNT(*) as total')
 			->where('parent_id', $this->id)
-			->pluck('total') > 0;
+			->value('total') > 0;
 	}
 
 	/**
@@ -298,19 +317,24 @@ class Page extends Model
 	}
 
 	/**
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 * @return Page
 	 */
-	public function parent()
+	public function parentPage()
 	{
 		if (array_key_exists($this->parent_id, static::$loadedPages))
 		{
 			return static::$loadedPages[$this->parent_id];
 		}
 
-		$parentPage = $this->belongsTo('\KodiCMS\Pages\Model\Page', 'parent_id')->first();
-		static::$loadedPages[$this->parent_id] = $parentPage;
+		return static::$loadedPages[$this->parent_id] = $this->parent()->getResults();
+	}
 
-		return $parentPage;
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
+	public function parent()
+	{
+		return $this->belongsTo(Page::class, 'parent_id');
 	}
 
 	/**
@@ -318,7 +342,7 @@ class Page extends Model
 	 */
 	public function children()
 	{
-		return $this->hasMany('\KodiCMS\Pages\Model\Page', 'parent_id', 'id');
+		return $this->hasMany(Page::class, 'parent_id', 'id');
 	}
 
 	/**
@@ -326,7 +350,28 @@ class Page extends Model
 	 */
 	public function parts()
 	{
-		return $this->hasMany('\KodiCMS\Pages\Model\PagePart', 'page_id', 'id');
+		return $this->hasMany(PagePart::class, 'page_id', 'id');
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\HasOne
+	 */
+	public function behaviorSettings()
+	{
+		return $this->hasOne(PageBehaviorSettings::class, 'page_id', 'id');
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getBehaviorSettings()
+	{
+		if(!is_null($settings = $this->behaviorSettings()->first()))
+		{
+			return $settings->settings;
+		}
+
+		return [];
 	}
 
 	/**
@@ -375,7 +420,7 @@ class Page extends Model
 
 		if ($this->id != 1) {
 			$layout = NULL;
-			if ($parent = $this->parent()) {
+			if ($parent = $this->parentPage()) {
 				$layout = $parent->getLayout();
 			}
 
@@ -426,9 +471,6 @@ class Page extends Model
 			return static::$loadedUsers[$this->{$filed}];
 		}
 
-		$user = $this->belongsTo('\KodiCMS\Users\Model\User', $filed);
-		static::$loadedUsers[$this->{$filed}] = $user;
-
-		return $user;
+		return static::$loadedUsers[$this->{$filed}] = $this->belongsTo(User::class, $filed);
 	}
 }

@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\Users\Helpers;
 
+use HTML;
+
 class Gravatar
 {
 
@@ -17,24 +19,24 @@ class Gravatar
 	 * @param array $attributes
 	 * @return string
 	 */
-	public static function load($email, $size = 100, $default = NULL, array $attributes = NULL)
+	public static function load($email, $size = 100, $default = null, array $attributes = null)
 	{
-		if (empty($email)) {
+		if (empty($email))
+		{
 			$email = 'test@test.com';
 		}
 
-		if ($default === NULL) {
+		if ($default === null)
+		{
 			$default = 'mm';
 		}
 
 		$hash = md5(strtolower(trim($email)));
-		$queryParams = http_build_query([
-			'd' => urlencode($default),
-			's' => (int)$size
-		]);
+		$queryParams = http_build_query(['d' => urlencode($default), 's' => (int)$size]);
 
-		if (!isset(self::$cache[$email][$size])) {
-			self::$cache[$email][$size] = \HTML::image('http://www.gravatar.com/avatar/' . $hash . '?' . $queryParams, NULL, $attributes);
+		if (!isset(self::$cache[$email][$size]))
+		{
+			self::$cache[$email][$size] = HTML::image('http://www.gravatar.com/avatar/' . $hash . '?' . $queryParams, null, $attributes);
 		}
 
 		return self::$cache[$email][$size];

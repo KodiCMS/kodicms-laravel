@@ -19,7 +19,7 @@
 	<div class="form-group">
 		<label class="col-md-3 control-label">@lang('pages::layout.label.roles')</label>
 		<div class="col-md-9">
-			{!! Form::select('roles[]', $roles, NULL, [
+			{!! Form::select('roles[]', $roles, null, [
 				'class' => 'form-control', 'multiple'
 			]) !!}
 		</div>

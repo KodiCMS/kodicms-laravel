@@ -13,8 +13,12 @@ class WidgetController extends Controller {
 		$pageId = (int) $this->getRequiredParameter('page_id');
 		$block = $this->getRequiredParameter('block');
 
-		$insert = DB::table('page_widgets')
-			->insert(['page_id' => $pageId, 'widget_id' => $widgetId, 'block' => $block]);
+		DB::table('page_widgets')
+			->insert([
+				'page_id' => $pageId,
+				'widget_id' => $widgetId,
+				'block' => $block
+			]);
 
 		$widget = Widget::findOrFail($widgetId);
 		$this->setContent(view('widgets::widgets.page.row', [
@@ -33,7 +37,6 @@ class WidgetController extends Controller {
 		$data = (array) $this->getRequiredParameter('data');
 
 		$page = Page::find($pageId);
-
 		$widgetsData = [];
 
 		foreach ($data as $block => $widgets)
@@ -54,5 +57,20 @@ class WidgetController extends Controller {
 
 		$page->save();
 		$this->setContent(TRUE);
+	}
+
+	public function setTemplate()
+	{
+		$widgetId = (int) $this->getRequiredParameter('widget_id');
+		$template = $this->getParameter('template');
+
+		$widget = Widget::findOrFail($widgetId);
+
+		$widget->update([
+			'template' => $template
+		]);
+
+		$this->setMessage(trans('widgets::core.messages.template_updated', ['template' => $template]));
+		$this->setContent(true);
 	}
 }

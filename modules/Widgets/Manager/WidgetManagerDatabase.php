@@ -1,9 +1,6 @@
 <?php namespace KodiCMS\Widgets\Manager;
 
 use DB;
-use Illuminate\Database\Eloquent\Collection;
-use KodiCMS\Pages\Model\FrontendPage;
-use KodiCMS\Widgets\Contracts\WidgetCorrupt;
 use KodiCMS\Widgets\Model\Widget;
 
 class WidgetManagerDatabase extends WidgetManager
@@ -11,7 +8,8 @@ class WidgetManagerDatabase extends WidgetManager
 
 	/**
 	 * @param array $types
-	 * @return array
+	 *
+	 * @return \Illuminate\Support\Collection
 	 */
 	public static function getWidgetsByType(array $types = null)
 	{
@@ -25,6 +23,12 @@ class WidgetManagerDatabase extends WidgetManager
 		return static::buildWidgetCollection($widgets->get());
 	}
 
+	/**
+	 * @param array         $types
+	 * @param null|integer  $dsId
+	 *
+	 * @return \Illuminate\Support\Collection
+	 */
 	public static function getWidgetByTypeAndDsid(array $types = null, $dsId = null)
 	{
 		$widgets = static::getWidgetsByType($types);
@@ -41,7 +45,7 @@ class WidgetManagerDatabase extends WidgetManager
 	}
 
 	/**
-	 * @return array
+	 * @return \Illuminate\Support\Collection
 	 */
 	public static function getAllWidgets()
 	{
@@ -52,7 +56,8 @@ class WidgetManagerDatabase extends WidgetManager
 
 	/**
 	 * @param int $pageId
-	 * @return array
+	 *
+	 * @return \Illuminate\Support\Collection
 	 */
 	public static function getWidgetsByPage($pageId)
 	{
@@ -60,13 +65,14 @@ class WidgetManagerDatabase extends WidgetManager
 		{
 			$q->where('pages.id', (int) $pageId);
 
-		})->get();
+		})->with('related')->get();
 
 		return static::buildWidgetCollection($widgets);
 	}
 
 	/**
 	 * @param int $pageId
+	 *
 	 * @return array
 	 */
 	public static function getPageWidgetBlocks($pageId)
@@ -85,26 +91,8 @@ class WidgetManagerDatabase extends WidgetManager
 	}
 
 	/**
-	 * @param Collection $widgets
-	 * @return Collection
-	 */
-	private static function buildWidgetCollection(Collection $widgets)
-	{
-		return $widgets->map(function($widget)
-		{
-			return $widget->toWidget();
-		})->filter(function($widget)
-		{
-			return !($widget instanceof WidgetCorrupt);
-		})->keyBy(function($widget)
-		{
-			return $widget->getId();
-		});
-	}
-
-	/**
 	 * @param $id
-	 * @return mixed
+	 * @return \KodiCMS\Widgets\Contracts\Widget
 	 */
 	public static function getWidgetById($id)
 	{

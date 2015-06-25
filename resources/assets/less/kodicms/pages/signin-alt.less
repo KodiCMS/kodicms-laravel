@@ -3,6 +3,7 @@
 //
 // --------------------------------------------------
 
+.page-reflink-alt,
 .page-signin-alt {
 	padding-bottom: 40px;
 
@@ -97,20 +98,27 @@
 }
 
 @media (min-width: @screen-small) {
-	.page-signin-alt {
-		.signin-header {
-			padding-left: 0;
-			text-align: center;
-		}
-
-		.panel {
-			width: 360px;
-			margin: 100px auto 0;
-		}
-
-		.signin-with {
-			width: 360px;
-			margin: 0 auto;
-		}
+  .page-signin-alt {
+	.signin-header {
+	  padding-left: 0;
+	  text-align: center;
 	}
+
+	.panel {
+	  width: 360px;
+	  margin: 100px auto 0;
+	}
+
+	.signin-with {
+	  width: 360px;
+	  margin: 0 auto;
+	}
+  }
+
+  .page-reflink-alt {
+	.panel {
+	  width: 600px;
+	  margin: 100px auto 0;
+	}
+  }
 }

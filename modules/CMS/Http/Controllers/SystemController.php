@@ -1,15 +1,17 @@
 <?php namespace KodiCMS\CMS\Http\Controllers;
 
 use Date;
-use KodiCMS\CMS\Helpers\Locale;
+use Assets;
 use WYSIWYG;
+use KodiCMS\CMS\Helpers\Updater;
+use KodiCMS\Support\Helpers\Locale;
 
 class SystemController extends System\BackendController {
 
 	public function settings()
 	{
-		$htmlEditors = WYSIWYG::htmlSelect(WYSIWYG::TYPE_HTML);
-		$codeEditors = WYSIWYG::htmlSelect(WYSIWYG::TYPE_CODE);
+		$htmlEditors = WYSIWYG::htmlSelect(WYSIWYG::html());
+		$codeEditors = WYSIWYG::htmlSelect(WYSIWYG::code());
 		$dateFormats = Date::getFormats();
 
 		// TODO: сделать вывод языков в нормальном формате
@@ -25,8 +27,20 @@ class SystemController extends System\BackendController {
 
 	public function phpInfo()
 	{
-		$this->autoRender = FALSE;
+		$this->autoRender = false;
 
 		phpinfo();
+	}
+
+	public function update()
+	{
+		Assets::package('diff');
+		$updater = new Updater();
+		$repositoryVersion = $updater->getRemoteVersion();
+		$hasNewVersion = $updater->hasNewVersion();
+
+		$issueUrl = $updater->newIssueUrl();
+
+		$this->setContent('system.update', compact('repositoryVersion', 'hasNewVersion', 'issueUrl'));
 	}
 }

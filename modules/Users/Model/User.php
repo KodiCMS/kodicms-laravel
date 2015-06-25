@@ -1,10 +1,15 @@
 <?php namespace KodiCMS\Users\Model;
 
+use CMS;
+use ACL;
 use Carbon\Carbon;
+use KodiCMS\Support\Helpers\Locale;
 use KodiCMS\Users\Helpers\Gravatar;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use KodiCMS\Support\Model\ModelFieldTrait;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use KodiCMS\Users\Model\FieldCollections\UserFieldCollection;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
@@ -14,7 +19,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
-	use Authenticatable, CanResetPassword;
+	use Authenticatable, CanResetPassword, ModelFieldTrait;
 
 	/**
 	 * @var array
@@ -63,6 +68,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	protected $permissions = [];
 
 	/**
+	 * @return array
+	 */
+	protected function fieldCollection()
+	{
+		return new UserFieldCollection;
+	}
+
+	/**
 	 * @param integer $date
 	 * @return string
 	 */
@@ -71,9 +84,42 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return (new Carbon())->createFromTimestamp($date)->diffForHumans();
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getCurrentTheme()
 	{
 		return UserMeta::get('cms_theme', config('cms.theme.default'), $this->id);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAvailableLocales()
+	{
+		$locales = Locale::getAvailable();
+		$systemDefault = Locale::getSystemDefault();
+
+		$locales[Locale::DEFAULT_LOCALE] = trans('users::core.field.default_locale', [
+			'locale' => array_get($locales, $systemDefault, $systemDefault)
+		]);
+
+		return $locales;
+	}
+
+	/**
+	 * @param int $size
+	 * @param array $attributes
+	 * @return string
+	 */
+	public function getAvatar($size = 100, array $attributes = null)
+	{
+		if (empty($this->avatar) or !is_file(CMS::uploadPath() . 'avatars' . DIRECTORY_SEPARATOR . $this->avatar))
+		{
+			return $this->getGravatar($size, null, $attributes);
+		}
+
+		return HTML::image(CMS::uploadURL() . '/avatars/' . $this->avatar, null, $attributes);
 	}
 
 	/**
@@ -84,7 +130,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 * @param array $attributes
 	 * @return string HTML::image
 	 */
-	public function gravatar($size = 100, $default = NULL, array $attributes = NULL)
+	public function getGravatar($size = 100, $default = null, array $attributes = null)
 	{
 		return Gravatar::load($this->email, $size, $default, $attributes);
 	}
@@ -95,7 +141,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	public function setPasswordAttribute($password)
 	{
-		$this->attributes['password'] = \Hash::make($password);
+		$this->attributes['password'] = bcrypt($password);
 	}
 
 	/**
@@ -104,7 +150,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	public function roles()
 	{
-		return $this->belongsToMany('KodiCMS\Users\Model\UserRole', 'roles_users', 'user_id', 'role_id');
+		return $this->belongsToMany(UserRole::class, 'roles_users', 'user_id', 'role_id');
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\hasMany
+	 */
+	public function reflinks()
+	{
+		return $this->hasMany(UserReflink::class);
 	}
 
 	/**
@@ -123,11 +177,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return $roles;
 	}
 
+	/**
+	 * @param string|array $role
+	 * @param bool         $allRequired
+	 *
+	 * @return bool
+	 */
 	public function hasRole($role, $allRequired = FALSE)
 	{
-		$status = TRUE;
-
-		$roles = $this->getRoles()->lists('name');
+		$roles = $this->getRoles()->lists('name')->all();
 
 		if (is_array($role))
 		{
@@ -137,13 +195,13 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 				// If the user doesn't have the role
 				if (!in_array($_role, $roles)) {
 					// Set the status false and get outta here
-					$status = FALSE;
+					$status = false;
 
 					if ($allRequired) {
 						break;
 					}
 				} elseif (!$allRequired) {
-					$status = TRUE;
+					$status = true;
 					break;
 				}
 			}
@@ -162,13 +220,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	public function getPermissionsByRoles()
 	{
 		$roles = $this->getRoles()
-			->lists('name', 'id');
+			->lists('name', 'id')
+			->all();
 
 		if(!empty($roles)) {
 			$permissions = (new RolePermission())
 				->whereIn('role_id', array_keys($roles))
 				->get()
-				->lists('action');
+				->lists('action')
+				->all();
 		}
 
 		return array_unique($permissions);
@@ -181,7 +241,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	{
 		$permissions = [];
 
-		foreach (\ACL::getPermissions() as $sectionTitle => $actions) {
+		foreach (ACL::getPermissionsList() as $sectionTitle => $actions) {
 			foreach ($actions as $action => $title) {
 				if (acl_check($action, $this)) {
 					$permissions[$sectionTitle][$action] = $title;
@@ -195,12 +255,18 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	/**
 	 * @return string
 	 */
-	public function getLocaleAttribute()
+	public function getLocale()
 	{
-		if(!empty($this->attributes['locale'])) {
-			return $this->attributes['locale'];
+		if (!empty($this->attributes['locale']))
+		{
+			$locale = $this->attributes['locale'];
+
+			if ($locale != Locale::DEFAULT_LOCALE)
+			{
+				return $locale;
+			}
 		}
 
-		return config('app.locale');
+		return Locale::getSystemDefault();
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-use KodiCMS\CMS\Helpers\File;
+use KodiCMS\Support\Helpers\File;
 
 /**
  * @return string

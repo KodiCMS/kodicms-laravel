@@ -1,9 +1,10 @@
 <?php namespace KodiCMS\Pages\Observers;
 
-use KodiCMS\Pages\Model\PagePart;
-use Request;
 use Cache;
+use KodiCMS\Pages\Model\PageBehaviorSettings;
+use Request;
 use KodiCMS\Pages\Model\Page;
+use KodiCMS\Pages\Model\PagePart;
 
 class PageObserver
 {
@@ -40,10 +41,32 @@ class PageObserver
 	 * @param \KodiCMS\Pages\Model\Page $page
 	 * @return void
 	 */
+	public function saved($page)
+	{
+		if ($page->hasBehavior())
+		{
+			$settings = [
+				'settings' => Request::input('behavior_settings', [])
+			];
+			$behaviorSettings = $page->behaviorSettings()->first();
+			if (is_null($behaviorSettings))
+			{
+				$page->behaviorSettings()->save(new PageBehaviorSettings($settings));
+			}
+			else
+			{
+				$behaviorSettings->update($settings);
+			}
+		}
+	}
+
+	/**
+	 * @param \KodiCMS\Pages\Model\Page $page
+	 * @return void
+	 */
 	public function creating($page)
 	{
-		$user = auth()->user();
-		if (!is_null($user))
+		if (!is_null($user = auth()->user()))
 		{
 			$page->created_by_id = $user->id;
 		}
@@ -64,8 +87,7 @@ class PageObserver
 	 */
 	public function updating($page)
 	{
-		$user = auth()->user();
-		if (!is_null($user))
+		if (!is_null($user = auth()->user()))
 		{
 			$page->updated_by_id = $user->id;
 		}
@@ -126,12 +148,10 @@ class PageObserver
 	 */
 	public function deleted($page)
 	{
-		// Все дочерние страницы перекидываем в корень
-		// TODO: спрашивать у пользователя нужно ли удалять все внутренние страницы
-		//Page::where('parent_id', $page->id)->delete();
-		Page::where('parent_id', $page->id)->update([
-			'parent_id' => 1
-		]);
+		// TODO: подумать что лучше делать с дочерними страницами при удалении предка
+		$page->children()->delete();
+		$page->behaviorSettings()->delete();
+		$page->parts()->delete();
 
 		$this->clearCache($page);
 	}

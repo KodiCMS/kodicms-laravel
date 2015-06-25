@@ -3,9 +3,8 @@
 return [
 	'title' => 'KodiCMS',
 	'backend_path' => env('ADMIN_DIR_NAME', 'backend'),
-
-	'modules' => ['API', 'CMS', 'Plugins', 'Pages', 'Users', 'Email', 'Cron', 'Widgets', 'Filemanager', 'Installer', 'Dashboard', 'Datasource'],
-
+	'url_suffix' => null, //'.html',
+	'modules' => ['API', 'CMS', 'Email', 'Plugins', 'Pages', 'Users', 'Cron', 'Widgets', 'Filemanager', 'Installer', 'Dashboard', 'Datasource'],
 	'theme' => [
 		'default' => 'default',
 		'list' => [
@@ -70,4 +69,8 @@ return [
 		'd F Y H:i',
 		'l, j-S F Y'
 	),
+	'update' => [
+		'repository' => 'KodiCMS/kodicms-laravel',
+		'branch' => 'dev'
+	]
 ];

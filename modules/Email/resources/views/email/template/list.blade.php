@@ -1,7 +1,7 @@
 <div class="panel">
 	<div class="panel-heading">
 		@if (acl_check('email.template.create'))
-			{!! link_to_route('backend.email.template.create', trans('email::core.button.templates.create'), [], [
+			{!! link_to_route('backend.email.template.create', trans('email::core.button.templates.create'), isset($routeParams) ? $routeParams : [], [
 				'class' => 'btn btn-primary', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
 			]) !!}
 		@endif
@@ -19,7 +19,7 @@
 		<thead>
 		<tr>
 			<th>@lang('email::core.field.templates.subject')</th>
-			<th>@lang('email::core.field.templates.email_type')</th>
+			<th>@lang('email::core.field.templates.email_event')</th>
 			<th class="hidden-xs">@lang('email::core.field.templates.email_from')</th>
 			<th class="hidden-xs">@lang('email::core.field.templates.email_to')</th>
 			<th class="hidden-xs">@lang('email::core.field.templates.status')</th>
@@ -36,11 +36,11 @@
 						{!! UI::icon('lock') !!} {{ $emailTemplate->subject }}
 					@endif
 				</td>
-				<td class="email-type">
-					@if (acl_check('email.type.edit'))
-						{!! link_to_route('backend.email.type.edit', $emailTemplate->type->name, [$emailTemplate->type]) !!}
+				<td class="email-event">
+					@if (acl_check('email.event.edit'))
+						{!! link_to_route('backend.email.event.edit', $emailTemplate->event->name, [$emailTemplate->event]) !!}
 					@else
-						{!! UI::icon('lock') !!} {{ $emailTemplate->type->name }}
+						{!! UI::icon('lock') !!} {{ $emailTemplate->event->name }}
 					@endif
 				</td>
 				<td class="email-from hidden-xs">
@@ -54,9 +54,12 @@
 				</td>
 				<td class="actions text-right">
 					@if (acl_check('email.template.delete'))
-						{!! link_to_route('backend.email.template.delete', '', [$emailTemplate], [
+					{!! Form::open(['route' => ['backend.email.template.delete', $emailTemplate]]) !!}
+						{!! Form::button('', [
+							'type' => 'submit',
 							'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
 						]) !!}
+					{!! Form::close() !!}
 					@endif
 				</td>
 			</tr>

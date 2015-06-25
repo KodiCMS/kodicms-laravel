@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Pages\Model;
 
-use KodiCMS\CMS\Helpers\Sitemap;
-use KodiCMS\CMS\Helpers\URL;
+use KodiCMS\Support\Helpers\URL;
+use KodiCMS\Support\Helpers\TreeCollection;
 
 class PageSitemap {
 	
@@ -77,7 +77,7 @@ class PageSitemap {
 				}
 			}
 
-			static::$sitemap[$status] = new Sitemap(reset($structuredPages));
+			static::$sitemap[$status] = new TreeCollection(reset($structuredPages));
 		}
 
 		return clone(static::$sitemap[$status]);

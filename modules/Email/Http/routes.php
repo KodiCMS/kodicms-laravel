@@ -1,20 +1,24 @@
 <?php
 
-Route::group(['prefix' => \CMS::backendPath()], function () {
-	Route::get('/email/template', ['as' => 'backend.email.template.list', 'uses' => 'EmailTemplateController@getIndex']);
-	Route::get('/email/template/create', ['as' => 'backend.email.template.create', 'uses' => 'EmailTemplateController@getCreate']);
-	Route::post('/email/template/create', ['as' => 'backend.email.template.create.post', 'uses' => 'EmailTemplateController@postCreate']);
-	Route::get('/email/template/{id}/edit', ['as' => 'backend.email.template.edit', 'uses' => 'EmailTemplateController@getEdit']);
-	Route::post('/email/template/{id}/edit', ['as' => 'backend.email.template.edit.post', 'uses' => 'EmailTemplateController@postEdit']);
-	Route::get('/email/template/{id}/delete', ['as' => 'backend.email.template.delete', 'uses' => 'EmailTemplateController@getDelete']);
+Route::group(['prefix' => CMS::backendPath(), 'as' => 'backend.email.'], function ()
+{
+	Route::get('/email/template', ['as' => 'template.list', 'uses' => 'EmailTemplateController@getIndex']);
+	Route::get('/email/template/create', ['as' => 'template.create', 'uses' => 'EmailTemplateController@getCreate']);
+	Route::post('/email/template/create', ['as' => 'template.create.post', 'uses' => 'EmailTemplateController@postCreate']);
+	Route::get('/email/template/{id}/edit', ['as' => 'template.edit', 'uses' => 'EmailTemplateController@getEdit']);
+	Route::post('/email/template/{id}/edit', ['as' => 'template.edit.post', 'uses' => 'EmailTemplateController@postEdit']);
+	Route::post('/email/template/{id}/delete', ['as' => 'template.delete', 'uses' => 'EmailTemplateController@postDelete']);
 
-	Route::get('/email/type', ['as' => 'backend.email.type.list', 'uses' => 'EmailTypeController@getIndex']);
-	Route::get('/email/type/create', ['as' => 'backend.email.type.create', 'uses' => 'EmailTypeController@getCreate']);
-	Route::post('/email/type/create', ['as' => 'backend.email.type.create.post', 'uses' => 'EmailTypeController@postCreate']);
-	Route::get('/email/type/{id}/edit', ['as' => 'backend.email.type.edit', 'uses' => 'EmailTypeController@getEdit']);
-	Route::post('/email/type/{id}/edit', ['as' => 'backend.email.type.edit.post', 'uses' => 'EmailTypeController@postEdit']);
-	Route::get('/email/type/{id}/delete', ['as' => 'backend.email.type.delete', 'uses' => 'EmailTypeController@getDelete']);
+	Route::get('/email/event', ['as' => 'event.list', 'uses' => 'EmailEventController@getIndex']);
+	Route::get('/email/event/create', ['as' => 'event.create', 'uses' => 'EmailEventController@getCreate']);
+	Route::post('/email/event/create', ['as' => 'event.create.post', 'uses' => 'EmailEventController@postCreate']);
+	Route::get('/email/event/{id}/edit', ['as' => 'event.edit', 'uses' => 'EmailEventController@getEdit']);
+	Route::post('/email/event/{id}/edit', ['as' => 'event.edit.post', 'uses' => 'EmailEventController@postEdit']);
+	Route::post('/email/event/{id}/delete', ['as' => 'event.delete', 'uses' => 'EmailEventController@postDelete']);
 });
 
-Route::get('/api.email-types.options', ['as' => 'api.email.type.options', 'uses' => 'API\EmailTypeController@getOptions']);
-Route::post('/api.email.send', ['as' => 'api.email.send', 'uses' => 'API\EmailTypeController@postSend']);
+Route::group(['as' => 'api.email.'], function ()
+{
+	RouteAPI::get('email.events.options', ['as' => 'event.options', 'uses' => 'API\EmailEventController@getOptions']);
+	RouteAPI::post('email.send', ['as' => 'send', 'uses' => 'API\EmailEventController@postSend']);
+});

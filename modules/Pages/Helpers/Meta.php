@@ -112,7 +112,6 @@ class Meta
 	public function addCss($handle, $src, $dependency = null, array $attrs = null)
 	{
 		Assets::css($handle, $src, $dependency, $attrs);
-
 		return $this;
 	}
 
@@ -185,7 +184,6 @@ class Meta
 	public function addToGroup($handle, $content, $params = [], $dependency = null)
 	{
 		Assets::group('FRONTEND', $handle, strtr($content, $params), $dependency);
-
 		return $this;
 	}
 
@@ -197,7 +195,6 @@ class Meta
 	public function removeFromGroup($handle = null)
 	{
 		Assets::removeGroup('FRONTEND', $handle);
-
 		return $this;
 	}
 
@@ -210,7 +207,6 @@ class Meta
 	public function addPackage($name, $loadDependencies = false, $footer = false)
 	{
 		Assets::package($name, $loadDependencies, $footer);
-
 		return $this;
 	}
 

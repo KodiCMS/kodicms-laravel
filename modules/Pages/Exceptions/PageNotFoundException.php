@@ -1,10 +1,10 @@
 <?php namespace KodiCMS\Pages\Exceptions;
 
-use KodiCMS\CMS\Exceptions\Exception;
-use KodiCMS\Pages\Model\FrontendPage;
 use Request;
 use Illuminate\Http\Response;
-use KodiCMS\CMS\Helpers\File;
+use KodiCMS\Support\Helpers\File;
+use KodiCMS\CMS\Exceptions\Exception;
+use KodiCMS\Pages\Model\FrontendPage;
 
 class PageNotFoundException extends Exception
 {

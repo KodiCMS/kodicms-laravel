@@ -27,13 +27,19 @@ password: **password**
  * `layout:rebuild_blocks` - индексация размеченых блоков в шаблонах
  * `api:generate_key` - генерация нового API ключа
  * `cms:install` - создание .env файла, миграция и добавление сидов (в будущем данная команда будет создавать файл и производить миграцию)
- * `cms:modules:migrate` - создание таблиц в БД
+ * `cms:modules:publish` - публикация `view` шаблонов
+ * `cms:modules:migrate` - создание таблиц в БД (Для сидирование данных, необходимо добавть `--seed` )
  * `cms:modules:seed` - заполнение таблиц тестовыми данными
+ * `cms:modules:list` - просмотр информации о добавленных модулях и плагинов
+ * `cms:wysiwyg:list` - список установленных в системе редакторов текста
  * `cms:generate:translate:js` - генерация JS языковых файлов
- * `cms:generate:locale` - генерация пакета lang файлов для перевода. Файлы будут скопированы в `/resources/lang/packages`
+ * `cms:modules:locale:publish` - генерация пакета lang файлов для перевода. Файлы будут скопированы в `/resources/lang/packages`
  * `cms:make:controller` - создание контроллера (`cms:make:controller TestController --module=cms --type=backend` создаст контроллер в модуле `modules\CMS`. Существует два типа контроллеров `[api, backend]`)
  * `cms:packages:list` - список всех media пакетов
-
+ 
+ * `cms:plugins:list` - просмотр информации о добавленных плагинах
+ * `cms:plugins:activate author:plugin` - активация плагина
+ * `cms:plugins:deactivate author:plugin [--removetable=no]` - деактивация плагина (удаление таблицы из БД)
 ---
 
 ### Загрузка сервис-провайдеров и алиасов

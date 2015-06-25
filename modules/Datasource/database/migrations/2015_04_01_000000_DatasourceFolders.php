@@ -10,6 +10,7 @@ class DatasourceFolders extends Migration
 		Schema::create('datasource_folders', function (Blueprint $table) {
 			$table->increments('id');
 			$table->string('name');
+			$table->string('icon');
 			$table->integer('position')->default(0);
 		});
 	}

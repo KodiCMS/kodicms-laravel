@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
-use KodiCMS\CMS\Helpers\File;
-use Illuminate\Http\Response;
 use ModuleLoader;
+use Illuminate\Http\Response;
+use KodiCMS\Support\Helpers\File;
 
 class VirtualMediaLinksController extends Controller
 {

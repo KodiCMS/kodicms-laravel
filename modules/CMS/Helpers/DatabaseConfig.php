@@ -4,33 +4,50 @@
 use DB;
 use Cache;
 
+/**
+ * Class DatabaseConfig
+ * @package KodiCMS\CMS\Helpers
+ */
 class DatabaseConfig
 {
 	/**
 	 * @var string
 	 */
-	protected static $cacheKey = 'databaseConfig';
+	protected $cacheKey = 'databaseConfig';
 
 	/**
 	 * @var array
 	 */
-	protected static $loadedKeys = [];
+	protected $config = [];
 
-	/**
-	 * @return array
-	 */
-	final public static function get()
+	public function __construct()
 	{
-		$databaseConfig = Cache::rememberForever(static::$cacheKey, function () {
+		$databaseConfig = Cache::rememberForever($this->cacheKey, function () {
 			return DB::table('config')->get();
 		});
 
 		foreach($databaseConfig as $row)
 		{
-			static::$loadedKeys[$row->group][$row->key] = json_decode($row->value, true);
+			$this->config[$row->group][$row->key] = json_decode($row->value, true);
 		}
+	}
 
-		return static::$loadedKeys;
+	/**
+	 * @return array
+	 */
+	final public function getAll()
+	{
+		return $this->config;
+	}
+
+	/**
+	 * @param string $key
+	 * @param mixed $default
+	 * @return mixed
+	 */
+	final public function get($key, $default = null)
+	{
+		return array_get($this->config, $key, $default);
 	}
 
 	/**
@@ -39,20 +56,20 @@ class DatabaseConfig
 	 * @param mixed $value
 	 * @return bool
 	 */
-	final public static function set($group, $key, $value)
+	final public function set($group, $key, $value)
 	{
 		$value = json_encode($value);
 
-		if (isset(static::$loadedKeys[$group][$key]))
+		if (isset($this->config[$group][$key]))
 		{
-			static::update($group, $key, $value);
+			$this->update($group, $key, $value);
 		}
 		else
 		{
-			static::insert($group, $key, $value);
+			$this->insert($group, $key, $value);
 		}
 
-		Cache::forget(static::$cacheKey);
+		Cache::forget($this->cacheKey);
 
 		return TRUE;
 	}
@@ -60,7 +77,7 @@ class DatabaseConfig
 	/**
 	 * @param array $settings
 	 */
-	final public static function save(array $settings)
+	final public function save(array $settings)
 	{
 		foreach ($settings as $group => $values)
 		{
@@ -68,12 +85,12 @@ class DatabaseConfig
 			{
 				foreach ($values as $key => $value)
 				{
-					static::set($group, $key, $value);
+					$this->set($group, $key, $value);
 				}
 			}
 			else
 			{
-				static::set('site', $group, $values);
+				$this->set('site', $group, $values);
 			}
 		}
 	}
@@ -86,7 +103,7 @@ class DatabaseConfig
 	 * @param array       $config The serialized configuration to write
 	 * @return boolean
 	 */
-	final protected static function insert($group, $key, $config)
+	final protected function insert($group, $key, $config)
 	{
 		DB::table('config')->insert([
 			'group' => $group,
@@ -103,7 +120,7 @@ class DatabaseConfig
 	 * @param array       $config The serialized configuration to write
 	 * @return boolean
 	 */
-	final protected static function update($group, $key, $config)
+	final protected function update($group, $key, $config)
 	{
 		DB::table('config')
 			->where('group', '=', $group)

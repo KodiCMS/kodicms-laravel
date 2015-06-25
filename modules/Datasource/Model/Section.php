@@ -12,11 +12,15 @@ class Section extends Model implements SectionInterface
 	{
 		parent::boot();
 
+		static::creating(function($section)
+		{
+			$section->settings = $section->toSection()->getSettings();
+		});
+
 		static::created(function($section)
 		{
 			$section = $section->toSection();
-			$section->createSystemFields();
-			$section->createTable();
+			DatasourceManager::createTableSection($section);
 		});
 	}
 

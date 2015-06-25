@@ -1,9 +1,10 @@
 <?php namespace KodiCMS\Pages\Behavior;
 
-use KodiCMS\CMS\Helpers\Callback;
+use KodiCMS\Support\Helpers\Callback;
+use KodiCMS\Pages\Model\FrontendPage;
 use KodiCMS\Pages\Contracts\BehaviorInterface;
 use KodiCMS\Pages\Exceptions\BehaviorException;
-use KodiCMS\Pages\Model\FrontendPage;
+use KodiCMS\Pages\Contracts\BehaviorPageInterface;
 
 abstract class BehaviorAbstract implements BehaviorInterface
 {
@@ -27,14 +28,19 @@ abstract class BehaviorAbstract implements BehaviorInterface
 	protected $parameters = [];
 
 	/**
-	 * @var array
+	 * @var Settings
 	 */
-	protected $settings = [];
+	protected $settings;
 
 	/**
-	 * @var bool
+	 * @var string
 	 */
-	protected $settingsLoaded = false;
+	protected $settingsClass = Settings::class;
+
+	/**
+	 * @var null|string
+	 */
+	protected $settingsTemplate = null;
 
 	/**
 	 * @param array $parameters
@@ -49,14 +55,17 @@ abstract class BehaviorAbstract implements BehaviorInterface
 			$routes = $parameters['routes'] + $routes;
 		}
 
+		$settingsClass = $this->settingsClass;
+
+		$this->settings = new $settingsClass($this);
 		$this->router = new Router($routes);
 	}
 
 	/**
-	 * @param FrontendPage $page
+	 * @param BehaviorPageInterface $page
 	 * @throws BehaviorException
 	 */
-	public function setPage(FrontendPage &$page)
+	public function setPage(BehaviorPageInterface &$page)
 	{
 		if (!is_null($this->page))
 		{
@@ -64,6 +73,7 @@ abstract class BehaviorAbstract implements BehaviorInterface
 		}
 
 		$this->page = &$page;
+		$this->settings->setSettings($page->getBehaviorSettings());
 	}
 
 	/**
@@ -120,16 +130,18 @@ abstract class BehaviorAbstract implements BehaviorInterface
 	}
 
 	/**
+	 * @return null|string
+	 */
+	public function getSettingsTemplate()
+	{
+		return $this->settingsTemplate;
+	}
+
+	/**
 	 * @return Settings
 	 */
 	public function getSettings()
 	{
-		if (!$this->settingsLoaded)
-		{
-			$this->settings = new Settings($this->getPage());
-			$this->settingsLoaded = true;
-		}
-
 		return $this->settings;
 	}
 

@@ -2,7 +2,7 @@
 
 use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
-abstract class SectionHeadline implements SectionHeadlineInterface
+class SectionHeadline implements SectionHeadlineInterface
 {
 
 }

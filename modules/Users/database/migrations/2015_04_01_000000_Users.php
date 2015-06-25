@@ -20,6 +20,8 @@ class Users extends Migration
 
 			$table->string('locale', 5)->default(config('app.locale'));
 
+			$table->string('avatar', 100);
+
 			$table->rememberToken();
 			$table->timestamps();
 		});

@@ -18,7 +18,7 @@ class Layout extends File
 	 */
 	public function getBlocks()
 	{
-		return LayoutBlock::where('layout_name', $this->getName())->lists('block');
+		return LayoutBlock::where('layout_name', $this->getName())->lists('block')->all();
 	}
 
 	/**

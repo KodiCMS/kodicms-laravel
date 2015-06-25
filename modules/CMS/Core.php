@@ -3,9 +3,15 @@
 use Closure;
 use Illuminate\Container\Container;
 
+/**
+ * Class Core
+ * TODO: убрать статику. Greabock 20.05.2015
+ *
+ * @package KodiCMS\CMS
+ */
 class Core extends Container {
 
-	const VERSION 	= '14.0.0';
+	const VERSION 	= '0.0.1 alpha';
 	const NAME		= 'KodiCMS';
 	const WEBSITE	= 'http://kodicms.ru';
 
@@ -36,7 +42,7 @@ class Core extends Container {
 	 */
 	public static function backendResourcesPath()
 	{
-		return public_path('cms/');
+		return public_path('cms' . DIRECTORY_SEPARATOR);
 	}
 
 	/**
@@ -52,12 +58,12 @@ class Core extends Container {
 	 */
 	public static function backendResourcesURL()
 	{
-		return url(static::backendPath() . '/cms');
+		return url(static::backendPath() . DIRECTORY_SEPARATOR .'cms');
 	}
 
 	public function __construct()
 	{
-		register_shutdown_function([$this, 'shutdown_handler']);
+		register_shutdown_function([$this, 'shutdownHandler']);
 	}
 
 	public function shutdown(Closure $callback)
@@ -65,7 +71,7 @@ class Core extends Container {
 		$this->shutdowsCalbbacks[] = $callback;
 	}
 
-	public function shutdown_handler()
+	public function shutdownHandler()
 	{
 		foreach($this->shutdowsCalbbacks as $callback)
 		{

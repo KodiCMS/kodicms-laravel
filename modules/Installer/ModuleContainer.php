@@ -11,6 +11,14 @@ class ModuleContainer extends BaseModuleContainer
 	 */
 	public function loadRoutes(Router $router)
 	{
+
+	}
+
+	/**
+	 * @param Router $router
+	 */
+	protected function loadSystemRoutes(Router $router)
+	{
 		if (CMS::isInstalled())
 		{
 			return;

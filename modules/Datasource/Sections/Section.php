@@ -1,14 +1,13 @@
 <?php namespace KodiCMS\Datasource\Sections;
 
 use DB;
-use KodiCMS\Datasource\Fields\Primary;
-use KodiCMS\Datasource\Fields\String;
-use KodiCMS\Datasource\Model\Field;
-use Schema;
 use DatasourceManager;
-use KodiCMS\CMS\Traits\Settings;
+use KodiCMS\Datasource\Model\SectionFolder;
 use KodiCMS\Datasource\SectionType;
-use KodiCMS\Datasource\Contracts\FieldInterface;
+use KodiCMS\Support\Traits\Settings;
+use KodiCMS\Datasource\Fields\String;
+use KodiCMS\Datasource\Fields\Primary;
+use KodiCMS\Datasource\SectionHeadline;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Model\Section as SectionModel;
 
@@ -57,6 +56,20 @@ class Section implements SectionInterface
 	}
 
 	/**
+	 * @return SectionHeadline
+	 */
+	public function getHeadline()
+	{
+		return new SectionHeadline;
+	}
+
+	// TODO реализовать тулбар
+	public function getToolbar()
+	{
+		return null;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function systemFields()
@@ -71,6 +84,14 @@ class Section implements SectionInterface
 				'name' => 'Header'
 			])
 		];
+	}
+
+	/**
+	 * @return SectionFolder|null
+	 */
+	public function getFolder()
+	{
+		return $this->model->folder;
 	}
 
 	/**
@@ -98,6 +119,14 @@ class Section implements SectionInterface
 	}
 
 	/**
+	 * @return SectionModel
+	 */
+	public function getModel()
+	{
+		return $this->model;
+	}
+
+	/**
 	 * @param string $name
 	 * @param mixed $value
 	 * @return $this
@@ -109,65 +138,11 @@ class Section implements SectionInterface
 		return $return;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getTableName()
 	{
-		return $this->tableName . $this->getId();
-	}
-
-	public function createTable()
-	{
-		$fields = $this->getFields();
-		Schema::dropIfExists($this->getTableName());
-		Schema::create($this->getTableName(), function($table) use($fields)
-		{
-			foreach($fields as $field)
-			{
-				$field->setDatabaseFieldType($table);
-			}
-		});
-	}
-
-	public function createSystemFields()
-	{
-		foreach ($this->systemFields() as $field)
-		{
-			if($field = $this->model->fields()->save($field->getModel()))
-			{
-				$this->fields[$field->id] = $field->toField();
-			}
-		}
-
-		return $this;
-	}
-
-	/**
-	 * @param $fieldId
-	 */
-	public function attachField($fieldId)
-	{
-		if ($fieldId instanceof FieldInterface)
-		{
-			$field = $fieldId;
-		}
-		else if (is_integer($fieldId))
-		{
-			$field = Field::find($fieldId)->toField();
-		}
-		elseif ($fieldId instanceof Field)
-		{
-			$field = $fieldId->toField();
-		}
-
-		$sectionId = $this->getId();
-
-		if (!Schema::hasColumn($field->getDBKey()))
-		{
-
-			$field->attachToSection($sectionId);
-			Schema::table($this->getTableName(), function ($table) use($field, $sectionId)
-			{
-				$field->setDatabaseFieldType($table);
-			});
-		}
+		return 'ds_' . $this->tableName . $this->getId();
 	}
 }

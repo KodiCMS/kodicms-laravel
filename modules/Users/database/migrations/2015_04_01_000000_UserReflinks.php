@@ -8,13 +8,13 @@ class UserReflinks extends Migration
 	public function up()
 	{
 		Schema::create('user_reflinks', function (Blueprint $table) {
-			$table->integer('user_id')->index();
-			$table->string('type', 50);
-			$table->string('code', 50)->index();
-			$table->json('properties');
-			$table->timestamp('created_at');
+			$table->increments('id');
 
-			$table->unique(['user_id', 'code']);
+			$table->integer('user_id')->index();
+			$table->string('handler', 255);
+			$table->string('token', 100)->unique();
+			$table->json('properties');
+			$table->timestamps();
 		});
 	}
 

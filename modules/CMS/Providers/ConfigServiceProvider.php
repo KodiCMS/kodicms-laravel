@@ -21,22 +21,25 @@ class ConfigServiceProvider extends ServiceProvider {
 			}
 		}
 
-		/**
-		 * Загрузка конфигурационных файлов из БД с заменой ключей
-		 */
-		try
+		if (CMS::isInstalled())
 		{
-			$config = DatabaseConfig::get();
-		}
-		catch(\PDOException $e) // Если таблица конфиг не существует
-		{
-			$config = [];
+			/**
+			 * Загрузка конфигурационных файлов из БД с заменой ключей
+			 */
+			try
+			{
+				$databaseConfig = new DatabaseConfig;
+				$this->app->instance('config.database', $databaseConfig);
+
+				$config = $databaseConfig->getAll();
+				foreach ($config as $group => $data)
+				{
+					app('config')->set($group, array_merge(config($group, []), $data));
+				}
+			}
+			catch (\PDOException $e) {} // Если таблица конфиг не существует
 		}
 
-		foreach($config as $group => $data)
-		{
-			app('config')->set($group, array_merge(config($group, []), $data));
-		}
 
 		Event::fire('config.loaded');
 	}

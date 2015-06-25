@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\API;
 
+use Illuminate\Http\JsonResponse;
 use KodiCMS\API\Exceptions\Exception;
 use KodiCMS\API\Http\Controllers\System\Controller;
 use KodiCMS\CMS\Model\FileCollection;
@@ -107,5 +108,16 @@ abstract class AbstractFileController extends Controller {
 		}
 
 		throw new Exception(trans("{$this->moduleNamespace}{$this->sectionPrefix}.messages.not_found"));
+	}
+
+	public function getListForXEditable()
+	{
+		$collection = $this->collection->getHTMLSelectChoices();
+
+		$data = array_map(function($value, $key) {
+			return ['id' => $key, 'text' => $value];
+		}, $collection, array_keys($collection));
+
+		return new JsonResponse($data);
 	}
 }

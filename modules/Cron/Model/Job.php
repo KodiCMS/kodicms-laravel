@@ -1,10 +1,10 @@
 <?php namespace KodiCMS\Cron\Model;
 
+use DB;
 use Artisan;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use DB;
 use KodiCMS\Cron\Support\Crontab;
+use Illuminate\Database\Eloquent\Model;
 
 class Job extends Model
 {
@@ -12,7 +12,7 @@ class Job extends Model
 	const STATUS_FAILED = -1;    // Job has failed
 	const STATUS_NEW = 1;        // New job
 	const STATUS_RUNNING = 2;    // Job is currently running
-	const STATUS_COMPLETED = 3;   // Job is complete
+	const STATUS_COMPLETED = 3;  // Job is complete
 
 	const AGENT_SYSTEM = 0;
 	const AGENT_CRON = 1;
@@ -38,7 +38,9 @@ class Job extends Model
 	/**
 	 * @var array
 	 */
-	protected $attributes = ['crontime' => '* * * * *'];
+	protected $attributes = [
+		'crontime' => '* * * * *'
+	];
 
 	/**
 	 * @return array
@@ -56,13 +58,12 @@ class Job extends Model
 	 */
 	public function getDates()
 	{
-		$dates = [
+		return array_merge(parent::getDates(), [
 			'date_start',
 			'date_end',
 			'last_run',
 			'next_run',
-		];
-		return array_merge(parent::getDates(), $dates);
+		]);
 	}
 
 	/**
@@ -76,6 +77,9 @@ class Job extends Model
 		}, config('jobs'));
 	}
 
+	/**
+	 * @param integer $value
+	 */
 	public function setAttemptsAttribute($value)
 	{
 		$this->attributes['attempts'] = intval($value);
@@ -101,6 +105,9 @@ class Job extends Model
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getStatusStringAttribute()
 	{
 		return trans('cron::core.statuses.' . $this->status);
@@ -111,7 +118,7 @@ class Job extends Model
 	 */
 	public function logs()
 	{
-		return $this->hasMany('KodiCMS\Cron\Model\JobLog');
+		return $this->hasMany(JobLog::class);
 	}
 
 	public static function runAll()

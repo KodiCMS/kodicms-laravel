@@ -102,7 +102,7 @@
 				@block('sidebar')
 			</div>
 			<div class="col-md-8">
-				@block('content', ['comments' => false])
+				@block('content', ['comments' => true])
 			</div>
 		</div>
 

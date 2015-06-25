@@ -2,7 +2,9 @@
 	<div class="form-group">
 		<label class="control-label col-md-3">@lang('widgets::types.paginator.setting.linked_widget_id')</label>
 		<div class="col-md-4">
-			{!! Form::select('settings[linked_widget_id]', $select, $widget->linked_widget_id, ['id' => 'linked_widget_id']) !!}
+			{!! Form::select('settings[linked_widget_id]', $select, $widget->linked_widget_id, [
+				'id' => 'linked_widget_id', 'class' => 'form-control'
+			]) !!}
 		</div>
 	</div>
 

@@ -5,13 +5,14 @@ use Cache;
 use Request;
 use Carbon\Carbon;
 use KodiCMS\Users\Model\User;
-use KodiCMS\CMS\Helpers\File;
-use KodiCMS\CMS\Helpers\Text;
+use KodiCMS\Support\Helpers\File;
+use KodiCMS\Support\Helpers\Text;
 use Illuminate\Database\Query\Builder;
+use KodiCMS\Pages\Contracts\BehaviorPageInterface;
 use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 
-class FrontendPage
+class FrontendPage implements BehaviorPageInterface
 {
 	const STATUS_DRAFT     = 1;
 	const STATUS_PUBLISHED = 100;
@@ -26,7 +27,7 @@ class FrontendPage
 	 * @param $field
 	 * @param $value
 	 * @param FrontendPage $parentPage
-	 * @param bool $includeHidden
+	 * @param boolean|array $includeHidden
 	 * @return bool|FrontendPage
 	 */
 	public static function findByField($field, $value, FrontendPage $parentPage = null, $includeHidden = true)
@@ -78,7 +79,7 @@ class FrontendPage
 
 	/**
 	 * @param string $uri
-	 * @param bool $includeHidden
+	 * @param boolean|array $includeHidden
 	 * @param FrontendPage $parentPage
 	 * @return stdClass
 	 */
@@ -127,7 +128,7 @@ class FrontendPage
 	/**
 	 * @param $slug
 	 * @param FrontendPage $parentPage
-	 * @param bool $includeHidden
+	 * @param boolean|array $includeHidden
 	 * @return bool|FrontendPage
 	 */
 	public static function findBySlug($slug, FrontendPage $parentPage = null, $includeHidden = true)
@@ -137,7 +138,7 @@ class FrontendPage
 
 	/**
 	 * @param $id
-	 * @param bool $includeHidden
+	 * @param boolean|array $includeHidden
 	 * @return bool|FrontendPage
 	 */
 	public static function findById($id, $includeHidden = true)
@@ -165,7 +166,7 @@ class FrontendPage
 			$slugs->where('published_at', '<=', DB::raw('NOW()'));
 		}
 
-		$slugs = $slugs->get()->lists('slug', 'id');
+		$slugs = $slugs->get()->lists('slug', 'id')->all();
 
 		$newSlugs = [];
 		foreach ($uriSlugs as $slug)
@@ -214,16 +215,20 @@ class FrontendPage
 	}
 
 	/**
-	 * @param boolean $includeHidden
+	 * @param boolean|array $includeHidden
 	 * @return array
 	 */
 	public static function getStatuses($includeHidden = false)
 	{
 		$statuses = [static::STATUS_PUBLISHED];
 
-		if ($includeHidden)
+		if ($includeHidden === true)
 		{
 			$statuses[] = static::STATUS_HIDDEN;
+		}
+		else if (is_array($includeHidden))
+		{
+			$statuses = array_merge($statuses, $includeHidden);
 		}
 
 		return $statuses;
@@ -847,13 +852,9 @@ class FrontendPage
 
 				if ($param !== null)
 				{
-					if (strpos($param, 'site.') !== false)
+					if (strpos($param, 'cms.') !== false)
 					{
-						$parts[] = config('app.' . substr($param, 5), $default);
-					}
-					else if (strpos($param, 'ctx.') !== false)
-					{
-						$parts[] = app('ctx')->get(substr($param, 4));
+						$parts[] = config('cms.' . substr($param, 5), $default);
 					}
 					else if (strpos($param, 'parent.') !== false AND $this->getParent() instanceof FrontendPage AND method_exists($this, ($method = 'get' . ucfirst(substr($param, 7))))
 					)
@@ -912,6 +913,7 @@ class FrontendPage
 	}
 
 	/**
+	 * @param bool $includeHidden
 	 * @return Builder
 	 */
 	public function getChildrenQuery($includeHidden = false)
@@ -926,6 +928,15 @@ class FrontendPage
 		}
 
 		return $query;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getBehaviorSettings()
+	{
+		$settings = PageBehaviorSettings::where('page_id', $this->getId())->first();
+		return is_null($settings) ? [] : $settings->settings;
 	}
 
 	/**

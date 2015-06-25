@@ -1,5 +1,12 @@
 <?php namespace KodiCMS\CMS\Navigation;
 
+
+/**
+ * Class Collection
+ * TODO: убрать статику. Greabock 20.05.2015
+ *
+ * @package KodiCMS\CMS\Navigation
+ */
 class Collection
 {
 

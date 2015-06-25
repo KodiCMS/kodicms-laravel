@@ -11,8 +11,10 @@ class QueueSend extends Command
 	 */
 	protected $name = 'cms:email:queue-send';
 
+	/**
+	 * @var string
+	 */
 	protected $description = 'Send queued emails';
-
 
 	/**
 	 * Execute the console command.
@@ -22,5 +24,4 @@ class QueueSend extends Command
 		EmailQueue::sendAll();
 		$this->info('All done');
 	}
-
 }

@@ -1,7 +1,8 @@
 <?php namespace KodiCMS\Datasource\database\seeds;
 
+use DatasourceManager;
 use Illuminate\Database\Seeder;
-use KodiCMS\Datasource\Model\Field;
+use KodiCMS\Datasource\Fields\String;
 use KodiCMS\Datasource\Model\Section;
 
 class DatasourceTableSeeder extends Seeder
@@ -21,12 +22,9 @@ class DatasourceTableSeeder extends Seeder
 			'settings' => []
 		]);
 
-		Field::create([
-			'key' => 'other',
-			'type' => 'string',
-			'name' => 'Other',
-			'settings' => [],
-			'position' => 20
-		]);
+		DatasourceManager::addNewField($section->toSection(), new String(null, [
+			'key' => 'test',
+			'name' => 'test'
+		]));
 	}
 }

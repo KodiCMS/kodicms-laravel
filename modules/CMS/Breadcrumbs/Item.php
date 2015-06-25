@@ -1,10 +1,11 @@
 <?php namespace KodiCMS\CMS\Breadcrumbs;
 
+use KodiCMS\Support\Traits\Accessor;
 use KodiCMS\API\Exceptions\Exception;
-use KodiCMS\CMS\Traits\Accessor;
 
 /**
  * Class Item
+ *
  * @package KodiCMS\CMS\Breadcrumbs
  */
 class Item

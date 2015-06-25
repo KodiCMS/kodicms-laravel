@@ -61,7 +61,9 @@ return [
 		'parent_id' => 'Родительская страница',
 		'layout_file' => 'Шаблон',
 		'behavior' => 'Поведение',
-		'published_at' => 'Опубликована'
+		'published_at' => 'Опубликована',
+		'created_by_id' => 'Создал',
+		'updated_by_id' => 'Обновил',
 	],
 	'messages' => [
 		'not_found' => 'Страница не найдена',

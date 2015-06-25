@@ -1,9 +1,8 @@
 <?php namespace KodiCMS\Datasource;
 
 use Schema;
-use KodiCMS\Datasource\Exceptions\FieldException;
-use KodiCMS\Datasource\Model\Field;
-use KodiCMS\Datasource\Model\Section;
+use KodiCMS\Datasource\Contracts\FieldInterface;
+use KodiCMS\Datasource\Contracts\SectionInterface;
 
 class FieldManager
 {
@@ -71,5 +70,68 @@ class FieldManager
 		}
 
 		return null;
+	}
+
+	/**
+	 * @param SectionInterface $section
+	 * @param FieldInterface $field
+	 */
+	public function attachFieldToSection(SectionInterface $section, FieldInterface $field)
+	{
+		$this->addFieldToSectionTable($section, $field);
+		$field->getModel()->update([
+			'ds_id' => $section->getId()
+		]);
+	}
+
+	/**
+	 * @param SectionInterface $section
+	 * @param FieldInterface $field
+	 */
+	public function addFieldToSectionTable(SectionInterface $section, FieldInterface $field)
+	{
+		if (Schema::hasColumn($section->getTableName(), $field->getDBKey()))
+		{
+			// TODO throw Exception
+		}
+
+		Schema::table($section->getTableName(), function($table) use($field)
+		{
+			$field->setDatabaseFieldType($table);
+		});
+	}
+
+	/**
+	 * @param SectionInterface $section
+	 * @param FieldInterface $field
+	 */
+	public function updateSectionTableField(SectionInterface $section, FieldInterface $field)
+	{
+		if (!Schema::hasColumn($section->getTableName(), $field->getDBKey()))
+		{
+			// TODO throw Exception
+		}
+
+		Schema::table($section->getTableName(), function($table) use($field)
+		{
+			$field->setDatabaseFieldType($table)->change();
+		});
+	}
+
+	/**
+	 * @param SectionInterface $section
+	 * @param FieldInterface $field
+	 */
+	public function dropSectionTableField(SectionInterface $section, FieldInterface $field)
+	{
+		if (!Schema::hasColumn($section->getTableName(), $field->getDBKey()))
+		{
+			// TODO throw Exception
+		}
+
+		Schema::table($section->getTableName(), function($table) use($field)
+		{
+			$table->dropColumn($field->getDBKey());
+		});
 	}
 }

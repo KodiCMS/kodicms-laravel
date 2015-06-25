@@ -1,17 +1,10 @@
 <?php namespace KodiCMS\Pages\Http\Controllers;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use WYSIWYG;
-use KodiCMS\CMS\Http\Controllers\System\BackendController;
 use Assets;
-use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
-use KodiCMS\Pages\Helpers\BlockWysiwyg;
-use KodiCMS\Pages\Model\FrontendPage;
+use Carbon\Carbon;
 use KodiCMS\Pages\Model\Page;
-use KodiCMS\Pages\Services\PageCreator;
-use KodiCMS\Pages\Services\PageUpdator;
-use KodiCMS\Widgets\Collection\PageWidgetCollection;
+use KodiCMS\Pages\Repository\PageRepository;
+use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class PageController extends BackendController
 {
@@ -25,7 +18,10 @@ class PageController extends BackendController
 	 */
 	public $allowedActions = ['children'];
 
-	public function getIndex()
+	/**
+	 * @param PageRepository $repository
+	 */
+	public function getIndex(PageRepository $repository)
 	{
 		Assets::package(['nestable', 'editable']);
 
@@ -33,17 +29,21 @@ class PageController extends BackendController
 			return ['id' => $key, 'text' => $value];
 		}, Page::getStatusList(), array_keys(Page::getStatusList()));
 
-		$page = $this->getPage(1);
+		$page = $repository->findOrFail(1);
 
 		$this->setContent('pages.index', compact('page'));
 	}
 
-	public function getEdit($id)
+	/**
+	 * @param PageRepository $repository
+	 * @param integer $id
+	 */
+	public function getEdit(PageRepository $repository, $id)
 	{
 		Assets::package(['backbone', 'jquery-ui']);
-		WYSIWYG::loadAll();
+		$this->includeModuleMediaFile('BehaviorController');
 
-		$page = $this->getPage($id);
+		$page = $repository->findOrFail($id);
 		$this->setTitle(trans('pages::core.title.pages.edit', [
 			'title' => $page->title
 		]));
@@ -52,86 +52,67 @@ class PageController extends BackendController
 
 		$updator = $page->updatedBy()->first();
 		$creator = $page->createdBy()->first();
-		$pagesMap = $page->getSitemap();
 
 		$page->setAppends(['layout']);
-
-		$behaviorList = BehaviorManager::formChoices();
-
-		$this->setContent('pages.edit', compact('page', 'updator', 'creator', 'pagesMap', 'behaviorList'));
+		$this->setContent('pages.edit', compact('page', 'updator', 'creator'));
 	}
 
-	public function postEdit(PageUpdator $page, $id)
+	/**
+	 * @param PageRepository $repository
+	 * @param integer $id
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function postEdit(PageRepository $repository, $id)
 	{
 		$data = $this->request->all();
-		$validator = $page->validator($id, $data);
+		$repository->validateOnUpdate($id, $data);
 
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
-		}
-
-		$page = $page->update($id, $data);
+		$page = $repository->update($id, $data);
 
 		return $this->smartRedirect([$page])
 			->with('success', trans('pages::core.messages.updated', ['title' => $page->title]));
 	}
 
-	public function getCreate($parent_id = NULL)
+	/**
+	 * @param PageRepository $repository
+	 * @param integer|null $parentId
+	 */
+	public function getCreate(PageRepository $repository, $parentId = null)
 	{
-		$page = new Page([
-			'parent_id' => $parent_id,
+		$page = $repository->instance([
+			'parent_id' => $parentId,
 			'published_at' => new Carbon
 		]);
+
 		$this->setTitle(trans('pages::core.title.pages.create'));
+		$this->includeModuleMediaFile('BehaviorController');
 
-		$pagesMap = $page->getSitemap();
-		$behaviorList = BehaviorManager::formChoices();
-
-		$this->setContent('pages.create', compact('page', 'pagesMap', 'behaviorList'));
+		$this->setContent('pages.create', compact('page'));
 	}
 
-	public function postCreate(PageCreator $page, $parent_id = NULL)
+	/**
+	 * @param PageRepository $repository
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function postCreate(PageRepository $repository)
 	{
 		$data = $this->request->all();
-
-		$validator = $page->validator($data);
-
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
-		}
-
-		$page = $page->create($data);
+		$repository->validateOnCreate($data);
+		$page = $repository->create($data);
 
 		return $this->smartRedirect([$page])
 			->with('success', trans('pages::core.messages.created', ['title' => $page->title]));
 	}
 
-	public function getDelete($id)
+	/**
+	 * @param PageRepository $repository
+	 * @param integer $id
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function postDelete(PageRepository $repository, $id)
 	{
-		$page = $this->getPage($id);
-		$page->delete();
-
+		$page = $repository->delete($id);
 		return $this->smartRedirect()
 			->with('success', trans('pages::core.messages.deleted', ['title' => $page->title]));
 	}
-
-	/**
-	 * @param integer $id
-	 * @return Page
-	 * @throws HttpResponseException
-	 */
-	protected function getPage($id)
-	{
-		try {
-			return Page::findOrFail($id);
-		}
-		catch (ModelNotFoundException $e) {
-			$this->throwFailException($this->smartRedirect()->withErrors(trans('pages::core.messages.not_found')));
-		}
-	}
-
 }

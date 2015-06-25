@@ -51,7 +51,7 @@ class PagesTableSeeder extends Seeder {
 
 		foreach($pages as $page)
 		{
-			foreach(range(1, 30) as $i)
+			foreach(range(1, 2) as $i)
 			{
 				$title = str_singular($page->title) . ' ' . $i;
 				$page->children()->save(new Page([

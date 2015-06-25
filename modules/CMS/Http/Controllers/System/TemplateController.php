@@ -4,6 +4,7 @@ use CMS;
 use View;
 use Lang;
 use Assets;
+use ModuleLoader;
 
 class TemplateController extends Controller
 {
@@ -159,12 +160,22 @@ class TemplateController extends Controller
 	/**
 	 * @param string $key
 	 * @param string $file
-	 * @param string $ext
 	 */
-	public function includeMedia($key, $file, $ext)
+	public function includeMergedMediaFile($key, $file)
 	{
-		$mediaContent = '<script type="text/javascript">' . Assets::mergeFiles($file, $ext) . "</script>";
+		$mediaContent = '<script type="text/javascript">' . Assets::mergeFiles($file, 'js') . "</script>";
 		Assets::group('global', $key, $mediaContent, 'global');
+	}
+
+	/**
+	 * @param $filename
+	 */
+	public function includeModuleMediaFile($filename)
+	{
+		if (ModuleLoader::findFile('resources/js', $filename, 'js'))
+		{
+			Assets::js('include.' . $filename, backend_resources_url() . '/js/' . $filename . '.js', 'core', false);
+		}
 	}
 
 	/**

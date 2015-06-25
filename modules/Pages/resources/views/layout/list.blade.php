@@ -74,10 +74,12 @@
 			</td>
 			<td class="actions text-right">
 				@if (acl_check('layout.delete'))
-				{!! link_to_route('backend.layout.delete', '', [$layout->getName()], [
-					'data-icon' => 'times fa-inverse',
-					'class' => 'btn btn-danger btn-xs btn-confirm'
-				]) !!}
+				{!! Form::open(['route' => ['backend.layout.delete', $layout->getName()]]) !!}
+					{!! Form::button('', [
+						'type' => 'submit',
+						'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
+					]) !!}
+				{!! Form::close() !!}
 				@endif
 			</td>
 		</tr>

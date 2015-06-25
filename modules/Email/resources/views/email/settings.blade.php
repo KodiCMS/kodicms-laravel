@@ -1,4 +1,6 @@
 @section('scripts')
+	@parent
+
 <script type="text/javascript">
 var show_button = true;
 var current_driver = '';
@@ -84,6 +86,8 @@ function test_email_button_visible() {
 }
 </script>
 @stop
+
+
 <div class="panel-heading" data-icon="envelope">
 	<span class="panel-title">@lang('email::core.settings.title')</span>
 </div>
@@ -104,7 +108,7 @@ function test_email_button_visible() {
 			<div class="form-group">
 				<label class="control-label col-md-3" for="emailDriver">@lang('email::core.settings.email_driver')</label>
 				<div class="col-md-6">
-					{!! Form::select('config[mail][driver]', $drivers, config('mail.driver'), ['id' => 'emailDriver']) !!}
+					{!! Form::select('config[mail][driver]', $drivers, config('mail.driver'), ['id' => 'emailDriver', 'class' => 'form-control']) !!}
 
 					<p class="help-block test-email-message">@lang('email::core.settings.test.label')</p>
 				</div>
@@ -178,7 +182,8 @@ function test_email_button_visible() {
 							'ssl' => 'SSL',
 							'tls' => 'TLS'
 						], config('mail.encryption'), [
-							'id' => 'settingEncryption'
+							'id' => 'settingEncryption',
+							'class' => 'form-control'
 						]) !!}
 					</div>
 				</div>

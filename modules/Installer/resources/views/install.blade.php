@@ -10,9 +10,9 @@
 				<div class="form-group">
 					<label class="control-label col-md-3">@lang('installer::core.field.current_language')</label>
 					<div class="col-md-3">
-						{!! Form::select('locale', $locales,$selectedLocale, array(
-						'id' => 'current-lang'
-						)) !!}
+						{!! Form::select('locale', $locales,$selectedLocale, [
+							'id' => 'current-lang', 'class' => 'form-control'
+						]) !!}
 					</div>
 				</div>
 			</div>
@@ -167,21 +167,21 @@
 				<div class="form-group">
 					<label class="control-label col-md-3">@lang('installer::core.field.interface_locale')</label>
 					<div class="col-md-3">
-						{!! Form::select('install[locale]', $locales, array_get($data, 'locale')) !!}
+						{!! Form::select('install[locale]', $locales, array_get($data, 'locale'), ['class' => 'form-control']) !!}
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="control-label col-md-3">@lang('installer::core.field.timezone')</label>
 					<div class="col-md-3">
-						{!! Form::select('install[timezone]', $timezones, array_get($data, 'timezone')) !!}
+						{!! Form::select('install[timezone]', $timezones, array_get($data, 'timezone'), ['class' => 'form-control']) !!}
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="control-label col-md-3">@lang('installer::core.field.date_format')</label>
 					<div class="col-md-3">
-						{!! Form::select('install[date_format]', $dateFormats, array_get($data, 'date_format')) !!}
+						{!! Form::select('install[date_format]', $dateFormats, array_get($data, 'date_format'), ['class' => 'form-control']) !!}
 					</div>
 				</div>
 			</div>

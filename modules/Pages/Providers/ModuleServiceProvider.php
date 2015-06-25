@@ -1,19 +1,19 @@
 <?php namespace KodiCMS\Pages\Providers;
 
+use Route;
 use Blade;
 use Block;
 use Event;
-use Illuminate\Support\Debug\Dumper;
-use KodiCMS\CMS\Providers\ServiceProvider;
-use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
-use KodiCMS\Pages\Helpers\Meta;
-use KodiCMS\Pages\Model\LayoutBlock;
+use WYSIWYG;
 use KodiCMS\Pages\Model\Page;
-use KodiCMS\Pages\Model\PagePart as PagePartModel;
-use KodiCMS\Pages\PagePart;
+use KodiCMS\Pages\Helpers\Meta;
 use KodiCMS\Pages\Observers\PageObserver;
+use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Pages\Observers\PagePartObserver;
-use KodiCMS\Pages\Widget\PagePart as PagePartWidget;
+use KodiCMS\Pages\Model\PagePart as PagePartModel;
+use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
+use KodiCMS\Pages\Console\Commands\RebuldLayoutBlocks;
+use KodiCMS\Pages\Listeners\PlacePagePartsToBlocksEventHandler;
 
 class ModuleServiceProvider extends ServiceProvider {
 
@@ -33,6 +33,7 @@ class ModuleServiceProvider extends ServiceProvider {
 
 		Event::listen('view.page.edit', function ($page)
 		{
+			WYSIWYG::loadAllEditors();
 			echo view('pages::parts.list')->with('page', $page);
 		}, 999);
 
@@ -49,42 +50,24 @@ class ModuleServiceProvider extends ServiceProvider {
 		{
 			app('frontpage.meta')->setPage($page, true);
 
-			$layoutBlocks = (new LayoutBlock)->getBlocksGroupedByLayouts($page->getLayout());
-
-			foreach ($layoutBlocks as $name => $blocks)
-			{
-				foreach($blocks as $block)
-				{
-					if (!($part = PagePart::exists($page, $block)))
-					{
-						continue;
-					}
-
-					$partWidget = new PagePartWidget($part['name']);
-					$partWidget->setContent($part['content_html']);
-					Block::addWidget($partWidget, $block);
-				}
-			}
 		}, 8000);
 
-		Blade::extend(function ($view, $compiler)
-		{
-			$pattern = $compiler->createMatcher('meta');
+		Event::listen('frontend.found', PlacePagePartsToBlocksEventHandler::class, 7000);
 
-			return preg_replace($pattern, '$1<?php meta$2; ?>', $view);
+
+		Blade::directive('meta', function($expression)
+		{
+			return "<?php meta{$expression}; ?>";
 		});
 
-		Blade::extend(function ($view, $compiler)
+		Blade::directive('block', function($expression)
 		{
-			$pattern = $compiler->createMatcher('block');
-
-			return preg_replace($pattern, '$1<?php Block::run$2; ?>', $view);
+			return "<?php Block::run{$expression}; ?>";
 		});
 
-		Blade::extend(function ($view, $compiler)
+		Blade::directive('part', function($expression)
 		{
-			$pattern = $compiler->createMatcher('part');
-			return preg_replace($pattern, '$1<?php echo \KodiCMS\Pages\PagePart::getContent$2; ?>', $view);
+			return "<?php echo \\KodiCMS\\Pages\\PagePart::getContent{$expression}; ?>";
 		});
 
 		Page::observe(new PageObserver);
@@ -93,6 +76,6 @@ class ModuleServiceProvider extends ServiceProvider {
 
 	public function register()
 	{
-		$this->registerConsoleCommand('layout.generate.key', '\KodiCMS\Pages\Console\Commands\RebuldLayoutBlocks');
+		$this->registerConsoleCommand('layout.generate.key', RebuldLayoutBlocks::class);
 	}
 }

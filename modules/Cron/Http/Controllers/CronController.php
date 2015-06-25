@@ -1,11 +1,8 @@
 <?php namespace KodiCMS\Cron\Http\Controllers;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use KodiCMS\CMS\Http\Controllers\System\BackendController;
-use KodiCMS\Cron\Model\Job;
-use KodiCMS\Cron\Services\JobCreator;
-use KodiCMS\Cron\Services\JobUpdator;
 use Assets;
+use KodiCMS\Cron\Repository\CronRepository;
+use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class CronController extends BackendController
 {
@@ -14,19 +11,18 @@ class CronController extends BackendController
 	 */
 	public $moduleNamespace = 'cron::';
 
-	public function getIndex()
+	public function getIndex(CronRepository $repository)
 	{
-		$jobs = Job::paginate();
-
+		$jobs = $repository->paginate();
 		$this->setContent('cron.list', compact('jobs'));
 	}
 
-	public function getCreate()
+	public function getCreate(CronRepository $repository)
 	{
 		$this->setTitle(trans('cron::core.title.cron.create'));
 		Assets::package('cron');
 
-		$job = new Job;
+		$job = $repository->instance();
 		$action = 'backend.cron.create.post';
 
 		$this->templateScripts['JOB'] = $job->toArray();
@@ -34,27 +30,19 @@ class CronController extends BackendController
 		$this->setContent('cron.form', compact('job', 'action'));
 	}
 
-	public function postCreate(JobCreator $jobCreator)
+	public function postCreate(CronRepository $repository)
 	{
 		$data = $this->request->all();
-
-		$validator = $jobCreator->validator($data);
-
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
-		}
-
-		$job = $jobCreator->create($data);
+		$repository->validateOnCreate($data);
+		$job = $repository->create($data);
 
 		return $this->smartRedirect([$job])
 			->with('success', trans('cron::core.messages.created', ['title' => $job->name]));
 	}
 
-	public function getEdit($id)
+	public function getEdit(CronRepository $repository, $id)
 	{
-		$job = $this->getJob($id);
+		$job = $repository->findOrFail($id);
 
 		Assets::package('cron');
 		$this->templateScripts['JOB'] = $job->toArray();
@@ -67,50 +55,30 @@ class CronController extends BackendController
 		$this->setContent('cron.form', compact('job', 'action'));
 	}
 
-	public function postEdit(JobUpdator $jobUpdator, $id)
+	public function postEdit(CronRepository $repository, $id)
 	{
 		$data = $this->request->all();
-		$validator = $jobUpdator->validator($id, $data);
 
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
-		}
+		$repository->validateOnUpdate($data);
 
-		$job = $jobUpdator->update($id, $data);
+		$job = $repository->update($id, $data);
 
 		return $this->smartRedirect([$job])
 			->with('success', trans('cron::core.messages.updated', ['title' => $job->name]));
 	}
 
-	public function getDelete($id)
+	public function postDelete(CronRepository $repository, $id)
 	{
-		$job = $this->getJob($id);
-		$job->delete();
-
+		$job = $repository->delete($id);
 		return $this->smartRedirect()
 			->with('success', trans('cron::core.messages.deleted', ['title' => $job->name]));
 	}
 
-	public function getRun($id)
+	public function getRun(CronRepository $repository, $id)
 	{
-		$job = $this->getJob($id);
-		$job->run();
-
+		$job = $repository->runJob($id);
 		return redirect(route('backend.cron.edit', $job))
 			->with('success', trans('cron::core.messages.runned', ['title' => $job->name]));
-	}
-
-	protected function getJob($id)
-	{
-		try {
-			return Job::findOrFail($id);
-		}
-		catch (ModelNotFoundException $e) {
-			$this->throwFailException($this->smartRedirect()->withErrors(trans('cron::core.messages.not_found')));
-		}
-		return null;
 	}
 
 }

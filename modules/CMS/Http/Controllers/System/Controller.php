@@ -1,19 +1,18 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
 use CMS;
-use Illuminate\Auth\Guard;
-use Illuminate\Foundation\Bus\DispatchesCommands;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Http\Exception\HttpResponseException;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Routing\Route;
-use Illuminate\Session\Store as SessionStore;
-use Illuminate\Support\Str;
-use KodiCMS\API\Exceptions\AuthenticateException;
 use Lang;
+use Illuminate\Auth\Guard;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
+use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Session\Store as SessionStore;
+use Illuminate\Foundation\Bus\DispatchesCommands;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Http\Exception\HttpResponseException;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 abstract class Controller extends BaseController
 {
@@ -190,7 +189,13 @@ abstract class Controller extends BaseController
 			return $this->denyAccess(trans('users::core.messages.auth.deny_access'), true);
 		}
 
-		if (!in_array($this->getCurrentAction(), $this->allowedActions) AND !acl_check(array_get($this->permissions, $this->getCurrentAction()))
+		$currentPermission = array_get($this->permissions, $this->getCurrentAction());
+		if (
+			!in_array($this->getCurrentAction(), $this->allowedActions)
+		and
+			!is_null($currentPermission)
+		and
+			!acl_check($currentPermission)
 		)
 		{
 			return $this->denyAccess(trans('users::core.messages.auth.no_permissions'));
@@ -204,18 +209,12 @@ abstract class Controller extends BaseController
 	 */
 	public function denyAccess($message = null, $redirect = false)
 	{
-		if ($this->request->ajax())
-		{
-			throw new AuthenticateException($message);
-		}
-		elseif ($redirect)
+		if ($redirect)
 		{
 			return redirect()->guest($this->loginPath)->withErrors($message);
 		}
-		else
-		{
-			return abort(403, $message);
-		}
+
+		return abort(403, $message);
 	}
 
 	/**
@@ -251,10 +250,8 @@ abstract class Controller extends BaseController
 		{
 			return back();
 		}
-		else
-		{
-			return redirect($route);
-		}
+
+		return redirect($route);
 	}
 
 	/**
@@ -280,7 +277,7 @@ abstract class Controller extends BaseController
 			$this->currentUser = $auth->user();
 			if (auth()->check())
 			{
-				Lang::setLocale($this->currentUser->locale);
+				Lang::setLocale($this->currentUser->getLocale());
 			}
 		}
 	}

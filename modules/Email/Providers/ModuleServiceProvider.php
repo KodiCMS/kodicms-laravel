@@ -2,15 +2,16 @@
 
 use Event;
 use KodiCMS\CMS\Providers\ServiceProvider;
-use Validator;
+use KodiCMS\Email\Console\Commands\QueueSend;
+use KodiCMS\Email\Console\Commands\QueueClean;
 
 class ModuleServiceProvider extends ServiceProvider
 {
 
 	public function register()
 	{
-		$this->registerConsoleCommand('email.queue-send', 'KodiCMS\Email\Console\Commands\QueueSend');
-		$this->registerConsoleCommand('email.queue-clean', 'KodiCMS\Email\Console\Commands\QueueClean');
+		$this->registerConsoleCommand('email.queue-send', QueueSend::class);
+		$this->registerConsoleCommand('email.queue-clean', QueueClean::class);
 
 		Event::listen('view.settings.bottom', function ()
 		{
@@ -20,10 +21,11 @@ class ModuleServiceProvider extends ServiceProvider
 				'sendmail' => 'Sendmail',
 				'mailgun'  => 'Mailgun',
 				'mandrill' => 'Mandrill',
+				'log'      => 'Log',
 			];
+
 			echo view('email::email.settings', compact('drivers'))->render();
 		});
-
 	}
 
 }

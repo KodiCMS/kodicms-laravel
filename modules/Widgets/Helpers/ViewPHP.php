@@ -7,6 +7,9 @@ class ViewPHP {
 	 */
 	protected $phpCode = '';
 
+	/**
+	 * @var array
+	 */
 	protected $data = [];
 
 	/**

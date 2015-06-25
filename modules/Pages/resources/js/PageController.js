@@ -22,6 +22,8 @@ var Page = {
 		Api.post('/api.user.meta', {key: this.cacheKey, value: _.uniq(this._expandedPages)});
 	},
 	loadChildren: function(parent_id, level, $container, $expander) {
+		CMS.loader.show('#page-tree');
+
 		Api.get('/api.page.children', {parent_id: parent_id, level: level}, $.proxy(function(response) {
 			$container.append(response.content);
 			if($expander) {
@@ -36,6 +38,7 @@ var Page = {
 				}
 			}
 
+			CMS.loader.hide();
 			CMS.ui.init('icon');
 		}, this));
 	},
@@ -114,12 +117,40 @@ CMS.controllers.add('page.get.index', function() {
 					listNodeName: 'ul',
 					listClass: 'dd-list list-unstyled',
 				}).on('change', function(e, el) {
-					var list = e.length ? e : $(e.target);
-					var pages = list.nestable('serialize');
-					if (!pages.length)
+					var list = $(e.target).data('nestable');
+
+					var data,
+						depth = 0,
+						array = [];
+
+					step = function(level, depth)
+					{
+						var items = level.children(list.options.itemNodeName),
+							position = 0;
+
+						items.each(function()
+						{
+							var li   = $(this),
+								sub  = li.children(list.options.listNodeName),
+								parent_id = level.parent().data('id');
+
+							array.push({
+								parent_id: parseInt(parent_id ? parent_id : list.options.parent_id),
+								id: li.data('id'),
+								position: position++
+							});
+
+							if (sub.length) {
+								step(sub, depth + 1);
+							}
+						});
+					};
+					step(list.el.find(list.options.listNodeName).first(), depth);
+
+					if (!array.length)
 						return false;
 
-					Api.post('/api.page.reorder', {'pids': pages});
+					Api.post('/api.page.reorder', {'pids': array});
 				});
 			}, self.parent());
 		}
@@ -131,8 +162,12 @@ CMS.controllers.add('page.get.index', function() {
 		if ($('#page-seacrh-input').val() !== '') {
 			$('#page-tree-list').hide();
 
+			CMS.loader.show('#page-search-list');
+
 			Api.get('/api.page.search', form.serialize(), function(resp) {
 				$('#page-search-list').html(resp.content);
+				CMS.loader.hide();
+				CMS.ui.init('icon');
 			});
 
 		} else {
@@ -142,11 +177,11 @@ CMS.controllers.add('page.get.index', function() {
 
 		return false;
 	});
-	
+
 	var editable_status = {
 		selector: '.editable-status',
 		type: 'select2',
-		title: __('Page status'),
+		title: i18n.t('pages.core.field.status'),
 		send: 'always',
 		highlight: false,
 		ajaxOptions: {
@@ -165,11 +200,11 @@ CMS.controllers.add('page.get.index', function() {
 		source: PAGE_STATUSES,
 		select2: {
 			width: 200,
-			placeholder: __('Page status')
+			placeholder: i18n.t('pages.core.field.status')
 		}
 	};
 	
-	$('#page-tree-list').editable(editable_status);
+	$('#page-tree-list, #page-search-list').editable(editable_status);
 });
 
 
@@ -207,19 +242,28 @@ CMS.controllers.add(['page.get.create', 'page.get.edit'], function() {
 		});
 	});
 
-	$('input[name="is_redirect"]').on('change', function() {
+	var $redirectCheckbox = $('input[name="is_redirect"]');
+
+	$redirectCheckbox.on('change', function() {
 		show_redirect_field($(this))
 	});
 
-	show_redirect_field($('input[name="is_redirect"]'));
+	$('#redirect-container').on('click', function (e) {
+		if(!$(e.target).is(':input, label') && !$redirectCheckbox.is(':checked'))
+			$redirectCheckbox.trigger('click')
+	});
+
+	show_redirect_field($redirectCheckbox);
 	function show_redirect_field(input) {
 		var cont = $('#redirect-to-container'),
 			meta_cont = $('#page-meta-panel-li');
 
 		if (input.is(':checked')) {
+			input.closest('.form-group').removeClass('no-margin-b');
 			cont.show();
 			meta_cont.hide();
 		} else {
+			input.closest('.form-group').addClass('no-margin-b');
 			cont.hide();
 			meta_cont.show();
 		}

@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Cron\Model;
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 
 class JobLog extends Model
@@ -28,7 +29,7 @@ class JobLog extends Model
 	 */
 	public function job()
 	{
-		return $this->belongsTo('KodiCMS\Cron\Model\Job');
+		return $this->belongsTo(Job::class);
 	}
 
 	public function getStatusStringAttribute()
@@ -42,9 +43,9 @@ class JobLog extends Model
 	 */
 	public function setStatus($value)
 	{
-		if ( ! $this->exists)
+		if (!$this->exists)
 		{
-			throw new \Exception('Cannot set status because it is not loaded');
+			throw new Exception('Cannot set status because it is not loaded');
 		}
 
 		$this->job->status = $value;

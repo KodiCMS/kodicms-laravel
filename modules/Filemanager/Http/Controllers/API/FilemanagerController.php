@@ -1,10 +1,10 @@
 <?php namespace KodiCMS\Filemanager\Http\Controllers\API;
 
-use \KodiCMS\API\Http\Controllers\System\Controller as APIController;
-use KodiCMS\Filemanager\elFinder\Connector;
 use KodiCMS\Filemanager\elFinder\elFinder;
+use KodiCMS\Filemanager\elFinder\Connector;
+use KodiCMS\API\Http\Controllers\System\Controller;
 
-class FilemanagerController extends APIController
+class FilemanagerController extends Controller
 {
 
 	public function before()
