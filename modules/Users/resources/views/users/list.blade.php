@@ -29,7 +29,7 @@
 		@foreach ($users as $user)
 		<tr class="item">
 			<td class="name">
-				{!! $user->gravatar(20, NULL, array('class' => 'img-circle')) !!}
+				{!! $user->getAvatar(20, ['class' => 'img-circle']) !!}
 				{!! link_to_route('backend.user.profile', $user->username, [$user]) !!}
 			</td>
 			<td class="email hidden-xs">{!! UI::label(HTML::mailto($user->email)) !!}</td>
@@ -45,8 +45,7 @@
 					{!! Form::button('', [
 						'type' => 'submit',
 						'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
-						])
-					!!}
+					]) !!}
 				{!! Form::close() !!}
 				@endif
 			</td>

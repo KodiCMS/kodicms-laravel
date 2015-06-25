@@ -1,13 +1,13 @@
 @if(Auth::check())
 <li class="dropdown user-menu">
 	<a href="#" class="dropdown-toggle user-menu" data-toggle="dropdown">
-		{!! $currentUser->gravatar(25) !!}
+		{!! $currentUser->getAvatar(25) !!}
 		<span>{{ $currentUser->username }}</span>
 	</a>
 
 	<ul class="dropdown-menu">
 		<li class="user-header">
-			{!! $currentUser->gravatar(90, NULL, ['class' => 'img-circle']) !!}
+			{!! $currentUser->getAvatar(90, ['class' => 'img-circle']) !!}
 			<p>
 				{{ $currentUser->username }}
 				<small>{{ $currentUser->email }}</small>

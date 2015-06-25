@@ -5,7 +5,7 @@
 			<span class="text-semibold">{{ $currentUser->username }}</span>
 		</div>
 
-		{!! $currentUser->gravatar(50) !!}
+		{!! $currentUser->getAvatar(50) !!}
 		<div class="btn-group">
 			{!! HTML::linkRoute('backend.user.current_profile', '', [], [
 				'data-icon' => 'user',

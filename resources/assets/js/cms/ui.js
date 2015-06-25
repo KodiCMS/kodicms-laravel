@@ -495,4 +495,8 @@ CMS.ui.add('flags', function () {
 })
 .add('bootbox', function() {
 	bootbox.setLocale(LOCALE);
+})
+.add('bootstrap', function() {
+	$('[data-toggle="tooltip"]').tooltip();
+	$('[data-toggle="popover"]').popover();
 });

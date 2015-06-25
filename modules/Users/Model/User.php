@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Users\Model;
 
+use CMS;
 use ACL;
 use Carbon\Carbon;
 use KodiCMS\Support\Helpers\Locale;
@@ -107,6 +108,21 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 
 	/**
+	 * @param int $size
+	 * @param array $attributes
+	 * @return string
+	 */
+	public function getAvatar($size = 100, array $attributes = null)
+	{
+		if (empty($this->avatar) or !is_file(CMS::uploadPath() . 'avatars' . DIRECTORY_SEPARATOR . $this->avatar))
+		{
+			return $this->getGravatar($size, null, $attributes);
+		}
+
+		return HTML::image(CMS::uploadURL() . '/avatars/' . $this->avatar, null, $attributes);
+	}
+
+	/**
 	 * Получение аватара пользлователя из сервиса Gravatar
 	 *
 	 * @param integer $size
@@ -114,7 +130,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 * @param array $attributes
 	 * @return string HTML::image
 	 */
-	public function gravatar($size = 100, $default = NULL, array $attributes = NULL)
+	public function getGravatar($size = 100, $default = null, array $attributes = null)
 	{
 		return Gravatar::load($this->email, $size, $default, $attributes);
 	}
@@ -125,7 +141,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	public function setPasswordAttribute($password)
 	{
-		$this->attributes['password'] = \Hash::make($password);
+		$this->attributes['password'] = bcrypt($password);
 	}
 
 	/**
