@@ -366,7 +366,7 @@ CMS.ui.add('flags', function () {
 	});
 
 	$(document).on('keydown', null, 'shift+f2', function (e) {
-		Api.post('/api.layout.rebuild');
+		Api.get('/api.layout.rebuild');
 		e.preventDefault();
 	});
 
