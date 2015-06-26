@@ -52,7 +52,7 @@ CMS.ui.add('flags', function () {
 		var $btn = $(this);
 
 		var message = i18n.t('cms.core.messages.are_you_sure');
-		if($btn.data('message')) {
+		if ($btn.data('message')) {
 			message = $btn.data('message');
 		}
 
@@ -387,7 +387,7 @@ CMS.ui.add('flags', function () {
 }).add('icon', function () {
 	$('*[data-icon]').add('*[data-icon-prepend]').each(function () {
 		var cls = $(this).data('icon');
-		if($(this).hasClass('btn-labeled')) cls += ' btn-label icon';
+		if ($(this).hasClass('btn-labeled')) cls += ' btn-label icon';
 
 		$(this).html('<i class="fa fa-' + cls + '"></i> ' + $(this).html());
 		$(this).removeAttr('data-icon-prepend').removeAttr('data-icon');
@@ -432,23 +432,58 @@ CMS.ui.add('flags', function () {
 	}
 
 	$('.tabs-generated').tabdrop();
-}).add('noty', function() {
+}).add('noty', function () {
+	$.noty.themes.KodiCMSTheme = $.extend($.noty.themes.bootstrapTheme, {
+		name: 'KodiCMSTheme',
+		style: function () {
+
+			var containerSelector = this.options.layout.container.selector;
+			$(containerSelector).addClass('list-group');
+
+			this.$closeButton.append('<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>');
+			this.$closeButton.addClass('close');
+
+			this.$bar.addClass('alert alert-dark').css('padding', '10px');
+			switch (this.options.type) {
+				case 'alert':
+				case 'notification':
+				case 'information':
+					this.$bar.addClass("alert-info");
+					break;
+				case 'warning':
+					this.$bar.addClass("alert-warning");
+					break;
+				case 'error':
+					this.$bar.addClass("alert-danger");
+					break;
+				case 'success':
+					this.$bar.addClass("alert-success");
+					break;
+			}
+
+			this.$message.css({
+
+				position: 'relative'
+			});
+		}
+	});
+
 	$.noty.defaults = $.extend($.noty.defaults, {
 		layout: 'topRight',
-		theme: 'bootstrapTheme',
+		theme: 'KodiCMSTheme',
 		timeout: 3000
 	});
 })
-.add('momentJs', function() {
-	moment.locale(LOCALE);
-})
-.add('switcher', function() {
-	$(".form-switcher").bootstrapToggle();
-})
-.add('bootbox', function() {
-	bootbox.setLocale(LOCALE);
-})
-.add('bootstrap', function() {
-	$('[data-toggle="tooltip"]').tooltip();
-	$('[data-toggle="popover"]').popover();
-});
+	.add('momentJs', function () {
+		moment.locale(LOCALE);
+	})
+	.add('switcher', function () {
+		$(".form-switcher").bootstrapToggle();
+	})
+	.add('bootbox', function () {
+		bootbox.setLocale(LOCALE);
+	})
+	.add('bootstrap', function () {
+		$('[data-toggle="tooltip"]').tooltip();
+		$('[data-toggle="popover"]').popover();
+	});
