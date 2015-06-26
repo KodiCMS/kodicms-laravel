@@ -13,7 +13,7 @@ var Api = {
 		return this.request('DELETE', uri, data, callback, async);
 	},
 	request: function(method, uri, data, callback, async) {
-		var url = uri;
+		var url = this.parseUrl(uri);
 
 		$.ajaxSetup({
 			contentType : 'application/json'
@@ -51,6 +51,13 @@ var Api = {
 			.fail(function(e) {
 				return Api.exception(e.responseJSON, callback);
 			});
+	},
+	parseUrl: function(url) {
+		return url;
+	},
+	getEventKey: function(method, url) {
+		var event = method + url.replace(SITE_URL, ":").replace(/\//g, ':');
+		return event.toLowerCase()
 	},
 	serializeObject: function(form) {
 		var json = {},

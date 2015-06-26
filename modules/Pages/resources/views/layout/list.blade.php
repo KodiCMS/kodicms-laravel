@@ -11,7 +11,8 @@
 		{!! Form::button(trans('pages::layout.button.rebuild'), [
 			'data-icon' => 'refresh',
 			'class' => 'btn btn-inverse btn-xs',
-			'data-api-url' => '/api.layout.rebuild'
+			'data-api-url' => '/api.layout.rebuild',
+			'data-preloader' => '#layoutList'
 		]) !!}
 		@endif
 	</div>
@@ -22,7 +23,7 @@
 	@endif
 
 	@if($collection->getTotal() > 0)
-	<table class="table-primary table table-striped table-hover">
+	<table class="table-primary table table-striped table-hover" id="layoutList">
 		<colgroup>
 			<col />
 			<col width="150px" />
@@ -55,13 +56,7 @@
 				@else
 				@endif
 
-				@if (count($layout->getBlocks()) > 0)
-				<span class="text-muted text-normal text-sm">
-					<strong>@lang('pages::layout.label.blocks'):</strong> <span class="layout-block-list">
-						<?php echo implode(', ', $layout->getBlocks()); ?>
-					</span>
-				</span>
-				@endif
+				<span class="layout-block-list">{!! view('pages::layout.partials.blocks', ['blocks' => $layout->getBlocks()]) !!}</span>
 			</th>
 			<td class="modified hidden-xs">
 				{{ $layout->getMTime() }}

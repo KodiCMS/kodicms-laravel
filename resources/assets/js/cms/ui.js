@@ -411,7 +411,8 @@ CMS.ui.add('flags', function () {
 
 		var $method = $self.data('method'),
 			$reload = $self.data('reload'),
-			$params = $self.data('params');
+			$params = $self.data('params'),
+			$preloader = $self.data('preloader');
 
 		if ($reload) {
 			if ($reload === true) $callback = function () { window.location = '' }
@@ -419,6 +420,14 @@ CMS.ui.add('flags', function () {
 		}
 
 		if (!$method) $method = 'GET';
+
+		if($preloader) {
+			var container = typeof($preloader) == "string" ? $preloader : 'body';
+			var loader = CMS.loader.show(container);
+			$(window).on(Api.getEventKey($method, Api.parseUrl($url)), function(e) {
+				CMS.loader.hide(loader);
+			});
+		}
 
 		Api.request($method, $url, $params, $callback);
 	})
