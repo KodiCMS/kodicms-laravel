@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Datasource\Http\Controllers;
 
+use DatasourceManager;
 use KodiCMS\Datasource\Model\Section;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
@@ -12,8 +13,6 @@ class DatasourceController extends BackendController
 
 	public function getIndex($dsId)
 	{
-		/*$sectionsTree = DatasourceManager::getSectionsTree();*/
-
 		$sectionModel = Section::findOrFail($dsId);
 		$section = $sectionModel->toSection();
 
