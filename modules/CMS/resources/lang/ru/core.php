@@ -13,6 +13,8 @@ return [
 	'label'      => [
 		'not_set'    => 'Не указан',
 		'date_never' => 'Никогда',
+		'toggler_close' => 'Свернуть',
+		'toggler_open' => 'Развернуть',
 		'update' => [
 			'new_files' => 'Новые файлы',
 			'changed_files' => 'Измененные файлы'

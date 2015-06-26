@@ -67,24 +67,29 @@ CMS.ui.add('flags', function () {
 	});
 }).add('panel-toggler', function () {
 	var icon_open = 'fa-chevron-up',
-		icon_close = 'fa-chevron-down';
+		icon_close = 'fa-chevron-down',
+		text = i18n.t('cms.core.label.toggler_open');
 
 	$('.panel-toggler')
 		.click(function () {
 			var $self = $(this);
 
-			if ($self.data('target-')) {
-				$_cont = $($self.data('target-'));
+			if ($self.data('target')) {
+				$_cont = $($self.data('target'));
 			} else {
 				var $_cont = $self.next('.panel-spoiler');
 			}
 
 			$_cont.slideToggle('fast', function () {
 				var $icon = $self.find('.panel-toggler-icon');
+				var $text = $self.find('.panel-toggler-text');
+
 				if ($(this).is(':hidden')) {
 					$icon.removeClass(icon_open).addClass(icon_close).addClass('fa');
+					$text.text(i18n.t('cms.core.label.toggler_close'));
 				} else {
 					$icon.addClass(icon_open).removeClass(icon_close).addClass('fa');
+					$text.text(i18n.t('cms.core.label.toggler_open'));
 				}
 			});
 
@@ -95,7 +100,13 @@ CMS.ui.add('flags', function () {
 				$('html,body').animate({scrollTop: $(this).offset().top}, 'slow');
 			}
 		})
-		.append('<div class="panel-heading-controls"><span class="text-sm"><i class="panel-toggler-icon fa ' + icon_close + '" />&nbsp;&nbsp;&nbsp;' + __('Toggle') + '</span></div>');
+		.append('' +
+			'<div class="panel-heading-controls">' +
+				'<span class="text-sm">' +
+					'<i class="panel-toggler-icon fa ' + icon_close + '" />' +
+					'&nbsp;&nbsp;&nbsp;<span class="panel-toggler-text">' + text + '</span>' +
+				'</span>' +
+			'</div>');
 
 }).add('datepicker', function () {
 
@@ -417,9 +428,9 @@ CMS.ui.add('flags', function () {
 			});
 
 			$tabs_ul.prependTo($self);
-			//$('li a', $tabs_ul).on('click', function() {
-			//	window.location.hash = $(this).attr('href');
-			//});
+			$('li a', $tabs_ul).on('click', function() {
+				window.location.hash = $(this).attr('href');
+			});
 		}
 	});
 
