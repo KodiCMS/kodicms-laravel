@@ -274,23 +274,6 @@ CMS.ui.add('flags', function () {
 		tags: true,
 		tokenSeparators: [',', ' ', ';']
 	});
-}).add('ajax_form', function () {
-	$('body').on('submit', 'form.form-ajax', function () {
-		var $self = $(this),
-			$buttons = $('button', $self).attr('disabled', 'disabled'),
-			$action = $self.attr('action');
-
-		if ($self.data('ajax-action'))
-			$action = $self.data('ajax-action');
-
-		Api.post($action, $self, function (response) {
-			setTimeout(function () {
-				$buttons.removeAttr('disabled');
-			}, 5000);
-		});
-
-		return false;
-	});
 }).add('filemanager', function () {
 	var $input = $(':input[data-filemanager]');
 
@@ -396,41 +379,6 @@ CMS.ui.add('flags', function () {
 		window.location = '/backend/logout';
 		e.preventDefault();
 	});
-}).add('api_buttons', function () {
-	$('.btn[data-api-url]').on('click', function (e) {
-		e.preventDefault();
-		var $self = $(this);
-
-		var $callback = function (response) {};
-		var $url = $self.data('api-url');
-		if (!$url) return;
-
-		var $callback = $self.data('callback');
-		if ($callback) $callback = window[$callback];
-		else $callback = function (response) {};
-
-		var $method = $self.data('method'),
-			$reload = $self.data('reload'),
-			$params = $self.data('params'),
-			$preloader = $self.data('preloader');
-
-		if ($reload) {
-			if ($reload === true) $callback = function () { window.location = '' }
-			else $callback = function () { window.location = $reload }
-		}
-
-		if (!$method) $method = 'GET';
-
-		if($preloader) {
-			var container = typeof($preloader) == "string" ? $preloader : 'body';
-			var loader = CMS.loader.show(container);
-			$(window).on(Api.getEventKey($method, Api.parseUrl($url)), function(e) {
-				CMS.loader.hide(loader);
-			});
-		}
-
-		Api.request($method, $url, $params, $callback);
-	})
 }).add('select_all_checkbox', function () {
 	$(document).on('change', 'input[name="check_all"]', function (e) {
 		var $self = $(this),
