@@ -8,16 +8,15 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Session\Store as SessionStore;
-use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
 abstract class Controller extends BaseController
 {
-
-	use DispatchesCommands, ValidatesRequests;
+	use DispatchesJobs, ValidatesRequests;
 
 	/**
 	 * @var Request
