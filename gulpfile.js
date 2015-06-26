@@ -35,6 +35,7 @@ elixir(function(mix) {
 		'libs/i18next/js/i18next.min.js'
 	], 'public/cms/js/libraries.js', 'public/cms/');
 
+	// TODO: разобраться с местоположением компонентов
 	mix.scripts([
 		'cms/core.js',
 		'cms/app.js',

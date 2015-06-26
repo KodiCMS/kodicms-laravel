@@ -361,22 +361,17 @@ CMS.ui.add('flags', function () {
 
 	// GLOBAL HOTKEYS
 	$(document).on('keydown', null, 'shift+f1', function (e) {
-		Api.delete('cache');
+		Api.delete('/api.cache.clear');
 		e.preventDefault();
 	});
 
-	$(document).on('keydown', null, 'shift+f3', function (e) {
-		Api.get('search.update_index');
-		e.preventDefault();
-	});
-
-	$(document).on('keydown', null, 'shift+f4', function (e) {
-		Api.post('layout.rebuild');
+	$(document).on('keydown', null, 'shift+f2', function (e) {
+		Api.post('/api.layout.rebuild');
 		e.preventDefault();
 	});
 
 	$(document).on('keydown', null, 'ctrl+shift+l', function (e) {
-		window.location = '/backend/logout';
+		window.location = '/backend/auth/logout';
 		e.preventDefault();
 	});
 }).add('select_all_checkbox', function () {
