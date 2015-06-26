@@ -48,6 +48,7 @@ elixir(function(mix) {
 		'cms/components/ui.js',
 		'cms/helpers.js',
 		'cms/ui.js',
+		'cms/hashString.js',
 		'cms/popup.js',
 		'cms/scroll.js',
 		'cms/api.js',

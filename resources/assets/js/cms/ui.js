@@ -68,11 +68,12 @@ CMS.ui.add('flags', function () {
 }).add('panel-toggler', function () {
 	var icon_open = 'fa-chevron-up',
 		icon_close = 'fa-chevron-down',
-		text = i18n.t('cms.core.label.toggler_open');
+		text = i18n.t('cms.core.label.toggler_close');
 
 	$('.panel-toggler')
 		.click(function () {
-			var $self = $(this);
+			var $self = $(this),
+				hash = $self.data('hash');
 
 			if ($self.data('target')) {
 				$_cont = $($self.data('target'));
@@ -87,17 +88,21 @@ CMS.ui.add('flags', function () {
 				if ($(this).is(':hidden')) {
 					$icon.removeClass(icon_open).addClass(icon_close).addClass('fa');
 					$text.text(i18n.t('cms.core.label.toggler_close'));
+					if(hash) CMS.hashString.removeParam('toggled', hash);
 				} else {
 					$icon.addClass(icon_open).removeClass(icon_close).addClass('fa');
 					$text.text(i18n.t('cms.core.label.toggler_open'));
+					if(hash) CMS.hashString.setParam('toggled[]', hash);
 				}
 			});
 
 			return false;
 		}).each(function () {
-			if ($(this).data('hash') == window.location.hash.substring(1)) {
-				$(this).click();
-				$('html,body').animate({scrollTop: $(this).offset().top}, 'slow');
+			var $self = $(this),
+				hash = $self.data('hash');
+
+			if (CMS.hashString.findInParam('toggled', hash)) {
+				$self.click();
 			}
 		})
 		.append('' +
@@ -428,21 +433,12 @@ CMS.ui.add('flags', function () {
 			});
 
 			$tabs_ul.prependTo($self);
-			$('li a', $tabs_ul).on('click', function() {
-				window.location.hash = $(this).attr('href');
-			});
 		}
 	});
 
-	if (window.location.hash.length > 0 && $('.tabs-generated li a[href=' + window.location.hash + ']').length > 0) {
-		$('li a[href=' + window.location.hash + ']').parent().addClass('active');
-		$('.tabbable .tab-pane' + window.location.hash).addClass('active');
-	} else {
-		$('.tabs-generated li:first-child').addClass('active');
-		$('.tabbable .tab-pane:first-child').addClass('active');
-	}
-
+	$('.tabs-generated li:first-child').add('.tabbable .tab-pane:first-child').addClass('active');
 	$('.tabs-generated').tabdrop();
+
 }).add('noty', function () {
 	$.noty.themes.KodiCMSTheme = $.extend($.noty.themes.bootstrapTheme, {
 		name: 'KodiCMSTheme',

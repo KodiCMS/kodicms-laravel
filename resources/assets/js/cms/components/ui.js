@@ -2,13 +2,14 @@ CMS.ui = {
 
 	// 0: name
 	// 1: callback
+	// 2: priority
 
 	_elements:[],
-	add:function (module, callback) {
+	add:function (module, callback, priority) {
 		if (typeof(callback) != 'function')
 			return this;
 
-		CMS.ui._elements.push([module, callback]);
+		CMS.ui._elements.push([module, callback, priority || 0]);
 		return this;
 	},
 	call: function(module) {
@@ -22,6 +23,9 @@ CMS.ui = {
 	},
 	init:function (module) {
 		$('body').trigger('ui.init.before', [this]);
+
+		CMS.ui._elements = _.sortBy(CMS.ui._elements, 2);
+
 		for (var i = 0; i < CMS.ui._elements.length; i++) {
 			var elm = CMS.ui._elements[i];
 
