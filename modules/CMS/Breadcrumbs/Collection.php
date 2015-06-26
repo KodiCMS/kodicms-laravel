@@ -21,17 +21,6 @@ class Collection implements \Countable, \Iterator
 	protected $items = [];
 
 	/**
-	 * TODO: это, как если бы гардеробщица рожала гардеробы, вместо того, чтобы хранить шубы.  Убрать.
-	 *
-	 * @param array $options
-	 * @return Manager
-	 */
-	public static function factory($options = [])
-	{
-		return new Collection($options);
-	}
-
-	/**
 	 * @param array $options
 	 */
 	public function __construct(array $options = [])

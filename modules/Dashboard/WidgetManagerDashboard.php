@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\Dashboard;
 
-use KodiCMS\Dashboard\Contracts\WidgetDashboard;
 use KodiCMS\Users\Model\UserMeta;
 use KodiCMS\Widgets\Manager\WidgetManager;
+use KodiCMS\Dashboard\Contracts\WidgetDashboard;
 
 class WidgetManagerDashboard extends WidgetManager
 {

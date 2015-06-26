@@ -31,7 +31,6 @@ CMS.controllers.add('plugin.get.index', function () {
 			return response.content;
 		},
 
-		// Filter down the list of all todo items that are finished.
 		activated: function () {
 			return this.filter(function (plugin) {
 				return plugin.get('status');
@@ -65,7 +64,6 @@ CMS.controllers.add('plugin.get.index', function () {
 			this.model.toggleStatus(remove_data);
 		},
 
-		// Re-render the titles of the todo item.
 		render: function () {
 			this.$el.toggleClass('success', this.model.get('isActivated'));
 			this.$el.toggleClass('danger', !this.model.get('isInstallable'));

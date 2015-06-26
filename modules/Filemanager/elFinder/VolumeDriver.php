@@ -1882,7 +1882,6 @@ abstract class VolumeDriver
 				$p = DIRECTORY_SEPARATOR;
 			}
 
-			// TODO crypt path and return hash
 			$hash = $this->crypt($p);
 			// hash is used as id in HTML that means it must contain vaild chars
 			// make base64 html safe and append prefix in begining
@@ -1910,7 +1909,7 @@ abstract class VolumeDriver
 			$h = substr($hash, strlen($this->id));
 			// replace HTML safe base64 to normal
 			$h = base64_decode(strtr($h, '-_.', '+/='));
-			// TODO uncrypt hash and return path
+
 			$path = $this->uncrypt($h);
 
 			// append ROOT to path after it was cut in encode
@@ -2145,11 +2144,6 @@ abstract class VolumeDriver
 		if (empty($stat['mime'])) {
 			$stat['mime'] = $this->mimetype($stat['name']);
 		}
-
-		// @todo move dateformat to client
-		// $stat['date'] = isset($stat['ts'])
-		// 	? $this->formatDate($stat['ts'])
-		// 	: 'unknown';
 
 		if (!isset($stat['size'])) {
 			$stat['size'] = 'unknown';

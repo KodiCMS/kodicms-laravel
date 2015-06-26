@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Plugins\Loader;
 
+use CMS;
 use Event;
-use KodiCMS\CMS\Core as CMS;
 use KodiCMS\Plugins\Model\Plugin;
 use KodiCMS\Support\Traits\Settings;
 use KodiCMS\CMS\Loader\ModuleContainer;

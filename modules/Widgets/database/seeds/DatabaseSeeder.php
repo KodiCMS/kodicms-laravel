@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use KodiCMS\Widgets\database\seeds\WidgetTableSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,7 +14,6 @@ class DatabaseSeeder extends Seeder
 	public function run()
 	{
 		Model::unguard();
-
-		$this->call('\KodiCMS\Widgets\database\seeds\WidgetTableSeeder');
+		$this->call(WidgetTableSeeder::class);
 	}
 }

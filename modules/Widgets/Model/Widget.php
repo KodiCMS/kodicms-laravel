@@ -95,7 +95,6 @@ class Widget extends Model
 		}
 		else
 		{
-			// TODO: возможно стоит переделать
 			$this->widget = new TempWidget($this->name, $this->description);
 		}
 

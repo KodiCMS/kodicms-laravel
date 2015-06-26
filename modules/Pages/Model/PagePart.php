@@ -52,7 +52,9 @@ class PagePart extends Model
 	{
 		foreach ($positions as $pos => $id)
 		{
-			DB::table($this->table)->where('id', $id)->update(['position' => (int)$pos]);
+			DB::table($this->table)
+				->where('id', $id)
+				->update(['position' => (int) $pos]);
 		}
 
 		return $this;

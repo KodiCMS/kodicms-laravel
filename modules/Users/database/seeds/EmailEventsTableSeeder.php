@@ -13,7 +13,7 @@ class EmailEventsTableSeeder extends Seeder
 
 	function __construct()
 	{
-		$this->repository = app('KodiCMS\Email\Repository\EmailEventRepository');
+		$this->repository = app(EmailEventRepository::class);
 	}
 
 	/**

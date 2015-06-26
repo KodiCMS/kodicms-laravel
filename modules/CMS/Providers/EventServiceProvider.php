@@ -1,6 +1,8 @@
 <?php namespace KodiCMS\CMS\Providers;
 
 use WYSIWYG;
+use KodiCMS\CMS\Handlers\Events\SettingsSave;
+use KodiCMS\CMS\Handlers\Events\SettingsValidate;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as BaseEventServiceProvider;
 
@@ -12,12 +14,8 @@ class EventServiceProvider extends BaseEventServiceProvider {
 	 * @var array
 	 */
 	protected $listen = [
-		'backend.settings.validate' => [
-			'\KodiCMS\CMS\Handlers\Events\SettingsValidate'
-		],
-		'backend.settings.save' => [
-			'\KodiCMS\CMS\Handlers\Events\SettingsSave'
-		]
+		'backend.settings.validate' => [SettingsValidate::class],
+		'backend.settings.save' => [SettingsSave::class]
 	];
 
 	/**

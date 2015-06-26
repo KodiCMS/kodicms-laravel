@@ -84,7 +84,7 @@ class LayoutBlock extends Model
 	}
 
 	/**
-	 * TODO: оптимизиторвать
+	 * @param null|string $layoutName
 	 * @return array
 	 */
 	public function getBlocksGroupedByLayouts($layoutName = null)

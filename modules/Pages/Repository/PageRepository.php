@@ -88,7 +88,6 @@ class PageRepository extends BaseRepository
 	 */
 	public function create(array $data = [])
 	{
-		// TODO: фильтровать входные данные через модель
 		return parent::create(array_only($data, [
 			'title', 'slug', 'is_redirect', 'breadcrumb',
 			'meta_title', 'meta_keywords', 'meta_description',
@@ -109,7 +108,6 @@ class PageRepository extends BaseRepository
 			$data['is_redirect'] = 0;
 		}
 
-		// TODO: фильтровать входные данные через модель
 		return parent::update($id, array_only($data, [
 			'title', 'slug', 'is_redirect', 'breadcrumb',
 			'meta_title', 'meta_keywords', 'meta_description',

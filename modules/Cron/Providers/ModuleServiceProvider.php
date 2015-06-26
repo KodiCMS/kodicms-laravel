@@ -21,7 +21,8 @@ class ModuleServiceProvider extends ServiceProvider
 			}
 		});
 
-		Event::listen('view.settings.bottom', function() {
+		Event::listen('view.settings.bottom', function ()
+		{
 			$agents = Job::agents();
 			echo view('cron::cron.settings', compact('agents'));
 		});

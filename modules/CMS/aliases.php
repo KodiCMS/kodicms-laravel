@@ -42,6 +42,7 @@ return [
 	/*
 	 * KodiCMS aliases...
 	 */
+	'CMS'				=> KodiCMS\Support\Facades\CMS::class,
 	'ModuleLoader' 		=> KodiCMS\Support\Facades\ModuleLoader::class,
 	'PluginLoader' 		=> KodiCMS\Support\Facades\PluginLoader::class,
 	'ACL'				=> KodiCMS\Support\Facades\ACL::class,
@@ -53,7 +54,6 @@ return [
 	'Keys'          	=> KodiCMS\Support\Facades\KeysHelper::class,
 	'Package'       	=> KodiCMS\Support\Facades\Package::class,
 	'RouteAPI'      	=> KodiCMS\Support\Facades\RouteAPI::class,
-	'CMS'				=> KodiCMS\CMS\Core::class,
 	'UI'				=> KodiCMS\Support\Helpers\UI::class,
 	'Assets'			=> KodiCMS\Support\Facades\Assets::class,
 	'Date'				=> KodiCMS\Support\Helpers\Date::class,

@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Users\Http\Middleware;
 
+use CMS;
 use Closure;
 use KodiCMS\API\Exceptions\AuthenticateException;
 use Illuminate\Contracts\Auth\Guard;
@@ -42,7 +43,7 @@ class Authenticate {
 			}
 			else
 			{
-				return redirect()->guest(\CMS::backendPath() . '/auth/login');
+				return redirect()->guest(CMS::backendPath() . '/auth/login');
 			}
 		}
 

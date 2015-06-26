@@ -89,7 +89,7 @@ class ModuleLoader
 		{
 			$moduleContainerClass = class_exists($defaultModuleClass)
 				? $defaultModuleClass
-				: '\\KodiCMS\\CMS\\Loader\\ModuleContainer';
+				: \KodiCMS\CMS\Loader\ModuleContainer::class;
 		}
 
 		$moduleContainer = new $moduleContainerClass($moduleName, $modulePath, $namespace);

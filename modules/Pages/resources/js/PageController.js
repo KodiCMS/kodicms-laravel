@@ -437,7 +437,6 @@ CMS.controllers.add(['page.get.edit'], function() {
 			this.model.on('destroy', this.remove, this);
 		},
 
-		// Re-render the titles of the todo item.
 		render: function() {
 			this.$el.html(this.template(this.model.toJSON()));
 			this.$el.data('id', this.model.id);

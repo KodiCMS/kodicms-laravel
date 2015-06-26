@@ -1,6 +1,5 @@
 <?php namespace KodiCMS\CMS\Helpers;
 
-
 use DB;
 use Cache;
 
@@ -22,7 +21,8 @@ class DatabaseConfig
 
 	public function __construct()
 	{
-		$databaseConfig = Cache::rememberForever($this->cacheKey, function () {
+		$databaseConfig = Cache::rememberForever($this->cacheKey, function ()
+		{
 			return DB::table('config')->get();
 		});
 

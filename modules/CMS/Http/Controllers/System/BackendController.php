@@ -30,7 +30,7 @@ class BackendController extends TemplateController
 	public function boot()
 	{
 		$this->navigation = Navigation::init($this->request->getUri(), config('sitemap', []));
-		$this->breadcrumbs = Breadcrumbs::factory();
+		$this->breadcrumbs = new Breadcrumbs;
 
 		if (is_null(array_get($this->permissions, $this->getCurrentAction()))) {
 			$this->permissions[$this->getCurrentAction()] = $this->getRouter()->currentRouteName();

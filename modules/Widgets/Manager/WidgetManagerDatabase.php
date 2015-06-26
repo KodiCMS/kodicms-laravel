@@ -164,8 +164,6 @@ class WidgetManagerDatabase extends WidgetManager
 	}
 
 	/**
-	 * // TODO: добавить установку хлебных крошек
-	 *
 	 * @param integer $widgetId
 	 * @param array $locations [(int) {pageId} => ['block' => (string) '...', 'position' => (int) '...', 'set_crumbs' => (bool) '...']]
 	 */
@@ -176,7 +174,7 @@ class WidgetManagerDatabase extends WidgetManager
 			->delete();
 
 		$insertData = [];
-		foreach($locations as $pageId => $options)
+		foreach ($locations as $pageId => $options)
 		{
 			if (is_null(array_get($options, 'block')) || $options['block'] == -1)
 			{
@@ -192,7 +190,7 @@ class WidgetManagerDatabase extends WidgetManager
 			];
 		}
 
-		if(count($insertData) > 0)
+		if (count($insertData) > 0)
 		{
 			DB::table('page_widgets')
 				->where('widget_id', (int) $widgetId)

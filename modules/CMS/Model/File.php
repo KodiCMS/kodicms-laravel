@@ -53,8 +53,6 @@ class File
 	protected $settings = [];
 
 	/**
-	 * TODO добавить поддержку модулей
-	 *
 	 * @param SplFileObject|string $filename
 	 * @param string $basePath
 	 * @param bool $onlyExists

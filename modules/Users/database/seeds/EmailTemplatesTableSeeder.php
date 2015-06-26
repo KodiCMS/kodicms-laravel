@@ -1,18 +1,17 @@
 <?php namespace KodiCMS\Users\database\seeds;
 
 use Illuminate\Database\Seeder;
-use KodiCMS\Email\Model\EmailTemplate;
 use KodiCMS\Email\Model\EmailType;
 use KodiCMS\Email\Repository\EmailEventRepository;
 use KodiCMS\Email\Repository\EmailTemplateRepository;
 
 class EmailTemplatesTableSeeder extends Seeder
 {
-
 	/**
 	 * @var EmailTemplateRepository
 	 */
 	protected $emailTemplateRepository;
+
 	/**
 	 * @var EmailEventRepository
 	 */
@@ -20,8 +19,8 @@ class EmailTemplatesTableSeeder extends Seeder
 
 	function __construct()
 	{
-		$this->emailTemplateRepository = app('KodiCMS\Email\Repository\EmailTemplateRepository');
-		$this->emailEventRepository = app('KodiCMS\Email\Repository\EmailEventRepository');
+		$this->emailTemplateRepository = app(EmailTemplateRepository::class);
+		$this->emailEventRepository = app(EmailEventRepository::class);
 	}
 
 	/**

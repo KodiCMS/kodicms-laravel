@@ -521,7 +521,7 @@ class FrontendPage implements BehaviorPageInterface
 	 */
 	public function getBreadcrumbs($level = 0)
 	{
-		$crumbs = Breadcrumbs::factory();
+		$crumbs = new Breadcrumbs;
 
 		if (($parent = $this->getParent()) instanceof FrontendPage AND $this->getLevel() > $level)
 		{
