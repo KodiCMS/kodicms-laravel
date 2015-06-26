@@ -1,12 +1,13 @@
 <?php namespace KodiCMS\CMS;
 
 use Closure;
+use Illuminate\Container\Container;
 
 /**
  * Class Core
  * @package KodiCMS\CMS
 */
-class Core {
+class Core extends Container {
 
 	const VERSION 	= '0.0.1 alpha';
 
