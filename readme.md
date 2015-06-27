@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/KodiCMS/kodicms-laravel](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/KodiCMS/kodicms-laravel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Установка (Installation):
+### Установка (Installation):
 
  * Клонировать репозиторий *(Clone repositiry)* `git clone git@github.com:KodiCMS/kodicms-laravel.git`
  * Запустить команду *(Run command)* `composer install` для загрузки всех необходимых компонентов
