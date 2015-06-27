@@ -1,0 +1,66 @@
+<?php
+return [
+	'title' => [
+		'list' 				=> 'Widgets',
+		'create' 			=> 'Create widget',
+		'edit' 				=> 'Edit widget :name',
+		'location' 		=> 'Used target',
+		'general' 		=> 'Summary',
+		'settings' 		=> 'Settings',
+		'assets' 			=> 'Media packages',
+		'permissions' => 'Permissions',
+		'cache' 			=> 'Caching',
+		'template' 		=> 'Template',
+		'copy_widgets'=> 'Copy widgets',
+	],
+	'field' => [
+		'name' 				=> 'Title',
+		'description' => 'Description',
+		'type' 				=> 'Type',
+		'template' 		=> 'Template',
+		'cache' 			=> 'Caching',
+		'actions' 		=> 'Actions',
+		'blocks' 			=> 'Blocks',
+		'position' 		=> 'Priority',
+		'page' 				=> 'Page',
+	],
+	'label' => [
+		'handler' 						=> 'Handler',
+		'remove_from_page' 		=> 'Removed from page',
+		'hide' 								=> 'Hidden',
+		'before_page_render' 	=> 'Before page load',
+		'after_page_render' 	=> 'After page load',
+		'dont_copy_widgets' 	=> 'Don\'t copy',
+		'block' 							=> 'Block :block_name',
+	],
+	'settings' => [
+		'header' 							=> 'Title',
+		'assets_package' 			=> 'Media packages',
+		'cache_tags' 					=> 'Tags',
+		'cache_lifetime' 			=> 'Cache lifetime',
+		'template_parameters' => 'Template settings',
+		'related_widgets' 		=> 'Download the widget template',
+	],
+	'button' => [
+		'create' 					=> 'Create',
+		'location' 				=> 'Used target',
+		'select_blocks' 	=> 'Select blocks',
+		'rebuild_blocks' 	=> 'Refresh list',
+		'select_childs' 	=> 'Select interior',
+		'add_to_page' 		=> 'Add widget',
+		'defaultTemplate' => 'The default template',
+		'cache' => [
+			'enabled' 	=> 'Enable',
+			'disabled' 	=> 'Disable',
+		]
+	],
+	'messages' => [
+		'created' 		=> 'The widget set',
+		'updated' 		=> 'Widget saved',
+		'deleted' 		=> 'Widget deleted',
+		'corrupted' 	=> 'The widget is damaged and can not be used',
+		'is_handler' 	=> 'To use the widget to submit your data to URL <code>:url</code> or use the Route <code>:route</code>',
+		'empty' 			=> 'You do not have widgets',
+		'all_widgets_placed' => 'All widgets are placed on the current page',
+	]
+];
