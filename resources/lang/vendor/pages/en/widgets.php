@@ -4,14 +4,14 @@ return [
 	'page_menu' => [
 		'title' => 'Меню',
 		'label' => [
-			'excluded_pages' 	=> 'Delete the page from the list',
-			'linked_page' 		=> '-- With respect to the current page --',
+			'excluded_pages' => 'Delete the page from the list',
+			'linked_page' => '-- With respect to the current page --',
 		],
 		'setting' => [
-			'start_page' 						=> 'Root page',
-			'include_children' 			=> 'Per child elements',
-			'include_hidden_pages' 	=> 'Show hidden page',
-			'page_level' 						=> 'Set the level',
+			'start_page' => 'Root page',
+			'include_children' => 'Per child elements',
+			'include_hidden_pages' => 'Show hidden page',
+			'page_level' => 'Set the level',
 		]
 	],
 	'page_list' => [
@@ -20,7 +20,7 @@ return [
 			'linked_page' => '-- With respect to the current page --',
 		],
 		'setting' => [
-			'start_page' 					=> 'Root page',
+			'start_page' => 'Root page',
 			'include_user_object' => 'Download the user object',
 		]
 	],

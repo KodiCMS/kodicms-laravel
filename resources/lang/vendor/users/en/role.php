@@ -1,32 +1,32 @@
 <?php
 return [
 	'title' => [
-		'list' 		=> 'Role',
-		'edit' 		=> 'Edit roles :name',
-		'create' 	=> 'Create a role',
+		'list' => 'Role',
+		'edit' => 'Edit roles :name',
+		'create' => 'Create a role',
 	],
 	'tab' => [
-		'general' 		=> 'Summary',
+		'general' => 'Summary',
 		'permissions' => 'Permissions',
 	],
 	'field' => [
-		'name' 				=> 'Title',
+		'name' => 'Title',
 		'description' => 'Description',
-		'actions' 		=> 'Actions',
+		'actions' => 'Actions',
 	],
 	'button' => [
 		'create' => 'Add Role',
 		'select_all_permissions' => 'Select all',
 		'permissions' => [
-			'grant' 	=> 'Allowed',
-			'denied' 	=> 'Prohibited',
+			'grant' => 'Allowed',
+			'denied' => 'Prohibited',
 		]
 	],
 	'messages' => [
-		'not_found'	=> 'Role Found',
-		'deleted' 	=> 'role removed',
-		'updated' 	=> 'role updated',
-		'created' 	=> 'The role is created',
-		'empty' 		=> 'Under no documents',
+		'not_found' => 'Role Found',
+		'deleted' => 'role removed',
+		'updated' => 'role updated',
+		'created' => 'The role is created',
+		'empty' => 'Under no documents',
 	]
 ];

@@ -1,11 +1,11 @@
 <?php
 return [
 	'title' => 'Cron',
-	'cron'  => [
-		'list'   => 'View the list',
+	'cron' => [
+		'list' => 'View the list',
 		'create' => 'Create',
-		'edit'   => 'edit',
+		'edit' => 'edit',
 		'delete' => 'Remove',
-		'run'    => 'Running tasks',
+		'run' => 'Running tasks',
 	],
 ];
