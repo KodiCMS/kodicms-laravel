@@ -15,10 +15,12 @@
 Сайт: http://laravel.kodicms.ru/backend
 
 **Русский интерфейс**
+
 username: **admin@site.com**  
 password: **password**
 
 **English interface**
+
 username: **admin_en@site.com**  
 password: **password**
 
@@ -49,12 +51,12 @@ password: **password**
 
 ---
 
-### Структура модуля 
+### Структура модуля (Module sctructure)
 [https://github.com/KodiCMS/kodicms-laravel/wiki/Modules](https://github.com/KodiCMS/kodicms-laravel/wiki/Modules)
 
 ---
 
-### События
+### События (Events)
 [https://github.com/KodiCMS/kodicms-laravel/wiki/Events](https://github.com/KodiCMS/kodicms-laravel/wiki/Events)
 
 ---
