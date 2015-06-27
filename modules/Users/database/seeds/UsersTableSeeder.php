@@ -27,17 +27,30 @@ class UsersTableSeeder extends Seeder
 		$user = User::create([
 			'email' => 'admin@site.com',
 			'password' => 'password',
-			'username' => 'admin'
+			'username' => 'admin',
+			'locale' => 'ru'
+		]);
+
+		$user->roles()->sync([1, 2, 3]);
+
+		$user = User::create([
+			'email' => 'admin_en@site.com',
+			'password' => 'password',
+			'username' => 'admin_en',
+			'locale' => 'en'
 		]);
 
 		$user->roles()->sync([1, 2, 3]);
 
 		$usedEmails = $usedUsernames = [];
 
-		for ($i = 0; $i < $totalUsers; $i++) {
-			do {
+		for ($i = 0; $i < $totalUsers; $i++)
+		{
+			do
+			{
 				$email = strtolower($faker->email);
 			} while (in_array($email, $usedEmails));
+
 			$usedEmails[] = $email;
 
 			do
