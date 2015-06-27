@@ -36,10 +36,10 @@ password: **password**
  * `cms:modules:locale:publish` - генерация пакета lang файлов для перевода. Файлы будут скопированы в `/resources/lang/packages`
  * `cms:make:controller` - создание контроллера (`cms:make:controller TestController --module=cms --type=backend` создаст контроллер в модуле `modules\CMS`. Существует два типа контроллеров `[api, backend]`)
  * `cms:packages:list` - список всех media пакетов
- 
  * `cms:plugins:list` - просмотр информации о добавленных плагинах
  * `cms:plugins:activate author:plugin` - активация плагина
  * `cms:plugins:deactivate author:plugin [--removetable=no]` - деактивация плагина (удаление таблицы из БД)
+
 ---
 
 ### Загрузка сервис-провайдеров и алиасов
