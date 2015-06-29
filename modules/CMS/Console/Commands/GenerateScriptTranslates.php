@@ -24,28 +24,33 @@ class GenerateScriptTranslates extends Command {
 
 		foreach(ModuleLoader::getRegisteredModules() as $module)
 		{
-			if(!is_dir($module->getLocalePath())) continue;
-
-			foreach($files->directories($module->getLocalePath()) as $localeDir)
+			if (!is_dir($module->getLocalePath()) or !$module->isPublishable())
 			{
-				$locale = basename($localeDir);
-				foreach($files->allFiles($localeDir) as $localeFile)
-				{
-					$data[$locale][strtolower($module->getName())][basename($localeFile, '.php')] = $files->getRequire($localeFile->getRealPath());
-				}
+				continue;
+			}
+
+			$namespace = strtolower($module->getName());
+
+			$data = array_merge_recursive($data, $this->loadLangFromPath($files, $module->getLocalePath(), $namespace));
+
+			$vendorPath = base_path(implode(DIRECTORY_SEPARATOR, ['resources', 'lang', 'vendor', $namespace]));
+
+			if (is_dir($vendorPath))
+			{
+				$data = array_merge_recursive($data, $this->loadLangFromPath($files, $vendorPath, $namespace));
 			}
 		}
 
 		$langDirectory = CMS::backendResourcesPath() . 'js' . DIRECTORY_SEPARATOR . 'locale';
 
-		if(!$files->exists($langDirectory))
+		if (!$files->exists($langDirectory))
 		{
-			$files->makeDirectory($langDirectory, 0755, TRUE);
+			$files->makeDirectory($langDirectory, 0755, true);
 		}
 
 		$this->output->progressStart(count($data));
 
-		foreach($data as $locale => $translates)
+		foreach ($data as $locale => $translates)
 		{
 			$data = json_encode($translates);
 			$file = $langDirectory . DIRECTORY_SEPARATOR . $locale . '.json';
@@ -58,4 +63,27 @@ class GenerateScriptTranslates extends Command {
 		$this->output->progressFinish();
 	}
 
+	/**
+	 * @param Filesystem $files
+	 * @param $path
+	 * @param $namespace
+	 *
+	 * @return array
+	 * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+	 */
+	protected function loadLangFromPath(Filesystem $files, $path, $namespace)
+	{
+		$data = [];
+
+		foreach ($files->directories($path) as $localeDir)
+		{
+			$locale = basename($localeDir);
+			foreach ($files->allFiles($localeDir) as $localeFile)
+			{
+				$data[$locale][$namespace][basename($localeFile, '.php')] = $files->getRequire($localeFile->getRealPath());
+			}
+		}
+
+		return $data;
+	}
 }
