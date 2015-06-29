@@ -33,6 +33,11 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 	protected $isBooted = false;
 
 	/**
+	 * @var bool
+	 */
+	protected $isPublishable = true;
+
+	/**
 	 * @var string
 	 */
 	protected $namespace = 'KodiCMS';
@@ -258,6 +263,14 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 		return [
 			$this->getViewsPath() => $this->publishViewPath()
 		];
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isPublishable()
+	{
+		return $this->isPublishable;
 	}
 
 	/**

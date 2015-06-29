@@ -8,6 +8,11 @@ class AppModuleContainer extends ModuleContainer
 	protected $namespace = '';
 
 	/**
+	 * @var bool
+	 */
+	protected $isPublishable = false;
+
+	/**
 	 * @param \Illuminate\Foundation\Application $app
 	 * @return $this
 	 */

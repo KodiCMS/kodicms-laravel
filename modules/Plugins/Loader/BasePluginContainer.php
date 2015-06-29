@@ -28,6 +28,11 @@ abstract class BasePluginContainer extends ModuleContainer
 	protected $isActivated = false;
 
 	/**
+	 * @var bool
+	 */
+	protected $isPublishable = false;
+
+	/**
 	 * @var array
 	 */
 	protected $details = [];

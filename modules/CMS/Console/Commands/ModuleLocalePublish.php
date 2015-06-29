@@ -32,7 +32,7 @@ class ModuleLocalePublish extends Command {
 
 		foreach (ModuleLoader::getRegisteredModules() as $module)
 		{
-			if (!is_dir($module->getLocalePath()))
+			if (!is_dir($module->getLocalePath()) or !$module->isPublishable())
 			{
 				continue;
 			}
