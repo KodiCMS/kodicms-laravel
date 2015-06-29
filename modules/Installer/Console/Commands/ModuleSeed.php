@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Installer\Console\Commands;
 
-use Illuminate\Console\Command;
 use ModuleLoader;
+use Illuminate\Console\Command;
 use KodiCMS\Installer\Support\ModuleInstaller;
 
 class ModuleSeed extends Command
@@ -24,7 +24,8 @@ class ModuleSeed extends Command
 		$installer->cleanOutputMessages();
 		$installer->seedModules();
 
-		foreach ($installer->getOutputMessages() as $message) {
+		foreach ($installer->getOutputMessages() as $message)
+		{
 			$this->output->writeln($message);
 		}
 	}

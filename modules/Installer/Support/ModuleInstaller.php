@@ -1,10 +1,10 @@
 <?php namespace KodiCMS\Installer\Support;
 
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Migrations\DatabaseMigrationRepository;
-use Illuminate\Database\Migrations\Migrator;
+use App;
+use Schema;
 use KodiCMS\CMS\Loader\ModuleContainer;
+use Illuminate\Database\Migrations\Migrator;
+use Illuminate\Database\Migrations\DatabaseMigrationRepository;
 
 class ModuleInstaller {
 

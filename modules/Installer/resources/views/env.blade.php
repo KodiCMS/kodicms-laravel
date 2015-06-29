@@ -16,10 +16,10 @@
 		</colgroup>
 		<tbody>
 		@foreach ($tests as $test)
-		<tr class="{{ !$test['failed'] ? '' : 'danger' }}">
+		<tr class="{{ $test['passed'] ? '' : 'danger' }}">
 			<th>{{ array_get($test, 'title') }}</th>
 			<td>
-				<div class="{{ !$test['failed'] ? 'text-success' : '' }}">{{ $test['message'] }}</div>
+				<div class="{{ $test['passed'] ? 'text-success' : '' }}">{{ $test['message'] }}</div>
 				<?php $notice = array_get($test, 'notice'); ?>
 
 				@if (is_array($notice))
@@ -51,10 +51,10 @@
 		</colgroup>
 		<tbody>
 		@foreach($optional as $test)
-		<tr class="{{ !$test['failed'] ? '' : 'info' }}">
+		<tr class="{{ $test['passed'] ? '' : 'info' }}">
 			<th>{{ array_get($test, 'title') }}</th>
 			<td>
-				<div class="{{ !$test['failed'] ? 'text-success' : '' }}">{{ $test['message'] }}</div>
+				<div class="{{ $test['passed'] ? 'text-success' : '' }}">{{ $test['message'] }}</div>
 			</td>
 		</tr>
 		@endforeach

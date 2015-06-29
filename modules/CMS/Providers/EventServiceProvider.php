@@ -28,12 +28,14 @@ class EventServiceProvider extends BaseEventServiceProvider {
 	{
 		parent::boot($events);
 
-		$events->listen('view.settings.bottom', function() {
+		$events->listen('view.settings.bottom', function ()
+		{
 			WYSIWYG::loadAllEditors();
 			echo view('cms::ace.settings')->with('availableACEThemes', config('cms.wysiwyg.ace_themes'));
 		});
 
-		$events->listen('view.menu', function($navigation) {
+		$events->listen('view.menu', function ($navigation)
+		{
 			echo view('cms::navigation.list')->with('navigation', $navigation);
 		});
 	}

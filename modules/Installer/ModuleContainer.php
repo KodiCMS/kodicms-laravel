@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Installer;
 
 use CMS;
+use Route;
 use Illuminate\Routing\Router;
 use KodiCMS\CMS\Loader\ModuleContainer as BaseModuleContainer;
 
@@ -11,7 +12,12 @@ class ModuleContainer extends BaseModuleContainer
 	 */
 	public function loadRoutes(Router $router)
 	{
+		if (CMS::isInstalled())
+		{
+			return;
+		}
 
+		$this->includeRoutes($router);
 	}
 
 	/**
@@ -24,6 +30,15 @@ class ModuleContainer extends BaseModuleContainer
 			return;
 		}
 
-		$this->includeRoutes($router);
+		Route::before(function()
+		{
+			Route::group(['namespace' => $this->getControllerNamespace(), 'prefix' => CMS::backendPath()], function ()
+			{
+				Route::get('{slug}', [
+					'uses' => 'InstallerController@error',
+					'as' => 'installer.error'
+				])->where('slug', '(.*)?');
+			});
+		});
 	}
 }

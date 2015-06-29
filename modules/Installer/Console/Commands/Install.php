@@ -1,10 +1,14 @@
 <?php namespace KodiCMS\Installer\Console\Commands;
 
 use DB;
+use CMS;
 use Config;
-use KodiCMS\Installer\Installer;
+use Installer;
+use EnvironmentTester;
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputOption;
+use KodiCMS\Installer\Exceptions\InstallException;
+use KodiCMS\Installer\Exceptions\InstallDatabaseException;
 
 class Install extends GeneratorCommand
 {
@@ -20,20 +24,87 @@ class Install extends GeneratorCommand
 	protected $env = [];
 
 	/**
-	 * @return array
+	 * Configs DB
 	 */
-	protected function getEnvironment()
+	protected $DBConfigs = [
+		'host' => 'DB_HOST',
+		'database' => 'DB_DATABASE',
+		'username' => 'DB_USERNAME',
+		'password' => 'DB_PASSWORD',
+		'prefix' => 'DB_PREFIX'
+	];
+
+	/**
+	 * @var array
+	 */
+	protected $testHeaders = ['Title', 'Passed', 'Motice', 'Message'];
+
+	/**
+	 * Execute the console command.
+	 */
+	public function fire()
 	{
-		if (empty($this->env))
+		list($failed, $tests, $optional) = EnvironmentTester::check();
+
+		$this->table($this->testHeaders, $tests);
+
+		if (!empty($optional))
 		{
-			foreach (Installer::getDefaultEnvironment() as $key => $default)
+			$this->info('Optional tests');
+			$this->table($this->testHeaders, $optional);
+		}
+
+		if ($failed)
+		{
+			throw new InstallException('Environment test failed');
+		}
+
+		if (CMS::isInstalled())
+		{
+			$this->error('.env file already exists!');
+
+			if (!$this->confirm('Do you want rewrite file env?'))
 			{
-				$this->env[$key] = $this->input->hasOption($key) ? $this->input->getOption($key) : $default;
+				return $this->error("Installation is aborted.");
 			}
 		}
 
-		return $this->env;
+		$db = $this->createDBConnection();
+
+		while (!$db && $this->confirm('Do you want enter settings?'))
+		{
+			$this->askOptions();
+			$db = $this->createDBConnection();
+		}
+
+		if (!$db)
+		{
+			return $this->error("Installation is aborted.");
+		}
+
+		if (Installer::createEnvironmentFile($this->getConfig()))
+		{
+			$this->info('.env file created successfully.');
+		}
+
+//		if ($this->confirm("Clear database? [yes/no]"))
+//		{
+//			Installer::resetDatabase($this->input->getOption("DB_DATABASE"));
+//			$this->info("Database cleaned");
+//		}
+
+		if ($this->confirm('Migrate database?'))
+		{
+			$this->migrate();
+			if ($this->confirm('Install seed data?'))
+			{
+				$this->seed();
+			}
+		}
+
+		$this->info('Installation completed successfully');
 	}
+
 
 	/**
 	 * Get the stub file for the generator.
@@ -42,58 +113,15 @@ class Install extends GeneratorCommand
 	 */
 	protected function getStub()
 	{
-		return __DIR__.'/stubs/env.stub';
+		return __DIR__ . '/stubs/env.stub';
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getEnvPath()
-	{
-		return base_path(app()->environmentFile());
-	}
-
-	/**
-	 * Execute the console command.
-	 */
-	public function fire()
-	{
-		if ($this->files->exists($path = $this->getEnvPath()))
-		{
-			return $this->error('.env file already exists!');
-		}
-
-		$this->makeDirectory($path);
-
-		if($this->files->put($path, $this->buildEnvFile()))
-		{
-			$this->info('.env file created successfully.');
-			$this->migrate();
-			$this->seed();
-		}
-	}
 
 	/**
 	 * Миграция данных
 	 */
 	public function migrate()
 	{
-		// Сбрасываем подключение к БД
-		DB::purge();
-
-		$configs = [
-			'host' => 'DB_HOST',
-			'database' => 'DB_DATABASE',
-			'username' => 'DB_USERNAME',
-			'password' => 'DB_PASSWORD'
-		];
-
-		// Обновляем данные подключения к БД
-		foreach($configs as $key => $env)
-		{
-			Config::set("database.connections.mysql.{$key}", array_get($this->getEnvironment(), $env));
-		}
-
 		$this->call('cms:modules:migrate');
 	}
 
@@ -105,26 +133,6 @@ class Install extends GeneratorCommand
 		$this->call('cms:modules:seed');
 	}
 
-	/**
-	 * @return string
-	 */
-	protected function buildEnvFile()
-	{
-		$stub = $this->files->get($this->getStub());
-
-		$options = [];
-		foreach(Installer::getDefaultEnvironment() as $key => $default)
-		{
-			$value = $this->input->hasOption($key) ? $this->input->getOption($key) : $default;
-			$options['{{' . $key . '}}'] =  $value;
-		}
-
-		$stub = str_replace(
-			array_keys($options), array_values($options), $stub
-		);
-
-		return $stub;
-	}
 
 	/**
 	 * Get the console command options.
@@ -139,6 +147,7 @@ class Install extends GeneratorCommand
 			['DB_DATABASE', 'db', InputOption::VALUE_OPTIONAL, 'Database name', array_get($defaults, 'DB_DATABASE')],
 			['DB_USERNAME', 'u', InputOption::VALUE_OPTIONAL, 'Database username', array_get($defaults, 'DB_USERNAME')],
 			['DB_PASSWORD', 'p', InputOption::VALUE_OPTIONAL, 'Database password', array_get($defaults, 'DB_PASSWORD')],
+			['DB_PREFIX', 'pr', InputOption::VALUE_OPTIONAL, 'Database prefix', array_get($defaults, 'DB_PREFIX')],
 			['CACHE_DRIVER', 'cache', InputOption::VALUE_OPTIONAL, 'Cache driver [file|redis]', array_get($defaults, 'CACHE_DRIVER')],
 			['SESSION_DRIVER', 'session', InputOption::VALUE_OPTIONAL, 'Session driver [file|database]', array_get($defaults, 'SESSION_DRIVER')],
 			['APP_ENV', 'env', InputOption::VALUE_OPTIONAL, 'Application Environmet [local|production]', array_get($defaults, 'APP_ENV')],
@@ -157,4 +166,50 @@ class Install extends GeneratorCommand
 	{
 		return [];
 	}
+
+
+	/**
+	 * Ask options
+	 */
+	protected function askOptions()
+	{
+		foreach ($this->getOptions() as $option)
+		{
+			$defVal = $this->input->getOption($option[0]);
+			$val = $this->ask($option[3] . "{" . $defVal . "}", $defVal);
+			$this->input->setOption($option[0], $val);
+		}
+	}
+
+	private function getConfig()
+	{
+		$config = [];
+		foreach ($this->getOptions() as $option)
+		{
+			$config = array_add($config, $option[0], $this->input->getOption($option[0]));
+		}
+
+		return $config;
+	}
+
+	private function createDBConnection()
+	{
+		try
+		{
+			$config = [];
+			foreach ($this->DBConfigs as $key => $value)
+			{
+				$config = array_add($config, $key, $this->input->getOption($value));
+			}
+
+			return Installer::createDBConnection($config);
+		}
+		catch (InstallDatabaseException $e)
+		{
+			$this->error($e->GetMessage());
+
+			return false;
+		}
+	}
+
 }

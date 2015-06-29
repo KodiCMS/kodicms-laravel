@@ -28,7 +28,7 @@ class ModuleContainer extends Loader\ModuleContainer
 	{
 		Route::before(function()
 		{
-			Route::group(['namespace' => 'KodiCMS\CMS\Http\Controllers', 'prefix' => CMS::backendPath()], function ()
+			Route::group(['namespace' => $this->getControllerNamespace(), 'prefix' => CMS::backendPath()], function ()
 			{
 				Route::get('cms/{file}.{ext}', 'System\VirtualMediaLinksController@find')
 					->where('file', '.*')

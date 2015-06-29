@@ -9,11 +9,13 @@ class ModuleServiceProvider extends ServiceProvider
 	{
 		parent::__construct($app);
 
-		$this->app->singleton('module.loader', function ($app) {
+		$this->app->singleton('module.loader', function ($app)
+		{
 			return new ModuleLoader(config('cms.modules'));
 		});
 
-		$this->app->singleton('cms', function ($app) {
+		$this->app->singleton('cms', function ($app)
+		{
 			return new Core;
 		});
 	}

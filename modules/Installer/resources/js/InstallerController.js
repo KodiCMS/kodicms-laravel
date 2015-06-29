@@ -32,6 +32,10 @@ $(function() {
 			previous: __("Previous"),
 			loading: __("Loading ...")
 		},
+		onInit: function() {
+			$(this).find('.steps ul').addClass('nav nav-tabs tabs-generated');
+			//$(this).find('.content').addClass('tab-content')
+		},
 		onStepChanging: function (event, currentIndex, newIndex) {
 			$form = $(".form-horizontal");
 

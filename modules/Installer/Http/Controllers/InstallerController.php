@@ -3,8 +3,8 @@
 use Lang;
 use Date;
 use Assets;
+use EnvironmentTester;
 use KodiCMS\Installer\Installer;
-use KodiCMS\Installer\EnvironmentTester;
 use KodiCMS\Installer\Exceptions\InstallValidationException;
 use KodiCMS\CMS\Http\Controllers\System\FrontendController;
 
@@ -20,9 +20,9 @@ class InstallerController extends FrontendController {
 	 */
 	protected $installer;
 
-	public function boot()
+	public function boot(Installer $installer)
 	{
-		$this->installer = new Installer;
+		$this->installer = $installer;
 	}
 
 	public function error()
@@ -39,8 +39,9 @@ class InstallerController extends FrontendController {
 
 		list($failed, $tests, $optional) = EnvironmentTester::check();
 
+
 		$this->setContent('install', [
-			'environment' => view($this->moduleNamespace . 'env', [
+			'environment' => view("{$this->moduleNamespace}env", [
 				'failed' => $failed,
 				'tests' => $tests,
 				'optional' => $optional
@@ -59,7 +60,6 @@ class InstallerController extends FrontendController {
 	public function install()
 	{
 		$this->autoRender = FALSE;
-
 		$data = $this->request->get('install', []);
 
 		try

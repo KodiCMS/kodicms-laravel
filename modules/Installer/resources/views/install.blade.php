@@ -3,7 +3,7 @@
 	{!! Form::open([
 		'class' => 'form-horizontal'
 	]) !!}
-	<div id="wizard" class="wizard">
+	<div id="wizard" class="wizard panel">
 		<h1>@lang('installer::core.title.language')</h1>
 		<div>
 			<div class="panel-body">

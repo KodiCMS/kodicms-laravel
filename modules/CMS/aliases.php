@@ -58,4 +58,6 @@ return [
 	'Assets'			=> KodiCMS\Support\Facades\Assets::class,
 	'Date'				=> KodiCMS\Support\Helpers\Date::class,
 	'Reflinks'			=> KodiCMS\Support\Facades\Reflinks::class,
+	'Installer'			=> KodiCMS\Support\Facades\Installer::class,
+	'EnvironmentTester'	=> KodiCMS\Support\Facades\EnvironmentTester::class,
 ];
