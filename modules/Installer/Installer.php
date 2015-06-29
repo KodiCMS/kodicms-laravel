@@ -146,7 +146,7 @@ class Installer {
 
 		$this->session->set(static::SESSION_KEY, $post);
 		$this->validation = $this->checkPostData($post);
-		$this->connection = $this->checkDatabaseConnection($post);
+		$this->connection = self::createDatabaseConnection($post);
 
 
 		if (isset($post['empty_database']))
@@ -169,7 +169,7 @@ class Installer {
 	 * @return DatabaseManager
 	 * @throws InstallDatabaseException
 	 */
-	public function checkDatabaseConnection(array $post)
+	public static function createDatabaseConnection(array $post,$dbtype="mysql")
 	{
 		// Сбрасываем подключение к БД
 		DB::purge();
@@ -184,7 +184,7 @@ class Installer {
 		// Обновляем данные подключения к БД
 		foreach($configs as $key => $env)
 		{
-			Config::set("database.connections.mysql.{$key}", array_get($post, $env));
+			Config::set("database.connections.{$dbtype}.{$key}", array_get($post, $env));
 		}
 
 		try

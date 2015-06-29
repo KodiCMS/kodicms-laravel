@@ -28,7 +28,7 @@ return [
 	'field' => [
 		'current_language' => 'Текущий язык',
 		'db_server' => 'Сервер',
-		'db_username' => 'Имя польщователя',
+		'db_username' => 'Имя пользователя',
 		'db_password' => 'Пароль',
 		'db_database' => 'Имя базы данных',
 		'db_preffix' => 'Префикс таблиц',
