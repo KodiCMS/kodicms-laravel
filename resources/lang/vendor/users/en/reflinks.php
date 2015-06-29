@@ -8,7 +8,7 @@ return [
 		'send_token' => 'Proceed'
 	],
 	'jobs' => [
-		'delete_expired' => 'Removing expired tokens reflinks'
+		'delete_expired' => 'Removing expired tokens'
 	],
 	'messages' => [
 		'invalid_token' => 'Invalid token',

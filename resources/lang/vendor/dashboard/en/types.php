@@ -8,10 +8,10 @@ return [
 	'mini_calendar' => [
 		'title' => 'Current date',
 		'label' => [
-			'format' => 'Format Fremen'
+			'format' => 'Time format'
 		]
 	],
 	'kodicms_rss' => [
-		'title' => 'Updates KodiCMS'
+		'title' => 'KodiCMS updates'
 	]
 ];

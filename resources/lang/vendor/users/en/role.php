@@ -1,7 +1,7 @@
 <?php
 return [
 	'title' => [
-		'list' => 'Role',
+		'list' => 'Roles',
 		'edit' => 'Edit roles :name',
 		'create' => 'Create a role',
 	],
@@ -23,10 +23,10 @@ return [
 		]
 	],
 	'messages' => [
-		'not_found' => 'Role Found',
-		'deleted' => 'role removed',
-		'updated' => 'role updated',
+		'not_found' => 'Role not found',
+		'deleted' => 'Role removed',
+		'updated' => 'Role updated',
 		'created' => 'The role is created',
-		'empty' => 'Under no documents',
+		'empty' => 'Section is empty',
 	]
 ];

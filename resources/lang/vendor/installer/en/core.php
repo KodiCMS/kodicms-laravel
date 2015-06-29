@@ -2,8 +2,8 @@
 
 return [
 	'tests' => [
-		'pass' => 'success',
-		'failed' => 'failure',
+		'pass' => 'Success',
+		'failed' => 'Failure',
 		'success' => [
 
 		],

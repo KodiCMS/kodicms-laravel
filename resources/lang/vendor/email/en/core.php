@@ -3,9 +3,9 @@ return [
 	'title' => [
 		'section' => 'E-mail',
 		'templates' => [
-			'list' => 'Letters',
-			'create' => 'New letter',
-			'edit' => 'Edit letter',
+			'list' => 'Templates',
+			'create' => 'New template',
+			'edit' => 'Edit template',
 		],
 		'events' => [
 			'list' => 'Post event',
@@ -18,7 +18,7 @@ return [
 			'create' => 'Create event',
 		],
 		'templates' => [
-			'create' => 'Write a letter',
+			'create' => 'Create template',
 		],
 	],
 	'field' => [
@@ -32,9 +32,9 @@ return [
 			'status' => 'Status',
 			'use_queue' => 'The method of sending a message',
 			'email_from' => 'From',
-			'email_to' => 'Whom',
-			'subject' => 'Theme',
-			'message' => 'Text of letter',
+			'email_to' => 'To',
+			'subject' => 'Subject',
+			'message' => 'Message',
 			'message_type' => 'Message Type',
 			'cc' => 'Copy',
 			'bcc' => 'Bcc',

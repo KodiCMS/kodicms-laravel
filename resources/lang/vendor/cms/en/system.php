@@ -10,7 +10,7 @@ return [
 			'site_information' => 'Main',
 			'regional' => 'Regional settings',
 			'debug' => 'Debugging',
-			'wysiwig' => 'Editor',
+			'wysiwig' => 'Wysiwig editor',
 			'session' => 'Session options',
 			'ace_editor' => 'Ace',
 		]

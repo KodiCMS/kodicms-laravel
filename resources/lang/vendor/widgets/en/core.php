@@ -4,7 +4,7 @@ return [
 		'list' => 'Widgets',
 		'create' => 'Create widget',
 		'edit' => 'Edit widget :name',
-		'location' => 'Used target',
+		'location' => 'Target location',
 		'general' => 'Summary',
 		'settings' => 'Settings',
 		'assets' => 'Media packages',
@@ -48,7 +48,7 @@ return [
 		'rebuild_blocks' => 'Refresh list',
 		'select_childs' => 'Select interior',
 		'add_to_page' => 'Add widget',
-		'defaultTemplate' => 'The default template',
+		'defaultTemplate' => 'Default template',
 		'cache' => [
 			'enabled' => 'Enable',
 			'disabled' => 'Disable',

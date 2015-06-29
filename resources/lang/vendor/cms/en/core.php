@@ -5,7 +5,7 @@ return [
 		'about' => 'About',
 		'settings' => 'Settings',
 		'system' => 'System',
-		'dashboard' => 'Desktop',
+		'dashboard' => 'Dashboard',
 		'design' => 'Design',
 		'system' => 'System',
 		'update' => 'Update'
@@ -19,11 +19,11 @@ return [
 		]
 	],
 	'button' => [
-		'update' => 'Retain',
+		'update' => 'Update',
 		'update_close' => 'Save and Close',
 		'create' => 'Create',
 		'create_close' => 'Create and Close',
-		'cancel' => 'Cancellation',
+		'cancel' => 'Cancel',
 		'bug_report' => 'Report an error',
 	],
 	'helpers' => [
@@ -36,12 +36,12 @@ return [
 		'adminTeheme' => 'Theme :name',
 	],
 	'navigation' => [
-		'hide' => 'Hide the menu',
+		'hide' => 'Hide',
 		'site' => 'View site'
 	],
 	'messages' => [
-		'route_not_found' => 'Page not foun',
-		'cache_clear' => 'The cache is cleare',
+		'route_not_found' => 'Page not found',
+		'cache_clear' => 'The cache is clear',
 		'are_you_sure' => 'Are you sure',
 		'new_version' => 'There is a newer version of the system (:version)',
 		'no_new_version' => 'Do you have the latest version',

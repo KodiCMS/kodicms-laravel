@@ -4,11 +4,11 @@ return [
 	'title' => [
 		'pages' => [
 			'create' => 'New page',
-			'list' => 'Page',
+			'list' => 'Pages',
 			'edit' => 'Edit page :title',
 		],
 		'layouts' => [
-			'list' => 'Templates'
+			'list' => 'Layouts'
 		]
 	],
 	'status' => [

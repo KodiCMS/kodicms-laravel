@@ -2,13 +2,13 @@
 
 return [
 	'title' => [
-		'edit' => 'Edit template :name',
-		'create' => 'Generate mask',
+		'edit' => 'Edit layout :name',
+		'create' => 'Create layout',
 	],
 	'button' => [
 		'add' => 'Add',
 		'rebuild' => 'Update the list of blocks',
-		'filemanager' => 'File Manager',
+		'filemanager' => 'File manager',
 	],
 	'label' => [
 		'blocks' => 'Blocks',
@@ -16,7 +16,7 @@ return [
 		'not_set' => 'Not specified',
 		'inherit' => 'Inherited [:layout]',
 		'settings' => 'Settings',
-		'roles' => 'Role',
+		'roles' => 'Roles',
 	],
 	'field' => [
 		'name' => 'Title',
