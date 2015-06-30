@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\Installer\Providers;
 
 use KodiCMS\Installer\Installer;
-use Illuminate\Filesystem\Filesystem;
 use KodiCMS\Installer\EnvironmentTester;
 use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Installer\Console\Commands\Install;
@@ -18,7 +17,7 @@ class ModuleServiceProvider extends ServiceProvider
 
 		$this->app->singleton('installer', function ($app)
 		{
-			return new Installer($app['filesystem']);
+			return new Installer($app['files']);
 		});
 
 		$this->app->singleton('installer.environment.tester', function ($app)

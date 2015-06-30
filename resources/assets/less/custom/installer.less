@@ -39,7 +39,7 @@
 	a, a:hover, a:active {
 	  display: block;
 	  width: auto;
-	  padding: 15px 10px 5px;
+	  padding: 8px 10px 5px;
 	  text-decoration: none;
 	}
 
@@ -106,35 +106,26 @@
 	  }
 	}
   }
-}
 
-.wizard > .steps .current-info,
-.tabcontrol > .steps .current-info,
-.wizard > .content > .title,
-.tabcontrol > .content > .title {
-  position: absolute;
-  left: -999em;
-}
+  & > .steps .current-info {
+	position: absolute;
+	left: -999em;
+  }
 
-.wizard > .content > .body,
-.tabcontrol > .content > .body {
-  margin: 0 0 20px;
-}
+  > .content {
+	> .title {
+	  position: absolute;
+	  left: -999em;
+	}
 
-.wizard > .content > .body ul,
-.tabcontrol > .content > .body ul {
-  list-style: disc !important;
-}
+	> .body {
+	  ul {
+		list-style: disc !important;
 
-.wizard > .content > .body ul > li,
-.tabcontrol > .content > .body ul > li {
-  display: inline-block;
-}
-
-.wizard > .steps .current-info,
-.tabcontrol > .steps .current-info,
-.wizard > .content > .title,
-.tabcontrol > .content > .title {
-  position: absolute;
-  left: -999em;
+		> li {
+		  display: inline-block;
+		}
+	  }
+	}
+  }
 }

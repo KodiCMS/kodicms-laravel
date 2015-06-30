@@ -1,15 +1,24 @@
 <?php namespace KodiCMS\Support\Helpers;
 
+use Request;
 
 /**
  * Class Locale
- * TODO: вынести в хелпер-функции? Greabock 20.05.2015
- *
  * @package KodiCMS\CMS\Helpers
  */
 class Locale
 {
 	const DEFAULT_LOCALE = 'sys';
+
+
+
+	/**
+	 * @return string
+	 */
+	public static function detectBrowser()
+	{
+		return substr(Request::server('http_accept_language'), 0, 2);
+	}
 
 	/**
 	 * @return array
@@ -24,6 +33,6 @@ class Locale
 	 */
 	public static function getSystemDefault()
 	{
-		return config('app.locale', 'ru');
+		return config('app.locale', 'en');
 	}
 }

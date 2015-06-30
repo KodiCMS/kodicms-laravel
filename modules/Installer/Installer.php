@@ -16,7 +16,8 @@ use KodiCMS\Installer\Exceptions\InstallValidationException;
 
 class Installer
 {
-	const SESSION_KEY = 'installer::data';
+	const POST_DATA_KEY = 'installer::data';
+	const POST_DATABASE_KEY = 'installer::data';
 
 	/**
 	 * @var Filesystem
@@ -93,15 +94,21 @@ class Installer
 		];
 	}
 
-
 	/**
 	 * @return array
 	 */
 	public function getParameters()
 	{
-		return array_merge($this->getDefaultParameters(), $this->session->get(static::SESSION_KEY, []));
+		return array_merge($this->getDefaultParameters(), $this->session->get(static::POST_DATA_KEY, []));
 	}
 
+	/**
+	 * @return array
+	 */
+	public function getDatabaseParameters()
+	{
+		return $this->session->get(static::POST_DATABASE_KEY, []);
+	}
 	/**
 	 * @return array
 	 */
@@ -132,13 +139,8 @@ class Installer
 	 * @return boolean
 	 * @throws InstallException
 	 */
-	public function install(array $config)
+	public function install(array $config, array $databaseConfig)
 	{
-		if (empty($config))
-		{
-			throw new InstallException('No install data!');
-		}
-
 		if (isset($config['password_generate']))
 		{
 			$config['password_field'] = str_random();
@@ -146,14 +148,12 @@ class Installer
 
 		date_default_timezone_set($config['timezone']);
 
-		$this->session->set(static::SESSION_KEY, $config);
-		$this->validation = $this->checkPostData($config);
-		$this->connection = $this->createDBConnection($config);
+		$this->session->set(static::POST_DATA_KEY, $config);
+		$this->session->set(static::POST_DATABASE_KEY, $databaseConfig);
 
-		if (isset($config['empty_database']))
-		{
-			$this->reset();
-		}
+		$this->validation = $this->checkPostData($config);
+
+		$this->connection = $this->createDBConnection($databaseConfig);
 
 		$this->createEnvironmentFile($config);
 
@@ -225,10 +225,7 @@ class Installer
 			'USERNAME' => 'required',
 			'EMAIL' => 'required|email',
 			'PASSWORD' => 'required|confirmed',
-			'PASSWORD_CONFIRMATION' => 'required',
-			'DB_HOST' => 'required',
-			'DB_DATABASE' => 'required',
-			'DB_USERNAME' => 'required'
+			'PASSWORD_CONFIRMATION' => 'required'
 		]);
 
 		if ($validator->fails())
@@ -321,7 +318,6 @@ class Installer
 	 */
 	protected function buildEnvFile(array $config)
 	{
-
 		$path = $this->getEnvPath();
 		$stub = $this->files->get($this->getStub());
 

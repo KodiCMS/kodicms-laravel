@@ -1,10 +1,12 @@
 @if ($failed)
 <div class="alert alert-danger alert-dark no-margin-b padding-sm-vr">
-	{!! UI::icon('exclamation-triangle fa-lg') !!} {{ __('Kohana may not work correctly with your environment.') }}
+	{!! UI::icon('exclamation-triangle fa-lg') !!}
+	@lang('installer::core.messages.environment_failed')
 </div>
 @else
 <div class="alert alert-success alert-dark no-margin-b padding-sm-vr">
-	{!! UI::icon('check fa-lg') !!} {{ __('Your environment passed all requirements.') }}
+	{!! UI::icon('check fa-lg') !!}
+	@lang('installer::core.messages.environment_passed')
 </div>
 @endif
 
@@ -37,11 +39,12 @@
 
 @if($optional)
 <div class="panel-heading">
-	<span class="panel-title">{{ __( 'Optional Tests' ) }}</span>
+	<span class="panel-title">@lang('installer::core.title.environment_optional')</span>
 </div>
 
 <p class="alert alert-info alert-dark no-margin-b padding-sm-vr">
-	{!! UI::icon('lightbulb-o fa-lg') !!} {{  __('The following extensions are not required to run the Kohana core, but if enabled can provide access to additional classes.') }}
+	{!! UI::icon('lightbulb-o fa-lg') !!}
+	@lang('installer::core.messages.environment_optional')
 </p>
 <div id="optional_test">
 	<table class="table table-striped">
@@ -58,7 +61,7 @@
 			</td>
 		</tr>
 		@endforeach
-		</tbdoy>
+		</tbody>
 	</table>
 </div>
 @endif

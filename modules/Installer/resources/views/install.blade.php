@@ -1,5 +1,4 @@
 <div class="container-fluid margin-sm-vr">
-	<h1 class="pull-left no-margin-t">{{ $title }}</h1>
 	{!! Form::open([
 		'class' => 'form-horizontal'
 	]) !!}
@@ -29,7 +28,7 @@
 					<div class="form-group">
 						<label class="control-label col-md-3" for="db_host">@lang('installer::core.field.db_server')</label>
 						<div class="col-md-9">
-							{!! Form::text('install[db_host]', array_get($data, 'db_host'), [
+							{!! Form::text('database[host]', array_get($database, 'host'), [
 								'class' => 'form-control col-sm-auto', 'id' => 'db_host', 'required'
 							]) !!}
 						</div>
@@ -38,8 +37,8 @@
 					<div class="form-group">
 						<label class="control-label col-md-3" for="db_username">@lang('installer::core.field.db_username')</label>
 						<div class="col-md-9 form-inline">
-							{!! Form::text('install[db_username]', array_get($data, 'db_username'), [
-								'class' => 'form-control col-sm-auto', 'id' => 'db_user', 'required'
+							{!! Form::text('database[username]', array_get($database, 'username'), [
+								'class' => 'form-control col-sm-auto', 'id' => 'db_username', 'required'
 							]) !!}
 						</div>
 					</div>
@@ -47,7 +46,7 @@
 					<div class="form-group">
 						<label class="control-label col-md-3" for="db_password">@lang('installer::core.field.db_password')</label>
 						<div class="col-md-9">
-							{!! Form::password('install[db_password]', [
+							{!! Form::password('database[password]', [
 								'class' => 'form-control col-sm-auto', 'id' => 'db_password'
 							]) !!}
 
@@ -58,26 +57,18 @@
 				<div class="form-group well well-sm">
 					<label class="control-label col-md-3" for="db_database">@lang('installer::core.field.db_database')</label>
 					<div class="col-md-9 form-inline">
-						{!! Form::text('install[db_database]', array_get($data, 'db_database'), [
+						{!! Form::text('database[database]', array_get($database, 'database'), [
 							'class' => 'form-control col-sm-auto', 'id' => 'db_database', 'required'
 						]) !!}
 
 						<p class="help-block">@lang('installer::core.messages.database_name_inforamtion')</p>
-					</div>
-
-					<div class="col-md-offset-3 col-md-9">
-						<hr />
-						<label class="checkbox btn btn-danger btn-checkbox">
-							{!! Form::checkbox('install[empty_database]', 1, (bool) array_get($data, 'empty_database'), ['class' => 'px']) !!}
-							<span class="lbl">@lang('installer::core.button.empty_database')</span>
-						</label>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="control-label col-md-3" for="db_preffix">@lang('installer::core.field.db_preffix')</label>
 					<div class="col-md-9 form-inline">
-						{!! Form::text('install[db_prefix]', array_get($data, 'db_prefix'), [
+						{!! Form::text('database[prefix]', array_get($data, 'prefix'), [
 							'class' => 'form-control', 'id' => 'db_preffix'
 						]) !!}
 					</div>
@@ -148,17 +139,6 @@
 						</div>
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="control-label col-md-3" for="url_suffix">@lang('installer::core.field.url_suffix')</label>
-					<div class="col-md-9 form-inline">
-						<div class="input-group">
-							<div class="input-group-addon">{{ url() }}/news</div>
-							{!! Form::text('install[url_suffix]', array_get($data, 'url_suffix'), [
-							'class' => 'form-control', 'id' => 'url_suffix', 'size' => 6, 'maxlength' => 6
-							]) !!}
-						</div>
-					</div>
-				</div>
 			</div>
 			<div class="panel-heading" data-icon="globe">
 				<span class="panel-title">@lang('installer::core.title.regional_settings')</span>
@@ -185,34 +165,32 @@
 					</div>
 				</div>
 			</div>
-			<?php /* Observer::notify('installer_step_site_imformation', $data); */ ?>
+
+			@event('view.installer.step.information', [$data])
 		</div>
 
-		<?php /*
-		<h1>{{ __('Other') }}</h1>
+		<h1>@lang('installer::core.title.other')</h1>
 		<div>
 			<div class="panel-body">
 				<div class="form-group">
-					<label class="control-label col-md-3">{{ __('Cache type') }}</label>
+					<label class="control-label col-md-3">@lang('installer::core.field.cache_type')</label>
 					<div class="col-md-3">
-						<?php echo Form::select('install[cache_type]', $cacheTypes, array_get($data, 'cache_type')); ?>
+						{!! Form::select('install[cache_type]', $cacheTypes, array_get($data, 'cache_type')) !!}
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label class="control-label col-md-3"><?php echo __('Session storage'); ?></label>
+					<label class="control-label col-md-3">@lang('installer::core.field.session_type')</label>
 					<div class="col-md-3">
-						<?php echo Form::select('install[session_type]', $session_types, array_get($data, 'session_type')); ?>
+						{!! Form::select('install[session_type]', $sessionTypes, array_get($data, 'session_type')) !!}
 					</div>
 				</div>
 			</div>
 
-			<?php Observer::notify('installer_step_other', $data); ?>
+			@event('view.installer.step.other', [$data])
 		</div>
 
-		<?php Observer::notify('installer_step_new', $data); ?>
-
-		*/ ?>
+		@event('view.installer.step.new', [$data])
 	</div>
 	{!! Form::close() !!}
 </div>

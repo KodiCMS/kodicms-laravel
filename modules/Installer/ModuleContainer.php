@@ -32,7 +32,7 @@ class ModuleContainer extends BaseModuleContainer
 
 		Route::before(function()
 		{
-			Route::group(['namespace' => $this->getControllerNamespace(), 'prefix' => CMS::backendPath()], function ()
+			Route::group(['namespace' => $this->getControllerNamespace()], function ()
 			{
 				Route::get('{slug}', [
 					'uses' => 'InstallerController@error',

@@ -139,8 +139,6 @@ class EnvironmentTester
 		return $test;
 	}
 
-
-
 	/***********************************************************************************
 	 * Tests
 	 ***********************************************************************************/
@@ -155,8 +153,141 @@ class EnvironmentTester
 			{
 				return version_compare(PHP_VERSION, '5.5.9', '>=');
 			},
-			'error_message' => trans('installer::core.tests.error.php_version', ['version' => PHP_VERSION]),
+			'error_message' => trans('installer::core.tests.errors.php_version', ['version' => PHP_VERSION]),
 			'success_message' => PHP_VERSION
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public function testCacheStorage()
+	{
+		$storagePath = base_path('storage' . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR . 'cache');
+		return [
+			'title' => 'Cache storage',
+			'condition' => function () use($storagePath)
+			{
+				return is_writable($storagePath);
+			},
+			'error_message' => trans('installer::core.tests.errors.cache_storage', [':path' => $storagePath]),
+			'success_message' => $storagePath,
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public function testSessionsStorage()
+	{
+		$storagePath = base_path('storage' . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR . 'sessions');
+		return [
+			'title' => 'Sessions storage',
+			'condition' => function () use($storagePath)
+			{
+				return is_writable($storagePath);
+			},
+			'error_message' => trans('installer::core.tests.errors.sessions_storage', [':path' => $storagePath]),
+			'success_message' => $storagePath,
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public function testViewsStorage()
+	{
+		$storagePath = base_path('storage' . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR . 'views');
+		return [
+			'title' => 'Views storage',
+			'condition' => function () use($storagePath)
+			{
+				return is_writable($storagePath);
+			},
+			'error_message' => trans('installer::core.tests.errors.views_storage', [':path' => $storagePath]),
+			'success_message' => $storagePath,
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public function testLogsStorage()
+	{
+		$storagePath = base_path('storage' . DIRECTORY_SEPARATOR . 'logs');
+		return [
+			'title' => 'Logs storage',
+			'condition' => function () use($storagePath)
+			{
+				return is_writable($storagePath);
+			},
+			'error_message' => trans('installer::core.tests.errors.logs_storage', [':path' => $storagePath]),
+			'success_message' => $storagePath,
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public function testBootstrapCache()
+	{
+		$storagePath = base_path('bootstrap' . DIRECTORY_SEPARATOR . 'cache');
+		return [
+			'title' => 'Bootstrap cache',
+			'condition' => function () use($storagePath)
+			{
+				return is_writable($storagePath);
+			},
+			'error_message' => trans('installer::core.tests.errors.bootstrap_cache', [':path' => $storagePath]),
+			'success_message' => $storagePath,
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public function testOpenSSL()
+	{
+		return [
+			'title' => 'OpenSSL Extension',
+			'condition' => function ()
+			{
+				return extension_loaded('openssl');
+			},
+			'error_message' => trans('installer::core.tests.errors.openssl'),
+			'success_message' => trans('installer::core.tests.messages.pass'),
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public function testPDO()
+	{
+		return [
+			'title' => 'PDO Extension',
+			'condition' => function ()
+			{
+				return extension_loaded('pdo');
+			},
+			'error_message' => trans('installer::core.tests.errors.pdo'),
+			'success_message' => trans('installer::core.tests.messages.pass'),
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public function testMbstring()
+	{
+		return [
+			'title' => 'Mbstring Extension',
+			'condition' => function ()
+			{
+				return extension_loaded('mbstring');
+			},
+			'error_message' => trans('installer::core.tests.errors.mbstring'),
+			'success_message' => trans('installer::core.tests.messages.pass'),
 		];
 	}
 }
