@@ -4,6 +4,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use KodiCMS\CMS\Console\Commands\WysiwygList;
 use KodiCMS\CMS\Console\Commands\ModulesList;
 use KodiCMS\CMS\Console\Commands\PackagesList;
+use KodiCMS\CMS\Console\Commands\ModuleLocaleDiff;
 use KodiCMS\CMS\Console\Commands\ModuleLocalePublish;
 use KodiCMS\CMS\Console\Commands\ModulePublishCommand;
 use KodiCMS\CMS\Console\Commands\ControllerMakeCommand;
@@ -20,6 +21,7 @@ class Kernel extends ConsoleKernel {
 	protected $commands = [
 		GenerateScriptTranslates::class,
 		ModuleLocalePublish::class,
+		ModuleLocaleDiff::class,
 		ControllerMakeCommand::class,
 		ModulePublishCommand::class,
 		PackagesList::class,

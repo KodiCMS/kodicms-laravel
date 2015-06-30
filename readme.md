@@ -34,6 +34,7 @@ password: **password**
  
  * `cms:modules:publish` - публикация `view` шаблонов *(Publish view templates)*
  * `cms:modules:locale:publish` - генерация пакета lang файлов для перевода. Файлы будут скопированы в `/resources/lang/vendor`
+ * `cms:modules:locale:diff --locale=en` - проверка наличия всех ключей в переводе в папке `/resources/lang/vendor` относительно модулей.
  * `cms:generate:translate:js` - генерация JS языковых файлов *(Generate javascript translate admin files)*
  
  * `cms:modules:list` - просмотр информации о добавленных модулях и плагинов *(Show modules information)*
