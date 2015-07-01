@@ -1,6 +1,5 @@
 <?php namespace KodiCMS\Filemanager\elFinder;
 
-
 class VolumeLocalFileSystem extends VolumeDriver
 {
 
@@ -36,6 +35,8 @@ class VolumeLocalFileSystem extends VolumeDriver
 	 **/
 	public function __construct()
 	{
+		parent::__construct();
+
 		$this->options['alias'] = '';              // alias to replace root dir name
 		$this->options['dirMode'] = 0755;            // new dirs mode
 		$this->options['fileMode'] = 0644;            // new files mode
@@ -58,19 +59,21 @@ class VolumeLocalFileSystem extends VolumeDriver
 		$this->aroot = realpath($this->root);
 		$root = $this->stat($this->root);
 
-		if ($this->options['quarantine']) {
+		if ($this->options['quarantine'])
+		{
 			$this->attributes[] = [
 				'pattern' => '~^' . preg_quote(DIRECTORY_SEPARATOR . $this->options['quarantine']) . '$~',
-				'read' => FALSE,
-				'write' => FALSE,
-				'locked' => TRUE,
-				'hidden' => TRUE
+				'read' => false,
+				'write' => false,
+				'locked' => true,
+				'hidden' => true
 			];
 		}
 
 		// chek thumbnails path
-		if ($this->options['tmbPath']) {
-			$this->options['tmbPath'] = strpos($this->options['tmbPath'], DIRECTORY_SEPARATOR) === FALSE
+		if ($this->options['tmbPath'])
+		{
+			$this->options['tmbPath'] = strpos($this->options['tmbPath'], DIRECTORY_SEPARATOR) === false
 				// tmb path set as dirname under root dir
 				? $this->root . DIRECTORY_SEPARATOR . $this->options['tmbPath']
 				// tmb path as full path
@@ -80,23 +83,30 @@ class VolumeLocalFileSystem extends VolumeDriver
 		parent::configure();
 
 		// if no thumbnails url - try detect it
-		if ($root['read'] && !$this->tmbURL && $this->URL) {
-			if (strpos($this->tmbPath, $this->root) === 0) {
+		if ($root['read'] && !$this->tmbURL && $this->URL)
+		{
+			if (strpos($this->tmbPath, $this->root) === 0)
+			{
 				$this->tmbURL = $this->URL . str_replace(DIRECTORY_SEPARATOR, '/', substr($this->tmbPath, strlen($this->root) + 1));
-				if (preg_match("|[^/?&=]$|", $this->tmbURL)) {
+				if (preg_match("|[^/?&=]$|", $this->tmbURL))
+				{
 					$this->tmbURL .= '/';
 				}
 			}
 		}
 
 		// check quarantine dir
-		if (!empty($this->options['quarantine'])) {
+		if (!empty($this->options['quarantine']))
+		{
 			$this->quarantine = $this->root . DIRECTORY_SEPARATOR . $this->options['quarantine'];
-			if ((!is_dir($this->quarantine) && !$this->_mkdir($this->root, $this->options['quarantine'])) || !is_writable($this->quarantine)) {
+			if ((!is_dir($this->quarantine) && !$this->_mkdir($this->root, $this->options['quarantine'])) || !is_writable($this->quarantine))
+			{
 				$this->archivers['extract'] = [];
 				$this->disabled[] = 'extract';
 			}
-		} else {
+		}
+		else
+		{
 			$this->archivers['extract'] = [];
 			$this->disabled[] = 'extract';
 		}
@@ -155,20 +165,25 @@ class VolumeLocalFileSystem extends VolumeDriver
 	 **/
 	protected function _normpath($path)
 	{
-		if (empty($path)) {
+		if (empty($path))
+		{
 			return '.';
 		}
 
-		if (strpos($path, '/') === 0) {
-			$initial_slashes = TRUE;
-		} else {
-			$initial_slashes = FALSE;
+		if (strpos($path, '/') === 0)
+		{
+			$initial_slashes = true;
+		}
+		else
+		{
+			$initial_slashes = false;
 		}
 
 		if (($initial_slashes)
 			&& (strpos($path, '//') === 0)
-			&& (strpos($path, '///') === FALSE)
-		) {
+			&& (strpos($path, '///') === false)
+		)
+		{
 			$initial_slashes = 2;
 		}
 
@@ -176,23 +191,29 @@ class VolumeLocalFileSystem extends VolumeDriver
 
 		$comps = explode('/', $path);
 		$new_comps = [];
-		foreach ($comps as $comp) {
-			if (in_array($comp, ['', '.'])) {
+		foreach ($comps as $comp)
+		{
+			if (in_array($comp, ['', '.']))
+			{
 				continue;
 			}
 
 			if (($comp != '..')
 				|| (!$initial_slashes && !$new_comps)
 				|| ($new_comps && (end($new_comps) == '..'))
-			) {
+			)
+			{
 				array_push($new_comps, $comp);
-			} elseif ($new_comps) {
+			}
+			elseif ($new_comps)
+			{
 				array_pop($new_comps);
 			}
 		}
 		$comps = $new_comps;
 		$path = implode('/', $comps);
-		if ($initial_slashes) {
+		if ($initial_slashes)
+		{
 			$path = str_repeat('/', $initial_slashes) . $path;
 		}
 
@@ -247,11 +268,12 @@ class VolumeLocalFileSystem extends VolumeDriver
 	{
 		$real_path = realpath($path);
 		$real_parent = realpath($parent);
-		if ($real_path && $real_parent) {
+		if ($real_path && $real_parent)
+		{
 			return $real_path === $real_parent || strpos($real_path, $real_parent . DIRECTORY_SEPARATOR) === 0;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 
@@ -281,26 +303,31 @@ class VolumeLocalFileSystem extends VolumeDriver
 	{
 		$stat = [];
 
-		if (!file_exists($path)) {
+		if (!file_exists($path))
+		{
 			return $stat;
 		}
 
 		//Verifies the given path is the root or is inside the root. Prevents directory traveral.
-		if (!$this->aroot) {
+		if (!$this->aroot)
+		{
 			// for Inheritance class ( not calling parent::configure() )
 			$this->aroot = realpath($this->root);
 		}
-		if (!$this->_inpath($path, $this->aroot)) {
+		if (!$this->_inpath($path, $this->aroot))
+		{
 			return $stat;
 		}
 
-		if ($path != $this->root && is_link($path)) {
-			if (($target = $this->readlink($path)) == FALSE
+		if ($path != $this->root && is_link($path))
+		{
+			if (($target = $this->readlink($path)) == false
 				|| $target == $path
-			) {
+			)
+			{
 				$stat['mime'] = 'symlink-broken';
-				$stat['read'] = FALSE;
-				$stat['write'] = FALSE;
+				$stat['read'] = false;
+				$stat['write'] = false;
 				$stat['size'] = 0;
 
 				return $stat;
@@ -310,7 +337,9 @@ class VolumeLocalFileSystem extends VolumeDriver
 			$path = $target;
 			$lstat = lstat($path);
 			$size = $lstat['size'];
-		} else {
+		}
+		else
+		{
 			$size = @filesize($path);
 		}
 
@@ -320,7 +349,8 @@ class VolumeLocalFileSystem extends VolumeDriver
 		$stat['ts'] = filemtime($path);
 		$stat['read'] = is_readable($path);
 		$stat['write'] = is_writable($path);
-		if ($stat['read']) {
+		if ($stat['read'])
+		{
 			$stat['size'] = $dir ? 0 : $size;
 		}
 
@@ -338,20 +368,23 @@ class VolumeLocalFileSystem extends VolumeDriver
 	protected function _subdirs($path)
 	{
 
-		if (($dir = dir($path))) {
+		if (($dir = dir($path)))
+		{
 			$dir = dir($path);
-			while (($entry = $dir->read()) !== FALSE) {
+			while (($entry = $dir->read()) !== false)
+			{
 				$p = $dir->path . DIRECTORY_SEPARATOR . $entry;
-				if ($entry != '.' && $entry != '..' && is_dir($p) && !$this->attr($p, 'hidden')) {
+				if ($entry != '.' && $entry != '..' && is_dir($p) && !$this->attr($p, 'hidden'))
+				{
 					$dir->close();
 
-					return TRUE;
+					return true;
 				}
 			}
 			$dir->close();
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -367,9 +400,9 @@ class VolumeLocalFileSystem extends VolumeDriver
 	{
 		clearstatcache();
 
-		return strpos($mime, 'image') === 0 && ($s = @getimagesize($path)) !== FALSE
+		return strpos($mime, 'image') === 0 && ($s = @getimagesize($path)) !== false
 			? $s[0] . 'x' . $s[1]
-			: FALSE;
+			: false;
 	}
 	/******************** file/dir content *********************/
 
@@ -382,21 +415,24 @@ class VolumeLocalFileSystem extends VolumeDriver
 	 **/
 	protected function readlink($path)
 	{
-		if (!($target = @readlink($path))) {
-			return FALSE;
+		if (!($target = @readlink($path)))
+		{
+			return false;
 		}
 
-		if (substr($target, 0, 1) != DIRECTORY_SEPARATOR) {
+		if (substr($target, 0, 1) != DIRECTORY_SEPARATOR)
+		{
 			$target = dirname($path) . DIRECTORY_SEPARATOR . $target;
 		}
 
-		if ($this->_inpath($target, $this->aroot)) {
+		if ($this->_inpath($target, $this->aroot))
+		{
 			$atarget = realpath($target);
 
 			return $this->_normpath($this->root . DIRECTORY_SEPARATOR . substr($atarget, strlen($this->aroot) + 1));
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -410,8 +446,10 @@ class VolumeLocalFileSystem extends VolumeDriver
 	{
 		$files = [];
 
-		foreach (scandir($path) as $name) {
-			if ($name != '.' && $name != '..') {
+		foreach (scandir($path) as $name)
+		{
+			if ($name != '.' && $name != '..')
+			{
 				$files[] = $path . DIRECTORY_SEPARATOR . $name;
 			}
 		}
@@ -458,13 +496,14 @@ class VolumeLocalFileSystem extends VolumeDriver
 	{
 		$path = $path . DIRECTORY_SEPARATOR . $name;
 
-		if (@mkdir($path)) {
+		if (@mkdir($path))
+		{
 			@chmod($path, $this->options['dirMode']);
 
 			return $path;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -479,14 +518,15 @@ class VolumeLocalFileSystem extends VolumeDriver
 	{
 		$path = $path . DIRECTORY_SEPARATOR . $name;
 
-		if (($fp = @fopen($path, 'w'))) {
+		if (($fp = @fopen($path, 'w')))
+		{
 			@fclose($fp);
 			@chmod($path, $this->options['fileMode']);
 
 			return $path;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -531,7 +571,7 @@ class VolumeLocalFileSystem extends VolumeDriver
 	{
 		$target = $targetDir . DIRECTORY_SEPARATOR . $name;
 
-		return @rename($source, $target) ? $target : FALSE;
+		return @rename($source, $target) ? $target : false;
 	}
 
 	/**
@@ -573,11 +613,13 @@ class VolumeLocalFileSystem extends VolumeDriver
 	{
 		$path = $dir . DIRECTORY_SEPARATOR . $name;
 
-		if (!($target = @fopen($path, 'wb'))) {
-			return FALSE;
+		if (!($target = @fopen($path, 'wb')))
+		{
+			return false;
 		}
 
-		while (!feof($fp)) {
+		while (!feof($fp))
+		{
 			fwrite($target, fread($fp, 8192));
 		}
 		fclose($target);
@@ -609,13 +651,14 @@ class VolumeLocalFileSystem extends VolumeDriver
 	 **/
 	protected function _filePutContents($path, $content)
 	{
-		if (@file_put_contents($path, $content, LOCK_EX) !== FALSE) {
+		if (@file_put_contents($path, $content, LOCK_EX) !== false)
+		{
 			clearstatcache();
 
-			return TRUE;
+			return true;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -658,30 +701,40 @@ class VolumeLocalFileSystem extends VolumeDriver
 	 **/
 	protected function _findSymlinks($path)
 	{
-		if (is_link($path)) {
-			return TRUE;
+		if (is_link($path))
+		{
+			return true;
 		}
 
-		if (is_dir($path)) {
-			foreach (scandir($path) as $name) {
-				if ($name != '.' && $name != '..') {
+		if (is_dir($path))
+		{
+			foreach (scandir($path) as $name)
+			{
+				if ($name != '.' && $name != '..')
+				{
 					$p = $path . DIRECTORY_SEPARATOR . $name;
-					if (is_link($p) || !$this->nameAccepted($name)) {
-						return TRUE;
+					if (is_link($p) || !$this->nameAccepted($name))
+					{
+						return true;
 					}
-					if (is_dir($p) && $this->_findSymlinks($p)) {
-						return TRUE;
-					} elseif (is_file($p)) {
+					if (is_dir($p) && $this->_findSymlinks($p))
+					{
+						return true;
+					}
+					elseif (is_file($p))
+					{
 						$this->archiveSize += filesize($p);
 					}
 				}
 			}
-		} else {
+		}
+		else
+		{
 
 			$this->archiveSize += filesize($path);
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -696,19 +749,22 @@ class VolumeLocalFileSystem extends VolumeDriver
 	protected function _extract($path, $arc)
 	{
 
-		if ($this->quarantine) {
+		if ($this->quarantine)
+		{
 			$dir = $this->quarantine . DIRECTORY_SEPARATOR . str_replace(' ', '_', microtime()) . basename($path);
 			$archive = $dir . DIRECTORY_SEPARATOR . basename($path);
 
-			if (!@mkdir($dir)) {
-				return FALSE;
+			if (!@mkdir($dir))
+			{
+				return false;
 			}
 
 			chmod($dir, 0777);
 
 			// copy in quarantine
-			if (!copy($path, $archive)) {
-				return FALSE;
+			if (!copy($path, $archive))
+			{
+				return false;
 			}
 
 			// extract in quarantine
@@ -717,15 +773,18 @@ class VolumeLocalFileSystem extends VolumeDriver
 
 			// get files list
 			$ls = [];
-			foreach (scandir($dir) as $i => $name) {
-				if ($name != '.' && $name != '..') {
+			foreach (scandir($dir) as $i => $name)
+			{
+				if ($name != '.' && $name != '..')
+				{
 					$ls[] = $name;
 				}
 			}
 
 			// no files - extract error ?
-			if (empty($ls)) {
-				return FALSE;
+			if (empty($ls))
+			{
+				return false;
 			}
 
 			$this->archiveSize = 0;
@@ -735,46 +794,54 @@ class VolumeLocalFileSystem extends VolumeDriver
 			// remove arc copy
 			$this->remove($dir);
 
-			if ($symlinks) {
+			if ($symlinks)
+			{
 				return $this->setError(elFinder::ERROR_ARC_SYMLINKS);
 			}
 
 			// check max files size
-			if ($this->options['maxArcFilesSize'] > 0 && $this->options['maxArcFilesSize'] < $this->archiveSize) {
+			if ($this->options['maxArcFilesSize'] > 0 && $this->options['maxArcFilesSize'] < $this->archiveSize)
+			{
 				return $this->setError(elFinder::ERROR_ARC_MAXSIZE);
 			}
 
 
 			// archive contains one item - extract in archive dir
-			if (count($ls) == 1) {
+			if (count($ls) == 1)
+			{
 				$this->_unpack($path, $arc);
 				$result = dirname($path) . DIRECTORY_SEPARATOR . $ls[0];
 
 
-			} else {
+			}
+			else
+			{
 				// for several files - create new directory
 				// create unique name for directory
 				$name = basename($path);
-				if (preg_match('/\.((tar\.(gz|bz|bz2|z|lzo))|cpio\.gz|ps\.gz|xcf\.(gz|bz2)|[a-z0-9]{1,4})$/i', $name, $m)) {
+				if (preg_match('/\.((tar\.(gz|bz|bz2|z|lzo))|cpio\.gz|ps\.gz|xcf\.(gz|bz2)|[a-z0-9]{1,4})$/i', $name, $m))
+				{
 					$name = substr($name, 0, strlen($name) - strlen($m[0]));
 				}
 				$test = dirname($path) . DIRECTORY_SEPARATOR . $name;
-				if (file_exists($test) || is_link($test)) {
-					$name = $this->uniqueName(dirname($path), $name, '-', FALSE);
+				if (file_exists($test) || is_link($test))
+				{
+					$name = $this->uniqueName(dirname($path), $name, '-', false);
 				}
 
 				$result = dirname($path) . DIRECTORY_SEPARATOR . $name;
 				$archive = $result . DIRECTORY_SEPARATOR . basename($path);
 
-				if (!$this->_mkdir(dirname($path), $name) || !copy($path, $archive)) {
-					return FALSE;
+				if (!$this->_mkdir(dirname($path), $name) || !copy($path, $archive))
+				{
+					return false;
 				}
 
 				$this->_unpack($archive, $arc);
 				@unlink($archive);
 			}
 
-			return file_exists($result) ? $result : FALSE;
+			return file_exists($result) ? $result : false;
 		}
 	}
 
@@ -802,7 +869,7 @@ class VolumeLocalFileSystem extends VolumeDriver
 
 		$path = $dir . DIRECTORY_SEPARATOR . $name;
 
-		return file_exists($path) ? $path : FALSE;
+		return file_exists($path) ? $path : false;
 	}
 
 } // END class 

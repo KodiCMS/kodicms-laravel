@@ -25,7 +25,7 @@
 			@if (!acl_check('filemanager.edit')),allowShortcuts : false @endif
 		}, params);
 
-		var elfinder = $('body').elfinder(params).elfinder('instance');
+		var elfinder = $('#elfinder').elfinder(params).elfinder('instance');
 
 		$(window).resize(function() {
 			var node = elfinder.getUI('node');
@@ -54,3 +54,5 @@
 	});
 </script>
 @stop
+
+<div id="elfinder"></div>

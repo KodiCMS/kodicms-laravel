@@ -124,11 +124,11 @@ class Connector
 				header($header);
 			}
 		}
-
 		if (isset($data['pointer']))
 		{
 			rewind($data['pointer']);
 			fpassthru($data['pointer']);
+
 			if (!empty($data['volume']))
 			{
 				$data['volume']->close($data['pointer'], $data['info']['hash']);
