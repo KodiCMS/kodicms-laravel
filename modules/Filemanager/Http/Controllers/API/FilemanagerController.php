@@ -15,7 +15,8 @@ class FilemanagerController extends Controller
 			'roots' => config('filemanager', 'volumes')
 		];
 
-		// run elFinder
-		return (new Connector(new elFinder($opts)))->run($this->request);
+		return view('filemanager::open_file', [
+			'response' => (new Connector(new elFinder($opts)))->run($this->request)
+		]);
 	}
 }

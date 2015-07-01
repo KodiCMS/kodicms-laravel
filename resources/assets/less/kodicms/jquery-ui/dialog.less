@@ -1,0 +1,108 @@
+.ui-dialog {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: .2em;
+  outline: 0;
+
+  .ui-dialog-titlebar {
+	padding: .4em 1em;
+	position: relative;
+  }
+
+  .ui-dialog-title {
+	float: left;
+	margin: .1em 0;
+	white-space: nowrap;
+	width: 90%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+  }
+
+  .ui-dialog-titlebar-close {
+	position: absolute;
+	right: .3em;
+	top: 50%;
+	width: 20px;
+	margin: -10px 0 0 0;
+	padding: 1px;
+	height: 20px;
+  }
+
+  .ui-dialog-content {
+	position: relative;
+	border: 0;
+	padding: .5em 1em;
+	background: none;
+	overflow: auto;
+  }
+
+  .ui-dialog-buttonpane {
+	text-align: left;
+	border-width: 1px 0 0 0;
+	background-image: none;
+	margin-top: .5em;
+	padding: .3em 1em .5em .4em;
+
+	.ui-dialog-buttonset {
+	  float: right;
+	}
+
+	button {
+	  margin: .5em .4em .5em 0;
+	  cursor: pointer;
+	}
+  }
+
+  .ui-resizable-n {
+	height: 2px;
+	top: 0;
+  }
+
+  .ui-resizable-e {
+	width: 2px;
+	right: 0;
+  }
+
+  .ui-resizable-s {
+	height: 2px;
+	bottom: 0;
+  }
+
+  .ui-resizable-w {
+	width: 2px;
+	left: 0;
+  }
+
+  .ui-resizable-se,
+  .ui-resizable-sw,
+  .ui-resizable-ne,
+  .ui-resizable-nw {
+	width: 7px;
+	height: 7px;
+  }
+
+  .ui-resizable-se {
+	right: 0;
+	bottom: 0;
+  }
+
+  .ui-resizable-sw {
+	left: 0;
+	bottom: 0;
+  }
+
+  .ui-resizable-ne {
+	right: 0;
+	top: 0;
+  }
+
+  .ui-resizable-nw {
+	left: 0;
+	top: 0;
+  }
+}
+
+.ui-draggable .ui-dialog-titlebar {
+  cursor: move;
+}

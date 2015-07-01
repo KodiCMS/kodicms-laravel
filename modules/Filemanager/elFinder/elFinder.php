@@ -372,7 +372,6 @@ class elFinder
 	 **/
 	public function exec($cmd, $args)
 	{
-
 		if (!$this->loaded) {
 			return ['error' => $this->error(self::ERROR_CONF, self::ERROR_CONF_NO_VOL)];
 		}

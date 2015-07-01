@@ -13,7 +13,8 @@ var elixir = require('laravel-elixir');
 
 elixir(function(mix) {
 	mix
-		.less('common.less', 'public/cms/css');
+		.less('common.less', 'public/cms/css')
+		.less('kodicms/jquery-ui/jquery-ui.less', 'public/cms/css/jquery-ui.css');
 
 	mix.scripts([
 		'libs/jquery/js/jquery.min.js',
@@ -35,7 +36,6 @@ elixir(function(mix) {
 		'libs/i18next/js/i18next.min.js'
 	], 'public/cms/js/libraries.js', 'public/cms/');
 
-	// TODO: разобраться с местоположением компонентов
 	mix.scripts([
 		'cms/core.js',
 		'cms/app.js',
@@ -55,4 +55,11 @@ elixir(function(mix) {
 		'cms/user.meta.js',
 		'cms/run.js'
 	], 'public/cms/js/backend.js');
+
+	/*
+		elFinder
+	 */
+	mix
+		.scripts(['elfinder.full.js'], 'public/cms/libs/elfinder/js/elfinder.min.js', 'public/cms/libs/elfinder/js/')
+		.styles(['elfinder.full.css',], 'public/cms/libs/elfinder/css/elfinder.min.css', 'public/cms/libs/elfinder/css/');
 });
