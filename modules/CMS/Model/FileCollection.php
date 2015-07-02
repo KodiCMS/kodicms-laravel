@@ -2,12 +2,13 @@
 
 use Iterator;
 use SplFileInfo;
+use ModuleLoader;
 use KodiCMS\Support\Helpers\File as FileSystem;
 
 class FileCollection implements Iterator
 {
 	/**
-	 * @var string
+	 * @var SplFileInfo
 	 */
 	protected $directory;
 
@@ -32,11 +33,19 @@ class FileCollection implements Iterator
 	protected $fileClass = File::class;
 
 	/**
-	 * @param string $directory
+	 * @var string
 	 */
-	public function __construct($directory)
+	protected $resourceFolder;
+
+	/**
+	 * @param string $directory
+	 * @param string $resourceFolder
+	 */
+	public function __construct($directory, $resourceFolder)
 	{
 		$this->directory = new SplFileInfo($directory);
+		$this->resourceFolder = 'resources' . DIRECTORY_SEPARATOR . $resourceFolder;
+
 		$this->settings = $this->getSettingsFile();
 
 		$this->listFiles();
@@ -44,9 +53,26 @@ class FileCollection implements Iterator
 
 	protected function listFiles()
 	{
-		$files = app('files')->files($this->getRealPath());
-		foreach ($files as $path) {
-			$this->addFile($path);
+		$paths = ModuleLoader::listFiles($this->resourceFolder);
+		$this->addFiles($paths);
+	}
+
+	/**
+	 * @param array $files
+	 */
+	protected function addFiles(array $files)
+	{
+		foreach ($files as $filePath)
+		{
+			if (is_array($filePath))
+			{
+				// TODO: реализовать вывод файлов из суббирректорий
+				//$this->addFiles($filePath);
+			}
+			else
+			{
+				$this->addFile($filePath);
+			}
 		}
 	}
 
@@ -89,9 +115,12 @@ class FileCollection implements Iterator
 	{
 		$settingsFile = $this->getSettingsFilePath();
 
-		if (is_file($settingsFile)) {
-			return (array) include($settingsFile);
-		} else {
+		if (is_file($settingsFile))
+		{
+			return (array)include($settingsFile);
+		}
+		else
+		{
 			return [];
 		}
 	}
@@ -110,19 +139,24 @@ class FileCollection implements Iterator
 	 */
 	public function findFile($filename)
 	{
-		if (strpos($filename, File::$ext) !== FALSE) {
+		if (strpos($filename, File::$ext) !== false)
+		{
 			$method = 'getFilename';
-		} else {
+		}
+		else
+		{
 			$method = 'getName';
 		}
 
-		foreach ($this->files as $file) {
-			if ($file->{$method}() == $filename) {
+		foreach ($this->files as $file)
+		{
+			if ($file->{$method}() == $filename)
+			{
 				return $file;
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -130,7 +164,7 @@ class FileCollection implements Iterator
 	 */
 	public function newFile()
 	{
-		return $this->newFiles[] = new $this->fileClass(NULL, $this->getRealPath());
+		return $this->newFiles[] = new $this->fileClass(null, $this->getRealPath());
 	}
 
 	/**
@@ -158,7 +192,8 @@ class FileCollection implements Iterator
 	 */
 	public function saveChanges()
 	{
-		foreach ($this->files as $file) {
+		foreach ($this->files as $file)
+		{
 			$this->saveFile($file);
 		}
 
@@ -191,16 +226,17 @@ class FileCollection implements Iterator
 			$status = touch($this->getSettingsFilePath()) !== false;
 		}
 
-		if($status)
+		if ($status)
 		{
 			$settings = [];
-			foreach ($this->files as $file) {
+			foreach ($this->files as $file)
+			{
 				$settings[$file->getFilename()] = $file->getSettings();
 			}
 
 			$data = "<?php" . PHP_EOL;
 			$data .= "return ";
-			$data .= var_export($settings, TRUE);
+			$data .= var_export($settings, true);
 			$data .= ";";
 
 			return file_put_contents($this->getSettingsFilePath(), $data);

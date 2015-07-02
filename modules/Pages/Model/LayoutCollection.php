@@ -11,6 +11,6 @@ class LayoutCollection extends FileCollection
 
 	public function __construct()
 	{
-		return parent::__construct(layouts_path());
+		return parent::__construct(layouts_path(), 'layouts');
 	}
 }

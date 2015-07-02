@@ -6,6 +6,6 @@ class SnippetCollection extends FileCollection
 {
 	public function __construct()
 	{
-		return parent::__construct(snippets_path());
+		return parent::__construct(snippets_path(), 'snippets');
 	}
 }
