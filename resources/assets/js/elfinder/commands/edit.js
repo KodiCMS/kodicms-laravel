@@ -33,11 +33,8 @@ elFinder.prototype.commands.edit = function () {
 		 * @return $.Deferred
 		 **/
 		dialog = function (id, file, content) {
-			var ext = file.name.split('.').pop();
-
-			if (ext == 'js') ext = 'javascript';
 			var dfrd = $.Deferred(),
-				ta = $('<textarea class="elfinder-file-edit" rows="20" id="' + id + '-ta" data-mode="' + ext + '">' + fm.escape(content) + '</textarea>'),
+				ta = $('<textarea class="elfinder-file-edit" rows="20" id="' + id + '-ta">' + fm.escape(content) + '</textarea>'),
 				save = function () {
 					ta.editor && ta.editor.save(ta[0], ta.editor.instance);
 					dfrd.resolve(ta.getContent());
@@ -62,7 +59,7 @@ elFinder.prototype.commands.edit = function () {
 						ta[0].setSelectionRange && ta[0].setSelectionRange(0, 0);
 						ta.editor && ta.editor.load(ta[0]);
 
-						CMS.filters.switchOn(id+'-ta', 'ace');
+						CMS.filters.switchOn(id+'-ta', 'ace', {mime: file.mime});
 					}
 				};
 
@@ -115,7 +112,6 @@ elFinder.prototype.commands.edit = function () {
 							save();
 						}
 					}
-
 				})
 			}
 
@@ -225,5 +221,4 @@ elFinder.prototype.commands.edit = function () {
 			? $.when.apply(null, list)
 			: $.Deferred().reject();
 	}
-
 }

@@ -34,21 +34,22 @@ elFinder.prototype.commands.resize = function () {
 					uiresize = $('<div class="elfinder-resize-uiresize"/>'),
 					uicrop = $('<div class="elfinder-resize-uicrop"/>'),
 					uibuttonset = '<div class="ui-panel-body btn-group"/>',
-					uibutton = '<div class="btn"/>',
+					uibutton = '<button class="btn btn-default btn-xs"/>',
 					uiseparator = '',
 					uirotate = $('<div class="elfinder-resize-rotate"/>'),
-					uideg270 = $(uibutton).attr('title', fm.i18n('rotate-cw')).append($('<span class="elfinder-button-icon elfinder-button-icon-rotate-l"/>')
+					uideg270 = $(uibutton).attr('title', fm.i18n('rotate-cw')).append($('<span class="fa fa-rotate-left"/>')
 						.click(function () {
 							rdegree = rdegree - 90;
 							rotate.update(rdegree);
 						})),
-					uideg90 = $(uibutton).attr('title', fm.i18n('rotate-ccw')).append($('<span class="elfinder-button-icon elfinder-button-icon-rotate-r"/>')
+					uideg90 = $(uibutton).attr('title', fm.i18n('rotate-ccw')).append($('<span class="fa fa-rotate-right"/>')
 						.click(function () {
 							rdegree = rdegree + 90;
 							rotate.update(rdegree);
 						})),
+
 					uiprop = $('<span />'),
-					reset = $('<div class="ui-state-default  elfinder-resize-reset"><span class="ui-icon ui-icon-arrowreturnthick-1-w"/></div>'),
+					reset = $('<button class="btn btn-danger btn-xs elfinder-resize-reset"><i class="fa fa-undo"/></button>'),
 					uitype = $('<div class="elfinder-resize-type"/>')
 						.append('<label for="' + id + '-resize">' + fm.i18n('resize') + '</label>')
 						.append('<label for="' + id + '-crop">' + fm.i18n('crop') + '</label>')
@@ -220,9 +221,7 @@ elFinder.prototype.commands.resize = function () {
 
 							resizable();
 
-							reset.hover(function () {
-								reset.toggleClass('ui-state-hover');
-							}).click(resetView);
+							reset.click(resetView);
 
 						})
 						.error(function () {
@@ -232,7 +231,7 @@ elFinder.prototype.commands.resize = function () {
 					imgc = $('<img/>'),
 					coverc = $('<div/>'),
 					imgr = $('<img/>'),
-					resetView = function () {
+					resetView = function (e) {
 						width.val(owidth);
 						height.val(oheight);
 						resize.updateView(owidth, oheight);
@@ -485,8 +484,6 @@ elFinder.prototype.commands.resize = function () {
 						var w, h, x, y, d;
 						var mode = $('input:checked', uitype).val();
 
-						//width.add(height).change(); // may be unnecessary
-
 						if (mode == 'resize') {
 							w = parseInt(width.val()) || 0;
 							h = parseInt(height.val()) || 0;
@@ -554,7 +551,7 @@ elFinder.prototype.commands.resize = function () {
 
 				uiresize.append($(row).append($(label).text(fm.i18n('width'))).append(width).append(reset))
 					.append($(row).append($(label).text(fm.i18n('height'))).append(height))
-					.append($(row).append($('<label/>').text(fm.i18n('aspectRatio')).prepend(constr)))
+					.append($(row).append($('<label />').text(fm.i18n('aspectRatio')).prepend(constr)))
 					.append($(row).append(fm.i18n('scale') + ' ').append(uiprop));
 
 				uicrop.append($(row).append($(label).text('X')).append(pointX))
@@ -580,6 +577,7 @@ elFinder.prototype.commands.resize = function () {
 				control.append($(row))
 					.append(uiresize)
 					.append(uicrop.hide())
+					.append(uirotate.hide())
 					.append(uirotate.hide())
 					.find('input,select').attr('disabled', 'disabled');
 
@@ -835,5 +833,4 @@ elFinder.prototype.commands.resize = function () {
 			return value;
 		};
 	}
-
 })(jQuery);

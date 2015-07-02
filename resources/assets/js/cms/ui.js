@@ -295,7 +295,7 @@ CMS.ui.add('flags', function () {
 
 	$input.each(function () {
 		var $self = $(this);
-		var $btn = $('<button class="btn" type="button"><i class="fa fa-folder-open"></i></button>');
+		var $btn = $('<button class="btn btn-info btn-labeled" type="button"><i class="fa fa-folder-open"></i></button>');
 		if ($self.next().hasClass('input-group-btn')) {
 			$btn.prependTo($self.next());
 		} else {

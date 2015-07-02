@@ -1,22 +1,19 @@
 <?php namespace KodiCMS\Filemanager\Http\Controllers\API;
 
+use Illuminate\Http\JsonResponse;
 use KodiCMS\Filemanager\elFinder\elFinder;
 use KodiCMS\Filemanager\elFinder\Connector;
 use KodiCMS\API\Http\Controllers\System\Controller;
 
 class FilemanagerController extends Controller
 {
-
-	public function before()
+	public function load()
 	{
-		parent::before();
-
-		$opts = [
+		$options = [
 			'roots' => config('filemanager', 'volumes')
 		];
 
-		return view('filemanager::open_file', [
-			'response' => (new Connector(new elFinder($opts)))->run($this->request)
-		]);
+		$elFinder = new elFinder(app('session.store'), $options);
+		return new JsonResponse((new Connector($elFinder, $this->request))->run());
 	}
 }

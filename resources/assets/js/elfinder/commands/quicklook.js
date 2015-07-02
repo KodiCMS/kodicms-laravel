@@ -7,48 +7,56 @@
 elFinder.prototype.commands.quicklook = function () {
 	var self = this,
 		fm = self.fm,
+
 		/**
 		 * window closed state
 		 *
 		 * @type Number
 		 **/
 		closed = 0,
+
 		/**
 		 * window animated state
 		 *
 		 * @type Number
 		 **/
 		animated = 1,
+
 		/**
 		 * window opened state
 		 *
 		 * @type Number
 		 **/
 		opened = 2,
+
 		/**
 		 * window state
 		 *
 		 * @type Number
 		 **/
 		state = closed,
-	/**
-	 * next/prev event name (requied to cwd catch it)
-	 *
-	 * @type Number
-	 **/
-	// keydown    = fm.UA.Firefox || fm.UA.Opera ? 'keypress' : 'keydown',
+
+		/**
+		 * next/prev event name (requied to cwd catch it)
+		 *
+		 * @type Number
+		 **/
+		// keydown    = fm.UA.Firefox || fm.UA.Opera ? 'keypress' : 'keydown',
+
 		/**
 		 * navbar icon class
 		 *
 		 * @type Number
 		 **/
 		navicon = 'elfinder-quicklook-navbar-icon',
+
 		/**
 		 * navbar "fullscreen" icon class
 		 *
 		 * @type Number
 		 **/
 		fullscreen = 'elfinder-quicklook-fullscreen',
+
 		/**
 		 * Triger keydown/keypress event with left/right arrow key code
 		 *
@@ -64,6 +72,7 @@ elFinder.prototype.commands.quicklook = function () {
 				metaKey: false
 			}));
 		},
+
 		/**
 		 * Return css for closed window
 		 *
@@ -79,6 +88,7 @@ elFinder.prototype.commands.quicklook = function () {
 				left: node.offset().left + 'px'
 			}
 		},
+
 		/**
 		 * Return css for opened window
 		 *
@@ -114,18 +124,21 @@ elFinder.prototype.commands.quicklook = function () {
 		 * @type Number
 		 **/
 		width,
+
 		/**
 		 * Opened window height (from config)
 		 *
 		 * @type Number
 		 **/
 		height,
+
 		/**
 		 * elFinder node
 		 *
 		 * @type jQuery
 		 **/
 		parent,
+
 		/**
 		 * elFinder current directory node
 		 *
@@ -148,6 +161,8 @@ elFinder.prototype.commands.quicklook = function () {
 					win.css(win.data('position')).unbind('mousemove');
 					$window.unbind(scroll).trigger(self.resize).unbind(self.resize);
 					navbar.unbind('mouseenter').unbind('mousemove');
+
+					self.offFullscreen();
 				} else {
 					win.data('position', {
 						left: win.css('left'),
@@ -183,6 +198,8 @@ elFinder.prototype.commands.quicklook = function () {
 						.mousemove(function (e) {
 							e.stopPropagation();
 						});
+
+					self.onFullscreen();
 				}
 				navbar.attr('style', '').draggable(full ? 'destroy' : {});
 				win.toggleClass(fullscreen);
@@ -201,8 +218,15 @@ elFinder.prototype.commands.quicklook = function () {
 			.append('<div class="elfinder-quicklook-navbar-separator"/>')
 			.append($('<div class="' + navicon + ' ' + navicon + '-close"/>').mousedown(function () {
 				self.window.trigger('close');
-			}))
-		;
+			}));
+
+	this.onFullscreen = function() {
+		$(window).trigger('elfinder.quicklook.fullscreen.on');
+	};
+
+	this.offFullscreen = function() {
+		$(window).trigger('elfinder.quicklook.fullscreen.off');
+	};
 
 	this.resize = 'resize.' + fm.namespace;
 	this.info = $('<div class="elfinder-quicklook-info-wrapper"/>')
@@ -444,3 +468,5 @@ elFinder.prototype.commands.quicklook = function () {
 		this.info.stop(true).hide();
 	}
 }
+
+elFinder.prototype.commands.quicklook.plugins = [];

@@ -2463,6 +2463,7 @@ abstract class VolumeDriver
 	static protected function mimetypeInternalDetect($path)
 	{
 		$ext = pathinfo($path, PATHINFO_EXTENSION);
+
 		return isset(static::$mimetypes[$ext])
 			? is_array(static::$mimetypes[$ext])
 				? static::$mimetypes[$ext][0]

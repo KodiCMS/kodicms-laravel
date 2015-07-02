@@ -28,37 +28,34 @@ class Connector
 	 **/
 	protected $header = 'Content-Type: application/json';
 
+	/**
+	 * @var Requests
+	 */
+	protected $request;
 
 	/**
-	 * @param $elFinder
+	 * @param elFinder $elFinder
 	 * @param bool $debug
 	 */
-	public function __construct($elFinder, $debug = false)
+	public function __construct(elFinder $elFinder, Request $request, $debug = false)
 	{
 		$this->elFinder = $elFinder;
+		$this->request = $request;
+
 		if ($debug)
 		{
 			$this->header = 'Content-Type: text/html; charset=utf-8';
 		}
 	}
 
-	/**
-	 * @param Request $request
-	 */
-	public function run(Request $request)
+	public function run()
 	{
-		$isPost = $request->getMethod() === 'POST';
+		$isPost = $this->request->getMethod() === 'POST';
 
-		$src = $request->all();
+		$src = $this->request->all();
 
 		$cmd = isset($src['cmd']) ? $src['cmd'] : '';
 		$args = [];
-
-		if (!function_exists('json_encode'))
-		{
-			$error = $this->elFinder->error(elFinder::ERROR_CONF, elFinder::ERROR_CONF_NO_JSON);
-			$this->output(['error' => '{"error":["' . implode('","', $error) . '"]}', 'raw' => true]);
-		}
 
 		if (!$this->elFinder->loaded())
 		{
@@ -95,7 +92,7 @@ class Connector
 
 		$args['debug'] = isset($src['debug']) ? !!$src['debug'] : false;
 
-		$this->output($this->elFinder->exec($cmd, $this->input_filter($args)));
+		return $this->output($this->elFinder->exec($cmd, $this->input_filter($args)));
 	}
 
 	/**
@@ -107,7 +104,11 @@ class Connector
 	 **/
 	protected function output(array $data)
 	{
-		$header = isset($data['header']) ? $data['header'] : $this->header;
+		$header = isset($data['header'])
+			? $data['header']
+			: $this->header;
+
+
 		unset($data['header']);
 
 		if ($header)
@@ -124,6 +125,7 @@ class Connector
 				header($header);
 			}
 		}
+
 		if (isset($data['pointer']))
 		{
 			rewind($data['pointer']);
@@ -133,20 +135,20 @@ class Connector
 			{
 				$data['volume']->close($data['pointer'], $data['info']['hash']);
 			}
-			exit();
+
+			return null;
 		}
 		else
 		{
 			if (!empty($data['raw']) && !empty($data['error']))
 			{
-				exit($data['error']);
+				return $data['error'];
 			}
 			else
 			{
-				exit(json_encode($data));
+				return $data;
 			}
 		}
-
 	}
 
 	/**
@@ -164,6 +166,7 @@ class Connector
 		}
 
 		$res = str_replace("\0", '', $args);
+
 		return $res;
 	}
 }

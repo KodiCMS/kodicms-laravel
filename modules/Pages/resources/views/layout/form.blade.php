@@ -45,7 +45,7 @@
 			{!! Form::button(trans('pages::layout.button.filemanager'), [
 			'data-icon' => 'folder-open',
 			'data-el' => 'textarea_content',
-			'class' => 'btn btn-filemanager btn-flat btn-info btn-sm'
+			'class' => 'btn btn-filemanager btn-labeled btn-info btn-sm'
 			]) !!}
 		</div>
 	@endif

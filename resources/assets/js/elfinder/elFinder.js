@@ -2289,7 +2289,6 @@ elFinder.prototype = {
 		key = 'elfinder-' + key + this.id;
 
 		if (val === null) {
-			console.log('remove', key)
 			return s.removeItem(key);
 		}
 
