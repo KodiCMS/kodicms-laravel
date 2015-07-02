@@ -219,7 +219,7 @@ class FileCollection implements Iterator
 	 */
 	public function saveSettings()
 	{
-		$status = is_file($this->getSettingsFilePath());
+		$status = is_file($this->getSettingsFilePath()) and is_writable($this->getSettingsFilePath());
 
 		if (!$status)
 		{
