@@ -3,17 +3,19 @@
 	<div class="panel-heading">
 		@if (acl_check('layout.add'))
 		{!! link_to_route('backend.layout.create', trans('pages::layout.button.add'), [], [
-			'class' => 'btn btn-default', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
+			'class' => 'btn btn-default btn-labeled', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
 		]) !!}
 		@endif
 
 		@if ($collection->getTotal() > 0 and acl_check('layout.rebuild'))
-		{!! Form::button(trans('pages::layout.button.rebuild'), [
+		<div class="panel-heading-controls">
+			{!! Form::button(trans('pages::layout.button.rebuild'), [
 			'data-icon' => 'refresh',
-			'class' => 'btn btn-inverse btn-xs',
+			'class' => 'btn btn-info btn-sm btn-labeled',
 			'data-api-url' => '/api.layout.rebuild',
 			'data-preloader' => '#layoutList'
-		]) !!}
+			]) !!}
+		</div>
 		@endif
 	</div>
 	@else

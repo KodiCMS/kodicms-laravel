@@ -4,24 +4,21 @@
 <div class="panel-body api-settings">
 	<div class="form-group">
 		<label class="control-label col-lg-3">@lang('api::core.title.api_key')</label>
-		<div class="col-md-7">
-			<div class="input-group">
-				@if (acl_check('api.view_key'))
-				{!!  Form::text(NULL, config('cms.api_key'), [
+		<div class="col-md-5">
+			@if (acl_check('api.view_key'))
+			{!!  Form::text(NULL, config('cms.api_key'), [
 				'id' => 'api-key', 'class' => 'form-control', 'readonly'
-				]) !!}
-				@endif
-
-				@if (acl_check('api.refresh_key'))
-				<div class="input-group-btn">
-				{!! Form::button(trans('api::core.buttons.refresh_key'), [
-					'class' => 'btn btn-primary',
-					'id' => 'refresh-api-key',
-					'data-icon' => 'refresh'
-				]) !!}
-				</div>
-				@endif
-			</div>
+			]) !!}
+			@endif
+		</div>
+		<div class="col-md-3">
+			@if (acl_check('api.refresh_key'))
+			{!! Form::button(trans('api::core.buttons.refresh_key'), [
+			'class' => 'btn btn-primary btn-labeled',
+			'id' => 'refresh-api-key',
+			'data-icon' => 'refresh'
+			]) !!}
+			@endif
 		</div>
 	</div>
 

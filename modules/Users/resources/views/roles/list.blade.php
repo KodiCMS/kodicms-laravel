@@ -2,7 +2,7 @@
 	<div class="panel-heading">
 		@if (acl_check('roles.add'))
 			{!! link_to_route('backend.role.create', trans('users::role.button.create'), [], [
-			'class' => 'btn btn-primary', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
+			'class' => 'btn btn-primary btn-labeled', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
 			]) !!}
 		@endif
 	</div>

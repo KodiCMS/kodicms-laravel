@@ -3,7 +3,7 @@
 		<div class="panel-heading">
 			@if (acl_check('snippet.add'))
 				{!! link_to_route('backend.snippet.create', trans('widgets::snippet.button.add'), [], [
-				'class' => 'btn btn-default', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
+				'class' => 'btn btn-default btn-labeled', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
 				]) !!}
 			@endif
 		</div>

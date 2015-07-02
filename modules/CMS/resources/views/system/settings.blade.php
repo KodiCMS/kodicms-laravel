@@ -92,9 +92,10 @@
 @event('view.settings.bottom')
 
 <div class="form-actions panel-footer">
-	{!! Form::button(UI::icon('check') . ' ' . trans('cms::system.button.settings.save'), [
+	{!! Form::button(trans('cms::system.button.settings.save'), [
 		'type' => 'submit',
-		'class' => 'btn btn-lg btn-primary',
+		'data-icon' => 'check',
+		'class' => 'btn btn-lg btn-primary btn-labeled',
 		'data-hotkeys' => 'ctrl+s'
 	]) !!}
 </div>
