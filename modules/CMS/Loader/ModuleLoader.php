@@ -150,7 +150,7 @@ class ModuleLoader
 			if (is_dir($dir = $module->getPath($sub)))
 			{
 				// This path has a file, add it to the list
-				$paths[] = $dir;
+				$paths[$module->getName()] = $dir;
 			}
 		}
 
@@ -233,6 +233,92 @@ class ModuleLoader
 
 		// Files have been changed
 		$this->filesChanged = true;
+
+		return $found;
+	}
+
+	/**
+	 * @param   string $directory directory name
+	 * @param   string|array $ext
+	 * @return  array
+	 */
+	public function listFiles($directory = null, $ext = null)
+	{
+		if ($directory !== null)
+		{
+			// Add the directory separator
+			$directory .= DIRECTORY_SEPARATOR;
+		}
+
+		if ($ext === null)
+		{
+			// Use the default extension
+			$ext = 'php';
+		}
+
+		$paths = $this->getPaths();
+
+		// Create an array for the files
+		$found = [];
+
+		foreach ($paths as $moduleName => $path)
+		{
+			if (is_dir($path = File::normalizePath($path . DIRECTORY_SEPARATOR . $directory)))
+			{
+				// Create a new directory iterator
+				$dir = new \DirectoryIterator($path);
+
+				foreach ($dir as $file)
+				{
+					// Get the file name
+					$filename = $file->getFilename();
+
+					if ($filename[0] === '.' OR $filename[strlen($filename) - 1] === '~')
+					{
+						// Skip all hidden files and UNIX backup files
+						continue;
+					}
+
+					$fileExt = $file->getExtension();
+
+					// Relative filename is the array key
+					$key = $directory . $filename;
+
+					if ($file->isDir())
+					{
+						if ($subDir = $this->listFiles($key, $ext))
+						{
+							if (isset($found[$key]))
+							{
+								// Append the sub-directory list
+								$found[$key] += $subDir;
+							}
+							else
+							{
+								// Create a new sub-directory list
+								$found[$key] = $subDir;
+							}
+						}
+					}
+					else
+					{
+						if (!empty($ext) and is_array($ext) ? !in_array($fileExt, $ext) : ($fileExt != $ext))
+						{
+							continue;
+						}
+
+						if (!isset($found[$key]))
+						{
+							// Add new files to the list
+							$found[$key] = realpath($file->getPathName());
+						}
+					}
+				}
+			}
+		}
+
+		// Sort the results alphabetically
+		ksort($found);
 
 		return $found;
 	}
