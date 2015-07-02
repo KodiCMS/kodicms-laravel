@@ -3,7 +3,7 @@
 		@if (acl_check('cron.create'))
 		{!! link_to_route('backend.cron.create', trans('cron::core.button.create'), [], [
 			'class' => 'btn btn-primary btn-labeled', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
-		ы]) !!}
+		]) !!}
 		@endif
 	</div>
 
