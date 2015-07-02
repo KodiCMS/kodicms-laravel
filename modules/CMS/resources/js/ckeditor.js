@@ -6,11 +6,13 @@ CMS.ui.add('ckeditor', function() {
 	CKEDITOR.config.simpleImageBrowserURL = '/api-media.images';
 
 	$ckeditor.switchOn_handler = function (textarea_id, params) {
+		var textarea = $('#' + textarea_id).hide(),
 		params = $.extend({
 			skin: 'bootstrapck',
 			filebrowserBrowseUrl: BASE_URL + '/filemanager.popup',
 			height: 200
-		}, params);
+		}, textarea.data(), params);
+
 		var editor = CKEDITOR.replace(textarea_id, params);
 		return editor;
 	};

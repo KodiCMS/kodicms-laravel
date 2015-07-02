@@ -4,16 +4,23 @@ CMS.ui.add('ace', function() {
 	$ace.switchOn_handler = function (textarea_id, params) {
 		var editor_id = getSlug(textarea_id) + 'Div';
 		var textarea = $('#' + textarea_id).hide();
-		var height = textarea.data('height') ? textarea.data('height') : 300;
-		var mode = textarea.data('mode') ? textarea.data('mode') : 'php';
+
+		params = $.extend({
+			height: 300
+		}, textarea.data(), params);
+
+		var mode = params.mode || params.mime ? parseMimeMode(params.mime) : 'php';
+
 		var editArea = $('<div id="' + editor_id + '" />')
 			.insertAfter(textarea)
 			.css({
-				height: height,
+				height: params.height,
 				fontSize: 14
 			});
 
 		var editor = ace.edit(editor_id);
+
+		editor.$blockScrolling = Infinity;
 		editor.setValue(textarea.val());
 
 		editor.clearSelection();
@@ -26,6 +33,20 @@ CMS.ui.add('ace', function() {
 		});
 		editor.setTheme("ace/theme/" + ACE_THEME);
 
+		function parseMimeMode(mime) {
+			var mode;
+			switch (mime)
+			{
+				case 'application/json':
+					mode = 'json';
+					break;
+				default:
+					mode = mime.indexOf('text/') === 0 ? mime.substring(5) : 'text';
+			}
+
+			return mode;
+		}
+
 		function fullscreen(editArea, editor, height) {
 			var $menu = $('#main-menu').add('#main-navbar').add('#main-menu-bg');
 			if (!editArea.data('fullscreen') || editArea.data('fullscreen') == 'off') {
@@ -35,10 +56,11 @@ CMS.ui.add('ace', function() {
 						width: '100%',
 						height: '100%',
 						top: 0, left: 0,
-						'z-index': 999
+						'z-index': 999999
 					})
 					.data('fullscreen', 'on');
 
+				editor.resize();
 				$menu.hide();
 			} else {
 				editArea
@@ -49,6 +71,7 @@ CMS.ui.add('ace', function() {
 						height: height,
 						top: 'auto', left: 'auto'
 					});
+				editor.resize();
 				$menu.show();
 			}
 		}
@@ -62,15 +85,15 @@ CMS.ui.add('ace', function() {
 					$('button[name="continue"]').click();
 				}
 			});
-
-			editor.commands.addCommand({
-				name: 'Full-screen',
-				bindKey: {win: 'Ctrl-Shift-F', mac: 'Command-F'},
-				exec: function (editor) {
-					fullscreen(editArea, editor, height)
-				}
-			});
 		}
+
+		editor.commands.addCommand({
+			name: 'Full-screen',
+			bindKey: {win: 'Ctrl-Shift-F', mac: 'Command-F'},
+			exec: function (editor) {
+				fullscreen(editArea, editor, height)
+			}
+		});
 
 		return editor;
 	};
