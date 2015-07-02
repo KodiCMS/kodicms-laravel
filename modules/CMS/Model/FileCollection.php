@@ -219,14 +219,14 @@ class FileCollection implements Iterator
 	 */
 	public function saveSettings()
 	{
-		$status = is_file($this->getSettingsFilePath()));
+		$status = is_file($this->getSettingsFilePath());
 
 		if (!$status)
 		{
 			$status = touch($this->getSettingsFilePath()) !== false;
 		}
 
-		if ($status and is_writable($this->getSettingsFilePath())
+		if ($status and is_writable($this->getSettingsFilePath()))
 		{
 			$settings = [];
 			foreach ($this->files as $file)
