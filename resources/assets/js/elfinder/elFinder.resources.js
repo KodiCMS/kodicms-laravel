@@ -42,6 +42,7 @@ elFinder.prototype.resources = {
 			'application/javascript',
 			'application/json',
 			'text/html',
+			'text/x-markdown',
 			'application/xhtml+xml',
 			'audio/x-mp3-playlist',
 			'application/x-web-config',

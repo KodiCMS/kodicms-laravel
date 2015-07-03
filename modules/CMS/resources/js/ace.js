@@ -36,23 +36,20 @@ CMS.ui.add('ace', function() {
 		editor.setTheme("ace/theme/" + ACE_THEME);
 
 		function parseMimeMode(mime) {
-			var mode;
 			switch (mime)
 			{
 				case 'application/json':
-					mode = 'json';
-					break;
+					return 'json';
 				case 'text/plain':
-					mode = 'text';
-					break;
-				case 'text/x-sql':
-					mode = 'sql';
-					break;
+					return 'text';
 				default:
-					mode = mime.indexOf('text/') === 0 ? mime.substring(5) : 'text';
+					if(mime.indexOf('text/x-') === 0)
+						return mime.substring(7);
+					else if(mime.indexOf('text/') === 0)
+						return mime.substring(5);
+					else
+						return 'text';
 			}
-
-			return mode;
 		}
 
 		if (textarea.data('readonly') == 'on') {

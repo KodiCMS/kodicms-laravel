@@ -86,6 +86,7 @@ return [
 	'm4p'      => ['video/mp4v-es'],
 	'm4v'      => ['video/mp4'],
 	'man'      => ['application/x-troff-man'],
+	'md'       => ['text/x-markdown'],
 	'mdb'      => ['application/x-msaccess'],
 	'midi'     => ['audio/midi'],
 	'mid'      => ['audio/midi'],
