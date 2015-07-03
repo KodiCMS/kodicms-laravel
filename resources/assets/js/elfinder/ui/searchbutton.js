@@ -29,7 +29,7 @@ $.fn.elfindersearchbutton = function (cmd) {
 					cmd.fm.trigger('searchend');
 				}
 			},
-			input = $('<input type="text" class="form-control no-margin-b" placeholder="Search..." />')
+			input = $('<input type="text" class="form-control no-margin-b" placeholder="' + cmd.fm.i18n('cmdsearch') + '" />')
 				.appendTo(form)
 				// to avoid fm shortcuts on arrows
 				.keypress(function (e) {

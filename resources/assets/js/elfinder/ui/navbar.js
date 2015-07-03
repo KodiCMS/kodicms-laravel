@@ -31,7 +31,9 @@ $.fn.elfindernavbar = function (fm, opts) {
 						right: ltr ? parseInt(nav.scrollLeft() - offset) * -1 : 'auto'
 					});
 				})
-				.find('.ui-resizable-handle').zIndex(nav.zIndex() + 10);
+				.find('.ui-resizable-handle')
+					.zIndex(nav.zIndex() + 10)
+					.append('<i class="fa fa-ellipsis-v" />');
 
 			if (!ltr) {
 				nav.resize(function () {

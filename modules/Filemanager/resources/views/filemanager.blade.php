@@ -5,7 +5,7 @@ $(function() {
 		lang: '{{ Lang::getLocale() }}',
 		url : '/api.filemanager',
 		resizable: false,
-		height: CMS.content_height - 50,
+		height: CMS.content_height - 55,
 		uiOptions: {
 			toolbar : [
 				[
@@ -31,8 +31,8 @@ $(function() {
 
 	$(window).resize(function() {
 		var node = elfinder.getUI('node');
-		var h = CMS.content_height - 50;
-		node.height(h);
+		var h = CMS.content_height - 55;
+
 		node.find('.elfinder-navbar')
 			.add(node.find('.elfinder-workzone'))
 			.add(node.find('.elfinder-cwd'))

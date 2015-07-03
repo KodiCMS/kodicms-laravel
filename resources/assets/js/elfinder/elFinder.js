@@ -1402,7 +1402,7 @@
 		 */
 		this.resize = function (w, h) {
 			w && node.css('width', w);
-			h && node.height(h);
+			//h && node.height(h);
 
 			node.trigger('resize');
 
