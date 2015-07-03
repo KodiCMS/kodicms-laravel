@@ -2,14 +2,15 @@ CMS.ui.add('ace', function() {
 	var $ace = {};
 
 	$ace.switchOn_handler = function (textarea_id, params) {
-		var editor_id = getSlug(textarea_id) + 'Div';
-		var textarea = $('#' + textarea_id).hide();
+		var editor_id = getSlug(textarea_id) + 'Div',
+			textarea = $('#' + textarea_id).hide(),
+			mode;
 
 		params = $.extend({
 			height: 300
 		}, textarea.data(), params);
 
-		var mode = params.mode || params.mime ? parseMimeMode(params.mime) : 'php';
+		(mode = params.mode) || params.mime.length && (mode = parseMimeMode(params.mime)) || (mode = 'php');
 
 		var editArea = $('<div id="' + editor_id + '" />')
 			.insertAfter(textarea)
