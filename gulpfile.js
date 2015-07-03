@@ -108,7 +108,6 @@ elixir(function(mix) {
 			'commands/quicklook.js',
 			'commands/quicklook/audio.js',
 			'commands/quicklook/flash.js',
-			'commands/quicklook/html.js',
 			'commands/quicklook/images.js',
 			'commands/quicklook/pdf.js',
 			'commands/quicklook/text.js',

@@ -50,12 +50,9 @@ elFinder.prototype.commands.quicklook.plugins.push(function (ql) {
 				});
 		}
 
-		$(window).on('elfinder.quicklook.fullscreen.on', function() {
-			$('.elfinder-quicklook-preview-text-wrapper').trigger('resize');
-		});
-
-		$(window).on('elfinder.quicklook.fullscreen.off', function() {
-			$('.elfinder-quicklook-preview-text-wrapper').trigger('resize');
-		});
+		$(window)
+			.on(ql.resize, function () {
+				$('.elfinder-quicklook-preview-text-wrapper').trigger('resize');
+			});
 	});
 });

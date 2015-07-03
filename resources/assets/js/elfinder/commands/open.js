@@ -8,10 +8,6 @@ elFinder.prototype.commands.open = function () {
 	this.alwaysEnabled = true;
 
 	this._handlers = {
-		dblclick: function (e) {
-			e.preventDefault();
-			this.exec()
-		},
 		'select enable disable reload': function (e) {
 			this.update(e.type == 'disable' ? -1 : void(0));
 		}

@@ -46,7 +46,7 @@ $.fn.elfindersearchbutton = function (cmd) {
 					}
 				});
 
-		$('<span class="input-group-btn"><button class="btn" title="' + cmd.title + '"><i class="fa fa-search" /></button></span>')
+		$('<span class="input-group-btn"><button class="btn btn-default" title="' + cmd.title + '"><i class="fa fa-search" /></button></span>')
 			.appendTo(form)
 			.click(search);
 

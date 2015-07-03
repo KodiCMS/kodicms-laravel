@@ -31,6 +31,7 @@ CMS.ui.add('ace', function() {
 		editor.getSession().on('change', function () {
 			textarea.val(editor.getSession().getValue());
 		});
+
 		editor.setTheme("ace/theme/" + ACE_THEME);
 
 		function parseMimeMode(mime) {
@@ -39,6 +40,12 @@ CMS.ui.add('ace', function() {
 			{
 				case 'application/json':
 					mode = 'json';
+					break;
+				case 'text/plain':
+					mode = 'text';
+					break;
+				case 'text/x-sql':
+					mode = 'sql';
 					break;
 				default:
 					mode = mime.indexOf('text/') === 0 ? mime.substring(5) : 'text';
@@ -89,7 +96,7 @@ CMS.ui.add('ace', function() {
 
 		editor.commands.addCommand({
 			name: 'Full-screen',
-			bindKey: {win: 'Ctrl-Shift-F', mac: 'Command-F'},
+			bindKey: {win: 'Ctrl-Shift-F', mac: 'Command-Shift-F'},
 			exec: function (editor) {
 				fullscreen(editArea, editor, height)
 			}

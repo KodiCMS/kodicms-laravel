@@ -15,7 +15,7 @@ $.fn.elfindertoolbar = function (fm, opts) {
 
 		while (l--) {
 			if (panels[l]) {
-				panel = $('<div class="btn-group" style="margin-right: 5px;"/>');
+				panel = $('<div class="btn-group"/>');
 				i = panels[l].length;
 				while (i--) {
 					if ((cmd = commands[panels[l][i]])) {

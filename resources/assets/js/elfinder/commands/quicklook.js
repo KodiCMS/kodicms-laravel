@@ -48,7 +48,7 @@ elFinder.prototype.commands.quicklook = function () {
 		 *
 		 * @type Number
 		 **/
-		navicon = 'elfinder-quicklook-navbar-icon',
+		navicon = 'fa',
 
 		/**
 		 * navbar "fullscreen" icon class
@@ -91,7 +91,6 @@ elFinder.prototype.commands.quicklook = function () {
 
 		/**
 		 * Return css for opened window
-		 *
 		 * @return void
 		 **/
 		openedCss = function () {
@@ -145,108 +144,41 @@ elFinder.prototype.commands.quicklook = function () {
 		 * @type jQuery
 		 **/
 		cwd,
-		title = $('<div class="elfinder-quicklook-title"/>'),
+		title = $('<span class="panel-title elfinder-quicklook-title label label-info"/>'),
 		icon = $('<div/>'),
-		info = $('<div class="elfinder-quicklook-info"/>'),//.hide(),
-		fsicon = $('<div class="' + navicon + ' ' + navicon + '-fullscreen"/>')
-			.mousedown(function (e) {
-				var win = self.window,
-					full = win.is('.' + fullscreen),
-					scroll = 'scroll.' + fm.namespace,
-					$window = $(window);
+		info = $('<div class="elfinder-quicklook-info list-group"/>'),
+		$btn = $('<button class="btn btn-default btn-xs" />'),
 
-				e.stopPropagation();
-
-				if (full) {
-					win.css(win.data('position')).unbind('mousemove');
-					$window.unbind(scroll).trigger(self.resize).unbind(self.resize);
-					navbar.unbind('mouseenter').unbind('mousemove');
-
-					self.offFullscreen();
-				} else {
-					win.data('position', {
-						left: win.css('left'),
-						top: win.css('top'),
-						width: win.width(),
-						height: win.height()
-					})
-						.css({
-							width: '100%',
-							height: '100%'
-						});
-
-					$(window).bind(scroll, function () {
-						win.css({
-							left: parseInt($(window).scrollLeft()) + 'px',
-							top: parseInt($(window).scrollTop()) + 'px'
-						})
-					})
-						.bind(self.resize, function (e) {
-							self.preview.trigger('changesize');
-						})
-						.trigger(scroll)
-						.trigger(self.resize);
-
-					win.bind('mousemove', function (e) {
-						navbar.stop(true, true).show().delay(3000).fadeOut('slow');
-					})
-						.mousemove();
-
-					navbar.mouseenter(function () {
-						navbar.stop(true, true).show();
-					})
-						.mousemove(function (e) {
-							e.stopPropagation();
-						});
-
-					self.onFullscreen();
-				}
-				navbar.attr('style', '').draggable(full ? 'destroy' : {});
-				win.toggleClass(fullscreen);
-				$(this).toggleClass(navicon + '-fullscreen-off');
-				$.fn.resizable && parent.add(win).resizable(full ? 'enable' : 'disable').removeClass('disabled');
-			}),
-
-		navbar = $('<div class="elfinder-quicklook-navbar"/>')
-			.append($('<div class="' + navicon + ' ' + navicon + '-prev"/>').mousedown(function () {
-				navtrigger(37);
-			}))
-			.append(fsicon)
-			.append($('<div class="' + navicon + ' ' + navicon + '-next"/>').mousedown(function () {
-				navtrigger(39);
-			}))
-			.append('<div class="elfinder-quicklook-navbar-separator"/>')
-			.append($('<div class="' + navicon + ' ' + navicon + '-close"/>').mousedown(function () {
-				self.window.trigger('close');
-			}));
-
-	this.onFullscreen = function() {
-		$(window).trigger('elfinder.quicklook.fullscreen.on');
-	};
-
-	this.offFullscreen = function() {
-		$(window).trigger('elfinder.quicklook.fullscreen.off');
-	};
+		navbar = $('<div class="elfinder-quicklook-navbar panel-heading-controls"/>')
+			.append($('<div class="btn-group" />')
+				.append($btn.clone().append('<div class="' + navicon + ' fa-arrow-left"/>').on('click', function () {
+					navtrigger(37);
+				}))
+				.append($btn.clone().append('<div class="' + navicon + ' fa-arrow-right"/>').on('click', function () {
+					navtrigger(39);
+				}))
+				.append($btn.clone().append('<span class="fa fa-times elfinder-quicklook-close"/>').on('click', function (e) {
+					e.stopPropagation();
+					self.window.trigger('close');
+				}))
+			);
 
 	this.resize = 'resize.' + fm.namespace;
 	this.info = $('<div class="elfinder-quicklook-info-wrapper"/>')
 		.append(icon)
 		.append(info);
 
-	this.preview = $('<div class="elfinder-quicklook-preview ui-helper-clearfix"/>')
-		// clean info/icon
-		.bind('change', function (e) {
+	this.preview = $('<div class="elfinder-quicklook-preview panel-body"/>')
+		.on('change', function (e) {
 			self.info.attr('style', '').hide();
 			icon.removeAttr('class').attr('style', '');
 			info.html('');
-
 		})
-		// update info/icon
-		.bind('update', function (e) {
+		.on('update', function (e) {
 			var fm = self.fm,
 				preview = self.preview,
 				file = e.file,
-				tpl = '<div class="elfinder-quicklook-info-data">{value}</div>',
+				tpl = '<div class="elfinder-quicklook-info-data list-group-item">{value}</div>',
 				tmb;
 
 			if (file) {
@@ -280,22 +212,19 @@ elFinder.prototype.commands.quicklook = function () {
 		});
 
 
-	this.window = $('<div class="ui-helper-reset ui-widget elfinder-quicklook" style="position:absolute"/>')
-		.click(function (e) {
+	this.window = $('<div class="ui-helper-reset ui-widget panel elfinder-quicklook" style="position:absolute"/>')
+		.on('click', function (e) {
 			e.stopPropagation();
 		})
 		.append(
-		$('<div class="elfinder-quicklook-titlebar"/>')
-			.append(title)
-			.append($('<span class="ui-icon ui-icon-circle-close"/>').mousedown(function (e) {
-				e.stopPropagation();
-				self.window.trigger('close');
-			}))
-	)
-		.append(this.preview.add(navbar))
+			$('<div class="panel-heading elfinder-quicklook-titlebar"/>')
+				.append(title)
+				.append(navbar)
+		)
+		.append(this.preview)
 		.append(self.info.hide())
 		.draggable({handle: 'div.elfinder-quicklook-titlebar'})
-		.bind('open', function (e) {
+		.on('open', function (e) {
 			var win = self.window,
 				file = self.value,
 				node;
@@ -312,22 +241,19 @@ elFinder.prototype.commands.quicklook = function () {
 					});
 			}
 		})
-		.bind('close', function (e) {
+		.on('close', function (e) {
 			var win = self.window,
 				preview = self.preview.trigger('change'),
-				file = self.value,
 				node = cwd.find('#' + win.data('hash')),
 				close = function () {
 					state = closed;
 					win.hide();
 					preview.children().remove();
 					self.update(0, self.value);
-
 				};
 
 			if (self.opened()) {
 				state = animated;
-				win.is('.' + fullscreen) && fsicon.mousedown()
 				node.length
 					? win.animate(closedCss(node), 500, close)
 					: close();
@@ -358,6 +284,11 @@ elFinder.prototype.commands.quicklook = function () {
 		},
 		'searchshow searchhide': function () {
 			this.opened() && this.window.trigger('close');
+		},
+		dblclick: function (e) {
+			e.preventDefault();
+
+			this.exec();
 		}
 	}
 
@@ -378,7 +309,6 @@ elFinder.prototype.commands.quicklook = function () {
 			mp4: support('video/mp4; codecs="avc1.42E01E"') || support('video/mp4; codecs="avc1.42E01E, mp4a.40.2"')
 		}
 	}
-
 
 	/**
 	 * Return true if quickLoock window is visible and not animated
@@ -410,8 +340,8 @@ elFinder.prototype.commands.quicklook = function () {
 			preview = this.preview,
 			i, p;
 
-		width = o.width > 0 ? parseInt(o.width) : 450;
-		height = o.height > 0 ? parseInt(o.height) : 300;
+		width = o.width > 0 ? parseInt(o.width) : 800;
+		height = o.height > 0 ? parseInt(o.height) : 500;
 
 		fm.one('load', function () {
 			parent = fm.getUI();
@@ -449,7 +379,7 @@ elFinder.prototype.commands.quicklook = function () {
 				}
 			});
 
-			preview.bind('update', function () {
+			preview.on('update', function () {
 				self.info.show();
 			});
 		});

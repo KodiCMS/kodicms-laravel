@@ -150,8 +150,7 @@ elFinder.prototype.command = function (fm) {
 	 *
 	 * @return void
 	 */
-	this.init = function () {
-	}
+	this.init = function () {}
 
 	/**
 	 * Exec command

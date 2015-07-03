@@ -38,7 +38,7 @@ elFinder.prototype.commands.edit = function () {
 				save = function () {
 					ta.editor && ta.editor.save(ta[0], ta.editor.instance);
 					dfrd.resolve(ta.getContent());
-					$('body').trigger('show_message', [__('Saved')])
+					$('body').trigger('show_message', [fm.i18n('ntfsave')])
 				},
 				cancel = function () {
 					dfrd.reject();
@@ -115,8 +115,8 @@ elFinder.prototype.commands.edit = function () {
 				})
 			}
 
-			opts.buttons[fm.i18n('Save')] = save;
-			opts.buttons[fm.i18n('Close')] = cancel;
+			opts.buttons[fm.i18n('btnSave')] = save;
+			opts.buttons[fm.i18n('btnClose')] = cancel;
 
 			fm.dialog(ta, opts).attr('id', id).addClass('elfinder-dialog-editor').parent().on('resize', function(e, ui) {
 				CMS.filters.exec(id+'-ta', 'changeHeight', $(this).find('.panel-body').height());

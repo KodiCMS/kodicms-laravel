@@ -9,6 +9,7 @@ elFinder.prototype.commands.quicklook.plugins.push(function (ql) {
 		mimes = {
 			'video/mp4': 'mp4',
 			'video/x-m4v': 'mp4',
+			'application/mp4': 'mp4',
 			'video/ogg': 'ogg',
 			'application/ogg': 'ogg',
 			'video/webm': 'webm'

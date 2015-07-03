@@ -5,7 +5,7 @@ return [
 		'driver' => \KodiCMS\Filemanager\elFinder\VolumeLocalFileSystem::class,
 		'path' => public_path('assets'),
 		'URL' => url('assets'),
-		'alias' => trans('filemanager::core.public'),
+		'alias' => 'public\assets',
 		'uploadMaxSize' => '32M',
 		'mimeDetect' => 'internal',
 		'imgLib' => 'gd',
