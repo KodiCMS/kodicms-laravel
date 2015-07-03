@@ -50,9 +50,8 @@ elFinder.prototype.commands.quicklook.plugins.push(function (ql) {
 				});
 		}
 
-		$(window)
-			.on(ql.resize, function () {
-				$('.elfinder-quicklook-preview-text-wrapper').trigger('resize');
-			});
+		ql.preview.on('changesize', function () {
+			$('.elfinder-quicklook-preview-text-wrapper').trigger('resize');
+		});
 	});
 });

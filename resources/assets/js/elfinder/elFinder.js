@@ -1401,8 +1401,15 @@
 		 * @return void
 		 */
 		this.resize = function (w, h) {
-			node.css('width', w).height(h).trigger('resize');
-			this.trigger('resize', {width: node.width(), height: node.height()});
+			w && node.css('width', w);
+			h && node.height(h);
+
+			node.trigger('resize');
+
+			this.trigger('resize', {
+				width: node.width(),
+				height: node.height()
+			});
 		}
 
 		/**

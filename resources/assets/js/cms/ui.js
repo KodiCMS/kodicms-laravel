@@ -481,16 +481,16 @@ CMS.ui.add('flags', function () {
 		timeout: 3000
 	});
 })
-	.add('momentJs', function () {
-		moment.locale(LOCALE);
-	})
-	.add('switcher', function () {
-		$(".form-switcher").bootstrapToggle();
-	})
-	.add('bootbox', function () {
-		bootbox.setLocale(LOCALE);
-	})
-	.add('bootstrap', function () {
-		$('[data-toggle="tooltip"]').tooltip();
-		$('[data-toggle="popover"]').popover();
-	});
+.add('momentJs', function () {
+	moment.locale(LOCALE);
+})
+.add('switcher', function () {
+	$(".form-switcher").bootstrapToggle();
+})
+.add('bootbox', function () {
+	bootbox.setLocale(LOCALE);
+})
+.add('bootstrap', function () {
+	$('[data-toggle="tooltip"]').tooltip();
+	$('[data-toggle="popover"]').popover();
+});

@@ -51,13 +51,6 @@ elFinder.prototype.commands.quicklook = function () {
 		navicon = 'fa',
 
 		/**
-		 * navbar "fullscreen" icon class
-		 *
-		 * @type Number
-		 **/
-		fullscreen = 'elfinder-quicklook-fullscreen',
-
-		/**
 		 * Triger keydown/keypress event with left/right arrow key code
 		 *
 		 * @param  Number  left/right arrow key code
@@ -157,6 +150,9 @@ elFinder.prototype.commands.quicklook = function () {
 				.append($btn.clone().append('<div class="' + navicon + ' fa-arrow-right"/>').on('click', function () {
 					navtrigger(39);
 				}))
+				.append($btn.clone().addClass('btn-info').append('<div class="' + navicon + ' fa-expand"/>').on('click', function () {
+					FullScreen.request(self.info.is(':hidden') ? self.preview[0] : self.info[0]);
+				}))
 				.append($btn.clone().append('<span class="fa fa-times elfinder-quicklook-close"/>').on('click', function (e) {
 					e.stopPropagation();
 					self.window.trigger('close');
@@ -176,7 +172,6 @@ elFinder.prototype.commands.quicklook = function () {
 		})
 		.on('update', function (e) {
 			var fm = self.fm,
-				preview = self.preview,
 				file = e.file,
 				tpl = '<div class="elfinder-quicklook-info-data list-group-item">{value}</div>',
 				tmb;
@@ -233,9 +228,9 @@ elFinder.prototype.commands.quicklook = function () {
 				navbar.attr('style', '');
 				state = animated;
 				node.trigger('scrolltoview');
-				win.css(closedCss(node))
+				win.css(closedCss(node)).css(openedCss())
 					.show()
-					.animate(openedCss(), 550, function () {
+					.animate(openedCss(), 10, function () {
 						state = opened;
 						self.update(1, self.value);
 					});
@@ -255,7 +250,7 @@ elFinder.prototype.commands.quicklook = function () {
 			if (self.opened()) {
 				state = animated;
 				node.length
-					? win.animate(closedCss(node), 500, close)
+					? win.animate(closedCss(node), 100, close)
 					: close();
 			}
 		});

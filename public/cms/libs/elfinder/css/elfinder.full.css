@@ -445,10 +445,14 @@
 
 /* container active on dropenter */
 .elfinder .elfinder-cwd-wrapper.elfinder-droppable-active {
+	border: 5px dashed #ccc;
+	overflow: hidden;
 	padding: 0;
-	border: 2px solid #8cafed;
 }
 
+.elfinder .elfinder-cwd-wrapper.elfinder-droppable-active .elfinder-cwd {
+	opacity: .3;
+}
 /************************** ICONS VIEW ********************************/
 
 /* file container */
@@ -1149,25 +1153,6 @@
 	bottom: 3px;
 	background: url("../img/toolbar.png") 0 -496px no-repeat; }
 
-/* quicklook fullscreen window */
-.elfinder-quicklook-fullscreen {
-	-webkit-background-clip: padding-box;
-	/*	background-clip:padding-box;*/
-	padding: 0;
-	background: #000;
-	z-index: 9999999999999;
-	display: block;
-}
-
-/* hide titlebar in fullscreen mode */
-.elfinder-quicklook-fullscreen .elfinder-quicklook-titlebar { display: none; }
-
-/* hide preview border in fullscreen mode */
-.elfinder-quicklook-fullscreen .elfinder-quicklook-preview {
-	border: 0 solid;
-	padding: 5px;
-	overflow: hidden;
-}
 
 .elfinder-quicklook-titlebar { }
 

@@ -634,8 +634,6 @@ $.fn.elfindercwd = function (fm, options) {
 			 */
 			content = function (files, any) {
 				var phash = fm.cwd().hash;
-				// console.log(files)
-
 				unselectAll();
 
 				try {
@@ -877,11 +875,10 @@ $.fn.elfindercwd = function (fm, options) {
 						'x': e.clientX,
 						'y': e.clientY
 					});
-
 				}),
 
 			resize = function () {
-				var h = 0;
+				var h = 5;
 
 				wrapper.siblings('.elfinder-panel:visible').each(function () {
 					h += $(this).outerHeight(true);
@@ -890,11 +887,10 @@ $.fn.elfindercwd = function (fm, options) {
 				wrapper.height(wz.height() - h);
 			},
 
-		// elfinder node
+			// elfinder node
 			parent = $(this).parent().resize(resize),
-		// workzone node
-			wz = parent.children('.elfinder-workzone').append(wrapper.append(this))
-			;
+			// workzone node
+			wz = parent.children('.elfinder-workzone').append(wrapper.append(this));
 
 
 		if (fm.dragUpload) {
@@ -1006,7 +1002,7 @@ $.fn.elfindercwd = function (fm, options) {
 				cwd.css('height', 'auto');
 
 				if (cwd.outerHeight(true) < wrapper.height()) {
-					cwd.height(wrapper.height() - (cwd.outerHeight(true) - cwd.height()) - 2);
+					cwd.height(wrapper.height() - (cwd.outerHeight(true) - cwd.height()) - 5);
 				}
 			})
 			// select dragged file if no selected, disable selectable

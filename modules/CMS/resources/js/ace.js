@@ -54,35 +54,6 @@ CMS.ui.add('ace', function() {
 			return mode;
 		}
 
-		function fullscreen(editArea, editor, height) {
-			var $menu = $('#main-menu').add('#main-navbar').add('#main-menu-bg');
-			if (!editArea.data('fullscreen') || editArea.data('fullscreen') == 'off') {
-				editArea
-					.css({
-						position: 'fixed',
-						width: '100%',
-						height: '100%',
-						top: 0, left: 0,
-						'z-index': 999999
-					})
-					.data('fullscreen', 'on');
-
-				editor.resize();
-				$menu.hide();
-			} else {
-				editArea
-					.data('fullscreen', 'off')
-					.css({
-						position: 'relative',
-						width: 'auto',
-						height: height,
-						top: 'auto', left: 'auto'
-					});
-				editor.resize();
-				$menu.show();
-			}
-		}
-
 		if (textarea.data('readonly') == 'on') {
 			editor.setReadOnly(true);
 		} else {
@@ -98,7 +69,7 @@ CMS.ui.add('ace', function() {
 			name: 'Full-screen',
 			bindKey: {win: 'Ctrl-Shift-F', mac: 'Command-Shift-F'},
 			exec: function (editor) {
-				fullscreen(editArea, editor, height)
+				FullScreen.toggle(editArea[0]);
 			}
 		});
 
