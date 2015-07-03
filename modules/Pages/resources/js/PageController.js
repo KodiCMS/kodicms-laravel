@@ -1,38 +1,40 @@
 var Page = {
 	cacheKey: 'expanded_pages',
 	_expandedPages: [],
-	init: function() {
+	init: function () {
 		this.expandedPages();
 		this.loadChildren(1, 0, $('#page-tree-list').find('li'));
 		$('#page-tree-list').on('click', '.item-expander', $.proxy(this.onExpand, this));
 	},
-	expandedPages: function() {
-		Api.get('/api.user.meta', {key: this.cacheKey}, $.proxy(function(response) {
-			this._expandedPages = _.map(response.content, function(num) { return parseInt(num); });
+	expandedPages: function () {
+		Api.get('/api.user.meta', {key: this.cacheKey}, $.proxy(function (response) {
+			this._expandedPages = _.map(response.content, function (num) {
+				return parseInt(num);
+			});
 		}, this));
 	},
-	expandedPagesAdd: function(page_id) {
+	expandedPagesAdd: function (page_id) {
 		this._expandedPages.push(page_id);
 		Api.post('/api.user.meta', {key: this.cacheKey, value: _.uniq(this._expandedPages)});
 	},
-	expandedPagesRemove: function(page_id) {
-		this._expandedPages = _.filter(this._expandedPages, function(num) {
+	expandedPagesRemove: function (page_id) {
+		this._expandedPages = _.filter(this._expandedPages, function (num) {
 			return num != parseInt(page_id);
 		});
 		Api.post('/api.user.meta', {key: this.cacheKey, value: _.uniq(this._expandedPages)});
 	},
-	loadChildren: function(parent_id, level, $container, $expander) {
+	loadChildren: function (parent_id, level, $container, $expander) {
 		CMS.loader.show('#page-tree');
 
-		Api.get('/api.page.children', {parent_id: parent_id, level: level}, $.proxy(function(response) {
+		Api.get('/api.page.children', {parent_id: parent_id, level: level}, $.proxy(function (response) {
 			$container.append(response.content);
-			if($expander) {
+			if ($expander) {
 				$expander
 					.addClass('item-expander-expand')
 					.removeClass('fa-plus')
 					.addClass('fa-minus');
 
-				if(parent_id > 1) {
+				if (parent_id > 1) {
 					$container.addClass('item-expanded');
 					this.expandedPagesAdd(parent_id);
 				}
@@ -42,12 +44,12 @@ var Page = {
 			CMS.ui.init('icon');
 		}, this));
 	},
-	onExpand: function(e) {
+	onExpand: function (e) {
 		var expander = $(e.target),
 			li = expander.closest('li'),
 			parent_id = li.data('id');
 
-		if ( ! li.hasClass('item-expanded')) {
+		if (!li.hasClass('item-expanded')) {
 			var level = parseInt(li.parent().data('level'));
 
 			this.loadChildren(parent_id, level, li, expander);
@@ -78,9 +80,9 @@ var Page = {
 }
 
 
-CMS.controllers.add('page.get.index', function() {
+CMS.controllers.add('page.get.index', function () {
 	Page.init();
-	$('#pageMapReorderButton').on('click', function() {
+	$('#pageMapReorderButton').on('click', function () {
 		var self = $(this);
 
 		if (self.hasClass('btn-inverse')) {
@@ -88,7 +90,7 @@ CMS.controllers.add('page.get.index', function() {
 			$('#page-tree-header').show();
 			self.removeClass('btn-inverse');
 
-			$.get('/api.page.children', {parent_id: 1, level: 0}, function(resp) {
+			$.get('/api.page.children', {parent_id: 1, level: 0}, function (resp) {
 				$('#page-tree-list')
 					.find('ul')
 					.remove();
@@ -106,7 +108,7 @@ CMS.controllers.add('page.get.index', function() {
 			$('#page-tree-list').hide();
 			$('#page-tree-header').hide();
 
-			Api.get('/api.page.reorder', {}, function(response) {
+			Api.get('/api.page.reorder', {}, function (response) {
 				$('#page-search-list')
 					.html(response.content)
 					.show();
@@ -116,22 +118,20 @@ CMS.controllers.add('page.get.index', function() {
 					maxDepth: 10,
 					listNodeName: 'ul',
 					listClass: 'dd-list list-unstyled',
-				}).on('change', function(e, el) {
+				}).on('change', function (e, el) {
 					var list = $(e.target).data('nestable');
 
 					var data,
 						depth = 0,
 						array = [];
 
-					step = function(level, depth)
-					{
+					step = function (level, depth) {
 						var items = level.children(list.options.itemNodeName),
 							position = 0;
 
-						items.each(function()
-						{
-							var li   = $(this),
-								sub  = li.children(list.options.listNodeName),
+						items.each(function () {
+							var li = $(this),
+								sub = li.children(list.options.listNodeName),
 								parent_id = level.parent().data('id');
 
 							array.push({
@@ -156,7 +156,7 @@ CMS.controllers.add('page.get.index', function() {
 		}
 	});
 
-	$('.form-search').on('submit', function(event) {
+	$('.form-search').on('submit', function (event) {
 		var form = $(this);
 
 		if ($('#page-seacrh-input').val() !== '') {
@@ -164,7 +164,7 @@ CMS.controllers.add('page.get.index', function() {
 
 			CMS.loader.show('#page-search-list');
 
-			Api.get('/api.page.search', form.serialize(), function(resp) {
+			Api.get('/api.page.search', form.serialize(), function (resp) {
 				$('#page-search-list').html(resp.content);
 				CMS.loader.hide();
 				CMS.ui.init('icon');
@@ -187,13 +187,13 @@ CMS.controllers.add('page.get.index', function() {
 		ajaxOptions: {
 			dataType: 'json'
 		},
-		params: function(params) {
+		params: function (params) {
 			params.page_id = $(this).closest('li').data('id');
 			return params;
 		},
-		url: function(params) {
+		url: function (params) {
 			var $self = $(this);
-			Api.post('/api.page.changeStatus', params, function(response) {
+			Api.post('/api.page.changeStatus', params, function (response) {
 				$self.replaceWith($(response.content).editable(editable_status));
 			});
 		},
@@ -203,39 +203,39 @@ CMS.controllers.add('page.get.index', function() {
 			placeholder: i18n.t('pages.core.field.status')
 		}
 	};
-	
+
 	$('#page-tree-list, #page-search-list').editable(editable_status);
 });
 
 
-CMS.controllers.add('page.get.create', function() {
-	$('body').on('keyup', 'input[name="title"]', function() {
+CMS.controllers.add('page.get.create', function () {
+	$('body').on('keyup', 'input[name="title"]', function () {
 		$('input[name="breadcrumb"]')
 			.add('input[name="meta_title"]')
 			.val($(this).val());
 	});
-	
+
 	$('.panel-toggler').click();
 });
 
-CMS.controllers.add(['page.get.create', 'page.get.edit'], function() {
-	$('body').on('change', 'select[name="status"]', function() {
+CMS.controllers.add(['page.get.create', 'page.get.edit'], function () {
+	$('body').on('change', 'select[name="status"]', function () {
 		show_password_field($(this).val());
 	});
-	
-	$('#page-meta-panel').on('click', ':input', function() {
+
+	$('#page-meta-panel').on('click', ':input', function () {
 		var $fields = {};
 		var $array = ['breadcrumb', 'meta_title', 'meta_keywords', 'meta_description'];
-		for(i in $array) {
+		for (i in $array) {
 			$fields[$array[i]] = $('#' + $array[i]).val();
 		}
-	
+
 		Api.get('/api.page.parse_meta', {
 			page_id: PAGE.id,
 			fields: $fields
-		}, function(response) {
-			if(response.content) {
-				for(field in response.content) {
+		}, function (response) {
+			if (response.content) {
+				for (field in response.content) {
 					$('#field-' + field + ' .help-block').text(response.content[field]);
 				}
 			}
@@ -244,12 +244,12 @@ CMS.controllers.add(['page.get.create', 'page.get.edit'], function() {
 
 	var $redirectCheckbox = $('input[name="is_redirect"]');
 
-	$redirectCheckbox.on('change', function() {
+	$redirectCheckbox.on('change', function () {
 		show_redirect_field($(this))
 	});
 
 	$('#redirect-container').on('click', function (e) {
-		if(!$(e.target).is(':input, label') && !$redirectCheckbox.is(':checked'))
+		if (!$(e.target).is(':input, label') && !$redirectCheckbox.is(':checked'))
 			$redirectCheckbox.trigger('click')
 	});
 
@@ -270,7 +270,7 @@ CMS.controllers.add(['page.get.create', 'page.get.edit'], function() {
 	}
 });
 
-CMS.controllers.add(['page.get.edit'], function() {
+CMS.controllers.add(['page.get.edit'], function () {
 	var partModel = Backbone.Model.extend({
 		urlRoot: '/api.page.part',
 		defaults: {
@@ -285,41 +285,41 @@ CMS.controllers.add(['page.get.edit'], function() {
 			position: 0
 		},
 
-		parse: function(response, xhr) {
-			if(response.method == 'POST') {
+		parse: function (response, xhr) {
+			if (_.contains('POST', 'PUT'), response.method) {
 				return response.content;
 			}
 
 			return response;
 		},
 
-		validate: function(attrs) {
-			if(!$.trim(attrs.name))
+		validate: function (attrs) {
+			if (!$.trim(attrs.name))
 				return 'Name must be set';
 		},
 
-		switchProtected: function() {
+		switchProtected: function () {
 			this.save({is_protected: this.get('is_protected') == 1 ? 0 : 1});
 		},
 
-		toggleMinimize: function() {
+		toggleMinimize: function () {
 			this.save({is_expanded: this.get('is_expanded') == 1 ? 0 : 1});
 		},
 
-		switchIndexable: function() {
+		switchIndexable: function () {
 			this.save({is_indexable: this.get('is_indexable') == 1 ? 0 : 1});
 		},
 
-		changeFilter: function(wysiwyg) {
-			if(this.get('wysiwyg') != wysiwyg)
+		changeFilter: function (wysiwyg) {
+			if (this.get('wysiwyg') != wysiwyg)
 				this.save({wysiwyg: wysiwyg});
 		},
 
-		destroyFilter: function() {
-			CMS.filters.switchOff('pageEditPartContent-' + this.get('name') );
+		destroyFilter: function () {
+			CMS.filters.switchOff('pageEditPartContent-' + this.get('name'));
 		},
 
-		clear: function() {
+		clear: function () {
 			this.destroy();
 		}
 	});
@@ -327,10 +327,10 @@ CMS.controllers.add(['page.get.edit'], function() {
 	var partCollection = Backbone.Collection.extend({
 		url: '/api.page.part',
 		model: partModel,
-		parse: function(response, xhr) {
+		parse: function (response, xhr) {
 			return response.content;
 		},
-		comparator: function(a) {
+		comparator: function (a) {
 			return a.get('position');
 		},
 		setOrder: function (data) {
@@ -350,7 +350,7 @@ CMS.controllers.add(['page.get.edit'], function() {
 		events: {
 			'click .part-options-button': 'toggleOptions',
 			'click .part-minimize-button': 'toggleMinimize',
-			'dblclick .panel-heading ': 'toggleMinimize',
+			'dblclick .panel-title': 'editName',
 			'change .item-filter': 'changeFilter',
 			'change .is_protected': 'switchProtected',
 			'change .is_indexable': 'switchIndexable',
@@ -359,39 +359,44 @@ CMS.controllers.add(['page.get.edit'], function() {
 			'keypress .edit-name': 'updateOnEnter'
 		},
 
-		updateOnEnter: function(e) {
+		updateOnEnter: function (e) {
 			if (e.keyCode == 13) this.closeEditName();
 			this.input.val(this.input.val().replace(/[^a-z0-9\-\_]/, ''));
 		},
 
-		editName: function(e) {
-			if(this.model.get('is_protected') == 1 && this.model.get('is_developer') == 0) return;
+		checkPermissions: function () {
+			return !(this.model.get('is_protected') == 1 && this.model.get('is_developer') == 0);
+		},
 
-			if(this.$el.hasClass("editing")) {
+		editName: function (e) {
+			if (!this.checkPermissions()) return;
+
+			if (this.$el.hasClass("editing")) {
 				this.closeEditName();
 			} else {
-				this.$el.addClass("editing");
 				this.input.show().focus();
 				this.$el.find('.part-name').hide();
 			}
+
+			this.$el.toggleClass("editing");
 			return false;
 		},
 
-		closeEditName: function() {
-			if(this.model.get('is_protected') == 1 && this.model.get('is_developer') == 0) return;
+		closeEditName: function () {
+			if (!this.checkPermissions()) return;
 
-			this.$el.removeClass("editing");
 			var value = $.trim(this.input.val());
 			this.model.save({name: value});
+
 			this.render();
 
 			return false;
 		},
 
-		toggleMinimize: function(e) {
+		toggleMinimize: function (e) {
 			e.preventDefault();
 
-			if(this.model.get('is_expanded') == 1) {
+			if (this.model.get('is_expanded') == 1) {
 				this.$el
 					.find('.part-minimize-button i')
 					.addClass('fa-chevron-down')
@@ -413,41 +418,43 @@ CMS.controllers.add(['page.get.edit'], function() {
 			this.model.toggleMinimize();
 		},
 
-		changeFilter: function() {
+		changeFilter: function () {
 			var wysiwyg = this.$el.find('.item-filter').val();
 			this.model.changeFilter(wysiwyg);
-			CMS.filters.switchOn( 'pageEditPartContent-' + this.model.get('name'), wysiwyg);
+			CMS.filters.switchOn('pageEditPartContent-' + this.model.get('name'), wysiwyg);
 		},
 
-		toggleOptions: function(e) {
+		toggleOptions: function (e) {
 			e.preventDefault();
 			this.$el.find('.part-options').toggle();
 		},
 
-		switchProtected: function() {
+		switchProtected: function () {
 			this.model.switchProtected();
 		},
 
-		switchIndexable: function() {
+		switchIndexable: function () {
 			this.model.switchIndexable();
 		},
 
-		initialize: function() {
+		initialize: function () {
 			this.model.on('add', this.render, this);
 			this.model.on('destroy', this.remove, this);
 		},
 
-		render: function() {
+		render: function () {
 			this.$el.html(this.template(this.model.toJSON()));
 			this.$el.data('id', this.model.id);
 
+			this.changeFilter();
+
 			this.input = this.$el.find('.edit-name').hide();
 
-			if(this.model.get('is_protected') == 1) {
+			if (this.model.get('is_protected') == 1) {
 				this.$el.find('.is_protected').check();
 			}
 
-			if(this.model.get('is_indexable') == 1) {
+			if (this.model.get('is_indexable') == 1) {
 				this.$el.find('.is_indexable').check();
 			}
 
@@ -455,7 +462,7 @@ CMS.controllers.add(['page.get.edit'], function() {
 		},
 
 		// Remove the item, destroy the model.
-		clear: function(e) {
+		clear: function (e) {
 			e.preventDefault();
 			if (confirm(__('Remove part :part_name?', {":part_name": this.model.get('name')}))) this.model.clear();
 		}
@@ -463,7 +470,7 @@ CMS.controllers.add(['page.get.edit'], function() {
 
 	var partListView = Backbone.View.extend({
 		el: $("#pageEditParts"),
-		initialize: function() {
+		initialize: function () {
 			var $self = this;
 			this.collection.fetch({
 				data: {
@@ -477,33 +484,33 @@ CMS.controllers.add(['page.get.edit'], function() {
 			this.$el.sortable({
 				axis: "y",
 				handle: ".panel-heading-sortable-handler",
-				receive: _.bind(function(event, ui) {
+				receive: _.bind(function (event, ui) {
 					// do something here?
 				}, this),
-				remove: _.bind(function(event, ui) {
+				remove: _.bind(function (event, ui) {
 					// do something here?
 				}, this),
-				update: _.bind(function(event, ui) {
+				update: _.bind(function (event, ui) {
 					var list = ui.item.context.parentNode;
 					this.collection.setOrder($(list).sortable('toArray', {attribute: 'data-id'}));
 				}, this)
 			});
 		},
 
-		render: function() {
+		render: function () {
 			this.clear();
-			this.collection.each(function(part) {
+			this.collection.each(function (part) {
 				this.addPart(part);
 			}, this);
 
 			this.collection.on('add', this.render, this);
 		},
 
-		clear: function() {
+		clear: function () {
 			this.$el.empty();
 		},
 
-		addPart: function(part) {
+		addPart: function (part) {
 			var view = new partView({model: part});
 			this.$el.append(view.render().el);
 			view.changeFilter();
@@ -513,8 +520,8 @@ CMS.controllers.add(['page.get.edit'], function() {
 	var partPanel = Backbone.View.extend({
 		el: $("#pageEditPartsPanel"),
 
-		initialize: function() {
-			if(PAGE.id == 0)
+		initialize: function () {
+			if (PAGE.id == 0)
 				this.$el.remove();
 		},
 
@@ -522,17 +529,17 @@ CMS.controllers.add(['page.get.edit'], function() {
 			'click #pageEditPartAddButton': 'createPart'
 		},
 
-		createPart: function(e) {
+		createPart: function (e) {
 			e.preventDefault();
 
 			this.model = new partModel();
 
-			if(this.collection.length == 0)
+			if (this.collection.length == 0)
 				this.model.set('name', 'body');
 
 			var i = 0;
-			this.collection.each(function(part) {
-				if(part.get('name') == this.model.get('name')) {
+			this.collection.each(function (part) {
+				if (part.get('name') == this.model.get('name')) {
 					do {
 						i++;
 						this.model.set('name', 'part' + i);
@@ -544,8 +551,8 @@ CMS.controllers.add(['page.get.edit'], function() {
 
 			this.model.save();
 
-			this.model.on("sync", function() {
-				this.collection.each(function(part) {
+			this.model.on("sync", function () {
+				this.collection.each(function (part) {
 					part.destroyFilter();
 				}, this);
 				this.collection.add(this.model);
