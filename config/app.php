@@ -112,6 +112,7 @@ return [
 		 * App Service Providers must be here...
 		 */
 		App\Providers\AppServiceProvider::class,
+		Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 	]),
 
 	/*
