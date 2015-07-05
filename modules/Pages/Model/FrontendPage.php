@@ -5,7 +5,7 @@ use Cache;
 use Request;
 use Carbon\Carbon;
 use KodiCMS\Users\Model\User;
-use KodiCMS\Support\Helpers\File;
+use KodiCMS\Support\Helpers\Mime;
 use KodiCMS\Support\Helpers\Text;
 use Illuminate\Database\Query\Builder;
 use KodiCMS\Pages\Contracts\BehaviorPageInterface;
@@ -674,7 +674,7 @@ class FrontendPage implements BehaviorPageInterface
 	 */
 	public function getMime()
 	{
-		$mime = File::mimeByExt(pathinfo($this->getUri(), PATHINFO_EXTENSION));
+		$mime = Mime::byFilename(pathinfo($this->getUri(), PATHINFO_EXTENSION));
 
 		return $mime === false ? 'text/html' : $mime;
 	}

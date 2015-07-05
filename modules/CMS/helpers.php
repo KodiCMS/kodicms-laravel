@@ -2,6 +2,7 @@
 
 use KodiCMS\Support\Helpers\File;
 
+
 /**
  * @return string
  */
@@ -19,11 +20,20 @@ function backend_resources_url()
 }
 
 /**
+ * @param string $path
+ * @return string
+ */
+function normalize_path($path)
+{
+	return str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+}
+
+/**
  * @return string
  */
 function layouts_path()
 {
-	return File::normalizePath(base_path('resources/layouts'));
+	return normalize_path(base_path('resources/layouts'));
 }
 
 /**
@@ -31,7 +41,7 @@ function layouts_path()
  */
 function snippets_path()
 {
-	return File::normalizePath(base_path('resources/snippets'));
+	return normalize_path(base_path('resources/snippets'));
 }
 
 /**

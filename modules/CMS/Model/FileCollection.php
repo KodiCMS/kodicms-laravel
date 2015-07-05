@@ -3,7 +3,6 @@
 use Iterator;
 use SplFileInfo;
 use ModuleLoader;
-use KodiCMS\Support\Helpers\File as FileSystem;
 
 class FileCollection implements Iterator
 {
@@ -105,7 +104,7 @@ class FileCollection implements Iterator
 	 */
 	public function getSettingsFilePath()
 	{
-		return FileSystem::normalizePath($this->directory . DIRECTORY_SEPARATOR . '.settings.php');
+		return normalize_path($this->directory . DIRECTORY_SEPARATOR . '.settings.php');
 	}
 
 	/**

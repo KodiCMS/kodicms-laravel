@@ -2,7 +2,7 @@
 
 use ModuleLoader;
 use Illuminate\Http\Response;
-use KodiCMS\Support\Helpers\File;
+use KodiCMS\Support\Helpers\Mime;
 
 class VirtualMediaLinksController extends Controller
 {
@@ -16,7 +16,7 @@ class VirtualMediaLinksController extends Controller
 		if ($file = ModuleLoader::findFile('resources', $file, $ext))
 		{
 			return (new Response(file_get_contents($file)))
-				->header('Content-Type', File::mimeByExt($ext))
+				->header('Content-Type', Mime::byExt($ext))
 				->header('last-modified', date('r', filemtime($file)));
 		}
 

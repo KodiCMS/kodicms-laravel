@@ -184,7 +184,7 @@ class ModuleLoader
 		}
 
 		// Create a partial path of the filename
-		$path = File::normalizePath($dir . DIRECTORY_SEPARATOR . $file . $ext);
+		$path = normalize_path("{$dir}/{$file}{$ext}");
 
 		if (isset($this->files[$path . ($array ? '_array' : '_path')]))
 		{
@@ -263,7 +263,7 @@ class ModuleLoader
 
 		foreach ($paths as $moduleName => $path)
 		{
-			if (is_dir($path = File::normalizePath($path . DIRECTORY_SEPARATOR . $directory)))
+			if (is_dir($path = normalize_path($path . DIRECTORY_SEPARATOR . $directory)))
 			{
 				// Create a new directory iterator
 				$dir = new \DirectoryIterator($path);

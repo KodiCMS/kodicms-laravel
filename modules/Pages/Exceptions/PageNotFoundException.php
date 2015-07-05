@@ -2,7 +2,7 @@
 
 use Request;
 use Illuminate\Http\Response;
-use KodiCMS\Support\Helpers\File;
+use KodiCMS\Support\Helpers\Mime;
 use KodiCMS\CMS\Exceptions\Exception;
 use KodiCMS\Pages\Model\FrontendPage;
 
@@ -15,39 +15,39 @@ class PageNotFoundException extends Exception
 		if(config('app.debug')) return;
 
 		$ext = pathinfo(Request::getUri(), PATHINFO_EXTENSION);
-		$mimetype = null;
+		$mimeType = null;
 
-		if (empty($ext) or ($ext and !($mimetype = File::mimeByExt($ext))))
+		if (empty($ext) or ($ext and !($mimeType = Mime::byExt($ext))))
 		{
-			$mimetype = 'text/html';
+			$mimeType = 'text/html';
 		}
 
-		if ($mimetype AND $mimetype != 'text/html')
+		if ($mimeType AND $mimeType != 'text/html')
 		{
 			$response = new Response();
-			$this->sendResponse($response, $mimetype);
+			$this->sendResponse($response, $mimeType);
 		}
 		elseif (!is_null($page = FrontendPage::findByField('behavior', 'page.not.found')))
 		{
 			$controller = app()->make('\KodiCMS\Pages\Http\Controllers\FrontendController');
 
 			$response = app()->call([$controller, 'run'], [$page->getUri()]);
-			$this->sendResponse($response, $mimetype);
+			$this->sendResponse($response, $mimeType);
 		}
 	}
 
 	/**
 	 * @param Response $response
-	 * @param string $mimetype
+	 * @param string $mimeType
 	 */
-	protected function sendResponse(Response $response, $mimetype)
+	protected function sendResponse(Response $response, $mimeType)
 	{
-		if(empty($mimetype))
+		if(empty($mimeType))
 		{
-			$mimetype = 'text/html';
+			$mimeType = 'text/html';
 		}
 
-		$response->header('Content-type', $mimetype);
+		$response->header('Content-type', $mimeType);
 		$response->setStatusCode(404);
 		$response->send();
 		exit();

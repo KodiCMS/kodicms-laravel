@@ -10,7 +10,6 @@ use SplTempFileObject;
 use KodiCMS\Support\Helpers\Text;
 use KodiCMS\CMS\Exceptions\Exception;
 use KodiCMS\CMS\Exceptions\FileModelException;
-use KodiCMS\Support\Helpers\File as FileSystem;
 use KodiCMS\CMS\Exceptions\FileValidationException;
 
 class File
@@ -424,7 +423,7 @@ class File
 
 		if ($this->isNew())
 		{
-			$newFilename = FileSystem::normalizePath($this->basePath . DIRECTORY_SEPARATOR . $this->changed['name']);
+			$newFilename = normalize_path($this->basePath . DIRECTORY_SEPARATOR . $this->changed['name']);
 			$status = touch($newFilename) !== false;
 
 			if ($status)
@@ -435,7 +434,7 @@ class File
 		}
 		else if ($this->isChanged('name'))
 		{
-			$newFilename = FileSystem::normalizePath($this->getPath() . '/' . $this->changed['name']);
+			$newFilename = normalize_path($this->getPath() . '/' . $this->changed['name']);
 			$status = @app('files')->move($this->getRealPath(), $newFilename);
 
 			if ($status)
