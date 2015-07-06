@@ -1,19 +1,40 @@
 CMS.ui.add('ace', function() {
 	var $ace = {};
 
+	function parseMimeMode(mime) {
+		switch (mime)
+		{
+			case 'application/json':
+				return 'json';
+			case 'text/plain':
+				return 'text';
+			default:
+				if(mime.indexOf('text/x-') === 0)
+					return mime.substring(7);
+				else if(mime.indexOf('text/') === 0)
+					return mime.substring(5);
+				else
+					return 'text';
+		}
+	}
+
 	$ace.switchOn_handler = function (textarea_id, params) {
 		var editor_id = getSlug(textarea_id) + 'Div',
-			textarea = $('#' + textarea_id).hide(),
+			$textarea = $('#' + textarea_id).hide(),
 			mode;
 
 		params = $.extend({
 			height: 300
-		}, textarea.data(), params);
+		}, $textarea.data(), params);
 
-		(mode = params.mode) || params.mime.length && (mode = parseMimeMode(params.mime)) || (mode = 'php');
+
+		mode = params.mode || 'php';
+
+		if(_.has(params, 'mime'))
+			mode = parseMimeMode(params.mime);
 
 		var editArea = $('<div id="' + editor_id + '" />')
-			.insertAfter(textarea)
+			.insertAfter($textarea)
 			.css({
 				height: params.height,
 				fontSize: 14
@@ -22,7 +43,7 @@ CMS.ui.add('ace', function() {
 		var editor = ace.edit(editor_id);
 
 		editor.$blockScrolling = Infinity;
-		editor.setValue(textarea.val());
+		editor.setValue($textarea.val());
 
 		editor.clearSelection();
 		editor.getSession().setMode("ace/mode/" + mode);
@@ -30,29 +51,12 @@ CMS.ui.add('ace', function() {
 		editor.getSession().setUseSoftTabs(false);
 		editor.getSession().setUseWrapMode(true);
 		editor.getSession().on('change', function () {
-			textarea.val(editor.getSession().getValue());
+			$textarea.val(editor.getSession().getValue());
 		});
 
 		editor.setTheme("ace/theme/" + ACE_THEME);
 
-		function parseMimeMode(mime) {
-			switch (mime)
-			{
-				case 'application/json':
-					return 'json';
-				case 'text/plain':
-					return 'text';
-				default:
-					if(mime.indexOf('text/x-') === 0)
-						return mime.substring(7);
-					else if(mime.indexOf('text/') === 0)
-						return mime.substring(5);
-					else
-						return 'text';
-			}
-		}
-
-		if (textarea.data('readonly') == 'on') {
+		if (_.propertyOf(params)('readonly')) {
 			editor.setReadOnly(true);
 		} else {
 			editor.commands.addCommand({
