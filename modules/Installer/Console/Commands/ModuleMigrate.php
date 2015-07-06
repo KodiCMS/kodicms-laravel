@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\Installer\Console\Commands;
 
+use ModulesLoader;
 use Illuminate\Console\Command;
-use ModuleLoader;
-use KodiCMS\Installer\Support\ModuleInstaller;
+use KodiCMS\Installer\Support\ModulesInstaller;
 use Symfony\Component\Console\Input\InputOption;
 
 class ModuleMigrate extends Command
@@ -20,7 +20,7 @@ class ModuleMigrate extends Command
 	public function fire()
 	{
 		$this->output->writeln('<info>Migrating KodiCMS modules...</info>');
-		$installer = new ModuleInstaller(ModuleLoader::getRegisteredModules());
+		$installer = new ModulesInstaller(ModulesLoader::getRegisteredModules());
 
 		$installer->cleanOutputMessages();
 		$installer->resetModules();

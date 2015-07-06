@@ -6,7 +6,7 @@ use KodiCMS\CMS\Loader\ModuleContainer;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Database\Migrations\DatabaseMigrationRepository;
 
-class ModuleInstaller {
+class ModulesInstaller {
 
 	/**
 	 * @var array

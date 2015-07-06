@@ -1,8 +1,7 @@
 <?php namespace KodiCMS\Plugins\Loader;
 
-use DB;
 use Artisan;
-use ModuleLoader;
+use ModulesLoader;
 use KodiCMS\Plugins\Model\Plugin;
 use Illuminate\Filesystem\Filesystem;
 
@@ -211,7 +210,7 @@ class PluginLoader {
 			)
 			{
 				$this->activated[get_class($pluginContainer)] = $pluginContainer;
-				ModuleLoader::registerModule($pluginContainer);
+				ModulesLoader::registerModule($pluginContainer);
 
 				$pluginContainer->checkActivation();
 				$pluginContainer->setSettings($model->settings);

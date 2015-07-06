@@ -1,6 +1,6 @@
 <?php namespace KodiCMS\CMS\Console\Commands;
 
-use ModuleLoader;
+use ModulesLoader;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Input\InputOption;
@@ -30,7 +30,7 @@ class ModuleLocalePublish extends Command {
 
 		$newLocale = $this->input->getOption('locale');
 
-		foreach (ModuleLoader::getRegisteredModules() as $module)
+		foreach (ModulesLoader::getRegisteredModules() as $module)
 		{
 			if (!is_dir($module->getLocalePath()) or !$module->isPublishable())
 			{

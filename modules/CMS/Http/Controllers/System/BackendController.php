@@ -3,7 +3,6 @@
 use UI;
 use View;
 use Assets;
-use ModuleLoader;
 use KodiCMS\Support\Helpers\Callback;
 use KodiCMS\CMS\Exceptions\ValidationException;
 use KodiCMS\CMS\Navigation\Collection as Navigation;

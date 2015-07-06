@@ -43,7 +43,8 @@ return [
 	 * KodiCMS aliases...
 	 */
 	'CMS'				=> KodiCMS\Support\Facades\CMS::class,
-	'ModuleLoader' 		=> KodiCMS\Support\Facades\ModuleLoader::class,
+	'ModulesLoader' 	=> KodiCMS\Support\Facades\ModulesLoader::class,
+	'ModulesFileSystem' => KodiCMS\Support\Facades\ModulesFileSystem::class,
 	'PluginLoader' 		=> KodiCMS\Support\Facades\PluginLoader::class,
 	'ACL'				=> KodiCMS\Support\Facades\ACL::class,
 	'DatabaseConfig' 	=> KodiCMS\Support\Facades\DatabaseConfig::class,

@@ -2,7 +2,7 @@
 
 use Iterator;
 use SplFileInfo;
-use ModuleLoader;
+use ModulesFileSystem;
 
 class FileCollection implements Iterator
 {
@@ -52,27 +52,22 @@ class FileCollection implements Iterator
 
 	protected function listFiles()
 	{
-		$paths = ModuleLoader::listFiles($this->resourceFolder);
-		$this->addFiles($paths);
+		foreach (ModulesFileSystem::listFiles($this->resourceFolder) as $relativePath => $splFile)
+		{
+			$this->addFile($splFile);
+		}
 	}
 
 	/**
-	 * @param array $files
+	 * @param SplFileInfo $file
+	 * @return File
 	 */
-	protected function addFiles(array $files)
+	public function addFile($file)
 	{
-		foreach ($files as $filePath)
-		{
-			if (is_array($filePath))
-			{
-				// TODO: реализовать вывод файлов из суббирректорий
-				//$this->addFiles($filePath);
-			}
-			else
-			{
-				$this->addFile($filePath);
-			}
-		}
+		$file = new $this->fileClass($file);
+		$file->setSettings(array_get($this->settings, $file->getFilename()));
+
+		return $this->files[$file->getRealPath()] = $file;
 	}
 
 	/**
@@ -164,18 +159,6 @@ class FileCollection implements Iterator
 	public function newFile()
 	{
 		return $this->newFiles[] = new $this->fileClass(null, $this->getRealPath());
-	}
-
-	/**
-	 * @param string $path
-	 * @return File
-	 */
-	public function addFile($path)
-	{
-		$file = new $this->fileClass($path);
-		$file->setSettings(array_get($this->settings, $file->getFilename()));
-
-		return $this->files[$path] = $file;
 	}
 
 	/**

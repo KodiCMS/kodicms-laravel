@@ -2,7 +2,7 @@
 
 use CMS;
 use Event;
-use ModuleLoader;
+use ModulesLoader;
 use KodiCMS\CMS\Helpers\DatabaseConfig;
 
 class ConfigServiceProvider extends ServiceProvider {
@@ -12,7 +12,7 @@ class ConfigServiceProvider extends ServiceProvider {
 		/**
 		 * Загрузка конфигов модулей
 		 */
-		foreach (ModuleLoader::getRegisteredModules() as $module)
+		foreach (ModulesLoader::getRegisteredModules() as $module)
 		{
 			$config = $module->loadConfig();
 			foreach($config as $group => $data)

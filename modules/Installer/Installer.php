@@ -9,7 +9,7 @@ use Validator;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Session\Store as SessionStore;
-use KodiCMS\Installer\Support\ModuleInstaller;
+use KodiCMS\Installer\Support\ModulesInstaller;
 use KodiCMS\Installer\Exceptions\InstallException;
 use KodiCMS\Installer\Exceptions\InstallDatabaseException;
 use KodiCMS\Installer\Exceptions\InstallValidationException;
@@ -30,7 +30,7 @@ class Installer
 	protected $session;
 
 	/**
-	 * @var ModuleInstaller
+	 * @var ModulesInstaller
 	 */
 	protected $installer;
 

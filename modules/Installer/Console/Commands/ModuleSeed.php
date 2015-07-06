@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\Installer\Console\Commands;
 
-use ModuleLoader;
+use ModulesLoader;
 use Illuminate\Console\Command;
-use KodiCMS\Installer\Support\ModuleInstaller;
+use KodiCMS\Installer\Support\ModulesInstaller;
 
 class ModuleSeed extends Command
 {
@@ -19,7 +19,7 @@ class ModuleSeed extends Command
 	public function fire()
 	{
 		$this->output->writeln('<info>Seeding KodiCMS modules...</info>');
-		$installer = new ModuleInstaller(ModuleLoader::getRegisteredModules());
+		$installer = new ModulesInstaller(ModulesLoader::getRegisteredModules());
 
 		$installer->cleanOutputMessages();
 		$installer->seedModules();
