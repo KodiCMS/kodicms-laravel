@@ -54,7 +54,7 @@
 'class' => 'form-control',
 'id' => 'textarea_content',
 'data-height' => 600,
-'data-readonly' => (!$snippet->isEditable() and !$snippet->isCreatable()) ? 'on' : 'off'
+'data-readonly' => (!$snippet->isEditable() and !$snippet->isCreatable()) ? 'true' : 'false'
 ]) !!}
 
 @if(!$snippet->isEditable() and !$snippet->isCreatable())

@@ -10,7 +10,7 @@
 		]) !!}
 	</div>
 
-	<textarea id="highlight_content" name="content" data-height="470" data-mode="html" data-readonly="on">
+	<textarea id="highlight_content" name="content" data-height="470" data-mode="html" data-readonly="true">
 <!DOCTYPE html>
 <html lang="en">
 <head>
