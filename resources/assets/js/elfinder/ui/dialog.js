@@ -153,12 +153,16 @@ $.fn.elfinderdialog = function (opts) {
 		}
 		dialog.prepend(
 			$('<div class="panel-heading">' + opts.title + '</div>')
-				.prepend($('<i class="fa fa-times pull-right"></i>')
-					.css('cursor', 'pointer')
-					.mousedown(function (e) {
-						e.preventDefault();
-						self.elfinderdialog('close');
-					}))
+				.append(
+					$('<div class="panel-heading-controls" />').append(
+						$('<button class="btn btn-default btn-xs"><i class="fa fa-times"/></button>')
+							.on('click', function (e) {
+								e.preventDefault();
+								self.elfinderdialog('close');
+							})
+						)
+				)
+
 		);
 
 		$.each(opts.buttons, function (name, cb) {
@@ -201,7 +205,7 @@ $.fn.elfinderdialog = function (opts) {
 $.fn.elfinderdialog.defaults = {
 	cssClass: '',
 	title: '',
-	modal: false,
+	modal: true,
 	resizable: true,
 	autoOpen: true,
 	closeOnEscape: true,

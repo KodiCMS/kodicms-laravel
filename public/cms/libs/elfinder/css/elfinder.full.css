@@ -475,6 +475,7 @@
 	margin: 1px auto 1px auto;
 	padding: 2px;
 	position: relative;
+	background-color: transparent !important;
 }
 
 /* file name place */
