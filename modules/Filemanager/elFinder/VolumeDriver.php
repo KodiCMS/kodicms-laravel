@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\Filemanager\elFinder;
 
+use KodiCMS\Support\Helpers\Mime;
+
 abstract class VolumeDriver
 {
 	/**
@@ -381,7 +383,7 @@ abstract class VolumeDriver
 
 	public function __construct()
 	{
-		static::$mimetypes = config('mimes');
+		static::$mimetypes = Mime::getList();
 	}
 
 	/*********************************************************************/
