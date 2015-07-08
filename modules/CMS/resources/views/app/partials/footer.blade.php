@@ -1,4 +1,4 @@
-<footer class="margin-sm-vr">
+<footer>
 	<div class="panel no-margin-b">
 		<div class="panel-body">
 			<div class="row">

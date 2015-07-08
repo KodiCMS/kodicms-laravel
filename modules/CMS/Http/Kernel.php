@@ -10,12 +10,12 @@ class Kernel extends HttpKernel {
 	 * @var array
 	 */
 	protected $middleware = [
-		'Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode',
-		'Illuminate\Cookie\Middleware\EncryptCookies',
-		'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
-		'Illuminate\Session\Middleware\StartSession',
-		'Illuminate\View\Middleware\ShareErrorsFromSession',
-		'KodiCMS\CMS\Http\Middleware\VerifyCsrfToken',
+		\Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+		\KodiCMS\CMS\Http\Middleware\EncryptCookies::class,
+		\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+		\Illuminate\Session\Middleware\StartSession::class,
+		\Illuminate\View\Middleware\ShareErrorsFromSession::class,
+		\KodiCMS\CMS\Http\Middleware\VerifyCsrfToken::class,
 	];
 
 	/**
@@ -24,7 +24,7 @@ class Kernel extends HttpKernel {
 	 * @var array
 	 */
 	protected $routeMiddleware = [
-		'auth' => 'KodiCMS\Users\Http\Middleware\Authenticate',
-		'guest' => 'KodiCMS\Users\Http\Middleware\RedirectIfAuthenticated'
+		'auth' => \KodiCMS\Users\Http\Middleware\Authenticate::class,
+		'guest' => \KodiCMS\Users\Http\Middleware\RedirectIfAuthenticated::class
 	];
 }

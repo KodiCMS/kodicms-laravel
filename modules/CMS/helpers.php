@@ -2,6 +2,7 @@
 
 use KodiCMS\Support\Helpers\File;
 
+
 /**
  * @return string
  */
@@ -19,11 +20,20 @@ function backend_resources_url()
 }
 
 /**
+ * @param string $path
+ * @return string
+ */
+function normalize_path($path)
+{
+	return str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+}
+
+/**
  * @return string
  */
 function layouts_path()
 {
-	return File::normalizePath(base_path('resources/layouts'));
+	return normalize_path(base_path('resources/layouts'));
 }
 
 /**
@@ -31,7 +41,7 @@ function layouts_path()
  */
 function snippets_path()
 {
-	return File::normalizePath(base_path('resources/snippets'));
+	return normalize_path(base_path('resources/snippets'));
 }
 
 /**
@@ -42,4 +52,36 @@ function snippets_path()
 function __($message, array $params = [])
 {
 	return trans($message, $params);
+}
+
+/**
+ * @param array $arr1
+ * @param array $arr2
+ * @return array
+ */
+function array_keys_exists_recursive(array $arr1, array $arr2)
+{
+	$outputDiff = [];
+
+	foreach ($arr1 as $key => $value)
+	{
+		if (array_key_exists($key, $arr2))
+		{
+			if (is_array($value))
+			{
+				$recursiveDiff = array_keys_exists_recursive($value, $arr2[$key]);
+
+				if (count($recursiveDiff))
+				{
+					$outputDiff[$key] = $recursiveDiff;
+				}
+			}
+		}
+		else
+		{
+			$outputDiff[$key] = $value;
+		}
+	}
+
+	return $outputDiff;
 }

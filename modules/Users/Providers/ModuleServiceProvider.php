@@ -50,8 +50,10 @@ class ModuleServiceProvider extends ServiceProvider {
 	 */
 	protected function registerReflinksBroker()
 	{
-		$this->app->singleton('reflinks', function ($app) {
+		$this->app->singleton('reflinks', function ($app)
+		{
 			$tokens = $app['reflink.tokens'];
+
 			return new ReflinksBroker($tokens);
 		});
 	}
@@ -62,9 +64,11 @@ class ModuleServiceProvider extends ServiceProvider {
 	 */
 	protected function registerTokenRepository()
 	{
-		$this->app->singleton('reflink.tokens', function ($app) {
+		$this->app->singleton('reflink.tokens', function ($app)
+		{
 			$key = $app['config']['app.key'];
 			$expire = 60;
+
 			return new ReflinkTokenRepository($key, $expire);
 		});
 	}

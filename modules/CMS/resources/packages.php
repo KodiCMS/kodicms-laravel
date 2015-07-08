@@ -28,7 +28,7 @@ Package::add('backbone')
 
 Package::add('jquery-ui')
 	->js(NULL, resources_url() . '/libs/jquery-ui/js/jquery-ui.min.js', 'jquery')
-	->css(NULL, resources_url() . '/libs/jquery-ui/css/jquery-ui.min.css');
+	->css(NULL, resources_url() . '/css/jquery-ui.css');
 
 Package::add('dropzone')
 	->js(NULL, resources_url() . '/libs/dropzone/js/dropzone.min.js', 'jquery')

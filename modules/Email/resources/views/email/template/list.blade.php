@@ -2,7 +2,7 @@
 	<div class="panel-heading">
 		@if (acl_check('email.template.create'))
 			{!! link_to_route('backend.email.template.create', trans('email::core.button.templates.create'), isset($routeParams) ? $routeParams : [], [
-				'class' => 'btn btn-primary', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
+				'class' => 'btn btn-primary btn-labeled', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
 			]) !!}
 		@endif
 	</div>

@@ -42,7 +42,9 @@ return [
 	/*
 	 * KodiCMS aliases...
 	 */
-	'ModuleLoader' 		=> KodiCMS\Support\Facades\ModuleLoader::class,
+	'CMS'				=> KodiCMS\Support\Facades\CMS::class,
+	'ModulesLoader' 	=> KodiCMS\Support\Facades\ModulesLoader::class,
+	'ModulesFileSystem' => KodiCMS\Support\Facades\ModulesFileSystem::class,
 	'PluginLoader' 		=> KodiCMS\Support\Facades\PluginLoader::class,
 	'ACL'				=> KodiCMS\Support\Facades\ACL::class,
 	'DatabaseConfig' 	=> KodiCMS\Support\Facades\DatabaseConfig::class,
@@ -53,11 +55,12 @@ return [
 	'Keys'          	=> KodiCMS\Support\Facades\KeysHelper::class,
 	'Package'       	=> KodiCMS\Support\Facades\Package::class,
 	'RouteAPI'      	=> KodiCMS\Support\Facades\RouteAPI::class,
-	'CMS'				=> KodiCMS\CMS\Core::class,
 	'UI'				=> KodiCMS\Support\Helpers\UI::class,
 	'Assets'			=> KodiCMS\Support\Facades\Assets::class,
 	'Date'				=> KodiCMS\Support\Helpers\Date::class,
 	'Reflinks'			=> KodiCMS\Support\Facades\Reflinks::class,
+	'Installer'			=> KodiCMS\Support\Facades\Installer::class,
+	'EnvironmentTester'	=> KodiCMS\Support\Facades\EnvironmentTester::class,
 	'DatasourceManager' => KodiCMS\Support\Facades\DatasourceManager::class,
 	'FieldManager' 		=> KodiCMS\Support\Facades\FieldManager::class,
 ];

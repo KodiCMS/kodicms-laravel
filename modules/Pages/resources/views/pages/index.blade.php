@@ -2,13 +2,16 @@
 	<div class="panel-heading">
 		@if (acl_check('page.add'))
 		{!! link_to_route('backend.page.create', trans('pages::core.button.add'), [], [
-			'class' => 'btn btn-default', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
+			'class' => 'btn btn-default btn-labeled', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
 		]) !!}
 		@endif
 
 		@if (acl_check('page.sort'))
 		{!! Form::button(trans('pages::core.button.reorder'), [
-			'class' => 'btn btn-primary btn-sm', 'data-icon' => 'sort', 'data-hotkeys' => 'ctrl+s', 'id' => 'pageMapReorderButton'
+			'class' => 'btn btn-primary btn-sm btn-labeled',
+			'data-icon' => 'sort',
+			'data-hotkeys' => 'ctrl+s',
+			'id' => 'pageMapReorderButton'
 		]) !!}
 		@endif
 

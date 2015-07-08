@@ -13,7 +13,6 @@ class JobLog extends Model
 		'status'
 	];
 
-	// TODO: вынести в отдельный Observer
 	protected static function boot()
 	{
 		parent::boot();

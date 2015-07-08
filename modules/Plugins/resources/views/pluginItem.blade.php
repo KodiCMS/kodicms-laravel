@@ -12,8 +12,8 @@
 		<% if (isActivated && settings_template) { %>
 		@if (acl_check('plugins.settings'))
 
-		<a href="<%= settingsUrl %>" class="btn btn-default btn-sm pull-right">
-			<span class="hidden-xs hidden-sm" data-icon="cog">@lang('plugins::core.button.settings')</span>
+		<a href="<%= settingsUrl %>" class="btn btn-default btn-sm pull-right btn-labeled">
+			<span class="hidden-xs hidden-sm btn-labeled" data-icon="cog">@lang('plugins::core.button.settings')</span>
 		</a>
 
 		@endif

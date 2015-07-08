@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\Users\Observers;
 
 /**
- * TODO: добавить логирование событий
  * Class UserObserver
  * @package KodiCMS\Users\Observers
  */

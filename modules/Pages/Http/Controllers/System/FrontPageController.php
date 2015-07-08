@@ -45,8 +45,6 @@ abstract class FrontPageController extends Controller
 	}
 
 	/**
-	 * TODO: добавить кеширование вывода
-	 *
 	 * @param View $layout
 	 * @param string $mime
 	 * @return \Illuminate\View\View|null

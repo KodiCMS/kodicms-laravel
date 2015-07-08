@@ -1,20 +1,49 @@
 CMS.ui.add('ace', function() {
 	var $ace = {};
 
+	function parseMimeMode(mime) {
+		switch (mime)
+		{
+			case 'application/json':
+				return 'json';
+			case 'text/plain':
+				return 'text';
+			default:
+				if(mime.indexOf('text/x-') === 0)
+					return mime.substring(7);
+				else if(mime.indexOf('text/') === 0)
+					return mime.substring(5);
+				else
+					return 'text';
+		}
+	}
+
 	$ace.switchOn_handler = function (textarea_id, params) {
-		var editor_id = getSlug(textarea_id) + 'Div';
-		var textarea = $('#' + textarea_id).hide();
-		var height = textarea.data('height') ? textarea.data('height') : 300;
-		var mode = textarea.data('mode') ? textarea.data('mode') : 'php';
+		var editor_id = getSlug(textarea_id) + 'Div',
+			$textarea = $('#' + textarea_id).hide(),
+			mode;
+
+		params = $.extend({
+			height: 300
+		}, $textarea.data(), params);
+
+
+		mode = params.mode || 'php';
+
+		if(_.has(params, 'mime'))
+			mode = parseMimeMode(params.mime);
+
 		var editArea = $('<div id="' + editor_id + '" />')
-			.insertAfter(textarea)
+			.insertAfter($textarea)
 			.css({
-				height: height,
+				height: params.height,
 				fontSize: 14
 			});
 
 		var editor = ace.edit(editor_id);
-		editor.setValue(textarea.val());
+
+		editor.$blockScrolling = Infinity;
+		editor.setValue($textarea.val());
 
 		editor.clearSelection();
 		editor.getSession().setMode("ace/mode/" + mode);
@@ -22,38 +51,12 @@ CMS.ui.add('ace', function() {
 		editor.getSession().setUseSoftTabs(false);
 		editor.getSession().setUseWrapMode(true);
 		editor.getSession().on('change', function () {
-			textarea.val(editor.getSession().getValue());
+			$textarea.val(editor.getSession().getValue());
 		});
+
 		editor.setTheme("ace/theme/" + ACE_THEME);
 
-		function fullscreen(editArea, editor, height) {
-			var $menu = $('#main-menu').add('#main-navbar').add('#main-menu-bg');
-			if (!editArea.data('fullscreen') || editArea.data('fullscreen') == 'off') {
-				editArea
-					.css({
-						position: 'fixed',
-						width: '100%',
-						height: '100%',
-						top: 0, left: 0,
-						'z-index': 999
-					})
-					.data('fullscreen', 'on');
-
-				$menu.hide();
-			} else {
-				editArea
-					.data('fullscreen', 'off')
-					.css({
-						position: 'relative',
-						width: 'auto',
-						height: height,
-						top: 'auto', left: 'auto'
-					});
-				$menu.show();
-			}
-		}
-
-		if (textarea.data('readonly') == 'on') {
+		if (_.propertyOf(params)('readonly')) {
 			editor.setReadOnly(true);
 		} else {
 			editor.commands.addCommand({
@@ -62,15 +65,15 @@ CMS.ui.add('ace', function() {
 					$('button[name="continue"]').click();
 				}
 			});
-
-			editor.commands.addCommand({
-				name: 'Full-screen',
-				bindKey: {win: 'Ctrl-Shift-F', mac: 'Command-F'},
-				exec: function (editor) {
-					fullscreen(editArea, editor, height)
-				}
-			});
 		}
+
+		editor.commands.addCommand({
+			name: 'Full-screen',
+			bindKey: {win: 'Ctrl-Shift-F', mac: 'Command-Shift-F'},
+			exec: function (editor) {
+				FullScreen.toggle(editArea[0]);
+			}
+		});
 
 		return editor;
 	};

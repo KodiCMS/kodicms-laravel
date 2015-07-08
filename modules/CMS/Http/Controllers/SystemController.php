@@ -14,9 +14,7 @@ class SystemController extends System\BackendController {
 		$codeEditors = WYSIWYG::htmlSelect(WYSIWYG::code());
 		$dateFormats = Date::getFormats();
 
-		// TODO: сделать вывод языков в нормальном формате
 		$availableLocales = Locale::getAvailable();
-
 		$this->setContent('system.settings', compact('htmlEditors', 'codeEditors', 'dateFormats', 'availableLocales'));
 	}
 

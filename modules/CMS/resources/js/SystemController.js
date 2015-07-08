@@ -17,7 +17,7 @@ CMS.controllers.add('system.settings', function () {
 		change_ace_theme($(this).val());
 	});
 
-	CMS.filters.switchOn('highlight_content', 'ace', $('#textarea_content').data());
+	CMS.filters.switchOn('highlight_content', 'ace', $('#highlight_content').data());
 
 	function change_ace_theme(theme) {
 		var editor = ace.edit('highlight_contentDiv');

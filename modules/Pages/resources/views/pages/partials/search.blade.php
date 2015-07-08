@@ -7,7 +7,7 @@
 	]) !!}
 
 	<div class="input-group-btn">
-		{!! Form::button(trans('pages::core.button.search'), [
+		{!! Form::button('', [
 			'type' => 'submit',
 			'data-icon' => 'search',
 			'class' => 'btn btn-default'

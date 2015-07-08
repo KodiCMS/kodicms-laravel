@@ -19,9 +19,8 @@ CMS.controllers.add(['layout.get.edit', 'layout.get.create'], function () {
 
 CMS.controllers.add('layout.get.index', function () {
 	$('body').on('get:api.layout.rebuild', function(e, response) {
-		for(i in response) {
-			var blocks = response[i];
-			$('.layout-block-list', '#layout_' + i).text((blocks instanceof Array) ? blocks.sort().join (', ') : '');
+		for (layout in response.content) {
+			$('.layout-block-list', '#layout_' + layout).html(response.content[layout]);
 		}
 	});
 });

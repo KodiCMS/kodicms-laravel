@@ -52,7 +52,7 @@ CMS.ui.add('flags', function () {
 		var $btn = $(this);
 
 		var message = i18n.t('cms.core.messages.are_you_sure');
-		if($btn.data('message')) {
+		if ($btn.data('message')) {
 			message = $btn.data('message');
 		}
 
@@ -67,35 +67,51 @@ CMS.ui.add('flags', function () {
 	});
 }).add('panel-toggler', function () {
 	var icon_open = 'fa-chevron-up',
-		icon_close = 'fa-chevron-down';
+		icon_close = 'fa-chevron-down',
+		text = i18n.t('cms.core.label.toggler_close');
 
 	$('.panel-toggler')
 		.click(function () {
-			var $self = $(this);
+			var $self = $(this),
+				hash = $self.data('hash');
 
-			if ($self.data('target-')) {
-				$_cont = $($self.data('target-'));
+			if ($self.data('target')) {
+				$_cont = $($self.data('target'));
 			} else {
 				var $_cont = $self.next('.panel-spoiler');
 			}
 
 			$_cont.slideToggle('fast', function () {
 				var $icon = $self.find('.panel-toggler-icon');
+				var $text = $self.find('.panel-toggler-text');
+
 				if ($(this).is(':hidden')) {
 					$icon.removeClass(icon_open).addClass(icon_close).addClass('fa');
+					$text.text(i18n.t('cms.core.label.toggler_close'));
+					if(hash) CMS.hashString.removeParam('toggled', hash);
 				} else {
 					$icon.addClass(icon_open).removeClass(icon_close).addClass('fa');
+					$text.text(i18n.t('cms.core.label.toggler_open'));
+					if(hash) CMS.hashString.setParam('toggled[]', hash);
 				}
 			});
 
 			return false;
 		}).each(function () {
-			if ($(this).data('hash') == window.location.hash.substring(1)) {
-				$(this).click();
-				$('html,body').animate({scrollTop: $(this).offset().top}, 'slow');
+			var $self = $(this),
+				hash = $self.data('hash');
+
+			if (CMS.hashString.findInParam('toggled', hash)) {
+				$self.click();
 			}
 		})
-		.append('<div class="panel-heading-controls"><span class="text-sm"><i class="panel-toggler-icon fa ' + icon_close + '" />&nbsp;&nbsp;&nbsp;' + __('Toggle') + '</span></div>');
+		.append('' +
+			'<div class="panel-heading-controls">' +
+				'<span class="text-sm">' +
+					'<i class="panel-toggler-icon fa ' + icon_close + '" />' +
+					'&nbsp;&nbsp;&nbsp;<span class="panel-toggler-text">' + text + '</span>' +
+				'</span>' +
+			'</div>');
 
 }).add('datepicker', function () {
 
@@ -274,29 +290,12 @@ CMS.ui.add('flags', function () {
 		tags: true,
 		tokenSeparators: [',', ' ', ';']
 	});
-}).add('ajax_form', function () {
-	$('body').on('submit', 'form.form-ajax', function () {
-		var $self = $(this),
-			$buttons = $('button', $self).attr('disabled', 'disabled'),
-			$action = $self.attr('action');
-
-		if ($self.data('ajax-action'))
-			$action = $self.data('ajax-action');
-
-		Api.post($action, $self, function (response) {
-			setTimeout(function () {
-				$buttons.removeAttr('disabled');
-			}, 5000);
-		});
-
-		return false;
-	});
 }).add('filemanager', function () {
 	var $input = $(':input[data-filemanager]');
 
 	$input.each(function () {
 		var $self = $(this);
-		var $btn = $('<button class="btn" type="button"><i class="fa fa-folder-open"></i></button>');
+		var $btn = $('<button class="btn btn-info btn-labeled" type="button"><i class="fa fa-folder-open"></i></button>');
 		if ($self.next().hasClass('input-group-btn')) {
 			$btn.prependTo($self.next());
 		} else {
@@ -378,50 +377,19 @@ CMS.ui.add('flags', function () {
 
 	// GLOBAL HOTKEYS
 	$(document).on('keydown', null, 'shift+f1', function (e) {
-		Api.delete('cache');
+		Api.delete('/api.cache.clear');
 		e.preventDefault();
 	});
 
-	$(document).on('keydown', null, 'shift+f3', function (e) {
-		Api.get('search.update_index');
-		e.preventDefault();
-	});
-
-	$(document).on('keydown', null, 'shift+f4', function (e) {
-		Api.post('layout.rebuild');
+	$(document).on('keydown', null, 'shift+f2', function (e) {
+		Api.get('/api.layout.rebuild');
 		e.preventDefault();
 	});
 
 	$(document).on('keydown', null, 'ctrl+shift+l', function (e) {
-		window.location = '/backend/logout';
+		window.location = '/backend/auth/logout';
 		e.preventDefault();
 	});
-}).add('api_buttons', function () {
-	$('.btn[data-api-url]').on('click', function (e) {
-		e.preventDefault();
-		var $self = $(this);
-
-		var $callback = function (response) {};
-		var $url = $self.data('api-url');
-		if (!$url) return;
-
-		var $callback = $self.data('callback');
-		if ($callback) $callback = window[$callback];
-		else $callback = function (response) {};
-
-		var $method = $self.data('method'),
-			$reload = $self.data('reload'),
-			$params = $self.data('params');
-
-		if ($reload) {
-			if ($reload === true) $callback = function () { window.location = '' }
-			else $callback = function () { window.location = $reload }
-		}
-
-		if (!$method) $method = 'GET';
-
-		Api.request($method, $url, $params, $callback);
-	})
 }).add('select_all_checkbox', function () {
 	$(document).on('change', 'input[name="check_all"]', function (e) {
 		var $self = $(this),
@@ -435,7 +403,7 @@ CMS.ui.add('flags', function () {
 }).add('icon', function () {
 	$('*[data-icon]').add('*[data-icon-prepend]').each(function () {
 		var cls = $(this).data('icon');
-		if($(this).hasClass('btn-labeled')) cls += ' btn-label icon';
+		if ($(this).hasClass('btn-labeled')) cls += ' btn-label icon';
 
 		$(this).html('<i class="fa fa-' + cls + '"></i> ' + $(this).html());
 		$(this).removeAttr('data-icon-prepend').removeAttr('data-icon');
@@ -465,38 +433,64 @@ CMS.ui.add('flags', function () {
 			});
 
 			$tabs_ul.prependTo($self);
-			//$('li a', $tabs_ul).on('click', function() {
-			//	window.location.hash = $(this).attr('href');
-			//});
 		}
 	});
 
-	if (window.location.hash.length > 0 && $('.tabs-generated li a[href=' + window.location.hash + ']').length > 0) {
-		$('li a[href=' + window.location.hash + ']').parent().addClass('active');
-		$('.tabbable .tab-pane' + window.location.hash).addClass('active');
-	} else {
-		$('.tabs-generated li:first-child').addClass('active');
-		$('.tabbable .tab-pane:first-child').addClass('active');
-	}
-
+	$('.tabs-generated li:first-child').add('.tabbable .tab-pane:first-child').addClass('active');
 	$('.tabs-generated').tabdrop();
-}).add('noty', function() {
+
+}).add('noty', function () {
+	$.noty.themes.KodiCMSTheme = $.extend($.noty.themes.bootstrapTheme, {
+		name: 'KodiCMSTheme',
+		style: function () {
+
+			var containerSelector = this.options.layout.container.selector;
+			$(containerSelector).addClass('list-group');
+
+			this.$closeButton.append('<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>');
+			this.$closeButton.addClass('close');
+
+			this.$bar.addClass('alert alert-dark').css('padding', '10px');
+			switch (this.options.type) {
+				case 'alert':
+				case 'notification':
+				case 'information':
+					this.$bar.addClass("alert-info");
+					break;
+				case 'warning':
+					this.$bar.addClass("alert-warning");
+					break;
+				case 'error':
+					this.$bar.addClass("alert-danger");
+					break;
+				case 'success':
+					this.$bar.addClass("alert-success");
+					break;
+			}
+
+			this.$message.css({
+
+				position: 'relative'
+			});
+		}
+	});
+
 	$.noty.defaults = $.extend($.noty.defaults, {
 		layout: 'topRight',
-		theme: 'bootstrapTheme',
+		theme: 'KodiCMSTheme',
 		timeout: 3000
 	});
 })
-.add('momentJs', function() {
+.add('momentJs', function () {
 	moment.locale(LOCALE);
 })
-.add('switcher', function() {
+.add('switcher', function () {
 	$(".form-switcher").bootstrapToggle();
 })
-.add('bootbox', function() {
+.add('bootbox', function () {
 	bootbox.setLocale(LOCALE);
 })
-.add('bootstrap', function() {
+.add('bootstrap', function () {
 	$('[data-toggle="tooltip"]').tooltip();
 	$('[data-toggle="popover"]').popover();
 });

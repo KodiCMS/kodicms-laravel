@@ -5,26 +5,25 @@ use Illuminate\Container\Container;
 
 /**
  * Class Core
- * TODO: убрать статику. Greabock 20.05.2015
- *
  * @package KodiCMS\CMS
- */
+*/
 class Core extends Container {
 
 	const VERSION 	= '0.0.1 alpha';
+
 	const NAME		= 'KodiCMS';
+
 	const WEBSITE	= 'http://kodicms.ru';
 
 	/**
 	 * @var array
 	 */
-	protected $shutdowsCalbbacks = [];
+	protected $shutdownCalbbacks = [];
 
 	/**
-	 * TODO: доработать проверку
 	 * @return bool
 	 */
-	public static function isInstalled()
+	public function isInstalled()
 	{
 		return is_file(base_path(app()->environmentFile()));
 	}
@@ -32,7 +31,7 @@ class Core extends Container {
 	/**
 	 * @return string
 	 */
-	public static function backendPath()
+	public function backendPath()
 	{
 		return config('cms.backend_path', 'backend');
 	}
@@ -40,7 +39,7 @@ class Core extends Container {
 	/**
 	 * @return string
 	 */
-	public static function backendResourcesPath()
+	public function backendResourcesPath()
 	{
 		return public_path('cms' . DIRECTORY_SEPARATOR);
 	}
@@ -48,7 +47,7 @@ class Core extends Container {
 	/**
 	 * @return string
 	 */
-	public static function resourcesURL()
+	public function resourcesURL()
 	{
 		return url('cms');
 	}
@@ -56,7 +55,7 @@ class Core extends Container {
 	/**
 	 * @return string
 	 */
-	public static function backendResourcesURL()
+	public function backendResourcesURL()
 	{
 		return url(static::backendPath() . DIRECTORY_SEPARATOR .'cms');
 	}
@@ -68,12 +67,12 @@ class Core extends Container {
 
 	public function shutdown(Closure $callback)
 	{
-		$this->shutdowsCalbbacks[] = $callback;
+		$this->shutdownCalbbacks[] = $callback;
 	}
 
 	public function shutdownHandler()
 	{
-		foreach($this->shutdowsCalbbacks as $callback)
+		foreach($this->shutdownCalbbacks as $callback)
 		{
 			$this->call($callback);
 		}

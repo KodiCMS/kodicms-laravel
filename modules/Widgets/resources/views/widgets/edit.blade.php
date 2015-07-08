@@ -46,7 +46,7 @@
 <hr class="no-margin-vr" />
 <div class="panel-body">
 	{!! link_to_route('backend.widget.location', trans('widgets::core.button.location'), [$widget], [
-		'data-icon' => 'sitemap', 'class' => 'btn btn-xs btn-primary'
+		'data-icon' => 'sitemap', 'class' => 'btn btn-xs btn-primary btn-labeled'
 	]) !!}
 </div>
 @endif

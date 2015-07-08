@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
-use ModuleLoader;
+use ModulesFileSystem;
 use Illuminate\Http\Response;
-use KodiCMS\Support\Helpers\File;
+use KodiCMS\Support\Helpers\Mime;
 
 class VirtualMediaLinksController extends Controller
 {
@@ -10,23 +10,16 @@ class VirtualMediaLinksController extends Controller
 	{
 		$route = $this->getRouter()->getCurrentRoute();
 
-		// Get the file path from the request
 		$file = $route->getParameter('file');
 		$ext = $route->getParameter('ext');
 
-		// Remove the extension from the filename
-		if ($file = ModuleLoader::findFile('resources', $file, $ext))
+		if ($file = ModulesFileSystem::findFile('resources', $file, $ext))
 		{
-			// Check if the browser sent an "if-none-match: <etag>" header, and tell if the file hasn't changed
-
-			// Set the proper headers to allow caching
 			return (new Response(file_get_contents($file)))
-				->header('Content-Type', File::mimeByExt($ext))
+				->header('Content-Type', Mime::byExt($ext))
 				->header('last-modified', date('r', filemtime($file)));
 		}
-		else
-		{
-			abort(404);
-		}
+
+		abort(404);
 	}
 }

@@ -211,12 +211,6 @@ class WidgetManager implements WidgetManagerInterface
 			return null;
 		}
 
-		// TODO: разобраться с этим кодом
-//		if (static::isCorrupt($class))
-//		{
-//			throw new WidgetException("Widget class {$widgetClass} must be implemented of [KodiCMS\Widgets\Contracts\Widget]");
-//		}
-
 		$widget = new $class($name, $description);
 
 		if (!is_null($settings))

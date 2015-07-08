@@ -95,7 +95,6 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
 	{
 		if ($this->isExists())
 		{
-			// TODO: написать правильный текст
 			throw new WidgetException('You can\'t change widget id');
 		}
 

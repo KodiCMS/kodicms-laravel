@@ -49,9 +49,10 @@ class LayoutController extends AbstractFileController
 
 		foreach($layouts as $layout)
 		{
-			$blocks[$layout->getKey()] = $layout->findBlocks();
+			$blocks[$layout->getKey()] = view('pages::layout.partials.blocks', ['blocks' => $layout->findBlocks()])->render();
 		}
 
+		$this->setMessage(trans('pages::layout.messages.rebuild'));
 		$this->setContent($blocks);
 	}
 

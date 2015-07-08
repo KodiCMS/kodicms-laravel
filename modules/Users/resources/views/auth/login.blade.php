@@ -4,7 +4,6 @@
 	</a>
 </div>
 
-<?php //TODO: добавить возможность включения своего кода в шаблон ?>
 <div class="page-signin-alt">
 	{!! Form::open(['route' => 'backend.auth.login.post', 'class' => 'panel', 'id' => 'signin-form_id']) !!}
 

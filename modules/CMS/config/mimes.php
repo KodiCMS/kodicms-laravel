@@ -86,6 +86,7 @@ return [
 	'm4p'      => ['video/mp4v-es'],
 	'm4v'      => ['video/mp4'],
 	'man'      => ['application/x-troff-man'],
+	'md'       => ['text/x-markdown'],
 	'mdb'      => ['application/x-msaccess'],
 	'midi'     => ['audio/midi'],
 	'mid'      => ['audio/midi'],
@@ -219,5 +220,15 @@ return [
 	'xvid'     => ['video/x-xvid'],
 	'xwd'      => ['image/x-xwindowdump'],
 	'z'        => ['application/x-compress'],
-	'zip'      => ['application/x-zip', 'application/zip', 'application/x-zip-compressed']
+	'zip'      => ['application/x-zip', 'application/zip', 'application/x-zip-compressed'],
+	'bz'       => ['application/x-bzip2'],
+	'bz2'      => ['application/x-bzip2'],
+	'tbz'      => ['application/x-bzip2'],
+	'rtfd'     => ['text/rtfd'],
+	'rb'       => ['text/x-ruby'],
+	'sql'      => ['text/x-sql'],
+	'tga'      => ['image/x-targa'],
+	'pxm'      => ['image/pxm'],
+	'dv'       => ['video/x-dv'],
+	'ogm'      => ['video/ogg']
 ];

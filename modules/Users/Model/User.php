@@ -136,7 +136,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 	
 	/**
-	 * 
 	 * @param string $password
 	 */
 	public function setPasswordAttribute($password)
@@ -145,7 +144,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 
 	/**
-	 * TODO: добавить кеширование ролей
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	 */
 	public function roles()

@@ -15,7 +15,7 @@
 <?php
 $defaultTemplateButton = $widget->getDefaultFrontendTemplate()
 	? link_to_route('backend.widget.template', UI::hidden(trans('widgets::core.button.defaultTemplate'), ['sm', 'xs']), [$widget->id], [
-			'data-icon' => 'desktop', 'class' => 'btn popup fancybox.iframe btn-default',
+			'data-icon' => 'desktop', 'class' => 'btn popup fancybox.iframe btn-default btn-labeled',
 			'id' => 'defaultTemplateButton'
 	])
 	: null;

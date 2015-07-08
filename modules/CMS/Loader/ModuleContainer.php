@@ -4,7 +4,6 @@ use CMS;
 use Cache;
 use Carbon\Carbon;
 use Illuminate\Routing\Router;
-use KodiCMS\Support\Helpers\File;
 use Illuminate\Support\Facades\App;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
@@ -33,6 +32,11 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 	protected $isBooted = false;
 
 	/**
+	 * @var bool
+	 */
+	protected $isPublishable = true;
+
+	/**
 	 * @var string
 	 */
 	protected $namespace = 'KodiCMS';
@@ -58,7 +62,7 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 			$modulePath = $this->getDefaultModulePath($moduleName);
 		}
 
-		$this->path = File::normalizePath($modulePath);
+		$this->path = normalize_path($modulePath);
 		$this->name = $moduleName;
 
 		$this->setNamespace($namespace);
@@ -70,7 +74,7 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 	 */
 	protected function getDefaultModulePath($moduleName)
 	{
-		return base_path('modules/' . $moduleName);
+		return base_path('modules' . DIRECTORY_SEPARATOR . $moduleName);
 	}
 
 	/**
@@ -261,6 +265,14 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function isPublishable()
+	{
+		return $this->isPublishable;
+	}
+
+	/**
 	 * Get the instance as an array.
 	 *
 	 * @return array
@@ -336,7 +348,7 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 	 */
 	protected function publishViewPath()
 	{
-		return base_path("/resources/views/modules/{$this->getName()}");
+		return base_path(normalize_path("/resources/views/modules/{$this->getName()}"));
 	}
 
 	/**

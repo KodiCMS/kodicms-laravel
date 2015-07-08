@@ -4,7 +4,7 @@ use CMS;
 use View;
 use Lang;
 use Assets;
-use ModuleLoader;
+use ModulesFileSystem;
 
 class TemplateController extends Controller
 {
@@ -172,7 +172,7 @@ class TemplateController extends Controller
 	 */
 	public function includeModuleMediaFile($filename)
 	{
-		if (ModuleLoader::findFile('resources/js', $filename, 'js'))
+		if (ModulesFileSystem::findFile('resources/js', $filename, 'js'))
 		{
 			Assets::js('include.' . $filename, backend_resources_url() . '/js/' . $filename . '.js', 'core', false);
 		}

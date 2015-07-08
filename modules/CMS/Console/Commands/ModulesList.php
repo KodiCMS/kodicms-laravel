@@ -1,6 +1,6 @@
 <?php namespace KodiCMS\CMS\Console\Commands;
 
-use ModuleLoader;
+use ModulesLoader;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
 
@@ -31,7 +31,7 @@ class ModulesList extends Command {
 	{
 		$modules = [];
 
-		foreach(ModuleLoader::getRegisteredModules() as $module)
+		foreach(ModulesLoader::getRegisteredModules() as $module)
 		{
 			$modules[] = [
 				$module->getName() . ' [' . get_class($module) .']',

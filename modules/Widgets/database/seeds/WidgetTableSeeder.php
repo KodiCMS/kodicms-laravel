@@ -1,10 +1,11 @@
 <?php namespace KodiCMS\Widgets\database\seeds;
 
-use Illuminate\Database\Seeder;
+use DB;
 use KodiCMS\Pages\Model\Page;
+use Illuminate\Database\Seeder;
+use KodiCMS\Widgets\Model\Widget;
 use KodiCMS\Widgets\Contracts\WidgetPaginator;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
-use KodiCMS\Widgets\Model\Widget;
 
 class WidgetTableSeeder extends Seeder {
 
@@ -15,7 +16,7 @@ class WidgetTableSeeder extends Seeder {
 	 */
 	public function run()
 	{
-		\DB::table('widgets')->truncate();
+		DB::table('widgets')->truncate();
 
 		$widgets = [
 			[

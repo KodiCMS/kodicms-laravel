@@ -2,7 +2,7 @@
 	<div class="panel-heading">
 		@if (acl_check('widgets.add'))
 		{!! link_to_route('backend.widget.create', trans('widgets::core.button.create'), [], [
-			'class' => 'btn btn-primary', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
+			'class' => 'btn btn-primary btn-labeled', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
 		]) !!}
 		@endif
 	</div>

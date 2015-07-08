@@ -2,12 +2,12 @@
 
 use Iterator;
 use SplFileInfo;
-use KodiCMS\Support\Helpers\File as FileSystem;
+use ModulesFileSystem;
 
 class FileCollection implements Iterator
 {
 	/**
-	 * @var string
+	 * @var SplFileInfo
 	 */
 	protected $directory;
 
@@ -32,11 +32,19 @@ class FileCollection implements Iterator
 	protected $fileClass = File::class;
 
 	/**
-	 * @param string $directory
+	 * @var string
 	 */
-	public function __construct($directory)
+	protected $resourceFolder;
+
+	/**
+	 * @param string $directory
+	 * @param string $resourceFolder
+	 */
+	public function __construct($directory, $resourceFolder)
 	{
 		$this->directory = new SplFileInfo($directory);
+		$this->resourceFolder = 'resources' . DIRECTORY_SEPARATOR . $resourceFolder;
+
 		$this->settings = $this->getSettingsFile();
 
 		$this->listFiles();
@@ -44,10 +52,22 @@ class FileCollection implements Iterator
 
 	protected function listFiles()
 	{
-		$files = app('files')->files($this->getRealPath());
-		foreach ($files as $path) {
-			$this->addFile($path);
+		foreach (ModulesFileSystem::listFiles($this->resourceFolder) as $relativePath => $splFile)
+		{
+			$this->addFile($splFile);
 		}
+	}
+
+	/**
+	 * @param SplFileInfo $file
+	 * @return File
+	 */
+	public function addFile($file)
+	{
+		$file = new $this->fileClass($file);
+		$file->setSettings(array_get($this->settings, $file->getFilename()));
+
+		return $this->files[$file->getRealPath()] = $file;
 	}
 
 	/**
@@ -79,7 +99,7 @@ class FileCollection implements Iterator
 	 */
 	public function getSettingsFilePath()
 	{
-		return FileSystem::normalizePath($this->directory . DIRECTORY_SEPARATOR . '.settings.php');
+		return normalize_path($this->directory . DIRECTORY_SEPARATOR . '.settings.php');
 	}
 
 	/**
@@ -89,9 +109,12 @@ class FileCollection implements Iterator
 	{
 		$settingsFile = $this->getSettingsFilePath();
 
-		if (is_file($settingsFile)) {
-			return (array) include($settingsFile);
-		} else {
+		if (is_file($settingsFile))
+		{
+			return (array)include($settingsFile);
+		}
+		else
+		{
 			return [];
 		}
 	}
@@ -110,19 +133,24 @@ class FileCollection implements Iterator
 	 */
 	public function findFile($filename)
 	{
-		if (strpos($filename, File::$ext) !== FALSE) {
+		if (strpos($filename, File::$ext) !== false)
+		{
 			$method = 'getFilename';
-		} else {
+		}
+		else
+		{
 			$method = 'getName';
 		}
 
-		foreach ($this->files as $file) {
-			if ($file->{$method}() == $filename) {
+		foreach ($this->files as $file)
+		{
+			if ($file->{$method}() == $filename)
+			{
 				return $file;
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -130,19 +158,7 @@ class FileCollection implements Iterator
 	 */
 	public function newFile()
 	{
-		return $this->newFiles[] = new $this->fileClass(NULL, $this->getRealPath());
-	}
-
-	/**
-	 * @param string $path
-	 * @return File
-	 */
-	public function addFile($path)
-	{
-		$file = new $this->fileClass($path);
-		$file->setSettings(array_get($this->settings, $file->getFilename()));
-
-		return $this->files[$path] = $file;
+		return $this->newFiles[] = new $this->fileClass(null, $this->getRealPath());
 	}
 
 	/**
@@ -158,7 +174,8 @@ class FileCollection implements Iterator
 	 */
 	public function saveChanges()
 	{
-		foreach ($this->files as $file) {
+		foreach ($this->files as $file)
+		{
 			$this->saveFile($file);
 		}
 
@@ -191,16 +208,17 @@ class FileCollection implements Iterator
 			$status = touch($this->getSettingsFilePath()) !== false;
 		}
 
-		if($status)
+		if ($status and is_writable($this->getSettingsFilePath()))
 		{
 			$settings = [];
-			foreach ($this->files as $file) {
+			foreach ($this->files as $file)
+			{
 				$settings[$file->getFilename()] = $file->getSettings();
 			}
 
 			$data = "<?php" . PHP_EOL;
 			$data .= "return ";
-			$data .= var_export($settings, TRUE);
+			$data .= var_export($settings, true);
 			$data .= ";";
 
 			return file_put_contents($this->getSettingsFilePath(), $data);
