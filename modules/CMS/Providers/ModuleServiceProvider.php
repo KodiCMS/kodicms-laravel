@@ -3,6 +3,7 @@
 use CMS;
 use Blade;
 use KodiCMS\CMS\Core;
+use ModulesFileSystem;
 use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
