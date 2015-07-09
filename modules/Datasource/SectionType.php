@@ -31,6 +31,11 @@ class SectionType implements SectionTypeInterface
 	/**
 	 * @var string
 	 */
+	protected $icon = 'table';
+
+	/**
+	 * @var string
+	 */
 	protected $document = null;
 
 	/**
@@ -39,7 +44,7 @@ class SectionType implements SectionTypeInterface
 	 */
 	public function __construct($type, array $settings)
 	{
-		foreach(array_only($settings, ['class', 'title', 'document']) as $key => $value)
+		foreach(array_only($settings, ['class', 'title', 'document', 'icon']) as $key => $value)
 		{
 			$this->{$key} = $value;
 		}
@@ -95,8 +100,24 @@ class SectionType implements SectionTypeInterface
 	/**
 	 * @return string
 	 */
+	public function getIcon()
+	{
+		return $this->icon;
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getTitle()
 	{
 		return $this->title;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLink()
+	{
+		return route('backend.datasource.create', [$this->getType()]);
 	}
 }

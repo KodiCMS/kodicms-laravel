@@ -11,6 +11,7 @@ class DatasourceController extends BackendController
 	 */
 	public $moduleNamespace = 'datasource::';
 
+
 	public function getIndex($dsId)
 	{
 		$sectionModel = Section::findOrFail($dsId);
@@ -18,14 +19,19 @@ class DatasourceController extends BackendController
 
 		$this->setTitle($sectionModel->name);
 
-		$this->setContent('sections', [
-			'navigation' => view('datasource::navigation'),
-			'headline' => $section->getHeadline(),
-			'toolbar' => $section->getToolbar()
+		$this->setContent('content', [
+			'navigation' => view('datasource::navigation', [
+				'types' => DatasourceManager::getAvailableSectionTypes(),
+				'sections' => DatasourceManager::getSections()
+			]),
+			'section' => view('datasource::section', [
+				'headline' => $section->getHeadline(),
+				'toolbar' => $section->getToolbar(),
+				'section' => $section
+			])
 		]);
 
 		view()->share('dsModel', $sectionModel);
-		view()->share('ds', $section);
 
 		$this->templateScripts['DS'] = $sectionModel;
 	}

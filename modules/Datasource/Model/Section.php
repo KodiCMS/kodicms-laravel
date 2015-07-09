@@ -110,4 +110,9 @@ class Section extends Model implements SectionInterface
 	{
 		return $this->belongsTo('KodiCMS\Datasource\Model\SectionFolder', 'folder_id');
 	}
+
+	public function getLink()
+	{
+		return route('backend.datasource.list', [$this->id]);
+	}
 }

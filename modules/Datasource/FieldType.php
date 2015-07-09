@@ -32,12 +32,17 @@ class FieldType implements FieldTypeInterface
 	protected $title;
 
 	/**
+	 * @var string
+	 */
+	protected $icon = 'table';
+
+	/**
 	 * @param string $type
 	 * @param array $settings
 	 */
 	public function __construct($type, array $settings)
 	{
-		foreach(array_only($settings, ['class', 'type', 'title']) as $key => $value)
+		foreach(array_only($settings, ['class', 'type', 'title', 'icon']) as $key => $value)
 		{
 			$this->{$key} = $value;
 		}
@@ -75,5 +80,13 @@ class FieldType implements FieldTypeInterface
 	public function getTitle()
 	{
 		return $this->title;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getIcon()
+	{
+		return $this->icon;
 	}
 }

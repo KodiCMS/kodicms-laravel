@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Datasource;
 
-use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
 class SectionHeadline implements SectionHeadlineInterface
 {

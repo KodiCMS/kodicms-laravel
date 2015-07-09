@@ -2,10 +2,10 @@
 
 use Schema;
 use FieldManager;
-use KodiCMS\Datasource\Contracts\FieldInterface;
-use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Fields\Field;
 use KodiCMS\Datasource\Model\Section;
+use KodiCMS\Datasource\Contracts\FieldInterface;
+use KodiCMS\Datasource\Contracts\SectionInterface;
 
 class DatasourceManager {
 
@@ -13,6 +13,11 @@ class DatasourceManager {
 	 * @var array
 	 */
 	protected $config = [];
+
+	/**
+	 * @var array
+	 */
+	protected $types = [];
 
 	/**
 	 * @param array $config
@@ -24,6 +29,7 @@ class DatasourceManager {
 		foreach ($this->config as $type => $data)
 		{
 			if (!SectionType::isValid($data)) continue;
+
 			$this->types[$type] = new SectionType($type, $data);
 		}
 	}
@@ -71,14 +77,13 @@ class DatasourceManager {
 		return isset($this->types[$type]);
 	}
 
-	public function getSectionsTree()
-	{
-
-	}
-
+	/**
+	 * @param array|null $types
+	 * @return array
+	 */
 	public function getSections(array $types = null)
 	{
-		$query = DB::table('datasource');
+		$query = Section::query();
 
 		if(!empty($types))
 		{
@@ -87,10 +92,17 @@ class DatasourceManager {
 
 		$sections = [];
 
-		foreach($query->get() as $row)
+		foreach($query->get() as $section)
 		{
-			if(!$this->typeExists($row->type)) continue;
-			$sections[$row->id] = $section = new Section((array) $row);
+			if (!$this->typeExists($section->type))
+			{
+				continue;
+			}
+
+			$sections[$section->id] = [
+				'type' => $this->types[$section->type],
+				'object' => $section
+			];
 		}
 
 		return $sections;
