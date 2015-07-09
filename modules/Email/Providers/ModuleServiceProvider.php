@@ -1,9 +1,9 @@
 <?php namespace KodiCMS\Email\Providers;
 
 use Event;
-use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Email\Console\Commands\QueueSend;
 use KodiCMS\Email\Console\Commands\QueueClean;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
 {

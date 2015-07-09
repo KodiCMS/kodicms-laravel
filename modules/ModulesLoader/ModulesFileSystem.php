@@ -1,8 +1,7 @@
-<?php namespace KodiCMS\CMS;
+<?php namespace KodiCMS\ModulesLoader;
 
 use Cache;
 use Carbon\Carbon;
-use KodiCMS\CMS\Loader\ModulesLoader;
 use Illuminate\Filesystem\Filesystem;
 
 class ModulesFileSystem

@@ -3,24 +3,10 @@
 use CMS;
 use Route;
 use Illuminate\Routing\Router;
+use KodiCMS\ModulesLoader\ModuleContainer as BaseModuleContainer;
 
-class ModuleContainer extends Loader\ModuleContainer
+class ModuleContainer extends BaseModuleContainer
 {
-	/**
-	 * @param \Illuminate\Foundation\Application $app
-	 * @return $this
-	 */
-	public function register($app)
-	{
-		if (!$this->isRegistered)
-		{
-			$this->loadSystemRoutes($app['router']);
-			$this->isRegistered = true;
-		}
-
-		return $this;
-	}
-
 	/**
 	 * @param Router $router
 	 */

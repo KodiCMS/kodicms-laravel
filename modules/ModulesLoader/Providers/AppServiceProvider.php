@@ -1,6 +1,5 @@
-<?php namespace KodiCMS\CMS\Providers;
+<?php namespace KodiCMS\ModulesLoader\Providers;
 
-use Blade;
 use ModulesLoader;
 use ModulesFileSystem;
 
@@ -16,16 +15,6 @@ class AppServiceProvider extends ServiceProvider {
 		ModulesLoader::bootModules($this->app);
 
 		ModulesFileSystem::getFoundFilesFromCache();
-
-		$this->app['cms']->shutdown(function ()
-		{
-			ModulesFileSystem::cacheFoundFiles();
-		});
-
-		Blade::directive('event', function($expression)
-		{
-			return "<?php event{$expression}; ?>";
-		});
 	}
 
 	/**

@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\CMS\Console\Commands;
+<?php namespace KodiCMS\ModulesLoader\Console\Commands;
 
 use ModulesLoader;
 use Illuminate\Console\Command;

@@ -3,7 +3,7 @@
 use CMS;
 use Route;
 use Illuminate\Routing\Router;
-use KodiCMS\CMS\Loader\ModuleContainer as BaseModuleContainer;
+use KodiCMS\ModulesLoader\ModuleContainer as BaseModuleContainer;
 
 class ModuleContainer extends BaseModuleContainer
 {

@@ -2,9 +2,9 @@
 
 use KodiCMS\Installer\Installer;
 use KodiCMS\Installer\EnvironmentTester;
-use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Installer\Console\Commands\Install;
 use KodiCMS\Installer\Console\Commands\ModuleSeed;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 use KodiCMS\Installer\Console\Commands\ModuleMigrate;
 
 class ModuleServiceProvider extends ServiceProvider

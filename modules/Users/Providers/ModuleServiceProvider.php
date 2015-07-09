@@ -3,13 +3,12 @@
 use Event;
 use KodiCMS\Users\ACL;
 use KodiCMS\Users\Model\User;
-use KodiCMS\Users\Model\UserReflink;
 use KodiCMS\Users\Model\UserRole;
 use KodiCMS\Users\Observers\RoleObserver;
 use KodiCMS\Users\Observers\UserObserver;
-use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Users\Reflinks\ReflinksBroker;
 use KodiCMS\Users\Reflinks\ReflinkTokenRepository;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 use KodiCMS\Users\Console\Commands\DeleteExpiredReflinks;
 
 class ModuleServiceProvider extends ServiceProvider {

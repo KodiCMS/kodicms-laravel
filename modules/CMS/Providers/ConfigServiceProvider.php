@@ -2,8 +2,10 @@
 
 use CMS;
 use Event;
+use Config;
 use ModulesLoader;
 use KodiCMS\CMS\Helpers\DatabaseConfig;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 
 class ConfigServiceProvider extends ServiceProvider {
 
@@ -17,7 +19,7 @@ class ConfigServiceProvider extends ServiceProvider {
 			$config = $module->loadConfig();
 			foreach($config as $group => $data)
 			{
-				app('config')->set($group, $data);
+				Config::set($group, $data);
 			}
 		}
 
@@ -34,12 +36,11 @@ class ConfigServiceProvider extends ServiceProvider {
 				$config = $databaseConfig->getAll();
 				foreach ($config as $group => $data)
 				{
-					app('config')->set($group, array_merge(config($group, []), $data));
+					Config::set($group, array_merge(Config::get($group, []), $data));
 				}
 			}
 			catch (\PDOException $e) {} // Если таблица конфиг не существует
 		}
-
 
 		Event::fire('config.loaded');
 	}

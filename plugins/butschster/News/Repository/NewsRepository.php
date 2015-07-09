@@ -1,8 +1,8 @@
 <?php namespace Plugins\butschster\News\Repository;
 
 use Plugins\butschster\News\Model\News;
-use Plugins\butschster\News\Model\NewsContent;
 use KodiCMS\CMS\Repository\BaseRepository;
+use Plugins\butschster\News\Model\NewsContent;
 
 class NewsRepository extends BaseRepository
 {

@@ -32,11 +32,11 @@ return [
 	 * KodiCMS Service Providers...
 	 */
 	KodiCMS\Support\Html\HtmlServiceProvider::class,
-	KodiCMS\CMS\Providers\ModuleServiceProvider::class,
+	KodiCMS\ModulesLoader\Providers\ModuleServiceProvider::class,
 	KodiCMS\Plugins\Providers\PluginServiceProvider::class,
 	KodiCMS\CMS\Providers\RouteServiceProvider::class,
 	KodiCMS\CMS\Providers\EventServiceProvider::class,
 	KodiCMS\CMS\Providers\BusServiceProvider::class,
-	KodiCMS\CMS\Providers\AppServiceProvider::class,
+	KodiCMS\ModulesLoader\Providers\AppServiceProvider::class,
 	KodiCMS\CMS\Providers\ConfigServiceProvider::class,
 ];

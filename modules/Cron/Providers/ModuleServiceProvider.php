@@ -6,7 +6,7 @@ use Validator;
 use KodiCMS\Cron\Model\Job;
 use KodiCMS\Cron\Console\Commands\Run;
 use KodiCMS\Cron\Observers\JobObserver;
-use KodiCMS\CMS\Providers\ServiceProvider;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
 {

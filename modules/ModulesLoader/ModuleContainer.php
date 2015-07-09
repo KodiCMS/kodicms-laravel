@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\CMS\Loader;
+<?php namespace KodiCMS\ModulesLoader;
 
 use CMS;
 use Cache;
@@ -7,7 +7,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\App;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
-use KodiCMS\CMS\Contracts\ModuleContainerInterface;
+use KodiCMS\ModulesLoader\Contracts\ModuleContainerInterface;
 
 class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 {

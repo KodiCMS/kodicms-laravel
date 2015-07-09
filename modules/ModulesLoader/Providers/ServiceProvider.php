@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\CMS\Providers;
+<?php namespace KodiCMS\ModulesLoader\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 

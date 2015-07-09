@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\Plugins\Providers;
 
 use KodiCMS\Plugins\Loader\PluginLoader;
-use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Plugins\Loader\PluginInstaller;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 
 class PluginServiceProvider extends ServiceProvider {
 

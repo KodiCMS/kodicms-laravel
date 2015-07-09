@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\CMS\Contracts;
+<?php namespace KodiCMS\ModulesLoader\Contracts;
 
 use Illuminate\Routing\Router;
 

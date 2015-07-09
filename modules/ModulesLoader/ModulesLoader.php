@@ -1,8 +1,8 @@
-<?php namespace KodiCMS\CMS\Loader;
+<?php namespace KodiCMS\ModulesLoader;
 
 use KodiCMS\Support\Helpers\File;
 use Illuminate\Contracts\Foundation\Application;
-use KodiCMS\CMS\Contracts\ModuleContainerInterface;
+use KodiCMS\ModulesLoader\Contracts\ModuleContainerInterface;
 
 class ModulesLoader
 {
@@ -81,13 +81,13 @@ class ModulesLoader
 			$moduleContainerClass = '\\' . $namespace . '\\ModuleContainer';
 		}
 
-		$defaultModuleClass = '\\KodiCMS\\CMS\\Loader\\' . $moduleName . 'ModuleContainer';
+		$defaultModuleClass = '\\KodiCMS\\ModulesLoader\\' . $moduleName . 'ModuleContainer';
 
 		if (!class_exists($moduleContainerClass))
 		{
 			$moduleContainerClass = class_exists($defaultModuleClass)
 				? $defaultModuleClass
-				: \KodiCMS\CMS\Loader\ModuleContainer::class;
+				: \KodiCMS\ModulesLoader\ModuleContainer::class;
 		}
 
 		$moduleContainer = new $moduleContainerClass($moduleName, $modulePath, $namespace);

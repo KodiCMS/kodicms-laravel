@@ -2,7 +2,6 @@
 
 use Illuminate\Console\Scheduling\Schedule;
 use KodiCMS\CMS\Console\Commands\WysiwygList;
-use KodiCMS\CMS\Console\Commands\ModulesList;
 use KodiCMS\CMS\Console\Commands\PackagesList;
 use KodiCMS\CMS\Console\Commands\ModuleLocaleDiff;
 use KodiCMS\CMS\Console\Commands\ModuleLocalePublish;
@@ -25,7 +24,6 @@ class Kernel extends ConsoleKernel {
 		ControllerMakeCommand::class,
 		ModulePublishCommand::class,
 		PackagesList::class,
-		ModulesList::class,
 		WysiwygList::class
 	];
 

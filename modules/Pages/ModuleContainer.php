@@ -3,8 +3,9 @@
 use CMS;
 use Route;
 use Illuminate\Routing\Router;
+use KodiCMS\ModulesLoader\ModuleContainer as BaseModuleContainer;
 
-class ModuleContainer extends \KodiCMS\CMS\Loader\ModuleContainer
+class ModuleContainer extends BaseModuleContainer
 {
 	/**
 	 * @param Router $router

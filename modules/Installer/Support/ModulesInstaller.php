@@ -2,7 +2,7 @@
 
 use App;
 use Schema;
-use KodiCMS\CMS\Loader\ModuleContainer;
+use KodiCMS\ModulesLoader\ModuleContainer;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Database\Migrations\DatabaseMigrationRepository;
 

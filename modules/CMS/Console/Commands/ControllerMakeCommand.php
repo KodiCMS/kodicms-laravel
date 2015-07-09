@@ -2,8 +2,8 @@
 
 use ModulesLoader;
 use RuntimeException;
-use KodiCMS\CMS\Loader\ModuleContainer;
 use Illuminate\Console\GeneratorCommand;
+use KodiCMS\ModulesLoader\ModuleContainer;
 use Symfony\Component\Console\Input\InputOption;
 
 class ControllerMakeCommand extends GeneratorCommand {

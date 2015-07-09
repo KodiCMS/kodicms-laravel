@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\CMS\Loader;
+<?php namespace KodiCMS\ModulesLoader;
 
 class AppModuleContainer extends ModuleContainer
 {

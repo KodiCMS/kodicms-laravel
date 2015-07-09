@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\API\Providers;
 
 use Event;
-use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\API\Console\Commands\GenerateKey;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider {
 

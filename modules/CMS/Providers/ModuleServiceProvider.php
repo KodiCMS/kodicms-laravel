@@ -1,46 +1,30 @@
 <?php namespace KodiCMS\CMS\Providers;
 
+use CMS;
+use Blade;
 use KodiCMS\CMS\Core;
-use KodiCMS\CMS\ModulesFileSystem;
-use KodiCMS\CMS\Loader\ModulesLoader;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-	public function __construct($app)
+	public function register()
 	{
-		parent::__construct($app);
-
-		$this->app->singleton('modules.loader', function ($app)
-		{
-			return new ModulesLoader(config('cms.modules'));
-		});
-
-		$this->app->singleton('modules.filesystem', function ($app)
-		{
-			return new ModulesFileSystem($app['modules.loader'], $app['files']);
-		});
-
 		$this->app->singleton('cms', function ($app)
 		{
-			return new Core;
+			return new Core();
 		});
 	}
 
-	/**
-	 * Bootstrap any application services.
-	 *
-	 * @return void
-	 */
-	public function boot(){}
+	public function boot()
+	{
+		Blade::directive('event', function($expression)
+		{
+			return "<?php event{$expression}; ?>";
+		});
 
-	/**
-	 * Register any application services.
-	 *
-	 * This service provider is a great spot to register your various container
-	 * bindings with the application. As you can see, we are registering our
-	 * "Registrar" implementation here. You can add your own bindings too!
-	 *
-	 * @return void
-	 */
-	public function register(){}
+		CMS::shutdown(function()
+		{
+			ModulesFileSystem::cacheFoundFiles();
+		});
+	}
 }

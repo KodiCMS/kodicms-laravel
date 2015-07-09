@@ -2,9 +2,9 @@
 
 use Plugins\butschster\News\Model\News;
 use Plugins\butschster\News\Model\NewsContent;
-use Plugins\butschster\News\Observers\NewsContentObserver;
 use Plugins\butschster\News\Observers\NewsObserver;
-use KodiCMS\CMS\Providers\ServiceProvider;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
+use Plugins\butschster\News\Observers\NewsContentObserver;
 
 class ModuleServiceProvider extends ServiceProvider {
 

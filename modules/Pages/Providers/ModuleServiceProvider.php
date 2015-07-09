@@ -1,6 +1,5 @@
 <?php namespace KodiCMS\Pages\Providers;
 
-use Route;
 use Blade;
 use Block;
 use Event;
@@ -8,9 +7,9 @@ use WYSIWYG;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Helpers\Meta;
 use KodiCMS\Pages\Observers\PageObserver;
-use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Pages\Observers\PagePartObserver;
 use KodiCMS\Pages\Model\PagePart as PagePartModel;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 use KodiCMS\Pages\Console\Commands\RebuldLayoutBlocks;
 use KodiCMS\Pages\Listeners\PlacePagePartsToBlocksEventHandler;

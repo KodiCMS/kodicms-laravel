@@ -107,7 +107,7 @@ return [
 	| this array to grant expanded functionality to your applications.
 	|
 	*/
-	'providers' => array_merge(include(base_path('/modules/CMS/providers.php')), [
+	'providers' => array_merge(include(base_path('/modules/ModulesLoader/providers.php')), [
 		/*
 		 * App Service Providers must be here...
 		 */
@@ -126,7 +126,7 @@ return [
 	|
 	*/
 
-	'aliases' => array_merge(include(base_path('/modules/CMS/aliases.php')), [
+	'aliases' => array_merge(include(base_path('/modules/ModulesLoader/aliases.php')), [
 		/*
 		 * App aliases must be here...
 		 */
