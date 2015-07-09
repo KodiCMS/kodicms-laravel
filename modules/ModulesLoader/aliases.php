@@ -61,4 +61,5 @@ return [
 	'Reflinks'			=> KodiCMS\Support\Facades\Reflinks::class,
 	'Installer'			=> KodiCMS\Support\Facades\Installer::class,
 	'EnvironmentTester'	=> KodiCMS\Support\Facades\EnvironmentTester::class,
+	'Profiler'			=> KodiCMS\Support\Helpers\Profiler::class,
 ];

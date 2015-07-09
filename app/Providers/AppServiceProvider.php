@@ -11,19 +11,7 @@ class AppServiceProvider extends ServiceProvider {
 	 *
 	 * @return void
 	 */
-	public function boot()
-	{
-		$path = storage_path().'/logs/query.log';
-
-		Event::listen('illuminate.query', function($sql, $bindings, $time) use($path) {
-			$sql = str_replace(array('%', '?'), array('%%', '%s'), $sql);
-			$sql = vsprintf($sql, $bindings);
-
-			$time_now = (new \DateTime)->format('Y-m-d H:i:s');;
-			$log = $time_now.' | '.$sql.' | '.$time.'ms'.PHP_EOL;
-			File::append($path, $log);
-		});
-	}
+	public function boot() {}
 
 	/**
 	 * Register any application services.

@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\ModulesLoader\Providers;
 
+use Event;
+use Profiler;
 use KodiCMS\ModulesLoader\ModulesLoader;
 use KodiCMS\ModulesLoader\ModulesFileSystem;
 use KodiCMS\ModulesLoader\Console\Commands\ModulesList;
@@ -26,7 +28,15 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function boot(){}
+	public function boot()
+	{
+		Event::listen('illuminate.query', function($sql, $bindings, $time) {
+			$sql = str_replace(array('%', '?'), array('%%', '%s'), $sql);
+			$sql = vsprintf($sql, $bindings);
+
+			Profiler::append('Database', $sql, $time / 1000);
+		});
+	}
 
 	/**
 	 * Register any application services.
