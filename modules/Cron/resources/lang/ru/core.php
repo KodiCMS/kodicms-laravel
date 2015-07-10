@@ -70,6 +70,7 @@ return [
 	'settings' => [
 		'title'  => 'Настройка задач',
 		'info'   => 'При использовании cron необходимо в crontab добавить следующую строку:',
+		'agent'	 => 'Агент',
 		'agents' => [
 			'system' => 'Система',
 			'cron'   => 'Crontab',
