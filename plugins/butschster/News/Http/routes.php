@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => CMS::backendPath()], function ()
+Route::group(['prefix' => backend_url()], function ()
 {
 	Route::controller('news', 'NewsController', [
 		'getIndex' => 'backend.news.list',
