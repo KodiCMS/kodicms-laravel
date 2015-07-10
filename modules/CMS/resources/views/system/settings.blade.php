@@ -51,8 +51,25 @@
 <div class="panel-body">
 	<div class="form-group">
 		<label class="control-label col-md-3">@lang('cms::system.label.settings.debug_mode')</label>
-		<div class="col-md-2">
-			<?php echo Form::select('config[app][debug]', ['No', 'Yes'], config('app.debug'), ['class' => 'form-control']); ?>
+		<div class="col-md-9">
+			{!! Form::checkbox('config[app][debug]', 1, config('app.debug'), [
+				'class' => 'form-switcher', 'data-size' => 'small', 'data-width' => 60,
+				'data-on' => trans('cms::system.button.on'),
+				'data-off' => trans('cms::system.button.off'),
+				'data-onstyle' => 'success'
+			]) !!}
+		</div>
+	</div>
+	<hr />
+	<div class="form-group">
+		<label class="control-label col-md-3">@lang('cms::system.label.settings.profiling_mode')</label>
+		<div class="col-md-9">
+			{!! Form::checkbox('config[app][profiling]', 1, config('app.debug'), [
+				'class' => 'form-switcher', 'data-size' => 'small', 'data-width' => 60,
+				'data-on' => trans('cms::system.button.on'),
+				'data-off' => trans('cms::system.button.off'),
+				'data-onstyle' => 'success'
+			]) !!}
 		</div>
 	</div>
 </div>
