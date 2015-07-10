@@ -36,7 +36,6 @@ class ModuleServiceProvider extends ServiceProvider {
 			echo view('pages::parts.list')->with('page', $page);
 		}, 999);
 
-
 		Event::listen('frontend.found', function($page)
 		{
 			app()->singleton('frontpage', function () use ($page)

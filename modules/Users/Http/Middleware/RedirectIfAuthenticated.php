@@ -35,7 +35,7 @@ class RedirectIfAuthenticated
 	public function handle($request, Closure $next)
 	{
 		if ($this->auth->check()) {
-			return new RedirectResponse(url(\CMS::backendPath()));
+			return new RedirectResponse(url(backend_url()));
 		}
 
 		return $next($request);

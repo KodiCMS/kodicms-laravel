@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\CMS\Providers;
+<?php namespace KodiCMS\ModulesLoader\Providers;
 
 use ModulesLoader;
 use Illuminate\Routing\Router;
@@ -14,19 +14,7 @@ class RouteServiceProvider extends BaseRouteServiceProvider
 	 *
 	 * @var string
 	 */
-	protected $namespace = 'KodiCMS\CMS\Http\Controllers';
-
-	/**
-	 * Define your route model bindings, pattern filters, etc.
-	 *
-	 * @param  \Illuminate\Routing\Router $router
-	 * @return void
-	 */
-	public function boot(Router $router)
-	{
-		parent::boot($router);
-
-	}
+	protected $namespace = 'App\Http\Controllers';
 
 	/**
 	 * Load the cached routes for the application.

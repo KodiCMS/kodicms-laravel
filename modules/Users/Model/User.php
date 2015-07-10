@@ -1,6 +1,6 @@
 <?php namespace KodiCMS\Users\Model;
 
-use CMS;
+use App;
 use ACL;
 use Carbon\Carbon;
 use KodiCMS\Support\Helpers\Locale;
@@ -114,12 +114,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	public function getAvatar($size = 100, array $attributes = null)
 	{
-		if (empty($this->avatar) or !is_file(CMS::uploadPath() . 'avatars' . DIRECTORY_SEPARATOR . $this->avatar))
+		if (empty($this->avatar) or !is_file(App::uploadPath() . 'avatars' . DIRECTORY_SEPARATOR . $this->avatar))
 		{
 			return $this->getGravatar($size, null, $attributes);
 		}
 
-		return HTML::image(CMS::uploadURL() . '/avatars/' . $this->avatar, null, $attributes);
+		return HTML::image(App::uploadURL() . '/avatars/' . $this->avatar, null, $attributes);
 	}
 
 	/**

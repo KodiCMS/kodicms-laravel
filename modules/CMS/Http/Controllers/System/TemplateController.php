@@ -1,6 +1,6 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
-use CMS;
+use App;
 use View;
 use Lang;
 use Assets;
@@ -99,7 +99,7 @@ class TemplateController extends Controller
 			$this->registerMedia();
 		}
 
-		View::share('adminDir', \CMS::backendPath());
+		View::share('adminDir', backend_url());
 		View::share('controllerAction', $this->getCurrentAction());
 		View::share('currentUser', $this->currentUser);
 		View::share('requestType', $this->requestType);
@@ -127,9 +127,9 @@ class TemplateController extends Controller
 		$this->templateScripts = [
 			'CURRENT_URL' => $this->request->url(),
 			'SITE_URL' => url(),
-			'BASE_URL' => url(CMS::backendPath()),
-			'BACKEND_PATH' => CMS::backendPath(),
-			'BACKEND_RESOURCES' => CMS::backendResourcesURL(),
+			'BASE_URL' => url(backend_url()),
+			'BACKEND_PATH' => backend_url(),
+			'BACKEND_RESOURCES' => App::backendResourcesURL(),
 			'PUBLIC_URL' => url(),
 			'LOCALE' => Lang::getLocale(),
 			'ROUTE' => !is_null($this->getRouter()) ? $this->getRouter()->currentRouteAction() : null,

@@ -2,13 +2,24 @@
 
 use KodiCMS\Support\Helpers\File;
 
+if (!function_exists('backend_url'))
+{
+	/**
+	 * @param null|string $path
+	 * @return string
+	 */
+	function backend_url($path = null)
+	{
+		return App::backendUrlSegmentName() . (!is_null($path) ? '/' . ltrim($path, '/') : $path);
+	}
+}
 
 /**
  * @return string
  */
 function resources_url()
 {
-	return CMS::resourcesURL();
+	return App::resourcesURL();
 }
 
 /**
@@ -16,7 +27,7 @@ function resources_url()
  */
 function backend_resources_url()
 {
-	return CMS::backendResourcesURL();
+	return App::backendResourcesURL();
 }
 
 /**
@@ -42,16 +53,6 @@ function layouts_path()
 function snippets_path()
 {
 	return normalize_path(base_path('resources/snippets'));
-}
-
-/**
- * @param string $message
- * @param array $params
- * @return string
- */
-function __($message, array $params = [])
-{
-	return trans($message, $params);
 }
 
 /**

@@ -1,9 +1,9 @@
 <?php namespace KodiCMS\CMS\Helpers;
 
+use CMS;
 use HTML;
 use Cache;
 use Carbon\Carbon;
-use KodiCMS\CMS\Core;
 use KodiCMS\Support\Helpers\Text;
 
 class Updater
@@ -85,7 +85,7 @@ class Updater
 
 		$this->remoteVersion = $version;
 
-		return $this->newsVersion = (version_compare($this->remoteVersion, Core::VERSION) == static::VERSION_NEW);
+		return $this->newsVersion = (version_compare($this->remoteVersion, CMS::VERSION) == static::VERSION_NEW);
 	}
 
 	/**

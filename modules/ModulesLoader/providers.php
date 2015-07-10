@@ -34,9 +34,9 @@ return [
 	KodiCMS\Support\Html\HtmlServiceProvider::class,
 	KodiCMS\ModulesLoader\Providers\ModuleServiceProvider::class,
 	KodiCMS\Plugins\Providers\PluginServiceProvider::class,
-	KodiCMS\CMS\Providers\RouteServiceProvider::class,
+	KodiCMS\ModulesLoader\Providers\RouteServiceProvider::class,
 	KodiCMS\CMS\Providers\EventServiceProvider::class,
 	KodiCMS\CMS\Providers\BusServiceProvider::class,
 	KodiCMS\ModulesLoader\Providers\AppServiceProvider::class,
-	KodiCMS\CMS\Providers\ConfigServiceProvider::class,
+	KodiCMS\ModulesLoader\Providers\ConfigServiceProvider::class,
 ];

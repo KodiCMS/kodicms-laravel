@@ -1,12 +1,11 @@
 <?php namespace KodiCMS\Users\Http\Controllers\Auth;
 
-use KodiCMS\CMS\Http\Controllers\System\FrontendController;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-use DB;
-use CMS;
+use Illuminate\Contracts\Auth\Guard;
+use KodiCMS\CMS\Http\Controllers\System\FrontendController;
+use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 class AuthController extends FrontendController {
 
@@ -46,8 +45,8 @@ class AuthController extends FrontendController {
 	{
 		$this->auth = $auth;
 
-		$this->redirectPath = CMS::backendPath();
-		$this->redirectAfterLogout = CMS::backendPath() . '/auth/login';
+		$this->redirectPath = backend_url();
+		$this->redirectAfterLogout = backend_url('/auth/login');
 
 		$this->beforeFilter('@checkPermissions', ['except' => ['getLogout']]);
 	}

@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\ModulesLoader;
 
+use Profiler;
 use KodiCMS\Support\Helpers\File;
 use Illuminate\Contracts\Foundation\Application;
 use KodiCMS\ModulesLoader\Contracts\ModuleContainerInterface;
@@ -69,6 +70,8 @@ class ModulesLoader
 	 */
 	public function addModule($moduleName, $modulePath = null, $namespace = null, $moduleContainerClass = null)
 	{
+		$token = Profiler::start('Modules Loader', $moduleName);
+
 		if (is_null($namespace))
 		{
 			$namespace = 'KodiCMS\\' . $moduleName;
@@ -93,6 +96,8 @@ class ModulesLoader
 		$moduleContainer = new $moduleContainerClass($moduleName, $modulePath, $namespace);
 
 		$this->registerModule($moduleContainer);
+
+		Profiler::stop($token);
 
 		return $this;
 	}

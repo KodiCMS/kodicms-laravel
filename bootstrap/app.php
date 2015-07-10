@@ -11,7 +11,7 @@
 |
 */
 
-$app = new Illuminate\Foundation\Application(
+$app = new \KodiCMS\CMS\Application(
 	realpath(__DIR__.'/../')
 );
 

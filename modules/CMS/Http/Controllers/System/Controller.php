@@ -1,6 +1,5 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
-use CMS;
 use Lang;
 use Illuminate\Auth\Guard;
 use Illuminate\Support\Str;
@@ -78,7 +77,7 @@ abstract class Controller extends BaseController
 		$this->requestType = $this->request->input('type', $this->request->method());
 
 		$this->loadCurrentUser($auth);
-		$this->loginPath = CMS::backendPath() . '/auth/login';
+		$this->loginPath = backend_url() . '/auth/login';
 
 		// Execute method boot() on controller execute
 		if (method_exists($this, 'boot'))

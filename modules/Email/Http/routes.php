@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => CMS::backendPath(), 'as' => 'backend.email.'], function ()
+Route::group(['prefix' => backend_url(), 'as' => 'backend.email.'], function ()
 {
 	Route::get('/email/template', ['as' => 'template.list', 'uses' => 'EmailTemplateController@getIndex']);
 	Route::get('/email/template/create', ['as' => 'template.create', 'uses' => 'EmailTemplateController@getCreate']);

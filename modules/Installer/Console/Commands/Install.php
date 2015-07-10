@@ -1,8 +1,6 @@
 <?php namespace KodiCMS\Installer\Console\Commands;
 
-use DB;
-use CMS;
-use Config;
+use App;
 use Installer;
 use EnvironmentTester;
 use Illuminate\Console\GeneratorCommand;
@@ -59,7 +57,7 @@ class Install extends GeneratorCommand
 			throw new InstallException('Environment test failed');
 		}
 
-		if (CMS::isInstalled())
+		if (App::installed())
 		{
 			$this->error('.env file already exists!');
 

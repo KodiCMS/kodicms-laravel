@@ -1,6 +1,5 @@
 <?php namespace KodiCMS\CMS;
 
-use CMS;
 use Route;
 use Illuminate\Routing\Router;
 use KodiCMS\ModulesLoader\ModuleContainer as BaseModuleContainer;
@@ -14,7 +13,7 @@ class ModuleContainer extends BaseModuleContainer
 	{
 		Route::before(function()
 		{
-			Route::group(['namespace' => $this->getControllerNamespace(), 'prefix' => CMS::backendPath()], function ()
+			Route::group(['namespace' => $this->getControllerNamespace(), 'prefix' => backend_url()], function ()
 			{
 				Route::get('cms/{file}.{ext}', 'System\VirtualMediaLinksController@find')
 					->where('file', '.*')

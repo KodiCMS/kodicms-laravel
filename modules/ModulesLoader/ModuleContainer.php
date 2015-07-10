@@ -1,10 +1,9 @@
 <?php namespace KodiCMS\ModulesLoader;
 
-use CMS;
+use App;
 use Cache;
 use Carbon\Carbon;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\App;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
 use KodiCMS\ModulesLoader\Contracts\ModuleContainerInterface;
@@ -213,7 +212,7 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 	 */
 	public function loadRoutes(Router $router)
 	{
-		if (!CMS::isInstalled())
+		if (!App::installed())
 		{
 			return;
 		}
@@ -227,7 +226,7 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 	 */
 	public function loadConfig()
 	{
-		if (!CMS::isInstalled())
+		if (!App::installed())
 		{
 			return [];
 		}
