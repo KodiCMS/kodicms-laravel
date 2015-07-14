@@ -8,11 +8,18 @@ use KodiCMS\ModulesLoader\Console\Commands\ModulesList;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-	public function __construct($app)
+	/**
+	 * Register any application services.
+	 *
+	 * This service provider is a great spot to register your various container
+	 * bindings with the application. As you can see, we are registering our
+	 * "Registrar" implementation here. You can add your own bindings too!
+	 *
+	 * @return void
+	 */
+	public function register()
 	{
-		parent::__construct($app);
-
-		$this->app->singleton('modules.loader', function ($app)
+		$this->app->singleton('modules.loader', function ()
 		{
 			return new ModulesLoader(config('cms.modules'));
 		});
@@ -21,6 +28,8 @@ class ModuleServiceProvider extends ServiceProvider
 		{
 			return new ModulesFileSystem($app['modules.loader'], $app['files']);
 		});
+
+		$this->registerConsoleCommand('cms:modules:list', ModulesList::class);
 	}
 
 	/**
@@ -36,19 +45,5 @@ class ModuleServiceProvider extends ServiceProvider
 
 			Profiler::append('Database', $sql, $time / 1000);
 		});
-	}
-
-	/**
-	 * Register any application services.
-	 *
-	 * This service provider is a great spot to register your various container
-	 * bindings with the application. As you can see, we are registering our
-	 * "Registrar" implementation here. You can add your own bindings too!
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-		$this->registerConsoleCommand('cms:modules:list', ModulesList::class);
 	}
 }
