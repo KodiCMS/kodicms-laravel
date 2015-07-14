@@ -31,19 +31,4 @@ class ModuleServiceProvider extends ServiceProvider
 
 		$this->registerConsoleCommand('cms:modules:list', ModulesList::class);
 	}
-
-	/**
-	 * Bootstrap any application services.
-	 *
-	 * @return void
-	 */
-	public function boot()
-	{
-		Event::listen('illuminate.query', function($sql, $bindings, $time) {
-			$sql = str_replace(array('%', '?'), array('%%', '%s'), $sql);
-			$sql = vsprintf($sql, $bindings);
-
-			Profiler::append('Database', $sql, $time / 1000);
-		});
-	}
 }

@@ -32,6 +32,13 @@ class ModuleServiceProvider extends ServiceProvider
 				catch (\PDOException $e) {}
 			}
 		}, 999);
+
+		Event::listen('illuminate.query', function($sql, $bindings, $time) {
+			$sql = str_replace(array('%', '?'), array('%%', '%s'), $sql);
+			$sql = vsprintf($sql, $bindings);
+
+			Profiler::append('Database', $sql, $time / 1000);
+		});
 	}
 
 	public function boot()
