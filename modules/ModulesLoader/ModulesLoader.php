@@ -8,6 +8,11 @@ use KodiCMS\ModulesLoader\Contracts\ModuleContainerInterface;
 class ModulesLoader
 {
 	/**
+	 * @var
+	 */
+	public static $defaultContainerClass = \KodiCMS\ModulesLoader\ModuleContainer::class;
+
+	/**
 	 * @var array
 	 */
 	protected $registeredModules = [];
@@ -34,7 +39,7 @@ class ModulesLoader
 
 			if (is_null($modulePath))
 			{
-				$modulePath = base_path('modules/' . $moduleName);
+				$modulePath = base_path('modules' . DIRECTORY_SEPARATOR . $moduleName);
 			}
 
 			$this->addModule($moduleName, $modulePath, $moduleNamespace);
@@ -90,7 +95,7 @@ class ModulesLoader
 		{
 			$moduleContainerClass = class_exists($defaultModuleClass)
 				? $defaultModuleClass
-				: \KodiCMS\ModulesLoader\ModuleContainer::class;
+				: static::$defaultContainerClass;
 		}
 
 		$moduleContainer = new $moduleContainerClass($moduleName, $modulePath, $namespace);
