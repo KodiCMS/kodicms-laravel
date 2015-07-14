@@ -1,7 +1,5 @@
 <?php namespace KodiCMS\ModulesLoader\Providers;
 
-use Event;
-use Profiler;
 use KodiCMS\ModulesLoader\ModulesLoader;
 use KodiCMS\ModulesLoader\ModulesFileSystem;
 use KodiCMS\ModulesLoader\Console\Commands\ModulesList;

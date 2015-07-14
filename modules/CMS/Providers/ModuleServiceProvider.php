@@ -4,6 +4,7 @@ use Blade;
 use Cache;
 use Config;
 use Event;
+use Profiler;
 use ModulesFileSystem;
 use KodiCMS\CMS\Helpers\DatabaseConfig;
 use KodiCMS\Support\Cache\SqLiteTaggedStore;
