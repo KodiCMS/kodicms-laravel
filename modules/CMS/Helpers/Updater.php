@@ -77,7 +77,7 @@ class Updater
 	{
 		$version = Cache::remember(static::CACHE_KEY_VERSION, Carbon::now()->addHours(24), function ()
 		{
-			$response = self::request('https://raw.githubusercontent.com/:rep/:branch/modules/CMS/Core.php');
+			$response = self::request('https://raw.githubusercontent.com/:rep/:branch/modules/CMS/CMS.php');
 			preg_match('/const VERSION[ ]?[\t]?\=[ ]?[\t]?[\'|"]([0-9a-z. ]+)\'\;/i', $response, $matches);
 
 			return $matches[1];
