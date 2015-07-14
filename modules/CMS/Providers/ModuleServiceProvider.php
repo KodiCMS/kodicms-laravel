@@ -1,10 +1,13 @@
 <?php namespace KodiCMS\CMS\Providers;
 
-use Event;
 use Blade;
+use Cache;
 use Config;
+use Event;
 use ModulesFileSystem;
 use KodiCMS\CMS\Helpers\DatabaseConfig;
+use KodiCMS\Support\Cache\SqLiteTaggedStore;
+use KodiCMS\Support\Cache\DatabaseTaggedStore;
 use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -15,9 +18,6 @@ class ModuleServiceProvider extends ServiceProvider
 		{
 			if ($this->app->installed())
 			{
-				/**
-				 * Загрузка конфигурационных файлов из БД с заменой ключей
-				 */
 				try
 				{
 					$databaseConfig = new DatabaseConfig;
@@ -29,7 +29,7 @@ class ModuleServiceProvider extends ServiceProvider
 						Config::set($group, array_merge(Config::get($group, []), $data));
 					}
 				}
-				catch (\PDOException $e) {} // Если таблица конфиг не существует
+				catch (\PDOException $e) {}
 			}
 		}, 999);
 	}
@@ -44,6 +44,26 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->app->shutdown(function()
 		{
 			ModulesFileSystem::cacheFoundFiles();
+		});
+
+		Cache::extend('sqlite', function($app, $config)
+		{
+			$connectionName = array_get($config, 'connection');
+			$connectionConfig = config('database.connections.' . $connectionName);
+
+			if (!file_exists($connectionConfig['database']))
+			{
+				touch($connectionConfig['database']);
+			}
+
+			$connection = $this->app['db']->connection($connectionName);
+			return Cache::repository(new SqLiteTaggedStore($connection, $config['schema']));
+		});
+
+		Cache::extend('database', function($app, $config)
+		{
+			$connection = $this->app['db']->connection(array_get($config, 'connection'));
+			return Cache::repository(new DatabaseTaggedStore($connection, $config['table']));
 		});
 	}
 }
