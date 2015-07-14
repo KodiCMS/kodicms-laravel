@@ -51,8 +51,7 @@ class DatabaseTaggedCache implements Store
 	 */
 	public function get($key, $default = null)
 	{
-		$value = $this->store->get($this->taggedItemKey($key));
-
+		$value = $this->store->get($key);
 		return !is_null($value) ? $value : value($default);
 	}
 
@@ -78,7 +77,7 @@ class DatabaseTaggedCache implements Store
 		{
 			$this->table()->insert(compact('key', 'tags', 'expiration', 'value'));
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
 			$this->table()->where('key', '=', $key)->update(compact('tags', 'expiration', 'value'));
 		}
@@ -113,7 +112,7 @@ class DatabaseTaggedCache implements Store
 	 */
 	public function increment($key, $value = 1)
 	{
-		$this->store->increment($this->taggedItemKey($key), $value);
+		$this->store->increment($key, $value);
 	}
 
 	/**
@@ -125,7 +124,7 @@ class DatabaseTaggedCache implements Store
 	 */
 	public function decrement($key, $value = 1)
 	{
-		$this->store->decrement($this->taggedItemKey($key), $value);
+		$this->store->decrement($key, $value);
 	}
 
 	/**
@@ -137,7 +136,7 @@ class DatabaseTaggedCache implements Store
 	 */
 	public function forever($key, $value)
 	{
-		$this->store->forever($this->taggedItemKey($key), $value);
+		$this->store->forever($key, $value);
 	}
 
 	/**
@@ -148,7 +147,7 @@ class DatabaseTaggedCache implements Store
 	 */
 	public function forget($key)
 	{
-		return $this->store->forget($this->taggedItemKey($key));
+		return $this->store->forget($key);
 	}
 
 	/**
