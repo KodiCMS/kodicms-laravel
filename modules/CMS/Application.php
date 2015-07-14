@@ -73,6 +73,8 @@ class Application extends \Illuminate\Foundation\Application
 
 	public function shutdownHandler()
 	{
+		$this['events']->fire('app.shutdown', [$this]);
+
 		foreach($this->shutdownCallbacks as $callback)
 		{
 			$this->call($callback);

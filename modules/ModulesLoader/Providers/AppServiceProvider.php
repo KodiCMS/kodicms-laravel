@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\ModulesLoader\Providers;
 
+use Event;
 use ModulesLoader;
 use ModulesFileSystem;
 
@@ -28,5 +29,10 @@ class AppServiceProvider extends ServiceProvider {
 	{
 		ModulesLoader::bootModules($this->app);
 		ModulesFileSystem::getFoundFilesFromCache();
+
+		Event::listen('app.shutdown', function()
+		{
+			ModulesFileSystem::cacheFoundFiles();
+		});
 	}
 }
