@@ -30,9 +30,9 @@
 </style>
 
 <?php
-$group_stats      = Profiler::groupStats();
-$group_cols       = array('min', 'max', 'average', 'total');
-$application_cols = array('min', 'max', 'average', 'current');
+$group_stats = Profiler::groupStats();
+$group_cols = ['min', 'max', 'average', 'total'];
+$application_cols = ['min', 'max', 'average', 'current'];
 ?>
 
 <div class="kodicms-profiler">
@@ -46,9 +46,9 @@ $application_cols = array('min', 'max', 'average', 'current');
 			<td class="memory" colspan="4">{{ number_format($group_stats[$group]['total']['memory'] / 1024, 4) }} <abbr title="kilobyte">kB</abbr></td>
 		</tr>
 		<tr class="headers">
-			<th class="name">Benchmark</th>
+			<th class="name">@lang('cms::profiler.benchmark')</th>
 			@foreach ($group_cols as $key)
-			<th class="{{ $key }}">{{ ucfirst($key) }}</th>
+			<th class="{{ $key }}">@lang("cms::profiler.{$key}")</th>
 			@endforeach
 		</tr>
 		@foreach ($benchmarks as $name => $tokens)
@@ -86,7 +86,7 @@ $application_cols = array('min', 'max', 'average', 'current');
 	<table class="profiler">
 		<?php $stats = Profiler::application() ?>
 		<tr class="final mark time">
-			<th class="name" rowspan="2" scope="rowgroup">Application Execution ({{ $stats['count'] }})</th>
+			<th class="name" rowspan="2" scope="rowgroup">@lang('cms::profiler.application_execution') ({{ $stats['count'] }})</th>
 			@foreach ($application_cols as $key)
 			<td class="{{ $key }}">{{ number_format($stats[$key]['time'], 6) }} <abbr title="seconds">s</abbr></td>
 			@endforeach
