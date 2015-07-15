@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use KodiCMS\Support\Helpers\Locale;
 use KodiCMS\Users\Helpers\Gravatar;
 use Illuminate\Auth\Authenticatable;
+use KodiCMS\Support\Traits\Tentacle;
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Support\Model\ModelFieldTrait;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -19,7 +20,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
-	use Authenticatable, CanResetPassword, ModelFieldTrait;
+	use Authenticatable, CanResetPassword, ModelFieldTrait, Tentacle;
 
 	/**
 	 * @var array
