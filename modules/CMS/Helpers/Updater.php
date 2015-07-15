@@ -8,8 +8,8 @@ use KodiCMS\Support\Helpers\Text;
 
 class Updater
 {
-	const VERSION_NEW     = -1;
-	const VERSION_OLD     = 1;
+	const VERSION_NEW     = 1;
+	const VERSION_OLD     = -1;
 	const VERSION_CURRENT = 0;
 
 	const CACHE_KEY = 'update::cache';
