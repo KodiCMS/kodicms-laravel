@@ -3,7 +3,7 @@
 use KodiCMS\CMS\Helpers\Updater;
 use KodiCMS\Notifications\Contracts\NotificationTypeInterface;
 
-class CMSNewVersionNotification implements NotificationTypeInterface
+class CMSNewVersionNotification extends DefaultNotification
 {
 	/**
 	 * @var bool
@@ -27,7 +27,15 @@ class CMSNewVersionNotification implements NotificationTypeInterface
 	/**
 	 * @return string
 	 */
-	public function getTitle()
+	public function getId()
+	{
+		return false;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getType()
 	{
 		return 'Update';
 	}
@@ -61,19 +69,22 @@ class CMSNewVersionNotification implements NotificationTypeInterface
 	}
 
 	/**
+	 * @return Carbon
+	 */
+	public function getDate()
+	{
+		return date('Y-m-d H:i:d');
+	}
+
+	/**
 	 * Get the instance as an array.
 	 *
 	 * @return array
 	 */
 	public function toArray()
 	{
-		return [
-			'title' => $this->getTitle(),
-			'icon' => $this->getIcon(),
-			'color' => $this->getColor(),
-			'message' => $this->getMessage(),
-			'newVersion' => $this->newVersion,
-			'sent_on' => date('Y-m-d H:i:d')
-		];
+		return array_merge(parent::toArray(), [
+			'newVersion' => $this->newVersion
+		]);
 	}
 }

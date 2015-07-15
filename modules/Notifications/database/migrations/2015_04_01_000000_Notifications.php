@@ -10,6 +10,7 @@ class Notifications extends Migration
 		Schema::create('notifications', function (Blueprint $table)
 		{
 			$table->increments('id');
+			$table->integer('sender_id')->default(0);
 
 			$table->string('type');
 			$table->text('message')->nullable();
@@ -17,7 +18,7 @@ class Notifications extends Migration
 			$table->integer('object_id')->unsigned()->nullable();
 			$table->string('object_type')->nullable();
 
-			$table->json('settings');
+			$table->json('parameters');
 
 			$table->timestamps();
 			$table->timestamp('sent_at');

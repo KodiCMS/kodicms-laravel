@@ -7,7 +7,7 @@ class NotificationsController extends APIController
 {
 	public function getList()
 	{
-		$notifications = $this->currentUser->newNotifications()->get()->toarray();
+		$notifications = $this->currentUser->newNotifications()->get()->lists('type');
 
 		$this->setContent($notifications);
 	}

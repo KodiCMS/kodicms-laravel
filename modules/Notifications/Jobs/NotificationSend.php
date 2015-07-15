@@ -4,10 +4,14 @@ use Illuminate\Contracts\Bus\SelfHandling;
 use KodiCMS\Notifications\Model\Notification;
 use KodiCMS\Notifications\Types\DefaultNotification;
 use KodiCMS\Notifications\Contracts\NotificationTypeInterface;
-use KodiCMS\Notifications\Contracts\NotificationObjectInterface;
 
 class NotificationSend implements SelfHandling
 {
+	/**
+	 * @var array
+	 */
+	protected $users;
+
 	/**
 	 * @var string
 	 */
@@ -19,40 +23,38 @@ class NotificationSend implements SelfHandling
 	protected $type;
 
 	/**
-	 * @var NotificationObjectInterface
-	 */
-	protected $object;
-
-	/**
 	 * @var array
 	 */
-	protected $users;
+	protected $parameters;
 
 	/**
 	 * @param integer|array $users
 	 * @param string $message
 	 * @param NotificationTypeInterface|null $type
-	 * @param NotificationObjectInterface|null $object
+	 * @param array $parameters
 	 */
-	function __construct($users, $message, NotificationTypeInterface $type = null, NotificationObjectInterface $object = null)
+	function __construct($users, $message = null, NotificationTypeInterface $type = null, array $parameters = [])
 	{
 		$this->users = (array) $users;
-		$this->message = $message;
 		$this->type = is_null($type) ? new DefaultNotification : $type;
-		$this->object = $object;
+		$this->message = $message;
+		$this->parameters = $parameters;
 	}
 
 	public function handle()
 	{
 		$notification = new Notification;
 
-		$notification->withMessage($this->message);
 		$notification->withType($this->type);
 
-		if (!is_null($this->object))
+		$notification->withMessage($this->message);
+
+		if (!is_null($user = auth()->user()))
 		{
-			$notification->regarding($this->object);
+			$notification->from($user);
 		}
+
+		$notification->withParameters($this->parameters);
 
 		return $notification->deliver([$this->users]);
 	}

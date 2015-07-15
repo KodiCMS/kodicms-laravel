@@ -9,43 +9,28 @@ CMS.Notifications = {
 
 		this.fetchList();
 	},
-	create: function (id, message, sent_at, type, icon, color) {
+	create: function (data) {
 		var isset = this.list.length && _.find(this.list, function (row) {
-			return row.id == id;
+			return row.id == data.id;
 		});
 
-		!isset && this.list.push({
-			id: id,
-			message: message,
-			date: moment(sent_at),
-			type: type || '',
-			icon: icon,
-			color: color || 'default'
-		});
+		!isset && this.list.push(this.prepareData(data));
 	},
-	show: function (id, message, sent_at, type, icon, color) {
-		var $cont = this.getContainer(),
-			row;
+	show: function (data) {
+		var $cont = this.getContainer();
+		if(this.notificationIsShowed(data.id)) return;
 
-		if (typeof id == 'object') {
-			row = id;
-		} else {
-			row = {
-				id: id,
-				message: message,
-				date: moment(sent_at),
-				type: type || '',
-				icon: icon,
-				color: color || 'default'
-			}
-		}
-
-		if(this.notificationIsShowed(row.id)) return;
-
-		this.fetchNotification(row).prependTo($cont);
-		this.showed.push(row.id);
+		this.fetchNotification(this.prepareData(data)).prependTo($cont);
+		this.showed.push(data.id);
 
 		this.updateCounter();
+	},
+	prepareData: function(data) {
+		data.date = moment(data.date);
+		data.color = data.color || 'default';
+		data.type = data.type || 'Info';
+
+		return data;
 	},
 	read: function(id) {
 		var self = this;

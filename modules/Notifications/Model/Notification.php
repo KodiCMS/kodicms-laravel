@@ -19,7 +19,7 @@ class Notification extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['type', 'message', 'object_id', 'object_type', 'sent_at'];
+	protected $fillable = ['sender_id', 'type', 'message', 'object_id', 'object_type', 'sent_at', 'parameters'];
 
 	/**
 	 * The attributes that should be mutated to dates.
@@ -34,11 +34,12 @@ class Notification extends Model {
 	 * @var array
 	 */
 	protected $casts = [
+		'sender_id' => 'integer',
 		'object_id' => 'integer',
 		'type' => 'string',
 		'message' => 'string',
 		'object_type' => 'string',
-		'settings' => 'array',
+		'parameters' => 'array',
 	];
 
 	/*******************************************************************************************
@@ -50,7 +51,10 @@ class Notification extends Model {
 	 */
 	public function getTypeAttribute($type)
 	{
-		return class_exists($type) ? new $type : new DefaultNotificationType;
+		$type = class_exists($type) ? new $type : new DefaultNotificationType;
+		$type->setObject($this);
+
+		return $type;
 	}
 
 	/**
@@ -61,6 +65,17 @@ class Notification extends Model {
 	public function withMessage($message)
 	{
 		$this->message = $message;
+		return $this;
+	}
+
+	/**
+	 * @param array $parameters
+	 *
+	 * @return $this
+	 */
+	public function withParameters(array $parameters)
+	{
+		$this->parameters = $parameters;
 		return $this;
 	}
 
@@ -85,6 +100,17 @@ class Notification extends Model {
 		$this->object_id = $object->getId();
 		$this->object_type = get_class($object);
 
+		return $this;
+	}
+
+	/**
+	 * @param User $user
+	 *
+	 * @return $this
+	 */
+	public function from(User $user)
+	{
+		$this->sender()->associate($user);
 		return $this;
 	}
 
