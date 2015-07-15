@@ -29,7 +29,7 @@ return [
 		'options' => 'Опции запуска',
 	],
 	'jobs'     => [
-		'test' => 'Тестирование cron',
+
 	],
 	'interval' => [
 		'minute' => 'Минута',
