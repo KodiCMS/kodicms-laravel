@@ -6,7 +6,7 @@
 */
 class CMS {
 
-	const VERSION 	= '0.0.1 alpha';
+	const VERSION 	= '0.3.1 beta';
 	const NAME		= 'KodiCMS';
 	const WEBSITE	= 'http://kodicms.ru';
 }
