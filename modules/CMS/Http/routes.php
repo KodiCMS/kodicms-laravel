@@ -10,6 +10,7 @@ Route::group(['prefix' => backend_url(), 'as' => 'backend.'], function ()
 
 Route::group(['as' => 'api.'], function ()
 {
+	RouteAPI::get('updates.check.new_version', ['as' => 'update.check.new_version', 'uses' => 'API\UpdateController@checkNewVersion']);
 	RouteAPI::get('updates.check', ['as' => 'update.check', 'uses' => 'API\UpdateController@checkRemoteFiles']);
 	RouteAPI::get('updates.diff', ['as' => 'update.check', 'uses' => 'API\UpdateController@diffFiles']);
 	RouteAPI::post('settings.update', ['as' => 'settings.update', 'uses' => 'API\SettingsController@post']);

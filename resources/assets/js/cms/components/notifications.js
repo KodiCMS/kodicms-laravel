@@ -1,61 +1,107 @@
-CMS.notifications = {
-	_init: false,
-		_list: [],
-		counter: 0,
-		container: '#notifications-container',
-		add: function(text, created_on, title, type, icon, counter) {
-		this._list.push([text, moment(created_on), title, type, icon, counter]);
-	},
-	update_counter: function() {
-		this.counter++;
-	},
-	init: function() {
-		this._build();
+CMS.Notifications = {
+	list: {},
+	showed: [],
+	container: '#notifications-container',
+	init: function () {
+		this.getContainer().slimScroll({
+			height: 250
+		});
 
-		$('.notifications-list', this.container).slimScroll({ height: 250 });
-		this._init = true;
+		this.fetchList();
 	},
-	_build_row:function(row) {
-		var text = row[0],
-			created_on = row[1].fromNow(),
-			title = row[2],
-			type = row[3],
-			icon = row[4];
+	create: function (id, message, sent_at, type, icon, color) {
+		var isset = this.list.length && _.find(this.list, function (row) {
+			return row.id == id;
+		});
 
+		!isset && this.list.push({
+			id: id,
+			message: message,
+			date: moment(sent_at),
+			type: type || '',
+			icon: icon,
+			color: color || 'default'
+		});
+	},
+	show: function (id, message, sent_at, type, icon, color) {
+		var $cont = this.getContainer(),
+			row;
+
+		if (typeof id == 'object') {
+			row = id;
+		} else {
+			row = {
+				id: id,
+				message: message,
+				date: moment(sent_at),
+				type: type || '',
+				icon: icon,
+				color: color || 'default'
+			}
+		}
+
+		if(this.notificationIsShowed(row.id)) return;
+
+		this.fetchNotification(row).prependTo($cont);
+		this.showed.push(row.id);
+
+		this.updateCounter();
+	},
+	read: function(id) {
+		var self = this;
+		Api.delete('/api.notification.read', {id: id}, function() {
+			self.deleteNotifiction(id);
+		});
+	},
+	updateCounter: function () {
+		$('.counter', this.container).text(this.getTotal());
+	},
+	getTotal: function () {
+		return this.showed.length;
+	},
+	getContainer: function () {
+		return $('.notifications-list', this.container);
+	},
+	fetchList: function () {
+		this.list = _.sortBy(this.list, function (row) {
+			return !row.date.unix();
+		});
+
+		for (i in this.list) {
+			this.show(this.list[i]);
+		}
+	},
+	deleteNotifiction: function(id) {
+		$('.notification[data-id="' + id + '"]', this.container).remove();
+
+		this.list = _.filter(this.list, function(row) {
+			return row.id != id;
+		});
+
+		this.showed = _.filter(this.showed, function(_id) {
+			return _id == id;
+		});
+
+		this.updateCounter();
+	},
+	fetchNotification: function(row) {
 		var $notification = $('<div class="notification" />');
-		if(!type) var type = '';
+		var self = this;
 
-		if(title)
-			$('<div class="notification-title '+type+'" />').text(__(title).toUpperCase()).prependTo($notification);
+		row.id && $notification.data('id', row.id).on('click', function(e) {
+			self.read($(this).data('id'));
+		});
 
-		if(text)
-			$('<div class="notification-description" />').html(text).appendTo($notification);
-
-		if(created_on)
-			$('<div class="notification-ago margin-xs-vr" />').html(created_on).appendTo($notification);
-
-		if(icon)
-			$('<div class="notification-icon fa fa-'+icon+'" />').appendTo($notification);
+		row.type && $('<div class="notification-title text-' + row.color + '" />').text(row.type.toUpperCase()).appendTo($notification);
+		row.message && $('<div class="notification-description" />').html(row.message).appendTo($notification);
+		row.date && $('<div class="notification-ago margin-xs-vr" />').html(row.date.fromNow()).appendTo($notification);
+		row.icon && $('<div class="notification-icon fa fa-' + row.icon + ' bg-' + row.color + '" />').appendTo($notification);
 
 		return $notification;
 	},
-	_build: function() {
-		var $cont = $('.notifications-list', this.container);
-
-		this._list = _.sortBy(this._list, function(row) {
-			return !row[1].unix();
-		});
-
-		for(i in this._list) {
-			$notification = this._build_row(this._list[i]);
-			$notification.prependTo($cont);
-
-			if(this._list[i][5] !== false)
-				this.update_counter();
-
-			delete(this._list[i]);
-		}
-
-		$('.counter', this.container).text(parseInt(this.counter));
+	notificationIsShowed: function(id) {
+		return (this.showed.length && _.find(this.showed, function (_id) {
+			return _id == id;
+		}) !== undefined);
 	}
 }

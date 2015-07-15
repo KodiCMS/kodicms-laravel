@@ -5,7 +5,7 @@ return [
 	'backend_path' => env('ADMIN_DIR_NAME', 'backend'),
 	'url_suffix' => null, //'.html',
 
-	'modules' => ['API', 'CMS', 'Plugins', 'Pages', 'Users', 'Email', 'Cron', 'Widgets', 'Filemanager', 'Dashboard', 'Installer'],
+	'modules' => ['API', 'CMS', 'Plugins', 'Notifications', 'Pages', 'Users', 'Email', 'Cron', 'Widgets', 'Filemanager', 'Dashboard', 'Installer'],
 
 	'theme' => [
 		'default' => 'default',
