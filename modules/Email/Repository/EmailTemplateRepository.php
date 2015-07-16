@@ -21,7 +21,7 @@ class EmailTemplateRepository extends BaseRepository
 	/**
 	 * @param EmailTemplate $model
 	 */
-	function __construct(EmailTemplate $model)
+	public function __construct(EmailTemplate $model)
 	{
 		parent::__construct($model);
 	}

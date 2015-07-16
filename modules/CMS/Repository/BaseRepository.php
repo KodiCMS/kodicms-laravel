@@ -21,7 +21,7 @@ class BaseRepository
 	/**
 	 * @param Model $model
 	 */
-	function __construct(Model $model = null)
+	public function __construct(Model $model = null)
 	{
 		$this->model = $model;
 	}

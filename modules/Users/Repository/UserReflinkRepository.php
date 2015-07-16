@@ -8,7 +8,7 @@ class UserReflinkRepository extends BaseRepository
 	/**
 	 * @param UserReflink $model
 	 */
-	function __construct(UserReflink $model)
+	public function __construct(UserReflink $model)
 	{
 		parent::__construct($model);
 	}
