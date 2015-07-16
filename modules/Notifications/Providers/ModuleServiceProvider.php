@@ -4,8 +4,19 @@ use Event;
 use KodiCMS\Users\Model\User;
 use KodiCMS\Notifications\Model\Notification;
 use KodiCMS\ModulesLoader\Providers\ServiceProvider;
+use KodiCMS\Notifications\Console\Commands\DeleteExpired;
 
 class ModuleServiceProvider extends ServiceProvider {
+
+	/**
+	 * Register the service provider.
+	 *
+	 * @return void
+	 */
+	public function register()
+	{
+		$this->registerConsoleCommand('notifications.delete-expired', DeleteExpired::class);
+	}
 
 	public function boot()
 	{
@@ -23,15 +34,5 @@ class ModuleServiceProvider extends ServiceProvider {
 		{
 			return $model->notifications()->wherePivot('is_read', 0);
 		});
-	}
-
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-
 	}
 }

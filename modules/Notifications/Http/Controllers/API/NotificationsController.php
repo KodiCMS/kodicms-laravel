@@ -1,25 +1,20 @@
 <?php namespace KodiCMS\Notifications\Http\Controllers\API;
 
-use DB;
+use KodiCMS\Notifications\Repository\NotificationRepository;
 use KodiCMS\API\Http\Controllers\System\Controller as APIController;
 
 class NotificationsController extends APIController
 {
-	public function getList()
+	public function getList(NotificationRepository $repository)
 	{
-		$notifications = $this->currentUser->newNotifications()->get()->lists('type');
-
-		$this->setContent($notifications);
+		$this->setContent($repository->getNew($this->currentUser));
 	}
 
-	public function deleteRead()
+	public function deleteRead(NotificationRepository $repository)
 	{
 		$id = $this->getRequiredParameter('id');
 
-		DB::table('notifications_users')
-			->where('notification_id', $id)
-			->where('user_id',  $this->currentUser->id)
-			->update(['is_read' => 1]);
+		$repository->markRead($id, $this->currentUser);
 
 		$this->setContent(true);
 	}

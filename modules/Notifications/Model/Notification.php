@@ -91,13 +91,13 @@ class Notification extends Model {
 	}
 
 	/**
-	 * @param NotificationObjectInterface $object
+	 * @param Model $object
 	 *
 	 * @return $this
 	 */
-	public function regarding(NotificationObjectInterface $object)
+	public function regarding(Model $object)
 	{
-		$this->object_id = $object->getId();
+		$this->object_id = $object->getKey();
 		$this->object_type = get_class($object);
 
 		return $this;
@@ -139,8 +139,7 @@ class Notification extends Model {
 	{
 		try
 		{
-			$className = $this->object_type;
-			$object = new $className($this->object_id);
+			$object = call_user_func_array($this->object_type . '::findOrFail', [$this->object_id]);
 		}
 		catch (\Exception $e)
 		{
@@ -189,5 +188,31 @@ class Notification extends Model {
 	public function sender()
 	{
 		return $this->belongsTo(User::class, 'sender_id');
+	}
+
+	/**
+	 * @param integer $userId
+	 */
+	public function markRead($userId)
+	{
+		$this->users()->wherePivot('user_id', $userId)->rawUpdate([
+			'is_read' => true
+		]);
+	}
+
+	public function deleteExpired()
+	{
+		// Delete expired notifications_users rows
+		\DB::table('notifications_users')
+			->leftJoin($this->getTable(), 'notifications_users.notification_id', '=', $this->getTable() . '.id')
+			->whereRaw('DATE(created_at) < CURDATE() + INTERVAL 5 DAY')
+			->where('is_read', true)
+			->delete();
+
+		// Delete expired notifications without unread
+		\DB::table($this->getTable())
+			->whereRaw('DATE(sent_at) < CURDATE() + INTERVAL 5 DAY')
+			->whereRaw('(select COUNT(*) from notifications_users where is_read = 0 AND notification_id = id) = 0')
+			->delete();
 	}
 }

@@ -1,8 +1,10 @@
 <?php namespace KodiCMS\Notifications\Jobs;
 
+use Event;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Bus\SelfHandling;
-use KodiCMS\Notifications\Model\Notification;
 use KodiCMS\Notifications\Types\DefaultNotification;
+use KodiCMS\Notifications\Repository\NotificationRepository;
 use KodiCMS\Notifications\Contracts\NotificationTypeInterface;
 
 class NotificationSend implements SelfHandling
@@ -23,6 +25,11 @@ class NotificationSend implements SelfHandling
 	protected $type;
 
 	/**
+	 * @var Model
+	 */
+	protected $object;
+
+	/**
 	 * @var array
 	 */
 	protected $parameters;
@@ -41,9 +48,13 @@ class NotificationSend implements SelfHandling
 		$this->parameters = $parameters;
 	}
 
-	public function handle()
+	/**
+	 * @param NotificationRepository $repository
+	 * @return \Illuminate\Database\Eloquent\Model
+	 */
+	public function handle(NotificationRepository $repository)
 	{
-		$notification = new Notification;
+		$notification = $repository->instance();
 
 		$notification->withType($this->type);
 
@@ -54,8 +65,17 @@ class NotificationSend implements SelfHandling
 			$notification->from($user);
 		}
 
+		if (!is_null($this->object))
+		{
+			$notification->regarding($this->object);
+		}
+
 		$notification->withParameters($this->parameters);
 
-		return $notification->deliver([$this->users]);
+		$notification->deliver([$this->users]);
+
+		Event::listen('notification.send', [$notification]);
+
+		return $notification;
 	}
 }

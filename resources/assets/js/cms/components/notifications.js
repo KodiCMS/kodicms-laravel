@@ -2,11 +2,9 @@ CMS.Notifications = {
 	list: {},
 	showed: [],
 	container: '#notifications-container',
+	emptyMessageShowed: false,
+	scrollInited: false,
 	init: function () {
-		this.getContainer().slimScroll({
-			height: 250
-		});
-
 		this.fetchList();
 	},
 	create: function (data) {
@@ -39,7 +37,28 @@ CMS.Notifications = {
 		});
 	},
 	updateCounter: function () {
+		if(this.getTotal() > 0) {
+			this.emptyMessageShowed && this.removeEmptyMessage();
+			!this.scrollInited && this.getContainer().slimScroll({
+				height: 250
+			});
+		} else {
+			this.emptyMessageShowed || this.showEmptyMessage();
+			if(this.scrollInited) {
+				this.getContainer().slimScroll({
+					destroy:true
+				});
+			}
+		}
 		$('.counter', this.container).text(this.getTotal());
+	},
+	showEmptyMessage: function() {
+		this.emptyMessageShowed = true;
+		this.getContainer().append($('<div class="popover-content bg-info">' + i18n.t('notifications.core.no_unread_messages') + '</div>'));
+	},
+	removeEmptyMessage: function() {
+		this.emptyMessageShowed = false;
+		this.getContainer().find('.popover-content').remove();
 	},
 	getTotal: function () {
 		return this.showed.length;
@@ -55,10 +74,10 @@ CMS.Notifications = {
 		for (i in this.list) {
 			this.show(this.list[i]);
 		}
+
+		this.updateCounter();
 	},
 	deleteNotifiction: function(id) {
-		$('.notification[data-id="' + id + '"]', this.container).remove();
-
 		this.list = _.filter(this.list, function(row) {
 			return row.id != id;
 		});
@@ -75,6 +94,8 @@ CMS.Notifications = {
 
 		row.id && $notification.data('id', row.id).on('click', function(e) {
 			self.read($(this).data('id'));
+			$(this).remove();
+			e.preventDefault();
 		});
 
 		row.type && $('<div class="notification-title text-' + row.color + '" />').text(row.type.toUpperCase()).appendTo($notification);
