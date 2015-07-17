@@ -1,7 +1,5 @@
 <?php namespace KodiCMS\API\Http\Controllers\System;
 
-use KodiCMS\API\Exceptions\AuthenticateException;
-use KodiCMS\API\Exceptions\PermissionException;
 use Validator;
 use Illuminate\View\View;
 use BadMethodCallException;
@@ -10,6 +8,8 @@ use KodiCMS\API\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use KodiCMS\API\Exceptions\ValidationException;
+use KodiCMS\API\Exceptions\PermissionException;
+use KodiCMS\API\Exceptions\AuthenticateException;
 use KodiCMS\API\Exceptions\MissingParameterException;
 use KodiCMS\CMS\Http\Controllers\System\Controller as BaseController;
 
@@ -172,6 +172,18 @@ abstract class Controller extends BaseController
 		}
 
 		return (new Response(config('app.debug')))->createResponse($this->responseArray);
+	}
+
+	/**
+	 * @param string $command
+	 *
+	 * @return $this
+	 */
+	public function addJavascriptCommand($command)
+	{
+		$this->responseArray['commands'][] = $command;
+
+		return $this;
 	}
 
 	/**

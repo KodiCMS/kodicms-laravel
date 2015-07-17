@@ -1,26 +1,27 @@
 <?php namespace KodiCMS\API\Console\Commands;
 
-use DatabaseConfig;
-use KodiCMS\API\Model\ApiKey;
 use Illuminate\Console\Command;
+use KodiCMS\Api\Repository\ApiKeyRepository;
 
-class GenerateKey extends Command
+class GenerateApiKeyCommand extends Command
 {
 	/**
 	 * The console command name.
 	 */
-	protected $name = 'api:generate_key';
-
+	protected $name = 'cms:api:generate-key';
 
 	/**
 	 * Execute the console command.
+	 *
+	 * @param ApiKeyRepository $reposirory
+	 *
+	 * @return string
 	 */
-	public function fire()
+	public function fire(ApiKeyRepository $reposirory)
 	{
 		$this->output->writeln('<info>Generating KodiCMS API key...</info>');
 
-		$key = ApiKey::generate();
-		DatabaseConfig::set('cms', 'api_key', $key);
+		$key = $reposirory->generate();
 
 		if (!is_null($key))
 		{

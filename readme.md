@@ -45,7 +45,7 @@ password: **password**
  * `cms:plugins:list` - просмотр информации о добавленных плагинах *(Show plugins information)*
  
  * `layout:rebuild_blocks` - индексация размеченых блоков в шаблонах *(Rebuild templates blocks)*
- * `api:generate_key` - генерация нового API ключа *(Generate API key)*
+ * `cms:api:generate-key` - генерация нового API ключа *(Generate API key)*
  
  * `cms:make:controller` - создание контроллера (`cms:make:controller TestController --module=cms --type=backend` создаст контроллер в модуле `modules\CMS`. Существует два типа контроллеров `[api, backend]`)
  
