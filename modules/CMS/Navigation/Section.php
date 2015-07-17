@@ -173,7 +173,7 @@ class Section extends ItemDecorator implements \Countable, \Iterator
 	public function findSection($name)
 	{
 		foreach ($this->getSections() as $section) {
-			if ($section->getName() == $name) {
+			if ($section->getKey() == $name) {
 				return $section;
 			}
 		}
