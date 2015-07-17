@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 use KodiCMS\Installer\Exceptions\InstallException;
 use KodiCMS\Installer\Exceptions\InstallDatabaseException;
 
-class Install extends GeneratorCommand
+class InstallCommand extends GeneratorCommand
 {
 
 	/**

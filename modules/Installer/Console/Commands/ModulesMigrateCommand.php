@@ -2,28 +2,39 @@
 
 use ModulesLoader;
 use Illuminate\Console\Command;
+use Illuminate\Console\ConfirmableTrait;
 use KodiCMS\Installer\Support\ModulesInstaller;
 use Symfony\Component\Console\Input\InputOption;
 
-class ModuleMigrate extends Command
+class ModulesMigrateCommand extends Command
 {
+	use ConfirmableTrait;
 
 	/**
 	 * The console command name.
 	 */
 	protected $name = 'cms:modules:migrate';
 
-
 	/**
 	 * Execute the console command.
 	 */
 	public function fire()
 	{
+		if (!$this->confirmToProceed())
+		{
+			return;
+		}
+
 		$this->output->writeln('<info>Migrating KodiCMS modules...</info>');
 		$installer = new ModulesInstaller(ModulesLoader::getRegisteredModules());
 
 		$installer->cleanOutputMessages();
-		$installer->resetModules();
+
+		if ($this->input->getOption('rollback'))
+		{
+			$installer->resetModules();
+		}
+
 		$installer->migrateModules();
 
 		foreach ($installer->getOutputMessages() as $message)
@@ -48,7 +59,9 @@ class ModuleMigrate extends Command
 	protected function getOptions()
 	{
 		return [
-			['seed', null, InputOption::VALUE_NONE, 'Indicates if the seed task should be re-run.']
+			['seed', 's', InputOption::VALUE_NONE, 'Indicates if the seed task should be re-run.'],
+			['rollback', 'r', InputOption::VALUE_NONE, 'Rollback database migration.'],
+			['force', null, InputOption::VALUE_NONE, 'Force the operation to run when in production.'],
 		];
 	}
 }
