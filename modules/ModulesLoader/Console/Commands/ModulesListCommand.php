@@ -4,7 +4,7 @@ use ModulesLoader;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
 
-class ModulesList extends Command {
+class ModulesListCommand extends Command {
 
 	/**
 	 * The console command name.

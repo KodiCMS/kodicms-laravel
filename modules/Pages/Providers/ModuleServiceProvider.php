@@ -11,7 +11,7 @@ use KodiCMS\Pages\Observers\PagePartObserver;
 use KodiCMS\Pages\Model\PagePart as PagePartModel;
 use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
-use KodiCMS\Pages\Console\Commands\RebuldLayoutBlocks;
+use KodiCMS\Pages\Console\Commands\RebuldLayoutBlocksCommand;
 use KodiCMS\Pages\Listeners\PlacePagePartsToBlocksEventHandler;
 
 class ModuleServiceProvider extends ServiceProvider {
@@ -74,6 +74,6 @@ class ModuleServiceProvider extends ServiceProvider {
 
 	public function register()
 	{
-		$this->registerConsoleCommand('layout.generate.key', RebuldLayoutBlocks::class);
+		$this->registerConsoleCommand('layout.generate.key', RebuldLayoutBlocksCommand::class);
 	}
 }

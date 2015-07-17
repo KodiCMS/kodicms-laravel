@@ -3,7 +3,7 @@
 use PluginLoader;
 use Illuminate\Console\Command;
 
-class PluginActivate extends Command {
+class PluginActivateCommand extends Command {
 
 	/**
 	 * The console command name.

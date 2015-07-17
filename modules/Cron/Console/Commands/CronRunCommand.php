@@ -1,9 +1,9 @@
 <?php namespace KodiCMS\Cron\Console\Commands;
 
-use Illuminate\Console\Command;
 use KodiCMS\Cron\Model\Job;
+use Illuminate\Console\Command;
 
-class Run extends Command
+class CronRunCommand extends Command
 {
 
 	/**

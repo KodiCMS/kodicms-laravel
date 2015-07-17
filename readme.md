@@ -32,6 +32,7 @@ password: **password**
  * `cms:modules:migrate` - создание таблиц в БД
    - Для отката старых миграций необходимо добавить `--rollback`
    - Для сидирования данных необходимо добавить `--seed`
+
  * `cms:modules:seed` - заполнение таблиц тестовыми данными
  
  * `cms:modules:publish` - публикация `view` шаблонов *(Publish view templates)*
@@ -44,9 +45,10 @@ password: **password**
  * `cms:packages:list` - список всех media пакетов *(Show asset packages list)*
  * `cms:plugins:list` - просмотр информации о добавленных плагинах *(Show plugins information)*
  
- * `layout:rebuild_blocks` - индексация размеченых блоков в шаблонах *(Rebuild templates blocks)*
+ * `cms:layout:rebuild-blocks` - индексация размеченых блоков в шаблонах *(Rebuild templates blocks)*
  * `cms:api:generate-key` - генерация нового API ключа *(Generate API key)*
- 
+ * `cms:reflinks:delete-expired` - Удаление просроченых сервисных ссылок
+  
  * `cms:make:controller` - создание контроллера (`cms:make:controller TestController --module=cms --type=backend` создаст контроллер в модуле `modules\CMS`. Существует два типа контроллеров `[api, backend]`)
  
  * `cms:plugins:activate author:plugin` - активация плагина *(Plugin activation)*

@@ -4,15 +4,15 @@ use App;
 use Event;
 use Validator;
 use KodiCMS\Cron\Model\Job;
-use KodiCMS\Cron\Console\Commands\Run;
 use KodiCMS\Cron\Observers\JobObserver;
+use KodiCMS\Cron\Console\Commands\CronRunCommand;
 use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
 {
 	public function register()
 	{
-		$this->registerConsoleCommand('cron.run', Run::class);
+		$this->registerConsoleCommand('cron.run', CronRunCommand::class);
 		Event::listen('kernel.handled', function ()
 		{
 			if (App::installed() and config('job.agent', Job::AGENT_SYSTEM) === Job::AGENT_SYSTEM)

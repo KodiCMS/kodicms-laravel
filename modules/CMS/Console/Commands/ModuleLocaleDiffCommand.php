@@ -6,7 +6,7 @@ use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Helper\TableSeparator;
 
-class ModuleLocaleDiff extends Command {
+class ModuleLocaleDiffCommand extends Command {
 
 	/**
 	 * The console command name.

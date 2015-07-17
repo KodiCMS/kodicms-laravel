@@ -3,6 +3,9 @@
 use KodiCMS\Plugins\Loader\PluginLoader;
 use KodiCMS\Plugins\Loader\PluginInstaller;
 use KodiCMS\ModulesLoader\Providers\ServiceProvider;
+use KodiCMS\Plugins\Console\Commands\PluginsListCommand;
+use KodiCMS\Plugins\Console\Commands\PluginActivateCommand;
+use KodiCMS\Plugins\Console\Commands\PluginDeactivateCommand;
 
 class PluginServiceProvider extends ServiceProvider {
 
@@ -18,14 +21,14 @@ class PluginServiceProvider extends ServiceProvider {
 
 	public function register()
 	{
-		$this->registerConsoleCommand('console.plugins.list', \KodiCMS\Plugins\Console\Commands\PluginsList::class);
-		$this->registerConsoleCommand('console.plugins.activate', \KodiCMS\Plugins\Console\Commands\PluginActivate::class);
-		$this->registerConsoleCommand('console.plugins.deactivate', \KodiCMS\Plugins\Console\Commands\PluginDeactivate::class);
-
 		$this->app->singleton('plugin.installer', function($app)
 		{
 			return new PluginInstaller($app['db'], $app['files']);
 		});
+
+		$this->registerConsoleCommand('cms.plugins.list', PluginsListCommand::class);
+		$this->registerConsoleCommand('cms.plugins.activate', PluginActivateCommand::class);
+		$this->registerConsoleCommand('cms.plugins.deactivate', PluginDeactivateCommand::class);
 	}
 
 	public function boot()

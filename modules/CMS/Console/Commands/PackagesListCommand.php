@@ -4,7 +4,7 @@ use Package;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
 
-class PackagesList extends Command {
+class PackagesListCommand extends Command {
 
 	/**
 	 * The console command name.

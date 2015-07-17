@@ -2,7 +2,7 @@
 
 use KodiCMS\ModulesLoader\ModulesLoader;
 use KodiCMS\ModulesLoader\ModulesFileSystem;
-use KodiCMS\ModulesLoader\Console\Commands\ModulesList;
+use KodiCMS\ModulesLoader\Console\Commands\ModulesListCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -27,6 +27,6 @@ class ModuleServiceProvider extends ServiceProvider
 			return new ModulesFileSystem($app['modules.loader'], $app['files']);
 		});
 
-		$this->registerConsoleCommand('cms:modules:list', ModulesList::class);
+		$this->registerConsoleCommand('cms:modules:list', ModulesListCommand::class);
 	}
 }

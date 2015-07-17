@@ -4,7 +4,7 @@ use WYSIWYG;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
 
-class WysiwygList extends Command {
+class WysiwygListCommand extends Command {
 
 	/**
 	 * The console command name.

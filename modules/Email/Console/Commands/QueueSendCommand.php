@@ -3,25 +3,25 @@
 use Illuminate\Console\Command;
 use KodiCMS\Email\Model\EmailQueue;
 
-class QueueClean extends Command
+class QueueSendCommand extends Command
 {
 
 	/**
 	 * The console command name.
 	 */
-	protected $name = 'cms:email:queue-clean';
+	protected $name = 'cms:email:queue-send';
 
 	/**
 	 * @var string
 	 */
-	protected $description = 'Clean old queued emails';
+	protected $description = 'Send queued emails';
 
 	/**
 	 * Execute the console command.
 	 */
 	public function fire()
 	{
-		EmailQueue::cleanOld();
+		EmailQueue::sendAll();
 		$this->info('All done');
 	}
 }

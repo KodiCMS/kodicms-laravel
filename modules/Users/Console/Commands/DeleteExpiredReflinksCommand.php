@@ -2,13 +2,20 @@
 
 use Illuminate\Console\Command;
 
-class DeleteExpiredReflinks extends Command
+class DeleteExpiredReflinksCommand extends Command
 {
 
 	/**
 	 * The console command name.
 	 */
-	protected $name = 'cms:reflinks:delete_expired';
+	protected $name = 'cms:reflinks:delete-expired';
+
+	/**
+	 * The console command description.
+	 *
+	 * @var string
+	 */
+	protected $description = 'Delete expired referial links';
 
 	/**
 	 * Execute the console command.
@@ -16,7 +23,6 @@ class DeleteExpiredReflinks extends Command
 	public function fire()
 	{
 		app('reflink.tokens')->deleteExpired();
-
 		$this->info('All done');
 	}
 }

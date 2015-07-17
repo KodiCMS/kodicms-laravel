@@ -5,7 +5,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Input\InputOption;
 
-class ModuleLocalePublish extends Command {
+class ModuleLocalePublishCommand extends Command {
 
 	/**
 	 * The console command name.

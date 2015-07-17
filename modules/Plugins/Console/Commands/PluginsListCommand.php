@@ -4,7 +4,7 @@ use PluginLoader;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
 
-class PluginsList extends Command {
+class PluginsListCommand extends Command {
 
 	/**
 	 * The console command name.

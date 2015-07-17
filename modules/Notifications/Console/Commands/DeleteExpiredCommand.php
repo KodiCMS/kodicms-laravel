@@ -3,7 +3,7 @@
 use Illuminate\Console\Command;
 use KodiCMS\Notifications\Model\Notification;
 
-class DeleteExpired extends Command
+class DeleteExpiredCommand extends Command
 {
 
 	/**

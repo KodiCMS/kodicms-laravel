@@ -5,7 +5,7 @@ use ModulesLoader;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 
-class GenerateScriptTranslates extends Command {
+class GenerateScriptTranslatesCommand extends Command {
 
 	/**
 	 * The console command name.
