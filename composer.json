@@ -14,7 +14,8 @@
 		"filp/whoops": "~1.0",
 		"fzaninotto/faker": "dev-master",
 		"guzzlehttp/guzzle": "~5.0",
-		"barryvdh/laravel-ide-helper": "^2.0"
+		"barryvdh/laravel-ide-helper": "^2.0",
+		"michelf/php-markdown": "1.*"
 	},
 	"require-dev": {
 		"fzaninotto/faker": "~1.4",

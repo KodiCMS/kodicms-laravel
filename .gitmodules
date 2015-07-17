@@ -1,0 +1,3 @@
+[submodule "modules/Userguide/guide/laravel"]
+	path = modules/Userguide/guide/laravel
+	url = https://github.com/laravel/docs.git
