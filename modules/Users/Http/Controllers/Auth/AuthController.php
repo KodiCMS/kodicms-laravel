@@ -115,6 +115,8 @@ class AuthController extends FrontendController {
 	/**
 	 * @param Request $request
 	 * @param User $user
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	protected function authenticated(Request $request, User $user)
 	{
@@ -124,6 +126,8 @@ class AuthController extends FrontendController {
 		// Set the last login date
 		$user->last_login = time();
 		$user->save();
+
+		return redirect()->intended($this->redirectPath());
 	}
 
 	/**
