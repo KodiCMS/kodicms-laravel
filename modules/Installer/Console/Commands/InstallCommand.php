@@ -4,12 +4,14 @@ use App;
 use Installer;
 use EnvironmentTester;
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Console\ConfirmableTrait;
 use Symfony\Component\Console\Input\InputOption;
 use KodiCMS\Installer\Exceptions\InstallException;
 use KodiCMS\Installer\Exceptions\InstallDatabaseException;
 
 class InstallCommand extends GeneratorCommand
 {
+	use ConfirmableTrait;
 
 	/**
 	 * The console command name.
@@ -42,6 +44,11 @@ class InstallCommand extends GeneratorCommand
 	 */
 	public function fire()
 	{
+		if (!$this->confirmToProceed())
+		{
+			return;
+		}
+
 		list($failed, $tests, $optional) = EnvironmentTester::check();
 
 		$this->table($this->testHeaders, $tests);
