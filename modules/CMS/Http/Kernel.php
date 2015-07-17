@@ -25,6 +25,8 @@ class Kernel extends HttpKernel {
 	 * @var array
 	 */
 	protected $routeMiddleware = [
+		'backend.auth' => \KodiCMS\Users\Http\Middleware\BackendAuthenticate::class,
+		'backend.guest' => \KodiCMS\Users\Http\Middleware\BackendRedirectIfAuthenticated::class,
 		'auth' => \KodiCMS\Users\Http\Middleware\Authenticate::class,
 		'guest' => \KodiCMS\Users\Http\Middleware\RedirectIfAuthenticated::class
 	];

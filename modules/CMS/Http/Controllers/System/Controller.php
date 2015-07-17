@@ -43,11 +43,6 @@ abstract class Controller extends BaseController
 	protected $currentUser;
 
 	/**
-	 * @var string
-	 */
-	protected $loginPath;
-
-	/**
 	 * @var bool
 	 */
 	protected $authRequired = false;
@@ -77,7 +72,6 @@ abstract class Controller extends BaseController
 		$this->requestType = $this->request->input('type', $this->request->method());
 
 		$this->loadCurrentUser($auth);
-		$this->loginPath = backend_url() . '/auth/login';
 
 		// Execute method boot() on controller execute
 		if (method_exists($this, 'boot'))
@@ -87,8 +81,11 @@ abstract class Controller extends BaseController
 
 		if ($this->authRequired)
 		{
-			$this->beforeFilter('@checkPermissions');
+			$this->middleware('backend.auth');
 		}
+
+		// Todo: вынести во внешний класс для возможности использования данных в middleware
+		$this->checkPermissions();
 	}
 
 	/**
@@ -169,25 +166,12 @@ abstract class Controller extends BaseController
 	/**
 	 * Проверка прав текущего пользователя
 	 *
-	 * @param Route $router
-	 * @param Request $request
 	 * @return Response
 	 */
-	public function checkPermissions(Route $router, Request $request)
+	public function checkPermissions()
 	{
-		if (auth()->guest())
-		{
-			return $this->denyAccess(trans('users::core.messages.auth.unauthorized'), true);
-		}
-
-		if (!$this->currentUser->hasRole('login'))
-		{
-			auth()->logout();
-
-			return $this->denyAccess(trans('users::core.messages.auth.deny_access'), true);
-		}
-
 		$currentPermission = array_get($this->permissions, $this->getCurrentAction());
+
 		if (
 			!in_array($this->getCurrentAction(), $this->allowedActions)
 		and
@@ -273,10 +257,6 @@ abstract class Controller extends BaseController
 		if ($this->authRequired)
 		{
 			$this->currentUser = $auth->user();
-			if (auth()->check())
-			{
-				Lang::setLocale($this->currentUser->getLocale());
-			}
 		}
 	}
 }

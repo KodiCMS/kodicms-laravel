@@ -50,7 +50,7 @@ class AuthController extends FrontendController {
 		$this->redirectPath = backend_url();
 		$this->redirectAfterLogout = backend_url('/auth/login');
 
-		$this->beforeFilter('@checkPermissions', ['except' => ['getLogout']]);
+		$this->middleware('backend.guest', ['except' => ['getLogout']]);
 	}
 
 	/**
@@ -130,18 +130,7 @@ class AuthController extends FrontendController {
 		return redirect()->intended($this->redirectPath());
 	}
 
-	/**
-	 * @param Route $router
-	 * @param Request $request
-	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-	 */
-	public function checkPermissions(Route $router, Request $request)
-	{
-		if ($this->auth->check() AND !is_null($this->currentUser) AND $this->currentUser->hasRole('login'))
-		{
-			return redirect($this->redirectPath);
-		}
-	}
+	public function checkPermissions(){}
 
 	/**
 	 * Get the failed login message.
