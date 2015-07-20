@@ -2,7 +2,7 @@
 
 use Cache;
 use ModulesFileSystem;
-use KodiCMS\Userguide\Markdown;
+use KodiCMS\Userguide\UserguideMarkdown;
 use KodiCMS\CMS\Exceptions\Exception;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
@@ -15,7 +15,7 @@ class UserguideController extends BackendController
 
 	public function before()
 	{
-		if (!class_exists('\Michelf\Markdown'))
+		if (!class_exists('\Parsedown'))
 		{
 			throw new Exception('Markdown parser not found. Live documentation will not work in your environment.');
 		}
@@ -58,21 +58,14 @@ class UserguideController extends BackendController
 			abort(404, 'Userguide page not found');
 		}
 
-		Markdown::$baseUrl = route('backend.userguide.docs', [$module]);
+		UserguideMarkdown::$baseUrl = route('backend.userguide.docs', [$module]);
 
-		$content = Cache::remember("guide:{$module}:{$page}", 60, function () use ($file)
-		{
-			return Markdown::defaultTransform(file_get_contents($file));
-		});
-
-		$menuItems =  Cache::remember("guide:{$module}:menu", 60, function () use ($module)
-		{
-			return Markdown::defaultTransform($this->getAllMenuMarkdown($module));
-		});
+		$content = (new UserguideMarkdown)->text(file_get_contents($file));
+		$menuItems = (new UserguideMarkdown)->text($this->getAllMenuMarkdown($module));
 
 		$menu = view('userguide::menu', compact('menuItems', 'title'));
 
-		$this->setTitle($title, Markdown::$baseUrl);
+		$this->setTitle($title, UserguideMarkdown::$baseUrl);
 		$this->setTitle($this->title($module, $page));
 
 		$this->setContent('doc', compact('title', 'menu', 'content'));
