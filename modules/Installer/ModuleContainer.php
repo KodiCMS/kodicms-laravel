@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Installer;
 
 use App;
+use Event;
 use Route;
 use Illuminate\Routing\Router;
 use KodiCMS\ModulesLoader\ModuleContainer as BaseModuleContainer;
