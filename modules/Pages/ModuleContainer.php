@@ -2,6 +2,7 @@
 
 use App;
 use Route;
+use Event;
 use Illuminate\Routing\Router;
 use KodiCMS\ModulesLoader\ModuleContainer as BaseModuleContainer;
 
@@ -17,10 +18,10 @@ class ModuleContainer extends BaseModuleContainer
 			return;
 		}
 
-		Route::before(function()
+		Event::listen('routes.loaded', function()
 		{
 			Route::get('{slug}', ['as' => 'frontend.url', 'uses' => 'KodiCMS\Pages\Http\Controllers\FrontendController@run'])
 				->where('slug', '(.*)?');
-		});
+		}, 999);
 	}
 }

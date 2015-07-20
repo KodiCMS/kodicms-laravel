@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\CMS;
 
+use Event;
 use Route;
 use Illuminate\Routing\Router;
 use KodiCMS\ModulesLoader\ModuleContainer as BaseModuleContainer;
@@ -11,7 +12,7 @@ class ModuleContainer extends BaseModuleContainer
 	 */
 	protected function loadSystemRoutes(Router $router)
 	{
-		Route::before(function()
+		Event::listen('routes.loaded', function()
 		{
 			Route::group(['namespace' => $this->getControllerNamespace(), 'prefix' => backend_url()], function ()
 			{

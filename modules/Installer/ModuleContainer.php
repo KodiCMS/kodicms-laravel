@@ -30,7 +30,7 @@ class ModuleContainer extends BaseModuleContainer
 			return;
 		}
 
-		Route::before(function()
+		Event::listen('routes.loaded', function()
 		{
 			Route::group(['namespace' => $this->getControllerNamespace()], function ()
 			{
