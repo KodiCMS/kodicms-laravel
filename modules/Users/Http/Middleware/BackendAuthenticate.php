@@ -15,9 +15,9 @@ class BackendAuthenticate {
 	protected $auth;
 
 	/**
-	 * @var string
+	 * @var ControllerACL
 	 */
-	protected $loginPath;
+	protected $acl;
 
 	/**
 	 * Create a new filter instance.
@@ -27,13 +27,13 @@ class BackendAuthenticate {
 	public function __construct(Guard $auth)
 	{
 		$this->auth = $auth;
-		$this->loginPath = backend_url() . '/auth/login';
+		$this->acl = app('acl.controller');
+
+		$this->acl->setLoginPath(backend_url('auth/login'));
 	}
 
 	/**
 	 * Handle an incoming request.
-	 *
-	 *
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  \Closure  $next
@@ -43,33 +43,19 @@ class BackendAuthenticate {
 	{
 		if (auth()->guest())
 		{
-			return $this->denyAccess(trans('users::core.messages.auth.unauthorized'), true);
+			return $this->acl->denyAccess(trans('users::core.messages.auth.unauthorized'), true);
 		}
 
 		if (!auth()->user()->hasRole('login'))
 		{
 			auth()->logout();
-
-			return $this->denyAccess(trans('users::core.messages.auth.deny_access'), true);
+			return $this->acl->denyAccess(trans('users::core.messages.auth.deny_access'), true);
 		}
 
 		Lang::setLocale(auth()->user()->getLocale());
 
+		$this->acl->checkPermissions();
+
 		return $next($request);
-	}
-
-	/**
-	 * @param string|array|null $message
-	 * @param bool $redirect
-	 * @return Response
-	 */
-	public function denyAccess($message = null, $redirect = false)
-	{
-		if ($redirect)
-		{
-			return redirect()->guest($this->loginPath)->withErrors($message);
-		}
-
-		return abort(403, $message);
 	}
 }

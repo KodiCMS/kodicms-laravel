@@ -1,12 +1,11 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
-use Lang;
 use Illuminate\Auth\Guard;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
+use KodiCMS\Users\Http\ControllerACL;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Session\Store as SessionStore;
 use Illuminate\Routing\Controller as BaseController;
@@ -57,13 +56,53 @@ abstract class Controller extends BaseController
 	 */
 	protected $permissions = [];
 
+	/**
+	 * @var ControllersACL
+	 */
+	protected $acl;
+
+	public function __construct()
+	{
+		app()->call([$this, 'initController']);
+
+		$this->initControllerAcl();
+
+		// Execute method boot() on controller execute
+		if (method_exists($this, 'boot'))
+		{
+			app()->call([$this, 'boot']);
+		}
+
+		$this->initMiddleware();
+	}
+
+	/**
+	 * Execute before an action executed
+	 * return void
+	 */
+	public function before() {}
+
+	/**
+	 * Execute after an action executed
+	 * return void
+	 */
+	public function after() {}
+
+	/**
+	 * @return KodiCMS\Users\Http\ControllerACL
+	 */
+	protected function getControllerAcl()
+	{
+		return new ControllerACL();
+	}
 
 	/**
 	 * @param Request $request
 	 * @param Response $response
-	 * return void
+	 * @param SessionStore $session
+	 * @param Guard $auth
 	 */
-	public function __construct(Request $request, Response $response, SessionStore $session, Guard $auth)
+	public function initController(Request $request, Response $response, SessionStore $session, Guard $auth)
 	{
 		$this->request = $request;
 		$this->response = $response;
@@ -72,36 +111,25 @@ abstract class Controller extends BaseController
 		$this->requestType = $this->request->input('type', $this->request->method());
 
 		$this->loadCurrentUser($auth);
+	}
 
-		// Execute method boot() on controller execute
-		if (method_exists($this, 'boot'))
-		{
-			app()->call([$this, 'boot']);
-		}
+	public function initControllerAcl()
+	{
+		$this->acl = $this->getControllerAcl();
 
+		app()->instance('acl.controller', $this->acl);
+
+		$this->acl->setPermissions($this->permissions)
+			->setAllowedActions($this->allowedActions)
+			->setCurrentAction($this->getCurrentAction());
+	}
+
+	public function initMiddleware()
+	{
 		if ($this->authRequired)
 		{
 			$this->middleware('backend.auth');
 		}
-
-		// Todo: вынести во внешний класс для возможности использования данных в middleware
-		$this->checkPermissions();
-	}
-
-	/**
-	 * Execute before an action executed
-	 * return void
-	 */
-	public function before()
-	{
-	}
-
-	/**
-	 * Execute after an action executed
-	 * return void
-	 */
-	public function after()
-	{
 	}
 
 	/**
@@ -161,42 +189,6 @@ abstract class Controller extends BaseController
 		$this->after($response);
 
 		return $response;
-	}
-
-	/**
-	 * Проверка прав текущего пользователя
-	 *
-	 * @return Response
-	 */
-	public function checkPermissions()
-	{
-		$currentPermission = array_get($this->permissions, $this->getCurrentAction());
-
-		if (
-			!in_array($this->getCurrentAction(), $this->allowedActions)
-		and
-			!is_null($currentPermission)
-		and
-			!acl_check($currentPermission)
-		)
-		{
-			return $this->denyAccess(trans('users::core.messages.auth.no_permissions'));
-		}
-	}
-
-	/**
-	 * @param string|array|null $message
-	 * @param bool $redirect
-	 * @return Response
-	 */
-	public function denyAccess($message = null, $redirect = false)
-	{
-		if ($redirect)
-		{
-			return redirect()->guest($this->loginPath)->withErrors($message);
-		}
-
-		return abort(403, $message);
 	}
 
 	/**

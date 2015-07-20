@@ -2,7 +2,6 @@
 
 use DB;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 use KodiCMS\Users\Model\User;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -49,7 +48,10 @@ class AuthController extends FrontendController {
 
 		$this->redirectPath = backend_url();
 		$this->redirectAfterLogout = backend_url('/auth/login');
+	}
 
+	public function initMiddleware()
+	{
 		$this->middleware('backend.guest', ['except' => ['getLogout']]);
 	}
 

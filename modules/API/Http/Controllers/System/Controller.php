@@ -6,10 +6,9 @@ use BadMethodCallException;
 use Illuminate\Http\Request;
 use KodiCMS\API\Http\Response;
 use Illuminate\Http\JsonResponse;
+use KodiCMS\API\Http\ControllerACL;
 use Illuminate\Http\RedirectResponse;
 use KodiCMS\API\Exceptions\ValidationException;
-use KodiCMS\API\Exceptions\PermissionException;
-use KodiCMS\API\Exceptions\AuthenticateException;
 use KodiCMS\API\Exceptions\MissingParameterException;
 use KodiCMS\CMS\Http\Controllers\System\Controller as BaseController;
 
@@ -30,6 +29,14 @@ abstract class Controller extends BaseController
 	 * @var array
 	 */
 	public $requiredFields = [];
+
+	/**
+	 * @return KodiCMS\API\Http\ControllerACL
+	 */
+	protected function getControllerAcl()
+	{
+		return new ControllerACL();
+	}
 
 	/**
 	 * Получение значения передаваемого параметра
@@ -121,21 +128,6 @@ abstract class Controller extends BaseController
 		}
 
 		return true;
-	}
-
-	/**
-	 * @param string|array|null $message
-	 * @param bool $redirect
-	 * @return Response
-	 */
-	public function denyAccess($message = null, $redirect = false)
-	{
-		if (auth()->guest())
-		{
-			throw new AuthenticateException($message);
-		}
-
-		throw new PermissionException(array_get($this->permissions, $this->getCurrentAction()), $message);
 	}
 
 	/**
