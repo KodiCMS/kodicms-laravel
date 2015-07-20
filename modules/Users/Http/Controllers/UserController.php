@@ -6,11 +6,6 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 class UserController extends BackendController
 {
 	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'users::';
-
-	/**
 	 * @var array
 	 */
 	public $allowedActions = [
@@ -53,7 +48,7 @@ class UserController extends BackendController
 		$roles = $user->roles;
 		$permissions = $user->getAllowedPermissions();
 
-		$this->setTitle(trans('users::core.title.profile_alternate', [
+		$this->setTitle(trans($this->wrapNamespace('core.title.profile_alternate'), [
 			'name' => ucfirst($user->username)
 		]));
 
@@ -63,7 +58,7 @@ class UserController extends BackendController
 	public function getCreate(UserRepository $repository)
 	{
 		$user = $repository->instance();
-		$this->setTitle(trans('users::core.title.create'));
+		$this->setTitle(trans($this->wrapNamespace('core.title.create')));
 		$this->templateScripts['USER'] = $user;
 
 		$this->setContent('users.create', compact('user'));
@@ -76,13 +71,13 @@ class UserController extends BackendController
 		$user = $repository->create($data);
 
 		return $this->smartRedirect([$user])
-			->with('success', trans('users::core.messages.user.created', ['name' => $user->username]));
+			->with('success', trans($this->wrapNamespace('core.messages.user.created'), ['name' => $user->username]));
 	}
 
 	public function getEdit(UserRepository $repository, $id)
 	{
 		$user = $repository->findOrFail($id);
-		$this->setTitle(trans('users::core.title.edit', [
+		$this->setTitle(trans($this->wrapNamespace('core.title.edit'), [
 			'name' => ucfirst($user->username)
 		]));
 		$this->templateScripts['USER'] = $user;
@@ -97,13 +92,13 @@ class UserController extends BackendController
 		$user = $repository->update($id, $data);
 
 		return $this->smartRedirect([$user])
-			->with('success', trans('users::core.messages.user.updated', ['name' => $user->username]));
+			->with('success', trans($this->wrapNamespace('core.messages.user.updated'), ['name' => $user->username]));
 	}
 
 	public function postDelete(UserRepository $repository, $id)
 	{
 		$user = $repository->delete($id);
 		return $this->smartRedirect()
-			->with('success', trans('users::core.messages.user.deleted', ['name' => $user->username]));
+			->with('success', trans($this->wrapNamespace('core.messages.user.deleted'), ['name' => $user->username]));
 	}
 }

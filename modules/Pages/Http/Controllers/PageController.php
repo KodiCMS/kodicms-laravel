@@ -9,11 +9,6 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 class PageController extends BackendController
 {
 	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'pages::';
-
-	/**
 	 * @var array
 	 */
 	public $allowedActions = ['children'];

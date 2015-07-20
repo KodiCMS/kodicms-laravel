@@ -6,11 +6,6 @@ use KodiCMS\Widgets\Model\SnippetCollection;
 class SnippetController extends AbstractFileController
 {
 	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'widgets::';
-
-	/**
 	 * @var LayoutCollection
 	 */
 	protected $collection;

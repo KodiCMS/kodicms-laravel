@@ -8,11 +8,6 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class UserguideController extends BackendController
 {
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'userguide::';
-
 	public function before()
 	{
 		if (!class_exists('\Parsedown'))
@@ -22,7 +17,7 @@ class UserguideController extends BackendController
 
 		parent::before();
 
-		$this->setTitle(trans('userguide::core.title'));
+		$this->setTitle(trans($this->wrapNamespace('core.title')));
 	}
 
 	public function getIndex()
@@ -63,7 +58,7 @@ class UserguideController extends BackendController
 		$content = (new UserguideMarkdown)->text(file_get_contents($file));
 		$menuItems = (new UserguideMarkdown)->text($this->getAllMenuMarkdown($module));
 
-		$menu = view('userguide::menu', compact('menuItems', 'title'));
+		$menu = view($this->wrapNamespace('menu'), compact('menuItems', 'title'));
 
 		$this->setTitle($title, UserguideMarkdown::$baseUrl);
 		$this->setTitle($this->title($module, $page));

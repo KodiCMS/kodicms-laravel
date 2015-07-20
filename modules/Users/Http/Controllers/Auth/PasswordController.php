@@ -7,11 +7,6 @@ use KodiCMS\Users\Reflinks\Generators\ForgotPasswordGenerator;
 
 class PasswordController extends FrontendController {
 
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'users::';
-
 	public function boot()
 	{
 		$this->middleware('guest');

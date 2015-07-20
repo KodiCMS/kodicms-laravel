@@ -7,16 +7,6 @@ use KodiCMS\Pages\Model\LayoutCollection;
 class LayoutController extends AbstractFileController
 {
 	/**
-	 * @var bool
-	 */
-	public $authRequired = TRUE;
-
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'pages::';
-
-	/**
 	 * @return LayoutCollection
 	 */
 	protected function getCollection()
@@ -47,12 +37,12 @@ class LayoutController extends AbstractFileController
 
 		$blocks = [];
 
-		foreach($layouts as $layout)
+		foreach ($layouts as $layout)
 		{
-			$blocks[$layout->getKey()] = view('pages::layout.partials.blocks', ['blocks' => $layout->findBlocks()])->render();
+			$blocks[$layout->getKey()] = view($this->wrapNamespace('layout.partials.blocks'), ['blocks' => $layout->findBlocks()])->render();
 		}
 
-		$this->setMessage(trans('pages::layout.messages.rebuild'));
+		$this->setMessage(trans($this->wrapNamespace('layout.messages.rebuild')));
 		$this->setContent($blocks);
 	}
 

@@ -6,11 +6,6 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class CronController extends BackendController
 {
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'cron::';
-
 	public function getIndex(CronRepository $repository)
 	{
 		$jobs = $repository->paginate();

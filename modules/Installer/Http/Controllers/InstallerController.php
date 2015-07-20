@@ -10,12 +10,6 @@ use KodiCMS\Installer\Exceptions\InstallValidationException;
 use KodiCMS\CMS\Http\Controllers\System\FrontendController;
 
 class InstallerController extends FrontendController {
-
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'installer::';
-
 	/**
 	 * @var Installer
 	 */

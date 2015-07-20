@@ -1,10 +1,10 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
 use App;
-use View;
-use Lang;
 use Assets;
+use Lang;
 use ModulesFileSystem;
+use View;
 
 class TemplateController extends Controller
 {
@@ -14,64 +14,19 @@ class TemplateController extends Controller
 	public $template = 'cms::app.backend';
 
 	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'cms::';
-
-	/**
 	 * @var  boolean  auto render template
 	 **/
-	public $autoRender = TRUE;
+	public $autoRender = true;
 
 	/**
-	 *
 	 * @var boolean
 	 */
-	public $onlyContent = FALSE;
+	public $onlyContent = false;
 
 	/**
 	 * @var array
 	 */
 	public $templateScripts = [];
-
-	/**
-	 * Setup the layout used by the controller.
-	 *
-	 * @return $this
-	 */
-	protected function setupLayout()
-	{
-		if (!is_null($this->template)) {
-			$this->template = view($this->template);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Set the layout used by the controller.
-	 *
-	 * @param $name
-	 * @return $this
-	 */
-	protected function setLayout($name)
-	{
-		$this->template = $name;
-		return $this;
-	}
-
-	/**
-	 * @param $title
-	 * @return $this
-	 */
-	protected function setTitle($title)
-	{
-		// Initialize empty values
-		$this->template
-			->with('title', $title);
-
-		return $this;
-	}
 
 	/**
 	 * @param $view
@@ -80,14 +35,15 @@ class TemplateController extends Controller
 	 */
 	public function setContent($view, array $data = [])
 	{
-		if (!is_null($this->template)) {
-			$content = view($this->moduleNamespace . $view, $data);
+		if (!is_null($this->template))
+		{
+			$content = view($this->wrapNamespace($view), $data);
 			$this->template->with('content', $content);
 
 			return $content;
 		}
 
-		return view($this->moduleNamespace . $view, $data);
+		return view($this->wrapNamespace($view), $data);
 	}
 
 	public function before()
@@ -103,6 +59,9 @@ class TemplateController extends Controller
 		View::share('controllerAction', $this->getCurrentAction());
 		View::share('currentUser', $this->currentUser);
 		View::share('requestType', $this->requestType);
+
+		// Todo: подумать нужно ли передавать во view название модуля
+		//View::share('currentModule', substr($this->getModuleNamespace(), 0, -2));
 	}
 
 	public function after()
@@ -150,7 +109,6 @@ class TemplateController extends Controller
 		foreach ($this->templateScripts as $var => $value)
 		{
 			$value = json_encode($value);
-
 			$scrpit .= "var {$var} = {$value};\n";
 		}
 
@@ -199,5 +157,43 @@ class TemplateController extends Controller
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Setup the layout used by the controller.
+	 *
+	 * @return $this
+	 */
+	protected function setupLayout()
+	{
+		if (!is_null($this->template))
+		{
+			$this->template = view($this->template);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Set the layout used by the controller.
+	 *
+	 * @param $name
+	 * @return $this
+	 */
+	protected function setLayout($name)
+	{
+		$this->template = $name;
+		return $this;
+	}
+
+	/**
+	 * @param $title
+	 * @return $this
+	 */
+	protected function setTitle($title)
+	{
+		// Initialize empty values
+		$this->template->with('title', $title);
+		return $this;
 	}
 }
