@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => CMS::backendPath(), 'as' => 'backend.'], function ()
+Route::group(['prefix' => backend_url(), 'as' => 'backend.'], function ()
 {
 	Route::controller('snippets', 'SnippetController', [
 		'getIndex' => 'snippet.list',

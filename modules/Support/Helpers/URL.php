@@ -1,6 +1,5 @@
 <?php namespace KodiCMS\Support\Helpers;
 
-use CMS;
 use Request;
 
 /**
@@ -68,7 +67,7 @@ class URL
 	 */
 	public static function isBackend($url = null)
 	{
-		return static::startWith(CMS::backendPath(), $url);
+		return static::startWith(backend_url(), $url);
 	}
 
 	/**

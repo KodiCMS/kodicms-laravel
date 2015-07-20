@@ -6,12 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 class JobLog extends Model
 {
 	/**
+	 * The table associated with the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'cron_job_logs';
+
+	/**
 	 * @var array
 	 */
-	protected $fillable = [
-		'job_id',
-		'status'
-	];
+	protected $fillable = ['job_id', 'status'];
 
 	protected static function boot()
 	{

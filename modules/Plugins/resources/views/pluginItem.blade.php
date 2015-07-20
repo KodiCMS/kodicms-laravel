@@ -4,7 +4,7 @@
 		<div class="alert alert-danger alert-dark padding-xs">
 			<%= i18n.t('plugins.core.messages.not_installable', {
 				required_version: required_cms_version,
-				current_version: '{!! \KodiCMS\CMS\Core::VERSION !!}'
+				current_version: '{!! CMS::VERSION !!}'
 		}) %>
 		</div>
 		<% } %>

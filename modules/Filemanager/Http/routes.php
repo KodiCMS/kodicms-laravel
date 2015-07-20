@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => CMS::backendPath(), 'as' => 'backend.'], function ()
+Route::group(['prefix' => backend_url(), 'as' => 'backend.'], function ()
 {
 	Route::get('filemanager.popup', ['as' => 'filemanager.popup', 'uses' => 'FilemanagerController@popup']);
 	Route::get('filemanager', ['as' => 'filemanager', 'uses' => 'FilemanagerController@show']);

@@ -2,18 +2,18 @@
 
 use KodiCMS\Installer\Installer;
 use KodiCMS\Installer\EnvironmentTester;
-use KodiCMS\CMS\Providers\ServiceProvider;
-use KodiCMS\Installer\Console\Commands\Install;
-use KodiCMS\Installer\Console\Commands\ModuleSeed;
-use KodiCMS\Installer\Console\Commands\ModuleMigrate;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
+use KodiCMS\Installer\Console\Commands\InstallCommand;
+use KodiCMS\Installer\Console\Commands\ModulesSeedCommand;
+use KodiCMS\Installer\Console\Commands\ModulesMigrateCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
 	public function register()
 	{
-		$this->registerConsoleCommand('module.migrate', ModuleMigrate::class);
-		$this->registerConsoleCommand('module.seed', ModuleSeed::class);
-		$this->registerConsoleCommand('cms.install', Install::class);
+		$this->registerConsoleCommand('cms.install', InstallCommand::class);
+		$this->registerConsoleCommand('modules.seed', ModulesSeedCommand::class);
+		$this->registerConsoleCommand('modules.migrate', ModulesMigrateCommand::class);
 
 		$this->app->singleton('installer', function ($app)
 		{

@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\CMS\Navigation;
 
+use Event;
 
 /**
  * Class Collection
@@ -31,6 +32,7 @@ class Collection
 		static::getRootSection()->findActivePageByUri(strtolower($uri));
 		static::getRootSection()->sort();
 
+		Event::fire('navigation.inited', [static::getRootSection()]);
 		return static::getRootSection();
 	}
 

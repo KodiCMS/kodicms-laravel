@@ -1,6 +1,5 @@
 <?php namespace KodiCMS\Cron\Model;
 
-use DB;
 use Artisan;
 use Carbon\Carbon;
 use KodiCMS\Cron\Support\Crontab;
@@ -8,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Job extends Model
 {
+
+	/**
+	 * The table associated with the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'cron_jobs';
 
 	const STATUS_FAILED = -1;    // Job has failed
 	const STATUS_NEW = 1;        // New job
@@ -22,18 +28,15 @@ class Job extends Model
 	/**
 	 * @var array
 	 */
-	protected $fillable = [
-		'name',
-		'task_name',
-		'date_start',
-		'date_end',
-		'last_run',
-		'next_run',
-		'interval',
-		'crontime',
-		'status',
-		'attempts',
-	];
+	protected $fillable = ['name', 'task_name', 'date_start', 'date_end', 'last_run', 'next_run', 'interval', 'crontime', 'status', 'attempts',];
+
+
+	/**
+	 * The attributes that should be mutated to dates.
+	 *
+	 * @var array
+	 */
+	protected $dates = ['date_start', 'date_end', 'last_run', 'next_run'];
 
 	/**
 	 * @var array
@@ -51,19 +54,6 @@ class Job extends Model
 			static::AGENT_SYSTEM => trans('cron::core.settings.agents.system'),
 			static::AGENT_CRON   => trans('cron::core.settings.agents.cron')
 		];
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getDates()
-	{
-		return array_merge(parent::getDates(), [
-			'date_start',
-			'date_end',
-			'last_run',
-			'next_run',
-		]);
 	}
 
 	/**

@@ -164,7 +164,23 @@ class WysiwygManager {
 	 */
 	public function getEditor($editorId)
 	{
-		return array_get($this->getAvailable(), $editorId);
+		return array_get($this->getAvailable(), $editorId, new WysiwygEditor('dummy'));
+	}
+
+	/**
+	 * @return WysiwygEditor
+	 */
+	public function getDefaultHTMLEditor()
+	{
+		return $this->getEditor($this->getDefaultHTMLEditorId());
+	}
+
+	/**
+	 * @return WysiwygEditor
+	 */
+	public function getDefaultCodeEditor()
+	{
+		return $this->getEditor($this->getDefaultCodeEditorId());
 	}
 
 	/**

@@ -5,30 +5,33 @@ use Illuminate\Database\Schema\Blueprint;
 
 class Jobs extends Migration
 {
+	/**
+	 * Run the migrations.
+	 *
+	 * @return void
+	 */
 	public function up()
 	{
 		Schema::create('jobs', function (Blueprint $table) {
-			$table->increments('id');
-			$table->string('name');
-			$table->string('task_name');
-
-			$table->dateTime('date_start');
-			$table->dateTime('date_end');
-
-			$table->dateTime('last_run')->nullable();
-			$table->dateTime('next_run')->index();
-
-			$table->integer('interval');
-			$table->string('crontime', 100);
-
-			$table->tinyInteger('status');
-			$table->integer('attempts');
-			$table->timestamps();
+			$table->bigIncrements('id');
+			$table->string('queue');
+			$table->longText('payload');
+			$table->tinyInteger('attempts')->unsigned();
+			$table->tinyInteger('reserved')->unsigned();
+			$table->unsignedInteger('reserved_at')->nullable();
+			$table->unsignedInteger('available_at');
+			$table->unsignedInteger('created_at');
+			$table->index(['queue', 'reserved', 'reserved_at']);
 		});
 	}
 
+	/**
+	 * Reverse the migrations.
+	 *
+	 * @return void
+	 */
 	public function down()
 	{
-		Schema::dropIfExists('jobs');
+		Schema::drop('jobs');
 	}
 }

@@ -4,7 +4,7 @@ use CMS;
 use Event;
 use KodiCMS\Plugins\Model\Plugin;
 use KodiCMS\Support\Traits\Settings;
-use KodiCMS\CMS\Loader\ModuleContainer;
+use KodiCMS\ModulesLoader\ModuleContainer;
 use KodiCMS\Plugins\Exceptions\PluginContainerException;
 use KodiCMS\Support\Facades\PluginLoader as PluginLoaderFacade;
 

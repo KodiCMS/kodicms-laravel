@@ -37,6 +37,11 @@
 
 				@if($requestType != 'iframe')
 				@include('cms::app.partials.footer')
+
+				@if(config('app.profiling'))
+				@include('cms::app.profiler')
+				@endif
+
 				@endif
 			</div>
 		</div>

@@ -1,46 +1,77 @@
 <?php namespace KodiCMS\CMS\Providers;
 
-use KodiCMS\CMS\Core;
-use KodiCMS\CMS\ModulesFileSystem;
-use KodiCMS\CMS\Loader\ModulesLoader;
+use Blade;
+use Cache;
+use Config;
+use Event;
+use Profiler;
+use ModulesFileSystem;
+use KodiCMS\CMS\Helpers\DatabaseConfig;
+use KodiCMS\Support\Cache\SqLiteTaggedStore;
+use KodiCMS\Support\Cache\DatabaseTaggedStore;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-	public function __construct($app)
+	public function register()
 	{
-		parent::__construct($app);
-
-		$this->app->singleton('modules.loader', function ($app)
+		Event::listen('config.loaded', function()
 		{
-			return new ModulesLoader(config('cms.modules'));
-		});
+			if ($this->app->installed())
+			{
+				try
+				{
+					$databaseConfig = new DatabaseConfig;
+					$this->app->instance('config.database', $databaseConfig);
 
-		$this->app->singleton('modules.filesystem', function ($app)
-		{
-			return new ModulesFileSystem($app['modules.loader'], $app['files']);
-		});
+					$config = $databaseConfig->getAll();
+					foreach ($config as $group => $data)
+					{
+						Config::set($group, array_merge(Config::get($group, []), $data));
+					}
+				}
+				catch (\PDOException $e) {}
+			}
+		}, 999);
 
-		$this->app->singleton('cms', function ($app)
-		{
-			return new Core;
+		Event::listen('illuminate.query', function($sql, $bindings, $time) {
+			$sql = str_replace(array('%', '?'), array('%%', '%s'), $sql);
+			$sql = vsprintf($sql, $bindings);
+
+			Profiler::append('Database', $sql, $time / 1000);
 		});
 	}
 
-	/**
-	 * Bootstrap any application services.
-	 *
-	 * @return void
-	 */
-	public function boot(){}
+	public function boot()
+	{
+		Blade::directive('event', function($expression)
+		{
+			return "<?php event{$expression}; ?>";
+		});
 
-	/**
-	 * Register any application services.
-	 *
-	 * This service provider is a great spot to register your various container
-	 * bindings with the application. As you can see, we are registering our
-	 * "Registrar" implementation here. You can add your own bindings too!
-	 *
-	 * @return void
-	 */
-	public function register(){}
+		$this->app->shutdown(function()
+		{
+			ModulesFileSystem::cacheFoundFiles();
+		});
+
+		Cache::extend('sqlite', function($app, $config)
+		{
+			$connectionName = array_get($config, 'connection');
+			$connectionConfig = config('database.connections.' . $connectionName);
+
+			if (!file_exists($connectionConfig['database']))
+			{
+				touch($connectionConfig['database']);
+			}
+
+			$connection = $this->app['db']->connection($connectionName);
+			return Cache::repository(new SqLiteTaggedStore($connection, $config['schema']));
+		});
+
+		Cache::extend('database', function($app, $config)
+		{
+			$connection = $this->app['db']->connection(array_get($config, 'connection'));
+			return Cache::repository(new DatabaseTaggedStore($connection, $config['table']));
+		});
+	}
 }

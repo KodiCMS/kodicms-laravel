@@ -1,7 +1,5 @@
 <?php namespace KodiCMS\CMS\Navigation;
 
-use CMS;
-
 class Section extends ItemDecorator implements \Countable, \Iterator
 {
 
@@ -127,7 +125,7 @@ class Section extends ItemDecorator implements \Countable, \Iterator
 	public function findActivePageByUri($currentUri)
 	{
 		$found = FALSE;
-		$adminDirName = CMS::backendPath();
+		$adminDirName = backend_url();
 
 		foreach ($this->getPages() as $page) {
 
@@ -175,7 +173,7 @@ class Section extends ItemDecorator implements \Countable, \Iterator
 	public function findSection($name)
 	{
 		foreach ($this->getSections() as $section) {
-			if ($section->getName() == $name) {
+			if ($section->getKey() == $name) {
 				return $section;
 			}
 		}

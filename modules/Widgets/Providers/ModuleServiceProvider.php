@@ -9,11 +9,11 @@ use KodiCMS\Pages\Helpers\Block;
 use KodiCMS\Users\Model\UserRole;
 use KodiCMS\Widgets\Model\Widget;
 use KodiCMS\Widgets\Manager\WidgetManager;
-use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Widgets\Model\SnippetCollection;
 use KodiCMS\Widgets\Observers\WidgetObserver;
 use KodiCMS\Widgets\Contracts\WidgetPaginator;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 use KodiCMS\Widgets\Collection\PageWidgetCollection;
 
 class ModuleServiceProvider extends ServiceProvider

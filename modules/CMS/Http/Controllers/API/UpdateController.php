@@ -1,11 +1,17 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\API;
 
-use KodiCMS\API\Exceptions\Exception;
 use KodiCMS\CMS\Helpers\Updater;
+use KodiCMS\API\Exceptions\Exception;
 use KodiCMS\API\Http\Controllers\System\Controller;
+use KodiCMS\Notifications\Types\CMSNewVersionNotification;
 
 class UpdateController extends Controller
 {
+	public function checkNewVersion(Updater $updater)
+	{
+		$this->setContent((new CMSNewVersionNotification($updater))->toArray());
+	}
+
 	public function checkRemoteFiles(Updater $updater)
 	{
 		$files = $updater->checkFiles();
@@ -14,7 +20,6 @@ class UpdateController extends Controller
 
 	public function diffFiles(Updater $updater)
 	{
-
 		$path = $this->getRequiredParameter('path');
 
 		$localFile = base_path($path);

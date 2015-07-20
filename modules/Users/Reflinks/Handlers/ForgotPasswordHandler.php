@@ -1,6 +1,5 @@
 <?php namespace KodiCMS\Users\Reflinks\Handlers;
 
-use CMS;
 use Bus;
 use Auth;
 use Password;
@@ -65,7 +64,7 @@ class ForgotPasswordHandler implements ReflinkHandlerInterface
 
 		Auth::login($user);
 
-		$this->redirectUrl = CMS::backendPath();
+		$this->redirectUrl = backend_url();
 
 		$this->message = trans(Password::PASSWORD_RESET);
 	}

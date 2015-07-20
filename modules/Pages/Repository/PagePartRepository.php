@@ -8,7 +8,7 @@ class PagePartRepository extends BaseRepository
 	/**
 	 * @param PagePart $model
 	 */
-	function __construct(PagePart $model)
+	public function __construct(PagePart $model)
 	{
 		parent::__construct($model);
 	}

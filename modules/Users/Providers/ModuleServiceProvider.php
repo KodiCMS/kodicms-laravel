@@ -3,21 +3,18 @@
 use Event;
 use KodiCMS\Users\ACL;
 use KodiCMS\Users\Model\User;
-use KodiCMS\Users\Model\UserReflink;
 use KodiCMS\Users\Model\UserRole;
 use KodiCMS\Users\Observers\RoleObserver;
 use KodiCMS\Users\Observers\UserObserver;
-use KodiCMS\CMS\Providers\ServiceProvider;
 use KodiCMS\Users\Reflinks\ReflinksBroker;
 use KodiCMS\Users\Reflinks\ReflinkTokenRepository;
-use KodiCMS\Users\Console\Commands\DeleteExpiredReflinks;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
+use KodiCMS\Users\Console\Commands\DeleteExpiredReflinksCommand;
 
 class ModuleServiceProvider extends ServiceProvider {
 
 	public function boot()
 	{
-		$this->registerConsoleCommand('reflinks.clean', DeleteExpiredReflinks::class);
-
 		User::observe(new UserObserver);
 		UserRole::observe(new RoleObserver);
 
@@ -41,6 +38,7 @@ class ModuleServiceProvider extends ServiceProvider {
 
 		$this->registerReflinksBroker();
 		$this->registerTokenRepository();
+		$this->registerConsoleCommand('cms.reflinks.clean', DeleteExpiredReflinksCommand::class);
 	}
 
 	/**

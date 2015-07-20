@@ -1,12 +1,12 @@
 <?php namespace KodiCMS\Users\Http\Controllers\Auth;
 
-use KodiCMS\CMS\Http\Controllers\System\FrontendController;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 use DB;
-use CMS;
+use Illuminate\Http\Request;
+use KodiCMS\Users\Model\User;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
+use KodiCMS\CMS\Http\Controllers\System\FrontendController;
+use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 class AuthController extends FrontendController {
 
@@ -25,7 +25,7 @@ class AuthController extends FrontendController {
 	| a simple trait to add these behaviors. Why don't you explore it?
 	|
 	*/
-	use AuthenticatesAndRegistersUsers;
+	use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
 	/**
 	 * @var string
@@ -46,10 +46,13 @@ class AuthController extends FrontendController {
 	{
 		$this->auth = $auth;
 
-		$this->redirectPath = CMS::backendPath();
-		$this->redirectAfterLogout = CMS::backendPath() . '/auth/login';
+		$this->redirectPath = backend_url();
+		$this->redirectAfterLogout = backend_url('/auth/login');
+	}
 
-		$this->beforeFilter('@checkPermissions', ['except' => ['getLogout']]);
+	public function initMiddleware()
+	{
+		$this->middleware('backend.guest', ['except' => ['getLogout']]);
 	}
 
 	/**
@@ -76,42 +79,60 @@ class AuthController extends FrontendController {
 	public function postLogin(Request $request)
 	{
 		$this->validate($request, [
-			'email' => 'required|email', 'password' => 'required',
+			$this->loginUsername() => 'required', 'password' => 'required',
 		]);
 
-		$credentials = $request->only('email', 'password');
+		// If the class is using the ThrottlesLogins trait, we can automatically throttle
+		// the login attempts for this application. We'll key this by the username and
+		// the IP address of the client making these requests into this application.
+		$throttles = $this->isUsingThrottlesLoginsTrait();
+
+
+		if ($throttles && $this->hasTooManyLoginAttempts($request)) {
+			return $this->sendLockoutResponse($request);
+		}
+
+		$credentials = $this->getCredentials($request);
 
 		if ($this->auth->attempt($credentials, $request->has('remember')))
 		{
-			// Update the number of logins
-			$this->auth->user()->logins = DB::raw('logins + 1');
+			return $this->handleUserWasAuthenticated($request, $throttles);
+		}
 
-			// Set the last login date
-			$this->auth->user()->last_login = time();
-			$this->auth->user()->save();
-
-			return redirect()->intended($this->redirectPath());
+		// If the login attempt was unsuccessful we will increment the number of attempts
+		// to login and redirect the user back to the login form. Of course, when this
+		// user surpasses their maximum number of attempts they will get locked out.
+		if ($throttles)
+		{
+			$this->incrementLoginAttempts($request);
 		}
 
 		return redirect($this->loginPath())
 			->withInput($request->only('email', 'remember'))
 			->withErrors([
-				'email' => $this->getFailedLoginMessage(),
+				$this->loginUsername() => $this->getFailedLoginMessage(),
 			]);
 	}
 
 	/**
-	 * @param Route $router
 	 * @param Request $request
-	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 * @param User $user
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
-	public function checkPermissions(Route $router, Request $request)
+	protected function authenticated(Request $request, User $user)
 	{
-		if ($this->auth->check() AND !is_null($this->currentUser) AND $this->currentUser->hasRole('login'))
-		{
-			return redirect($this->redirectPath);
-		}
+		// Update the number of logins
+		$user->logins = DB::raw('logins + 1');
+
+		// Set the last login date
+		$user->last_login = time();
+		$user->save();
+
+		return redirect()->intended($this->redirectPath());
 	}
+
+	public function checkPermissions(){}
 
 	/**
 	 * Get the failed login message.

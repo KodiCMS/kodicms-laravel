@@ -8,7 +8,7 @@ class CronRepository extends BaseRepository
 	/**
 	 * @param Job $model
 	 */
-	function __construct(Job $model)
+	public function __construct(Job $model)
 	{
 		parent::__construct($model);
 	}

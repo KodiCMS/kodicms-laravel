@@ -30,20 +30,22 @@ class BackendController extends TemplateController
 	{
 		$this->navigation = Navigation::init($this->request->getUri(), config('sitemap', []));
 		$this->breadcrumbs = new Breadcrumbs;
+	}
 
-		if (is_null(array_get($this->permissions, $this->getCurrentAction()))) {
-			$this->permissions[$this->getCurrentAction()] = $this->getRouter()->currentRouteName();
-		}
+	public function initControllerAcl()
+	{
+		parent::initControllerAcl();
+		$this->acl->addPermission($this->getCurrentAction(), $this->getRouter()->currentRouteName());
 	}
 
 	public function before()
 	{
 		$currentPage = Navigation::getCurrentPage();
 
-		$this->breadcrumbs
-			->add(UI::icon('home'), route('backend.dashboard'));
+		$this->breadcrumbs->add(UI::icon('home'), route('backend.dashboard'));
 
-		if (!is_null($currentPage)) {
+		if (!is_null($currentPage))
+		{
 			$this->setTitle($currentPage->getName(), $currentPage->getUrl());
 		}
 

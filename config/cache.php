@@ -60,7 +60,11 @@ return [
 			'driver' => 'redis',
 			'connection' => 'default',
 		],
-
+		'sqlite' => [
+			'driver' => 'sqlite',
+			'connection' => 'sqlite_cache',
+			'schema'  => 'CREATE TABLE caches(key VARCHAR(127) PRIMARY KEY, tags VARCHAR(255), expiration INTEGER, value TEXT)'
+		]
 	],
 
 	/*

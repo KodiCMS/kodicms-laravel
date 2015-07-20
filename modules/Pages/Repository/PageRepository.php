@@ -11,7 +11,7 @@ class PageRepository extends BaseRepository
 	/**
 	 * @param Page $model
 	 */
-	function __construct(Page $model)
+	public function __construct(Page $model)
 	{
 		parent::__construct($model);
 	}

@@ -27,20 +27,19 @@ $(function () {
 		labels: {
 			current: "",
 			pagination: "Pagination",
-			finish: __("Finish"),
-			next: __("Next"),
-			previous: __("Previous"),
-			loading: __("Loading ...")
+			finish: i18n.t('installer.core.wizard.finish'),
+			next: i18n.t('installer.core.wizard.next'),
+			previous: i18n.t('installer.core.wizard.previous'),
+			loading: i18n.t('installer.core.wizard.loading')
 		},
 		onInit: function () {
 			$(this).find('.steps ul').addClass('nav nav-tabs tabs-generated');
-			//$(this).find('.content').addClass('tab-content')
 		},
 		onStepChanging: function (event, currentIndex, newIndex) {
 			$form = $(".form-horizontal");
 
 			if (currentIndex == 1 && newIndex > currentIndex && FAILED) {
-				CMS.messages.parse([__('Before proceeding to the next step you need to fix errors')], 'error');
+				CMS.messages.parse([i18n.t('installer.core.wizard.messages.next_step_error')], 'error');
 				return false;
 			}
 

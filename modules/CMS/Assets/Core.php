@@ -383,10 +383,10 @@ class Core
 			{
 				if(config('app.debug'))
 				{
-					$return .= "{$file}\n";
+					$return .= "\n/**\n{$file}\n**/\n";
 				}
 
-				$return .= file_get_contents($file) . "\n";
+				$return .= file_get_contents($file) . "\n\n";
 			}
 
 			return $return;

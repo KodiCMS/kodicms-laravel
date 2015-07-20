@@ -1,34 +1,20 @@
 <?php namespace KodiCMS\CMS;
 
-use CMS;
+use Event;
 use Route;
 use Illuminate\Routing\Router;
+use KodiCMS\ModulesLoader\ModuleContainer as BaseModuleContainer;
 
-class ModuleContainer extends Loader\ModuleContainer
+class ModuleContainer extends BaseModuleContainer
 {
-	/**
-	 * @param \Illuminate\Foundation\Application $app
-	 * @return $this
-	 */
-	public function register($app)
-	{
-		if (!$this->isRegistered)
-		{
-			$this->loadSystemRoutes($app['router']);
-			$this->isRegistered = true;
-		}
-
-		return $this;
-	}
-
 	/**
 	 * @param Router $router
 	 */
 	protected function loadSystemRoutes(Router $router)
 	{
-		Route::before(function()
+		Event::listen('routes.loading', function()
 		{
-			Route::group(['namespace' => $this->getControllerNamespace(), 'prefix' => CMS::backendPath()], function ()
+			Route::group(['namespace' => $this->getControllerNamespace(), 'prefix' => backend_url()], function ()
 			{
 				Route::get('cms/{file}.{ext}', 'System\VirtualMediaLinksController@find')
 					->where('file', '.*')

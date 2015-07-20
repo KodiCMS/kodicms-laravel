@@ -8,11 +8,15 @@ class UserRepository extends BaseRepository
 	/**
 	 * @param User $model
 	 */
-	function __construct(User $model)
+	public function __construct(User $model)
 	{
 		parent::__construct($model);
 	}
 
+	/**
+	 * @param integer|null $perPage
+	 * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+	 */
 	public function paginate($perPage = null)
 	{
 		return $this->model->with('roles')->paginate();

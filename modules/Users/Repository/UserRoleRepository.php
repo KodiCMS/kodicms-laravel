@@ -8,7 +8,7 @@ class UserRoleRepository extends BaseRepository
 	/**
 	 * @param UserRole $model
 	 */
-	function __construct(UserRole $model)
+	public function __construct(UserRole $model)
 	{
 		parent::__construct($model);
 	}

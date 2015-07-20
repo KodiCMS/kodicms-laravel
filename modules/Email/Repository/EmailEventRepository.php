@@ -8,7 +8,7 @@ class EmailEventRepository extends BaseRepository
 	/**
 	 * @param EmailEvent $model
 	 */
-	function __construct(EmailEvent $model)
+	public function __construct(EmailEvent $model)
 	{
 		parent::__construct($model);
 	}

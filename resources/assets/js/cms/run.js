@@ -19,17 +19,12 @@ $(function() {
 		runApplication();
 	}
 
-	function runApplication()
-	{
+	function runApplication() {
 		CMS.ui.init();
 		KodiCMS.start(null, CMS.settings);
 
 		CMS.controllers.call();
-
-		setTimeout(function() {
-			CMS.notifications.init();
-		}, 1500);
-
 		CMS.messages.init();
+		CMS.Notifications.init();
 	}
 });

@@ -1,15 +1,15 @@
 <?php namespace KodiCMS\CMS\Helpers;
 
+use CMS;
 use HTML;
 use Cache;
 use Carbon\Carbon;
-use KodiCMS\CMS\Core;
 use KodiCMS\Support\Helpers\Text;
 
 class Updater
 {
-	const VERSION_NEW     = -1;
-	const VERSION_OLD     = 1;
+	const VERSION_NEW     = 1;
+	const VERSION_OLD     = -1;
 	const VERSION_CURRENT = 0;
 
 	const CACHE_KEY = 'update::cache';
@@ -77,7 +77,7 @@ class Updater
 	{
 		$version = Cache::remember(static::CACHE_KEY_VERSION, Carbon::now()->addHours(24), function ()
 		{
-			$response = self::request('https://raw.githubusercontent.com/:rep/:branch/modules/CMS/Core.php');
+			$response = self::request('https://raw.githubusercontent.com/:rep/:branch/modules/CMS/CMS.php');
 			preg_match('/const VERSION[ ]?[\t]?\=[ ]?[\t]?[\'|"]([0-9a-z. ]+)\'\;/i', $response, $matches);
 
 			return $matches[1];
@@ -85,7 +85,7 @@ class Updater
 
 		$this->remoteVersion = $version;
 
-		return $this->newsVersion = (version_compare($this->remoteVersion, Core::VERSION) == static::VERSION_NEW);
+		return $this->newsVersion = (version_compare($this->remoteVersion, CMS::VERSION) == static::VERSION_NEW);
 	}
 
 	/**
@@ -190,22 +190,9 @@ class Updater
 	 */
 	protected function request($url)
 	{
-		$ch = curl_init();
-		curl_setopt_array($ch, [
-			CURLOPT_URL => $this->buildRemoteUrl($url),
-			CURLOPT_SSL_VERIFYPEER => FALSE,
-			CURLOPT_SSL_VERIFYHOST => FALSE,
-			CURLOPT_RETURNTRANSFER => TRUE,
-			CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5'
-		]);
+		$response = (new \GuzzleHttp\Client)->get($this->buildRemoteUrl($url), ['verify' => false]);
 
-		// загрузка URL и ее выдача в браузер
-		$content = curl_exec($ch);
-
-		// закрытие ресурса cURL и освобождение системных ресурсов
-		curl_close($ch);
-
-		return $content;
+		return (string) $response->getBody();
 	}
 
 	/**

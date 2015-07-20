@@ -1,6 +1,11 @@
 <?php
 
 return [
+	'profiler' => [
+		'title' => trans('cms::profiler.title'),
+		'class' => '\KodiCMS\Dashboard\Widget\Profiler',
+		'icon' => 'bar-chart'
+	],
 	'cache_button' => [
 		'title' => trans('dashboard::types.cache_button.title'),
 		'class' => '\KodiCMS\Dashboard\Widget\Cache',
