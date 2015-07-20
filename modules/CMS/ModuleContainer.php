@@ -12,7 +12,7 @@ class ModuleContainer extends BaseModuleContainer
 	 */
 	protected function loadSystemRoutes(Router $router)
 	{
-		Event::listen('routes.loaded', function()
+		Event::listen('routes.loading', function()
 		{
 			Route::group(['namespace' => $this->getControllerNamespace(), 'prefix' => backend_url()], function ()
 			{
