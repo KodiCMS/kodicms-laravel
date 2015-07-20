@@ -298,11 +298,11 @@ abstract class BasePluginContainer extends ModuleContainer
 	{
 		if (is_dir($appPath = $this->publishViewPath()))
 		{
-			app('view')->addNamespace($namespace, $appPath);
+			app('view')->addNamespace($this->getKey(), $appPath);
 		}
 		else
 		{
-			app('view')->addNamespace($namespace, $this->getViewsPath());
+			app('view')->addNamespace($this->getKey(), $this->getViewsPath());
 		}
 	}
 
