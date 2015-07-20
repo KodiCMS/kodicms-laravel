@@ -296,14 +296,14 @@ abstract class BasePluginContainer extends ModuleContainer
 
 	protected function loadViews()
 	{
-		$namespace = strtolower($this->getName());
-
 		if (is_dir($appPath = $this->publishViewPath()))
 		{
 			app('view')->addNamespace($namespace, $appPath);
 		}
-
-		app('view')->addNamespace($namespace, $this->getViewsPath());
+		else
+		{
+			app('view')->addNamespace($namespace, $this->getViewsPath());
+		}
 	}
 
 	/**

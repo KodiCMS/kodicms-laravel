@@ -48,7 +48,7 @@ class ModuleLocalePublishCommand extends Command {
 
 				foreach ($files->allFiles($localeDir) as $localeFile)
 				{
-					$data[strtolower($module->getName())][] = $localeFile->getRealPath();
+					$data[$module->getKey()][] = $localeFile->getRealPath();
 				}
 			}
 		}
