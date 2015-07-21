@@ -1,10 +1,11 @@
 <?php namespace KodiCMS\Datasource\Providers;
 
 use Event;
-use Config;
-use KodiCMS\CMS\Providers\ServiceProvider;
-use KodiCMS\Datasource\DatasourceManager;
+use KodiCMS\CMS\Navigation\Page;
+use KodiCMS\CMS\Navigation\Section;
 use KodiCMS\Datasource\FieldManager;
+use KodiCMS\Datasource\DatasourceManager;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider {
 
@@ -25,32 +26,21 @@ class ModuleServiceProvider extends ServiceProvider {
 
 	public function boot()
 	{
-		Event::listen('navigation.init', function(& $items)
+		Event::listen('navigation.inited', function(Section $navigation)
 		{
-			$sections = app('datasource.manager')->getSections();
-			$children = [];
-
-			foreach($sections as $section)
+			if (!is_null($section = $navigation->findSection('Datasources')))
 			{
-				$children[] = [
-					'name' => $section['object']->name,
-					'label' => $section['object']->name,
-					'icon' => 'table',
-					'url' => $section['object']->getLink()
-				];
+				$sections = app('datasource.manager')->getSections();
+				foreach($sections as $dsSection)
+				{
+					$section->addPage(new Page([
+						'name' => $dsSection['object']->name,
+						'label' => $dsSection['object']->name,
+						'icon' => 'table',
+						'url' => $dsSection['object']->getLink()
+					]));
+				}
 			}
-
-			$sitemap = [
-				[
-					'name' => 'Datasource',
-					'label' => 'datasource::core.title.section',
-					'icon' => 'tasks',
-					'priority' => 100,
-					'children' => $children
-				]
-			];
-
-			$items = array_merge($items, $sitemap);
 		});
 	}
 }

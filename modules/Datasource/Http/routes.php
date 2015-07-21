@@ -1,6 +1,7 @@
 <?php
-Route::group(['prefix' => CMS::backendPath(), 'as' => 'backend.datasource.'], function () {
 
+Route::group(['prefix' => base_path(), 'as' => 'backend.datasource.'], function ()
+{
 	Route::get('datasource/{id}', [
 		'as' => 'list',
 		'uses' => 'DatasourceController@getIndex'
