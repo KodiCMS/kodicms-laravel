@@ -24,13 +24,12 @@ class ModuleServiceProvider extends ServiceProvider
 
 				if (!is_null($section = $navigation->findSection('Documentation')))
 				{
-					$navigation->findSection('Documentation')
-						->addPage(new Page([
-							'name' => $key,
-							'icon' => 'leanpub',
-							'label' => config('userguide.modules.' . $key . '.name'),
-							'url' => route('backend.userguide.docs', [$key]),
-						]));
+					$section->addPage(new Page([
+						'name' => $key,
+						'icon' => 'leanpub',
+						'label' => config('userguide.modules.' . $key . '.name'),
+						'url' => route('backend.userguide.docs', [$key]),
+					]));
 				}
 			}
 		});
