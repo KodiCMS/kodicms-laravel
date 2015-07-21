@@ -86,3 +86,12 @@ function array_keys_exists_recursive(array $arr1, array $arr2)
 
 	return $outputDiff;
 }
+
+/**
+ * @param $string
+ * @return mixed
+ */
+function __($string)
+{
+	return $string;
+}

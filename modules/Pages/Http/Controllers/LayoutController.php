@@ -6,11 +6,6 @@ use KodiCMS\CMS\Http\Controllers\AbstractFileController;
 class LayoutController extends AbstractFileController
 {
 	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'pages::';
-
-	/**
 	 * @var array
 	 */
 	protected $editors = NULL;

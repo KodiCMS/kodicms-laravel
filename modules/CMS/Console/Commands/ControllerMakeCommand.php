@@ -62,7 +62,7 @@ class ControllerMakeCommand extends GeneratorCommand {
 
 		foreach(ModulesLoader::getRegisteredModules() as $moduleContainer)
 		{
-			if(strtolower($moduleContainer->getName()) == strtolower($module))
+			if($moduleContainer->getKey() == strtolower($module))
 			{
 				return $moduleContainer;
 			}

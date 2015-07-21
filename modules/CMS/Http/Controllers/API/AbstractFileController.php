@@ -2,8 +2,8 @@
 
 use Illuminate\Http\JsonResponse;
 use KodiCMS\API\Exceptions\Exception;
-use KodiCMS\API\Http\Controllers\System\Controller;
 use KodiCMS\CMS\Model\FileCollection;
+use KodiCMS\API\Http\Controllers\System\Controller;
 
 abstract class AbstractFileController extends Controller {
 
@@ -16,11 +16,6 @@ abstract class AbstractFileController extends Controller {
 	 * @var string
 	 */
 	protected $sectionPrefix;
-
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'cms::';
 
 	/**
 	 * @return FileCollection
@@ -64,7 +59,7 @@ abstract class AbstractFileController extends Controller {
 			->saveFile($file)
 			->saveSettings();
 
-		$this->setMessage(trans("{$this->moduleNamespace}{$this->sectionPrefix}.messages.created", ['name' => $file->getName()]));
+		$this->setMessage(trans($this->wrapNamespace("{$this->sectionPrefix}.messages.created"), ['name' => $file->getName()]));
 
 		return redirect($this->getRedirectToEditUrl($file->getName()));
 	}
@@ -88,7 +83,7 @@ abstract class AbstractFileController extends Controller {
 			->saveFile($file)
 			->saveSettings();
 
-		$this->setMessage(trans("{$this->moduleNamespace}{$this->sectionPrefix}.messages.updated", ['name' => $file->getName()]));
+		$this->setMessage(trans($this->wrapNamespace("{$this->sectionPrefix}.messages.updated"), ['name' => $file->getName()]));
 	}
 
 	/**
@@ -107,7 +102,7 @@ abstract class AbstractFileController extends Controller {
 			return $file;
 		}
 
-		throw new Exception(trans("{$this->moduleNamespace}{$this->sectionPrefix}.messages.not_found"));
+		throw new Exception(trans($this->wrapNamespace("{$this->sectionPrefix}.messages.not_found")));
 	}
 
 	public function getListForXEditable()

@@ -47,7 +47,7 @@ class ModuleLocaleDiffCommand extends Command {
 			{
 				foreach ($files->allFiles($localeDir) as $localeFile)
 				{
-					$vendorFileDir = strtolower($module->getName()) . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $localeFile->getFilename();
+					$vendorFileDir = $module->getKey() . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $localeFile->getFilename();
 					$vendorFilePath = $langDirectory . $vendorFileDir;
 					if (file_exists($vendorFilePath))
 					{

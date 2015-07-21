@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
+use ModulesFileSystem;
 use Illuminate\Auth\Guard;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -61,6 +62,11 @@ abstract class Controller extends BaseController
 	 */
 	protected $acl;
 
+	/**
+	 * @var string|null
+	 */
+	public $moduleNamespace = null;
+
 	public function __construct()
 	{
 		app()->call([$this, 'initController']);
@@ -87,14 +93,6 @@ abstract class Controller extends BaseController
 	 * return void
 	 */
 	public function after() {}
-
-	/**
-	 * @return KodiCMS\Users\Http\ControllerACL
-	 */
-	protected function getControllerAcl()
-	{
-		return new ControllerACL();
-	}
 
 	/**
 	 * @param Request $request
@@ -244,11 +242,42 @@ abstract class Controller extends BaseController
 	/**
 	 * @param Guard $auth
 	 */
+
 	protected function loadCurrentUser(Guard $auth)
 	{
 		if ($this->authRequired)
 		{
 			$this->currentUser = $auth->user();
 		}
+	}
+
+	/**
+	 * @return KodiCMS\Users\Http\ControllerACL
+	 */
+	protected function getControllerAcl()
+	{
+		return new ControllerACL();
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function getModuleNamespace()
+	{
+		if (is_null($this->moduleNamespace))
+		{
+			return ModulesFileSystem::getModuleNameByNamespace() . '::';
+		}
+
+		return $this->moduleNamespace;
+	}
+
+	/**
+	 * @param $string
+	 * @return string
+	 */
+	protected function wrapNamespace($string)
+	{
+		return $this->getModuleNamespace() . $string;
 	}
 }

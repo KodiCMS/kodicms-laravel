@@ -11,13 +11,8 @@ use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 use KodiCMS\Widgets\Engine\WidgetRenderSettingsHTML;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
-class WidgetController extends BackendController {
-
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'widgets::';
-
+class WidgetController extends BackendController
+{
 	/**
 	 * @param WidgetRepository $repository
 	 */
@@ -42,7 +37,7 @@ class WidgetController extends BackendController {
 
 	public function getCreate()
 	{
-		$this->setTitle(trans('widgets::core.title.create'));
+		$this->setTitle(trans($this->wrapNamespace('core.title.create')));
 
 		$types = WidgetManagerDatabase::getAvailableTypes();
 
@@ -57,7 +52,7 @@ class WidgetController extends BackendController {
 		$widget = $repository->create($data);
 
 		return $this->smartRedirect([$widget])
-			->with('success', trans('widgets::core.messages.created', ['name' => $widget->name]));
+			->with('success', trans($this->wrapNamespace('core.messages.created'), ['name' => $widget->name]));
 	}
 
 	/**
@@ -69,7 +64,7 @@ class WidgetController extends BackendController {
 		$widget = $repository->findOrFail($id);
 		$this->breadcrumbs->add($widget->getType());
 
-		$this->setTitle(trans('widgets::core.title.edit', [
+		$this->setTitle(trans($this->wrapNamespace('core.title.edit'), [
 			'name' => $widget->getName()
 		]));
 
@@ -90,7 +85,7 @@ class WidgetController extends BackendController {
 		$widget = $repository->update($id, $data);
 
 		return $this->smartRedirect([$widget])
-			->with('success', trans('widgets::core.messages.updated', ['name' => $widget->name]));
+			->with('success', trans($this->wrapNamespace('core.messages.updated'), ['name' => $widget->name]));
 	}
 
 	/**
@@ -102,7 +97,7 @@ class WidgetController extends BackendController {
 	{
 		$widget = $repository->delete($id);
 		return $this->smartRedirect()
-			->with('success', trans('widgets::core.messages.deleted', ['name' => $widget->name]));
+			->with('success', trans($this->wrapNamespace('core.messages.deleted'), ['name' => $widget->name]));
 	}
 
 	/**
@@ -121,7 +116,7 @@ class WidgetController extends BackendController {
 			->add($widget->getType())
 			->add($widget->name, route('backend.widget.edit', [$widget]));
 
-		$this->setTitle(trans('widgets::core.title.location', [
+		$this->setTitle(trans($this->wrapNamespace('core.title.location'), [
 			'name' => $widget->name
 		]));
 

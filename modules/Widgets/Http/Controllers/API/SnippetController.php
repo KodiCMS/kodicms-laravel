@@ -1,20 +1,10 @@
 <?php namespace KodiCMS\Widgets\Http\Controllers\API;
 
-use KodiCMS\CMS\Http\Controllers\API\AbstractFileController;
 use KodiCMS\Widgets\Model\SnippetCollection;
+use KodiCMS\CMS\Http\Controllers\API\AbstractFileController;
 
 class SnippetController extends AbstractFileController
 {
-	/**
-	 * @var bool
-	 */
-	public $authRequired = TRUE;
-
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'widgets::';
-
 	/**
 	 * @return SnippetCollection
 	 */

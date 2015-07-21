@@ -8,11 +8,6 @@ use KodiCMS\CMS\Http\Controllers\System\FrontendController;
 
 class ReflinkController extends FrontendController
 {
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'users::';
-
 	public function getForm()
 	{
 		$this->setContent('reflinks.form');

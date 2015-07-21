@@ -7,11 +7,6 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 class EmailEventController extends BackendController
 {
 	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'email::';
-
-	/**
 	 * @param EmailEventRepository $repository
 	 */
 	public function getIndex(EmailEventRepository $repository)

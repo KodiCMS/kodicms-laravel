@@ -190,6 +190,31 @@ class ModulesFileSystem
 		return $found;
 	}
 
+	/**
+	 * @param string|null $namespace
+	 * @return string
+	 */
+	public function getModuleNameByNamespace($namespace = null)
+	{
+		if (is_null($namespace))
+		{
+			$namespace = app('router')->getCurrentRoute()->getAction()['namespace'];
+		}
+
+		foreach ($this->moduleLoader->getRegisteredModules() as $module)
+		{
+			if (!empty($moduleNamespace = $module->getNamespace()))
+			{
+				if (strpos($namespace, $moduleNamespace) === 0)
+				{
+					return $module->getKey();
+				}
+			}
+		}
+
+		return 'app';
+	}
+
 	public function getFoundFilesFromCache()
 	{
 		$this->files = Cache::get('ModulesFileSystem::findFile', []);

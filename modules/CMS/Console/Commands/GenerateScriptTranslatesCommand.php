@@ -29,7 +29,7 @@ class GenerateScriptTranslatesCommand extends Command {
 				continue;
 			}
 
-			$namespace = strtolower($module->getName());
+			$namespace = $module->getKey();
 
 			$data = array_merge_recursive($data, $this->loadLangFromPath($files, $module->getLocalePath(), $namespace));
 

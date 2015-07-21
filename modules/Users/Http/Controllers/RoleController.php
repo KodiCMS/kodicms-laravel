@@ -6,11 +6,6 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class RoleController extends BackendController
 {
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'users::';
-
 	public function getIndex(UserRoleRepository $repository)
 	{
 		$roles = $repository->paginate();
@@ -20,7 +15,7 @@ class RoleController extends BackendController
 	public function getCreate(UserRoleRepository $repository)
 	{
 		$role = $repository->instance();
-		$this->setTitle(trans('users::role.title.create'));
+		$this->setTitle(trans($this->wrapNamespace('role.title.create')));
 
 		$permissions = ACL::getPermissionsList();
 		$this->setContent('roles.create', compact('role', 'permissions'));
@@ -33,13 +28,13 @@ class RoleController extends BackendController
 		$role = $repository->create($data);
 
 		return $this->smartRedirect([$role])
-			->with('success', trans('users::role.messages.created', ['name' => $role->name]));
+			->with('success', trans($this->wrapNamespace('role.messages.created'), ['name' => $role->name]));
 	}
 
 	public function getEdit(UserRoleRepository $repository, $id)
 	{
 		$role = $repository->findOrFail($id);
-		$this->setTitle(trans('users::role.title.edit', [
+		$this->setTitle(trans($this->wrapNamespace('role.title.edit'), [
 			'name' => ucfirst($role->name)
 		]));
 
@@ -57,13 +52,13 @@ class RoleController extends BackendController
 		$role = $repository->update($id, $data);
 
 		return $this->smartRedirect([$role])
-			->with('success', trans('users::role.messages.updated', ['name' => $role->name]));
+			->with('success', trans($this->wrapNamespace('role.messages.updated'), ['name' => $role->name]));
 	}
 
 	public function postDelete(UserRoleRepository $repository, $id)
 	{
 		$role = $repository->delete($id);
 		return $this->smartRedirect()
-			->with('success', trans('users::role.messages.deleted', ['name' => $role->name]));
+			->with('success', trans($this->wrapNamespace('role.messages.deleted'), ['name' => $role->name]));
 	}
 }

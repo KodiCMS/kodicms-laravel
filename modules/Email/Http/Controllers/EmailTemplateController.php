@@ -10,11 +10,6 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 class EmailTemplateController extends BackendController
 {
 	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'email::';
-
-	/**
 	 * @param EmailTemplateRepository $repository
 	 */
 	public function getIndex(EmailTemplateRepository $repository)

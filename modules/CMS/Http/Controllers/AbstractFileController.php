@@ -45,7 +45,7 @@ abstract class AbstractFileController extends System\BackendController {
 		$file = $this->getFile();
 		$roles = UserRole::lists('name', 'name')->all();
 
-		$this->setTitle(trans("{$this->moduleNamespace}{$this->sectionPrefix}.title.create"));
+		$this->setTitle(trans($this->wrapNamespace("{$this->sectionPrefix}.title.create")));
 		$this->templateScripts['FILE'] = $file->toArray();
 
 		$this->setContent("{$this->sectionPrefix}.create", compact('file', 'roles'));
@@ -71,7 +71,7 @@ abstract class AbstractFileController extends System\BackendController {
 			->saveSettings();
 
 		return $this->smartRedirect(['name' => $file->getName()])
-			->with('success', trans("{$this->moduleNamespace}{$this->sectionPrefix}.messages.created", ['name' => $file->getName()]));
+			->with('success', trans($this->wrapNamespace("{$this->sectionPrefix}.messages.created"), ['name' => $file->getName()]));
 	}
 
 	public function getEdit($filename)
@@ -79,7 +79,7 @@ abstract class AbstractFileController extends System\BackendController {
 		$file = $this->getFile($filename);
 		$roles = UserRole::lists('name', 'name')->all();
 
-		$this->setTitle(trans("{$this->moduleNamespace}{$this->sectionPrefix}.title.edit", [
+		$this->setTitle(trans($this->wrapNamespace("}{$this->sectionPrefix}.title.edit"), [
 			'name' => $file->getName()
 		]));
 
@@ -107,7 +107,7 @@ abstract class AbstractFileController extends System\BackendController {
 			->saveSettings();
 
 		return $this->smartRedirect(['name' => $file->getName()])
-			->with('success', trans("{$this->moduleNamespace}{$this->sectionPrefix}.messages.updated", ['name' => $file->getName()]));
+			->with('success', trans($this->wrapNamespace("{$this->sectionPrefix}.messages.updated"), ['name' => $file->getName()]));
 	}
 
 	public function postDelete($filename)
@@ -119,11 +119,11 @@ abstract class AbstractFileController extends System\BackendController {
 		if($file->delete())
 		{
 			return $this->smartRedirect()
-				->with('success', trans("{$this->moduleNamespace}{$this->sectionPrefix}.messages.deleted", ['name' => $file->getName()]));
+				->with('success', trans($this->wrapNamespace("{$this->sectionPrefix}.messages.deleted"), ['name' => $file->getName()]));
 		}
 
 		return $this->smartRedirect()
-			->withErrors(trans("{$this->moduleNamespace}{$this->sectionPrefix}.messages.not_deleted"));
+			->withErrors(trans($this->wrapNamespace("{$this->sectionPrefix}.messages.not_deleted")));
 	}
 
 	/**
@@ -146,7 +146,7 @@ abstract class AbstractFileController extends System\BackendController {
 
 		$this->throwFailException(
 			$this->smartRedirect()
-				->withErrors(trans("{$this->moduleNamespace}{$this->sectionPrefix}.messages.not_found"))
+				->withErrors(trans($this->wrapNamespace("{$this->sectionPrefix}.messages.not_found")))
 		);
 	}
 }

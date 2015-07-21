@@ -8,17 +8,11 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class DashboardController extends BackendController {
 
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'dashboard::';
-
 	public function getIndex()
 	{
 		Assets::package(['gridster']);
 
 		$widgets = WidgetManagerDashboard::getWidgets();
-
 		$this->setContent('dashboard', compact('widgets'));
 	}
 

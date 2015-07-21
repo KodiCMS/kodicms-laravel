@@ -7,11 +7,6 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class PluginController extends BackendController
 {
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'plugins::';
-
 	public function getIndex()
 	{
 		Assets::package(['backbone']);
@@ -25,7 +20,7 @@ class PluginController extends BackendController
 	public function getSettings($pluginId)
 	{
 		$plugin = $this->getPlugin($pluginId);
-		$this->setTitle( trans('plugins::core.plugin_settings_page', ['title' => $plugin->getTitle()]));
+		$this->setTitle(trans($this->wrapNamespace('core.plugin_settings_page'), ['title' => $plugin->getTitle()]));
 
 		$settingsTemplate = $plugin->getSettingsTemplate();
 
@@ -45,7 +40,7 @@ class PluginController extends BackendController
 		$plugin->saveSettings($settings);
 
 		return $this->smartRedirect([], 'backend.plugins.list')
-			->with('success', trans('plugins::core.messages.settings_saved', ['title' => $plugin->getTitle()]));
+			->with('success', trans($this->wrapNamespace('core.messages.settings_saved'), ['title' => $plugin->getTitle()]));
 	}
 
 	/**

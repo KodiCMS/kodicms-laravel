@@ -5,11 +5,6 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class FilemanagerController extends BackendController
 {
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'filemanager::';
-
 	public function show()
 	{
 		Assets::package(array('elfinder', 'jquery-ui', 'ace'));

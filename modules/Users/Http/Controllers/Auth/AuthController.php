@@ -8,13 +8,8 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use KodiCMS\CMS\Http\Controllers\System\FrontendController;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
-class AuthController extends FrontendController {
-
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'users::';
-
+class AuthController extends FrontendController
+{
 	/*
 	|--------------------------------------------------------------------------
 	| Registration & Login Controller
@@ -141,6 +136,6 @@ class AuthController extends FrontendController {
 	 */
 	protected function getFailedLoginMessage()
 	{
-		return trans('users::core.messages.auth.user_not_found');
+		return trans($this->wrapNamespace('core.messages.auth.user_not_found'));
 	}
 }
