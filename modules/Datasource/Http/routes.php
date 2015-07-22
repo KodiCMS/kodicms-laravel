@@ -7,6 +7,13 @@ Route::group(['prefix' => backend_url(), 'as' => 'backend.datasource.'], functio
 		'uses' => 'DatasourceController@getIndex'
 	])->where('id', '[0-9]+');
 
+	Route::controller('datasource/field', 'FieldController', [
+		'getCreate' => 'field.create',
+		'postCreate' => 'field.create.post',
+		'getEdit' => 'field.edit',
+		'postEdit' => 'field.edit.post'
+	]);
+
 	Route::controller('datasource/document', 'DocumentController', [
 		'getCreate' => 'document.create',
 		'postCreate' => 'document.create.post',

@@ -1,5 +1,5 @@
 	<div class="mail-container-header">
-		{!! UI::icon($dsModel->icon) !!} {{ $dsModel->name }}
+		{!! UI::icon($section->getIcon()) !!} {{ $section->getName() }}
 
 		<div class="btn-group pull-right">
 

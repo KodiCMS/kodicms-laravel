@@ -1,17 +1,25 @@
 <?php namespace KodiCMS\Datasource;
 
+use KodiCMS\Datasource\Fields\Field;
 use KodiCMS\Datasource\Contracts\FieldTypeInterface;
 
 class FieldType implements FieldTypeInterface
 {
+	const PRIMITIVE = 'Primitive';
+	const FILE      = 'File';
+	const RELATION  = 'Relation';
+
 	/**
 	 * @param array $settings
+	 *
 	 * @return bool
 	 */
 	public static function isValid(array $settings)
 	{
-		if(!isset($settings['class'])) return false;
-
+		if (!isset($settings['class']))
+		{
+			return false;
+		}
 
 		return true;
 	}
@@ -37,17 +45,43 @@ class FieldType implements FieldTypeInterface
 	protected $icon = 'table';
 
 	/**
+	 * @var string
+	 */
+	protected $category;
+
+	/**
+	 * @var string
+	 */
+	protected $edit_template = null;
+
+	/**
 	 * @param string $type
 	 * @param array $settings
 	 */
 	public function __construct($type, array $settings)
 	{
-		foreach(array_only($settings, ['class', 'type', 'title', 'icon']) as $key => $value)
+		foreach (array_only($settings, ['class', 'type', 'title', 'icon', 'category', 'edit_template']) as $key => $value)
 		{
 			$this->{$key} = $value;
 		}
 
 		$this->type = $type;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getCategory()
+	{
+		return is_null($this->category) ? static::PRIMITIVE : $this->category;
+	}
+
+	/**
+	 * @return Field
+	 */
+	public function getFieldObject()
+	{
+		return new $this->class;
 	}
 
 	/**
@@ -88,5 +122,13 @@ class FieldType implements FieldTypeInterface
 	public function getIcon()
 	{
 		return $this->icon;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getEditTemplate()
+	{
+		return $this->edit_template;
 	}
 }

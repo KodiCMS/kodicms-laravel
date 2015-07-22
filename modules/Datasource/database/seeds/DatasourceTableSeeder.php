@@ -1,9 +1,7 @@
 <?php namespace KodiCMS\Datasource\database\seeds;
 
-use DatasourceManager;
 use Illuminate\Database\Seeder;
-use KodiCMS\Datasource\Fields\String;
-use KodiCMS\Datasource\Model\Section;
+use KodiCMS\Datasource\Repository\SectionRepository;
 
 class DatasourceTableSeeder extends Seeder
 {
@@ -13,18 +11,13 @@ class DatasourceTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		$section = Section::create([
-			'type' => 'test',
+		app()->make(SectionRepository::class)->create([
+			'type' => 'default',
 			'name' => 'Test section',
 			'description' => 'Test description',
 			'is_indexable' => false,
 			'created_by_id' => 1,
 			'settings' => []
 		]);
-
-		DatasourceManager::addNewField($section->toSection(), new String(null, [
-			'key' => 'test',
-			'name' => 'test'
-		]));
 	}
 }

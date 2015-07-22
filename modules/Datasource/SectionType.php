@@ -6,6 +6,7 @@ class SectionType implements SectionTypeInterface
 {
 	/**
 	 * @param array $settings
+	 *
 	 * @return bool
 	 */
 	public static function isValid(array $settings)
@@ -39,12 +40,22 @@ class SectionType implements SectionTypeInterface
 	protected $document = null;
 
 	/**
+	 * @var string
+	 */
+	protected $create_template = null;
+
+	/**
+	 * @var string
+	 */
+	protected $edit_template = null;
+
+	/**
 	 * @param string $type
 	 * @param array $settings
 	 */
 	public function __construct($type, array $settings)
 	{
-		foreach(array_only($settings, ['class', 'title', 'document', 'icon']) as $key => $value)
+		foreach (array_only($settings, ['class', 'title', 'document', 'icon', 'create_template', 'edit_template']) as $key => $value)
 		{
 			$this->{$key} = $value;
 		}
@@ -111,6 +122,22 @@ class SectionType implements SectionTypeInterface
 	public function getTitle()
 	{
 		return $this->title;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCreateTemplate()
+	{
+		return is_null($this->create_template) ? 'datasource::section.create' : $this->create_template;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getEditTemplate()
+	{
+		return is_null($this->edit_template) ? 'datasource::section.edit' : $this->edit_template;
 	}
 
 	/**

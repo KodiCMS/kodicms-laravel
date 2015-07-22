@@ -115,14 +115,14 @@ class DatasourceManager {
 	{
 		$this->dropSectionTable($section);
 
-		Schema::create($section->getTableName(), function ($table) use($section)
+		Schema::create($section->getSectionTableName(), function ($table) use($section)
 		{
-			foreach ($section->systemFields() as $field)
+			foreach ($section->getSystemFields() as $field)
 			{
-				$model = $field->getModel()->fill(['is_system' => true]);
-				if($field = $section->getModel()->fields()->save($model))
+				$model = $field->fill(['is_system' => true]);
+				if($field = $section->fields()->save($model))
 				{
-					$field->toField()->setDatabaseFieldType($table);
+					$field->setDatabaseFieldType($table);
 				}
 			}
 		});
@@ -133,7 +133,7 @@ class DatasourceManager {
 	 */
 	public function dropSectionTable(SectionInterface $section)
 	{
-		Schema::dropIfExists($section->getTableName());
+		Schema::dropIfExists($section->getSectionTableName());
 	}
 
 	/**
@@ -142,10 +142,9 @@ class DatasourceManager {
 	 */
 	public function addNewField(SectionInterface $section, FieldInterface $field)
 	{
-		$model = $field->getModel();
-		if($field = $section->getModel()->fields()->save($model))
+		if($field = $section->fields()->save($field))
 		{
-			FieldManager::addFieldToSectionTable($section, $field->toField());
+			FieldManager::addFieldToSectionTable($section, $field);
 		}
 	}
 
@@ -161,28 +160,10 @@ class DatasourceManager {
 		}
 		else if (is_integer($fieldId))
 		{
-			$field = Field::find($fieldId)->toField();
-		}
-		elseif ($fieldId instanceof Field)
-		{
-			$field = $fieldId->toField();
+			$field = Field::find($fieldId);
 		}
 
 		FieldManager::attachFieldToSection($section, $field);
-	}
-
-	/**
-	 * @param integer $sectionId
-	 * @param integer $folderId
-	 * @return bool
-	 */
-	public function moveSectionToFolder($sectionId, $folderId)
-	{
-		Section::findOrFail($sectionId)->update([
-			'folder_id' => (int) $folderId
-		]);
-
-		return true;
 	}
 
 	/**

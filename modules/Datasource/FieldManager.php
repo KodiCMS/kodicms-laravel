@@ -39,20 +39,62 @@ class FieldManager
 	}
 
 	/**
+	 * @return array
+	 */
+	public function getAvailableTypesForSelect()
+	{
+		$types = [];
+
+		foreach($this->getAvailableTypes() as $key => $typeObject)
+		{
+			if($key == 'primary') continue;
+
+			$types[$typeObject->getCategory()][$key] = $typeObject->getTitle();
+		}
+
+		return $types;
+	}
+
+	public function getEmptyObjects()
+	{
+		$objects = [];
+		foreach($this->getAvailableTypes() as $key => $typeObject)
+		{
+			$objects[$key] = $typeObject->getFieldObject();
+		}
+
+		return $objects;
+	}
+
+	/**
+	 * @param string $key
+	 * @param string $value
+	 *
+	 * @return FieldType|null
+	 */
+	public function getFieldTypeBy($key, $value)
+	{
+		foreach ($this->getAvailableTypes() as $object)
+		{
+			$method = 'get' . ucfirst($key);
+			if ($value == $object->{$method}())
+			{
+				return $object;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * @param string $class
 	 * @return string|null
 	 */
 	public function getTypeByClassName($class)
 	{
-		foreach ($this->getAvailableTypes() as $object)
-		{
-			if ($class == $object->getClass())
-			{
-				return $object->getType();
-			}
-		}
-
-		return null;
+		return is_null($object = $this->getFieldTypeBy('class', $class))
+			? null
+			: $object->getType();
 	}
 
 	/**
@@ -61,15 +103,9 @@ class FieldManager
 	 */
 	public function getClassNameByType($type)
 	{
-		foreach ($this->getAvailableTypes() as $object)
-		{
-			if ($type == $object->getType())
-			{
-				return $object->getClass();
-			}
-		}
-
-		return null;
+		return is_null($object = $this->getFieldTypeBy('type', $type))
+			? null
+			: $object->getClass();
 	}
 
 	/**
@@ -79,7 +115,7 @@ class FieldManager
 	public function attachFieldToSection(SectionInterface $section, FieldInterface $field)
 	{
 		$this->addFieldToSectionTable($section, $field);
-		$field->getModel()->update([
+		$field->update([
 			'ds_id' => $section->getId()
 		]);
 	}
@@ -90,12 +126,7 @@ class FieldManager
 	 */
 	public function addFieldToSectionTable(SectionInterface $section, FieldInterface $field)
 	{
-		if (Schema::hasColumn($section->getTableName(), $field->getDBKey()))
-		{
-			// TODO throw Exception
-		}
-
-		Schema::table($section->getTableName(), function($table) use($field)
+		Schema::table($section->getSectionTableName(), function($table) use($field)
 		{
 			$field->setDatabaseFieldType($table);
 		});
@@ -107,12 +138,12 @@ class FieldManager
 	 */
 	public function updateSectionTableField(SectionInterface $section, FieldInterface $field)
 	{
-		if (!Schema::hasColumn($section->getTableName(), $field->getDBKey()))
+		if (!Schema::hasColumn($section->getSectionTableName(), $field->getDBKey()))
 		{
 			// TODO throw Exception
 		}
 
-		Schema::table($section->getTableName(), function($table) use($field)
+		Schema::table($section->getSectionTableName(), function($table) use($field)
 		{
 			$field->setDatabaseFieldType($table)->change();
 		});
@@ -124,12 +155,12 @@ class FieldManager
 	 */
 	public function dropSectionTableField(SectionInterface $section, FieldInterface $field)
 	{
-		if (!Schema::hasColumn($section->getTableName(), $field->getDBKey()))
+		if (!Schema::hasColumn($section->getSectionTableName(), $field->getDBKey()))
 		{
 			// TODO throw Exception
 		}
 
-		Schema::table($section->getTableName(), function($table) use($field)
+		Schema::table($section->getSectionTableName(), function($table) use($field)
 		{
 			$table->dropColumn($field->getDBKey());
 		});

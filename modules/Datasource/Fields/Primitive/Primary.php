@@ -1,5 +1,6 @@
-<?php namespace KodiCMS\Datasource\Fields;
+<?php namespace KodiCMS\Datasource\Fields\Primitive;
 
+use KodiCMS\Datasource\Model\Field;
 use Illuminate\Database\Schema\Blueprint;
 
 class Primary extends Field
