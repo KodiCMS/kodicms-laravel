@@ -14,6 +14,16 @@ interface SectionInterface
 	/**
 	 * @return string
 	 */
+	public function getDocumentPrimaryKey();
+
+	/**
+	 * @return string
+	 */
+	public function getDocumentTitleKey();
+
+	/**
+	 * @return string
+	 */
 	public function getName();
 
 	/**

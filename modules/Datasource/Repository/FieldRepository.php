@@ -70,6 +70,18 @@ class FieldRepository extends BaseRepository
 		return $field;
 	}
 
+	/**
+	 * @param array $ids
+	 */
+	public function deleteByIds(array $ids)
+	{
+		$fields = $this->instance()->whereIn('id', $ids)->get();
+
+		foreach($fields as $field)
+		{
+			$field->delete();
+		}
+	}
 
 	/**
 	 * @return array

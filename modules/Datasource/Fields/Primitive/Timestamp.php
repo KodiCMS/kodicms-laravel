@@ -1,9 +1,9 @@
 <?php namespace KodiCMS\Datasource\Fields\Primitive;
 
-use KodiCMS\Datasource\Model\Field;
+use KodiCMS\Datasource\Fields\Primitive;
 use Illuminate\Database\Schema\Blueprint;
 
-class Primary extends Field
+class Timestamp extends Primitive
 {
 	/**
 	 * @var array
@@ -13,19 +13,11 @@ class Primary extends Field
 	];
 
 	/**
-	 * @return string
-	 */
-	public function getDBKey()
-	{
-		return $this->getKey();
-	}
-
-	/**
 	 * @param Blueprint $table
 	 * @return \Illuminate\Support\Fluent
 	 */
 	public function setDatabaseFieldType(Blueprint $table)
 	{
-		return $table->increments($this->getDBKey());
+		return $table->timestamp($this->getDBKey());
 	}
 }

@@ -2,8 +2,9 @@
 	<div class="col-md-9 col-md-offset-3">
 		<div class="checkbox">
 			<label>
-				{!! Form::checkbox('settings[use_filemanager]', 1, $field->getSetting('use_filemanager') == 1, ['id' => 'use_filemanager']) !!}
-				Use filemanager to get data
+				{!! Form::switcher('settings[use_filemanager]', 1, $field->isUseFilemanager(), [
+				'id' => 'use_filemanager'
+				]) !!} Use filemanager to get data
 			</label>
 		</div>
 	</div>

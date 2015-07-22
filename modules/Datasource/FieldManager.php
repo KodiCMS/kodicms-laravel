@@ -111,6 +111,7 @@ class FieldManager
 	/**
 	 * @param SectionInterface $section
 	 * @param FieldInterface $field
+	 * @return bool
 	 */
 	public function attachFieldToSection(SectionInterface $section, FieldInterface $field)
 	{
@@ -118,11 +119,14 @@ class FieldManager
 		$field->update([
 			'ds_id' => $section->getId()
 		]);
+
+		return true;
 	}
 
 	/**
 	 * @param SectionInterface $section
 	 * @param FieldInterface $field
+	 * @return bool
 	 */
 	public function addFieldToSectionTable(SectionInterface $section, FieldInterface $field)
 	{
@@ -130,39 +134,48 @@ class FieldManager
 		{
 			$field->setDatabaseFieldType($table);
 		});
+
+		return true;
 	}
 
 	/**
-	 * @param SectionInterface $section
 	 * @param FieldInterface $field
+	 * @return bool
 	 */
-	public function updateSectionTableField(SectionInterface $section, FieldInterface $field)
+	public function updateSectionTableField(FieldInterface $field)
 	{
+		$section = $field->getSection();
+
 		if (!Schema::hasColumn($section->getSectionTableName(), $field->getDBKey()))
 		{
-			// TODO throw Exception
+			return false;
 		}
 
 		Schema::table($section->getSectionTableName(), function($table) use($field)
 		{
 			$field->setDatabaseFieldType($table)->change();
 		});
+
+		return true;
 	}
 
 	/**
-	 * @param SectionInterface $section
 	 * @param FieldInterface $field
+	 * @return bool
 	 */
-	public function dropSectionTableField(SectionInterface $section, FieldInterface $field)
+	public function dropSectionTableField(FieldInterface $field)
 	{
+		$section = $field->getSection();
 		if (!Schema::hasColumn($section->getSectionTableName(), $field->getDBKey()))
 		{
-			// TODO throw Exception
+			return false;
 		}
 
 		Schema::table($section->getSectionTableName(), function($table) use($field)
 		{
 			$table->dropColumn($field->getDBKey());
 		});
+
+		return true;
 	}
 }

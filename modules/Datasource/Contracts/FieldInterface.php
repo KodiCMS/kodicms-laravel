@@ -50,7 +50,22 @@ interface FieldInterface
 	/**
 	 * @return string
 	 */
+	public function getDatabaseDefaultValue();
+
+	/**
+	 * @return string
+	 */
 	public function getTablePrefix();
+
+	/**
+	 * @return bool
+	 */
+	public function isAttachedToSection();
+
+	/**
+	 * @return SectionInterface
+	 */
+	public function getSection();
 
 	/**
 	 * @param mixed $value
@@ -74,6 +89,11 @@ interface FieldInterface
 	 * @return bool
 	 */
 	public function isSystem();
+
+	/**
+	 * @return bool
+	 */
+	public function isEditable();
 
 	/**
 	 * @return bool

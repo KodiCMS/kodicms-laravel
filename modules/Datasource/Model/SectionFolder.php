@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Datasource\Contracts\FolderInterface;
 
-class SectionFolder extends Model
+class SectionFolder extends Model implements FolderInterface
 {
 	protected $table = 'datasource_folders';
 
@@ -25,5 +25,4 @@ class SectionFolder extends Model
 		'name' => 'string',
 		'position' => 'integer'
 	];
-
 }

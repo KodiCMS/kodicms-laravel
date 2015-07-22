@@ -15,7 +15,9 @@ use KodiCMS\Datasource\Contracts\DocumentInterface;
 
 class Field extends Model implements FieldInterface
 {
-	use ModelSettings;
+	use ModelSettings {
+		setSetting as protected _setSetting;
+	}
 
 	// TODO: вынести в отдельный Observer
 	protected static function boot()
@@ -25,6 +27,22 @@ class Field extends Model implements FieldInterface
 		static::creating(function(Field $field)
 		{
 			$field->position = $field->getLastPosition() + 1;
+		});
+
+		static::deleted(function(Field $field)
+		{
+			if ($field->isAttachedToSection())
+			{
+				FieldManager::dropSectionTableField($field);
+			}
+		});
+
+		static::updated(function(Field $field)
+		{
+			if ($field->isAttachedToSection())
+			{
+				FieldManager::updateSectionTableField($field);
+			}
 		});
 	}
 
@@ -54,13 +72,17 @@ class Field extends Model implements FieldInterface
 	protected $relatedSection = null;
 
 	/**
+	 * @var bool
+	 */
+	protected $initialized = false;
+
+	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
 	protected $fillable = [
-		'ds_id', 'key', 'type', 'name', 'related_ds',
-		'is_system', 'position', 'settings'
+		'ds_id', 'key', 'type', 'name', 'related_ds', 'position', 'settings'
 	];
 
 	/**
@@ -75,6 +97,7 @@ class Field extends Model implements FieldInterface
 		'name' => 'string',
 		'related_ds' => 'integer',
 		'is_system' => 'boolean',
+		'is_editable' => 'boolean',
 		'position' => 'integer',
 		'settings' => 'array'
 	];
@@ -157,11 +180,35 @@ class Field extends Model implements FieldInterface
 	}
 
 	/**
+	 * @return SectionInterface
+	 */
+	public function getSection()
+	{
+		return $this->section;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isAttachedToSection()
+	{
+		return !is_null($this->ds_id);
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function isSystem()
 	{
 		return (bool) $this->is_system;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isEditable()
+	{
+		return (bool) $this->is_editable;
 	}
 
 	/**
@@ -194,6 +241,14 @@ class Field extends Model implements FieldInterface
 	public function isSearchable()
 	{
 		return $this->getSetting('is_searchable', false);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDatabaseDefaultValue()
+	{
+		return $this->getDefaultValue();
 	}
 
 	/**
@@ -370,10 +425,11 @@ class Field extends Model implements FieldInterface
 
 	/**
 	 * @param Blueprint $table
+	 * @return \Illuminate\Support\Fluent
 	 */
 	public function setDatabaseFieldType(Blueprint $table)
 	{
-		$table->string($this->getDBKey());
+		return $table->string($this->getDBKey(), $this->getSetting('length'));
 	}
 
 	/**************************************************************************
@@ -397,15 +453,10 @@ class Field extends Model implements FieldInterface
 	 */
 	public function setSetting($name, $value = null)
 	{
-		parent::setSetting($name, $value);
+		$this->_setSetting($name, $value);
 
-		$this->settings = $this->fieldSettings;
+		$this->settings = $this->{$this->getSettingsProperty()};
 		return $this;
-	}
-
-	public function getSettingsAttribute()
-	{
-		return $this->fieldSettings = $this->attributes['settings'];
 	}
 
 	/**
@@ -425,6 +476,20 @@ class Field extends Model implements FieldInterface
 	}
 
 	/**
+	 * Save a new model and return the instance.
+	 *
+	 * @param  array  $attributes
+	 * @return static
+	 */
+	public static function create(array $attributes = [])
+	{
+		$model = static::getClassInstance((array) $attributes);
+		$model->save();
+
+		return $model;
+	}
+
+	/**
 	 * Create a new model instance that is existing.
 	 *
 	 * @param  array  $attributes
@@ -436,8 +501,7 @@ class Field extends Model implements FieldInterface
 		$model = $this->newInstance(['type' => array_get((array)$attributes, 'type')], true);
 		$model->setRawAttributes((array) $attributes, true);
 		$model->setConnection($connection ?: $this->connection);
-
-		$model->fill(['settings' => $this->defaultSettings()]);
+		$model->initialize();
 
 		return $model;
 	}
@@ -451,6 +515,29 @@ class Field extends Model implements FieldInterface
 	 */
 	public function newInstance($attributes = [], $exists = false)
 	{
+		$model = static::getClassInstance((array) $attributes);
+		$model->exists = $exists;
+
+		return $model;
+	}
+
+	public function initialize()
+	{
+		if ($this->initialized)
+		{
+			return;
+		}
+
+		$this->setSettings((array) $this->settings);
+		$this->initialized = true;
+	}
+
+	/**
+	 * @param array $attributes
+	 * @return static
+	 */
+	public static function getClassInstance($attributes = [])
+	{
 		// This method just provides a convenient way for us to generate fresh model
 		// instances of this current model. It is particularly useful during the
 		// hydration of new objects via the Eloquent query builder instances.
@@ -458,15 +545,11 @@ class Field extends Model implements FieldInterface
 		{
 			$class = $type->getClass();
 			unset($attributes['type']);
-			$model = new $class((array) $attributes);
+			return new $class((array) $attributes);
 		}
 		else
 		{
-			$model = new static((array) $attributes);
+			return new static((array) $attributes);
 		}
-
-		$model->exists = $exists;
-
-		return $model;
 	}
 }

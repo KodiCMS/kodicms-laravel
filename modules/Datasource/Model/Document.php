@@ -1,10 +1,10 @@
 <?php namespace KodiCMS\Datasource\Model;
 
-use KodiCMS\Datasource\Fields\Primary;
 use Illuminate\Database\Eloquent\Model;
-use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeTimestampInterface;
+use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\Fields\Primary;
 
 class Document extends Model implements DocumentInterface
 {
@@ -48,14 +48,14 @@ class Document extends Model implements DocumentInterface
 		$this->section = $section;
 		$this->table = $this->section->getSectionTableName();
 
+		$this->primaryKey = $section->getDocumentPrimaryKey();
+		if (!is_null($this->primaryKey))
+		{
+			$this->incrementing = true;
+		}
+
 		foreach ($this->section->getFields() as $field)
 		{
-			if ($field instanceof Primary)
-			{
-				$this->primaryKey = $field->getDBKey();
-				$this->incrementing = true;
-			}
-
 			if($field instanceof FieldTypeDateInterface)
 			{
 				$this->dates[] = $field->getDBKey();
@@ -65,9 +65,16 @@ class Document extends Model implements DocumentInterface
 			$this->sectionFields[$field->getDBKey()] = $field;
 		}
 
-		parent::__construct($attributes);
+		if (
+			isset($this->sectionFields[static::CREATED_AT])
+			AND
+			isset($this->sectionFields[static::UPDATED_AT])
+		)
+		{
+			$this->timestamps = true;
+		}
 
-		//TODO: инициализировать timestamps поля
+		parent::__construct($attributes);
 	}
 
 	/**
@@ -76,6 +83,25 @@ class Document extends Model implements DocumentInterface
 	public function getSectionFields()
 	{
 		return $this->sectionFields;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getEditableFields()
+	{
+		$fields = [];
+		foreach ($this->getSectionFields() as $key => $field)
+		{
+			if (!$field->isEditable())
+			{
+				continue;
+			}
+
+			$fields[$key] = $field;
+		}
+
+		return $fields;
 	}
 
 	/**
@@ -89,7 +115,7 @@ class Document extends Model implements DocumentInterface
 	{
 		if (!is_null($field = array_get($this->sectionFields, $key)))
 		{
-			$value = $field->onSetDocumentAttribute($this, $value);
+			$value = $field->convertValueToSQL($this, $value);
 		}
 
 		parent::setAttribute($key, $value);

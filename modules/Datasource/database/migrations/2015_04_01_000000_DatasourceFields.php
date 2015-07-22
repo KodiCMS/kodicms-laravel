@@ -12,6 +12,8 @@ class DatasourceFields extends Migration
 
 			$table->string('ds_id')->index();
 			$table->boolean('is_system')->default(false);
+			$table->boolean('is_editable')->default(true);
+
 			$table->string('key');
 			$table->string('type');
 

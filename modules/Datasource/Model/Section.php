@@ -2,8 +2,12 @@
 
 use DatasourceManager;
 use KodiCMS\Datasource\Document;
-use KodiCMS\Datasource\Fields\String;
-use KodiCMS\Datasource\Fields\Primary;
+
+use KodiCMS\Datasource\Fields\Primitive\String;
+use KodiCMS\Datasource\Fields\Primitive\Primary;
+use KodiCMS\Datasource\Fields\Primitive\Boolean;
+
+use KodiCMS\Datasource\Fields\Primitive\Timestamp;
 use KodiCMS\Datasource\SectionHeadline;
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Support\Traits\ModelSettings;
@@ -12,7 +16,9 @@ use KodiCMS\Datasource\Exceptions\SectionException;
 
 class Section extends Model implements SectionInterface
 {
-	use ModelSettings;
+	use ModelSettings {
+		setSetting as protected _setSetting;
+	}
 
 	/**
 	 * @var SectionHeadlineInterface
@@ -32,12 +38,27 @@ class Section extends Model implements SectionInterface
 	/**
 	 * @var string
 	 */
+	protected $documentPrimaryKey = 'id';
+
+	/**
+	 * @var string
+	 */
+	protected $documentTitleKey = 'header';
+
+	/**
+	 * @var string
+	 */
 	protected $sectionTableName = 'test';
 
 	/**
 	 * @var array
 	 */
 	protected $sectionFields = [];
+
+	/**
+	 * @var array
+	 */
+	protected $sectionSettings = [];
 
 	/**
 	 * @var
@@ -83,6 +104,22 @@ class Section extends Model implements SectionInterface
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getDocumentPrimaryKey()
+	{
+		return $this->documentPrimaryKey;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDocumentTitleKey()
+	{
+		return $this->documentTitleKey;
+	}
+
+	/**
 	 * @return integer
 	 */
 	public function getName()
@@ -122,7 +159,6 @@ class Section extends Model implements SectionInterface
 		return $this->getType()->getIcon();
 	}
 
-
 	/**************************************************************************
 	 * Fields
 	 **************************************************************************/
@@ -147,6 +183,18 @@ class Section extends Model implements SectionInterface
 			new String([
 				'key' => 'header',
 				'name' => 'Header'
+			]),
+			new Boolean([
+				'key' => 'published',
+				'name' => 'Published'
+			]),
+			new Timestamp([
+				'key' => static::CREATED_AT,
+				'name' => 'Created At'
+			]),
+			new Timestamp([
+				'key' => static::UPDATED_AT,
+				'name' => 'Updated At'
 			])
 		];
 	}
@@ -370,6 +418,28 @@ class Section extends Model implements SectionInterface
 	 * Other
 	 **************************************************************************/
 	/**
+	 * @param string $name
+	 * @param mixed $value
+	 * @return $this
+	 */
+	public function setSetting($name, $value = null)
+	{
+		$this->_setSetting($name, $value);
+
+		$this->settings = $this->{$this->getSettingsProperty()};
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function getSettingsProperty()
+	{
+		return 'sectionSettings';
+	}
+
+
+	/**
 	 * Create a new model instance that is existing.
 	 *
 	 * @param  array  $attributes
@@ -387,6 +457,20 @@ class Section extends Model implements SectionInterface
 	}
 
 	/**
+	 * Save a new model and return the instance.
+	 *
+	 * @param  array  $attributes
+	 * @return static
+	 */
+	public static function create(array $attributes = [])
+	{
+		$model = static::getClassInstance((array) $attributes);
+		$model->save();
+
+		return $model;
+	}
+
+	/**
 	 * Create a new instance of the given model.
 	 *
 	 * @param  array  $attributes
@@ -395,20 +479,7 @@ class Section extends Model implements SectionInterface
 	 */
 	public function newInstance($attributes = [], $exists = false)
 	{
-		// This method just provides a convenient way for us to generate fresh model
-		// instances of this current model. It is particularly useful during the
-		// hydration of new objects via the Eloquent query builder instances.
-		if (isset($attributes['type']) and !is_null($type = DatasourceManager::getTypeObject($attributes['type'])))
-		{
-			$class = $type->getClass();
-			unset($attributes['type']);
-			$model = new $class((array) $attributes);
-		}
-		else
-		{
-			$model = new static((array) $attributes);
-		}
-
+		$model = static::getClassInstance((array) $attributes);
 		$model->exists = $exists;
 
 		return $model;
@@ -426,6 +497,29 @@ class Section extends Model implements SectionInterface
 		$headlineClass = $this->getHeadlineClass();
 		$this->headline = new $headlineClass($this);
 
+		$this->setSettings((array) $this->settings);
+
 		$this->initialized = true;
+	}
+
+	/**
+	 * @param array $attributes
+	 * @return static
+	 */
+	public static function getClassInstance($attributes = [])
+	{
+		// This method just provides a convenient way for us to generate fresh model
+		// instances of this current model. It is particularly useful during the
+		// hydration of new objects via the Eloquent query builder instances.
+		if (isset($attributes['type']) and !is_null($type = DatasourceManager::getTypeObject($attributes['type'])))
+		{
+			$class = $type->getClass();
+			unset($attributes['type']);
+			return new $class((array) $attributes);
+		}
+		else
+		{
+			return new static((array) $attributes);
+		}
 	}
 }

@@ -15,33 +15,17 @@ class Boolean extends Primitive
 	public function defaultSettings()
 	{
 		return [
-			'display' => 0
+			'style' => static::STYLE_CHECKBOX
 		];
 	}
 
 	/**
-	 * @return int
-	 */
-	public function getSettingLenght()
-	{
-		$defaultLenght = 50;
-
-		$lenght = (int) array_get($this->settings, 'lenght', $defaultLenght);
-
-		if ($lenght == 0)
-		{
-			$lenght = $defaultLenght;
-		}
-
-		return $defaultLenght;
-	}
-
-	/**
 	 * @param Blueprint $table
+	 * @return \Illuminate\Support\Fluent
 	 */
 	public function setDatabaseFieldType(Blueprint $table)
 	{
-		$table->boolean($this->getDBKey());
+		return $table->boolean($this->getDBKey());
 	}
 
 	/**
