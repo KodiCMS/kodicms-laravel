@@ -1,10 +1,10 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
 use App;
-use Assets;
-use Lang;
-use ModulesFileSystem;
 use View;
+use Lang;
+use Assets;
+use ModulesFileSystem;
 
 class TemplateController extends Controller
 {

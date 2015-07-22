@@ -25,6 +25,8 @@ class ModulesMigrateCommand extends Command
 			return;
 		}
 
+		$this->call('cache:clear');
+
 		$this->output->writeln('<info>Migrating KodiCMS modules...</info>');
 		$installer = new ModulesInstaller(ModulesLoader::getRegisteredModules());
 
