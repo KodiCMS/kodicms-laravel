@@ -26,7 +26,9 @@
 &nbsp;&nbsp;&nbsp;&nbsp;
 
 @if(isset($route))
-{!! link_to_route($route, UI::hidden(trans('cms::core.button.cancel')), [], [
+<?php list($route, $params) = is_array($route) ? $route : [$route, []]; ?>
+
+{!! link_to_route($route, UI::hidden(trans('cms::core.button.cancel')), $params, [
 	'data-icon' => 'ban',
 	'class' => 'btn btn-close btn-outline'
 ]) !!}

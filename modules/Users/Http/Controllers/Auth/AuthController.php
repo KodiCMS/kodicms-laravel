@@ -74,14 +74,13 @@ class AuthController extends FrontendController
 	public function postLogin(Request $request)
 	{
 		$this->validate($request, [
-			$this->loginUsername() => 'required', 'password' => 'required',
+			$this->loginUsername() => 'required|email', 'password' => 'required',
 		]);
 
 		// If the class is using the ThrottlesLogins trait, we can automatically throttle
 		// the login attempts for this application. We'll key this by the username and
 		// the IP address of the client making these requests into this application.
 		$throttles = $this->isUsingThrottlesLoginsTrait();
-
 
 		if ($throttles && $this->hasTooManyLoginAttempts($request)) {
 			return $this->sendLockoutResponse($request);
@@ -103,7 +102,7 @@ class AuthController extends FrontendController
 		}
 
 		return redirect($this->loginPath())
-			->withInput($request->only('email', 'remember'))
+			->withInput($request->only($this->loginUsername(), 'remember'))
 			->withErrors([
 				$this->loginUsername() => $this->getFailedLoginMessage(),
 			]);
@@ -122,7 +121,8 @@ class AuthController extends FrontendController
 
 		// Set the last login date
 		$user->last_login = time();
-		$user->save();
+
+		$user->update();
 
 		return redirect()->intended($this->redirectPath());
 	}

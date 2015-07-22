@@ -273,11 +273,16 @@ abstract class Controller extends BaseController
 	}
 
 	/**
-	 * @param $string
+	 * @param string $string
 	 * @return string
 	 */
 	protected function wrapNamespace($string)
 	{
-		return $this->getModuleNamespace() . $string;
+		if (strpos($string, '::') === false)
+		{
+			$string = $this->getModuleNamespace() . $string;
+		}
+
+		return $string;
 	}
 }
