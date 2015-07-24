@@ -3,35 +3,35 @@
 use KodiCMS\Plugins\Loader\PluginSchema;
 use Illuminate\Database\Schema\Blueprint;
 
-class News extends PluginSchema
+class NewsTags extends PluginSchema
 {
 	/**
 	 * @return string
 	 */
 	public function getTableName()
 	{
-		return 'news';
+		return 'news_tags';
 	}
 
 	public function up()
 	{
 		Schema::create($this->getTableName(), function (Blueprint $table) {
-			$table->timestamps();
-			$table->dateTime('published_at');
-
 			$table->increments('id');
-			$table->string('title');
-			$table->string('slug')->unique();
+			$table->string('name', 45)->unique();
+			$table->timestamps();
+		});
 
-			$table->integer('status');
-
-			$table->integer('user_id')->index();
-			$table->integer('category_id')->index();
+		Schema::create('news_have_tags', function($table)
+		{
+			$table->increments('id');
+			$table->integer('post_id')->unsigned();
+			$table->integer('tag_id')->unsigned();
 		});
 	}
 
 	public function down()
 	{
 		Schema::dropIfExists($this->getTableName());
+		Schema::dropIfExists('news_have_tags');
 	}
 }

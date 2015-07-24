@@ -13,7 +13,7 @@ class NewsContentObserver
 	{
 		$editor = WYSIWYG::getDefaultHTMLEditor();
 
-		$newsContent->content_filtered = WYSIWYG::applyFilter($editor, $newsContent->content);
-		$newsContent->description_filtered = WYSIWYG::applyFilter($editor, $newsContent->description);
+		$newsContent->content_filtered = $editor->applyFilter($text) ;
+		$newsContent->description_filtered = $editor->applyFilter($text);
 	}
 }

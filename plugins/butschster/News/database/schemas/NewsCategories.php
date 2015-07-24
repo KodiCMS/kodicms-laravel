@@ -3,30 +3,24 @@
 use KodiCMS\Plugins\Loader\PluginSchema;
 use Illuminate\Database\Schema\Blueprint;
 
-class News extends PluginSchema
+class NewsCategories extends PluginSchema
 {
 	/**
 	 * @return string
 	 */
 	public function getTableName()
 	{
-		return 'news';
+		return 'news_categories';
 	}
 
 	public function up()
 	{
 		Schema::create($this->getTableName(), function (Blueprint $table) {
-			$table->timestamps();
-			$table->dateTime('published_at');
-
 			$table->increments('id');
-			$table->string('title');
-			$table->string('slug')->unique();
+			$table->string('slug', 80)->unique();
+			$table->string('name', 45)->unique();
 
-			$table->integer('status');
-
-			$table->integer('user_id')->index();
-			$table->integer('category_id')->index();
+			$table->timestamps();
 		});
 	}
 

@@ -6,7 +6,6 @@ use Plugins\butschster\News\Model\FieldCollections\NewsFieldCollection;
 
 class News extends Model
 {
-
 	use ModelFieldTrait;
 
 	/**
@@ -33,6 +32,13 @@ class News extends Model
 	];
 
 	/**
+	 * The attributes that should be mutated to dates.
+	 *
+	 * @var array
+	 */
+	protected $dates = ['published_at'];
+
+	/**
 	 * @return array
 	 */
 	protected function fieldCollection()
@@ -45,7 +51,7 @@ class News extends Model
 	 */
 	public function user()
 	{
-		return $this->belongsTo('\KodiCMS\Users\Model\User', 'user_id');
+		return $this->belongsTo(\KodiCMS\Users\Model\User::class, 'user_id');
 	}
 
 	/**
@@ -53,6 +59,45 @@ class News extends Model
 	 */
 	public function content()
 	{
-		return $this->hasOne('\Plugins\butschster\News\Model\NewsContent');
+		return $this->hasOne(\Plugins\butschster\News\Model\NewsContent::class);
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function comment()
+	{
+		return $this->hasMany(\Plugins\butschster\News\Model\NewsComment::class);
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
+	public function category()
+	{
+		return $this->belongsTo(\Plugins\butschster\News\Model\NewsCategory::class);
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	 */
+	public function tags()
+	{
+		return $this->belongsToMany(\Plugins\butschster\News\Model\NewsTag::class, 'news_have_tags', 'news_id', 'tag_id');
+	}
+
+	/*
+    |--------------------------------------------------------------------------
+    | Scopes
+    |--------------------------------------------------------------------------
+    */
+	public function scopeForAuthor($query)
+	{
+		return $query->whereUserId(Auth::user()->id);
+	}
+
+	public function scopeBySlug($query, $slug)
+	{
+		return $query->whereSlug($slug)->first();
 	}
 }
