@@ -66,25 +66,6 @@ interface FieldInterface
 	 * @return SectionInterface
 	 */
 	public function getSection();
-
-	/**
-	 * @param mixed $value
-	 * @return string
-	 */
-	public function convertValueToHTML($value);
-
-	/**
-	 * @param mixed $value
-	 * @return string
-	 */
-	public function convertValueToSQL($value);
-
-	/**
-	 * @param mixed $value
-	 * @return string
-	 */
-	public function convertValueToHeadline($value);
-
 	/**
 	 * @return bool
 	 */
@@ -132,7 +113,7 @@ interface FieldInterface
 	 *
 	 * @return mixed
 	 */
-	public function onGetDocumentAttribute(DocumentInterface $document, $value);
+	public function onGetDocumentValue(DocumentInterface $document, $value);
 
 	/**
 	 * @param DocumentInterface $document
@@ -140,7 +121,15 @@ interface FieldInterface
 	 *
 	 * @return mixed
 	 */
-	public function onGetFormAttributeValue(DocumentInterface $document, $value);
+	public function onGetFormValue(DocumentInterface $document, $value);
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return mixed
+	 */
+	public function onGetHeadlineValue(DocumentInterface $document, $value);
 
 	/**
 	 * @param DocumentInterface $document
@@ -174,7 +163,7 @@ interface FieldInterface
 	/**
 	 * @param Builder $query
 	 */
-	public function querySelectColumn(Builder $query);
+	public function querySelectColumn(Builder $query, DocumentInterface $document);
 
 	/**
 	 * @param Builder $query
@@ -187,7 +176,7 @@ interface FieldInterface
 	 * @param string $condition
 	 * @param string $value
 	 */
-	public function queryWhereCondition(Builder $query, $condition, $value);
+	public function queryWhereCondition(Builder $query, $condition, $value, array $params);
 
 	/**
 	 * @param Blueprint $table

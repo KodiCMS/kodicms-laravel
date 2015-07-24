@@ -4,21 +4,15 @@ use DB;
 use FieldManager;
 use KodiCMS\Datasource\FieldType;
 use Illuminate\Validation\Validator;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
-use KodiCMS\Support\Traits\ModelSettings;
 use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Exceptions\FieldException;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 
-class Field extends Model implements FieldInterface
+class Field extends DatasourceModel implements FieldInterface
 {
-	use ModelSettings {
-		setSetting as protected _setSetting;
-	}
-
 	// TODO: вынести в отдельный Observer
 	protected static function boot()
 	{
@@ -101,27 +95,6 @@ class Field extends Model implements FieldInterface
 		'position' => 'integer',
 		'settings' => 'array'
 	];
-
-	/**
-	 * @param array $attributes
-	 */
-	public function __construct(array $attributes = [])
-	{
-		if (empty($attributes['type']))
-		{
-			$attributes['type'] = FieldManager::getTypeByClassName(get_called_class());
-		}
-
-		parent::__construct($attributes);
-	}
-
-	/**
-	 * @return array
-	 */
-	public function defaultSettings()
-	{
-		return [];
-	}
 
 	/**
 	 * @return integer
@@ -290,36 +263,6 @@ class Field extends Model implements FieldInterface
 	}
 
 	/**************************************************************************
-	 * Converting
-	 **************************************************************************/
-	/**
-	 * @param mixed $value
-	 * @return string
-	 */
-	public function convertValueToHTML($value)
-	{
-		return $value;
-	}
-
-	/**
-	 * @param mixed $value
-	 * @return string
-	 */
-	public function convertValueToSQL($value)
-	{
-		return $value;
-	}
-
-	/**
-	 * @param mixed $value
-	 * @return string
-	 */
-	public function convertValueToHeadline($value)
-	{
-		return $value;
-	}
-
-	/**************************************************************************
 	 * Events
 	 **************************************************************************/
 
@@ -340,7 +283,7 @@ class Field extends Model implements FieldInterface
 	 *
 	 * @return mixed
 	 */
-	public function onGetDocumentAttribute(DocumentInterface $document, $value)
+	public function onGetDocumentValue(DocumentInterface $document, $value)
 	{
 		return $value;
 	}
@@ -351,7 +294,18 @@ class Field extends Model implements FieldInterface
 	 *
 	 * @return mixed
 	 */
-	public function onGetFormAttributeValue(DocumentInterface $document, $value)
+	public function onGetFormValue(DocumentInterface $document, $value)
+	{
+		return $value;
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return mixed
+	 */
+	public function onGetHeadlineValue(DocumentInterface $document, $value)
 	{
 		return $value;
 	}
@@ -398,8 +352,9 @@ class Field extends Model implements FieldInterface
 	 **************************************************************************/
 	/**
 	 * @param Builder $query
+	 * @param DocumentInterface $document
 	 */
-	public function querySelectColumn(Builder $query)
+	public function querySelectColumn(Builder $query, DocumentInterface $document)
 	{
 		$query->selectRaw("{$this->getDBKey()} as {$this->getKey()}");
 	}
@@ -415,12 +370,35 @@ class Field extends Model implements FieldInterface
 
 	/**
 	 * @param Builder $query
-	 * @param $condition
-	 * @param $value
+	 * @param string $condition
+	 * @param string $value
+	 * @param array $params
 	 */
-	public function queryWhereCondition(Builder $query, $condition, $value)
+	public function queryWhereCondition(Builder $query, $condition, $value, array $params)
 	{
-		$query->where($this->getKey(), $condition, $value);
+		switch ($condition)
+		{
+			case 'IN':
+				$query->whereIn($this->getKey(), $value);
+				break;
+			case 'NOT IN':
+				$query->whereNotIn($this->getKey(), $value);
+				break;
+			case 'NULL':
+				$query->whereNull($this->getKey(), $value);
+				break;
+			case 'NOT NULL':
+				$query->whereNotNull($this->getKey());
+				break;
+			case 'BETWEEN':
+				$query->whereBetween($this->getKey());
+				break;
+			case 'NOT BETWEEN':
+				$query->whereNotBetween($this->getKey(), $value);
+				break;
+			default:
+				$query->where($this->getKey(), $condition, $value);
+		}
 	}
 
 	/**
@@ -447,19 +425,6 @@ class Field extends Model implements FieldInterface
 	 * Other
 	 **************************************************************************/
 	/**
-	 * @param string $name
-	 * @param mixed $value
-	 * @return $this
-	 */
-	public function setSetting($name, $value = null)
-	{
-		$this->_setSetting($name, $value);
-
-		$this->settings = $this->{$this->getSettingsProperty()};
-		return $this;
-	}
-
-	/**
 	 * @return string
 	 */
 	protected function getSettingsProperty()
@@ -476,80 +441,10 @@ class Field extends Model implements FieldInterface
 	}
 
 	/**
-	 * Save a new model and return the instance.
-	 *
-	 * @param  array  $attributes
-	 * @return static
+	 * @return DatasourceManagerInterface
 	 */
-	public static function create(array $attributes = [])
+	public static function getManagerClass()
 	{
-		$model = static::getClassInstance((array) $attributes);
-		$model->save();
-
-		return $model;
-	}
-
-	/**
-	 * Create a new model instance that is existing.
-	 *
-	 * @param  array  $attributes
-	 * @param  string|null  $connection
-	 * @return static
-	 */
-	public function newFromBuilder($attributes = [], $connection = null)
-	{
-		$model = $this->newInstance(['type' => array_get((array)$attributes, 'type')], true);
-		$model->setRawAttributes((array) $attributes, true);
-		$model->setConnection($connection ?: $this->connection);
-		$model->initialize();
-
-		return $model;
-	}
-
-	/**
-	 * Create a new instance of the given model.
-	 *
-	 * @param  array  $attributes
-	 * @param  bool   $exists
-	 * @return static
-	 */
-	public function newInstance($attributes = [], $exists = false)
-	{
-		$model = static::getClassInstance((array) $attributes);
-		$model->exists = $exists;
-
-		return $model;
-	}
-
-	public function initialize()
-	{
-		if ($this->initialized)
-		{
-			return;
-		}
-
-		$this->setSettings((array) $this->settings);
-		$this->initialized = true;
-	}
-
-	/**
-	 * @param array $attributes
-	 * @return static
-	 */
-	public static function getClassInstance($attributes = [])
-	{
-		// This method just provides a convenient way for us to generate fresh model
-		// instances of this current model. It is particularly useful during the
-		// hydration of new objects via the Eloquent query builder instances.
-		if (isset($attributes['type']) and !is_null($type = FieldManager::getFieldTypeBy('type', $attributes['type'])))
-		{
-			$class = $type->getClass();
-			unset($attributes['type']);
-			return new $class((array) $attributes);
-		}
-		else
-		{
-			return new static((array) $attributes);
-		}
+		return FieldManager::getFacadeRoot();
 	}
 }

@@ -60,20 +60,6 @@ class Date extends Primitive implements FieldTypeDateInterface
 	}
 
 	/**
-	 * @param mixed $value
-	 * @return string
-	 */
-	public function convertValueToSQL($value)
-	{
-		if ($value instanceof Carbon)
-		{
-			return $value->format($this->dateFormat);
-		}
-
-		return parent::convertValueToSQL($value);
-	}
-
-	/**
 	 * @param Blueprint $table
 	 * @return \Illuminate\Support\Fluent
 	 */

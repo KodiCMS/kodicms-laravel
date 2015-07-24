@@ -2,24 +2,16 @@
 
 use DatasourceManager;
 use KodiCMS\Datasource\Document;
-
+use KodiCMS\Datasource\SectionHeadline;
 use KodiCMS\Datasource\Fields\Primitive\String;
 use KodiCMS\Datasource\Fields\Primitive\Primary;
 use KodiCMS\Datasource\Fields\Primitive\Boolean;
-
 use KodiCMS\Datasource\Fields\Primitive\Timestamp;
-use KodiCMS\Datasource\SectionHeadline;
-use Illuminate\Database\Eloquent\Model;
-use KodiCMS\Support\Traits\ModelSettings;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Exceptions\SectionException;
 
-class Section extends Model implements SectionInterface
+class Section extends DatasourceModel implements SectionInterface
 {
-	use ModelSettings {
-		setSetting as protected _setSetting;
-	}
-
 	/**
 	 * @var SectionHeadlineInterface
 	 */
@@ -64,11 +56,6 @@ class Section extends Model implements SectionInterface
 	 * @var
 	 */
 	protected $sectionType;
-
-	/**
-	 * @var bool
-	 */
-	protected $initialized = false;
 
 	/**
 	 * The attributes that are mass assignable.
@@ -266,7 +253,8 @@ class Section extends Model implements SectionInterface
 	public function getEmptyDocument()
 	{
 		$documentClass = $this->getDocumentClass();
-		return new $documentClass($this);
+
+		return new $documentClass([], $this);
 	}
 
 	/**
@@ -417,74 +405,6 @@ class Section extends Model implements SectionInterface
 	/**************************************************************************
 	 * Other
 	 **************************************************************************/
-	/**
-	 * @param string $name
-	 * @param mixed $value
-	 * @return $this
-	 */
-	public function setSetting($name, $value = null)
-	{
-		$this->_setSetting($name, $value);
-
-		$this->settings = $this->{$this->getSettingsProperty()};
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	protected function getSettingsProperty()
-	{
-		return 'sectionSettings';
-	}
-
-
-	/**
-	 * Create a new model instance that is existing.
-	 *
-	 * @param  array  $attributes
-	 * @param  string|null  $connection
-	 * @return static
-	 */
-	public function newFromBuilder($attributes = [], $connection = null)
-	{
-		$model = $this->newInstance(['type' => array_get((array)$attributes, 'type')], true);
-		$model->setRawAttributes((array) $attributes, true);
-		$model->setConnection($connection ?: $this->connection);
-		$model->initialize();
-
-		return $model;
-	}
-
-	/**
-	 * Save a new model and return the instance.
-	 *
-	 * @param  array  $attributes
-	 * @return static
-	 */
-	public static function create(array $attributes = [])
-	{
-		$model = static::getClassInstance((array) $attributes);
-		$model->save();
-
-		return $model;
-	}
-
-	/**
-	 * Create a new instance of the given model.
-	 *
-	 * @param  array  $attributes
-	 * @param  bool   $exists
-	 * @return static
-	 */
-	public function newInstance($attributes = [], $exists = false)
-	{
-		$model = static::getClassInstance((array) $attributes);
-		$model->exists = $exists;
-
-		return $model;
-	}
-
 	public function initialize()
 	{
 		if ($this->initialized)
@@ -503,23 +423,10 @@ class Section extends Model implements SectionInterface
 	}
 
 	/**
-	 * @param array $attributes
-	 * @return static
+	 * @return DatasourceManagerInterface
 	 */
-	public static function getClassInstance($attributes = [])
+	public static function getManagerClass()
 	{
-		// This method just provides a convenient way for us to generate fresh model
-		// instances of this current model. It is particularly useful during the
-		// hydration of new objects via the Eloquent query builder instances.
-		if (isset($attributes['type']) and !is_null($type = DatasourceManager::getTypeObject($attributes['type'])))
-		{
-			$class = $type->getClass();
-			unset($attributes['type']);
-			return new $class((array) $attributes);
-		}
-		else
-		{
-			return new static((array) $attributes);
-		}
+		return DatasourceManager::getFacadeRoot();
 	}
 }

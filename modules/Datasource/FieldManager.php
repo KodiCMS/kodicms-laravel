@@ -4,18 +4,8 @@ use Schema;
 use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 
-class FieldManager
+class FieldManager extends AbstractManager
 {
-	/**
-	 * @var array
-	 */
-	protected $config = [];
-
-	/**
-	 * @var array
-	 */
-	protected $types = [];
-
 	/**
 	 * @param array $config
 	 */
@@ -28,14 +18,6 @@ class FieldManager
 			if (!FieldType::isValid($data)) continue;
 			$this->types[$type] = new FieldType($type, $data);
 		}
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getAvailableTypes()
-	{
-		return $this->types;
 	}
 
 	/**
@@ -64,48 +46,6 @@ class FieldManager
 		}
 
 		return $objects;
-	}
-
-	/**
-	 * @param string $key
-	 * @param string $value
-	 *
-	 * @return FieldType|null
-	 */
-	public function getFieldTypeBy($key, $value)
-	{
-		foreach ($this->getAvailableTypes() as $object)
-		{
-			$method = 'get' . ucfirst($key);
-			if ($value == $object->{$method}())
-			{
-				return $object;
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * @param string $class
-	 * @return string|null
-	 */
-	public function getTypeByClassName($class)
-	{
-		return is_null($object = $this->getFieldTypeBy('class', $class))
-			? null
-			: $object->getType();
-	}
-
-	/**
-	 * @param string $type
-	 * @return string|null
-	 */
-	public function getClassNameByType($type)
-	{
-		return is_null($object = $this->getFieldTypeBy('type', $type))
-			? null
-			: $object->getClass();
 	}
 
 	/**

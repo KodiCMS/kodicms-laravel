@@ -7,18 +7,8 @@ use KodiCMS\Datasource\Model\Section;
 use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 
-class DatasourceManager {
-
-	/**
-	 * @var array
-	 */
-	protected $config = [];
-
-	/**
-	 * @var array
-	 */
-	protected $types = [];
-
+class DatasourceManager extends AbstractManager
+{
 	/**
 	 * @param array $config
 	 */
@@ -32,49 +22,6 @@ class DatasourceManager {
 
 			$this->types[$type] = new SectionType($type, $data);
 		}
-	}
-
-	/**
-	 * @param $type
-	 * @return SectionType|null
-	 */
-	public function getTypeObject($type)
-	{
-		foreach ($this->getAvailableSectionTypes() as $object)
-		{
-			if ($type == $object->getType())
-			{
-				return $object;
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * @param string $type
-	 * @return string|null
-	 */
-	public function getClassNameByType($type)
-	{
-		foreach ($this->getAvailableSectionTypes() as $object)
-		{
-			if ($type == $object->getType())
-			{
-				return $object->getClass();
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * @param string $type
-	 * @return bool
-	 */
-	public function typeExists($type)
-	{
-		return isset($this->types[$type]);
 	}
 
 	/**
@@ -164,13 +111,5 @@ class DatasourceManager {
 		}
 
 		FieldManager::attachFieldToSection($section, $field);
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getAvailableSectionTypes()
-	{
-		return $this->types;
 	}
 }

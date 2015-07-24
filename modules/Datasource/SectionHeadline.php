@@ -22,5 +22,4 @@ class SectionHeadline implements SectionHeadlineInterface
 	{
 		return '';
 	}
-
 }

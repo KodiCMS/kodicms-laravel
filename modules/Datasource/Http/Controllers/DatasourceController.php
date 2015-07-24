@@ -23,7 +23,7 @@ class DatasourceController extends BackendController
 
 		$this->setContent('content', [
 			'navigation' => view('datasource::navigation', [
-				'types' => DatasourceManager::getAvailableSectionTypes(),
+				'types' => DatasourceManager::getAvailableTypes(),
 				'sections' => DatasourceManager::getSections()
 			]),
 			'section' => view('datasource::section', [

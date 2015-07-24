@@ -11,7 +11,7 @@ class DocumentController extends BackendController
 
 		$document = $section->getEmptyDocument();
 
-		dd($document->getEditableFields());
+		dd($document->getDocumentById(1)->toArray());
 	}
 
 	public function postCreate()
