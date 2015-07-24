@@ -11,7 +11,6 @@
 //**   Small screens (mobile first)                                        **//
 
 .page-mail {
-	background: #fff !important;
 
 	#content-wrapper {
 		padding: 0;
@@ -215,9 +214,6 @@
 			width: @mail-nav-width;
 			border-bottom: 0;
 			position: absolute;
-			height: auto;
-			min-height: 100%;
-			border-right-width: 1px;
 
 			&.fixed {
 				position: fixed;
@@ -225,18 +221,6 @@
 				&:before {
 					display: none !important;
 				}
-			}
-
-			// Add fixed background
-			&:before {
-				content: "";
-				display: block;
-				top: 0;
-				bottom: 0;
-				position: fixed;
-				width: @mail-nav-width;
-				border-right: 1px solid;
-				z-index: -1;
 			}
 
 			.navigation {
@@ -286,7 +270,6 @@
 
 		.mail-container-header {
 			display: block;
-			/*margin-top: @main-navbar-height;*/
 		}
 	}
 }

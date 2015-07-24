@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\Pages\Helpers;
 
 use HTML;
-use KodiCMS\Pages\Model\FrontendPage;
 use Assets;
+use KodiCMS\Pages\Model\FrontendPage;
 
 class Meta
 {
@@ -22,10 +22,6 @@ class Meta
 	 *        <meta name="robots" content="" />
 	 *        <meta name="robots" content="" />
 	 *        <meta charset="utf-8">
-	 *
-	 * Для переопеределения данных используйте
-	 *
-	 *        Meta::factory($page)->add(array('name' => 'description', ...));
 	 *
 	 * @param FrontendPage $page
 	 */
@@ -96,15 +92,26 @@ class Meta
 	}
 
 	/**
+	 * @param string $filename [default: css/all.css]
+	 * @param null|string $dependency
+	 * @param array|null $attrs
+	 * @return $this
+	 */
+	public function addCssElixir($filename = 'css/all.css', $dependency = null, array $attrs = null)
+	{
+		return $this->addCss('elixir.css', elixir($filename), $dependency, $attrs);
+	}
+
+	/**
 	 * @param string $handle
 	 * @param string $src
-	 * @param null|string $deps
+	 * @param null|string $dependency
 	 * @param null|array $attrs
 	 * @return $this
 	 */
-	public function addCss($handle, $src, $deps = null, array $attrs = null)
+	public function addCss($handle, $src, $dependency = null, array $attrs = null)
 	{
-		Assets::css($handle, $src, $deps, $attrs);
+		Assets::css($handle, $src, $dependency, $attrs);
 		return $this;
 	}
 
@@ -119,15 +126,26 @@ class Meta
 	}
 
 	/**
-	 * @param string $handle
-	 * @param string $src
-	 * @param null|string $deps
+	 * @param string $filename [default: js/app.js]
+	 * @param null|string $dependency
 	 * @param bool $footer
 	 * @return $this
 	 */
-	public function AddJs($handle, $src, $deps = NULL, $footer = FALSE)
+	public function addJsElixir($filename = 'js/app.js', $dependency = null, $footer = false)
 	{
-		Assets::js($handle, $src, $deps, $footer);
+		return $this->AddJs('elixir.js', elixir($filename), $dependency, $footer);
+	}
+
+	/**
+	 * @param string $handle
+	 * @param string $src
+	 * @param null|string $dependency
+	 * @param bool $footer
+	 * @return $this
+	 */
+	public function AddJs($handle, $src, $dependency = NULL, $footer = false)
+	{
+		Assets::js($handle, $src, $dependency, $footer);
 		return $this;
 	}
 
@@ -160,12 +178,12 @@ class Meta
 	 * @param string $handle
 	 * @param string $content
 	 * @param array $params
-	 * @param null|string $deps
+	 * @param null|string $dependency
 	 * @return $this
 	 */
-	public function addToGroup($handle, $content, $params = [], $deps = null)
+	public function addToGroup($handle, $content, $params = [], $dependency = null)
 	{
-		Assets::group('FRONTEND', $handle, strtr($content, $params), $deps);
+		Assets::group('FRONTEND', $handle, strtr($content, $params), $dependency);
 		return $this;
 	}
 
@@ -189,7 +207,6 @@ class Meta
 	public function addPackage($name, $loadDependencies = false, $footer = false)
 	{
 		Assets::package($name, $loadDependencies, $footer);
-
 		return $this;
 	}
 

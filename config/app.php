@@ -236,6 +236,8 @@ return [
 		'Installer'			=> KodiCMS\Support\Facades\Installer::class,
 		'EnvironmentTester'	=> KodiCMS\Support\Facades\EnvironmentTester::class,
 		'Profiler'			=> KodiCMS\Support\Helpers\Profiler::class,
+		'DatasourceManager' => KodiCMS\Support\Facades\DatasourceManager::class,
+		'FieldManager'		=> KodiCMS\Support\Facades\FieldManager::class
 
 		/*
 		 * App aliases must be here...
