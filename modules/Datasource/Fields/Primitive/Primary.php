@@ -6,11 +6,9 @@ use Illuminate\Database\Schema\Blueprint;
 class Primary extends Field
 {
 	/**
-	 * @var array
+	 * @var bool
 	 */
-	protected $attributes = [
-		'is_editable' => false
-	];
+	protected $isEditable = false;
 
 	/**
 	 * @return string

@@ -53,6 +53,21 @@ interface FieldInterface
 	public function getDatabaseDefaultValue();
 
 	/**
+	 * @param DocumentInterface $document
+	 * @param Validator $validator
+	 *
+	 * @return array
+	 */
+	public function getValidationRules(DocumentInterface $document, Validator $validator);
+
+	/**
+	 * @param SectionHeadlineInterface $headline
+	 *
+	 * @return array
+	 */
+	public function getHeadlineParameters(SectionHeadlineInterface $headline);
+
+	/**
 	 * @return string
 	 */
 	public function getTablePrefix();
@@ -79,7 +94,7 @@ interface FieldInterface
 	/**
 	 * @return bool
 	 */
-	public function isRequire();
+	public function isRequired();
 
 	/**
 	 * @return bool
@@ -133,28 +148,21 @@ interface FieldInterface
 
 	/**
 	 * @param DocumentInterface $document
-	 * @param Validator $validator
 	 * @param $value
 	 */
-	public function onValidateDocument(DocumentInterface $document, Validator $validator, $value);
-
-	/**
-	 * @param DocumentInterface $document
-	 * @param $value
-	 */
-	public function onDocumentCreate(DocumentInterface $document, $value);
+	public function onDocumentCreated(DocumentInterface $document, $value);
 
 	/**
 	 * @param DocumentInterface $oldDocument
 	 * @param DocumentInterface $document
 	 * @param $value
 	 */
-	public function onDocumentUpdate(DocumentInterface $oldDocument, DocumentInterface $document, $value);
+	public function onDocumentUpdated(DocumentInterface $document, $value);
 
 	/**
 	 * @param DocumentInterface $document
 	 */
-	public function onDocumentRemove(DocumentInterface $document);
+	public function onDocumentDeleted(DocumentInterface $document);
 
 
 	/**************************************************************************
@@ -179,7 +187,23 @@ interface FieldInterface
 	public function queryWhereCondition(Builder $query, $condition, $value, array $params);
 
 	/**
+	 * @return bool
+	 */
+	public function isChangeableDatabaseField();
+
+	/**
 	 * @param Blueprint $table
 	 */
 	public function setDatabaseFieldType(Blueprint $table);
+
+	/**************************************************************************
+	 * Render
+	 **************************************************************************/
+	/**
+	 * @param DocumentInterface $document
+	 * @param string|null $template
+	 *
+	 * @return string
+	 */
+	public function renderBackendTemplate(DocumentInterface $document, $template = null);
 }

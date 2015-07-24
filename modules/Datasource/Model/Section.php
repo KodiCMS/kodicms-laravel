@@ -2,13 +2,15 @@
 
 use DatasourceManager;
 use KodiCMS\Datasource\Document;
-use KodiCMS\Datasource\SectionHeadline;
+use KodiCMS\Datasource\Sections\SectionToolbar;
 use KodiCMS\Datasource\Fields\Primitive\String;
+use KodiCMS\Datasource\Sections\SectionHeadline;
 use KodiCMS\Datasource\Fields\Primitive\Primary;
 use KodiCMS\Datasource\Fields\Primitive\Boolean;
 use KodiCMS\Datasource\Fields\Primitive\Timestamp;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Exceptions\SectionException;
+use KodiCMS\Datasource\Contracts\SectionToolbarInterface;
 
 class Section extends DatasourceModel implements SectionInterface
 {
@@ -16,6 +18,11 @@ class Section extends DatasourceModel implements SectionInterface
 	 * @var SectionHeadlineInterface
 	 */
 	protected $headline;
+
+	/**
+	 * @var SectionToolbarInterface
+	 */
+	protected $toolbar;
 
 	/**
 	 * @var string
@@ -165,7 +172,12 @@ class Section extends DatasourceModel implements SectionInterface
 		return [
 			new Primary([
 				'key' => 'id',
-				'name' => 'ID'
+				'name' => 'ID',
+				'settings' => [
+					'headline_parameters' => [
+						'width' => 30
+					]
+				]
 			]),
 			new String([
 				'key' => 'header',
@@ -173,15 +185,31 @@ class Section extends DatasourceModel implements SectionInterface
 			]),
 			new Boolean([
 				'key' => 'published',
-				'name' => 'Published'
+				'name' => 'Published',
+				'settings' => [
+					'headline_parameters' => [
+						'width' => 30
+					]
+				]
 			]),
 			new Timestamp([
 				'key' => static::CREATED_AT,
-				'name' => 'Created At'
+				'name' => 'Created At',
+				'settings' => [
+					'headline_parameters' => [
+						'width' => 200
+					]
+				]
 			]),
 			new Timestamp([
 				'key' => static::UPDATED_AT,
-				'name' => 'Updated At'
+				'name' => 'Updated At',
+				'settings' => [
+					'headline_parameters' => [
+						'width' => 200,
+						'visible' => false
+					]
+				]
 			])
 		];
 	}
@@ -216,10 +244,17 @@ class Section extends DatasourceModel implements SectionInterface
 	/**************************************************************************
 	 * Toolbar
 	 **************************************************************************/
-	// TODO реализовать тулбар
 	public function getToolbar()
 	{
-		return null;
+		return $this->toolbar;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getToolbarClass()
+	{
+		return SectionToolbar::class;
 	}
 
 	/**************************************************************************
@@ -416,6 +451,9 @@ class Section extends DatasourceModel implements SectionInterface
 
 		$headlineClass = $this->getHeadlineClass();
 		$this->headline = new $headlineClass($this);
+
+		$toolbarClass = $this->getToolbarClass();
+		$this->toolbar = new $toolbarClass($this);
 
 		$this->setSettings((array) $this->settings);
 

@@ -84,6 +84,11 @@ class FieldManager extends AbstractManager
 	 */
 	public function updateSectionTableField(FieldInterface $field)
 	{
+		if (!$field->isChangeableDatabaseField())
+		{
+			return false;
+		}
+
 		$section = $field->getSection();
 
 		if (!Schema::hasColumn($section->getSectionTableName(), $field->getDBKey()))

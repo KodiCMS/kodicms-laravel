@@ -1,9 +1,10 @@
 <?php namespace KodiCMS\Datasource\Repository;
 
 use DatasourceManager;
-use KodiCMS\Datasource\Exceptions\SectionException;
 use KodiCMS\Datasource\Model\Section;
 use KodiCMS\CMS\Repository\BaseRepository;
+use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Datasource\Exceptions\SectionException;
 
 class SectionRepository extends BaseRepository
 {
@@ -79,5 +80,103 @@ class SectionRepository extends BaseRepository
 		DatasourceManager::createTableSection($section);
 
 		return $section;
+	}
+
+	/**
+	 * @param integer $sectionId
+	 *
+	 * @return DocumentInterface
+	 */
+	public function getEmptyDocument($sectionId)
+	{
+		return $this->findOrFail($sectionId)->getEmptyDocument();
+	}
+
+	/**
+	 * @param integer $sectionId
+	 * @param integer $documentId
+	 *
+	 * @return DocumentInterface
+	 */
+	public function getDocumentById($sectionId, $documentId)
+	{
+		return $this->findOrFail($sectionId)->getDocumentById($documentId);
+	}
+
+	/**
+	 * @param integer $sectionId
+	 * @return bool
+	 * @throws \KodiCMS\CMS\Exceptions\ValidationException
+	 */
+	public function validateOnCreateDocument($sectionId, array $data = [])
+	{
+		$document = $this->findOrFail($sectionId)->getEmptyDocument();
+
+		$data = array_only($data, array_keys($document->getEditableFields()));
+
+		$validator = $this->validator($data);
+		$validator->setRules($document->getValidationRules($validator));
+		return $this->_validate($validator);
+	}
+
+	/**
+	 * @param array $data
+	 * @return bool
+	 * @throws \KodiCMS\CMS\Exceptions\ValidationException
+	 */
+	public function validateOnUpdateDocument(DocumentInterface $document, array $data = [])
+	{
+		$data = array_only($data, array_keys($document->getEditableFields()));
+
+		$validator = $this->validator($data);
+		$validator->setRules($document->getValidationRules($validator));
+		return $this->_validate($validator);
+	}
+
+	/**
+	 * @param integer $sectionId
+	 * @param array $data
+	 *
+	 * @return mixed
+	 */
+	public function createDocument($sectionId, array $data)
+	{
+		$document = $this->findOrFail($sectionId)->getEmptyDocument();
+		$data = array_only($data, array_keys($document->getEditableFields()));
+
+		$document->fill($data)->save();
+
+		return $document;
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param array $data
+	 *
+	 * @return mixed
+	 */
+	public function updateDocument(DocumentInterface $document, array $data)
+	{
+		$data = array_only($data, array_keys($document->getEditableFields()));
+
+		$document->update($data);
+
+		return $document;
+	}
+
+	/**
+	 * @param integer $sectionId
+	 * @param array $ids
+	 */
+	public function deleteDocuments($sectionId, array $ids)
+	{
+		$section = $this->findOrFail($sectionId);
+
+		$documents = $section->getEmptyDocument()->whereIn($section->getDocumentPrimaryKey(), $ids);
+
+		foreach ($documents->get() as $document)
+		{
+			$document->delete();
+		}
 	}
 }

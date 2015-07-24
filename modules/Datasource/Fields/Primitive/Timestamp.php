@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\Datasource\Fields\Primitive;
 
+use Date;
+use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 use KodiCMS\Datasource\Fields\Primitive;
 use Illuminate\Database\Schema\Blueprint;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
@@ -7,11 +9,14 @@ use KodiCMS\Datasource\Contracts\DocumentInterface;
 class Timestamp extends Primitive
 {
 	/**
-	 * @var array
+	 * @var bool
 	 */
-	protected $attributes = [
-		'is_editable' => false
-	];
+	protected $isEditable = false;
+
+	/**
+	 * @var bool
+	 */
+	protected $changeableDatabaseField = false;
 
 	/**
 	 * @param Blueprint $table
@@ -28,8 +33,21 @@ class Timestamp extends Primitive
 	 *
 	 * @return mixed
 	 */
-	public function onGetDocumentValue(DocumentInterface $document, $value)
+	public function onGetHeadlineValue(DocumentInterface $document, $value)
 	{
-		return '1';
+		return Date::format($value);
+	}
+
+	/**
+	 * @param SectionHeadlineInterface $headline
+	 *
+	 * @return array
+	 */
+	public function getHeadlineParameters(SectionHeadlineInterface $headline)
+	{
+		$params = parent::getHeadlineParameters($headline);
+		$params['class'] = 'text-right';
+
+		return $params;
 	}
 }

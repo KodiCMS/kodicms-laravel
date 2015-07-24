@@ -84,6 +84,18 @@ class FieldRepository extends BaseRepository
 	}
 
 	/**
+	 * @param integer $fieldId
+	 * @param bool $status
+	 */
+	public function updateVisible($fieldId, $status)
+	{
+		$field = $this->findOrFail($fieldId);
+
+		$field->setVisibleStatus($status);
+		$field->update();
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getSectionsForSelect()

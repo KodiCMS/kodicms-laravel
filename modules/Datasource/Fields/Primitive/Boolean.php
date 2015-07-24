@@ -2,12 +2,19 @@
 
 use KodiCMS\Datasource\Fields\Primitive;
 use Illuminate\Database\Schema\Blueprint;
+use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
 class Boolean extends Primitive
 {
 	const STYLE_RADIO = 0;
 	const STYLE_CHECKBOX = 1;
 	const STYLE_SELECT = 2;
+
+	/**
+	 * @var bool
+	 */
+	protected $changeableDatabaseField = false;
 
 	/**
 	 * @return array
@@ -20,12 +27,44 @@ class Boolean extends Primitive
 	}
 
 	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return mixed
+	 */
+	public function onGetHeadlineValue(DocumentInterface $document, $value)
+	{
+		return (bool) $value ? \UI::icon('check') : \UI::icon('close');
+	}
+
+	/**
 	 * @param Blueprint $table
 	 * @return \Illuminate\Support\Fluent
 	 */
 	public function setDatabaseFieldType(Blueprint $table)
 	{
 		return $table->boolean($this->getDBKey());
+	}
+
+	/**
+	 * @param SectionHeadlineInterface $headline
+	 *
+	 * @return array
+	 */
+	public function getHeadlineParameters(SectionHeadlineInterface $headline)
+	{
+		$params = parent::getHeadlineParameters($headline);
+		$params['class'] = 'text-center';
+
+		return $params;
+	}
+
+	/**
+	 * @return integer
+	 */
+	public function getDisplayStyle()
+	{
+		return $this->getSetting('style', static::STYLE_CHECKBOX);
 	}
 
 	/**

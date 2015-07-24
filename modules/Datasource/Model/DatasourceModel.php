@@ -7,9 +7,7 @@ use KodiCMS\Datasource\Contracts\DatasourceManagerInterface;
 
 class DatasourceModel extends Model
 {
-	use ModelSettings {
-		setSetting as protected _setSetting;
-	}
+	use ModelSettings;
 
 	/**
 	 * @var bool
@@ -38,16 +36,23 @@ class DatasourceModel extends Model
 	}
 
 	/**
-	 * @param string $name
-	 * @param mixed $value
-	 * @return $this
+	 * @param array $settings
 	 */
-	public function setSetting($name, $value = null)
+	public function setSettingsAttribute(array $settings)
 	{
-		$this->_setSetting($name, $value);
+		$this->setSettings($settings);
+		$this->attributes['settings'] = json_encode($this->{$this->getSettingsProperty()});
+	}
 
-		$this->settings = $this->{$this->getSettingsProperty()};
-		return $this;
+	/**
+	 * @return array
+	 */
+	public function getDirty()
+	{
+		$dirty = parent::getDirty();
+		$dirty['settings'] = json_encode($this->{$this->getSettingsProperty()});
+
+		return $dirty;
 	}
 
 	/**

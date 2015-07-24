@@ -10,6 +10,7 @@ use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Exceptions\FieldException;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
 class Field extends DatasourceModel implements FieldInterface
 {
@@ -69,6 +70,16 @@ class Field extends DatasourceModel implements FieldInterface
 	 * @var bool
 	 */
 	protected $initialized = false;
+
+	/**
+	 * @var bool
+	 */
+	protected $isEditable = true;
+
+	/**
+	 * @var bool
+	 */
+	protected $changeableDatabaseField = true;
 
 	/**
 	 * The attributes that are mass assignable.
@@ -181,13 +192,13 @@ class Field extends DatasourceModel implements FieldInterface
 	 */
 	public function isEditable()
 	{
-		return (bool) $this->is_editable;
+		return (bool) $this->isEditable;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isRequire()
+	public function isRequired()
 	{
 		return $this->getSetting('is_required', false);
 	}
@@ -197,7 +208,7 @@ class Field extends DatasourceModel implements FieldInterface
 	 */
 	public function isVisible()
 	{
-		return $this->getSetting('is_visible', false);
+		return $this->getSetting('headline_parameters.visible',  true);
 	}
 
 	/**
@@ -205,7 +216,16 @@ class Field extends DatasourceModel implements FieldInterface
 	 */
 	public function setVisibleStatus($status)
 	{
-		$this->setSetting('is_visible', (bool) $status);
+		$this->setSetting(['headline_parameters' => ['visible' => (bool) $status]]);
+	}
+
+	/**
+	 * @param array $params
+	 */
+	public function setSettingHeadlineParameters($params)
+	{
+		$headlineParams = array_get($this->{$this->getSettingsProperty()}, 'headline_parameters', []);
+		$this->{$this->getSettingsProperty()}['headline_parameters'] = array_merge($headlineParams, $params);
 	}
 
 	/**
@@ -213,7 +233,7 @@ class Field extends DatasourceModel implements FieldInterface
 	 */
 	public function isSearchable()
 	{
-		return $this->getSetting('is_searchable', false);
+		return $this->getSetting('searchable', false);
 	}
 
 	/**
@@ -230,6 +250,27 @@ class Field extends DatasourceModel implements FieldInterface
 	public function getDefaultValue()
 	{
 		return $this->getSetting('default_value', false);
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getHint()
+	{
+		return $this->getSetting('hint');
+	}
+
+	/**
+	 * @param SectionHeadlineInterface $headline
+	 *
+	 * @return array
+	 */
+	public function getHeadlineParameters(SectionHeadlineInterface $headline)
+	{
+		return array_merge($this->getSetting('headline_parameters', []), [
+			'id' => $this->getId(),
+			'name' => $this->getName()
+		]);
 	}
 
 	/**************************************************************************
@@ -260,6 +301,24 @@ class Field extends DatasourceModel implements FieldInterface
 	public function getTypeTitle()
 	{
 		return $this->getType()->getTitle();
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param Validator $validator
+	 *
+	 * @return array
+	 */
+	public function getValidationRules(DocumentInterface $document, Validator $validator)
+	{
+		$rules = [];
+
+		if($this->isRequired())
+		{
+			$rules[] = 'required';
+		}
+
+		return $rules;
 	}
 
 	/**************************************************************************
@@ -312,10 +371,9 @@ class Field extends DatasourceModel implements FieldInterface
 
 	/**
 	 * @param DocumentInterface $document
-	 * @param Validator $validator
 	 * @param $value
 	 */
-	public function onValidateDocument(DocumentInterface $document, Validator $validator, $value)
+	public function onDocumentCreated(DocumentInterface $document, $value)
 	{
 
 	}
@@ -324,17 +382,7 @@ class Field extends DatasourceModel implements FieldInterface
 	 * @param DocumentInterface $document
 	 * @param $value
 	 */
-	public function onDocumentCreate(DocumentInterface $document, $value)
-	{
-
-	}
-
-	/**
-	 * @param DocumentInterface $oldDocument
-	 * @param DocumentInterface $document
-	 * @param $value
-	 */
-	public function onDocumentUpdate(DocumentInterface $oldDocument, DocumentInterface $document, $value)
+	public function onDocumentUpdated(DocumentInterface $document, $value)
 	{
 
 	}
@@ -342,7 +390,7 @@ class Field extends DatasourceModel implements FieldInterface
 	/**
 	 * @param DocumentInterface $document
 	 */
-	public function onDocumentRemove(DocumentInterface $document)
+	public function onDocumentDeleted(DocumentInterface $document)
 	{
 
 	}
@@ -402,6 +450,14 @@ class Field extends DatasourceModel implements FieldInterface
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function isChangeableDatabaseField()
+	{
+		return $this->changeableDatabaseField;
+	}
+
+	/**
 	 * @param Blueprint $table
 	 * @return \Illuminate\Support\Fluent
 	 */
@@ -446,5 +502,28 @@ class Field extends DatasourceModel implements FieldInterface
 	public static function getManagerClass()
 	{
 		return FieldManager::getFacadeRoot();
+	}
+
+	/**************************************************************************
+	 * Render
+	 **************************************************************************/
+	/**
+	 * @param DocumentInterface $document
+	 *
+	 * @return string
+	 */
+	public function renderBackendTemplate(DocumentInterface $document, $template = null)
+	{
+		if (is_null($template))
+		{
+			$template = 'datasource::document.field.' . $this->getType()->getType();
+		}
+
+		return view($template, [
+			'value' => $document->getFormValue($this->getDBKey()),
+			'field' => $this,
+			'document' => $document,
+			'section' => $document->getSection()
+		]);
 	}
 }

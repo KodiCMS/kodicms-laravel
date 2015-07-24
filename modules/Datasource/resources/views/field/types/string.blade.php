@@ -14,7 +14,7 @@
 	<label class="control-label col-md-3" for="primitive_default">Default value</label>
 
 	<div class="col-md-9">
-		{!! Form::text('settings[default_value]', $field->getSetting('default_value'), ['class' => 'form-control', 'id' => 'default_value']) !!}
+		{!! Form::text('settings[default_value]', $field->getDefaultValue(), ['class' => 'form-control', 'id' => 'default_value']) !!}
 	</div>
 </div>
 
@@ -24,6 +24,6 @@
 	<label class="control-label col-md-3" for="length">Field length</label>
 
 	<div class="col-md-2">
-		{!! Form::text('settings[length]', $field->getSetting('length'), ['class' => 'form-control', 'id' => 'length', 'size' => 3, 'maxlength' => 3]) !!}
+		{!! Form::text('settings[length]', $field->getLength(), ['class' => 'form-control', 'id' => 'length', 'size' => 3, 'maxlength' => 3]) !!}
 	</div>
 </div>

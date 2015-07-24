@@ -10,10 +10,9 @@ class FieldController extends Controller
 	 */
 	public function deleteField(FieldRepository $repository)
 	{
-		$ids = (array) $this->getRequiredParameter('fields');
+		$ids = (array) $this->getRequiredParameter('remove_field');
 
 		$repository->deleteByIds($ids);
-
 		$this->setContent($ids);
 	}
 
@@ -24,5 +23,27 @@ class FieldController extends Controller
 
 		$field = $repository->updatePosition($fieldId, $position);
 		$this->setContent($field->getPosition());
+	}
+
+	/**
+	 * @param FieldRepository $repository
+	 */
+	public function setVisible(FieldRepository $repository)
+	{
+		$fieldId = $this->getRequiredParameter('field_id');
+		$repository->updateVisible($fieldId, true);
+
+		$this->setContent(true);
+	}
+
+	/**
+	 * @param FieldRepository $repository
+	 */
+	public function setInvisible(FieldRepository $repository)
+	{
+		$fieldId = $this->getRequiredParameter('field_id');
+		$repository->updateVisible($fieldId, false);
+
+		$this->setContent(true);
 	}
 }

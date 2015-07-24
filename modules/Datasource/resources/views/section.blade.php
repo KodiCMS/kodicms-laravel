@@ -7,15 +7,13 @@
 		]) !!}
 	</div>
 </div>
-<div class="mail-controls clearfix headline-actions">
 
+@if (isset($toolbar))
+<div class="mail-controls headline-actions">
+	{!! $toolbar !!}
 </div>
-<?php if (isset($toolbar)): ?>
-<div class="mail-controls">
-	<?php echo $toolbar; ?>
-</div>
-<?php endif; ?>
+@endif
 
-<div class="mail-list headline">
+<div class="mail-list headline no-margin">
 	{!! $headline !!}
 </div>

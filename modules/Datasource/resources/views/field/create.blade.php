@@ -1,21 +1,21 @@
 <script type="text/javascript">
-	$(function() {
-		$('#select-field-type').change(function() {
-			var id = $(this).val();
-			var $fieldset = $('#field-settings fieldset');
+$(function() {
+	$('#select-field-type').change(function() {
+		var id = $(this).val();
+		var $fieldset = $('#field-settings fieldset');
 
-			$fieldset
-					.attr('disabled', 'disabled')
-					.hide()
-					.filter('fieldset#field-' + id)
-					.show()
-					.removeAttr('disabled')
-					.end();
+		$fieldset
+				.attr('disabled', 'disabled')
+				.hide()
+				.filter('fieldset#field-' + id)
+				.show()
+				.removeAttr('disabled')
+				.end();
 
-			$('select', $fieldset).removeAttr('disabled')
+		$('select', $fieldset).removeAttr('disabled')
 
-		}).change();
-	});
+	}).change();
+});
 </script>
 
 {!! Form::model($field, [
@@ -71,10 +71,7 @@
 			<hr class="panel-wide" />
 			@endif
 
-			@if($field->isRequire())
-				@include('datasource::field.partials.required', compact('field', 'section', 'sections'))
-			@endif
-
+			@include('datasource::field.partials.required', compact('field', 'section', 'sections'))
 			@include('datasource::field.partials.hint', compact('field'))
 			@include('datasource::field.partials.position', compact('field'))
 		</fieldset>

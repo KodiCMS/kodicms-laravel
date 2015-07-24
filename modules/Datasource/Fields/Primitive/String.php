@@ -31,19 +31,9 @@ class String extends Primitive
 		return (bool) $this->getSetting('use_filemanager');
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getSettingLength($defaultLength)
+	public function getLength()
 	{
-		$length = (int) array_get($this->settings, 'length', $defaultLength);
-
-		if (!$length)
-		{
-			$length = $defaultLength;
-		}
-
-		return $defaultLength;
+		return $this->getSetting('length');
 	}
 
 	/**
@@ -52,6 +42,19 @@ class String extends Primitive
 	 */
 	public function setDatabaseFieldType(Blueprint $table)
 	{
-		return $table->string($this->getDBKey(), $this->getSetting('length'));
+		return $table->string($this->getDBKey(), $this->getLength());
+	}
+
+	/**************************************************************************
+	 * Setting mutators
+	 **************************************************************************/
+	/**
+	 * @param int $defaultLength
+	 *
+	 * @return int
+	 */
+	public function getSettingLength($defaultLength = 255)
+	{
+		return (int) array_get($this->{$this->getSettingsProperty()}, 'length', $defaultLength);
 	}
 }

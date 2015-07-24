@@ -41,10 +41,7 @@
 		<hr class="panel-wide" />
 	@endif
 
-	@if($field->isRequire())
-		@include('datasource::field.partials.required', compact('field', 'section', 'sections'))
-	@endif
-
+	@include('datasource::field.partials.required', compact('field', 'section', 'sections'))
 	@include('datasource::field.partials.hint', compact('field'))
 	@include('datasource::field.partials.position', compact('field'))
 </div>

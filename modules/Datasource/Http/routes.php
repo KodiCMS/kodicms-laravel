@@ -30,3 +30,12 @@ Route::group(['prefix' => backend_url(), 'as' => 'backend.datasource.'], functio
 		'getRemove' => 'remove',
 	]);
 });
+
+Route::group(['as' => 'api.datasource.'], function ()
+{
+	RouteAPI::get('datasource.headline', ['as' => 'headline', 'uses' => 'API\SectionController@getHeadline']);
+	RouteAPI::post('datasource.field.visible', ['as' => 'field.visible.set', 'uses' => 'API\FieldController@setVisible']);
+	RouteAPI::delete('datasource.field.visible', ['as' => 'field.visible.delete', 'uses' => 'API\FieldController@setInvisible']);
+	RouteAPI::delete('datasource.field', ['as' => 'field.delete', 'uses' => 'API\FieldController@deleteField']);
+	RouteAPI::post('datasource.document.remove', ['as' => 'document.remove', 'uses' => 'API\DocumentController@deleteDelete']);
+});

@@ -7,14 +7,13 @@
 </div>
 <hr />
 <div class="form-group">
-	<label class="control-label col-md-3">Default value</label>
-
-	<div class="col-md-2">
-		{!! Form::checkbox('settings[default_value]', 1, $field->getSetting('default_value'), [
-			'class' => 'form-switcher', 'data-size' => 'small', 'data-width' => 60,
-			'data-on' => trans('cms::system.button.on'),
-			'data-off' => trans('cms::system.button.off'),
-			'data-onstyle' => 'success'
-		]) !!}
+	<div class="col-md-9 col-md-offset-3">
+		<div class="checkbox">
+			<label>
+				{!! Form::switcher('settings[default_value]', 1, $field->getDefaultValue(), [
+				'id' => 'default_value'
+				]) !!} Default value
+			</label>
+		</div>
 	</div>
 </div>

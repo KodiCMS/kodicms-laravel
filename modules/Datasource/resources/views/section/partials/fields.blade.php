@@ -1,3 +1,43 @@
+<script type="text/javascript">
+$(function() {
+	var $fieldsToRemove = $('#section-fields input[name="remove_field[]"]'),
+		$selectedFieldsToRemove = $fieldsToRemove.filter(':checked'),
+		$removeBtn = $('#remove-fields');
+
+	$fieldsToRemove.change(function () {
+		$selectedFieldsToRemove = $fieldsToRemove.filter(':checked');
+		if ($selectedFieldsToRemove.size() == 0) {
+			$removeBtn.prop('disabled', 'disabled');
+		} else {
+			$removeBtn.removeProp('disabled');
+		}
+	}).change();
+
+	$removeBtn.on('click', function(e) {
+		e.prevenDefault();
+
+		if($selectedFieldsToRemove.size() < 1) return false;
+
+		Api.delete('/api.datasource.field', $selectedFieldsToRemove.serialize(), function(response) {
+			for(i in response.content) {
+				$('[data-id="' +response.content[i]+ '"]').remove();
+			}
+		});
+	});
+
+	$(document).on('change', 'input[name="visible"]', function () {
+		var $input = $(this);
+		var id = $input.val();
+
+		if ($(this).checked()) {
+			Api.post('/api.datasource.field.visible', {field_id: id});
+		} else {
+			Api.delete('/api.datasource.field.visible', {field_id: id});
+		}
+	});
+});
+</script>
+
 <div class="panel">
 	<div class="panel-heading" data-icon="th-list fa-lg">
 		<span class="panel-title">Fields</span>
@@ -47,7 +87,7 @@
 				{!! UI::label($field->getTypeTitle()) !!}
 			</td>
 			<td>
-				{!! Form::checkbox("in_headline[{$field->getId()}]", 1, false) !!}
+				{!! Form::checkbox("visible", $field->getId(), $field->isVisible()) !!}
 			</td>
 		</tr>
 		@endforeach

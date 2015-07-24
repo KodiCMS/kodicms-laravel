@@ -13,6 +13,11 @@ class Date extends Primitive implements FieldTypeDateInterface
 	protected $dateFormat = 'Y-m-d';
 
 	/**
+	 * @var bool
+	 */
+	protected $changeableDatabaseField = false;
+
+	/**
 	 * @return array
 	 */
 	public function booleanSettings()

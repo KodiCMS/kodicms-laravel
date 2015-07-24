@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Validator;
 use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
@@ -9,6 +10,36 @@ use KodiCMS\Datasource\Contracts\FieldTypeDateInterface;
 
 class Document extends Model implements DocumentInterface
 {
+	// TODO: вынести в отдельный Observer
+	protected static function boot()
+	{
+		parent::boot();
+
+		static::created(function (Document $document)
+		{
+			foreach ($document->getSectionFields() as $key => $field)
+			{
+				$field->onDocumentCreated($document, $document->getAttribute($key));
+			}
+		});
+
+		static::deleted(function (Document $document)
+		{
+			foreach ($document->getSectionFields() as $key => $field)
+			{
+				$field->onDocumentDeleted($document);
+			}
+		});
+
+		static::updated(function (Document $document)
+		{
+			foreach ($document->getSectionFields() as $key => $field)
+			{
+				$field->onDocumentUpdated($document, $document->getAttribute($key));
+			}
+		});
+	}
+
 	/**
 	 * @var SectionInterface
 	 */
@@ -69,8 +100,8 @@ class Document extends Model implements DocumentInterface
 					$this->dates[] = $field->getDBKey();
 				}
 
+				$this->fillable[] = $field->getDBKey();
 				$this->setAttribute($field->getDBKey(), $field->getDefaultValue());
-
 				$this->sectionFields[$field->getDBKey()] = $field;
 			}
 
@@ -88,6 +119,38 @@ class Document extends Model implements DocumentInterface
 	}
 
 	/**
+	 * @return string|integer
+	 */
+	public function getId()
+	{
+		return $this->getKey();
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTitle()
+	{
+		return $this->{$this->section->getDocumentTitleKey()};
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getEditLink()
+	{
+		return route('backend.datasource.document.edit', [$this->section->getId(), $this->getKey()]);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCreateLink()
+	{
+		return route('backend.datasource.document.create', [$this->section->getId()]);
+	}
+
+	/**
 	 * Set a given attribute on the model.
 	 *
 	 * @param  string $key
@@ -98,7 +161,7 @@ class Document extends Model implements DocumentInterface
 	{
 		if (!is_null($field = array_get($this->sectionFields, $key)))
 		{
-			$value = $field->convertValueToSQL($this, $value);
+			$value = $field->onSetDocumentAttribute($this, $value);
 		}
 
 		parent::setAttribute($key, $value);
@@ -154,7 +217,6 @@ class Document extends Model implements DocumentInterface
 	public function getHeadlineValue($key)
 	{
 		$value = parent::getAttributeValue($key);
-
 		if (!is_null($field = array_get($this->sectionFields, $key)))
 		{
 			$value = $field->onGetHeadlineValue($this, $value);
@@ -191,6 +253,46 @@ class Document extends Model implements DocumentInterface
 	}
 
 	/**
+	 * @return SectionInterface
+	 */
+	public function getSection()
+	{
+		return $this->section;
+	}
+
+	/**
+	 * @param Validator $validator
+	 *
+	 * @return array
+	 */
+	public function getValidationRules(Validator $validator)
+	{
+		$rules = [];
+
+		foreach($this->getEditableFields() as $field)
+		{
+			$rules[$field->getDBKey()] = $field->getValidationRules($this, $validator);
+		}
+
+		return $rules;
+	}
+	/**************************************************************************
+	 * Scopes
+	 **************************************************************************/
+	/**
+	 * Scope a query to only include popular users.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Builder
+	 */
+	public function scopeOnlyPublished($query)
+	{
+		return $query->where('published', 1);
+	}
+
+	/**************************************************************************
+	 * Custom query builder by Headline/Widgets parameters
+	 **************************************************************************/
+	/**
 	 * @param integer|string $id
 	 * @param array|null $fields
 	 * @param string|integer|null $primaryKeyField
@@ -218,13 +320,7 @@ class Document extends Model implements DocumentInterface
 	 */
 	public function getDocuments($fields = true, array $orderRules = [], array $filterRules = [])
 	{
-		$items = $this->buildQueryForWidget($fields)->get()->toArray();
-
-		$items = array_map(function ($item) {
-			return $this->newFromBuilder($item);
-		}, $items);
-
-		return $this->newCollection($items);
+		return $this->buildQueryForWidget($fields);
 	}
 
 	/**
@@ -235,7 +331,7 @@ class Document extends Model implements DocumentInterface
 	 */
 	protected function buildQueryForWidget($fields = true, array $orderRules = [], array $filterRules = [])
 	{
-		$query = \DB::table($this->getTable());
+		$query = $this->newQuery();
 
 		$t = [$this->section->getId() => true];
 
@@ -459,6 +555,10 @@ class Document extends Model implements DocumentInterface
 		}
 	}
 
+	/**************************************************************************
+	 * Override methods
+	 **************************************************************************/
+
 	/**
 	 * Create a new instance of the given model.
 	 *
@@ -472,5 +572,16 @@ class Document extends Model implements DocumentInterface
 		$model->exists = $exists;
 
 		return $model;
+	}
+
+	/**
+	 * Create a new Eloquent query builder for the model.
+	 *
+	 * @param  \Illuminate\Database\Query\Builder $query
+	 * @return \Illuminate\Database\Eloquent\Builder|static
+	 */
+	public function newEloquentBuilder($query)
+	{
+		return new DocumentQueryBuilder($query, $this->section);
 	}
 }

@@ -27,15 +27,15 @@ class DatasourceController extends BackendController
 				'sections' => DatasourceManager::getSections()
 			]),
 			'section' => view('datasource::section', [
-				'headline' => $section->getHeadline(),
-				'toolbar' => $section->getToolbar(),
+				'headline' => $section->getHeadline()->render(),
+				'toolbar' => $section->getToolbar()->render(),
 				'section' => $section
 			])
 		]);
 
 		view()->share('sectionModel', $section);
 
-		$this->templateScripts['DS'] = $section;
+		$this->templateScripts['SECTION'] = $section;
 	}
 
 	/**
