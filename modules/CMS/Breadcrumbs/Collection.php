@@ -11,7 +11,7 @@ class Collection implements \Countable, \Iterator
 	 * @var array
 	 */
 	protected $options = [
-		'view' => 'cms::app.parials.breadcrumbs'
+		'view' => 'cms::app.partials.breadcrumbs'
 	];
 
 	/**
