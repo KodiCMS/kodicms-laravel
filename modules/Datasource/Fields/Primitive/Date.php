@@ -1,9 +1,10 @@
 <?php namespace KodiCMS\Datasource\Fields\Primitive;
 
-use Carbon\Carbon;
-use Illuminate\Database\Schema\Blueprint;
-use KodiCMS\Datasource\Contracts\FieldTypeDateInterface;
+use Illuminate\Validation\Validator;
 use KodiCMS\Datasource\Fields\Primitive;
+use Illuminate\Database\Schema\Blueprint;
+use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Datasource\Contracts\FieldTypeDateInterface;
 
 class Date extends Primitive implements FieldTypeDateInterface
 {
@@ -62,6 +63,21 @@ class Date extends Primitive implements FieldTypeDateInterface
 	public function getDatabaseDefaultValue()
 	{
 		return $this->getSetting('default_value');
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param Validator $validator
+	 *
+	 * @return array
+	 */
+	public function getValidationRules(DocumentInterface $document, Validator $validator)
+	{
+		$rules = parent::getValidationRules($document, $validator);
+
+		$rules[] = 'date';
+
+		return $rules;
 	}
 
 	/**

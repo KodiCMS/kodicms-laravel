@@ -15,6 +15,10 @@ return [
 		'title' => trans('datasource::fields.string.title'),
 		'edit_template' => 'datasource::field.types.string'
 	],
+	'email' => [
+		'class' => KodiCMS\Datasource\Fields\Primitive\Email::class,
+		'title' => trans('datasource::fields.email.title')
+	],
 	'textarea' => [
 		'class' => KodiCMS\Datasource\Fields\Primitive\Textarea::class,
 		'title' => trans('datasource::fields.textarea.title'),

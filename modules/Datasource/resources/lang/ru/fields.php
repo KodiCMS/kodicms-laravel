@@ -12,6 +12,9 @@ return [
 		'use_filemanager' => 'Использовать файловый менеджер',
 		'length' => 'Длина'
 	],
+	'email' => [
+		'title' => 'Email'
+	],
 	'textarea' => [
 		'title' => 'Текст',
 		'allow_html' => 'Разрешить HTML теги',

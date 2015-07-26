@@ -88,6 +88,17 @@ class HTML extends Primitive
 	}
 
 	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return mixed
+	 */
+	public function onGetHeadlineValue(DocumentInterface $document, $value)
+	{
+		return str_limit($value, 50);
+	}
+
+	/**
 	 * @param Blueprint $table
 	 * @return \Illuminate\Support\Fluent
 	 */

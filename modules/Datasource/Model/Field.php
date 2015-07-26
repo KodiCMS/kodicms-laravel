@@ -2,15 +2,15 @@
 
 use DB;
 use FieldManager;
-use KodiCMS\Datasource\FieldType;
-use Illuminate\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
-use KodiCMS\Datasource\Contracts\FieldInterface;
-use KodiCMS\Datasource\Exceptions\FieldException;
-use KodiCMS\Datasource\Contracts\SectionInterface;
+use Illuminate\Validation\Validator;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
+use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\Exceptions\FieldException;
+use KodiCMS\Datasource\FieldType;
 
 class Field extends DatasourceModel implements FieldInterface
 {
@@ -313,7 +313,7 @@ class Field extends DatasourceModel implements FieldInterface
 	{
 		$rules = [];
 
-		if($this->isRequired())
+		if ($this->isRequired())
 		{
 			$rules[] = 'required';
 		}

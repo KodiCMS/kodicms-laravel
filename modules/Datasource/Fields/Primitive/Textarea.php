@@ -80,6 +80,17 @@ class Textarea extends Primitive
 
 	/**
 	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return mixed
+	 */
+	public function onGetHeadlineValue(DocumentInterface $document, $value)
+	{
+		return str_limit($value, 50);
+	}
+
+	/**
+	 * @param DocumentInterface $document
 	 * @param $value
 	 *
 	 * TODO: реализовать фильтрацию тегов

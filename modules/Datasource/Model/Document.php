@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\Datasource\Model;
 
+use Illuminate\Validation\Validator;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Validation\Validator;
 use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
@@ -10,6 +10,21 @@ use KodiCMS\Datasource\Contracts\FieldTypeDateInterface;
 
 class Document extends Model implements DocumentInterface
 {
+	const COND_EQ       = 0;
+	const COND_BTW      = 1;
+	const COND_GT       = 2;
+	const COND_LT       = 3;
+	const COND_GTEQ     = 4;
+	const COND_LTEQ     = 5;
+	const COND_CONTAINS = 6;
+	const COND_LIKE     = 7;
+	const COND_NULL     = 8;
+
+	const FILTER_VALUE_PLAIN    = 20;
+	const FILTER_VALUE_GET      = 40;
+	const FILTER_VALUE_POST     = 50;
+	const FILTER_VALUE_BEHAVIOR = 30;
+
 	// TODO: вынести в отдельный Observer
 	protected static function boot()
 	{
@@ -425,21 +440,6 @@ class Document extends Model implements DocumentInterface
 			$j++;
 		}
 	}
-
-	const COND_EQ       = 0;
-	const COND_BTW      = 1;
-	const COND_GT       = 2;
-	const COND_LT       = 3;
-	const COND_GTEQ     = 4;
-	const COND_LTEQ     = 5;
-	const COND_CONTAINS = 6;
-	const COND_LIKE     = 7;
-	const COND_NULL     = 8;
-
-	const FILTER_VALUE_PLAIN    = 20;
-	const FILTER_VALUE_GET      = 40;
-	const FILTER_VALUE_POST     = 50;
-	const FILTER_VALUE_BEHAVIOR = 30;
 
 	/**
 	 * @param Builder $query
