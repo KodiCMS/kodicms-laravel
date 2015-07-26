@@ -1,8 +1,7 @@
 <?php namespace KodiCMS\ModulesLoader\Providers;
 
 use Event;
-use Config;
-use ModulesLoader;
+use ModulesFileSystem;
 
 class ConfigServiceProvider extends ServiceProvider {
 
@@ -11,15 +10,7 @@ class ConfigServiceProvider extends ServiceProvider {
 		/**
 		 * Загрузка конфигов модулей
 		 */
-		foreach (ModulesLoader::getRegisteredModules() as $module)
-		{
-			$config = $module->loadConfig();
-			foreach($config as $group => $data)
-			{
-				Config::set($group, $data);
-			}
-		}
-
+		ModulesFileSystem::loadConfigs();
 		Event::fire('config.loaded');
 	}
 
