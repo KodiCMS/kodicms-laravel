@@ -7,6 +7,13 @@ $(function() {
 	$("#icons").select2({
 		templateResult: formatState
 	});
+
+	function chekShowInRootStatus() {
+		var $cont = $('#menu-position-cont');
+		$('#show_in_root_menu').is(':checked') ? $cont.show() : $cont.hide();
+	}
+	chekShowInRootStatus();
+	$('#show_in_root_menu').on('change', chekShowInRootStatus);
 });
 </script>
 
@@ -25,18 +32,30 @@ $(function() {
 		<label class="control-label col-md-3" for="description">@lang('datasource::core.information.description')</label>
 		<div class="col-md-9">
 			{!! Form::textarea('description', null, [
-					'class' => 'form-control', 'id' => 'description', 'rows' => 3
+				'class' => 'form-control', 'id' => 'description', 'rows' => 3
 			]) !!}
 		</div>
 	</div>
 
-	<div class="form-group">
-		<div class="col-md-9 col-md-offset-3">
-			<div class="checkbox">
-				<label>
-					{!! Form::hidden('settings[show_in_root_menu]', 0) !!}
-					{!! Form::switcher('settings[show_in_root_menu]', 1, $section->getSetting('show_in_root_menu'), ['id' => 'show_in_root_menu']) !!} @lang('datasource::core.information.show_in_root')
-				</label>
+	<div class="well well-sm">
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<div class="checkbox">
+					<label>
+						{!! Form::hidden('settings[show_in_root_menu]', 0) !!}
+						{!! Form::switcher('settings[show_in_root_menu]', 1, $section->showInRootMenu(), ['id' => 'show_in_root_menu']) !!} @lang('datasource::core.information.show_in_root')
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="form-group form-inline" id="menu-position-cont">
+			<label class="control-label col-md-3" for="name">@lang('datasource::core.information.menu_position')</label>
+			<div class="col-md-9">
+				{!! Form::text('settings[menu_position]', $section->getMenuPosition(), [
+					'class' => 'form-control',
+					'id' => 'menu_position',
+					'size' => 5
+				]) !!}
 			</div>
 		</div>
 	</div>

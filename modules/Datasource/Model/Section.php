@@ -149,6 +149,22 @@ class Section extends DatasourceModel implements SectionInterface
 		return $this->getSetting('icon', $this->getType()->getIcon());
 	}
 
+	/**
+	 * @return integer
+	 */
+	public function getMenuPosition()
+	{
+		return $this->getSetting('menu_position', 0);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function showInRootMenu()
+	{
+		return $this->getSetting('show_in_root_menu', false);
+	}
+
 	/**************************************************************************
 	 * Fields
 	 **************************************************************************/

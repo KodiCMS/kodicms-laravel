@@ -34,6 +34,21 @@ interface SectionInterface
 	/**
 	 * @return string
 	 */
+	public function getLink();
+
+	/**
+	 * @return integer
+	 */
+	public function getMenuPosition();
+
+	/**
+	 * @return bool
+	 */
+	public function showInRootMenu();
+
+	/**
+	 * @return string
+	 */
 	public function getDescription();
 
 	/**

@@ -38,7 +38,8 @@ class ModuleServiceProvider extends ServiceProvider {
 						'name' => $dsSection->getName(),
 						'label' => $dsSection->getName(),
 						'icon' => $dsSection->getIcon(),
-						'url' => $dsSection->getLink()
+						'url' => $dsSection->getLink(),
+						'priority' => $dsSection->getMenuPosition()
 					]);
 
 					if($dsSection->getSetting('show_in_root_menu'))

@@ -12,7 +12,8 @@ return [
 		'name' => 'Название',
 		'description' => 'Описание',
 		'show_in_root' => 'Показывать в корне меню',
-		'icon' => 'Иконка'
+		'icon' => 'Иконка',
+		'menu_position' => 'Позиция'
 	],
 	'button' => [
 		'create' => 'Создать раздел',
