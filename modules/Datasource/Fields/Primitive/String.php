@@ -55,6 +55,6 @@ class String extends Primitive
 	 */
 	public function getSettingLength($defaultLength = 255)
 	{
-		return (int) array_get($this->{$this->getSettingsProperty()}, 'length', $defaultLength);
+		return (int) array_get($this->fieldSettings, 'length', $defaultLength);
 	}
 }

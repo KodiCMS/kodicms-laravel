@@ -27,9 +27,9 @@
 
 	<div class="sections-list">
 	@if (!empty($sections))
-		<ul class="sections">
+		<ul class="nav nav-pills nav-stacked">
 		@foreach ($sections as $section)
-			<li>
+			<li @if($currentSection->getId() == $section->getId()) class="active" @endif >
 				{!! HTML::link($section->getLink(), $section->name, [
 					'data-icon' => $section->getIcon()
 				]) !!}

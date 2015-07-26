@@ -165,19 +165,19 @@ interface FieldInterface
 	 * @param DocumentInterface $document
 	 * @param $value
 	 */
-	public function onDocumentCreated(DocumentInterface $document, $value);
+	public function onDocumentCreating(DocumentInterface $document, $value);
 
 	/**
 	 * @param DocumentInterface $oldDocument
 	 * @param DocumentInterface $document
 	 * @param $value
 	 */
-	public function onDocumentUpdated(DocumentInterface $document, $value);
+	public function onDocumentUpdating(DocumentInterface $document, $value);
 
 	/**
 	 * @param DocumentInterface $document
 	 */
-	public function onDocumentDeleted(DocumentInterface $document);
+	public function onDocumentDeleting(DocumentInterface $document);
 
 
 	/**************************************************************************

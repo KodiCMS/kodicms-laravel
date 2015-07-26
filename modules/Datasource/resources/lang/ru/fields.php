@@ -12,6 +12,20 @@ return [
 		'use_filemanager' => 'Использовать файловый менеджер',
 		'length' => 'Длина'
 	],
+	'textarea' => [
+		'title' => 'Текст',
+		'allow_html' => 'Разрешить HTML теги',
+		'filter_html' => 'Фильтровать HTML теги',
+		'allowed_tags' => 'Разрешенные теги',
+		'num_rows' => 'Кол-во строк'
+	],
+	'html' => [
+		'title' => 'HTML c редактором',
+		'filter_html' => 'Фильтровать HTML теги',
+		'allowed_tags' => 'Разрешенные теги',
+		'wysiwyg' => 'Редактор текста',
+		'remove_empty_tags' => 'Удалять пустые теги'
+	],
 	'boolean' => [
 		'title' => 'Boolean',
 		'style' => 'Стиль'

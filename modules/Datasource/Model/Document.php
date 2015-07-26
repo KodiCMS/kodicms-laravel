@@ -15,27 +15,27 @@ class Document extends Model implements DocumentInterface
 	{
 		parent::boot();
 
-		static::created(function (Document $document)
+		static::creating(function (Document $document)
 		{
 			foreach ($document->getSectionFields() as $key => $field)
 			{
-				$field->onDocumentCreated($document, $document->getAttribute($key));
+				$field->onDocumentCreating($document, $document->getAttribute($key));
 			}
 		});
 
-		static::deleted(function (Document $document)
+		static::deleting(function (Document $document)
 		{
 			foreach ($document->getSectionFields() as $key => $field)
 			{
-				$field->onDocumentDeleted($document);
+				$field->onDocumentDeleting($document);
 			}
 		});
 
-		static::updated(function (Document $document)
+		static::updating(function (Document $document)
 		{
 			foreach ($document->getSectionFields() as $key => $field)
 			{
-				$field->onDocumentUpdated($document, $document->getAttribute($key));
+				$field->onDocumentUpdating($document, $document->getAttribute($key));
 			}
 		});
 	}
@@ -231,6 +231,20 @@ class Document extends Model implements DocumentInterface
 	public function getSectionFields()
 	{
 		return $this->sectionFields;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getFieldsNames()
+	{
+		$fields = [];
+		foreach ($this->getSectionFields() as $key => $field)
+		{
+			$fields[$key] = $field->getName();
+		}
+
+		return $fields;
 	}
 
 	/**

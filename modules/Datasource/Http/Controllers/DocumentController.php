@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Datasource\Http\Controllers;
 
+use WYSIWYG;
 use KodiCMS\Datasource\Repository\SectionRepository;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
@@ -11,6 +12,8 @@ class DocumentController extends BackendController
 	 */
 	public function getCreate(SectionRepository $repository, $sectionId)
 	{
+		WYSIWYG::loadAllEditors();
+
 		$document = $repository->getEmptyDocument($sectionId);
 		$section = $document->getSection();
 
@@ -44,6 +47,7 @@ class DocumentController extends BackendController
 	 */
 	public function getEdit(SectionRepository $repository, $sectionId, $documentId)
 	{
+		WYSIWYG::loadAllEditors();
 		$document = $repository->getDocumentById($sectionId, $documentId);
 		$section = $document->getSection();
 

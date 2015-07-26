@@ -143,6 +143,7 @@ class SectionRepository extends BaseRepository
 
 		$validator = $this->validator($data);
 		$validator->setRules($document->getValidationRules($validator));
+		$validator->setAttributeNames($document->getFieldsNames());
 		return $this->_validate($validator);
 	}
 

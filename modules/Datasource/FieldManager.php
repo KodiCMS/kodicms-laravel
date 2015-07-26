@@ -121,7 +121,6 @@ class FieldManager extends AbstractManager
 		Schema::table($section->getSectionTableName(), function($table) use($field)
 		{
 			$field->onDatabaseDrop($table);
-			$table->dropColumn($field->getDBKey());
 		});
 
 		return true;

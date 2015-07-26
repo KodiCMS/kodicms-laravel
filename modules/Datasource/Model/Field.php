@@ -345,7 +345,7 @@ class Field extends DatasourceModel implements FieldInterface
 	 */
 	public function onDatabaseDrop(Blueprint $table)
 	{
-
+		$table->dropColumn($this->getDBKey());
 	}
 
 	/**
@@ -396,7 +396,7 @@ class Field extends DatasourceModel implements FieldInterface
 	 * @param DocumentInterface $document
 	 * @param $value
 	 */
-	public function onDocumentCreated(DocumentInterface $document, $value)
+	public function onDocumentCreating(DocumentInterface $document, $value)
 	{
 
 	}
@@ -405,7 +405,7 @@ class Field extends DatasourceModel implements FieldInterface
 	 * @param DocumentInterface $document
 	 * @param $value
 	 */
-	public function onDocumentUpdated(DocumentInterface $document, $value)
+	public function onDocumentUpdating(DocumentInterface $document, $value)
 	{
 
 	}
@@ -413,7 +413,7 @@ class Field extends DatasourceModel implements FieldInterface
 	/**
 	 * @param DocumentInterface $document
 	 */
-	public function onDocumentDeleted(DocumentInterface $document)
+	public function onDocumentDeleting(DocumentInterface $document)
 	{
 
 	}

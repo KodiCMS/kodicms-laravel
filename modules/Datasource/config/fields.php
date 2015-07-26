@@ -15,6 +15,16 @@ return [
 		'title' => trans('datasource::fields.string.title'),
 		'edit_template' => 'datasource::field.types.string'
 	],
+	'textarea' => [
+		'class' => KodiCMS\Datasource\Fields\Primitive\Textarea::class,
+		'title' => trans('datasource::fields.textarea.title'),
+		'edit_template' => 'datasource::field.types.textarea'
+	],
+	'html' => [
+		'class' => KodiCMS\Datasource\Fields\Primitive\HTML::class,
+		'title' => trans('datasource::fields.html.title'),
+		'edit_template' => 'datasource::field.types.html'
+	],
 	'timestamp' => [
 		'class' => KodiCMS\Datasource\Fields\Primitive\Timestamp::class,
 		'title' => trans('datasource::fields.timestamp.title')

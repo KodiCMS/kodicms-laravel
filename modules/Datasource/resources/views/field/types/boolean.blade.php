@@ -10,6 +10,7 @@
 	<div class="col-md-9 col-md-offset-3">
 		<div class="checkbox">
 			<label>
+				{!! Form::hidden('settings[default_value]', 0) !!}
 				{!! Form::switcher('settings[default_value]', 1, $field->getDefaultValue(), [
 				'id' => 'default_value'
 				]) !!} @lang('datasource::core.field.default_value')

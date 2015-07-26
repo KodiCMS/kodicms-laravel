@@ -41,7 +41,7 @@ class DatasourceController extends BackendController
 			])
 		]);
 
-		view()->share('sectionModel', $section);
+		view()->share('currentSection', $section);
 
 		$this->templateScripts['SECTION'] = $section;
 	}

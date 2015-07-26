@@ -97,7 +97,7 @@ class SectionType implements SectionTypeInterface
 			return $this->document;
 		}
 
-		return 'KodiCMS\Datasource\Document';
+		return \KodiCMS\Datasource\Document::class;
 	}
 
 	/**
