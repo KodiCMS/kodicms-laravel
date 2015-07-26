@@ -3,11 +3,7 @@
 use DatasourceManager;
 use KodiCMS\Datasource\Document;
 use KodiCMS\Datasource\Sections\SectionToolbar;
-use KodiCMS\Datasource\Fields\Primitive\String;
 use KodiCMS\Datasource\Sections\SectionHeadline;
-use KodiCMS\Datasource\Fields\Primitive\Primary;
-use KodiCMS\Datasource\Fields\Primitive\Boolean;
-use KodiCMS\Datasource\Fields\Primitive\Timestamp;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Exceptions\SectionException;
 use KodiCMS\Datasource\Contracts\SectionToolbarInterface;
@@ -47,7 +43,7 @@ class Section extends DatasourceModel implements SectionInterface
 	/**
 	 * @var string
 	 */
-	protected $sectionTableName = 'test';
+	protected $sectionTableName = 'datasource';
 
 	/**
 	 * @var array
@@ -169,49 +165,7 @@ class Section extends DatasourceModel implements SectionInterface
 	 */
 	public function getSystemFields()
 	{
-		return [
-			new Primary([
-				'key' => 'id',
-				'name' => 'ID',
-				'settings' => [
-					'headline_parameters' => [
-						'width' => 30
-					]
-				]
-			]),
-			new String([
-				'key' => 'header',
-				'name' => 'Header'
-			]),
-			new Boolean([
-				'key' => 'published',
-				'name' => 'Published',
-				'settings' => [
-					'headline_parameters' => [
-						'width' => 30
-					]
-				]
-			]),
-			new Timestamp([
-				'key' => static::CREATED_AT,
-				'name' => 'Created At',
-				'settings' => [
-					'headline_parameters' => [
-						'width' => 200
-					]
-				]
-			]),
-			new Timestamp([
-				'key' => static::UPDATED_AT,
-				'name' => 'Updated At',
-				'settings' => [
-					'headline_parameters' => [
-						'width' => 200,
-						'visible' => false
-					]
-				]
-			])
-		];
+		return [];
 	}
 
 	protected function initializeFields()
@@ -306,7 +260,7 @@ class Section extends DatasourceModel implements SectionInterface
 	 */
 	public function getDocumentClass()
 	{
-		return Document::class;
+		return null;
 	}
 
 	/**************************************************************************
@@ -420,7 +374,6 @@ class Section extends DatasourceModel implements SectionInterface
 	/**************************************************************************
 	 * Relations
 	 **************************************************************************/
-
 	/**
 	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
 	 */
@@ -435,6 +388,26 @@ class Section extends DatasourceModel implements SectionInterface
 	public function folder()
 	{
 		return $this->belongsTo('KodiCMS\Datasource\Model\SectionFolder', 'folder_id')->orderBy('position');
+	}
+
+	/**************************************************************************
+	 * Titles
+	 **************************************************************************/
+	/**
+	 * @return string
+	 */
+	public function getCreateDocumentTitle()
+	{
+		return trans('datasource::core.title.create_document');
+	}
+
+	/**
+	 * @param string $name
+	 * @return string
+	 */
+	public function getEditDocumentTitle($name = '')
+	{
+		return trans('datasource::core.title.edit_document', ['name' => $name]);
 	}
 
 	/**************************************************************************

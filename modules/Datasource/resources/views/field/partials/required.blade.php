@@ -4,7 +4,7 @@
 			<label>
 				{!! Form::switcher('settings[is_required]', 1, $field->isRequired(), [
 					'id' => 'is_required'
-				]) !!} Required
+				]) !!} @lang('datasource::core.field.required')
 			</label>
 		</div>
 	</div>

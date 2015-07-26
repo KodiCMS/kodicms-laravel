@@ -2,7 +2,7 @@
 	@if (!empty($types))
 	<div class="compose-btn">
 		<div class="btn-group">
-			{!! HTML::link('#', __('Create section'), [
+			{!! HTML::link('#', trans('datasource::core.button.create'), [
 				'class' => 'dropdown-toggle btn btn-primary btn-labeled btn-block',
 				'data-icon-append' => 'caret-down',
 				'data-toggle' => 'dropdown'
@@ -19,7 +19,7 @@
 		</div>
 
 		<br /><br />
-		{!! HTML::link('#', __('Create folder'), [
+		{!! HTML::link('#', trans('datasource::core.button.create_folder'), [
 			'class' => 'btn btn-default btn-xs create-folder-button',
 		]) !!}
 	</div>

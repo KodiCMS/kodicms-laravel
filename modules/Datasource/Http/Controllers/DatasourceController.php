@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\Datasource\Http\Controllers;
 
 use DatasourceManager;
-use KodiCMS\Datasource\Repository\SectionRepository;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
+use KodiCMS\Datasource\Repository\SectionRepository;
 
 class DatasourceController extends BackendController
 {
@@ -13,13 +13,21 @@ class DatasourceController extends BackendController
 
 	/**
 	 * @param SectionRepository $repository
-	 * @param integer $dsId
+	 * @param integer $sectionId
 	 */
-	public function getIndex(SectionRepository $repository, $dsId)
+	public function getIndex(SectionRepository $repository, $sectionId = null)
 	{
-		$section = $repository->findOrFail($dsId);
-
-		$this->setTitle($section->getName());
+		if (!is_null($sectionId))
+		{
+			$section = $repository->findOrFail($sectionId);
+			$headline = $section->getHeadline()->render();
+			$toolbar = $section->getToolbar()->render();
+			$this->setTitle($section->getName());
+		}
+		else
+		{
+			$section = $headline = $toolbar = null;
+		}
 
 		$this->setContent('content', [
 			'navigation' => view('datasource::navigation', [
@@ -27,8 +35,8 @@ class DatasourceController extends BackendController
 				'sections' => DatasourceManager::getSections()
 			]),
 			'section' => view('datasource::section', [
-				'headline' => $section->getHeadline()->render(),
-				'toolbar' => $section->getToolbar()->render(),
+				'headline' => $headline,
+				'toolbar' => $toolbar,
 				'section' => $section
 			])
 		]);
@@ -82,13 +90,13 @@ class DatasourceController extends BackendController
 
 	/**
 	 * @param SectionRepository $repository
-	 * @param integer $dsId
+	 * @param integer $sectionId
 	 *
 	 * @throws SectionException
 	 */
-	public function getEdit(SectionRepository $repository, $dsId)
+	public function getEdit(SectionRepository $repository, $sectionId)
 	{
-		$section = $repository->findOrFail($dsId);
+		$section = $repository->findOrFail($sectionId);
 
 		$this->breadcrumbs
 			->add($section->getName(), route('backend.datasource.list', $section->getId()));
@@ -103,17 +111,26 @@ class DatasourceController extends BackendController
 
 	/**
 	 * @param SectionRepository $repository
-	 * @param $dsId
+	 * @param $sectionId
 	 *
 	 * @return \Illuminate\Http\RedirectResponse
 	 */
-	public function postEdit(SectionRepository $repository, $dsId)
+	public function postEdit(SectionRepository $repository, $sectionId)
 	{
 		$data = $this->request->except(['type']);
 		$repository->validateOnUpdate($data);
-		$section = $repository->update($dsId, $data);
+		$section = $repository->update($sectionId, $data);
 
 		return $this->smartRedirect([$section->getId()])
 			->with('success', trans($this->wrapNamespace('core.messages.section.updated'), ['title' => $section->getName()]));
+	}
+
+	/**
+	 * @param SectionRepository $repository
+	 * @param integer $sectionId
+	 */
+	public function getRemove(SectionRepository $repository, $sectionId)
+	{
+		$repository->delete($sectionId);
 	}
 }

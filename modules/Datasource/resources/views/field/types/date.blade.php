@@ -19,7 +19,7 @@
 </script>
 
 <div class="form-group form-inline" id="default_container">
-	<label class="control-label col-md-3" for="primitive_default">Default value</label>
+	<label class="control-label col-md-3" for="primitive_default">@lang('datasource::core.field.default_value')</label>
 	<div class="col-md-9">
 		{!! Form::text('settings[default_value]', $field->getSetting('default_value'), [
 			'class' => 'form-control datepicker',
@@ -36,7 +36,7 @@
 			<label>
 			{!! Form::switcher('settings[set_current]', 1, $field->isCurrentDateByDefault(), [
 				'id' => 'set_current'
-			]) !!} Current date
+			]) !!} @lang('datasource::fields.date.set_current_date')
 			</label>
 		</div>
 	</div>

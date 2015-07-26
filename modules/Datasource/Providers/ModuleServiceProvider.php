@@ -31,6 +31,7 @@ class ModuleServiceProvider extends ServiceProvider {
 			if (!is_null($section = $navigation->findSection('Datasources')))
 			{
 				$sections = app('datasource.manager')->getSections();
+
 				foreach($sections as $dsSection)
 				{
 					$section->addPage(new Page([
@@ -40,6 +41,25 @@ class ModuleServiceProvider extends ServiceProvider {
 						'url' => $dsSection['object']->getLink()
 					]));
 				}
+
+				$types = app('datasource.manager')->getAvailableTypes();
+				$subSection = new Section([
+					'name' => 'Datasource',
+					'label' => trans('datasource::core.title.create'),
+					'icon' => 'plus',
+				]);
+
+				foreach ($types as $type => $object)
+				{
+					$subSection->addPage(new Page([
+						'name' => $object->getTitle(),
+						'label' => $object->getTitle(),
+						'icon' => $object->getIcon(),
+						'url' => $object->getLink()
+					]));
+				}
+
+				$section->addPage($subSection);
 			}
 		});
 	}

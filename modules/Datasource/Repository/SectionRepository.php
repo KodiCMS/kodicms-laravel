@@ -83,6 +83,21 @@ class SectionRepository extends BaseRepository
 	}
 
 	/**
+	 * @param integer $id
+	 * @return Model
+	 * @throws \Exception
+	 */
+	public function delete($id)
+	{
+		$model = $this->findOrFail($id);
+		$model->delete();
+		$model->fields()->delete();
+
+		DatasourceManager::dropSectionTable($model);
+		return $model;
+	}
+
+	/**
 	 * @param integer $sectionId
 	 *
 	 * @return DocumentInterface

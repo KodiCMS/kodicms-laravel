@@ -72,6 +72,7 @@ class FieldManager extends AbstractManager
 	{
 		Schema::table($section->getSectionTableName(), function($table) use($field)
 		{
+			$field->onDatabaseCreate($table);
 			$field->setDatabaseFieldType($table);
 		});
 
@@ -98,6 +99,7 @@ class FieldManager extends AbstractManager
 
 		Schema::table($section->getSectionTableName(), function($table) use($field)
 		{
+			$field->onDatabaseUpdate($table);
 			$field->setDatabaseFieldType($table)->change();
 		});
 
@@ -118,6 +120,7 @@ class FieldManager extends AbstractManager
 
 		Schema::table($section->getSectionTableName(), function($table) use($field)
 		{
+			$field->onDatabaseDrop($table);
 			$table->dropColumn($field->getDBKey());
 		});
 

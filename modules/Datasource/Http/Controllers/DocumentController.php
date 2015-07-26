@@ -17,7 +17,7 @@ class DocumentController extends BackendController
 		$this->breadcrumbs
 			->add($section->getName(), route('backend.datasource.list', $section->getId()));
 
-		$this->setTitle(trans($this->wrapNamespace('document.title.create')));
+		$this->setTitle($section->getCreateDocumentTitle());
 
 		$this->setContent('document.create', [
 			'document' => $document,
@@ -34,7 +34,7 @@ class DocumentController extends BackendController
 		$document = $repository->createDocument($sectionId, $data);
 
 		return $this->smartRedirect([$sectionId, $document->getId()])
-			->with('success', trans($this->wrapNamespace('document.messages.updated'), ['title' => $document->getTitle()]));
+			->with('success', trans($this->wrapNamespace('core.messages.document_updated'), ['title' => $document->getTitle()]));
 	}
 
 	/**
@@ -50,7 +50,7 @@ class DocumentController extends BackendController
 		$this->breadcrumbs
 			->add($section->getName(), route('backend.datasource.list', $section->getId()));
 
-		$this->setTitle(trans($this->wrapNamespace('document.title.edit'), ['header' => $document->getTitle()]));
+		$this->setTitle($section->getCreateDocumentTitle($document->getTitle()));
 
 		$this->setContent('document.edit', [
 			'document' => $document,
@@ -69,6 +69,6 @@ class DocumentController extends BackendController
 		$document = $repository->updateDocument($document, $data);
 
 		return $this->smartRedirect([$document->getId()])
-			->with('success', trans($this->wrapNamespace('document.messages.updated'), ['title' => $document->getTitle()]));
+			->with('success', trans($this->wrapNamespace('core.messages.document_updated'), ['title' => $document->getTitle()]));
 	}
 }

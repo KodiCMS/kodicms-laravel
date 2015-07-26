@@ -40,9 +40,9 @@ $(function() {
 
 <div class="panel">
 	<div class="panel-heading" data-icon="th-list fa-lg">
-		<span class="panel-title">Fields</span>
+		<span class="panel-title">@lang('datasource::core.field.list')</span>
 		<div class="panel-heading-controls">
-			{!! Form::button('Remove fields', [
+			{!! Form::button(trans('datasource::core.button.remove_fields'), [
 				'data-icon' => 'trash-o',
 				'class' => 'btn btn-sm btn-danger btn-labeled',
 				'id' => 'remove-fields'
@@ -61,11 +61,11 @@ $(function() {
 		<thead>
 		<tr>
 			<td></td>
-			<td>Position</td>
-			<td>Key</td>
-			<td>Header</td>
-			<td>Type</td>
-			<td>Show in headline</td>
+			<td>@lang('datasource::core.field.position')</td>
+			<td>@lang('datasource::core.field.key')</td>
+			<td>@lang('datasource::core.field.name')</td>
+			<td>@lang('datasource::core.field.type')</td>
+			<td>@lang('datasource::core.field.visible')</td>
 		</tr>
 		</thead>
 		<tbody>
@@ -96,7 +96,7 @@ $(function() {
 
 	<div class="panel-footer">
 		<div class="btn-group">
-			{!! link_to_route('backend.datasource.field.create', 'Create field', $section->getId(), [
+			{!! link_to_route('backend.datasource.field.create', trans('datasource::core.button.create_field'), $section->getId(), [
 				'data-icon' => 'plus', 'class' => 'btn btn-primary btn-labeled'
 			]) !!}
 		</div>

@@ -1,5 +1,5 @@
 <div class="form-group">
-	<label class="control-label col-md-3">Style</label>
+	<label class="control-label col-md-3">@lang('datasource::fields.boolean.style')</label>
 
 	<div class="col-md-3">
 		{!! Form::select('settings[display]', $field->getDisplayStyles(), $field->getSetting('display')) !!}
@@ -12,7 +12,7 @@
 			<label>
 				{!! Form::switcher('settings[default_value]', 1, $field->getDefaultValue(), [
 				'id' => 'default_value'
-				]) !!} Default value
+				]) !!} @lang('datasource::core.field.default_value')
 			</label>
 		</div>
 	</div>

@@ -324,6 +324,29 @@ class Field extends DatasourceModel implements FieldInterface
 	/**************************************************************************
 	 * Events
 	 **************************************************************************/
+	/**
+	 * @param Blueprint $table
+	 */
+	public function onDatabaseCreate(Blueprint $table)
+	{
+
+	}
+
+	/**
+	 * @param Blueprint $table
+	 */
+	public function onDatabaseUpdate(Blueprint $table)
+	{
+
+	}
+
+	/**
+	 * @param Blueprint $table
+	 */
+	public function onDatabaseDrop(Blueprint $table)
+	{
+
+	}
 
 	/**
 	 * @param DocumentInterface $document

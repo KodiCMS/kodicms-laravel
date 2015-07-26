@@ -24,12 +24,12 @@ $(function() {
 ]) !!}
 
 <div class="panel-heading" data-icon="exclamation-circle">
-	<span class="panel-title">Description</span>
+	<span class="panel-title">@lang('datasource::core.field.information')</span>
 </div>
 
 <div class="panel-body" id="filed-type">
 	<div class="form-group form-group-lg">
-		<label class="control-label col-md-3" for="name">Name</label>
+		<label class="control-label col-md-3" for="name">@lang('datasource::core.field.name')</label>
 		<div class="col-md-9">
 			{!! Form::text('name', null, [
 				'class' => 'slug-generator form-control',
@@ -39,7 +39,7 @@ $(function() {
 	</div>
 
 	<div class="form-group">
-		<label class="control-label col-md-3" for="key">Key</label>
+		<label class="control-label col-md-3" for="key">@lang('datasource::core.field.key')</label>
 		<div class="col-md-3">
 			{!! Form::text('key', null, [
 				'class' => 'slugify form-control',
@@ -49,7 +49,7 @@ $(function() {
 	</div>
 
 	<div class="form-group">
-		<label class="control-label col-md-3" for="select-field-type">Type</label>
+		<label class="control-label col-md-3" for="select-field-type">@lang('datasource::core.field.type')</label>
 		<div class="col-md-3">
 			{!! Form::select('type', FieldManager::getAvailableTypesForSelect(), null, ['id' => 'select-field-type']) !!}
 		</div>
@@ -57,7 +57,7 @@ $(function() {
 </div>
 
 <div class="panel-heading">
-	<span class="panel-title" data-icon="cog">Settings</span>
+	<span class="panel-title" data-icon="cog">@lang('datasource::core.field.settings')</span>
 </div>
 <div class="panel-body">
 	<div id="field-settings">
@@ -81,16 +81,10 @@ $(function() {
 	</div>
 </div>
 <div class="panel-footer form-actions">
-	{!! Form::button('Create field', [
+	{!! Form::button(trans('datasource::core.button.create_field'), [
 		'type' => 'submit',
 		'data-icon' => 'plus',
 		'class' => 'btn btn-lg btn-primary btn-labeled'
-	])!!}
-
-	{!! Form::button('Save and create another', [
-		'type' => 'submit',
-		'data-icon' => 'plus', 'class' => 'btn btn-sm btn-default btn-labeled',
-		'name' => 'save_and_create'
 	])!!}
 </div>
 {!! Form::close() !!}

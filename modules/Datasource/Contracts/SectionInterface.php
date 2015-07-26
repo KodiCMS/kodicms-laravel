@@ -86,4 +86,15 @@ interface SectionInterface
 	 * @return string
 	 */
 	public function getDocumentClass();
+
+	/**
+	 * @return string
+	 */
+	public function getCreateDocumentTitle();
+
+	/**
+	 * @param string $name
+	 * @return string
+	 */
+	public function getEditDocumentTitle($name = '');
 }

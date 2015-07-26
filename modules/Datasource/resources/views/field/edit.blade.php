@@ -4,12 +4,12 @@
 ]) !!}
 
 <div class="panel-heading" data-icon="exclamation-circle">
-	<span class="panel-title">Field description</span>
+	<span class="panel-title">@lang('datasource::core.field.information')</span>
 </div>
 
 <div class="panel-body" id="filed-type">
 	<div class="form-group form-group-lg">
-		<label class="control-label col-md-3" for="name">Name</label>
+		<label class="control-label col-md-3" for="name">@lang('datasource::core.field.name')</label>
 		<div class="col-md-9">
 			{!! Form::text('name', null, [
 				'class' => 'slug-generator form-control',
@@ -19,7 +19,7 @@
 	</div>
 
 	<div class="form-group">
-		<label class="control-label col-md-3" for="key">Key</label>
+		<label class="control-label col-md-3" for="key">@lang('datasource::core.field.key')</label>
 		<div class="col-md-3">
 			{!! Form::text(null, $field->getKey(), [
 				'class' => 'form-control',
@@ -31,7 +31,7 @@
 </div>
 
 <div class="panel-heading">
-	<span class="panel-title" data-icon="cog">Settings</span>
+	<span class="panel-title" data-icon="cog">@lang('datasource::core.field.settings')</span>
 </div>
 
 @if(!is_null($typeObject = $field->getType()))

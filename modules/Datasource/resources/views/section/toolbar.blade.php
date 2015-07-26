@@ -73,7 +73,7 @@ function checkbox_check() {
 <div class="btn-toolbar" role="toolbar">
 
 	<div class="btn-group">
-		{!! link_to_route('backend.datasource.document.create', 'Create document', [$section->getId()], [
+		{!! link_to_route('backend.datasource.document.create', trans('datasource::core.toolbar.create_document'), [$section->getId()], [
 			'data-icon' => 'plus',
 			'data-hotkeys' => 'ctrl+a',
 			'class' => 'btn btn-primary'
@@ -86,13 +86,13 @@ function checkbox_check() {
 				<i class="fa fa-check-square-o"></i>&nbsp;<i class="fa fa-caret-down"></i>
 			</button>
 			<ul class="dropdown-menu" role="menu">
-				<li><a href="#" class="action" data-action="check_all">Check all</a></li>
+				<li><a href="#" class="action" data-action="check_all">@lang('datasource::core.toolbar.check_all')</a></li>
 				<li class="divider"></li>
-				<li><a href="#" class="action" data-action="uncheck_all">Uncheck all</a></li>
+				<li><a href="#" class="action" data-action="uncheck_all">@lang('datasource::core.toolbar.uncheck_all')</a></li>
 			</ul>
 		</div>
 	</div>
 	<div class="btn-group doc-actions pull-right">
-		<button type="button" data-action="remove" class="btn btn-danger action disabled" data-icon="trash-o" title="Remove"></button>
+		<button type="button" data-action="remove" class="btn btn-danger action disabled" data-icon="trash-o" title="@lang('datasource::core.toolbar.remove_selected')"></button>
 	</div>
 </div>
