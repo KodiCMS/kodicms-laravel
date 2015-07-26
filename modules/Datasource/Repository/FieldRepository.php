@@ -104,8 +104,7 @@ class FieldRepository extends BaseRepository
 
 		foreach (DatasourceManager::getSections() as $id => $section)
 		{
-			$section = $section['object'];
-			$sections[$section->type][$id] = $section->name;
+			$sections[$section->type][$id] = $section->getName();
 		}
 
 		return $sections;

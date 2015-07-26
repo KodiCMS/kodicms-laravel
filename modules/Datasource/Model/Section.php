@@ -146,7 +146,7 @@ class Section extends DatasourceModel implements SectionInterface
 	 */
 	public function getIcon()
 	{
-		return $this->getType()->getIcon();
+		return $this->getSetting('icon', $this->getType()->getIcon());
 	}
 
 	/**************************************************************************

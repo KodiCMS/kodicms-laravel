@@ -46,10 +46,7 @@ class DatasourceManager extends AbstractManager
 				continue;
 			}
 
-			$sections[$section->id] = [
-				'type' => $this->types[$section->type],
-				'object' => $section
-			];
+			$sections[$section->id] = $section;
 		}
 
 		return $sections;

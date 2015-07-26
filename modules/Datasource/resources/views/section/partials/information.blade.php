@@ -1,3 +1,15 @@
+<script>
+$(function() {
+	function formatState(state) {
+		if (!state.id) return state.text; // optgroup
+		return $("<span><i class='fa fa-" + state.id + " fa-fw fa-lg'/>" + state.text+"</span>");
+	}
+	$("#icons").select2({
+		templateResult: formatState
+	});
+});
+</script>
+
 <div class="panel-heading" data-icon="info">
 	<span class="panel-title">@lang('datasource::core.title.information')</span>
 </div>
@@ -22,9 +34,17 @@
 		<div class="col-md-9 col-md-offset-3">
 			<div class="checkbox">
 				<label>
-					{!! Form::switcher('show_in_root_menu', 1, null, ['id' => 'show_in_root_menu']) !!} @lang('datasource::core.information.show_in_root')
+					{!! Form::hidden('settings[show_in_root_menu]', 0) !!}
+					{!! Form::switcher('settings[show_in_root_menu]', 1, $section->getSetting('show_in_root_menu'), ['id' => 'show_in_root_menu']) !!} @lang('datasource::core.information.show_in_root')
 				</label>
 			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-3" for="icon">@lang('datasource::core.information.icon')</label>
+		<div class="col-md-9">
+			{!! Form::select('settings[icon]', array_unique(config('icons', [])), $section->getIcon(), ['class' => 'form-control', 'id' => 'icons']) !!}
 		</div>
 	</div>
 </div>

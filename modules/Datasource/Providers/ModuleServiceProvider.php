@@ -34,12 +34,21 @@ class ModuleServiceProvider extends ServiceProvider {
 
 				foreach($sections as $dsSection)
 				{
-					$section->addPage(new Page([
-						'name' => $dsSection['object']->name,
-						'label' => $dsSection['object']->name,
-						'icon' => 'table',
-						'url' => $dsSection['object']->getLink()
-					]));
+					$page = new Page([
+						'name' => $dsSection->getName(),
+						'label' => $dsSection->getName(),
+						'icon' => $dsSection->getIcon(),
+						'url' => $dsSection->getLink()
+					]);
+
+					if($dsSection->getSetting('show_in_root_menu'))
+					{
+						$navigation->addPage($page);
+					}
+					else
+					{
+						$section->addPage($page);
+					}
 				}
 
 				$types = app('datasource.manager')->getAvailableTypes();

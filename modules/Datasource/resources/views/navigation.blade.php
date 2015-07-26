@@ -30,8 +30,8 @@
 		<ul class="sections">
 		@foreach ($sections as $section)
 			<li>
-				{!! HTML::link($section['object']->getLink(), $section['object']->name, [
-					'data-icon' => $section['type']->getIcon()
+				{!! HTML::link($section->getLink(), $section->name, [
+					'data-icon' => $section->getIcon()
 				]) !!}
 			</li>
 		@endforeach
