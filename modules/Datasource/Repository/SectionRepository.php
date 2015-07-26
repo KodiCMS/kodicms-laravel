@@ -17,6 +17,18 @@ class SectionRepository extends BaseRepository
 	}
 
 	/**
+	 * @param string $type
+	 * @param array $attributes
+	 * @return Section
+	 * @throws SectionException
+	 */
+	public function instanceByType($type, array $attributes = [])
+	{
+		$attributes['type'] = $type;
+		return $this->model->newInstance($attributes);
+	}
+
+	/**
 	 * @param array $data
 	 * @return bool
 	 * @throws \KodiCMS\CMS\Exceptions\ValidationException

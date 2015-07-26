@@ -45,7 +45,7 @@ class ModuleServiceProvider extends ServiceProvider {
 				$types = app('datasource.manager')->getAvailableTypes();
 				$subSection = new Section([
 					'name' => 'Datasource',
-					'label' => trans('datasource::core.title.create'),
+					'label' => trans('datasource::core.button.create'),
 					'icon' => 'plus',
 				]);
 

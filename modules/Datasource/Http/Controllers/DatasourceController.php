@@ -56,14 +56,10 @@ class DatasourceController extends BackendController
 	{
 		$type = strtolower($type);
 
-		if (is_null($typeObject = DatasourceManager::getTypeObject($type)))
-		{
-			throw new SectionException("Datasource type {$type} not found");
-		}
+		$section = $repository->instanceByType($type);
+		$typeObject = $section->getType();
 
-		$section = $repository->instance();
 		$this->setTitle(trans($this->wrapNamespace('core.title.create'), ['type' => $typeObject->getTitle()]));
-
 		$this->setContent($typeObject->getCreateTemplate(), compact('typeObject', 'section'));
 	}
 
