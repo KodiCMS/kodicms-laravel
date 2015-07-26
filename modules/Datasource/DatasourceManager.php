@@ -66,8 +66,8 @@ class DatasourceManager extends AbstractManager
 		{
 			foreach ($section->getSystemFields() as $field)
 			{
-				$model = $field->fill(['is_system' => true]);
-				if($field = $section->fields()->save($model))
+				$field->is_system = true;
+				if($field = $section->fields()->save($field))
 				{
 					$field->setDatabaseFieldType($table);
 				}
