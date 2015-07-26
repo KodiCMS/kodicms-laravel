@@ -1,10 +1,11 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
 use App;
-use View;
 use Lang;
+use View;
 use Assets;
 use ModulesFileSystem;
+use Illuminate\Contracts\Support\Jsonable;
 
 class TemplateController extends Controller
 {
@@ -108,7 +109,15 @@ class TemplateController extends Controller
 		$scrpit = '';
 		foreach ($this->templateScripts as $var => $value)
 		{
-			$value = json_encode($value);
+			if ($value instanceof Jsonable)
+			{
+				$value = $value->toJson();
+			}
+			else
+			{
+				$value = json_encode($value);
+			}
+
 			$scrpit .= "var {$var} = {$value};\n";
 		}
 
