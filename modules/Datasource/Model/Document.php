@@ -241,6 +241,23 @@ class Document extends Model implements DocumentInterface
 	}
 
 	/**
+	 * Get a plain attribute (not a relationship).
+	 *
+	 * @param  string $key
+	 * @return mixed
+	 */
+	public function getWidgetValue($key)
+	{
+		$value = parent::getAttributeValue($key);
+		if (!is_null($field = array_get($this->sectionFields, $key)))
+		{
+			$value = $field->onGetWidgetValue($this, $value);
+		}
+
+		return $value;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getSectionFields()

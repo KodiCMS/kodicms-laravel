@@ -2,15 +2,15 @@
 
 use DB;
 use FieldManager;
+use KodiCMS\Datasource\FieldType;
+use Illuminate\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Validation\Validator;
-use KodiCMS\Datasource\Contracts\DocumentInterface;
 use KodiCMS\Datasource\Contracts\FieldInterface;
-use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
-use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Exceptions\FieldException;
-use KodiCMS\Datasource\FieldType;
+use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
 class Field extends DatasourceModel implements FieldInterface
 {
@@ -75,6 +75,11 @@ class Field extends DatasourceModel implements FieldInterface
 	 * @var bool
 	 */
 	protected $isEditable = true;
+
+	/**
+	 * @var bool
+	 */
+	protected $isOrderable = true;
 
 	/**
 	 * @var bool
@@ -198,6 +203,14 @@ class Field extends DatasourceModel implements FieldInterface
 	/**
 	 * @return bool
 	 */
+	public function isOrderable()
+	{
+		return $this->isOrderable;
+	}
+
+	/**
+	 * @return bool
+	 */
 	public function isRequired()
 	{
 		return $this->getSetting('is_required', false);
@@ -258,6 +271,14 @@ class Field extends DatasourceModel implements FieldInterface
 	public function getHint()
 	{
 		return $this->getSetting('hint');
+	}
+
+	/**
+	 * @return integer
+	 */
+	public function getRalatedSection()
+	{
+		return (int) $this->related_ds;
 	}
 
 	/**
@@ -366,6 +387,17 @@ class Field extends DatasourceModel implements FieldInterface
 	 * @return mixed
 	 */
 	public function onGetDocumentValue(DocumentInterface $document, $value)
+	{
+		return $value;
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return mixed
+	 */
+	public function onGetWidgetValue(DocumentInterface $document, $value)
 	{
 		return $value;
 	}
@@ -500,6 +532,14 @@ class Field extends DatasourceModel implements FieldInterface
 		return $this->belongsTo('KodiCMS\Datasource\Model\Section', 'ds_id');
 	}
 
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
+	public function relatedSection()
+	{
+		return $this->belongsTo('KodiCMS\Datasource\Model\Section', 'related_ds');
+	}
+
 	/**************************************************************************
 	 * Other
 	 **************************************************************************/
@@ -548,5 +588,14 @@ class Field extends DatasourceModel implements FieldInterface
 			'document' => $document,
 			'section' => $document->getSection()
 		]);
+	}
+
+	/**************************************************************************
+	 * Widgets
+	 **************************************************************************/
+
+	public function getWidgetTypes()
+	{
+		return [];
 	}
 }

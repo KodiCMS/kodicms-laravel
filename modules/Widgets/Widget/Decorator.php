@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Collection;
 use KodiCMS\Support\Traits\Settings;
-use KodiCMS\Widgets\Manager\WidgetManager;
 use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
+use KodiCMS\Widgets\Manager\WidgetManager;
 
 abstract class Decorator implements WidgetInterface, \ArrayAccess
 {
@@ -69,6 +69,11 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
 		$this->name = $name;
 		$this->description = $description;
 		$this->relatedWidgets = new Collection;
+
+		if (method_exists($this, 'boot'))
+		{
+			app()->call([$this, 'boot']);
+		}
 	}
 
 	/**

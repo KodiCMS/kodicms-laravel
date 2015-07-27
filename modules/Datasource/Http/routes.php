@@ -11,7 +11,8 @@ Route::group(['prefix' => backend_url(), 'as' => 'backend.datasource.'], functio
 		'getCreate' => 'field.create',
 		'postCreate' => 'field.create.post',
 		'getEdit' => 'field.edit',
-		'postEdit' => 'field.edit.post'
+		'postEdit' => 'field.edit.post',
+		'getLocation' => 'field.location'
 	]);
 
 	Route::controller('datasource/document', 'DocumentController', [

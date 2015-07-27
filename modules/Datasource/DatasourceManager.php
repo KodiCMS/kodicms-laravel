@@ -2,9 +2,11 @@
 
 use Schema;
 use FieldManager;
+use Illuminate\Support\Collection;
 use KodiCMS\Datasource\Fields\Field;
 use KodiCMS\Datasource\Model\Section;
 use KodiCMS\Datasource\Contracts\FieldInterface;
+use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 
 class DatasourceManager extends AbstractManager
@@ -22,6 +24,26 @@ class DatasourceManager extends AbstractManager
 
 			$this->types[$type] = new SectionType($type, $data);
 		}
+	}
+
+	/**
+	 * @param array $types
+	 * @param integer|null $sectionId
+	 * @return Collection
+	 */
+	public function getWidgetsBySection(array $types, $sectionId = null)
+	{
+		$widgets = WidgetManagerDatabase::getWidgetsByType($types);
+
+		if (is_null($sectionId))
+		{
+			return $widgets;
+		}
+
+		return $widgets->filter(function($widget) use($sectionId)
+		{
+			return $widget->section_id == (int) $sectionId;
+		});
 	}
 
 	/**
@@ -50,6 +72,21 @@ class DatasourceManager extends AbstractManager
 		}
 
 		return $sections;
+	}
+
+	/**
+	 * @param array|null $types
+	 * @return array
+	 */
+	public function getSectionsFormHTML(array $types = null)
+	{
+		$select = [trans('cms::core.label.not_set')];
+		foreach($this->getSections($types) as $section)
+		{
+			$select[$section->getType()->getTitle()][$section->getId()] = $section->getName();
+		}
+
+		return $select;
 	}
 
 	/**

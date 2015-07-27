@@ -24,27 +24,6 @@ class WidgetManagerDatabase extends WidgetManager
 	}
 
 	/**
-	 * @param array         $types
-	 * @param null|integer  $dsId
-	 *
-	 * @return \Illuminate\Support\Collection
-	 */
-	public static function getWidgetByTypeAndDsid(array $types = null, $dsId = null)
-	{
-		$widgets = static::getWidgetsByType($types);
-
-		if(is_null($dsId))
-		{
-			return $widgets;
-		}
-
-		return $widgets->filter(function($widget) use($dsId)
-		{
-			return $widget->ds_id == (int) $dsId;
-		});
-	}
-
-	/**
 	 * @return \Illuminate\Support\Collection
 	 */
 	public static function getAllWidgets()

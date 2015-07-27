@@ -159,6 +159,14 @@ interface FieldInterface
 	 *
 	 * @return mixed
 	 */
+	public function onGetWidgetValue(DocumentInterface $document, $value);
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return mixed
+	 */
 	public function onGetHeadlineValue(DocumentInterface $document, $value);
 
 	/**
