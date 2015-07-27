@@ -8,16 +8,11 @@
 <div class="panel-body">
 	@include('datasource::section.partials.fields', compact('section', 'fields'))
 </div>
-<?php
-// TODO: доделать сортировку документов
-//<div class="panel-body">
-//	@include('datasource::section.partials.documents_ordering', compact('section'))
-//</div>
-//
-?>
+
+@include('datasource::widgets.partials.ordering', ['ordering' => $section->getHeadlineOrdering()])
 
 <div class="form-actions panel-footer">
-	@include('cms::app.partials.actionButtons', ['route' => 'backend.datasource.list'])
+	@include('cms::app.partials.actionButtons', ['route' => ['backend.datasource.list', $section->getId()]])
 </div>
 
 {!! Form::close() !!}

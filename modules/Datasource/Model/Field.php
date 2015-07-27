@@ -328,8 +328,8 @@ class Field extends DatasourceModel implements FieldInterface
 	 */
 	public function setSettingHeadlineParameters($params)
 	{
-		$headlineParams = array_get($this->{$this->getSettingsProperty()}, 'headline_parameters', []);
-		$this->{$this->getSettingsProperty()}['headline_parameters'] = array_merge($headlineParams, $params);
+		$headlineParams = array_get($this->fieldSettings, 'headline_parameters', []);
+		$this->fieldSettings['headline_parameters'] = array_merge($headlineParams, $params);
 	}
 
 	/**

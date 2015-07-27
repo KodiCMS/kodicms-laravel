@@ -2,7 +2,7 @@
 
 Route::group(['prefix' => backend_url(), 'as' => 'backend.datasource.'], function ()
 {
-	Route::get('datasource/{id}', [
+	Route::get('datasource/{id?}', [
 		'as' => 'list',
 		'uses' => 'DatasourceController@getIndex'
 	])->where('id', '[0-9]+');

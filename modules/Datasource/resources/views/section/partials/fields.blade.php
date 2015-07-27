@@ -51,11 +51,11 @@ $(function() {
 	</div>
 	<table id="section-fields" class="table table-primary table-striped table-hover">
 		<colgroup>
-			<col width="30px" />
+			<col width="40px" />
 			<col width="50px" />
 			<col width="100px" />
 			<col width="200px" />
-			<col width="100px" />
+			<col width="200px" />
 			<col />
 		</colgroup>
 		<thead>
@@ -64,30 +64,32 @@ $(function() {
 			<td>@lang('datasource::core.field.position')</td>
 			<td>@lang('datasource::core.field.key')</td>
 			<td>@lang('datasource::core.field.name')</td>
-			<td>@lang('datasource::core.field.type')</td>
-			<td>@lang('datasource::core.field.visible')</td>
+			<td class="text-center">@lang('datasource::core.field.visible')</td>
+			<td class="text-right">@lang('datasource::core.field.type')</td>
 		</tr>
 		</thead>
 		<tbody>
 		@foreach ($fields as $field)
 		<tr data-id="{{ $field->getId() }}">
-			<td class="f">
+			<td>
 				@if(!$field->isSystem())
 				{!! Form::checkbox('remove_field[]', $field->getId(), false, ['id' => $field->getKey()]) !!}
 				@endif
 			</td>
-			<td class="position"><span class="editable-position">{{ $field->getPosition() }}</span></td>
-			<td class="sys">
+			<td class="text-center">
+				<span class="editable-position">{{ $field->getPosition() }}</span>
+			</td>
+			<td>
 				<label for="{{ $field->getKey() }}">{{ $field->getKey() }}</label>
 			</td>
 			<td>
 				{!! link_to_route('backend.datasource.field.edit', $field->getName(), [$field->getId()]) !!}
 			</td>
-			<td>
-				{!! UI::label($field->getTypeTitle()) !!}
-			</td>
-			<td>
+			<td class="text-center">
 				{!! Form::checkbox("visible", $field->getId(), $field->isVisible()) !!}
+			</td>
+			<td class="text-right">
+				{!! UI::label($field->getType()->getCategory(), 'success') !!} {!! UI::label($field->getTypeTitle()) !!}
 			</td>
 		</tr>
 		@endforeach

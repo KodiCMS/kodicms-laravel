@@ -67,6 +67,11 @@ interface SectionInterface
 	public function getHeadlineClass();
 
 	/**
+	 * @return array
+	 */
+	public function getHeadlineOrdering();
+
+	/**
 	 * @return string
 	 */
 	public function getToolbar();

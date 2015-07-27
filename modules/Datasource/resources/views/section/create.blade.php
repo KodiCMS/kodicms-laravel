@@ -20,7 +20,7 @@
 		<tr>
 			<td>@lang('datasource::core.field.key')</td>
 			<td>@lang('datasource::core.field.name')</td>
-			<td>@lang('datasource::core.field.type')</td>
+			<td class="text-right">@lang('datasource::core.field.type')</td>
 		</tr>
 		</thead>
 		<tbody>
@@ -32,8 +32,8 @@
 				<td>
 					{{ $field->getName() }}
 				</td>
-				<td>
-					{!! UI::label($field->getTypeTitle()) !!}
+				<td class="text-right">
+					{!! UI::label($field->getType()->getCategory(), 'success') !!} {!! UI::label($field->getTypeTitle()) !!}
 				</td>
 			</tr>
 		@endforeach

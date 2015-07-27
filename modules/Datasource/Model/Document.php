@@ -1,9 +1,9 @@
 <?php namespace KodiCMS\Datasource\Model;
 
 use Illuminate\Validation\Validator;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Datasource\Contracts\FieldInterface;
+use KodiCMS\Datasource\Model\DocumentQueryBuilder;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeDateInterface;
@@ -366,7 +366,7 @@ class Document extends Model implements DocumentInterface
 	 */
 	public function getDocuments($fields = true, array $orderRules = [], array $filterRules = [])
 	{
-		return $this->buildQueryForWidget($fields);
+		return $this->buildQueryForWidget($fields, $orderRules, $filterRules);
 	}
 
 	/**
@@ -427,11 +427,11 @@ class Document extends Model implements DocumentInterface
 	}
 
 	/**
-	 * @param Builder $query
+	 * @param DocumentQueryBuilder $query
 	 * @param array $orderRules
 	 * @param array $t
 	 */
-	protected function querySelectColumn(Builder $query, array $orderRules, array & $t)
+	protected function buildQueryOrdering(DocumentQueryBuilder $query, array $orderRules, array & $t)
 	{
 		$j = 0;
 
@@ -439,17 +439,17 @@ class Document extends Model implements DocumentInterface
 		{
 			$field = null;
 
-			$fieldId = key($rule);
+			$fieldKey = key($rule);
 			$dir = $rule[key($rule)];
 
-			if (!isset($this->sectionFieldsIds[$fieldId]))
+			if (!array_key_exists($fieldKey, $this->sectionFields))
 			{
 				continue;
 			}
 
 			// TODO: предусмотреть relation поля
 
-			$field = $this->sectionFieldsIds[$fieldId];
+			$field = $this->sectionFields[$fieldKey];
 			$field->queryOrderBy($query, $dir);
 
 			unset($field);
@@ -459,11 +459,11 @@ class Document extends Model implements DocumentInterface
 	}
 
 	/**
-	 * @param Builder $query
+	 * @param DocumentQueryBuilder $query
 	 * @param array $filterRules
 	 * @param array $t
 	 */
-	protected function buildQueryFilters(Builder $query, array $filterRules, array & $t)
+	protected function buildQueryFilters(DocumentQueryBuilder $query, array $filterRules, array & $t)
 	{
 		foreach ($filterRules as $rule)
 		{

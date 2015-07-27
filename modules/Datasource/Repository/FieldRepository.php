@@ -5,6 +5,7 @@ use DatasourceManager;
 use KodiCMS\Datasource\Model\Field;
 use KodiCMS\CMS\Repository\BaseRepository;
 use KodiCMS\Datasource\Exceptions\FieldException;
+use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
 
 class FieldRepository extends BaseRepository
 {
@@ -14,6 +15,19 @@ class FieldRepository extends BaseRepository
 	public function __construct(Field $model)
 	{
 		parent::__construct($model);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function validatorAttributeNames()
+	{
+		return [
+			'key' => trans('datasource::core.field.key'),
+			'name' => trans('datasource::core.field.name'),
+			'type' => trans('datasource::core.field.type'),
+			'related_ds' => trans('datasource::core.field.related_ds')
+		];
 	}
 
 	/**
@@ -28,6 +42,14 @@ class FieldRepository extends BaseRepository
 			'type' => 'required',
 			'name' => 'required'
 		]);
+
+		$validator->sometimes('related_ds', 'required|numeric|min:1', function ($input)
+		{
+			if ($typeObject = FieldManager::getFieldTypeBy('type', $input->type))
+			{
+				return $typeObject->getFieldObject() instanceof FieldTypeRelationInterface;
+			}
+		});
 
 		return $this->_validate($validator);
 	}

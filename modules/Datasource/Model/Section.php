@@ -211,6 +211,14 @@ class Section extends DatasourceModel implements SectionInterface
 		return SectionHeadline::class;
 	}
 
+	/**
+	 * @return array
+	 */
+	public function getHeadlineOrdering()
+	{
+		return $this->getSetting('ordering', []);
+	}
+
 	/**************************************************************************
 	 * Toolbar
 	 **************************************************************************/

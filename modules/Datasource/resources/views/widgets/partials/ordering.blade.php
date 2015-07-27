@@ -13,13 +13,13 @@ foreach ($fields as $field)
 		continue;
 	}
 
-	if (!isset($orderedFields[$field->getId()]))
+	if (!isset($orderedFields[$field->getDBKey()]))
 	{
-		$orderableFields[$field->getId()] = $field->getName();
+		$orderableFields[$field->getDBKey()] = $field->getName();
 	}
 	else
 	{
-		$ids[$field->getId()] = $field->getName();
+		$ids[$field->getDBKey()] = $field->getName();
 	}
 }
 
@@ -100,7 +100,7 @@ foreach ($ordering as $data)
 
 <div id="sorting_block">
 	<div class="panel-heading">
-		<span class="panel-title" data-icon="sort-alpha-desc">Documents ordering</span>
+		<span class="panel-title" data-icon="sort-alpha-desc">@lang('datasource::core.ordering.title')</span>
 	</div>
 	<table class="table table-noborder table-primary">
 		<colgroup>
@@ -111,9 +111,9 @@ foreach ($ordering as $data)
 		</colgroup>
 		<thead>
 		<tr>
-			<td>Order by</td>
+			<td>@lang('datasource::core.ordering.order_by')</td>
 			<td></td>
-			<td>Fields</td>
+			<td>@lang('datasource::core.ordering.fields')</td>
 			<td></td>
 		</tr>
 		</thead>

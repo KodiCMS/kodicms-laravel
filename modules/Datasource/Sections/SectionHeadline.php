@@ -111,9 +111,9 @@ class SectionHeadline implements SectionHeadlineInterface
 	/**
 	 * @return array
 	 */
-	public function getSortingRules()
+	public function getOrderingRules()
 	{
-		return [];
+		return $this->section->getHeadlineOrdering();
 	}
 
 	/**
@@ -122,7 +122,7 @@ class SectionHeadline implements SectionHeadlineInterface
 	public function getDocuments()
 	{
 		return $this->section->getEmptyDocument()
-			->getDocuments($this->getActiveFieldIds(), $this->getSortingRules())
+			->getDocuments($this->getActiveFieldIds(), $this->getOrderingRules())
 			->paginate();
 	}
 

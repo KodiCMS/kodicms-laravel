@@ -27,6 +27,14 @@ class BaseRepository
 	}
 
 	/**
+	 * @return array
+	 */
+	public function validatorAttributeNames()
+	{
+		return [];
+	}
+
+	/**
 	 * @return Model
 	 */
 	public function getModel()
@@ -159,6 +167,11 @@ class BaseRepository
 	 */
 	protected function _validate(\Illuminate\Validation\Validator $validator)
 	{
+		if (!empty($attributeNames = $this->validatorAttributeNames()))
+		{
+			$validator->setAttributeNames($attributeNames);
+		}
+
 		if ($validator->fails())
 		{
 			throw (new ValidationException)->setValidator($validator);
