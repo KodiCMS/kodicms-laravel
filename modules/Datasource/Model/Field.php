@@ -213,7 +213,7 @@ class Field extends DatasourceModel implements FieldInterface
 	 */
 	public function isRequired()
 	{
-		return (bool) $this->getSetting('is_required', false);
+		return (bool) $this->getSetting('is_required');
 	}
 
 	/**
@@ -230,23 +230,6 @@ class Field extends DatasourceModel implements FieldInterface
 	public function isVisible()
 	{
 		return $this->getSetting('headline_parameters.visible',  true);
-	}
-
-	/**
-	 * @param bool $status
-	 */
-	public function setVisibleStatus($status)
-	{
-		$this->setSetting(['headline_parameters' => ['visible' => (bool) $status]]);
-	}
-
-	/**
-	 * @param array $params
-	 */
-	public function setSettingHeadlineParameters($params)
-	{
-		$headlineParams = array_get($this->{$this->getSettingsProperty()}, 'headline_parameters', []);
-		$this->{$this->getSettingsProperty()}['headline_parameters'] = array_merge($headlineParams, $params);
 	}
 
 	/**
@@ -330,6 +313,23 @@ class Field extends DatasourceModel implements FieldInterface
 	public function getTypeTitle()
 	{
 		return $this->getType()->getTitle();
+	}
+
+	/**
+	 * @param bool $status
+	 */
+	public function setVisibleStatus($status)
+	{
+		$this->setSetting(['headline_parameters' => ['visible' => (bool) $status]]);
+	}
+
+	/**
+	 * @param array $params
+	 */
+	public function setSettingHeadlineParameters($params)
+	{
+		$headlineParams = array_get($this->{$this->getSettingsProperty()}, 'headline_parameters', []);
+		$this->{$this->getSettingsProperty()}['headline_parameters'] = array_merge($headlineParams, $params);
 	}
 
 	/**
