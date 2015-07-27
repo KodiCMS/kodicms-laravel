@@ -23,6 +23,13 @@ return [
 	'email' => [
 		'title' => 'Email'
 	],
+	'slug' => [
+		'title' => 'Slug',
+		'is_unique' => 'Уникальное',
+		'from_document_title' => 'Брать значение из заголовка документа',
+		'separator' => 'Разделитель',
+		'must_be_unique' => 'Значение поля должно быть уникальным',
+	],
 	'textarea' => [
 		'title' => 'Текст',
 		'allow_html' => 'Разрешить HTML теги',

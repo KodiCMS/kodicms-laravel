@@ -213,7 +213,15 @@ class Field extends DatasourceModel implements FieldInterface
 	 */
 	public function isRequired()
 	{
-		return $this->getSetting('is_required', false);
+		return (bool) $this->getSetting('is_required', false);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isUnique()
+	{
+		return (bool) $this->getSetting('is_unique');
 	}
 
 	/**
@@ -337,6 +345,19 @@ class Field extends DatasourceModel implements FieldInterface
 		if ($this->isRequired())
 		{
 			$rules[] = 'required';
+		}
+
+		if ($this->isUnique())
+		{
+			$table = $this->getSection()->getSectionTableName();
+
+			$uniqueRule = "unique:{$table},{$this->getDBKey()}";
+			if ($document->exists)
+			{
+				$uniqueRule .= ',' . $document->getId() . ',' . $document->getKeyName();
+			}
+
+			$rules[] = $uniqueRule;
 		}
 
 		return $rules;
@@ -584,6 +605,8 @@ class Field extends DatasourceModel implements FieldInterface
 
 		return view($template, [
 			'value' => $document->getFormValue($this->getDBKey()),
+			'key' => $this->getDBKey(),
+			'name' => $this->getName(),
 			'field' => $this,
 			'document' => $document,
 			'section' => $document->getSection()
