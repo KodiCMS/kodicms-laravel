@@ -54,7 +54,7 @@ class DocumentController extends BackendController
 		$this->breadcrumbs
 			->add($section->getName(), route('backend.datasource.list', $section->getId()));
 
-		$this->setTitle($section->getCreateDocumentTitle($document->getTitle()));
+		$this->setTitle($section->getEditDocumentTitle($document->getTitle()));
 
 		$this->setContent('document.edit', [
 			'document' => $document,

@@ -6,7 +6,7 @@ return [
 		'edit' => 'Редактирование раздела [:name]',
 		'create' => 'Новый раздел',
 		'create_document' => 'Новый документ',
-		'edit_document' => 'Новый документ [:name]'
+		'edit_document' => 'Редактирование документа [:name]'
 	],
 	'information' => [
 		'name' => 'Название',
