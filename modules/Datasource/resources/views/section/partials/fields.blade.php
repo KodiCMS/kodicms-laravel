@@ -94,6 +94,7 @@ $(function() {
 		</tr>
 		@endforeach
 		<tbody>
+		@if(!empty($relatedFields = $section->getRelatedFields()))
 		<thead>
 		<tr>
 			<th></th>
@@ -118,6 +119,7 @@ $(function() {
 		</tr>
 		@endforeach
 		</tbody>
+		@endif
 	</table>
 
 	<div class="panel-footer">
