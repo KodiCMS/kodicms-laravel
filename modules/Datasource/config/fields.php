@@ -5,10 +5,10 @@ return [
 		'class' => KodiCMS\Datasource\Fields\Primitive\Primary::class,
 		'title' => trans('datasource::fields.primary.title')
 	],
-	'boolean' => [
-		'class' => KodiCMS\Datasource\Fields\Primitive\Boolean::class,
-		'title' => trans('datasource::fields.boolean.title'),
-		'edit_template' => 'datasource::field.types.boolean'
+	'integer' => [
+		'class' => KodiCMS\Datasource\Fields\Primitive\Integer::class,
+		'title' => trans('datasource::fields.integer.title'),
+		'edit_template' => 'datasource::field.types.integer'
 	],
 	'string' => [
 		'class' => KodiCMS\Datasource\Fields\Primitive\String::class,
@@ -28,6 +28,11 @@ return [
 		'class' => KodiCMS\Datasource\Fields\Primitive\HTML::class,
 		'title' => trans('datasource::fields.html.title'),
 		'edit_template' => 'datasource::field.types.html'
+	],
+	'boolean' => [
+		'class' => KodiCMS\Datasource\Fields\Primitive\Boolean::class,
+		'title' => trans('datasource::fields.boolean.title'),
+		'edit_template' => 'datasource::field.types.boolean'
 	],
 	'timestamp' => [
 		'class' => KodiCMS\Datasource\Fields\Primitive\Timestamp::class,

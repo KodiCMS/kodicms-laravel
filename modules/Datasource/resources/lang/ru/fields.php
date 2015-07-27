@@ -7,6 +7,14 @@ return [
 	'primary' => [
 		'title' => 'Primary'
 	],
+	'integer' => [
+		'title' => 'Число',
+		'length' => 'Длина',
+		'min' => 'Минимальное значение',
+		'max' => 'Максимальное значение',
+		'auto_increment' => 'Автоматическое приращение',
+		'increment_step' => 'Шаг'
+	],
 	'string' => [
 		'title' => 'Строка',
 		'use_filemanager' => 'Использовать файловый менеджер',
