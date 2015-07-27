@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Datasource\Fields\Primitive;
 
+use UI;
 use KodiCMS\Datasource\Fields\Primitive;
 use Illuminate\Database\Schema\Blueprint;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
@@ -22,7 +23,8 @@ class Boolean extends Primitive
 	public function defaultSettings()
 	{
 		return [
-			'style' => static::STYLE_CHECKBOX
+			'style' => static::STYLE_CHECKBOX,
+			'default_value' => false
 		];
 	}
 
@@ -34,7 +36,7 @@ class Boolean extends Primitive
 	 */
 	public function onGetHeadlineValue(DocumentInterface $document, $value)
 	{
-		return (bool) $value ? \UI::icon('check') : \UI::icon('close');
+		return (bool) $value ? UI::icon('check') : UI::icon('close');
 	}
 
 	/**

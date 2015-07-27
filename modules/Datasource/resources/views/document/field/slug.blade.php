@@ -32,7 +32,7 @@ $(function () {
 		<span class="help-inline text-muted">@lang('datasource::fields.slug.must_be_unique')</span>
 		@endif
 
-		@if($hint = $field->getHint()): ?>
+		@if($hint)
 		<p class="help-block">{{ $hint }}</p>
 		@endif
 	</div>

@@ -39,4 +39,5 @@ Route::group(['as' => 'api.datasource.'], function ()
 	RouteAPI::delete('datasource.field.visible', ['as' => 'field.visible.delete', 'uses' => 'API\FieldController@setInvisible']);
 	RouteAPI::delete('datasource.field', ['as' => 'field.delete', 'uses' => 'API\FieldController@deleteField']);
 	RouteAPI::post('datasource.document.remove', ['as' => 'document.remove', 'uses' => 'API\DocumentController@deleteDelete']);
+	RouteAPI::get('datasource.document.find', ['as' => 'document.find', 'uses' => 'API\DocumentController@getFind']);
 });

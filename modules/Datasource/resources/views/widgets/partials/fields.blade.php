@@ -14,7 +14,7 @@
 
 	<tr id="field-{{ $field->getDBKey() }}" class="field-{{ $field->type }}">
 		<td class="f">
-			{!! Form::checkbox("settings[selected_fields][{$field->getId()}]", $field->getId(), in_array($field->getId(), $widget->getSelectedFields()), [
+			{!! Form::checkbox("settings[selected_fields][{$field->getDBKey()}]", $field->getDBKey(), in_array($field->getDBKey(), $widget->getSelectedFields()), [
 				'id' => "field-{$field->getDBKey()}-checkbox"
 			]) !!}
 		</td>

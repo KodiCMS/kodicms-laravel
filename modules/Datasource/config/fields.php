@@ -52,5 +52,12 @@ return [
 		'class' => KodiCMS\Datasource\Fields\Primitive\DateTime::class,
 		'title' => trans('datasource::fields.datetime.title'),
 		'edit_template' => 'datasource::field.types.date'
-	]
+	],
+
+	'has_one' => [
+		'class' => KodiCMS\Datasource\Fields\Relation\HasOne::class,
+		'title' => trans('datasource::fields.has_one.title'),
+		'edit_template' => 'datasource::field.types.has_one',
+		'category' => 'Relations'
+	],
 ];

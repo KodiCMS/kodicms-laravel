@@ -1,15 +1,19 @@
 <?php namespace KodiCMS\Datasource\Model;
 
+use KodiCMS\CMS\Http\Controllers\System\TemplateController;
+use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
+use KodiCMS\Support\Traits\Tentacle;
 use Illuminate\Validation\Validator;
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Datasource\Contracts\FieldInterface;
-use KodiCMS\Datasource\Model\DocumentQueryBuilder;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeDateInterface;
 
 class Document extends Model implements DocumentInterface
 {
+	use Tentacle;
+
 	const COND_EQ       = 0;
 	const COND_BTW      = 1;
 	const COND_GT       = 2;
@@ -113,6 +117,14 @@ class Document extends Model implements DocumentInterface
 				if ($field instanceof FieldTypeDateInterface)
 				{
 					$this->dates[] = $field->getDBKey();
+				}
+
+				if ($field instanceof FieldTypeRelationInterface)
+				{
+					$this->addRelation($field->getRelatedDBKey(), function () use ($field)
+					{
+						return $field->getDocumentRalation($this);
+					});
 				}
 
 				$this->fillable[] = $field->getDBKey();
@@ -307,6 +319,17 @@ class Document extends Model implements DocumentInterface
 	}
 
 	/**
+	 * @param TemplateController $controller
+	 */
+	public function onControllerLoad(TemplateController $controller)
+	{
+		foreach ($this->getSectionFields() as $field)
+		{
+			$field->onControllerLoad($this, $controller);
+		}
+	}
+
+	/**
 	 * @param Validator $validator
 	 *
 	 * @return array
@@ -387,12 +410,12 @@ class Document extends Model implements DocumentInterface
 		{
 			foreach ($fields as $fieldId)
 			{
-				if (!isset($this->sectionFieldsIds[$fieldId]))
+				if (!isset($this->sectionFields[$fieldId]))
 				{
 					continue;
 				}
 
-				$selectFields[] = $this->sectionFieldsIds[$fieldId];
+				$selectFields[] = $this->sectionFields[$fieldId];
 			}
 		}
 		else if ($fields === true)

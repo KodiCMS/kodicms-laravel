@@ -9,7 +9,7 @@
 			'maxlength' => $field->getLength(), 'size' => $field->getLength()
 		]) !!}
 
-		@if($hint = $field->getHint()): ?>
+		@if($hint)
 		<p class="help-block">{{ $hint }}</p>
 		@endif
 	</div>

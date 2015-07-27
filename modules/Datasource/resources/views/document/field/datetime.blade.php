@@ -6,7 +6,7 @@
 	<div class="col-md-10 col-sm-9">
 		{!! Form::text($key, $value, ['class' => 'form-control datetimepicker', 'id' => $key, 'size' => 10]) !!}
 
-		@if($hint = $field->getHint()): ?>
+		@if($hint)
 		<p class="help-block">{{ $hint }}</p>
 		@endif
 	</div>

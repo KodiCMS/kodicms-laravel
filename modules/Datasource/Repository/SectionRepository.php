@@ -111,6 +111,23 @@ class SectionRepository extends BaseRepository
 
 	/**
 	 * @param integer $sectionId
+	 * @param string|null $keyword
+	 *
+	 * @return array|static[]
+	 */
+	public function getDocumentsForRelationField($sectionId, $keyword = null)
+	{
+		$section = $this->findOrFail($sectionId);
+
+		return \DB::table($section->getSectionTableName())
+			->selectRaw("{$section->getDocumentPrimaryKey()} as id")
+			->selectRaw("{$section->getDocumentTitleKey()} as text")
+			->where($section->getDocumentTitleKey(), 'like', '%' . $keyword . '%')
+			->get();
+	}
+
+	/**
+	 * @param integer $sectionId
 	 *
 	 * @return DocumentInterface
 	 */

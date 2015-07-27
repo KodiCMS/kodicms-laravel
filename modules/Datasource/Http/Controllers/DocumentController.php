@@ -22,6 +22,10 @@ class DocumentController extends BackendController
 
 		$this->setTitle($section->getCreateDocumentTitle());
 
+		$this->templateScripts['SECTION'] = $section;
+		$this->templateScripts['DOCUMENT'] = $document;
+		$document->onControllerLoad($this);
+
 		$this->setContent('document.create', [
 			'document' => $document,
 			'section' => $section,
@@ -51,10 +55,14 @@ class DocumentController extends BackendController
 		$document = $repository->getDocumentById($sectionId, $documentId);
 		$section = $document->getSection();
 
+		$document->onControllerLoad($this);
 		$this->breadcrumbs
 			->add($section->getName(), route('backend.datasource.list', $section->getId()));
 
 		$this->setTitle($section->getEditDocumentTitle($document->getTitle()));
+
+		$this->templateScripts['SECTION'] = $section;
+		$this->templateScripts['DOCUMENT'] = $document;
 
 		$this->setContent('document.edit', [
 			'document' => $document,

@@ -113,13 +113,14 @@ class DatasourceList extends Decorator implements WidgetCacheable, WidgetPaginat
 
 		foreach ($this->getSection()->getFields() as $field)
 		{
-			if (in_array($field->getId(), $this->getSelectedFields()))
+			if (in_array($field->getDBKey(), $this->getSelectedFields()))
 			{
 				$visibleFields[] = $field;
 			}
 		}
 
 		$documents = [];
+
 		foreach ($result as $document)
 		{
 			$documents[$document->getId()] = [];
@@ -158,7 +159,7 @@ class DatasourceList extends Decorator implements WidgetCacheable, WidgetPaginat
 			$this->ordering = [];
 		}
 
-		$documents = $this->getSection()->getEmptyDocument()->getDocuments($this->selected_fields, $this->ordering, $this->filters);
+		$documents = $this->getSection()->getEmptyDocument()->getDocuments($this->selected_fields, (array) $this->ordering, (array) $this->filters);
 
 		if ($this->order_By_rand)
 		{

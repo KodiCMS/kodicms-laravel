@@ -53,6 +53,11 @@ class Section extends DatasourceModel implements SectionInterface
 	/**
 	 * @var array
 	 */
+	protected $relatedFields = [];
+
+	/**
+	 * @var array
+	 */
 	protected $sectionSettings = [];
 
 	/**
@@ -184,11 +189,24 @@ class Section extends DatasourceModel implements SectionInterface
 		return [];
 	}
 
+	/**
+	 * @return array
+	 */
+	public function getRelatedFields()
+	{
+		return $this->relatedFields;
+	}
+
 	protected function initializeFields()
 	{
 		foreach ($this->fields()->get() as $field)
 		{
 			$this->sectionFields[$field->getId()] = $field;
+		}
+
+		foreach ($this->relatedFields()->get() as $field)
+		{
+			$this->relatedFields[$field->getId()] = $field;
 		}
 	}
 
@@ -404,6 +422,14 @@ class Section extends DatasourceModel implements SectionInterface
 	public function fields()
 	{
 		return $this->hasMany('KodiCMS\Datasource\Model\Field', 'ds_id')->orderBy('position');
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function relatedFields()
+	{
+		return $this->hasMany('KodiCMS\Datasource\Model\Field', 'related_ds')->orderBy('position');
 	}
 
 	/**

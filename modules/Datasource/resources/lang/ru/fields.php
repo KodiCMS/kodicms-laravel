@@ -58,4 +58,7 @@ return [
 	'datetime' => [
 		'title' => 'Дата/Время'
 	],
+	'has_one' => [
+		'title' => 'HasOne'
+	]
 ];

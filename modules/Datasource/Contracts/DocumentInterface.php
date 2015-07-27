@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Datasource\Contracts;
 
 use Illuminate\Validation\Validator;
+use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 
 interface DocumentInterface
 {
@@ -64,4 +65,9 @@ interface DocumentInterface
 	 * @return Collection
 	 */
 	public function getDocuments($fields = true, array $orderRules = [], array $filterRules = []);
+
+	/**
+	 * @param TemplateController $controller
+	 */
+	public function onControllerLoad(TemplateController $controller);
 }

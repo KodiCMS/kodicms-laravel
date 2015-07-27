@@ -6,13 +6,15 @@ use KodiCMS\Datasource\FieldType;
 use Illuminate\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Contracts\Support\Arrayable;
 use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Exceptions\FieldException;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
+use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 
-class Field extends DatasourceModel implements FieldInterface
+class Field extends DatasourceModel implements FieldInterface, Arrayable
 {
 	// TODO: вынести в отдельный Observer
 	protected static function boot()
@@ -253,7 +255,7 @@ class Field extends DatasourceModel implements FieldInterface
 	 */
 	public function getDefaultValue()
 	{
-		return $this->getSetting('default_value', false);
+		return $this->getSetting('default_value');
 	}
 
 	/**
@@ -471,6 +473,15 @@ class Field extends DatasourceModel implements FieldInterface
 
 	}
 
+	/**
+	 * @param DocumentInterface $document
+	 * @param TemplateController $controller
+	 */
+	public function onControllerLoad(DocumentInterface $document, TemplateController $controller)
+	{
+		$controller->includeModuleMediaFile('fields/' . $this->getType()->getType());
+	}
+
 	/**************************************************************************
 	 * Database
 	 **************************************************************************/
@@ -480,7 +491,7 @@ class Field extends DatasourceModel implements FieldInterface
 	 */
 	public function querySelectColumn(Builder $query, DocumentInterface $document)
 	{
-		$query->selectRaw("{$this->getDBKey()} as {$this->getKey()}");
+		$query->addSelect($this->getDBKey());
 	}
 
 	/**
@@ -489,7 +500,7 @@ class Field extends DatasourceModel implements FieldInterface
 	 */
 	public function queryOrderBy(Builder $query, $dir = 'asc')
 	{
-		$query->orderBy($this->getKey(), $dir);
+		$query->orderBy($this->getDBKey(), $dir);
 	}
 
 	/**
@@ -603,14 +614,24 @@ class Field extends DatasourceModel implements FieldInterface
 			$template = 'datasource::document.field.' . $this->getType()->getType();
 		}
 
-		return view($template, [
+		return view($template, array_merge($this->toArray(), [
 			'value' => $document->getFormValue($this->getDBKey()),
-			'key' => $this->getDBKey(),
-			'name' => $this->getName(),
-			'field' => $this,
 			'document' => $document,
 			'section' => $document->getSection()
-		]);
+		]));
+	}
+
+	/**
+	 * @return array
+	 */
+	public function toArray()
+	{
+		return [
+			'key' => $this->getDBKey(),
+			'name' => $this->getName(),
+			'hint' => $this->getHint(),
+			'field' => $this,
+		];
 	}
 
 	/**************************************************************************

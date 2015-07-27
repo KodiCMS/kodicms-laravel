@@ -22,8 +22,8 @@
 		</label>
 		@endif
 
-		@if($hint = $field->getHint()): ?>
-		<p class="help-block">{{ $hint }}</p>
+		@if($hint)
+			<p class="help-block">{{ $hint }}</p>
 		@endif
 	</div>
 </div>

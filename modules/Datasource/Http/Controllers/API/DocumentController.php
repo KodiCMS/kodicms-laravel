@@ -12,4 +12,17 @@ class DocumentController extends Controller
 
 		$repository->deleteDocuments($sectionId, $docIds);
 	}
+
+	/**
+	 * @param SectionRepository $repository
+	 */
+	public function getFind(SectionRepository $repository)
+	{
+		$sectionId = $this->getRequiredParameter('section_id');
+		$keyword = $this->getParameter('q');
+
+		$documents = $repository->getDocumentsForRelationField($sectionId, $keyword);
+
+		$this->setContent($documents);
+	}
 }

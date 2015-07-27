@@ -15,7 +15,7 @@ $(function(){
 			'class' => 'form-control', 'id' => $key, 'data-height' => '265'
 		]) !!}
 
-		@if($hint = $field->getHint()): ?>
+		@if($hint)
 		<p class="help-block">{{ $hint }}</p>
 		@endif
 	</div>

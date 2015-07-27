@@ -4,6 +4,7 @@ use KodiCMS\Datasource\FieldType;
 use Illuminate\Validation\Validator;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Eloquent\Builder;
+use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 
 interface FieldInterface
 {
@@ -176,7 +177,6 @@ interface FieldInterface
 	public function onDocumentCreating(DocumentInterface $document, $value);
 
 	/**
-	 * @param DocumentInterface $oldDocument
 	 * @param DocumentInterface $document
 	 * @param $value
 	 */
@@ -186,6 +186,12 @@ interface FieldInterface
 	 * @param DocumentInterface $document
 	 */
 	public function onDocumentDeleting(DocumentInterface $document);
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param TemplateController $controller
+	 */
+	public function onControllerLoad(DocumentInterface $document, TemplateController $controller);
 
 
 	/**************************************************************************

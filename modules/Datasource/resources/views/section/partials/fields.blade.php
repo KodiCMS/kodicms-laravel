@@ -60,12 +60,12 @@ $(function() {
 		</colgroup>
 		<thead>
 		<tr>
-			<td></td>
-			<td>@lang('datasource::core.field.position')</td>
-			<td>@lang('datasource::core.field.key')</td>
-			<td>@lang('datasource::core.field.name')</td>
-			<td class="text-center">@lang('datasource::core.field.visible')</td>
-			<td class="text-right">@lang('datasource::core.field.type')</td>
+			<th></th>
+			<th>@lang('datasource::core.field.position')</th>
+			<th>@lang('datasource::core.field.key')</th>
+			<th>@lang('datasource::core.field.name')</th>
+			<th class="text-center">@lang('datasource::core.field.visible')</th>
+			<th class="text-right">@lang('datasource::core.field.type')</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -90,6 +90,30 @@ $(function() {
 			</td>
 			<td class="text-right">
 				{!! UI::label($field->getType()->getCategory(), 'success') !!} {!! UI::label($field->getTypeTitle()) !!}
+			</td>
+		</tr>
+		@endforeach
+		<tbody>
+		<thead>
+		<tr>
+			<th></th>
+			<th colspan="5">@lang('datasource::core.field.related')</th>
+		</tr>
+		</thead>
+		</tbody>
+		@foreach ($section->getRelatedFields() as $field)
+		<tr data-id="{{ $field->getId() }}">
+			<td></td>
+			<td class="text-center"></td>
+			<td>
+				<label for="{{ $field->getKey() }}">{{ $field->getKey() }}</label>
+			</td>
+			<td>
+				{!! link_to_route('backend.datasource.field.edit', $field->getName(), [$field->getId()], ['class' => 'popup']) !!}
+			</td>
+			<td class="text-center"></td>
+			<td class="text-right">
+				{!! UI::label($field->getType()->getCategory(), 'success') !!} {!! UI::label($field->getSection()->getName(), 'danger') !!}  {!! UI::label($field->getTypeTitle()) !!}
 			</td>
 		</tr>
 		@endforeach

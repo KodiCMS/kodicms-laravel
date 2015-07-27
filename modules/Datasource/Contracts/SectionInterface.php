@@ -84,6 +84,11 @@ interface SectionInterface
 	/**
 	 * @return array
 	 */
+	public function getRelatedFields();
+
+	/**
+	 * @return array
+	 */
 	public function getFields();
 
 	/**
