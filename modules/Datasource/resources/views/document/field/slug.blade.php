@@ -15,7 +15,7 @@ $(function () {
 	<div class="col-md-10 col-sm-9">
 		<div class="input-group">
 			{!! Form::text($key, $value, [
-				'class' => 'form-control slug ' . ($field->fromDocumentTitle() ? 'from-header' : ''),
+				'class' => 'form-control slugify ' . ($field->fromDocumentTitle() ? 'from-header' : ''),
 				'id' => $key, 'maxlength' => 255,
 				'data-separator' => $field->getSeparator()
 			]) !!}
