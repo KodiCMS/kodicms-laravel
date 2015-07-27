@@ -1,13 +1,13 @@
 <?php namespace KodiCMS\Datasource\Widget;
 
-use KodiCMS\Datasource\Contracts\SectionInterface;
-use KodiCMS\Datasource\Repository\SectionRepository;
-use KodiCMS\Datasource\Traits\WidgetDatasource;
-use KodiCMS\Widgets\Contracts\WidgetCacheable;
-use KodiCMS\Widgets\Contracts\WidgetPaginator as WidgetPaginatorInterface;
+use KodiCMS\Widgets\Widget\Decorator;
 use KodiCMS\Widgets\Traits\WidgetCache;
 use KodiCMS\Widgets\Traits\WidgetPaginator;
-use KodiCMS\Widgets\Widget\Decorator;
+use KodiCMS\Widgets\Contracts\WidgetCacheable;
+use KodiCMS\Datasource\Traits\WidgetDatasource;
+use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\Repository\SectionRepository;
+use KodiCMS\Widgets\Contracts\WidgetPaginator as WidgetPaginatorInterface;
 
 class DatasourceList extends Decorator implements WidgetCacheable, WidgetPaginatorInterface
 {
@@ -99,7 +99,7 @@ class DatasourceList extends Decorator implements WidgetCacheable, WidgetPaginat
 	}
 
 	/**
-	 * @return array
+	 * @return array [[array] $documents, [Collection] $documentsRaw, [KodiCMS\Datasource\Contracts\SectionInterface] $section]
 	 */
 	public function prepareData()
 	{
