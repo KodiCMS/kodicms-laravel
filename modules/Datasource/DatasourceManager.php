@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\Datasource;
 
 use Schema;
-use FieldManager;
 use Illuminate\Support\Collection;
 use KodiCMS\Datasource\Fields\Field;
 use KodiCMS\Datasource\Model\Section;

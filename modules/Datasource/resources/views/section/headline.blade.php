@@ -24,8 +24,7 @@
 
 			@foreach ($fieldParams as $key => $params)
 
-			@if(isset($document->$key))
-
+			@if($document->hasField($key))
 			@if(array_get($params, 'type') == 'link')
 			<td class="row-{{ $key }} {{ array_get($params, 'class') }}">
 				<strong>

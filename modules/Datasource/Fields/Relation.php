@@ -20,4 +20,12 @@ class Relation extends Field
 	{
 		return $this->related_ds;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getRelatedDBKey()
+	{
+		return $this->getDBKey() . '_relation';
+	}
 }

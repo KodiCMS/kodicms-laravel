@@ -49,7 +49,8 @@ class Section extends \KodiCMS\Datasource\Model\Section
 				'name' => 'ID',
 				'settings' => [
 					'headline_parameters' => [
-						'width' => 30
+						'width' => 30,
+						'visible' => true
 					]
 				]
 			]),
@@ -57,7 +58,10 @@ class Section extends \KodiCMS\Datasource\Model\Section
 				'key' => 'header',
 				'name' => 'Header',
 				'settings' => [
-					'is_required' => true
+					'is_required' => true,
+					'headline_parameters' => [
+						'visible' => true
+					]
 				]
 			]),
 			new Boolean([
@@ -65,7 +69,8 @@ class Section extends \KodiCMS\Datasource\Model\Section
 				'name' => 'Published',
 				'settings' => [
 					'headline_parameters' => [
-						'width' => 30
+						'width' => 30,
+						'visible' => true
 					]
 				]
 			]),
@@ -74,7 +79,8 @@ class Section extends \KodiCMS\Datasource\Model\Section
 				'name' => 'Created At',
 				'settings' => [
 					'headline_parameters' => [
-						'width' => 200
+						'width' => 200,
+						'visible' => true
 					]
 				]
 			]),

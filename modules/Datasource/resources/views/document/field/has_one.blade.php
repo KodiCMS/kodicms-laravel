@@ -5,7 +5,7 @@
 
 	<div class="col-md-10 col-sm-9">
 		<div class="input-group">
-			{!! Form::select($key, $field->getRelatedDocumentValue($value), $value, [
+			{!! Form::select($key, $field->getRelatedDocumentValue($document), $value, [
 				'id' => $key, 'class' => 'col-md-12 no-script', 'data-related-section' => $relatedSection->getId()
 			]) !!}
 

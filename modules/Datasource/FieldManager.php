@@ -3,6 +3,7 @@
 use Schema;
 use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\Contracts\FieldTypeOnlySystemInterface;
 
 class FieldManager extends AbstractManager
 {
@@ -29,7 +30,9 @@ class FieldManager extends AbstractManager
 
 		foreach($this->getAvailableTypes() as $key => $typeObject)
 		{
-			if($key == 'primary') continue;
+			$interfaces = class_implements($typeObject->getClass());
+
+			if(in_array(FieldTypeOnlySystemInterface::class, $interfaces)) continue;
 
 			$types[$typeObject->getCategory()][$key] = $typeObject->getTitle();
 		}
@@ -85,11 +88,6 @@ class FieldManager extends AbstractManager
 	 */
 	public function updateSectionTableField(FieldInterface $field)
 	{
-		if (!$field->isChangeableDatabaseField())
-		{
-			return false;
-		}
-
 		$section = $field->getSection();
 
 		if (!Schema::hasColumn($section->getSectionTableName(), $field->getDBKey()))

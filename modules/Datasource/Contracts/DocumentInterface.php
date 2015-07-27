@@ -6,6 +6,12 @@ use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 interface DocumentInterface
 {
 	/**
+	 * @param string $key
+	 * @return bool
+	 */
+	public function hasField($key);
+
+	/**
 	 * @return string
 	 */
 	public function getEditLink();

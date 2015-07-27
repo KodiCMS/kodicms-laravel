@@ -60,4 +60,9 @@ return [
 		'edit_template' => 'datasource::field.types.has_one',
 		'category' => 'Relations'
 	],
+	'belongs_to' => [
+		'class' => KodiCMS\Datasource\Fields\Relation\BelongsTo::class,
+		'title' => trans('datasource::fields.belongs_to.title'),
+		'category' => 'Relations'
+	],
 ];

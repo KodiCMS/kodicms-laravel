@@ -7,6 +7,7 @@ use Illuminate\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Contracts\Support\Arrayable;
+use KodiCMS\Datasource\Observers\FieldObserver;
 use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Exceptions\FieldException;
 use KodiCMS\Datasource\Contracts\SectionInterface;
@@ -16,31 +17,10 @@ use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 
 class Field extends DatasourceModel implements FieldInterface, Arrayable
 {
-	// TODO: вынести в отдельный Observer
 	protected static function boot()
 	{
 		parent::boot();
-
-		static::creating(function(Field $field)
-		{
-			$field->position = $field->getLastPosition() + 1;
-		});
-
-		static::deleted(function(Field $field)
-		{
-			if ($field->isAttachedToSection())
-			{
-				FieldManager::dropSectionTableField($field);
-			}
-		});
-
-		static::updated(function(Field $field)
-		{
-			if ($field->isAttachedToSection())
-			{
-				FieldManager::updateSectionTableField($field);
-			}
-		});
+		static::observe(new FieldObserver());
 	}
 
 	/**
@@ -231,7 +211,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 */
 	public function isVisible()
 	{
-		return $this->getSetting('headline_parameters.visible',  true);
+		return $this->getSetting('headline_parameters.visible');
 	}
 
 	/**
@@ -614,11 +594,20 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 			$template = 'datasource::document.field.' . $this->getType()->getType();
 		}
 
-		return view($template, array_merge($this->toArray(), [
+		return view($template, array_merge($this->toArray(), $this->fetchBackendTemplateValues($document)));
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @return array
+	 */
+	protected function fetchBackendTemplateValues(DocumentInterface $document)
+	{
+		return [
 			'value' => $document->getFormValue($this->getDBKey()),
 			'document' => $document,
 			'section' => $document->getSection()
-		]));
+		];
 	}
 
 	/**

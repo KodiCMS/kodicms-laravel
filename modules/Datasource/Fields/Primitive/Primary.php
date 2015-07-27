@@ -2,8 +2,9 @@
 
 use KodiCMS\Datasource\Model\Field;
 use Illuminate\Database\Schema\Blueprint;
+use KodiCMS\Datasource\Contracts\FieldTypeOnlySystemInterface;
 
-class Primary extends Field
+class Primary extends Field implements FieldTypeOnlySystemInterface
 {
 	/**
 	 * @var bool

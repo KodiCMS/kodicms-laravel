@@ -60,5 +60,8 @@ return [
 	],
 	'has_one' => [
 		'title' => 'HasOne'
+	],
+	'belongs_to' => [
+		'title' => 'Относится к'
 	]
 ];

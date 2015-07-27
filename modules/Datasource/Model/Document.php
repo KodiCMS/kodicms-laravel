@@ -1,7 +1,9 @@
 <?php namespace KodiCMS\Datasource\Model;
 
 use KodiCMS\CMS\Http\Controllers\System\TemplateController;
+use KodiCMS\Datasource\Contracts\FieldTypeOnlySystemInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
+use KodiCMS\Datasource\Observers\DocumentObserver;
 use KodiCMS\Support\Traits\Tentacle;
 use Illuminate\Validation\Validator;
 use Illuminate\Database\Eloquent\Model;
@@ -29,34 +31,10 @@ class Document extends Model implements DocumentInterface
 	const FILTER_VALUE_POST     = 50;
 	const FILTER_VALUE_BEHAVIOR = 30;
 
-	// TODO: вынести в отдельный Observer
 	protected static function boot()
 	{
 		parent::boot();
-
-		static::creating(function (Document $document)
-		{
-			foreach ($document->getSectionFields() as $key => $field)
-			{
-				$field->onDocumentCreating($document, $document->getAttribute($key));
-			}
-		});
-
-		static::deleting(function (Document $document)
-		{
-			foreach ($document->getSectionFields() as $key => $field)
-			{
-				$field->onDocumentDeleting($document);
-			}
-		});
-
-		static::updating(function (Document $document)
-		{
-			foreach ($document->getSectionFields() as $key => $field)
-			{
-				$field->onDocumentUpdating($document, $document->getAttribute($key));
-			}
-		});
+		static::observe(new DocumentObserver);
 	}
 
 	/**
@@ -121,14 +99,19 @@ class Document extends Model implements DocumentInterface
 
 				if ($field instanceof FieldTypeRelationInterface)
 				{
-					$this->addRelation($field->getRelatedDBKey(), function () use ($field)
+					$this->addRelation(camel_case($field->getRelatedDBKey()), function () use ($field)
 					{
 						return $field->getDocumentRalation($this);
 					});
 				}
 
-				$this->fillable[] = $field->getDBKey();
-				$this->setAttribute($field->getDBKey(), $field->getDefaultValue());
+				if (!($field instanceof FieldTypeOnlySystemInterface))
+				{
+					$this->fillable[] = $field->getDBKey();
+					$this->setAttribute($field->getDBKey(), $field->getDefaultValue());
+				}
+
+
 				$this->sectionFields[$field->getDBKey()] = $field;
 			}
 
@@ -206,6 +189,15 @@ class Document extends Model implements DocumentInterface
 	}
 
 	/**
+	 * @param string $key
+	 * @return bool
+	 */
+	public function hasField($key)
+	{
+		return isset($this->sectionFields[$key]);
+	}
+
+	/**
 	 * Get the value of an attribute using its mutator.
 	 *
 	 * @param  string  $key
@@ -244,6 +236,7 @@ class Document extends Model implements DocumentInterface
 	public function getHeadlineValue($key)
 	{
 		$value = parent::getAttributeValue($key);
+
 		if (!is_null($field = array_get($this->sectionFields, $key)))
 		{
 			$value = $field->onGetHeadlineValue($this, $value);

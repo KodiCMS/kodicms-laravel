@@ -4,7 +4,9 @@ use Event;
 use KodiCMS\CMS\Navigation\Page;
 use KodiCMS\CMS\Navigation\Section;
 use KodiCMS\Datasource\FieldManager;
+use KodiCMS\Datasource\Model\Field;
 use KodiCMS\Datasource\DatasourceManager;
+use KodiCMS\Datasource\Observers\FieldObserver;
 use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider {

@@ -52,7 +52,7 @@ trait Tentacle
 
 		if (array_key_exists($camelKey, static::$tentacles))
 		{
-			return $this->getRelationshipFromMethod($key, $camelKey);
+			return $this->getRelationshipFromMethod($camelKey);
 		}
 	}
 
