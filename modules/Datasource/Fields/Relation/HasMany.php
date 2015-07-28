@@ -6,10 +6,9 @@ use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Repository\FieldRepository;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
-use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
 use Illuminate\Database\Eloquent\Relations\HasMany as HasManyRelation;
 
-class HasMany extends Relation implements FieldTypeRelationInterface
+class HasMany extends Relation
 {
 	/**
 	 * @var bool
@@ -81,12 +80,12 @@ class HasMany extends Relation implements FieldTypeRelationInterface
 
 	/**
 	 * @param DocumentInterface $document
-	 * @param SectionInterface $relatedSection
+	 * @param SectionInterface|null $relatedSection
 	 * @param FieldInterface|null $relatedField
 	 *
 	 * @return HasManyRelation
 	 */
-	public function getDocumentRelation(DocumentInterface $document, SectionInterface $relatedSection, FieldInterface $relatedField = null)
+	public function getDocumentRelation(DocumentInterface $document, SectionInterface $relatedSection = null, FieldInterface $relatedField = null)
 	{
 		$instance = $relatedSection->getEmptyDocument()->newQuery();
 

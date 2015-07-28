@@ -3,8 +3,9 @@
 use DatasourceManager;
 use KodiCMS\Datasource\Model\Field;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
 
-class Relation extends Field
+abstract class Relation extends Field implements FieldTypeRelationInterface
 {
 	/**
 	 * The relations to eager load on every query.

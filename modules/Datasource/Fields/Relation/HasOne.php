@@ -7,22 +7,21 @@ use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Repository\FieldRepository;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
-use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
 use Illuminate\Database\Eloquent\Relations\HasOne as HasOneRelation;
 
-class HasOne extends Relation implements FieldTypeRelationInterface
+class HasOne extends Relation
 {
 	const ONE_TO_ONE = 'one_to_one';
 	const ONE_TO_MANY = 'one_to_many';
 
 	/**
 	 * @param DocumentInterface $document
-	 * @param SectionInterface $relatedSection
+	 * @param SectionInterface|null $relatedSection
 	 * @param FieldInterface|null $relatedField
 	 *
 	 * @return HasOneRelation
 	 */
-	public function getDocumentRelation(DocumentInterface $document, SectionInterface $relatedSection, FieldInterface $relatedField = null)
+	public function getDocumentRelation(DocumentInterface $document, SectionInterface $relatedSection = null, FieldInterface $relatedField = null)
 	{
 		$instance = $relatedSection->getEmptyDocument()->newQuery();
 

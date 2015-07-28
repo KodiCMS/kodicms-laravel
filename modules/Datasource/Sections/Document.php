@@ -1,4 +1,4 @@
-<?php namespace KodiCMS\Datasource\Sections\DefaultSection;
+<?php namespace KodiCMS\Datasource\Sections;
 
 class Document extends \KodiCMS\Datasource\Model\Document {
 

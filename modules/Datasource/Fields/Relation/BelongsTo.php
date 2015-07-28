@@ -5,11 +5,10 @@ use Illuminate\Database\Eloquent\Builder;
 use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
-use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeOnlySystemInterface;
 use Illuminate\Database\Eloquent\Relations\BelongsTo as BelongsToRelation;
 
-class BelongsTo extends Relation implements FieldTypeRelationInterface, FieldTypeOnlySystemInterface
+class BelongsTo extends Relation implements FieldTypeOnlySystemInterface
 {
 	/**
 	 * @var bool
@@ -40,12 +39,12 @@ class BelongsTo extends Relation implements FieldTypeRelationInterface, FieldTyp
 
 	/**
 	 * @param DocumentInterface $document
-	 * @param SectionInterface $relatedSection
+	 * @param SectionInterface|null $relatedSection
 	 * @param FieldInterface|null $relatedField
 	 *
 	 * @return BelongsToRelation
 	 */
-	public function getDocumentRelation(DocumentInterface $document, SectionInterface $relatedSection, FieldInterface $relatedField = null)
+	public function getDocumentRelation(DocumentInterface $document, SectionInterface $relatedSection = null, FieldInterface $relatedField = null)
 	{
 		$instance = $relatedSection->getEmptyDocument()->newQuery();
 

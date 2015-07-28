@@ -1,9 +1,12 @@
-<?php namespace KodiCMS\Datasource\Sections\DefaultSection;
+<?php namespace KodiCMS\Datasource\Sections\Article;
 
 use KodiCMS\Datasource\Sections\Document;
+use KodiCMS\Datasource\Fields\Source\User;
+use KodiCMS\Datasource\Fields\Primitive\HTML;
 use KodiCMS\Datasource\Fields\Primitive\String;
 use KodiCMS\Datasource\Sections\SectionToolbar;
 use KodiCMS\Datasource\Fields\Primitive\Primary;
+use KodiCMS\Datasource\Fields\Primitive\Boolean;
 use KodiCMS\Datasource\Sections\SectionHeadline;
 use KodiCMS\Datasource\Fields\Primitive\Timestamp;
 
@@ -12,7 +15,7 @@ class Section extends \KodiCMS\Datasource\Model\Section
 	/**
 	 * @var string
 	 */
-	protected $sectionTableName = 'default';
+	protected $sectionTableName = 'articles';
 
 	/**
 	 * @return string
@@ -59,6 +62,39 @@ class Section extends \KodiCMS\Datasource\Model\Section
 				'name' => 'Header',
 				'settings' => [
 					'is_required' => true,
+					'headline_parameters' => [
+						'visible' => true
+					]
+				]
+			]),
+			new Boolean([
+				'key' => 'published',
+				'name' => 'Published',
+				'settings' => [
+					'headline_parameters' => [
+						'width' => 30,
+						'visible' => true
+					]
+				]
+			]),
+			new HTML([
+				'key' => 'description',
+				'name' => 'Description',
+				'settings' => [
+					'headline_parameters' => [
+						'visible' => true
+					]
+				]
+			]),
+			new HTML([
+				'key' => 'text',
+				'name' => 'Text'
+			]),
+			new User([
+				'key' => 'created_by_id',
+				'name' => 'Created By',
+				'settings' => [
+					'current_only' => true,
 					'headline_parameters' => [
 						'visible' => true
 					]

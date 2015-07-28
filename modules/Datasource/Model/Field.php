@@ -627,7 +627,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 			$template = 'datasource::document.field.' . $this->getType()->getType();
 		}
 
-		return view($template, array_merge($this->toArray(), $this->fetchBackendTemplateValues($document)));
+		return view($template, array_merge($this->toArray(), $this->fetchBackendTemplateValues($document)))->render();
 	}
 
 	/**
