@@ -123,8 +123,6 @@ class HasMany extends Relation implements FieldTypeRelationInterface
 		}
 	}
 
-
-
 	/**
 	 * @param DocumentInterface $document
 	 * @return array

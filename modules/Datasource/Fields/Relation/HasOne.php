@@ -91,18 +91,6 @@ class HasOne extends Relation implements FieldTypeRelationInterface
 	/**************************************************************************
 	 * Events
 	 **************************************************************************/
-	/**
-	 * @param DocumentInterface $document
-	 * @param mixed $value
-	 *
-	 * @return mixed
-	 */
-	public function onGetWidgetValue(DocumentInterface $document, $value)
-	{
-		return $document->relationLoaded($this->getRelationName())
-			? $document->getRelation($this->getRelationName())->toArray()
-			: $value;
-	}
 
 	/**
 	 * @param DocumentInterface $document
