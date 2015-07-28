@@ -75,7 +75,7 @@ class BelongsTo extends Relation implements FieldTypeRelationInterface, FieldTyp
 	protected function fetchBackendTemplateValues(DocumentInterface $document)
 	{
 		return array_merge(parent::fetchBackendTemplateValues($document), [
-			'relatedDocument' => $this->getDocumentRalation($document)->first()
+			'relatedDocument' => $this->getDocumentRalation($document, $this->relatedSection)->first()
 		]);
 	}
 }
