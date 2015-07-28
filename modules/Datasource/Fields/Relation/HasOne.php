@@ -1,12 +1,13 @@
 <?php namespace KodiCMS\Datasource\Fields\Relation;
 
+use KodiCMS\Datasource\Fields\Relation;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\HasOne as HasOneRelation;
 use Illuminate\Database\Schema\Blueprint;
+use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\Repository\FieldRepository;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
-use KodiCMS\Datasource\Fields\Relation;
-use KodiCMS\Datasource\Repository\FieldRepository;
+use Illuminate\Database\Eloquent\Relations\HasOne as HasOneRelation;
 
 class HasOne extends Relation implements FieldTypeRelationInterface
 {
@@ -25,24 +26,21 @@ class HasOne extends Relation implements FieldTypeRelationInterface
 	 */
 	public function querySelectColumn(Builder $query, DocumentInterface $document)
 	{
-		$query
-			->addSelect($this->getDBKey())
-			->with([$this->getRelatedDBKey()]);
+		$query->addSelect($this->getDBKey())->with($this->getRelationName());
 	}
 
 	/**
 	 * @param DocumentInterface $document
-	 *
-	 * @return \Illuminate\Database\Eloquent\Relations\Relation
+	 * @param SectionInterface $relatedSection
+	 * @return BelongsToRelation
 	 */
-	public function getDocumentRalation(DocumentInterface $document)
+	public function getDocumentRalation(DocumentInterface $document, SectionInterface $relatedSection)
 	{
-		$section = $this->relatedSection()->first();
-		$instance = $section->getEmptyDocument()->newQuery();
+		$instance = $relatedSection->getEmptyDocument()->newQuery();
 
-		$foreignKey = $section->getSectionTableName() . '.' . $section->getDocumentPrimaryKey();
+		$foreignKey = $relatedSection->getSectionTableName() . '.' . $relatedSection->getDocumentPrimaryKey();
 		$otherKey = $this->getDBKey();
-		$relation = $this->getRelatedDBKey();
+		$relation = $this->getRelationName();
 
 		return new HasOneRelation($instance, $document, $foreignKey, $otherKey, $relation);
 	}
@@ -53,11 +51,11 @@ class HasOne extends Relation implements FieldTypeRelationInterface
 	 *
 	 * @return mixed
 	 */
-	public function onGetHeadlineValue(DocumentInterface $document, $value)
+	public function onGetWidgetValue(DocumentInterface $document, $value)
 	{
-		return !is_null($relatedDocument = $document->getAttribute($this->getRelatedDBKey()))
-			? \HTML::link($relatedDocument->getEditLink(), $relatedDocument->getTitle(), ['class' => 'popup'])
-			: null;
+		return $document->relationLoaded($this->getRelationName())
+			? $document->getRelation($this->getRelationName())->toArray()
+			: $value;
 	}
 
 	/**
@@ -66,11 +64,11 @@ class HasOne extends Relation implements FieldTypeRelationInterface
 	 *
 	 * @return mixed
 	 */
-	public function onGetWidgetValue(DocumentInterface $document, $value)
+	public function onGetHeadlineValue(DocumentInterface $document, $value)
 	{
-		return $document->relationLoaded($this->getRelatedDBKey())
-			? $document->getRelation($this->getRelatedDBKey())->toArray()
-			: $value;
+		return !is_null($relatedDocument = $document->getAttribute($this->getRelationName()))
+			? \HTML::link($relatedDocument->getEditLink(), $relatedDocument->getTitle(), ['class' => 'popup'])
+			: null;
 	}
 
 	/**

@@ -1,16 +1,16 @@
 <?php namespace KodiCMS\Datasource\Model;
 
-use KodiCMS\CMS\Http\Controllers\System\TemplateController;
-use KodiCMS\Datasource\Contracts\FieldTypeOnlySystemInterface;
-use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
-use KodiCMS\Datasource\Observers\DocumentObserver;
 use KodiCMS\Support\Traits\Tentacle;
 use Illuminate\Validation\Validator;
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Datasource\Contracts\FieldInterface;
+use KodiCMS\Datasource\Observers\DocumentObserver;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeDateInterface;
+use KodiCMS\CMS\Http\Controllers\System\TemplateController;
+use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
+use KodiCMS\Datasource\Contracts\FieldTypeOnlySystemInterface;
 
 class Document extends Model implements DocumentInterface
 {
@@ -99,9 +99,10 @@ class Document extends Model implements DocumentInterface
 
 				if ($field instanceof FieldTypeRelationInterface)
 				{
-					$this->addRelation(camel_case($field->getRelatedDBKey()), function () use ($field)
+					$section = $field->relatedSection;
+					$this->addRelation($field->getRelationName(), function () use ($field, $section)
 					{
-						return $field->getDocumentRalation($this);
+						return $field->getDocumentRalation($this, $section);
 					});
 				}
 

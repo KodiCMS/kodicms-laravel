@@ -1,8 +1,9 @@
 <?php namespace KodiCMS\Datasource\Fields\Relation;
 
-use Illuminate\Database\Eloquent\Builder;
 use KodiCMS\Datasource\Fields\Relation;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Eloquent\Builder;
+use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeOnlySystemInterface;
@@ -37,7 +38,7 @@ class BelongsTo extends Relation implements FieldTypeRelationInterface, FieldTyp
 	 */
 	public function onGetHeadlineValue(DocumentInterface $document, $value)
 	{
-		return !is_null($relatedDocument = $document->getAttribute($this->getRelatedDBKey()))
+		return !is_null($relatedDocument = $document->getAttribute($this->getRelationName()))
 			? \HTML::link($relatedDocument->getEditLink(), $relatedDocument->getTitle(), ['class' => 'popup'])
 			: null;
 	}
@@ -48,24 +49,21 @@ class BelongsTo extends Relation implements FieldTypeRelationInterface, FieldTyp
 	 */
 	public function querySelectColumn(Builder $query, DocumentInterface $document)
 	{
-		$query
-			->addSelect($this->getDBKey())
-			->with([$this->getRelatedDBKey()]);
+		$query->with($this->getRelationName());
 	}
 
 	/**
 	 * @param DocumentInterface $document
-	 *
-	 * @return \Illuminate\Database\Eloquent\Relations\Relation
+	 * @param SectionInterface $relatedSection
+	 * @return BelongsToRelation
 	 */
-	public function getDocumentRalation(DocumentInterface $document)
+	public function getDocumentRalation(DocumentInterface $document, SectionInterface $relatedSection)
 	{
-		$section = $this->relatedSection()->first();
-		$instance = $section->getEmptyDocument()->newQuery();
+		$instance = $relatedSection->getEmptyDocument()->newQuery();
 
 		$foreignKey = $this->getSection()->getDocumentPrimaryKey();
 		$otherKey =  str_replace('_belongs_to', '', $this->getDBKey());
-		$relation = $this->getRelatedDBKey();
+		$relation = $this->getRelationName();
 
 		return new BelongsToRelation($instance, $document, $foreignKey, $otherKey, $relation);
 	}

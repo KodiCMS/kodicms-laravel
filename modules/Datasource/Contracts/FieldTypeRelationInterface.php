@@ -9,10 +9,10 @@ interface FieldTypeRelationInterface
 
 	/**
 	 * @param DocumentInterface $document
-	 *
-	 * @return \Illuminate\Database\Eloquent\Relations\Relation
+	 * @param SectionInterface $relatedSection
+	 * @return BelongsToRelation
 	 */
-	public function getDocumentRalation(DocumentInterface $document);
+	public function getDocumentRalation(DocumentInterface $document, SectionInterface $relatedSection);
 
 	/**
 	 * @return string

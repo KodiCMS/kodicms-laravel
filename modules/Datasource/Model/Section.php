@@ -421,7 +421,7 @@ class Section extends DatasourceModel implements SectionInterface
 	 */
 	public function fields()
 	{
-		return $this->hasMany('KodiCMS\Datasource\Model\Field', 'ds_id')->orderBy('position');
+		return $this->hasMany(\KodiCMS\Datasource\Model\Field::class, 'ds_id')->orderBy('position');
 	}
 
 	/**
@@ -429,7 +429,7 @@ class Section extends DatasourceModel implements SectionInterface
 	 */
 	public function relatedFields()
 	{
-		return $this->hasMany('KodiCMS\Datasource\Model\Field', 'related_ds')->orderBy('position');
+		return $this->hasMany(\KodiCMS\Datasource\Model\Field::class, 'related_ds')->orderBy('position');
 	}
 
 	/**
@@ -437,7 +437,7 @@ class Section extends DatasourceModel implements SectionInterface
 	 */
 	public function folder()
 	{
-		return $this->belongsTo('KodiCMS\Datasource\Model\SectionFolder', 'folder_id')->orderBy('position');
+		return $this->belongsTo(\KodiCMS\Datasource\Model\SectionFolder::class, 'folder_id')->orderBy('position');
 	}
 
 	/**************************************************************************

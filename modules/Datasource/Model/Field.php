@@ -44,11 +44,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	protected $fieldType;
 
 	/**
-	 * @var null|SectionInterface
-	 */
-	protected $relatedSection = null;
-
-	/**
 	 * @var bool
 	 */
 	protected $initialized = false;
@@ -541,7 +536,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 */
 	public function section()
 	{
-		return $this->belongsTo('KodiCMS\Datasource\Model\Section', 'ds_id');
+		return $this->belongsTo(\KodiCMS\Datasource\Model\Section::class, 'ds_id');
 	}
 
 	/**
@@ -549,7 +544,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 */
 	public function relatedSection()
 	{
-		return $this->belongsTo('KodiCMS\Datasource\Model\Section', 'related_ds');
+		return $this->belongsTo(\KodiCMS\Datasource\Model\Section::class, 'related_ds');
 	}
 
 	/**************************************************************************

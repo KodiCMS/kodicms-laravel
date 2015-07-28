@@ -86,7 +86,7 @@ class SectionHeadline implements SectionHeadlineInterface
 				continue;
 			}
 
-			$fields[] = $field->getId();
+			$fields[] = $field->getDBKey();
 		}
 
 		return $fields;

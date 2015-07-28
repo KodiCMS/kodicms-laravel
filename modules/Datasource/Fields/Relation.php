@@ -6,6 +6,13 @@ use KodiCMS\Datasource\Model\Field;
 class Relation extends Field
 {
 	/**
+	 * The relations to eager load on every query.
+	 *
+	 * @var array
+	 */
+	protected $with = ['relatedSection'];
+
+	/**
 	 * @return array
 	 */
 	public function getSectionList()
@@ -26,6 +33,14 @@ class Relation extends Field
 	 */
 	public function getRelatedDBKey()
 	{
-		return $this->getDBKey() . '_relation';
+		return $this->getDBKey() . '_related';
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRelationName()
+	{
+		return camel_case($this->getDBKey() . '_relation');
 	}
 }
