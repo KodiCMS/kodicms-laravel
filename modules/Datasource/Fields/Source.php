@@ -1,4 +1,6 @@
 <?php namespace KodiCMS\Datasource\Fields;
 
+class Source extends Primitive
+{
 
-class Source extends Primitive{}
+}

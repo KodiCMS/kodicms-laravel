@@ -555,7 +555,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 */
 	public function setDatabaseFieldType(Blueprint $table)
 	{
-		return $table->string($this->getDBKey(), $this->getSetting('length'));
+		return $table->string($this->getDBKey(), $this->getSetting('length', 255));
 	}
 
 	/**************************************************************************

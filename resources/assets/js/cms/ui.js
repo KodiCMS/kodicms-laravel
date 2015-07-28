@@ -45,6 +45,8 @@ CMS.ui.add('flags', function () {
 			}
 		}
 
+		$src.change();
+
 		e.preventDefault();
 	});
 }).add('btn-confirm', function () {

@@ -54,6 +54,13 @@ return [
 		'edit_template' => 'datasource::field.types.date'
 	],
 
+	'file' => [
+		'class' => KodiCMS\Datasource\Fields\File::class,
+		'title' => trans('datasource::fields.file.title'),
+		'edit_template' => 'datasource::field.types.file',
+		'category' => 'File'
+	],
+
 	'user' => [
 		'class' => KodiCMS\Datasource\Fields\Source\User::class,
 		'title' => trans('datasource::fields.user.title'),

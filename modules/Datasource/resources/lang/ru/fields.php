@@ -64,6 +64,14 @@ return [
 		'set_current' => 'При создании выбирать текущего пользователя',
 		'unique' => 'Уникальные пользователи'
 	],
+	'file' => [
+		'title' => 'Файл',
+		'upload_new' => 'Загрузить новый файл',
+		'allowed_types_list' => 'Разрешенные файлы [:types]',
+		'max_size' => 'Максимальные размер [:size]',
+		'view_file' => 'Посмотреть',
+		'remove_file' => 'Удалить'
+	],
 	'has_one' => [
 		'title' => 'HasOne',
 		'view_document' => 'Посмотреть',

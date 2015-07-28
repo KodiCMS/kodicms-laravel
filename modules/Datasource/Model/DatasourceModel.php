@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\CMS\Exceptions\Exception;
-use KodiCMS\Support\Traits\ModelSettings;
 use KodiCMS\Datasource\Contracts\DatasourceManagerInterface;
+use KodiCMS\Support\Traits\ModelSettings;
 
 class DatasourceModel extends Model
 {
@@ -25,6 +25,11 @@ class DatasourceModel extends Model
 		}
 
 		parent::__construct($attributes);
+
+		if (method_exists($this, 'onInit'))
+		{
+			app()->call([$this, 'onInit']);
+		}
 	}
 
 	/**
@@ -137,6 +142,11 @@ class DatasourceModel extends Model
 		}
 
 		$this->setSettings((array) $this->settings);
+
+		if (method_exists($this, 'onInit'))
+		{
+			app()->call([$this, 'onInit']);
+		}
 
 		$this->initialized = true;
 	}
