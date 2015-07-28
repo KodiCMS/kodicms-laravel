@@ -1,13 +1,14 @@
 <?php namespace KodiCMS\CMS\Model;
 
-use View;
 use Date;
+use View;
 use Validator;
 use SplFileInfo;
-use Carbon\Carbon;
 use SplFileObject;
+use Carbon\Carbon;
 use SplTempFileObject;
 use KodiCMS\Support\Helpers\Text;
+use Illuminate\Filesystem\Filesystem;
 use KodiCMS\CMS\Exceptions\Exception;
 use KodiCMS\CMS\Exceptions\FileModelException;
 use KodiCMS\CMS\Exceptions\FileValidationException;
@@ -52,6 +53,11 @@ class File
 	protected $settings = [];
 
 	/**
+	 * @var Filesystem
+	 */
+	protected $filesSystem;
+
+	/**
 	 * @param SplFileObject|string $filename
 	 * @param string $basePath
 	 * @param bool $onlyExists
@@ -59,6 +65,8 @@ class File
 	 */
 	public function __construct($filename = null, $basePath = null, $onlyExists = false)
 	{
+		$this->filesSystem = app('files');
+
 		if (!is_null($basePath))
 		{
 			$this->basePath = $basePath;
@@ -332,7 +340,10 @@ class File
 	 */
 	public function setName($name)
 	{
-		$this->changed['name'] = $this->filterName($name);
+		if ($this->getName() != $name)
+		{
+			$this->changed['name'] = $this->filterName($name);
+		}
 
 		return $this;
 	}
@@ -343,7 +354,10 @@ class File
 	 */
 	public function setContent($content)
 	{
-		$this->changed['content'] = $content;
+		if ($this->getContent() != $content)
+		{
+			$this->changed['content'] = $content;
+		}
 
 		return $this;
 	}
@@ -395,11 +409,12 @@ class File
 	{
 		foreach ($data as $key => $value)
 		{
-			$method = 'set' . ucfirst($key);
+			$method = 'set' . camel_case($key);
 			if (method_exists($this, $method))
 			{
 				$this->{$method}($value);
-			} else
+			}
+			else
 			{
 				$this->changed[$key] = $value;
 			}
@@ -435,7 +450,11 @@ class File
 		else if ($this->isChanged('name'))
 		{
 			$newFilename = normalize_path($this->getPath() . '/' . $this->changed['name']);
-			$status = @app('files')->move($this->getRealPath(), $newFilename);
+
+			if ($newFilename != $this->getRealPath())
+			{
+				$status = @$this->filesSystem->move($this->getRealPath(), $newFilename);
+			}
 
 			if ($status)
 			{
@@ -445,7 +464,7 @@ class File
 
 		if ($status AND $this->isChanged('content'))
 		{
-			$status = app('files')->put($this->getRealPath(), $this->changed['content']) !== false;
+			$status = $this->filesSystem->put($this->getRealPath(), $this->changed['content']) !== false;
 		}
 
 		$this->changed = [];
