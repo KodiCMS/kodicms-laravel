@@ -35,12 +35,11 @@
 
 				@if(!empty($value))
 				<div class="panel-body padding-sm">
-					{!! HTML::link($value, trans('datasource::fields.file.view_file'), [
-						'target' => 'blank',
-						'class' => ['btn btn-default'],
-						'id' => 'uploaded-' . $key,
-						'data-icon' => 'file'
-					]) !!}
+					@if($field->isImage($value))
+					{!! link_to($value, \HTML::image($value, null, ['style' => 'max-height: 150px']), ['target' => '_blank', 'class' => 'popup']) !!}
+					@else
+					{!! link_to($value, trans('datasource::fields.file.view_file'), ['data-icon' => 'file', 'target' => '_blank', 'class' => ['btn btn-default'], 'id' => 'uploaded-' . $key,]) !!}
+					@endif
 					&nbsp;&nbsp;&nbsp;
 					<div class="checkbox-inline">
 						<label>

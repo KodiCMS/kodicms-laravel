@@ -296,4 +296,26 @@ class File extends Primitive
 	{
 		$this->deleteDirectory();
 	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return mixed
+	 */
+	public function onGetHeadlineValue(DocumentInterface $document, $value)
+	{
+		if($this->isImage($value))
+		{
+			$link = link_to($value, \HTML::image($value, null, ['style' => 'max-height: 50px']), ['target' => '_blank', 'class' => 'popup']);
+		}
+		else
+		{
+			$link = link_to($value, trans('datasource::fields.file.view_file'), ['target' => '_blank']);
+		}
+
+		return !is_null($value)
+			? $link
+			: null;
+	}
 }
