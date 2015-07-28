@@ -154,15 +154,16 @@ class TemplateController extends Controller
 	 */
 	public function callAction($method, $parameters)
 	{
-		if ($this->autoRender === TRUE)
+		if ($this->autoRender === true)
 		{
 			$this->setupLayout();
 		}
 
 		$response = parent::callAction($method, $parameters);
 
-		if (is_null($response) && $this->autoRender === TRUE && !is_null($this->template)) {
-			$response = $this->template;
+		if (is_null($response) && $this->autoRender === true && !is_null($this->template))
+		{
+			$response = $this->response->setContent($this->template);
 		}
 
 		return $response;
