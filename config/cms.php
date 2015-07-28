@@ -4,9 +4,7 @@ return [
 	'title' => 'KodiCMS',
 	'backend_path' => env('ADMIN_DIR_NAME', 'backend'),
 	'url_suffix' => null, //'.html',
-
-	'modules' => ['API', 'CMS', 'Plugins', 'Notifications', 'Pages', 'Users', 'Email', 'Cron', 'Widgets', 'Filemanager', 'Dashboard', 'Installer', 'Userguide'],
-
+	'modules' => ['API', 'CMS', 'Email', 'Plugins', 'Notifications', 'Pages', 'Users', 'Cron', 'Widgets', 'Filemanager', 'Installer', 'Dashboard', 'Datasource', 'Userguide'],
 	'theme' => [
 		'default' => 'default',
 		'list' => [

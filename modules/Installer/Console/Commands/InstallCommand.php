@@ -2,6 +2,8 @@
 
 use App;
 use Installer;
+use ModulesLoader;
+use ModulesFileSystem;
 use EnvironmentTester;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Console\ConfirmableTrait;
@@ -44,11 +46,6 @@ class InstallCommand extends GeneratorCommand
 	 */
 	public function fire()
 	{
-		if (!$this->confirmToProceed())
-		{
-			return;
-		}
-
 		list($failed, $tests, $optional) = EnvironmentTester::check();
 
 		$this->table($this->testHeaders, $tests);
@@ -96,6 +93,8 @@ class InstallCommand extends GeneratorCommand
 //			$this->info("Database cleaned");
 //		}
 
+		$this->initModules();
+
 		if ($this->confirm('Migrate database?'))
 		{
 			$this->migrate();
@@ -106,6 +105,16 @@ class InstallCommand extends GeneratorCommand
 		}
 
 		$this->info('Installation completed successfully');
+	}
+
+	protected function initModules()
+	{
+		foreach (ModulesLoader::getRegisteredModules() as $module)
+		{
+			app()->call([$module, 'loadRoutes'], [app('router')]);
+		}
+
+		ModulesFileSystem::loadConfigs();
 	}
 
 
@@ -125,7 +134,7 @@ class InstallCommand extends GeneratorCommand
 	 */
 	public function migrate()
 	{
-		$this->call('cms:modules:migrate', ['--force']);
+		$this->call('cms:modules:migrate', ['--force' => true]);
 	}
 
 	/**
@@ -133,7 +142,7 @@ class InstallCommand extends GeneratorCommand
 	 */
 	public function seed()
 	{
-		$this->call('cms:modules:seed', ['--force']);
+		$this->call('cms:modules:seed', ['--force' => true]);
 	}
 
 	/**
@@ -143,6 +152,8 @@ class InstallCommand extends GeneratorCommand
 	{
 		foreach ($this->getOptions() as $option)
 		{
+			if ($option[0] == 'force') continue;
+
 			$defVal = $this->input->getOption($option[0]);
 			$val = $this->ask($option[3] . "{" . $defVal . "}", $defVal);
 			$this->input->setOption($option[0], $val);
@@ -202,15 +213,15 @@ class InstallCommand extends GeneratorCommand
 			['DB_HOST', 'host', InputOption::VALUE_OPTIONAL, "Database host", array_get($defaults, 'DB_HOST')],
 			['DB_DATABASE', 'db', InputOption::VALUE_OPTIONAL, 'Database name', array_get($defaults, 'DB_DATABASE')],
 			['DB_USERNAME', 'u', InputOption::VALUE_OPTIONAL, 'Database username', array_get($defaults, 'DB_USERNAME')],
-			['DB_PASSWORD', 'p', InputOption::VALUE_OPTIONAL, 'Database password', array_get($defaults, 'DB_PASSWORD')],
-			['DB_PREFIX', 'pr', InputOption::VALUE_OPTIONAL, 'Database prefix', array_get($defaults, 'DB_PREFIX')],
+			['DB_PASSWORD', 'p', InputOption::VALUE_NONE, 'Database password'],
+			['DB_PREFIX', 'pr', InputOption::VALUE_NONE, 'Database prefix'],
 			['CACHE_DRIVER', 'cache', InputOption::VALUE_OPTIONAL, 'Cache driver [file|redis]', array_get($defaults, 'CACHE_DRIVER')],
 			['SESSION_DRIVER', 'session', InputOption::VALUE_OPTIONAL, 'Session driver [file|database]', array_get($defaults, 'SESSION_DRIVER')],
 			['APP_ENV', 'env', InputOption::VALUE_OPTIONAL, 'Application Environmet [local|production]', array_get($defaults, 'APP_ENV')],
 			['APP_DEBUG', 'debug', InputOption::VALUE_OPTIONAL, 'Application Debug [true|false]', array_get($defaults, 'APP_DEBUG')],
 			['APP_URL', 'url', InputOption::VALUE_OPTIONAL, 'Application host', array_get($defaults, 'APP_URL')],
 			['ADMIN_DIR_NAME', 'dir', InputOption::VALUE_OPTIONAL, 'Admin directory name', array_get($defaults, 'ADMIN_DIR_NAME')],
-			['force', null, InputOption::VALUE_NONE, 'Force the operation to run when in production.'],
+			['force', null, InputOption::VALUE_OPTIONAL, 'Force the operation to run when in production.'],
 		];
 	}
 }

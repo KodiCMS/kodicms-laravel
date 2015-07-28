@@ -79,7 +79,7 @@ abstract class AbstractFileController extends System\BackendController {
 		$file = $this->getFile($filename);
 		$roles = UserRole::lists('name', 'name')->all();
 
-		$this->setTitle(trans($this->wrapNamespace("}{$this->sectionPrefix}.title.edit"), [
+		$this->setTitle(trans($this->wrapNamespace("{$this->sectionPrefix}.title.edit"), [
 			'name' => $file->getName()
 		]));
 

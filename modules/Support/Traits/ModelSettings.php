@@ -68,6 +68,11 @@ trait ModelSettings {
 			}
 			else
 			{
+				if (array_key_exists($name, $this->booleanSettings()))
+				{
+					$value = !empty($value) ? true : false;
+				}
+
 				$this->{$this->getSettingsProperty()}[$name] = $value;
 			}
 		}
@@ -81,12 +86,6 @@ trait ModelSettings {
 	 */
 	public function setSettings(array $settings)
 	{
-		$booleans = $this->booleanSettings();
-		foreach ($booleans as $key)
-		{
-			$settings[$key] = !empty($settings[$key]) ? true : false;
-		}
-
 		foreach ($settings as $key => $value)
 		{
 			$this->setSetting($key, $value);

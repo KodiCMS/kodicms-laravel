@@ -28,7 +28,7 @@ abstract class Controller extends BaseController
 	protected $requestType = 'GET';
 
 	/**
-	 * @var Request
+	 * @var Response
 	 */
 	protected $response;
 

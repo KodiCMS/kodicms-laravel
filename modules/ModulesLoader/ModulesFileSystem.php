@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\ModulesLoader;
 
 use Cache;
+use Config;
 use Carbon\Carbon;
 use Illuminate\Filesystem\Filesystem;
 
@@ -34,6 +35,21 @@ class ModulesFileSystem
 	{
 		$this->moduleLoader = $loader;
 		$this->filesystem = $filesystem;
+	}
+
+	public function loadConfigs()
+	{
+		/**
+		 * Загрузка конфигов модулей
+		 */
+		foreach ($this->moduleLoader->getRegisteredModules() as $module)
+		{
+			$config = $module->loadConfig();
+			foreach($config as $group => $data)
+			{
+				Config::set($group, $data);
+			}
+		}
 	}
 
 	/**
