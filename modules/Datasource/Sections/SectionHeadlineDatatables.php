@@ -1,9 +1,10 @@
 <?php namespace KodiCMS\Datasource\Sections;
 
+use Datatables;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
-class SectionHeadline implements SectionHeadlineInterface
+class SectionHeadlineDatatables implements SectionHeadlineInterface
 {
 	/**
 	 * @var SectionInterface
@@ -16,24 +17,9 @@ class SectionHeadline implements SectionHeadlineInterface
 	protected $fields = null;
 
 	/**
-	 * @var integer
-	 */
-	protected $perPage = 20;
-
-	/**
-	 * @var integer
-	 */
-	protected $currentPage;
-
-	/**
-	 * @var integer
-	 */
-	protected $offset = 0;
-
-	/**
 	 * @var string
 	 */
-	protected $template = 'datasource::section.headline';
+	protected $template = 'datasource::section.headline_datatables';
 
 	/**
 	 * @param SectionInterface $section
@@ -41,6 +27,7 @@ class SectionHeadline implements SectionHeadlineInterface
 	public function __construct(SectionInterface $section)
 	{
 		$this->section = $section;
+		\Assets::package('datatables');
 	}
 
 	/**
@@ -78,18 +65,7 @@ class SectionHeadline implements SectionHeadlineInterface
 	 */
 	public function getActiveFieldIds()
 	{
-		$fields = [];
-		foreach ($this->section->getFields() as $field)
-		{
-			if (!$field->isVisible())
-			{
-				continue;
-			}
 
-			$fields[] = $field->getDBKey();
-		}
-
-		return $fields;
 	}
 
 	/**
@@ -97,15 +73,7 @@ class SectionHeadline implements SectionHeadlineInterface
 	 */
 	public function getSearchableFields()
 	{
-		$fields = array_filter($this->section->getFields(), function ($field)
-		{
-			return $field->isVisible() and $field->isSearchable();
-		});
 
-		return array_map(function ($field)
-		{
-			return $field->getName();
-		}, $fields);
 	}
 
 	/**
@@ -113,7 +81,7 @@ class SectionHeadline implements SectionHeadlineInterface
 	 */
 	public function getOrderingRules()
 	{
-		return $this->section->getHeadlineOrdering();
+
 	}
 
 	/**
@@ -121,9 +89,16 @@ class SectionHeadline implements SectionHeadlineInterface
 	 */
 	public function getDocuments()
 	{
-		return $this->section->getEmptyDocument()
-			->getDocuments($this->getActiveFieldIds(), $this->getOrderingRules())
-			->paginate();
+		$document = $this->section->getEmptyDocument();
+		return Datatables::of($document->newQuery())->make();
+	}
+
+	/**
+	 * @return array
+	 */
+	public function response()
+	{
+		return $this->getDocuments();
 	}
 
 	/**
@@ -141,13 +116,12 @@ class SectionHeadline implements SectionHeadlineInterface
 			}
 			else
 			{
-				$template = $template = $this->template;;
+				$template = $this->template;
 			}
 		}
 
 		return view($template, [
 			'fieldParams' => $this->getHeadlineFields(),
-			'items' => $this->getDocuments(),
 			'section' => $this->section
 		]);
 	}

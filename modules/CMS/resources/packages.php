@@ -81,5 +81,10 @@ Package::add('ace')
 Package::add('diff')
 	->js(NULL, resources_url() . '/libs/jsdiff/js/diff.js');
 
+Package::add('datatables')
+	->js(NULL, resources_url() . '/libs/datatables/js/jquery.dataTables.min.js', 'jquery')
+	->js('datatables.bootstrap', resources_url() . '/libs/datatables/js/datatables.bootstrap.js', 'datatables')
+	->css(NULL, resources_url() . '/libs/datatables/css/datatables.bootstrap.css');
+
 WYSIWYG::add('ace', 'Ace', NULL, NULL, WYSIWYG::code());
 WYSIWYG::add('ckeditor', 'CKEditor');
