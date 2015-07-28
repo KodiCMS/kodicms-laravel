@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\Datasource\Contracts;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
+
 interface FieldTypeRelationInterface
 {
 	/**
@@ -10,9 +12,11 @@ interface FieldTypeRelationInterface
 	/**
 	 * @param DocumentInterface $document
 	 * @param SectionInterface $relatedSection
-	 * @return BelongsToRelation
+	 * @param FieldInterface|null $relatedField
+	 *
+	 * @return Relation
 	 */
-	public function getDocumentRelation(DocumentInterface $document, SectionInterface $relatedSection);
+	public function getDocumentRelation(DocumentInterface $document, SectionInterface $relatedSection, FieldInterface $relatedField = null);
 
 	/**
 	 * @return string

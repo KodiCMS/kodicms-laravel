@@ -97,12 +97,15 @@ class Document extends Model implements DocumentInterface
 					$this->dates[] = $field->getDBKey();
 				}
 
+				// TODO: подумать как это оптимизировать
 				if ($field instanceof FieldTypeRelationInterface)
 				{
-					$section = $field->relatedSection;
-					$this->addRelation($field->getRelationName(), function () use ($field, $section)
+					$relatedSection = $field->relatedSection;
+					$relatedField = $field->relatedField;
+
+					$this->addRelation($field->getRelationName(), function () use ($field, $relatedSection, $relatedField)
 					{
-						return $field->getDocumentRelation($this, $section);
+						return $field->getDocumentRelation($this, $relatedSection, $relatedField);
 					});
 				}
 

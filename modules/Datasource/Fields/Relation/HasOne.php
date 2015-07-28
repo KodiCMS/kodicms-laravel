@@ -3,6 +3,7 @@
 use KodiCMS\Datasource\Fields\Relation;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Eloquent\Builder;
+use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Repository\FieldRepository;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
@@ -17,9 +18,11 @@ class HasOne extends Relation implements FieldTypeRelationInterface
 	/**
 	 * @param DocumentInterface $document
 	 * @param SectionInterface $relatedSection
-	 * @return BelongsToRelation
+	 * @param FieldInterface|null $relatedField
+	 *
+	 * @return HasOneRelation
 	 */
-	public function getDocumentRelation(DocumentInterface $document, SectionInterface $relatedSection)
+	public function getDocumentRelation(DocumentInterface $document, SectionInterface $relatedSection, FieldInterface $relatedField = null)
 	{
 		$instance = $relatedSection->getEmptyDocument()->newQuery();
 
