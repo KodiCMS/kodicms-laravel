@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\Datasource\Fields\Relation;
 
 use KodiCMS\Datasource\Fields\Relation;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Eloquent\Builder;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;

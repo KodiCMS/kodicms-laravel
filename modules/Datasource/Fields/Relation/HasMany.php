@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Datasource\Fields\Relation;
 
 use KodiCMS\Datasource\Fields\Relation;
+use Illuminate\Database\Eloquent\Builder;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Repository\FieldRepository;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
@@ -13,6 +14,31 @@ class HasMany extends Relation implements FieldTypeRelationInterface
 	 * @var bool
 	 */
 	protected $hasDatabaseColumn = false;
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return mixed
+	 */
+	public function onGetHeadlineValue(DocumentInterface $document, $value)
+	{
+		$documents = $document->getAttribute($this->getRelationName())->map(function($doc) {
+			return \HTML::link($doc->getEditLink(), $doc->getTitle(), ['class' => 'popup']);
+		})->all();
+		return !empty($documents)
+			? implode(', ', $documents)
+			: null;
+	}
+
+	/**
+	 * @param Builder $query
+	 * @param DocumentInterface $document
+	 */
+	public function querySelectColumn(Builder $query, DocumentInterface $document)
+	{
+		$query->with($this->getRelationName());
+	}
 
 	/**
 	 * @param DocumentInterface $document
