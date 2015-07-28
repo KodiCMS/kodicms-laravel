@@ -95,6 +95,7 @@ class WysiwygManager {
 
 	/**
 	 * Список используемых редакторов на странице
+     * List of used editors on the page
 	 *
 	 * @return array
 	 */
@@ -128,6 +129,7 @@ class WysiwygManager {
 
 	/**
 	 * Получения списка доступных редакторов в системе
+     * A list of available editors
 	 * @return array
 	 */
 	public function getAvailable()
@@ -137,6 +139,7 @@ class WysiwygManager {
 
 	/**
 	 * Получения списка доступных редакторов определенного типа
+     * A list of available editors of a certain type
 	 *
 	 * @param string $type
 	 * @return array
@@ -158,6 +161,7 @@ class WysiwygManager {
 
 	/**
 	 * Получение объекта редактора
+     * Getting Object Editor
 	 *
 	 * @param $editorId
 	 * @return WysiwygEditor|null
@@ -185,6 +189,7 @@ class WysiwygManager {
 
 	/**
 	 * Загрузить в шаблон все редакторы
+     * Download the template all the editors
 	 */
 	public function loadAllEditors()
 	{
@@ -196,6 +201,7 @@ class WysiwygManager {
 
 	/**
 	 * Загрузить в шаблон редакторы кода
+     * Download the template code editors
 	 */
 	public function loadCodeEditors()
 	{
@@ -207,6 +213,7 @@ class WysiwygManager {
 
 	/**
 	 * Загрузить в шаблон редакторы текса
+     * Download the template code editors
 	 */
 	public function loadHTMLEditors()
 	{
@@ -218,6 +225,7 @@ class WysiwygManager {
 
 	/**
 	 * Загрузить в шаблон редактор текста по умолчанию
+     * Download the template text editor by default
 	 */
 	public function loadDefaultHTMLEditor()
 	{
@@ -226,6 +234,7 @@ class WysiwygManager {
 
 	/**
 	 * Загрузить в шаблон редактор кода по умолчанию
+     * Download the template code editor by default
 	 */
 	public function loadDefaultCodeEditor()
 	{
@@ -234,6 +243,7 @@ class WysiwygManager {
 
 	/**
 	 * Загрузить в шаблон редакторы по умолчанию
+     * Download the template default editor
 	 */
 	public function loadDefaultEditors()
 	{
@@ -243,6 +253,7 @@ class WysiwygManager {
 
 	/**
 	 * Загрузить редактор в шаблон по идентификатору
+     * Download the editor template ID
 	 *
 	 * @param string $editorId
 	 * @return bool
@@ -270,6 +281,7 @@ class WysiwygManager {
 
 	/**
 	 * Применить фильтр используемый редактором к тексту
+     * Apply filter used by the editor to the text
 	 *
 	 * @param string $editorId
 	 * @param string $text
@@ -288,6 +300,7 @@ class WysiwygManager {
 
 	/**
 	 * Получение списка редакторов для выпадающего списка
+     * Getting a list of editors for the drop down list
 	 *
 	 * @param string $type
 	 * @return array
@@ -303,6 +316,7 @@ class WysiwygManager {
 
 	/**
 	 * Получение списка редакторов для выпадающего списка подключенных в шаблон
+     * Getting a list of editors for the drop-down list attached to the template
 	 *
 	 * @return array
 	 */
