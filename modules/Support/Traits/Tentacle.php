@@ -43,17 +43,15 @@ trait Tentacle
 	public function getAttribute($key)
 	{
 		$attribute = parent::getAttribute($key);
+
 		if (!is_null($attribute))
 		{
 			return $attribute;
 		}
 
-		$camelKey = camel_case($key);
-
-		if (array_key_exists($camelKey, static::$tentacles))
+		if (array_key_exists($key, static::$tentacles))
 		{
-			return $this->getRelationshipFromMethod($camelKey);
+			return $this->getRelationshipFromMethod($key);
 		}
 	}
-
 }
