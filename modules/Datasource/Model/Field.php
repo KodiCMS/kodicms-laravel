@@ -61,6 +61,11 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	/**
 	 * @var bool
 	 */
+	protected $hasDatabaseColumn = true;
+
+	/**
+	 * @var bool
+	 */
 	protected $changeableDatabaseField = true;
 
 	/**
@@ -69,7 +74,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 * @var array
 	 */
 	protected $fillable = [
-		'ds_id', 'key', 'type', 'name', 'related_ds', 'position', 'settings'
+		'section_id', 'key', 'type', 'name', 'related_section_id', 'related_field_id', 'position', 'settings', 'is_system'
 	];
 
 	/**
@@ -78,11 +83,11 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 * @var array
 	 */
 	protected $casts = [
-		'ds_id' => 'integer',
+		'section_id' => 'integer',
 		'key' => 'string',
 		'type' => 'string',
 		'name' => 'string',
-		'related_ds' => 'integer',
+		'related_section_id' => 'integer',
 		'is_system' => 'boolean',
 		'is_editable' => 'boolean',
 		'position' => 'integer',
@@ -158,7 +163,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 */
 	public function isAttachedToSection()
 	{
-		return !is_null($this->ds_id);
+		return !is_null($this->section_id);
 	}
 
 	/**
@@ -204,6 +209,14 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	/**
 	 * @return bool
 	 */
+	public function hasDatabaseColumn()
+	{
+		return $this->hasDatabaseColumn;
+	}
+
+	/**
+	 * @return bool
+	 */
 	public function isVisible()
 	{
 		return $this->getSetting('headline_parameters.visible');
@@ -244,9 +257,17 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	/**
 	 * @return integer
 	 */
-	public function getRalatedSection()
+	public function getRelatedSectionId()
 	{
-		return (int) $this->related_ds;
+		return (int) $this->related_section_id;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getRelatedFieldId()
+	{
+		return $this->related_field_id;
 	}
 
 	/**
@@ -442,6 +463,15 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 
 	/**
 	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 */
+	public function onDocumentFill(DocumentInterface $document, $value)
+	{
+
+	}
+
+	/**
+	 * @param DocumentInterface $document
 	 */
 	public function onDocumentDeleting(DocumentInterface $document)
 	{
@@ -536,7 +566,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 */
 	public function section()
 	{
-		return $this->belongsTo(\KodiCMS\Datasource\Model\Section::class, 'ds_id');
+		return $this->belongsTo(\KodiCMS\Datasource\Model\Section::class, 'section_id');
 	}
 
 	/**
@@ -544,7 +574,15 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 */
 	public function relatedSection()
 	{
-		return $this->belongsTo(\KodiCMS\Datasource\Model\Section::class, 'related_ds');
+		return $this->belongsTo(\KodiCMS\Datasource\Model\Section::class, 'related_section_id');
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
+	public function relatedField()
+	{
+		return $this->belongsTo(\KodiCMS\Datasource\Model\Field::class, 'related_field_id');
 	}
 
 	/**************************************************************************
@@ -563,7 +601,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 */
 	public function getLastPosition()
 	{
-		return DB::table($this->getTable())->where('ds_id', $this->ds_id)->max('position');
+		return DB::table($this->getTable())->where('section_id', $this->section_id)->max('position');
 	}
 
 	/**

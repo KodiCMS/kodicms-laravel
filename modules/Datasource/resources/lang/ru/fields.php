@@ -59,7 +59,13 @@ return [
 		'title' => 'Дата/Время'
 	],
 	'has_one' => [
-		'title' => 'HasOne'
+		'title' => 'HasOne',
+		'view_document' => 'Посмотреть',
+		'create_document' => 'Добавить',
+		'datasource' => 'Раздел',
+		'relation_type' => 'Тип связи',
+		'one_to_one' => 'Один к одному',
+		'one_to_many' => 'Один ко многим'
 	],
 	'belongs_to' => [
 		'title' => 'Относится к'

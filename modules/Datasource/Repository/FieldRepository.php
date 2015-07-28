@@ -26,7 +26,9 @@ class FieldRepository extends BaseRepository
 			'key' => trans('datasource::core.field.key'),
 			'name' => trans('datasource::core.field.name'),
 			'type' => trans('datasource::core.field.type'),
-			'related_ds' => trans('datasource::core.field.related_ds')
+			'related_section_id' => trans('datasource::core.field.related_section_id'),
+			'related_field_id' => trans('datasource::core.field.related_field_id'),
+			'section_id' => trans('datasource::core.field.section_id')
 		];
 	}
 
@@ -38,12 +40,12 @@ class FieldRepository extends BaseRepository
 	public function validateOnCreate(array $data = [])
 	{
 		$validator = $this->validator($data, [
-			'key' => 'required|unique:datasource_fields,key,NULL,id,ds_id,' . array_get($data, 'ds_id'),
+			'key' => 'required|unique:datasource_fields,key,NULL,id,section_id,' . array_get($data, 'section_id'),
 			'type' => 'required',
 			'name' => 'required'
 		]);
 
-		$validator->sometimes('related_ds', 'required|numeric|min:1', function ($input)
+		$validator->sometimes('related_section_id', 'required|numeric|min:1', function ($input)
 		{
 			if ($typeObject = FieldManager::getFieldTypeBy('type', $input->type))
 			{

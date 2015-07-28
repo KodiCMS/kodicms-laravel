@@ -1,7 +1,7 @@
 $(function () {
-	$('select[data-related-id]').each(function () {
+	$('select[data-related-many]').each(function () {
 		var $self = $(this),
-			$ds_id = $self.data('related-id'),
+			$ds_id = $self.data('related-many'),
 			placeHolderText = 'Type first 1 chars to find documents';
 
 		if($self.data('related-name').length)
@@ -9,6 +9,7 @@ $(function () {
 
 		$self.select2({
 			minimumInputLength: 1,
+			multiple: true,
 			placeholder: placeHolderText,
 			ajax: {
 				url: '/api.datasource.document.find',

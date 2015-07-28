@@ -17,12 +17,27 @@ class DatasourceController extends BackendController
 	 */
 	public function getIndex(SectionRepository $repository, $sectionId = null)
 	{
-		if (!is_null($sectionId))
+		if (is_null($sectionId))
+		{
+			$sectionId = $this->request->cookie('currentDS');
+		}
+
+		if (is_null($sectionId))
+		{
+			$section = $repository->query()->first();
+		}
+		else
 		{
 			$section = $repository->findOrFail($sectionId);
+		}
+
+		if (!is_null($section))
+		{
 			$headline = $section->getHeadline()->render();
 			$toolbar = $section->getToolbar()->render();
 			$this->setTitle($section->getName());
+
+			$this->response->withCookie(cookie()->forever('currentDS', $section->getId()));
 		}
 		else
 		{

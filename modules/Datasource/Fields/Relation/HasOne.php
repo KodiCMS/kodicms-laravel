@@ -1,16 +1,56 @@
 <?php namespace KodiCMS\Datasource\Fields\Relation;
 
 use KodiCMS\Datasource\Fields\Relation;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
-use KodiCMS\Datasource\Contracts\SectionInterface;
+use Illuminate\Database\Eloquent\Builder;
 use KodiCMS\Datasource\Repository\FieldRepository;
+use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
 use Illuminate\Database\Eloquent\Relations\HasOne as HasOneRelation;
 
 class HasOne extends Relation implements FieldTypeRelationInterface
 {
+	const ONE_TO_ONE = 'one_to_one';
+	const ONE_TO_MANY = 'one_to_many';
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param SectionInterface $relatedSection
+	 * @return BelongsToRelation
+	 */
+	public function getDocumentRelation(DocumentInterface $document, SectionInterface $relatedSection)
+	{
+		$instance = $relatedSection->getEmptyDocument()->newQuery();
+
+		$foreignKey = $relatedSection->getSectionTableName() . '.' . $relatedSection->getDocumentPrimaryKey();
+		$otherKey = $this->getDBKey();
+		$relation = $this->getRelationName();
+
+		return new HasOneRelation($instance, $document, $foreignKey, $otherKey, $relation);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getRelationTypes()
+	{
+		return [
+			static::ONE_TO_ONE => trans('datasource::fields.has_one.one_to_one'),
+			static::ONE_TO_MANY => trans('datasource::fields.has_one.one_to_many')
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getRelationType()
+	{
+		return $this->getSetting('relation_type', static::ONE_TO_ONE);
+	}
+	/**************************************************************************
+	 * Database
+	 **************************************************************************/
 	/**
 	 * @param Blueprint $table
 	 * @return \Illuminate\Support\Fluent
@@ -31,20 +71,23 @@ class HasOne extends Relation implements FieldTypeRelationInterface
 
 	/**
 	 * @param DocumentInterface $document
-	 * @param SectionInterface $relatedSection
-	 * @return BelongsToRelation
+	 *
+	 * @return array
 	 */
-	public function getDocumentRalation(DocumentInterface $document, SectionInterface $relatedSection)
+	public function getRelatedDocumentValue(DocumentInterface $document)
 	{
-		$instance = $relatedSection->getEmptyDocument()->newQuery();
+		$section = $this->relatedSection()->first();
 
-		$foreignKey = $relatedSection->getSectionTableName() . '.' . $relatedSection->getDocumentPrimaryKey();
-		$otherKey = $this->getDBKey();
-		$relation = $this->getRelationName();
-
-		return new HasOneRelation($instance, $document, $foreignKey, $otherKey, $relation);
+		return \DB::table($section->getSectionTableName())
+			->addSelect($section->getDocumentPrimaryKey())
+			->addSelect($section->getDocumentTitleKey())
+			->where($section->getDocumentPrimaryKey(), $document->getAttribute($this->getDBKey()))
+			->lists($section->getDocumentTitleKey(), $section->getDocumentPrimaryKey());
 	}
 
+	/**************************************************************************
+	 * Events
+	 **************************************************************************/
 	/**
 	 * @param DocumentInterface $document
 	 * @param mixed $value
@@ -72,47 +115,55 @@ class HasOne extends Relation implements FieldTypeRelationInterface
 	}
 
 	/**
-	 * @param DocumentInterface $document
-	 *
-	 * @return array|static[]
+	 * @param FieldRepository $repository
+	 * @throws \KodiCMS\Datasource\Exceptions\FieldException
 	 */
-	public function getRelatedDocumentValue(DocumentInterface $document)
+	public function onCreated(FieldRepository $repository)
 	{
-		$section = $this->relatedSection()->first();
+		if (!is_null($this->getRelatedFieldId()))
+		{
+			return;
+		}
 
-		return \DB::table($section->getSectionTableName())
-			->addSelect($section->getDocumentPrimaryKey())
-			->addSelect($section->getDocumentTitleKey())
-			->where($section->getDocumentPrimaryKey(), $document->getAttribute($this->getDBKey()))
-			->lists($section->getDocumentTitleKey(), $section->getDocumentPrimaryKey());
+		$data = [
+			'section_id' => $this->getRelatedSectionId(),
+			'is_system' => 1,
+			'name' => $this->getSection()->getName(),
+			'related_section_id' => $this->getSection()->getId(),
+			'related_field_id' => $this->getId()
+		];
+
+		$relatedField = null;
+
+		switch($this->getRelationType())
+		{
+			case static::ONE_TO_ONE:
+				$relatedField = $repository->create(array_merge([
+					'type' => 'belongs_to',
+					'key' => $this->getDBKey() . '_belongs_to',
+				], $data));
+
+				break;
+			case static::ONE_TO_MANY:
+				$relatedField = $repository->create(array_merge([
+					'type' => 'has_many',
+					'key' => $this->getDBKey() . '_has_many',
+				], $data));
+
+				break;
+		}
+
+		if (!is_null($relatedField))
+		{
+			$this->update(['related_field_id' => $relatedField->getId()]);
+		}
 	}
 
 	/**
-	 * @return array
+	 * @param FieldRepository $repository
 	 */
-	public function toArray()
-	{
-		return array_merge(parent::toArray(), ['relatedSection' => $this->relatedSection()->first()]);
-	}
-
-	public function onCreated(FieldRepository $repository)
-	{
-		$repository->create([
-			'type' => 'belongs_to',
-			'ds_id' => $this->getRelatedSectionId(),
-			'is_system' => 1,
-			'key' => $this->getDBKey() . '_belongs_to',
-			'name' => $this->getSection()->getName(),
-			'related_ds' => $this->getSection()->getId()
-		]);
-	}
-
 	public function onDeleted(FieldRepository $repository)
 	{
-		$repository->query()
-			->where('key', $this->getDBKey() . '_belongs_to')
-			->where('ds_id', $this->getRelatedSectionId())
-			->where('related_ds', $this->getSection()->getId())
-			->delete();
+		$this->relatedField->delete();
 	}
 }

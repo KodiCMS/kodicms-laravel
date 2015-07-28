@@ -45,7 +45,7 @@ class FieldObserver
 	 */
 	public function updated(Field $field)
 	{
-		if ($field->isAttachedToSection() and $field->isChangeableDatabaseField())
+		if ($field->isAttachedToSection())
 		{
 			FieldManager::updateSectionTableField($field);
 		}

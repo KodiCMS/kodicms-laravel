@@ -6,6 +6,11 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class DocumentController extends BackendController
 {
+	public function getIndex()
+	{
+		return redirect(route('backend.datasource.list', $this->request->cookie('currentDS')));
+	}
+
 	/**
 	 * @param SectionRepository $repository
 	 * @param integer $sectionId
@@ -80,7 +85,7 @@ class DocumentController extends BackendController
 
 		$document = $repository->updateDocument($document, $data);
 
-		return $this->smartRedirect([$document->getId()])
+		return $this->smartRedirect([$sectionId, $document->getId()])
 			->with('success', trans($this->wrapNamespace('core.messages.document_updated'), ['title' => $document->getTitle()]));
 	}
 }

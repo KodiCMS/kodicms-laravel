@@ -2,6 +2,7 @@
 
 use DatasourceManager;
 use KodiCMS\Datasource\Model\Field;
+use KodiCMS\Datasource\Contracts\DocumentInterface;
 
 class Relation extends Field
 {
@@ -25,7 +26,7 @@ class Relation extends Field
 	 */
 	public function getRelatedSectionId()
 	{
-		return $this->related_ds;
+		return $this->related_section_id;
 	}
 
 	/**
@@ -42,5 +43,19 @@ class Relation extends Field
 	public function getRelationName()
 	{
 		return camel_case($this->getDBKey() . '_relation');
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @return array
+	 */
+	protected function fetchBackendTemplateValues(DocumentInterface $document)
+	{
+		$relatedSection = $this->relatedSection;
+		return array_merge(parent::fetchBackendTemplateValues($document), [
+			'relatedDocument' => $this->getDocumentRelation($document, $relatedSection)->first(),
+			'relatedSection' => $relatedSection,
+			'relatedField' => $this->relatedField
+		]);
 	}
 }

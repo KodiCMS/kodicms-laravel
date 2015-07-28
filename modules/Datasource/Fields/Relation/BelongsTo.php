@@ -14,21 +14,7 @@ class BelongsTo extends Relation implements FieldTypeRelationInterface, FieldTyp
 	/**
 	 * @var bool
 	 */
-	protected $changeableDatabaseField = false;
-
-	/**
-	 * @var bool
-	 */
-	protected $isOrderable = false;
-
-	/**
-	 * @param Blueprint $table
-	 * @return \Illuminate\Support\Fluent
-	 */
-	public function setDatabaseFieldType(Blueprint $table)
-	{
-		return $table;
-	}
+	protected $hasDatabaseColumn = false;
 
 	/**
 	 * @param DocumentInterface $document
@@ -57,7 +43,7 @@ class BelongsTo extends Relation implements FieldTypeRelationInterface, FieldTyp
 	 * @param SectionInterface $relatedSection
 	 * @return BelongsToRelation
 	 */
-	public function getDocumentRalation(DocumentInterface $document, SectionInterface $relatedSection)
+	public function getDocumentRelation(DocumentInterface $document, SectionInterface $relatedSection)
 	{
 		$instance = $relatedSection->getEmptyDocument()->newQuery();
 
@@ -66,16 +52,5 @@ class BelongsTo extends Relation implements FieldTypeRelationInterface, FieldTyp
 		$relation = $this->getRelationName();
 
 		return new BelongsToRelation($instance, $document, $foreignKey, $otherKey, $relation);
-	}
-
-	/**
-	 * @param DocumentInterface $document
-	 * @return array
-	 */
-	protected function fetchBackendTemplateValues(DocumentInterface $document)
-	{
-		return array_merge(parent::fetchBackendTemplateValues($document), [
-			'relatedDocument' => $this->getDocumentRalation($document, $this->relatedSection)->first()
-		]);
 	}
 }

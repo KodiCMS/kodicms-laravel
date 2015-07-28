@@ -54,6 +54,16 @@ interface FieldInterface
 	public function getDatabaseDefaultValue();
 
 	/**
+	 * @return integer
+	 */
+	public function getRelatedSectionId();
+
+	/**
+	 * @return mixed
+	 */
+	public function getRelatedFieldId();
+
+	/**
 	 * @param DocumentInterface $document
 	 * @param Validator $validator
 	 *
@@ -108,6 +118,11 @@ interface FieldInterface
 	public function isSearchable();
 
 	/**
+	 * @return bool
+	 */
+	public function hasDatabaseColumn();
+
+	/**
 	 * @return array
 	 */
 	public function defaultSettings();
@@ -129,6 +144,12 @@ interface FieldInterface
 	 * @param Blueprint $table
 	 */
 	public function onDatabaseDrop(Blueprint $table);
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 */
+	public function onDocumentFill(DocumentInterface $document, $value);
 
 	/**
 	 * @param DocumentInterface $document

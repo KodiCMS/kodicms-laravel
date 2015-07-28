@@ -1,9 +1,9 @@
 <?php namespace KodiCMS\Datasource;
 
-use Schema;
 use KodiCMS\Datasource\Contracts\FieldInterface;
-use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeOnlySystemInterface;
+use KodiCMS\Datasource\Contracts\SectionInterface;
+use Schema;
 
 class FieldManager extends AbstractManager
 {
@@ -60,7 +60,7 @@ class FieldManager extends AbstractManager
 	{
 		$this->addFieldToSectionTable($section, $field);
 		$field->update([
-			'ds_id' => $section->getId()
+			'section_id' => $section->getId()
 		]);
 
 		return true;
@@ -73,6 +73,11 @@ class FieldManager extends AbstractManager
 	 */
 	public function addFieldToSectionTable(SectionInterface $section, FieldInterface $field)
 	{
+		if (!$field->hasDatabaseColumn())
+		{
+			return true;
+		}
+
 		Schema::table($section->getSectionTableName(), function($table) use($field)
 		{
 			$field->onDatabaseCreate($table);
@@ -88,6 +93,11 @@ class FieldManager extends AbstractManager
 	 */
 	public function updateSectionTableField(FieldInterface $field)
 	{
+		if (!$field->hasDatabaseColumn() or !$field->isChangeableDatabaseField())
+		{
+			return true;
+		}
+
 		$section = $field->getSection();
 
 		if (!Schema::hasColumn($section->getSectionTableName(), $field->getDBKey()))
@@ -110,6 +120,11 @@ class FieldManager extends AbstractManager
 	 */
 	public function dropSectionTableField(FieldInterface $field)
 	{
+		if (!$field->hasDatabaseColumn())
+		{
+			return true;
+		}
+
 		$section = $field->getSection();
 		if (!Schema::hasColumn($section->getSectionTableName(), $field->getDBKey()))
 		{

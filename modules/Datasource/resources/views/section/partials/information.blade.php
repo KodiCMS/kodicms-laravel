@@ -2,10 +2,11 @@
 $(function() {
 	function formatState(state) {
 		if (!state.id) return state.text; // optgroup
-		return $("<span><i class='fa fa-" + state.id + " fa-fw fa-lg'/>" + state.text+"</span>");
+		return $("<span><i class='fa fa-" + state.id + " fa-fw fa-lg'/> " + state.text+"</span>");
 	}
 	$("#icons").select2({
-		templateResult: formatState
+		templateResult: formatState,
+		templateSelection: formatState
 	});
 
 	function chekShowInRootStatus() {

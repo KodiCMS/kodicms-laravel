@@ -6,21 +6,24 @@ $(function() {
 
 	$fieldsToRemove.change(function () {
 		$selectedFieldsToRemove = $fieldsToRemove.filter(':checked');
+
 		if ($selectedFieldsToRemove.size() == 0) {
 			$removeBtn.prop('disabled', 'disabled');
 		} else {
 			$removeBtn.removeProp('disabled');
 		}
-	}).change();
+	});
 
 	$removeBtn.on('click', function(e) {
-		e.prevenDefault();
+		e.preventDefault();
 
 		if($selectedFieldsToRemove.size() < 1) return false;
 
-		Api.delete('/api.datasource.field', $selectedFieldsToRemove.serialize(), function(response) {
+		Api.delete('/api.datasource.field', $selectedFieldsToRemove, function(response) {
 			for(i in response.content) {
-				$('[data-id="' +response.content[i]+ '"]').remove();
+				var $field = $('[data-id="' +response.content[i]+ '"]').add('[data-related-id="' +response.content[i]+ '"]');
+
+				$field.remove();
 			}
 		});
 	});
@@ -70,7 +73,7 @@ $(function() {
 		</thead>
 		<tbody>
 		@foreach ($fields as $field)
-		<tr data-id="{{ $field->getId() }}">
+		<tr data-id="{{ $field->getId() }}" data-related-id="{{ $field->getRelatedFieldId() }}">
 			<td>
 				@if(!$field->isSystem())
 				{!! Form::checkbox('remove_field[]', $field->getId(), false, ['id' => $field->getKey()]) !!}
@@ -93,7 +96,7 @@ $(function() {
 			</td>
 		</tr>
 		@endforeach
-		<tbody>
+		</tbody>
 		@if(!empty($relatedFields = $section->getRelatedFields()))
 		<thead>
 		<tr>
@@ -101,9 +104,9 @@ $(function() {
 			<th colspan="5">@lang('datasource::core.field.related')</th>
 		</tr>
 		</thead>
-		</tbody>
+		<tbody>
 		@foreach ($section->getRelatedFields() as $field)
-		<tr data-id="{{ $field->getId() }}">
+		<tr data-id="{{ $field->getId() }}" data-related-id="{{ $field->getRelatedFieldId() }}">
 			<td></td>
 			<td class="text-center"></td>
 			<td>
@@ -114,7 +117,9 @@ $(function() {
 			</td>
 			<td class="text-center"></td>
 			<td class="text-right">
-				{!! UI::label($field->getType()->getCategory(), 'success') !!} {!! UI::label($field->getSection()->getName(), 'danger') !!}  {!! UI::label($field->getTypeTitle()) !!}
+				{!! UI::label($field->getType()->getCategory(), 'success') !!}
+				{!! UI::label($field->getTypeTitle()) !!}
+				{!! UI::label($field->getSection()->getName(), 'danger') !!}
 			</td>
 		</tr>
 		@endforeach

@@ -366,7 +366,7 @@ class Section extends DatasourceModel implements SectionInterface
 	 */
 	public function userHasAccess($acl = 'section.edit', $checkOwn = true, $userId = null)
 	{
-		return (acl_check('ds_id.' . $this->getId() . '.' . $acl) OR ($checkOwn AND $this->userIsCreator($userId)));
+		return (acl_check('section_id.' . $this->getId() . '.' . $acl) OR ($checkOwn AND $this->userIsCreator($userId)));
 	}
 
 	/**
@@ -421,7 +421,7 @@ class Section extends DatasourceModel implements SectionInterface
 	 */
 	public function fields()
 	{
-		return $this->hasMany(\KodiCMS\Datasource\Model\Field::class, 'ds_id')->orderBy('position');
+		return $this->hasMany(\KodiCMS\Datasource\Model\Field::class, 'section_id')->orderBy('position');
 	}
 
 	/**
@@ -429,7 +429,7 @@ class Section extends DatasourceModel implements SectionInterface
 	 */
 	public function relatedFields()
 	{
-		return $this->hasMany(\KodiCMS\Datasource\Model\Field::class, 'related_ds')->orderBy('position');
+		return $this->hasMany(\KodiCMS\Datasource\Model\Field::class, 'related_section_id')->orderBy('position');
 	}
 
 	/**

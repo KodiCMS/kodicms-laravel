@@ -12,7 +12,7 @@ interface FieldTypeRelationInterface
 	 * @param SectionInterface $relatedSection
 	 * @return BelongsToRelation
 	 */
-	public function getDocumentRalation(DocumentInterface $document, SectionInterface $relatedSection);
+	public function getDocumentRelation(DocumentInterface $document, SectionInterface $relatedSection);
 
 	/**
 	 * @return string

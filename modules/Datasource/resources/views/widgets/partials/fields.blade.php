@@ -28,7 +28,7 @@
 			<?php
 			if (!empty($types = $field->getWidgetTypes()))
 			{
-				$widgets = DatasourceManager::getWidgetsBySection($types, $field->getRalatedSection());
+				$widgets = DatasourceManager::getWidgetsBySection($types, $field->getRelatedSectionId());
 
 				if (isset($widgets[$widget->id]))
 				{

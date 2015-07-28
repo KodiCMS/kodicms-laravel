@@ -1,16 +1,16 @@
 <?php namespace KodiCMS\Datasource\Model;
 
-use KodiCMS\Support\Traits\Tentacle;
-use Illuminate\Validation\Validator;
 use Illuminate\Database\Eloquent\Model;
-use KodiCMS\Datasource\Contracts\FieldInterface;
-use KodiCMS\Datasource\Observers\DocumentObserver;
-use KodiCMS\Datasource\Contracts\SectionInterface;
-use KodiCMS\Datasource\Contracts\DocumentInterface;
-use KodiCMS\Datasource\Contracts\FieldTypeDateInterface;
+use Illuminate\Validation\Validator;
 use KodiCMS\CMS\Http\Controllers\System\TemplateController;
-use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
+use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Datasource\Contracts\FieldInterface;
+use KodiCMS\Datasource\Contracts\FieldTypeDateInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeOnlySystemInterface;
+use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
+use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\Observers\DocumentObserver;
+use KodiCMS\Support\Traits\Tentacle;
 
 class Document extends Model implements DocumentInterface
 {
@@ -102,16 +102,15 @@ class Document extends Model implements DocumentInterface
 					$section = $field->relatedSection;
 					$this->addRelation($field->getRelationName(), function () use ($field, $section)
 					{
-						return $field->getDocumentRalation($this, $section);
+						return $field->getDocumentRelation($this, $section);
 					});
 				}
 
-				if (!($field instanceof FieldTypeOnlySystemInterface))
+				if (!($field instanceof FieldTypeOnlySystemInterface) and $field->hasDatabaseColumn())
 				{
 					$this->fillable[] = $field->getDBKey();
 					$this->setAttribute($field->getDBKey(), $field->getDefaultValue());
 				}
-
 
 				$this->sectionFields[$field->getDBKey()] = $field;
 			}
@@ -162,6 +161,27 @@ class Document extends Model implements DocumentInterface
 	}
 
 	/**
+	 * Fill the model with an array of attributes.
+	 *
+	 * @param  array  $attributes
+	 * @return $this
+	 *
+	 * @throws \Illuminate\Database\Eloquent\MassAssignmentException
+	 */
+	public function fill(array $attributes)
+	{
+		foreach($attributes as $key => $value)
+		{
+			if (!is_null($field = array_get($this->sectionFields, $key)))
+			{
+				$field->onDocumentFill($this, $value);
+			}
+		}
+
+		return parent::fill($attributes);
+	}
+
+	/**
 	 * Set a given attribute on the model.
 	 *
 	 * @param  string $key
@@ -173,6 +193,11 @@ class Document extends Model implements DocumentInterface
 		if (!is_null($field = array_get($this->sectionFields, $key)))
 		{
 			$value = $field->onSetDocumentAttribute($this, $value);
+
+			if (method_exists($field, 'setDocumentAttribute'))
+			{
+				return $field->setDocumentAttribute($this, $value);
+			}
 		}
 
 		parent::setAttribute($key, $value);

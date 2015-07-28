@@ -10,19 +10,20 @@ class DatasourceFields extends Migration
 		Schema::create('datasource_fields', function (Blueprint $table) {
 			$table->increments('id');
 
-			$table->string('ds_id')->index();
+			$table->string('section_id')->index();
 			$table->boolean('is_system')->default(false);
 
 			$table->string('key');
 			$table->string('type');
 
 			$table->string('name');
-			$table->string('related_ds')->index();
+			$table->string('related_section_id')->index();
+			$table->string('related_field_id');
 
 			$table->json('settings');
 			$table->integer('position')->default(0);
 
-			$table->unique(['ds_id', 'key']);
+			$table->unique(['section_id', 'key']);
 
 			$table->timestamps();
 		});

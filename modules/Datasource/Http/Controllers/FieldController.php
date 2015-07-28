@@ -39,8 +39,8 @@ class FieldController extends BackendController
 	 */
 	public function postCreate(FieldRepository $repository, $dsId)
 	{
-		$data = $this->request->except(['ds_id', 'is_system']);
-		$data['ds_id'] = $dsId;
+		$data = $this->request->except(['section_id', 'is_system']);
+		$data['section_id'] = $dsId;
 		$repository->validateOnCreate($data);
 		$field = $repository->create($data);
 
@@ -81,7 +81,7 @@ class FieldController extends BackendController
 	 */
 	public function postEdit(FieldRepository $repository, $fieldId)
 	{
-		$data = $this->request->except(['key', 'ds_id', 'is_system', 'related_ds', 'type']);
+		$data = $this->request->except(['key', 'section_id', 'is_system', 'related_section_id', 'type']);
 
 		$repository->validateOnUpdate($data);
 		$field = $repository->update($fieldId, $data);

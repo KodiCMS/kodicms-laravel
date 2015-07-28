@@ -1,6 +1,6 @@
 <div class="panel-body">
 	<div class="form-group">
-		<label class="control-label col-md-3" for="ds_id">Datasource</label>
+		<label class="control-label col-md-3" for="section_id">Datasource</label>
 
 		<div class="col-md-3">
 			{!! Form::select('settings[section_id]', DatasourceManager::getSectionsFormHTML(), $widget->getSectionId(), [

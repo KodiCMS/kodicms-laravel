@@ -60,6 +60,12 @@ return [
 		'edit_template' => 'datasource::field.types.has_one',
 		'category' => 'Relations'
 	],
+	'has_many' => [
+		'class' => KodiCMS\Datasource\Fields\Relation\HasMany::class,
+		'title' => trans('datasource::fields.has_many.title'),
+		'edit_template' => 'datasource::field.types.has_many',
+		'category' => 'Relations'
+	],
 	'belongs_to' => [
 		'class' => KodiCMS\Datasource\Fields\Relation\BelongsTo::class,
 		'title' => trans('datasource::fields.belongs_to.title'),
