@@ -67,6 +67,9 @@ return [
 		'one_to_one' => 'Один к одному',
 		'one_to_many' => 'Один ко многим'
 	],
+	'has_many' => [
+		'title' => 'HasMany',
+	],
 	'belongs_to' => [
 		'title' => 'Относится к'
 	]
