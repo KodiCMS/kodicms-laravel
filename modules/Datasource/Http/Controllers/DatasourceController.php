@@ -6,7 +6,7 @@ use KodiCMS\Datasource\Repository\SectionRepository;
 
 class DatasourceController extends BackendController
 {
-	const DS_COOKIE_NAME;
+	const DS_COOKIE_NAME = 'currentDS';
 
 	/**
 	 * @var string
