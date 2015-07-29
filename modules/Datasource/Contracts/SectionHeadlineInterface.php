@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\Datasource\Contracts;
 
+use Illuminate\Http\JsonResponse;
+
 interface SectionHeadlineInterface
 {
 	/**
@@ -21,6 +23,11 @@ interface SectionHeadlineInterface
 	 * @return array
 	 */
 	public function getDocuments();
+
+	/**
+	 * @return JsonResponse
+	 */
+	public function JsonResponse();
 
 	/**
 	 * @param string|null $template

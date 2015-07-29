@@ -32,24 +32,10 @@ $(function() {
 		data['section_id'] = SECTION.id;
 
 		Api.post('/api.datasource.document.' + action, data, function(response) {
-			update_headline();
+			updateHeadline();
 		});
 	});
 });
-
-function update_headline(keyword) {
-	var data = {
-		page: $.query.get('page'),
-		section_id: SECTION.id
-	};
-
-	Api.get('/api.datasource.headline', _.extend(data, keyword), function(response) {
-		if(response.content) {
-			$('.headline').html(response.content);
-			CMS.ui.init('icon');
-		}
-	});
-}
 
 function checkbox_check() {
 	var $checkboxes = $('.headline [data-id] .doc-checkbox');

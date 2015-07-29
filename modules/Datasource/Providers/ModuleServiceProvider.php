@@ -4,9 +4,8 @@ use Event;
 use KodiCMS\CMS\Navigation\Page;
 use KodiCMS\CMS\Navigation\Section;
 use KodiCMS\Datasource\FieldManager;
-use KodiCMS\Datasource\Model\Field;
 use KodiCMS\Datasource\DatasourceManager;
-use KodiCMS\Datasource\Observers\FieldObserver;
+use KodiCMS\Datasource\Datatables\SectionDatatables;
 use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider {
@@ -24,6 +23,12 @@ class ModuleServiceProvider extends ServiceProvider {
 		});
 
 		$this->registerConsoleCommand('datasource.migrate', '\KodiCMS\Datasource\Console\Commands\DatasourceMigrate');
+
+		$this->app->bind('datatables', function ($app)
+		{
+			$request = $app->make('\yajra\Datatables\Request');
+			return new SectionDatatables($request);
+		});
 	}
 
 	public function boot()

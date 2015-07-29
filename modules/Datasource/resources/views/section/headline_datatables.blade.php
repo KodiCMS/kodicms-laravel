@@ -1,35 +1,53 @@
 <script>
 $(function() {
-	$('#headline').DataTable({
-		processing: true,
+	window.DataTable = $('#headline').DataTable({
 		serverSide: true,
+		stateSave: true,
+		createdRow: function (row, data, index) {
+			$(row)
+					.attr('data-id', data.primaryKey)
+					.find('input[name="document[]"]')
+					.val(data.primaryKey);
+		},
 		ajax: {
 			url: '/api.datasource.headline.datatables',
 			data: function ( d ) {
 				d.section_id = SECTION.id;
 
 				return d;
-			},
-			dataSrc: function(response) {
-				return response.content;
 			}
 		},
 		columns: [
-			@foreach ($fieldParams as $key => $params)
-			{ data: '{{ $key }}', name: '{{ $key }}' },
+			{
+				data: null,
+				orderable: false,
+				defaultContent: '{!! Form::checkbox('document[]', null, null, ['class' => 'doc-checkbox']) !!}'
+			},
+				@foreach ($fieldParams as $key => $params)
+				{
+				data: '{{ $key }}',
+				name: '{{ $key }}',
+				title: '{{ $params['name'] }}',
+				className: '{{ array_get($params, 'class') }}',
+				type: '{{ array_get($params, 'type', 'string') }}',
+				orderable: {{ array_get($params, 'orderable', 'true') }},
+				searchable: {{ array_get($params, 'searchable', 'true') }},
+			},
 			@endforeach
 		]
 	});
 });
+
+function updateHeadline() {
+	window.DataTable.draw();
+}
 </script>
 
-<table class="table table-striped" id="headline">
-	<thead>
-	<tr>
+<table class="table table-striped headline" id="headline">
+	<colgroup>
+		<col width="30px" />
 		@foreach ($fieldParams as $params)
-		<th class="{{ array_get($params, 'class') }}">{{ array_get($params, 'name') }}</th>
+		<col @if (!is_null(array_get($params, 'width'))) width="{{ array_get($params, 'width', 200) }}px"; @endif />
 		@endforeach
-	</tr>
-	</thead>
-	<tbody></tbody>
+	</colgroup>
 </table>

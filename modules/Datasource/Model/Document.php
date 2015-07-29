@@ -8,6 +8,7 @@ use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeDateInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeOnlySystemInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
+use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Observers\DocumentObserver;
 use KodiCMS\Support\Traits\Tentacle;
@@ -272,6 +273,35 @@ class Document extends Model implements DocumentInterface
 		}
 
 		return $value;
+	}
+
+	/**
+	 * @param SectionHeadlineInterface $headline
+	 *
+	 * @return array
+	 */
+	public function toHeadlineArray(SectionHeadlineInterface $headline)
+	{
+		$fields = $headline->getHeadlineFields();
+
+		$attributes = [
+			0 => null,
+			'primaryKey' => $this->getKey()
+		];
+
+		foreach ($fields as $key => $params)
+		{
+			if (array_get($params, 'type') == 'link')
+			{
+				$attributes[$key] = link_to($this->getEditLink(), $this->getHeadlineValue($key));
+			}
+			else
+			{
+				$attributes[$key] = $this->getHeadlineValue($key);
+			}
+		}
+
+		return $attributes;
 	}
 
 	/**
