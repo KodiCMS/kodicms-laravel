@@ -15,6 +15,11 @@ abstract class Relation extends Field implements FieldTypeRelationInterface
 	protected $with = ['relatedSection'];
 
 	/**
+	 * @var bool
+	 */
+	protected $isOrderable = false;
+
+	/**
 	 * @return array
 	 */
 	public function getSectionList()
