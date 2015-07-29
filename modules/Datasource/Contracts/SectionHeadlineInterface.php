@@ -35,4 +35,9 @@ interface SectionHeadlineInterface
 	 * @return \Illuminate\View\View
 	 */
 	public function render($template = null);
+
+	/**
+	 * @return \Illuminate\View\View|null
+	 */
+	public function renderOrderSettings();
 }

@@ -160,4 +160,14 @@ class SectionHeadline implements SectionHeadlineInterface
 			'section' => $this->section
 		]);
 	}
+
+	/**
+	 * @return \Illuminate\View\View
+	 */
+	public function renderOrderSettings()
+	{
+		return view('datasource::eidgets.partials.ordering', [
+			'ordering' => $this->getOrderingRules()
+		]);
+	}
 }
