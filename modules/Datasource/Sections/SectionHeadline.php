@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Datasource\Sections;
 
+use Illuminate\Http\JsonResponse;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
@@ -124,6 +125,14 @@ class SectionHeadline implements SectionHeadlineInterface
 		return $this->section->getEmptyDocument()
 			->getDocuments($this->getActiveFieldIds(), $this->getOrderingRules())
 			->paginate();
+	}
+
+	/**
+	 * @return JsonResponse
+	 */
+	public function JsonResponse()
+	{
+		return new JsonResponse($this->render());
 	}
 
 	/**

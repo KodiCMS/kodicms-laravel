@@ -27,4 +27,12 @@ class Primary extends Field implements FieldTypeOnlySystemInterface
 	{
 		return $table->increments($this->getDBKey());
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getHeadlineType()
+	{
+		return 'num';
+	}
 }

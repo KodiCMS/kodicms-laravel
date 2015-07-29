@@ -279,8 +279,19 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	{
 		return array_merge($this->getSetting('headline_parameters', []), [
 			'id' => $this->getId(),
-			'name' => $this->getName()
+			'name' => $this->getName(),
+			'orderable' => $this->isOrderable() ? 'true' : 'false',
+			'searchable' => $this->isSearchable() ? 'true' : 'false',
+			'type' => $this->getHeadlineType()
 		]);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getHeadlineType()
+	{
+		return 'string';
 	}
 
 	/**************************************************************************

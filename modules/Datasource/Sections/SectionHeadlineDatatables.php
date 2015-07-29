@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Datasource\Sections;
 
-use Datatables;
+use SectionDatatables;
+use Illuminate\Http\JsonResponse;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
@@ -90,13 +91,13 @@ class SectionHeadlineDatatables implements SectionHeadlineInterface
 	public function getDocuments()
 	{
 		$document = $this->section->getEmptyDocument();
-		return Datatables::of($document->newQuery())->make();
+		return app('datatables')->usingDatasourceEngine($document, $this)->make();
 	}
 
 	/**
-	 * @return array
+	 * @return JsonResponse
 	 */
-	public function response()
+	public function JsonResponse()
 	{
 		return $this->getDocuments();
 	}

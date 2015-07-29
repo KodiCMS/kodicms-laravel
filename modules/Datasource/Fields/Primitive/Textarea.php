@@ -86,7 +86,7 @@ class Textarea extends Primitive
 	 */
 	public function onGetHeadlineValue(DocumentInterface $document, $value)
 	{
-		return str_limit($value, 50);
+		return str_limit(strip_tags($value), 50);
 	}
 
 	/**

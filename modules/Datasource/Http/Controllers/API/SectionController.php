@@ -11,9 +11,6 @@ class SectionController extends Controller
 	public function getHeadline(SectionRepository $repository)
 	{
 		$sectionId = $this->getRequiredParameter('section_id');
-
-		$headline = $repository->findOrFail($sectionId)->getHeadline();
-
-		$this->setContent($headline->response());
+		return $repository->findOrFail($sectionId)->getHeadline()->JsonResponse();
 	}
 }

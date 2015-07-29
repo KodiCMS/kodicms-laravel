@@ -1,3 +1,19 @@
+<script>
+function updateHeadline(keyword) {
+	var data = {
+		page: $.query.get('page'),
+		section_id: SECTION.id
+	};
+
+	Api.get('/api.datasource.headline', _.extend(data, keyword), function(response) {
+		if(response) {
+			$('.headline').html(response);
+			CMS.ui.init('icon');
+		}
+	});
+}
+</script>
+
 @if(count($items) > 0)
 <table class="table table-striped">
 	<colgroup>

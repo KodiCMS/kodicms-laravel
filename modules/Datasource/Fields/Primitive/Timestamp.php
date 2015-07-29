@@ -50,4 +50,12 @@ class Timestamp extends Primitive
 
 		return $params;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getHeadlineType()
+	{
+		return 'date';
+	}
 }

@@ -69,6 +69,14 @@ class Integer extends Primitive
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getHeadlineType()
+	{
+		return 'num';
+	}
+
+	/**
 	 * @param DocumentInterface $document
 	 * @param Validator $validator
 	 *

@@ -7,8 +7,8 @@ use KodiCMS\Datasource\Fields\Primitive\String;
 use KodiCMS\Datasource\Sections\SectionToolbar;
 use KodiCMS\Datasource\Fields\Primitive\Primary;
 use KodiCMS\Datasource\Fields\Primitive\Boolean;
-use KodiCMS\Datasource\Sections\SectionHeadline;
 use KodiCMS\Datasource\Fields\Primitive\Timestamp;
+use KodiCMS\Datasource\Sections\SectionHeadlineDatatables;
 
 class Section extends \KodiCMS\Datasource\Model\Section
 {
@@ -30,7 +30,7 @@ class Section extends \KodiCMS\Datasource\Model\Section
 	 */
 	public function getHeadlineClass()
 	{
-		return SectionHeadline::class;
+		return SectionHeadlineDatatables::class;
 	}
 
 	/**
@@ -71,6 +71,7 @@ class Section extends \KodiCMS\Datasource\Model\Section
 				'key' => 'published',
 				'name' => 'Published',
 				'settings' => [
+					'default_value' => true,
 					'headline_parameters' => [
 						'width' => 30,
 						'visible' => true
@@ -96,6 +97,7 @@ class Section extends \KodiCMS\Datasource\Model\Section
 				'settings' => [
 					'current_only' => true,
 					'headline_parameters' => [
+						'width' => 100,
 						'visible' => true
 					]
 				]

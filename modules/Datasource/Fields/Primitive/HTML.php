@@ -13,6 +13,11 @@ class HTML extends Primitive
 	protected $changeableDatabaseField = false;
 
 	/**
+	 * @var bool
+	 */
+	protected $isOrderable = false;
+
+	/**
 	 * @return array
 	 */
 	public function booleanSettings()
@@ -66,6 +71,14 @@ class HTML extends Primitive
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getHeadlineType()
+	{
+		return 'html';
+	}
+
+	/**
 	 * @param DocumentInterface $document
 	 * @param $value
 	 *
@@ -95,7 +108,7 @@ class HTML extends Primitive
 	 */
 	public function onGetHeadlineValue(DocumentInterface $document, $value)
 	{
-		return str_limit($value, 50);
+		return str_limit(strip_tags($value), 50);
 	}
 
 	/**

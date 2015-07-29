@@ -6,12 +6,17 @@ use Illuminate\Database\Schema\Blueprint;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeDateInterface;
 
-class Date extends Primitive implements FieldTypeDateInterface
+class Date extends Timestamp implements FieldTypeDateInterface
 {
 	/**
 	 * @var string
 	 */
 	protected $dateFormat = 'Y-m-d';
+
+	/**
+	 * @var bool
+	 */
+	protected $isEditable = true;
 
 	/**
 	 * @var bool
