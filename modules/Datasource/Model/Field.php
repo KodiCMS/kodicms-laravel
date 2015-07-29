@@ -476,6 +476,15 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 * @param DocumentInterface $document
 	 * @param $value
 	 */
+	public function onDocumentCreated(DocumentInterface $document, $value)
+	{
+
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param $value
+	 */
 	public function onDocumentUpdating(DocumentInterface $document, $value)
 	{
 

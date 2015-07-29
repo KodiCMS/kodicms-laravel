@@ -20,7 +20,10 @@ class DocumentObserver {
 	 */
 	public function created(Document $document)
 	{
-
+		foreach ($document->getSectionFields() as $key => $field)
+		{
+			$field->onDocumentCreated($document, $document->getAttribute($key));
+		}
 	}
 
 	/**

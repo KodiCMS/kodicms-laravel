@@ -17,6 +17,11 @@ class ManyToMany extends Relation
 	protected $hasDatabaseColumn = false;
 
 	/**
+	 * @var array
+	 */
+	protected $selectedDocuments = [];
+
+	/**
 	 * @param DocumentInterface $document
 	 * @param mixed $value
 	 *
@@ -88,10 +93,16 @@ class ManyToMany extends Relation
 	 */
 	public function onDocumentFill(DocumentInterface $document, $value)
 	{
-		if(!is_null($relatedField = $this->relatedField))
-		{
-			$document->{$this->getRelationName()}()->sync((array) $value);
-		}
+		$this->selectedDocuments = $value;
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 */
+	public function onDocumentCreated(DocumentInterface $document, $value)
+	{
+		$document->{$this->getRelationName()}()->sync((array) $this->selectedDocuments);
 	}
 
 	/**
