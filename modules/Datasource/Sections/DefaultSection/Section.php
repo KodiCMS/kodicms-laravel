@@ -4,8 +4,8 @@ use KodiCMS\Datasource\Sections\Document;
 use KodiCMS\Datasource\Fields\Primitive\String;
 use KodiCMS\Datasource\Sections\SectionToolbar;
 use KodiCMS\Datasource\Fields\Primitive\Primary;
-use KodiCMS\Datasource\Sections\SectionHeadline;
 use KodiCMS\Datasource\Fields\Primitive\Timestamp;
+use KodiCMS\Datasource\Sections\SectionHeadlineDatatables;
 
 class Section extends \KodiCMS\Datasource\Model\Section
 {
@@ -27,7 +27,7 @@ class Section extends \KodiCMS\Datasource\Model\Section
 	 */
 	public function getHeadlineClass()
 	{
-		return SectionHeadline::class;
+		return SectionHeadlineDatatables::class;
 	}
 
 	/**

@@ -161,6 +161,7 @@ return [
 		 * App Service Providers must be here...
 		 */
 		App\Providers\AppServiceProvider::class,
+		yajra\Datatables\DatatablesServiceProvider::class,
 	],
 
 	/*
@@ -212,6 +213,7 @@ return [
 		'View'      => Illuminate\Support\Facades\View::class,
 		'Form'		=> Illuminate\Html\FormFacade::class,
 		'HTML'		=> Illuminate\Html\HtmlFacade::class,
+		'Datatables'=> yajra\Datatables\Datatables::class,
 
 		/*
 		 * KodiCMS aliases...
@@ -237,7 +239,7 @@ return [
 		'EnvironmentTester'	=> KodiCMS\Support\Facades\EnvironmentTester::class,
 		'Profiler'			=> KodiCMS\Support\Helpers\Profiler::class,
 		'DatasourceManager' => KodiCMS\Support\Facades\DatasourceManager::class,
-		'FieldManager'		=> KodiCMS\Support\Facades\FieldManager::class
+		'FieldManager'		=> KodiCMS\Support\Facades\FieldManager::class,
 
 		/*
 		 * App aliases must be here...

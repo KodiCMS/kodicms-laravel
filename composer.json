@@ -16,7 +16,8 @@
 		"guzzlehttp/guzzle": "~5.0",
 		"barryvdh/laravel-ide-helper": "^2.0",
 		"erusev/parsedown": "1.*",
-		"doctrine/dbal": "~2.3"
+		"doctrine/dbal": "~2.3",
+		"yajra/laravel-datatables-oracle": "~5.0"
 	},
 	"require-dev": {
 		"fzaninotto/faker": "~1.4",
