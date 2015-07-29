@@ -74,7 +74,8 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 * @var array
 	 */
 	protected $fillable = [
-		'section_id', 'key', 'type', 'name', 'related_section_id', 'related_field_id', 'position', 'settings', 'is_system'
+		'section_id', 'key', 'type', 'name', 'related_section_id',
+		'related_field_id', 'related_table', 'position', 'settings', 'is_system'
 	];
 
 	/**
@@ -263,11 +264,19 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	}
 
 	/**
-	 * @return mixed
+	 * @return integer
 	 */
 	public function getRelatedFieldId()
 	{
 		return $this->related_field_id;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRelatedTable()
+	{
+		return $this->related_table;
 	}
 
 	/**

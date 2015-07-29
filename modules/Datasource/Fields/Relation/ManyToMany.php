@@ -1,0 +1,174 @@
+<?php namespace KodiCMS\Datasource\Fields\Relation;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany as BelongsToManyRelation;
+use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Datasource\Contracts\FieldInterface;
+use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\Fields\Relation;
+use KodiCMS\Datasource\Repository\FieldRepository;
+use Schema;
+
+class ManyToMany extends Relation
+{
+	/**
+	 * @var bool
+	 */
+	protected $hasDatabaseColumn = false;
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return mixed
+	 */
+	public function onGetHeadlineValue(DocumentInterface $document, $value)
+	{
+		$documents = $document->getAttribute($this->getRelationName())->map(function($doc) {
+			return \HTML::link($doc->getEditLink(), $doc->getTitle(), ['class' => 'popup']);
+		})->all();
+		return !empty($documents)
+			? implode(', ', $documents)
+			: null;
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param SectionInterface $relatedSection
+	 * @param FieldInterface|null $relatedField
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\ManyToMany
+	 */
+	public function getDocumentRelation(DocumentInterface $document, SectionInterface $relatedSection = null, FieldInterface $relatedField = null)
+	{
+		$relatedDocument = $relatedSection->getEmptyDocument();
+		$builder = $relatedDocument->newQuery();
+
+		return new BelongsToManyRelation(
+			$builder, $document,
+			$this->getRelatedTable(),
+			$this->getDBKey(),
+			$relatedField->getDBKey(),
+			$this->getRelationName()
+		);
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 *
+	 * @return array
+	 */
+	public function getRelatedDocumentValues(DocumentInterface $document)
+	{
+		if (!is_null($relatedField = $this->relatedField))
+		{
+			$section = $relatedField->getSection();
+
+			return $this->getDocumentRelation($document, $section, $relatedField)
+				->get()
+				->lists($section->getDocumentTitleKey(), $section->GetDocumentPrimaryKey())
+				->all();
+		}
+
+		return  [];
+	}
+
+	/**
+	 * @param Builder $query
+	 * @param DocumentInterface $document
+	 */
+	public function querySelectColumn(Builder $query, DocumentInterface $document)
+	{
+		$query->with($this->getRelationName());
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 */
+	public function onDocumentFill(DocumentInterface $document, $value)
+	{
+		if(!is_null($relatedField = $this->relatedField))
+		{
+			$document->{$this->getRelationName()}()->sync((array) $value);
+		}
+	}
+
+	/**
+	 * @param FieldRepository $repository
+	 *
+	 * @throws \KodiCMS\Datasource\Exceptions\FieldException
+	 */
+	public function onCreated(FieldRepository $repository)
+	{
+		if (!is_null($this->getRelatedFieldId()))
+		{
+			return;
+		}
+
+		$relatedTable = 'ds_mtm_' . uniqid();
+
+		$relatedField = $repository->create([
+			'type' => 'many_to_many',
+			'section_id' => $this->getRelatedSectionId(),
+			'is_system' => 1,
+			'key' => $this->getRelatedDBKey(),
+			'name' => $this->getSection()->getName(),
+			'related_section_id' => $this->getSection()->getId(),
+			'related_field_id' => $this->getId(),
+			'related_table' => $relatedTable,
+			'settings' => $this->getSettings()
+		]);
+
+		if (!is_null($relatedField))
+		{
+			Schema::create($relatedTable, function ($table) use ($relatedField)
+			{
+				$table->integer($this->getDBKey());
+				$table->integer($relatedField->getDBKey());
+
+				$table->primary([$this->getDBKey(), $relatedField->getDBKey()]);
+			});
+
+			$this->update([
+				'related_field_id' => $relatedField->getId(),
+				'related_table' => $relatedTable
+			]);
+		}
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @return array
+	 */
+	protected function fetchBackendTemplateValues(DocumentInterface $document)
+	{
+		$relatedSection = $this->relatedSection;
+		$relatedField = $this->relatedField;
+
+		return [
+			'value' => $this->getRelatedDocumentValues($document),
+			'document' => $document,
+			'section' => $document->getSection(),
+			'relatedDocuments' => $this->getDocumentRelation($document, $relatedSection, $relatedField)->get(),
+			'relatedSection' => $relatedSection,
+			'relatedField' => $relatedField
+		];
+	}
+
+	/**
+	 * @param FieldRepository $repository
+	 */
+	public function onDeleted(FieldRepository $repository)
+	{
+		if (!is_null($relatedField = $this->relatedField))
+		{
+			$relatedField->delete();
+		}
+
+		if (!is_null($this->getRelatedTable()))
+		{
+			Schema::dropIfExists($this->getRelatedTable());
+		}
+	}
+}

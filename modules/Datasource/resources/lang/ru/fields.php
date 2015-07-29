@@ -83,6 +83,11 @@ return [
 	],
 	'has_many' => [
 		'title' => 'HasMany',
+		'datasource' => 'Раздел',
+	],
+	'many_to_many' => [
+		'title' => 'ManyToMany',
+		'datasource' => 'Раздел',
 	],
 	'belongs_to' => [
 		'title' => 'Относится к'

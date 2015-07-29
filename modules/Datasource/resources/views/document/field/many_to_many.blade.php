@@ -14,9 +14,9 @@
 
 			<div class="input-group-btn">
 				{!! link_to_route('backend.datasource.document.create', trans('datasource::fields.has_one.create_document'), [$relatedSection->getId()], [
-					'data-icon' => 'plus',
-					'class' => 'btn btn-success popup fancybox.iframe',
-					'data-target' => $key
+				'data-icon' => 'plus',
+				'class' => 'btn btn-success popup fancybox.iframe',
+				'data-target' => $key
 				]) !!}
 			</div>
 		</div>
