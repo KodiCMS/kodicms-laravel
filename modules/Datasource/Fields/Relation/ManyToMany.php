@@ -133,12 +133,12 @@ class ManyToMany extends Relation
 
 		if (!is_null($relatedField))
 		{
-			Schema::create($relatedTable, function ($table) use ($relatedField)
+			Schema::create($relatedTable, function ($table) use ($relatedField, $relatedTable)
 			{
 				$table->integer($this->getDBKey());
 				$table->integer($relatedField->getDBKey());
 
-				$table->primary([$this->getDBKey(), $relatedField->getDBKey()]);
+				$table->primary([$this->getDBKey(), $relatedField->getDBKey()], $relatedTable);
 			});
 
 			$this->update([
