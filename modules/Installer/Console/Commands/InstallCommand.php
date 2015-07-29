@@ -87,21 +87,17 @@ class InstallCommand extends GeneratorCommand
 			$this->info('.env file created successfully.');
 		}
 
-//		if ($this->confirm("Clear database? [yes/no]"))
-//		{
-//			Installer::resetDatabase($this->input->getOption("DB_DATABASE"));
-//			$this->info("Database cleaned");
-//		}
+		if ($this->confirm("Clear database? [yes/no]"))
+		{
+			$this->dropDatabase();
+		}
 
 		$this->initModules();
 
-		if ($this->confirm('Migrate database?'))
+		$this->migrate();
+		if ($this->confirm('Install seed data?'))
 		{
-			$this->migrate();
-			if ($this->confirm('Install seed data?'))
-			{
-				$this->seed();
-			}
+			$this->seed();
 		}
 
 		$this->info('Installation completed successfully');
@@ -117,7 +113,6 @@ class InstallCommand extends GeneratorCommand
 		ModulesFileSystem::loadConfigs();
 	}
 
-
 	/**
 	 * Get the stub file for the generator.
 	 *
@@ -128,11 +123,16 @@ class InstallCommand extends GeneratorCommand
 		return __DIR__ . '/stubs/env.stub';
 	}
 
+	protected function dropDatabase()
+	{
+		$this->call('db:clear', ['--force' => true]);
+	}
+
 
 	/**
 	 * Миграция данных
 	 */
-	public function migrate()
+	protected function migrate()
 	{
 		$this->call('cms:modules:migrate', ['--force' => true]);
 	}
@@ -140,7 +140,7 @@ class InstallCommand extends GeneratorCommand
 	/**
 	 * Сидирование данных
 	 */
-	public function seed()
+	protected function seed()
 	{
 		$this->call('cms:modules:seed', ['--force' => true]);
 	}

@@ -1,11 +1,13 @@
 <?php namespace KodiCMS\Installer\Providers;
 
-use KodiCMS\Installer\Console\Commands\InstallCommand;
-use KodiCMS\Installer\Console\Commands\ModulesMigrateCommand;
-use KodiCMS\Installer\Console\Commands\ModulesSeedCommand;
-use KodiCMS\Installer\EnvironmentTester;
+use Artisan;
 use KodiCMS\Installer\Installer;
+use KodiCMS\Installer\EnvironmentTester;
 use KodiCMS\ModulesLoader\Providers\ServiceProvider;
+use KodiCMS\Installer\Console\Commands\InstallCommand;
+use KodiCMS\Installer\Console\Commands\ModulesSeedCommand;
+use KodiCMS\Installer\Console\Commands\DropDatabaseCommand;
+use KodiCMS\Installer\Console\Commands\ModulesMigrateCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -14,6 +16,7 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConsoleCommand('cms.install', InstallCommand::class);
 		$this->registerConsoleCommand('modules.seed', ModulesSeedCommand::class);
 		$this->registerConsoleCommand('modules.migrate', ModulesMigrateCommand::class);
+		$this->registerConsoleCommand('db.clear', DropDatabaseCommand::class);
 
 		if (!$this->app->installed())
 		{
