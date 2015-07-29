@@ -3,6 +3,7 @@ $(function() {
 	window.DataTable = $('#headline').DataTable({
 		serverSide: true,
 		stateSave: true,
+		pageLength: 50,
 		createdRow: function (row, data, index) {
 			$(row)
 					.attr('data-id', data.primaryKey)
