@@ -174,6 +174,8 @@ class Document extends Model implements DocumentInterface
 	 */
 	public function fill(array $attributes)
 	{
+		parent::fill($attributes);
+
 		foreach($attributes as $key => $value)
 		{
 			if (!is_null($field = array_get($this->sectionFields, $key)))
@@ -182,7 +184,7 @@ class Document extends Model implements DocumentInterface
 			}
 		}
 
-		return parent::fill($attributes);
+		return $this;
 	}
 
 	/**

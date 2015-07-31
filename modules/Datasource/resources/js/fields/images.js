@@ -1,7 +1,7 @@
 $(function () {
 	function formatData(data)
 	{
-		return $('<image src="/' +data.image+ '" style="height: 50px;"/>');
+		return $('<span><image src="/' +data.image+ '" style="height: 50px;" class="img-thumbnail"/> ' + data.text + '</span>');
 	}
 
 	$('select[data-related-images]').each(function () {

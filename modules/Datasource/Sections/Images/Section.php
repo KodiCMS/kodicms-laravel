@@ -2,6 +2,7 @@
 
 use KodiCMS\Datasource\Fields\File\Image;
 use KodiCMS\Datasource\Sections\Document;
+use KodiCMS\Datasource\Fields\Primitive\String;
 use KodiCMS\Datasource\Fields\Primitive\Primary;
 use KodiCMS\Datasource\Fields\Primitive\Timestamp;
 
@@ -11,11 +12,6 @@ class Section extends \KodiCMS\Datasource\Model\Section
 	 * @var string
 	 */
 	protected $sectionTableName = 'images';
-
-	/**
-	 * @var string
-	 */
-	protected $documentTitleKey = 'id';
 
 	/**
 	 * @return string
@@ -37,6 +33,16 @@ class Section extends \KodiCMS\Datasource\Model\Section
 				'settings' => [
 					'headline_parameters' => [
 						'width' => 30,
+						'visible' => true
+					]
+				]
+			]),
+			new String([
+				'key' => 'header',
+				'name' => 'Header',
+				'settings' => [
+					'is_required' => true,
+					'headline_parameters' => [
 						'visible' => true
 					]
 				]
