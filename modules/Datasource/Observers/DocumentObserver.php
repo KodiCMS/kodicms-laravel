@@ -69,6 +69,11 @@ class DocumentObserver {
 		{
 			$field->onDocumentDeleting($document);
 		}
+
+		foreach ($document->getSection()->getRelatedFields() as $key => $field)
+		{
+			$field->onRelatedDocumentDeleting($document);
+		}
 	}
 
 	/**

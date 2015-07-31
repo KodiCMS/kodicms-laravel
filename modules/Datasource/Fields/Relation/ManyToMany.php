@@ -22,6 +22,11 @@ class ManyToMany extends Relation
 	protected $selectedDocuments = [];
 
 	/**
+	 * @var string|null
+	 */
+	protected $relatedFieldKey = null;
+
+	/**
 	 * @param DocumentInterface $document
 	 * @param mixed $value
 	 *
@@ -118,18 +123,28 @@ class ManyToMany extends Relation
 		}
 
 		$relatedTable = 'ds_mtm_' . uniqid();
+		$relatedField = null;
 
-		$relatedField = $repository->create([
-			'type' => 'many_to_many',
-			'section_id' => $this->getRelatedSectionId(),
-			'is_system' => 1,
-			'key' => $this->getRelatedDBKey(),
-			'name' => $this->getSection()->getName(),
-			'related_section_id' => $this->getSection()->getId(),
-			'related_field_id' => $this->getId(),
-			'related_table' => $relatedTable,
-			'settings' => $this->getSettings()
-		]);
+		if (
+			is_null($this->relatedFieldKey)
+			or
+			is_null($relatedSection = $this->relatedSection)
+			or
+			is_null($relatedField = $relatedSection->getFieldByKey($this->relatedFieldKey))
+		)
+		{
+			$relatedField = $repository->create([
+				'type' => 'many_to_many',
+				'section_id' => $this->getRelatedSectionId(),
+				'is_system' => 1,
+				'key' => $this->getRelatedDBKey(),
+				'name' => $this->getSection()->getName(),
+				'related_section_id' => $this->getSection()->getId(),
+				'related_field_id' => $this->getId(),
+				'related_table' => $relatedTable,
+				'settings' => $this->getSettings()
+			]);
+		}
 
 		if (!is_null($relatedField))
 		{
@@ -152,7 +167,7 @@ class ManyToMany extends Relation
 	 * @param DocumentInterface $document
 	 * @return array
 	 */
-	protected function fetchBackendTemplateValues(DocumentInterface $document)
+	protected function fetchDocumentTemplateValues(DocumentInterface $document)
 	{
 		$relatedSection = $this->relatedSection;
 		$relatedField = $this->relatedField;
@@ -181,5 +196,13 @@ class ManyToMany extends Relation
 		{
 			Schema::dropIfExists($this->getRelatedTable());
 		}
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 */
+	public function onRelatedDocumentDeleting(DocumentInterface $document)
+	{
+		$document->{$this->relatedField->getRelationName()}()->detach($document->getId());
 	}
 }

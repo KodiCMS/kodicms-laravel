@@ -124,9 +124,9 @@ class HasMany extends Relation
 	 * @param DocumentInterface $document
 	 * @return array
 	 */
-	protected function fetchBackendTemplateValues(DocumentInterface $document)
+	protected function fetchDocumentTemplateValues(DocumentInterface $document)
 	{
-		return array_merge(parent::fetchBackendTemplateValues($document), [
+		return array_merge(parent::fetchDocumentTemplateValues($document), [
 			'value' => $this->getRelatedDocumentValues($document)
 		]);
 	}

@@ -344,10 +344,8 @@ class ModuleContainer implements ModuleContainerInterface, Jsonable, Arrayable
 		{
 			view()->addNamespace($this->getKey(), $appPath);
 		}
-		else
-		{
-			view()->addNamespace($this->getKey(), $this->getViewsPath());
-		}
+
+		view()->addNamespace($this->getKey(), $this->getViewsPath());
 	}
 
 	/**

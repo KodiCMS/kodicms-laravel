@@ -6,5 +6,8 @@ return [
 	],
 	'article' => [
 		'title' => 'Article'
+	],
+	'images' => [
+		'title' => 'Изображения'
 	]
 ];

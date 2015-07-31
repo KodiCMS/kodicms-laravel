@@ -158,7 +158,7 @@ class SectionHeadline implements SectionHeadlineInterface
 			'fieldParams' => $this->getHeadlineFields(),
 			'items' => $this->getDocuments(),
 			'section' => $this->section
-		]);
+		])->render();
 	}
 
 	/**
@@ -166,8 +166,9 @@ class SectionHeadline implements SectionHeadlineInterface
 	 */
 	public function renderOrderSettings()
 	{
-		return view('datasource::eidgets.partials.ordering', [
-			'ordering' => $this->getOrderingRules()
-		]);
+		return view('datasource::widgets.partials.ordering', [
+			'ordering' => $this->getOrderingRules(),
+			'fields' => $this->section->getFields()
+		])->render();
 	}
 }

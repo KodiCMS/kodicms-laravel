@@ -656,14 +656,14 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 			$template = $this->getType()->getDocumentTemplate();
 		}
 
-		return view($template, array_merge($this->toArray(), $this->fetchBackendTemplateValues($document)))->render();
+		return view($template, array_merge($this->toArray(), $this->fetchDocumentTemplateValues($document)))->render();
 	}
 
 	/**
 	 * @param DocumentInterface $document
 	 * @return array
 	 */
-	protected function fetchBackendTemplateValues(DocumentInterface $document)
+	protected function fetchDocumentTemplateValues(DocumentInterface $document)
 	{
 		return [
 			'value' => $document->getFormValue($this->getDBKey()),

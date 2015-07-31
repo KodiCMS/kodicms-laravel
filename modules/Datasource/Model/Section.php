@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Datasource\Model;
 
 use DatasourceManager;
+use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Document;
 use KodiCMS\Datasource\Sections\SectionToolbar;
 use KodiCMS\Datasource\Sections\SectionHeadline;
@@ -179,6 +180,33 @@ class Section extends DatasourceModel implements SectionInterface
 	public function getFields()
 	{
 		return $this->sectionFields;
+	}
+
+	/**
+	 * @param string $key
+	 *
+	 * @return null|FieldInterface
+	 */
+	public function getFieldByKey($key)
+	{
+		foreach ($this->getFields() as $field)
+		{
+			if ($field->getDBKey() == $key)
+			{
+				return $field;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * @param ineger $id
+	 * @return null|FieldInterface
+	 */
+	public function getFieldById($id)
+	{
+		return array_get($this->getFields(), $id);
 	}
 
 	/**

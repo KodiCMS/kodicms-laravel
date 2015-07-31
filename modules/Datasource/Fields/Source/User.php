@@ -126,6 +126,14 @@ class User extends Source implements FieldTypeRelationInterface
 		return $this->getDBKey() . '_users';
 	}
 
+	/**
+	 * @param DocumentInterface $document
+	 */
+	public function onRelatedDocumentDeleting(DocumentInterface $document)
+	{
+
+	}
+
 	/**************************************************************************
 	 * Events
 	 **************************************************************************/

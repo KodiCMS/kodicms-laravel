@@ -14,6 +14,11 @@ interface FieldTypeRelationInterface
 	public function getDocumentRelation(DocumentInterface $document, SectionInterface $relatedSection = null, FieldInterface $relatedField = null);
 
 	/**
+	 * @param DocumentInterface $document
+	 */
+	public function onRelatedDocumentDeleting(DocumentInterface $document);
+
+	/**
 	 * @return string
 	 */
 	public function getRelationName();

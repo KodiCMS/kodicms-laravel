@@ -78,7 +78,7 @@ class SectionRepository extends BaseRepository
 	 */
 	public function create(array $data = [])
 	{
-		if(is_null($type = array_get($data, 'type')))
+		if (is_null($type = array_get($data, 'type')))
 		{
 			throw new SectionException("Type not set");
 		}
@@ -120,6 +120,7 @@ class SectionRepository extends BaseRepository
 		$section = $this->findOrFail($sectionId);
 
 		return \DB::table($section->getSectionTableName())
+			->select('*')
 			->selectRaw("{$section->getDocumentPrimaryKey()} as id")
 			->selectRaw("{$section->getDocumentTitleKey()} as text")
 			->where($section->getDocumentTitleKey(), 'like', '%' . $keyword . '%')

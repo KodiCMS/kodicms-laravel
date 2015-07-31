@@ -218,7 +218,11 @@ class File extends Primitive
 			return $filePath;
 		}
 
-		if ($file = Request::file($this->getDBKey()) and !is_null($filePath = $this->uploadFile($file)))
+		if (
+			(($file = $document->{$this->getDBKey()}) instanceof UploadedFile)
+			and
+			!is_null($filePath = $this->uploadFile($file))
+		)
 		{
 			$this->onDocumentDeleting($document);
 			$document->{$this->getDBKey()} = $filePath;
@@ -315,7 +319,10 @@ class File extends Primitive
 	{
 		if ($file->isValid())
 		{
-			$filename = $file->getClientOriginalName();
+			$ext = $file->getClientOriginalExtension();
+			$filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+			$filename .= '_' . uniqid() . '.' . $ext;
+
 			$file->move($this->getFolder(), $filename);
 
 			return $this->folderRelativePath . $filename;

@@ -55,10 +55,10 @@ abstract class Relation extends Field implements FieldTypeRelationInterface
 	 * @param DocumentInterface $document
 	 * @return array
 	 */
-	protected function fetchBackendTemplateValues(DocumentInterface $document)
+	protected function fetchDocumentTemplateValues(DocumentInterface $document)
 	{
 		$relatedSection = $this->relatedSection;
-		return array_merge(parent::fetchBackendTemplateValues($document), [
+		return array_merge(parent::fetchDocumentTemplateValues($document), [
 			'relatedDocument' => $this->getDocumentRelation($document, $relatedSection)->first(),
 			'relatedSection' => $relatedSection,
 			'relatedField' => $this->relatedField
@@ -76,5 +76,13 @@ abstract class Relation extends Field implements FieldTypeRelationInterface
 		return $document->relationLoaded($this->getRelationName())
 			? $document->getRelation($this->getRelationName())->toArray()
 			: $value;
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 */
+	public function onRelatedDocumentDeleting(DocumentInterface $document)
+	{
+
 	}
 }
