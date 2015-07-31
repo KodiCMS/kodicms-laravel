@@ -67,10 +67,21 @@ return [
 	'file' => [
 		'title' => 'Файл',
 		'upload_new' => 'Загрузить новый файл',
-		'allowed_types_list' => 'Разрешенные файлы [:types]',
+		'allowed_types' => 'Разрешенные типы файлов',
+		'allowed_types_list' => 'Разрешенные типы файлов [:types]',
+		'max_file_size' => 'Максимальные размер файла',
 		'max_size' => 'Максимальные размер [:size]',
 		'view_file' => 'Посмотреть',
 		'remove_file' => 'Удалить'
+	],
+	'image' => [
+		'title' => 'Изображение',
+		'max_file_size' => 'Максимальные размер файла',
+		'settings' => 'Настройки',
+		'size' => 'Размер',
+		'quality' => 'Качество',
+		'crop' => 'Обрезать',
+		'aspect_ratio' => 'Сохранять пропорции'
 	],
 	'has_one' => [
 		'title' => 'HasOne',

@@ -267,5 +267,5 @@ interface FieldInterface
 	 *
 	 * @return string
 	 */
-	public function renderBackendTemplate(DocumentInterface $document, $template = null);
+	public function renderDocumentTemplate(DocumentInterface $document, $template = null);
 }

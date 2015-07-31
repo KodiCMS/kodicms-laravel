@@ -61,6 +61,14 @@ return [
 		'category' => 'File'
 	],
 
+	'image' => [
+		'class' => KodiCMS\Datasource\Fields\File\Image::class,
+		'title' => trans('datasource::fields.image.title'),
+		'edit_template' => 'datasource::field.types.image',
+		'document_template' => 'datasource::document.field.file',
+		'category' => 'File'
+	],
+
 	'user' => [
 		'class' => KodiCMS\Datasource\Fields\Source\User::class,
 		'title' => trans('datasource::fields.user.title'),

@@ -584,7 +584,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 */
 	public function setDatabaseFieldType(Blueprint $table)
 	{
-		return $table->string($this->getDBKey(), $this->getSetting('length', 255));
+		return $table->string($this->getDBKey(), $this->getSetting('length', 255))->nullable();
 	}
 
 	/**************************************************************************
@@ -649,11 +649,11 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 *
 	 * @return string
 	 */
-	public function renderBackendTemplate(DocumentInterface $document, $template = null)
+	public function renderDocumentTemplate(DocumentInterface $document, $template = null)
 	{
 		if (is_null($template))
 		{
-			$template = 'datasource::document.field.' . $this->getType()->getType();
+			$template = $this->getType()->getDocumentTemplate();
 		}
 
 		return view($template, array_merge($this->toArray(), $this->fetchBackendTemplateValues($document)))->render();

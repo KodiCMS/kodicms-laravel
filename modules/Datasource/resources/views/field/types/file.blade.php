@@ -1,5 +1,5 @@
 <div class="form-group">
-	<label class="control-label col-md-3">Allowed file types</label>
+	<label class="control-label col-md-3">@lang('datasource::fields.file.allowed_types')</label>
 	<div class="col-md-9">
 		{!! Form::select('settings[allowed_types][]', $field->getMimeTypes(), $field->getAllowedTypes(), [
 			'id' => 'allowed_types', 'multiple'
@@ -16,7 +16,7 @@
 
 <hr />
 <div class="form-group form-inline">
-	<label class="control-label col-md-3">Max file size</label>
+	<label class="control-label col-md-3">@lang('datasource::fields.file.max_file_size')</label>
 	<div class="col-md-9">
 		{!! Form::text('settings[max_file_size]', $field->getMaxFileSize(), [
 			'class' => 'form-control', 'id' => 'max_file_size', 'size' => 10

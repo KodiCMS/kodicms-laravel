@@ -55,12 +55,17 @@ class FieldType implements FieldTypeInterface
 	protected $edit_template = null;
 
 	/**
+	 * @var string
+	 */
+	protected $document_template = null;
+
+	/**
 	 * @param string $type
 	 * @param array $settings
 	 */
 	public function __construct($type, array $settings)
 	{
-		foreach (array_only($settings, ['class', 'type', 'title', 'icon', 'category', 'edit_template']) as $key => $value)
+		foreach (array_only($settings, ['class', 'type', 'title', 'icon', 'category', 'edit_template', 'document_template']) as $key => $value)
 		{
 			$this->{$key} = $value;
 		}
@@ -130,5 +135,18 @@ class FieldType implements FieldTypeInterface
 	public function getEditTemplate()
 	{
 		return $this->edit_template;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDocumentTemplate()
+	{
+		if (is_null($template = $this->document_template))
+		{
+			$template = 'datasource::document.field.' . $this->getType();
+		}
+
+		return $template;
 	}
 }

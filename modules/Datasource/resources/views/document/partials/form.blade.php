@@ -1,6 +1,6 @@
 <div class="panel-body">
 	@foreach ($fields as $field)
-		{!! $field->renderBackendTemplate($document) !!}
+		{!! $field->renderDocumentTemplate($document) !!}
 	@endforeach
 </div>
 

@@ -35,6 +35,14 @@ class File extends Primitive
 	protected $files;
 
 	/**
+	 * @return array
+	 */
+	public function defaultSettings()
+	{
+		return ['allowed_types' => [], 'max_file_size' => 1048576];
+	}
+
+	/**
 	 * @param Filesystem $files
 	 */
 	public function onInit(Filesystem $files)
@@ -57,6 +65,7 @@ class File extends Primitive
 
 	/**
 	 * @param string $filePath
+	 *
 	 * @return boolean
 	 */
 	public function isImage($filePath)
@@ -94,17 +103,6 @@ class File extends Primitive
 	}
 
 	/**
-	 * @return array
-	 */
-	public function defaultSettings()
-	{
-		return [
-			'allowed_types' => [],
-			'max_file_size' => 1048576
-		];
-	}
-
-	/**
 	 * @return integer
 	 */
 	public function getMaxFileSize()
@@ -117,7 +115,7 @@ class File extends Primitive
 	 */
 	public function getAllowedTypes()
 	{
-		return (array) $this->getSetting('allowed_types');
+		return (array)$this->getSetting('allowed_types');
 	}
 
 	/**
@@ -128,6 +126,151 @@ class File extends Primitive
 	public function getFilePath($filePath)
 	{
 		return normalize_path(public_path($filePath));
+	}
+
+	/**
+	 * @param $size
+	 */
+	public function setSettingMaxFileSize($size)
+	{
+		$this->fieldSettings['max_file_size'] = (int)$size;
+	}
+
+	/**
+	 * @param array $types
+	 */
+	public function setSettingAllowedTypes($types)
+	{
+		if (!is_array($types))
+		{
+			$types = explode(',', $types);
+		}
+
+		foreach ($types as $i => $type)
+		{
+			$type = trim($type);
+			if (empty($type) or !preg_match('~^[A-Za-z0-9_\\-]+$~', $type) or !$this->checkDisallowedTypes($type))
+			{
+				unset($types[$i]);
+			}
+		}
+
+		$this->fieldSettings['allowed_types'] = $types;
+	}
+
+	/**
+	 *
+	 * @param string $type
+	 *
+	 * @return boolean
+	 */
+	protected function checkDisallowedTypes($type)
+	{
+		$disallowedTypes = explode(',', '/^php/,/^phtm/,py,pl,/^asp/,htaccess,cgi,_wc,/^shtm/,/^jsp/');
+		foreach ($disallowedTypes as $disallowed)
+		{
+			if (((strpos($disallowed, '/') !== false) AND preg_match($disallowed, $type)) OR $disallowed == $type)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param Validator $validator
+	 *
+	 * @return array
+	 */
+	public function getValidationRules(DocumentInterface $document, Validator $validator)
+	{
+		$rules = parent::getValidationRules($document, $validator);
+
+		if (!empty($allowedTypes = $this->getAllowedTypes()))
+		{
+			$rules[] = 'mimes:' . implode(',', $allowedTypes);
+		}
+
+		$rules[] = 'max:' . $this->getMaxFileSize();
+
+		return $rules;
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param value
+	 *
+	 * @return array|null|UploadedFile
+	 */
+	public function onDocumentUpdating(DocumentInterface $document, $value)
+	{
+		parent::onDocumentUpdating($document, $value);
+
+		$this->isRemoveFile = (bool)Request::get($this->getDBKey() . '_remove');
+
+		$filePath = null;
+
+		if ($this->isRemoveFile)
+		{
+			$this->onDocumentDeleting($document);
+			return $filePath;
+		}
+
+		if ($file = Request::file($this->getDBKey()) and !is_null($filePath = $this->uploadFile($file)))
+		{
+			$this->onDocumentDeleting($document);
+			$document->{$this->getDBKey()} = $filePath;
+		}
+
+		return $filePath;
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 */
+	public function onDocumentDeleting(DocumentInterface $document)
+	{
+		parent::onDocumentDeleting($document);
+
+		if (!empty($filePath = $document->getOriginal($this->getDBKey())))
+		{
+			$this->files->delete($this->getFilePath($filePath));
+			$document->{$this->getDBKey()} = '';
+		}
+	}
+
+	public function onCreated()
+	{
+		$this->makeDirectory();
+	}
+
+	public function onDeleted()
+	{
+		$this->deleteDirectory();
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return mixed
+	 */
+	public function onGetHeadlineValue(DocumentInterface $document, $value)
+	{
+		if ($this->isImage($value))
+		{
+			$link = link_to($value, \HTML::image($value, null, ['style' => 'max-height: 50px']), [
+				'target' => '_blank', 'class' => 'popup img-thumbnail'
+			]);
+		}
+		else
+		{
+			$link = link_to($value, trans('datasource::fields.file.view_file'), ['target' => '_blank']);
+		}
+
+		return !is_null($value) ? $link : null;
 	}
 
 	/**
@@ -179,143 +322,5 @@ class File extends Primitive
 		}
 
 		return null;
-	}
-
-	/**
-	 * @param $size
-	 */
-	public function setSettingMaxFileSize($size)
-	{
-		$this->fieldSettings['max_file_size'] = (int)$size;
-	}
-
-	/**
-	 * @param array $types
-	 */
-	public function setSettingAllowedTypes($types)
-	{
-		if (!is_array($types))
-		{
-			$types = explode(',', $types);
-		}
-
-		foreach ($types as $i => $type)
-		{
-			$type = trim($type);
-			if (empty($type) or !preg_match('~^[A-Za-z0-9_\\-]+$~', $type) or !$this->checkDisallowedTypes($type))
-			{
-				unset($types[$i]);
-			}
-		}
-
-		$this->fieldSettings['allowed_types'] = $types;
-	}
-
-	/**
-	 *
-	 * @param string $type
-	 * @return boolean
-	 */
-	protected function checkDisallowedTypes($type)
-	{
-		$disallowedTypes = explode(',', '/^php/,/^phtm/,py,pl,/^asp/,htaccess,cgi,_wc,/^shtm/,/^jsp/');
-		foreach ($disallowedTypes as $disallowed)
-		{
-			if (((strpos($disallowed, '/') !== false) AND preg_match($disallowed, $type)) OR $disallowed == $type)
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * @param DocumentInterface $document
-	 * @param Validator $validator
-	 *
-	 * @return array
-	 */
-	public function getValidationRules(DocumentInterface $document, Validator $validator)
-	{
-		$rules = parent::getValidationRules($document, $validator);
-
-		if (!empty($allowedTypes = $this->getAllowedTypes()))
-		{
-			$rules[] = 'mimes:' . implode(',', $allowedTypes);
-		}
-
-		$rules[] = 'max:' . $this->getMaxFileSize();
-
-		return $rules;
-	}
-
-	/**
-	 * @param DocumentInterface $document
-	 * @param $value
-	 */
-	public function onDocumentUpdating(DocumentInterface $document, $value)
-	{
-		parent::onDocumentUpdating($document, $value);
-
-		$this->isRemoveFile = (bool) Request::get($this->getDBKey() . '_remove');
-
-		if ($this->isRemoveFile)
-		{
-			$this->onDocumentDeleting($document);
-			return;
-		}
-
-		if ($file = Request::file($this->getDBKey()))
-		{
-			$document->{$this->getDBKey()} = $this->uploadFile($file);
-		}
-	}
-
-	/**
-	 * @param DocumentInterface $document
-	 */
-	public function onDocumentDeleting(DocumentInterface $document)
-	{
-		parent::onDocumentDeleting($document);
-
-		$filePath = $document->{$this->getDBKey()};
-		if (!empty($filePath))
-		{
-			$this->files->delete($this->getFilePath($filePath));
-			$document->{$this->getDBKey()} = '';
-		}
-	}
-
-	public function onCreated()
-	{
-		$this->makeDirectory();
-	}
-
-	public function onDeleted()
-	{
-		$this->deleteDirectory();
-	}
-
-	/**
-	 * @param DocumentInterface $document
-	 * @param mixed $value
-	 *
-	 * @return mixed
-	 */
-	public function onGetHeadlineValue(DocumentInterface $document, $value)
-	{
-		if($this->isImage($value))
-		{
-			$link = link_to($value, \HTML::image($value, null, ['style' => 'max-height: 50px']), ['target' => '_blank', 'class' => 'popup']);
-		}
-		else
-		{
-			$link = link_to($value, trans('datasource::fields.file.view_file'), ['target' => '_blank']);
-		}
-
-		return !is_null($value)
-			? $link
-			: null;
 	}
 }
