@@ -9,10 +9,7 @@ class DocumentObserver {
 	 */
 	public function creating(Document $document)
 	{
-		/*foreach ($document->getSectionFields() as $key => $field)
-		{
-			$field->onDocumentCreating($document, $document->getAttribute($key));
-		}*/
+
 	}
 
 	/**
@@ -31,10 +28,7 @@ class DocumentObserver {
 	 */
 	public function updating(Document $document)
 	{
-		/*foreach ($document->getSectionFields() as $key => $field)
-		{
-			$field->onDocumentUpdating($document, $document->getAttribute($key));
-		}*/
+
 	}
 
 	/**
