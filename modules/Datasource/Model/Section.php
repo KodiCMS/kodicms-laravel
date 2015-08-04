@@ -29,6 +29,11 @@ class Section extends DatasourceModel implements SectionInterface
 	protected $table = 'datasources';
 
 	/**
+	 * @var bool
+	 */
+	protected $initializedFields = false;
+
+	/**
 	 * @var string
 	 */
 	protected $sectionTablePrefix = 'ds_';
@@ -181,6 +186,7 @@ class Section extends DatasourceModel implements SectionInterface
 	 */
 	public function getFields()
 	{
+		$this->initializeFields();
 		return $this->sectionFields;
 	}
 
@@ -189,6 +195,7 @@ class Section extends DatasourceModel implements SectionInterface
 	 */
 	public function getRelatedFields()
 	{
+		$this->initializeFields();
 		return $this->relatedFields;
 	}
 
@@ -202,8 +209,13 @@ class Section extends DatasourceModel implements SectionInterface
 
 	protected function initializeFields()
 	{
-		$this->sectionFields = new FieldsCollection($this->fields()->get(), $this);
-		$this->relatedFields = new FieldsCollection($this->relatedFields()->get(), $this);
+		if (!$this->initializedFields)
+		{
+			$this->sectionFields = new FieldsCollection($this->fields()->get(), $this);
+			$this->relatedFields = new FieldsCollection($this->relatedFields()->get(), $this);
+
+			$this->initializedFields = true;
+		}
 	}
 
 	/**************************************************************************
@@ -466,17 +478,13 @@ class Section extends DatasourceModel implements SectionInterface
 			return;
 		}
 
-		$this->initializeFields();
-
 		$headlineClass = $this->getHeadlineClass();
 		$this->headline = new $headlineClass($this);
 
 		$toolbarClass = $this->getToolbarClass();
 		$this->toolbar = new $toolbarClass($this);
 
-		$this->setSettings((array) $this->settings);
-
-		$this->initialized = true;
+		parent::initialize();
 	}
 
 	/**
