@@ -1,11 +1,13 @@
 <div class="panel-body">
+	<?php $active = true; ?>
 	<ul class="nav nav-tabs">
 		@foreach ($fields as $field)
-			<li>
+			<li class="@if($active) active @endif">
 				<a href="#document-tab-{{ $field->getId() }}" data-toggle="tab">
-					<span class="">{{ $field->getName() }}</span>
+					<span>{{ $field->getName() }}</span>
 				</a>
 			</li>
+		<?php $active = false; ?>
 		@endforeach
 	</ul>
 	<?php $active = true; ?>
