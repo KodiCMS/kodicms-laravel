@@ -1,12 +1,12 @@
-<?php namespace KodiCMS\Datasource\Sections\Article;
+<?php namespace Plugins\butschster\DSArticles;
 
-use KodiCMS\Datasource\Sections\Document;
 use KodiCMS\Datasource\Fields\Source\User;
 use KodiCMS\Datasource\Fields\Primitive\HTML;
 use KodiCMS\Datasource\Fields\Primitive\String;
 use KodiCMS\Datasource\Sections\SectionToolbar;
 use KodiCMS\Datasource\Fields\Primitive\Primary;
 use KodiCMS\Datasource\Fields\Primitive\Boolean;
+use KodiCMS\Datasource\Fields\Primitive\Textarea;
 use KodiCMS\Datasource\Fields\Primitive\Timestamp;
 use KodiCMS\Datasource\Sections\SectionHeadlineDatatables;
 
@@ -66,6 +66,18 @@ class Section extends \KodiCMS\Datasource\Model\Section
 						'visible' => true
 					]
 				]
+			]),
+			new String([
+				'key' => 'meta_title',
+				'name' => 'Meta title'
+			]),
+			new String([
+				'key' => 'meta_keywords',
+				'name' => 'Meta keywords'
+			]),
+			new Textarea([
+				'key' => 'meta_description',
+				'name' => 'Meta description'
 			]),
 			new Boolean([
 				'key' => 'published',

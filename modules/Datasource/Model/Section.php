@@ -1,13 +1,15 @@
 <?php namespace KodiCMS\Datasource\Model;
 
 use DatasourceManager;
-use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Document;
+use KodiCMS\Datasource\Fields\FieldsCollection;
 use KodiCMS\Datasource\Sections\SectionToolbar;
+use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Sections\SectionHeadline;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Exceptions\SectionException;
 use KodiCMS\Datasource\Contracts\SectionToolbarInterface;
+use KodiCMS\Datasource\Contracts\FieldsCollectionInterface;
 
 class Section extends DatasourceModel implements SectionInterface
 {
@@ -47,14 +49,14 @@ class Section extends DatasourceModel implements SectionInterface
 	protected $sectionTableName = 'datasource';
 
 	/**
-	 * @var array
+	 * @var FieldsCollection
 	 */
-	protected $sectionFields = [];
+	protected $sectionFields;
 
 	/**
-	 * @var array
+	 * @var FieldsCollection
 	 */
-	protected $relatedFields = [];
+	protected $relatedFields;
 
 	/**
 	 * @var array
@@ -175,46 +177,11 @@ class Section extends DatasourceModel implements SectionInterface
 	 * Fields
 	 **************************************************************************/
 	/**
-	 * @return array
+	 * @return FieldsCollectionInterface
 	 */
 	public function getFields()
 	{
 		return $this->sectionFields;
-	}
-
-	/**
-	 * @param string $key
-	 *
-	 * @return null|FieldInterface
-	 */
-	public function getFieldByKey($key)
-	{
-		foreach ($this->getFields() as $field)
-		{
-			if ($field->getDBKey() == $key)
-			{
-				return $field;
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * @param ineger $id
-	 * @return null|FieldInterface
-	 */
-	public function getFieldById($id)
-	{
-		return array_get($this->getFields(), $id);
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getSystemFields()
-	{
-		return [];
 	}
 
 	/**
@@ -225,17 +192,18 @@ class Section extends DatasourceModel implements SectionInterface
 		return $this->relatedFields;
 	}
 
+	/**
+	 * @return array
+	 */
+	public function getSystemFields()
+	{
+		return [];
+	}
+
 	protected function initializeFields()
 	{
-		foreach ($this->fields()->get() as $field)
-		{
-			$this->sectionFields[$field->getId()] = $field;
-		}
-
-		foreach ($this->relatedFields()->get() as $field)
-		{
-			$this->relatedFields[$field->getId()] = $field;
-		}
+		$this->sectionFields = new FieldsCollection($this->fields()->get());
+		$this->relatedFields = new FieldsCollection($this->relatedFields()->get());
 	}
 
 	/**************************************************************************

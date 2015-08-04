@@ -89,7 +89,7 @@ $(function() {
 				{!! link_to_route('backend.datasource.field.edit', $field->getName(), [$field->getId()]) !!}
 			</td>
 			<td class="text-center">
-				{!! Form::checkbox("visible", $field->getId(), $field->isVisible()) !!}
+				{!! Form::switcher("visible", $field->getId(), $field->isVisible()) !!}
 			</td>
 			<td class="text-right">
 				{!! UI::label($field->getType()->getCategory(), 'success') !!} {!! UI::label($field->getTypeTitle()) !!}
@@ -97,7 +97,7 @@ $(function() {
 		</tr>
 		@endforeach
 		</tbody>
-		@if(!empty($relatedFields = $section->getRelatedFields()))
+		@if(count($relatedFields = $section->getRelatedFields()) > 0)
 		<thead>
 		<tr>
 			<th></th>
@@ -105,7 +105,7 @@ $(function() {
 		</tr>
 		</thead>
 		<tbody>
-		@foreach ($section->getRelatedFields() as $field)
+		@foreach ($relatedFields as $field)
 		<tr data-id="{{ $field->getId() }}" data-related-id="{{ $field->getRelatedFieldId() }}">
 			<td></td>
 			<td class="text-center"></td>

@@ -678,11 +678,17 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	public function toArray()
 	{
 		return [
+			'id' => $this->getId(),
 			'key' => $this->getDBKey(),
 			'name' => $this->getName(),
 			'hint' => $this->getHint(),
 			'field' => $this,
 		];
+	}
+
+	public function __toString()
+	{
+		return $this->renderDocumentTemplate();
 	}
 
 	/**************************************************************************

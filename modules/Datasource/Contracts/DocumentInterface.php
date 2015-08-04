@@ -6,10 +6,14 @@ use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 interface DocumentInterface
 {
 	/**
-	 * @param string $key
-	 * @return bool
+	 * @return string|integer
 	 */
-	public function hasField($key);
+	public function getId();
+
+	/**
+	 * @return string
+	 */
+	public function getTitle();
 
 	/**
 	 * @return string
@@ -22,16 +26,37 @@ interface DocumentInterface
 	public function getCreateLink();
 
 	/**
+	 * @param string $key
+	 * @return bool
+	 */
+	public function hasField($key);
+
+	/**
 	 * @param  string $key
 	 * @return mixed
 	 */
 	public function getFormValue($key);
 
 	/**
+	 * Get a plain attribute (not a relationship).
+	 *
+	 * @param  string $key
+	 * @return mixed
+	 */
+	public function getWidgetValue($key);
+
+	/**
 	 * @param  string $key
 	 * @return mixed
 	 */
 	public function getHeadlineValue($key);
+
+	/**
+	 * @param SectionHeadlineInterface $headline
+	 *
+	 * @return array
+	 */
+	public function toHeadlineArray(SectionHeadlineInterface $headline);
 
 
 	/**
@@ -42,12 +67,32 @@ interface DocumentInterface
 	/**
 	 * @return array
 	 */
+	public function getFieldsNames();
+
+	/**
+	 * @return array
+	 */
 	public function getSectionFields();
 
 	/**
 	 * @return array
 	 */
 	public function getEditableFields();
+
+	/**
+	 * @return string
+	 */
+	public function getEditTemplate();
+
+	/**
+	 * @return string
+	 */
+	public function getCreateTemplate();
+
+	/**
+	 * @return string
+	 */
+	public function getFormTemplate();
 
 	/**
 	 * @param Validator $validator

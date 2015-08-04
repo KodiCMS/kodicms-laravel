@@ -130,7 +130,7 @@ class ManyToMany extends Relation
 			or
 			is_null($relatedSection = $this->relatedSection)
 			or
-			is_null($relatedField = $relatedSection->getFieldByKey($this->relatedFieldKey))
+			is_null($relatedField = $relatedSection->getFields()->getByKey($this->relatedFieldKey))
 		)
 		{
 			$relatedField = $repository->create([
