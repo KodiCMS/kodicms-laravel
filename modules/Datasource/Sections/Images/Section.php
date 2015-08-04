@@ -2,6 +2,7 @@
 
 use KodiCMS\Datasource\Fields\File\Image;
 use KodiCMS\Datasource\Sections\Document;
+use KodiCMS\Datasource\FieldGroups\TitleGroup;
 use KodiCMS\Datasource\Fields\Primitive\String;
 use KodiCMS\Datasource\Fields\Primitive\Primary;
 use KodiCMS\Datasource\Fields\Primitive\Timestamp;
@@ -37,15 +38,17 @@ class Section extends \KodiCMS\Datasource\Model\Section
 					]
 				]
 			]),
-			new String([
-				'key' => 'header',
-				'name' => 'Header',
-				'settings' => [
-					'is_required' => true,
-					'headline_parameters' => [
-						'visible' => true
+			(new TitleGroup)->setFields([
+				new String([
+					'key' => 'header',
+					'name' => 'Header',
+					'settings' => [
+						'is_required' => true,
+						'headline_parameters' => [
+							'visible' => true
+						]
 					]
-				]
+				]),
 			]),
 			new Image([
 				'key' => 'image',

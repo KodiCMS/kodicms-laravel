@@ -238,6 +238,7 @@ return [
 		'Profiler'			=> KodiCMS\Support\Helpers\Profiler::class,
 		'DatasourceManager' => KodiCMS\Support\Facades\DatasourceManager::class,
 		'FieldManager'		=> KodiCMS\Support\Facades\FieldManager::class,
+		'FieldGroupManager' => KodiCMS\Support\Facades\FieldGroupManager::class,
 		'SectionDatatables' => KodiCMS\Datasource\Datatables\SectionDatatables::class,
 
 		/*

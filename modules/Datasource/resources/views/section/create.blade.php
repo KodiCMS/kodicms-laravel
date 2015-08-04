@@ -25,9 +25,10 @@
 		</thead>
 		<tbody>
 		@foreach($section->getSystemFields() as $field)
-			<tr data-id="{{ $field->getId() }}">
+			@if($field instanceof \KodiCMS\Datasource\Contracts\FieldInterface)
+			<tr>
 				<td class="sys">
-					<label for="{{ $field->getKey() }}">{{ $field->getKey() }}</label>
+					{{ $field->getKey() }}
 				</td>
 				<td>
 					{{ $field->getName() }}
@@ -36,6 +37,21 @@
 					{!! UI::label($field->getType()->getCategory(), 'success') !!} {!! UI::label($field->getTypeTitle()) !!}
 				</td>
 			</tr>
+			@elseif($field instanceof \KodiCMS\Datasource\Contracts\FieldGroupInterface)
+				@foreach($field->getFields() as $groupField)
+				<tr>
+					<td class="sys">
+						{{ $groupField->getKey() }}
+					</td>
+					<td>
+						{{ $groupField->getName() }}
+					</td>
+					<td class="text-right">
+						{!! UI::label($groupField->getType()->getCategory(), 'success') !!} {!! UI::label($groupField->getTypeTitle()) !!}
+					</td>
+				</tr>
+				@endforeach
+			@endif
 		@endforeach
 		</tbody>
 	</table>

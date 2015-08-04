@@ -2,8 +2,12 @@
 
 use Illuminate\Support\Collection;
 use Illuminate\Contracts\Support\Arrayable;
+use KodiCMS\Datasource\Contracts\FieldGroupInterface;
 use KodiCMS\Datasource\Contracts\FieldInterface;
+use KodiCMS\Datasource\FieldGroups\DefaultGroup;
+use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\FieldsCollectionInterface;
+use KodiCMS\Datasource\Model\FieldGroup;
 
 class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countable, \ArrayAccess, \IteratorAggregate
 {
@@ -23,15 +27,28 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
 	protected $fieldNames = [];
 
 	/**
+	 * @var SectionInterface
+	 */
+	protected $section;
+
+	/**
 	 * @param Collection|array $fields
 	 */
 	public function __construct($fields)
 	{
 		foreach ($fields as $field)
 		{
-			$this->fields[$field->getDBKey()] = $field;
-			$this->fieldIds[$field->getId()] = $field;
-			$this->fieldNames[$field->getDBKey()] = $field->getName();
+			if ($field instanceof FieldInterface)
+			{
+				$this->add($field);
+			}
+			else if ($field instanceof FieldGroupInterface)
+			{
+				foreach ($field->getFields() as $groupField)
+				{
+					$this->add($groupField);
+				}
+			}
 		}
 	}
 
@@ -88,6 +105,33 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
 	}
 
 	/**
+	 * @return array
+	 */
+	public function getGroupedFields()
+	{
+		$groups = FieldGroup::all()->map(function ($field)
+		{
+			return $field->setFields([]);
+		})->keyBy('id');
+
+		$defaultGroup = (new DefaultGroup())->setFields([]);
+
+		foreach ($this->getFields() as $field)
+		{
+			if ($groups->offsetExists($field->group_id) and !is_null($group = $groups->offsetGet($field->group_id)))
+			{
+				$group->addField($field);
+			}
+			else
+			{
+				$defaultGroup->addField($field);
+			}
+		}
+
+		return $groups->add($defaultGroup);
+	}
+
+	/**
 	 * @param array| string $keys
 	 *
 	 * @return array
@@ -110,7 +154,21 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
 		return new static(array_filter($this->getFields(), function ($field)
 		{
 			return $field->isEditable();
-		}));
+		}), $this->section);
+	}
+
+	/**
+	 * @param FieldInterface $field
+	 *
+	 * @return $this
+	 */
+	public function add(FieldInterface $field)
+	{
+		$this->fields[$field->getDBKey()] = $field;
+		$this->fieldIds[$field->getId()] = $field;
+		$this->fieldNames[$field->getDBKey()] = $field->getName();
+
+		return $this;
 	}
 
 	/**

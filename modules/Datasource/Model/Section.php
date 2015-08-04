@@ -202,8 +202,8 @@ class Section extends DatasourceModel implements SectionInterface
 
 	protected function initializeFields()
 	{
-		$this->sectionFields = new FieldsCollection($this->fields()->get());
-		$this->relatedFields = new FieldsCollection($this->relatedFields()->get());
+		$this->sectionFields = new FieldsCollection($this->fields()->get(), $this);
+		$this->relatedFields = new FieldsCollection($this->relatedFields()->get(), $this);
 	}
 
 	/**************************************************************************

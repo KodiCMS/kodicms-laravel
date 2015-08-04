@@ -11,6 +11,7 @@ class DatasourceFields extends Migration
 		{
 			$table->increments('id');
 
+			$table->integer('group_id')->nullable()->index();
 			$table->integer('section_id')->index();
 			$table->boolean('is_system')->default(false);
 

@@ -75,7 +75,8 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 */
 	protected $fillable = [
 		'section_id', 'key', 'type', 'name', 'related_section_id',
-		'related_field_id', 'related_table', 'position', 'settings', 'is_system'
+		'related_field_id', 'related_table', 'position', 'settings', 'is_system',
+		'froup_id'
 	];
 
 	/**
@@ -85,6 +86,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 */
 	protected $casts = [
 		'section_id' => 'integer',
+		'froup_id' => 'integer',
 		'key' => 'string',
 		'type' => 'string',
 		'name' => 'string',

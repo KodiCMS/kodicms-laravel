@@ -12,13 +12,9 @@ class DatasourceFieldGroups extends Migration
 			$table->increments('id');
 
 			$table->integer('section_id')->index();
-			$table->integer('field_id')->index();
-
 			$table->string('name');
+			$table->string('type');
 			$table->integer('position')->default(0);
-
-			$table->unique(['section_id', 'field_id']);
-
 			$table->timestamps();
 		});
 	}
