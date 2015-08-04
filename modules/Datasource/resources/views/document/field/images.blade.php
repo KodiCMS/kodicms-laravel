@@ -46,7 +46,7 @@
 			</div>
 			@endif
 			{!! Form::select($key . '_selected[]', [], [], [
-				'id' => $key, 'class' => 'col-md-12 no-script',
+				'class' => 'col-md-12 no-script section-images-select',
 				'multiple',
 				'data-related-images' => $relatedSection->getId(),
 				'data-related-name' => $relatedSection->getName()

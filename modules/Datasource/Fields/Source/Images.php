@@ -2,10 +2,10 @@
 
 use Request;
 use DatasourceManager;
+use KodiCMS\Datasource\Fields\Source;
+use KodiCMS\Datasource\Fields\Relation;
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
-use KodiCMS\Datasource\Fields\Relation;
-use KodiCMS\Datasource\Fields\Source;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Images extends Relation\ManyToMany
@@ -53,9 +53,13 @@ class Images extends Relation\ManyToMany
 
 			if ($file instanceof UploadedFile)
 			{
-				$document = $section->getEmptyDocument();
-				$document->fill(['image' => $file])->save();
-				$documentIds[] = $document->getId();
+				$imageDocument = $section->getEmptyDocument();
+
+				$imageDocument->fill([
+					'header' => $document->getTitle(),
+					'image' => $file
+				])->save();
+				$documentIds[] = $imageDocument->getId();
 			}
 		}
 		Model::reguard();
@@ -70,7 +74,7 @@ class Images extends Relation\ManyToMany
 	 */
 	public function onDocumentCreated(DocumentInterface $document, $value)
 	{
-		//$document->{$this->getRelationName()}()->sync((array) $this->selectedDocuments);
+		$document->{$this->getRelationName()}()->attach((array) $this->selectedDocuments);
 	}
 
 	/**
