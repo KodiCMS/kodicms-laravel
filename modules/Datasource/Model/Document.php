@@ -474,14 +474,14 @@ class Document extends Model implements DocumentInterface
 
 		if (is_array($fields))
 		{
-			foreach ($fields as $fieldId)
+			foreach ($fields as $fieldKey)
 			{
-				if ($this->hasField($fieldId))
+				if ($this->hasField($fieldKey))
 				{
 					continue;
 				}
 
-				$selectFields[] = $this->getSectionFields()->getById($fieldId);
+				$selectFields[] = $this->getSectionFields()->getByKey($fieldKey);
 			}
 		}
 		else if ($fields === true)

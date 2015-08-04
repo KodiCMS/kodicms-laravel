@@ -2,7 +2,7 @@
 	var add_filter = function() {
 		var filter = $('#sample_filter .filter').clone().appendTo(filters_container);
 		$('.select2-container', filter).remove()
-		$("select", filter).select2();
+		//$("select", filter).select2();
 		filter.on('click', '.remove_filter', function() {
 			filter.remove();
 			return false;
@@ -13,7 +13,7 @@
 
 	var set_condition = function (filters_container, data) {
 		$('.select2-container', filters_container).remove()
-		$("select", filters_container).select2();
+		//$("select", filters_container).select2();
 
 		for (key in data) {
 			if (key == 'invert' && data[key] == 1) {
@@ -27,7 +27,6 @@
 				$(filters_container).find('.field-title').text(data[key]).show();
 			}
 		}
-
 	}
 
 	$(function() {
@@ -50,13 +49,12 @@
 </script>
 
 <div class="panel-heading" data-icon="filter">
-	<span class="panel-title">Filters</span>
+	<span class="panel-title">@lang('datasource::widgets.list.filtering.title')</span>
 </div>
-<div class="panel-body">
+<div class="">
 	<fieldset disabled id="sample_filter" class="hide">
-		<div class="filter well well-sm">
-			<div class="clearfix"></div>
-			<h4 class="field-title hide pull-left"></h4>
+		<div class="filter well well-sm no-margin-b">
+			<h4 class="field-title pull-left"></h4>
 
 			{!! Form::button('', [
 				'data-icon' => 'trash-o', 'class' => 'btn btn-danger btn-xs remove_filter pull-right'
@@ -70,73 +68,81 @@
 				</colgroup>
 				<tbody>
 				<tr>
-					<td>Where field</td>
-					<td class="form-inline">
-						{!! Form::text('settings[filters][field][]', null, [
-							'class' => 'form-control'
-						]) !!}
-						{!! Form::text('settings[filters][params][]', null, [
-							'class' => 'form-control', 'size' => 50, 'placeholder' => 'Field params as Query string'
-						]) !!}
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2">&nbsp;</td>
-				</tr>
-				<tr>
-					<td>Condition</td>
+					<td></td>
 					<td>
 						<div class="row">
-							<div class="col-md-2">
-								{!! Form::select('settings[filters][condition][]', [
-									\KodiCMS\Datasource\Model\Document::COND_EQ => '==',
-									\KodiCMS\Datasource\Model\Document::COND_GT => '>',
-									\KodiCMS\Datasource\Model\Document::COND_LT => '<',
-									\KodiCMS\Datasource\Model\Document::COND_GTEQ => '>=',
-									\KodiCMS\Datasource\Model\Document::COND_LTEQ => '<=',
-									\KodiCMS\Datasource\Model\Document::COND_BTW => 'Between',
-									\KodiCMS\Datasource\Model\Document::COND_CONTAINS => 'Contains',
-									\KodiCMS\Datasource\Model\Document::COND_LIKE => 'Like'
-								]) !!}
+							<div class="col-xs-2">
+
 							</div>
-							<div class="col-md-5">
-								<div class="checkbox">
-									<label>
-										{!! Form::checkbox('settings[filters][invert][]', 1, false) !!}
-										Invert condition
-									</label>
+							<div class="col-xs-3">
+								@lang('datasource::widgets.list.filtering.condition')
+								<label class="text-right" style="margin-left: 30px;">
+									{!! Form::checkbox('settings[filters][invert][]', 1, false) !!}
+									@lang('datasource::widgets.list.filtering.invert_condition')
+								</label>
+							</div>
+							<div class="col-xs-3">
+								@lang('datasource::widgets.list.filtering.source')
+							</div>
+							<div class="col-xs-4">
+
+							</div>
+						</div>
+					</td>
+				</tr>
+					<tr>
+						<td>@lang('datasource::widgets.list.filtering.where')</td>
+						<td>
+							<div class="row">
+								<div class="col-xs-3 col-sm-2">
+									{!! Form::text('settings[filters][field][]', null, [
+										'class' => 'form-control', 'placeholder' => trans('datasource::widgets.list.filtering.field')
+									]) !!}
+								</div>
+								<div class="col-xs-2 col-sm-3">
+									{!! Form::select('settings[filters][condition][]', [
+										\KodiCMS\Datasource\Model\Document::COND_EQ => '==',
+										\KodiCMS\Datasource\Model\Document::COND_GT => '>',
+										\KodiCMS\Datasource\Model\Document::COND_LT => '<',
+										\KodiCMS\Datasource\Model\Document::COND_GTEQ => '>=',
+										\KodiCMS\Datasource\Model\Document::COND_LTEQ => '<=',
+										\KodiCMS\Datasource\Model\Document::COND_BTW => 'Between',
+										\KodiCMS\Datasource\Model\Document::COND_CONTAINS => 'Contains',
+										\KodiCMS\Datasource\Model\Document::COND_LIKE => 'Like'
+									], null, ['class' => 'no-script form-control']) !!}
+								</div>
+								<div class="col-xs-3">
+									{!! Form::select('settings[filters][type][]', [
+										\KodiCMS\Datasource\Model\Document::FILTER_VALUE_PLAIN => 'Plain',
+										\KodiCMS\Datasource\Model\Document::FILTER_VALUE_GET => '$_GET',
+										\KodiCMS\Datasource\Model\Document::FILTER_VALUE_POST => '$_POST',
+										\KodiCMS\Datasource\Model\Document::FILTER_VALUE_BEHAVIOR => 'Page behavior',
+									], null, ['class' => 'no-script form-control']) !!}
+								</div>
+								<div class="col-xs-4">
+									{!! Form::text('settings[filters][value][]', null, [
+										'class' => 'form-control', 'placeholder' => trans('datasource::widgets.list.filtering.condition_value')
+									]) !!}
 								</div>
 							</div>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2">&nbsp;</td>
-				</tr>
-				<tr>
-					<td>Conition value</td>
-					<td>
-						<div class="row">
-							<div class="col-md-4">
-								{!! Form::select('settings[filters][type][]', [
-									\KodiCMS\Datasource\Model\Document::FILTER_VALUE_PLAIN => 'Plain',
-									\KodiCMS\Datasource\Model\Document::FILTER_VALUE_GET => '$_GET',
-									\KodiCMS\Datasource\Model\Document::FILTER_VALUE_POST => '$_POST',
-									\KodiCMS\Datasource\Model\Document::FILTER_VALUE_BEHAVIOR => 'Page behavior',
-								]) !!}
-							</div>
-							<div class="col-md-8">
-								{!! Form::text('settings[filters][value][]', null, [
-									'class' => 'form-control'
-								]) !!}
-							</div>
-						</div>
-					</td>
-				</tr>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">&nbsp;</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							{!! Form::text('settings[filters][params][]', null, [
+								'class' => 'form-control', 'size' => 50, 'placeholder' => trans('datasource::widgets.list.filtering.query_string')
+							]) !!}
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
 	</fieldset>
+
 	<div id="filters_container"></div>
 
 	<?php
@@ -148,6 +154,7 @@
 		echo '});</script>';
 	}
 	?>
-
-	{!! Form::button('Add filter', ['data-con' => 'plus', 'id' => 'add_filter', 'class' => 'btn btn-default']) !!}
+	<div class="panel-body">
+		{!! Form::button(trans('datasource::widgets.list.filtering.button_add'), ['data-con' => 'plus', 'id' => 'add_filter', 'class' => 'btn btn-default']) !!}
+	</div>
 </div>

@@ -107,6 +107,19 @@ class User extends Source implements FieldTypeRelationInterface
 
 	/**
 	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return mixed
+	 */
+	public function onGetWidgetValue(DocumentInterface $document, $value)
+	{
+		return !is_null($user = $document->getAttribute($this->getRelationName()))
+			? $user->toArray()
+			: $value;
+	}
+
+	/**
+	 * @param DocumentInterface $document
 	 * @param SectionInterface|null $relatedSection
 	 * @param FieldInterface|null $relatedField
 	 *

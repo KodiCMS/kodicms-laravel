@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Datasource\Widget;
 
+use Illuminate\Support\Collection;
 use KodiCMS\Widgets\Widget\Decorator;
 use KodiCMS\Widgets\Traits\WidgetCache;
 use KodiCMS\Widgets\Traits\WidgetPaginator;
@@ -7,9 +8,8 @@ use KodiCMS\Widgets\Contracts\WidgetCacheable;
 use KodiCMS\Datasource\Traits\WidgetDatasource;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Repository\SectionRepository;
-use KodiCMS\Widgets\Contracts\WidgetPaginator as WidgetPaginatorInterface;
 
-class DatasourceList extends Decorator implements WidgetCacheable, WidgetPaginatorInterface
+class DatasourceList extends Decorator implements WidgetCacheable
 {
 	use WidgetCache, WidgetPaginator, WidgetDatasource;
 
@@ -63,14 +63,6 @@ class DatasourceList extends Decorator implements WidgetCacheable, WidgetPaginat
 	}
 
 	/**
-	 * @return int
-	 */
-	public function getTotalDocuments()
-	{
-		return 0;
-	}
-
-	/**
 	 * @return array
 	 */
 	public function prepareSettingsData()
@@ -99,7 +91,7 @@ class DatasourceList extends Decorator implements WidgetCacheable, WidgetPaginat
 	}
 
 	/**
-	 * @return array [[array] $documents, [Collection] $documentsRaw, [KodiCMS\Datasource\Contracts\SectionInterface] $section]
+	 * @return array [[Collection] $documents, [Collection] $documentsRaw, [KodiCMS\Datasource\Contracts\SectionInterface] $section, [Illuminate\Pagination\LengthAwarePaginator] $pagination]
 	 */
 	public function prepareData()
 	{
@@ -109,6 +101,7 @@ class DatasourceList extends Decorator implements WidgetCacheable, WidgetPaginat
 		}
 
 		$result = $this->getDocuments();
+
 		$visibleFields = [];
 
 		foreach ($this->getSection()->getFields() as $field)
@@ -123,21 +116,21 @@ class DatasourceList extends Decorator implements WidgetCacheable, WidgetPaginat
 
 		foreach ($result as $document)
 		{
-			$documents[$document->getId()] = [];
-
-			$doc = &$documents[$document->getId()];
 			foreach ($visibleFields as $field)
 			{
 				$doc[$field->getDBKey()] = $document->getWidgetValue($field->getDBKey());
 			}
 
 			$doc['href'] = strtr($this->document_uri, $this->buildUrlParams($doc));
+
+			$documents[$document->getId()] = $doc;
 		}
 
 		return [
 			'section' => $this->getSection(),
-			'documentsRaw' => $result,
-			'documents' => $documents
+			'documentsRaw' => $result->items(),
+			'pagination' => $result,
+			'documents' => new Collection($documents)
 		];
 	}
 
@@ -152,25 +145,22 @@ class DatasourceList extends Decorator implements WidgetCacheable, WidgetPaginat
 			return [];
 		}
 
-		$documents = [];
-
 		if ($this->order_By_rand)
 		{
 			$this->ordering = [];
 		}
 
-		$documents = $this->getSection()->getEmptyDocument()->getDocuments($this->selected_fields, (array) $this->ordering, (array) $this->filters);
+		$documents = $this->getSection()
+			->getEmptyDocument()
+			->getDocuments($this->selected_fields, (array) $this->ordering, (array) $this->filters);
 
 		if ($this->order_By_rand)
 		{
 			$documents->orderByRaw('RAND()');
 		}
 
-		$documents
-			->limit($this->list_size)
-			->offset($this->list_offset);
-
-		return $documents->get();
+		// TODO добавить кол-во выводимых документов
+		return $documents->paginate();
 	}
 
 	/**

@@ -157,7 +157,7 @@ class SectionRepository extends BaseRepository
 	{
 		$document = $this->findOrFail($sectionId)->getEmptyDocument();
 
-		$data = array_only($data, array_keys($document->getEditableFields()));
+		$data = array_only($data, $document->getEditableFields()->getKeys());
 
 		$validator = $this->validator($data);
 		$validator->setRules($document->getValidationRules($validator));
@@ -172,7 +172,7 @@ class SectionRepository extends BaseRepository
 	 */
 	public function validateOnUpdateDocument(DocumentInterface $document, array $data = [])
 	{
-		$data = array_only($data, array_keys($document->getEditableFields()));
+		$data = array_only($data, $document->getEditableFields()->getKeys());
 
 		$validator = $this->validator($data);
 		$validator->setRules($document->getValidationRules($validator));
@@ -188,7 +188,7 @@ class SectionRepository extends BaseRepository
 	public function createDocument($sectionId, array $data)
 	{
 		$document = $this->findOrFail($sectionId)->getEmptyDocument();
-		$data = array_only($data, array_keys($document->getEditableFields()));
+		$data = array_only($data, $document->getEditableFields()->getKeys());
 
 		$document->fill($data)->save();
 
@@ -203,10 +203,8 @@ class SectionRepository extends BaseRepository
 	 */
 	public function updateDocument(DocumentInterface $document, array $data)
 	{
-		$data = array_only($data, array_keys($document->getEditableFields()));
-
+		$data = array_only($data, $document->getEditableFields()->getKeys());
 		$document->update($data);
-
 		return $document;
 	}
 

@@ -2,6 +2,7 @@
 
 use WYSIWYG;
 use KodiCMS\Datasource\Fields\Primitive;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 
@@ -112,12 +113,26 @@ class HTML extends Primitive
 	}
 
 	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return mixed
+	 */
+	public function onGetWidgetValue(DocumentInterface $document, $value)
+	{
+		return [
+			'html' => $value,
+			'filtered' => $document->{$this->getDBFilteredColumnKey()}
+		];
+	}
+
+	/**
 	 * @param Blueprint $table
 	 * @return \Illuminate\Support\Fluent
 	 */
 	public function setDatabaseFieldType(Blueprint $table)
 	{
-		$table->text($this->getDBKey() . '_filtered');
+		$table->text($this->getDBFilteredColumnKey());
 
 		return $table->text($this->getDBKey());
 	}
@@ -129,5 +144,15 @@ class HTML extends Primitive
 	{
 		parent::onDatabaseDrop($table);
 		$table->dropColumn($this->getDBFilteredColumnKey());
+	}
+
+	/**
+	 * @param Builder $query
+	 * @param DocumentInterface $document
+	 */
+	public function querySelectColumn(Builder $query, DocumentInterface $document)
+	{
+		parent::querySelectColumn($query, $document);
+		$query->addSelect($this->getDBFilteredColumnKey());
 	}
 }
