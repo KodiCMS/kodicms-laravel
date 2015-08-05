@@ -43,10 +43,10 @@ return [
 	],
 	'button' => [
 		'create' => 'Create',
-		'location' => 'Used target',
+		'location' => 'Widget location',
 		'select_blocks' => 'Select blocks',
 		'rebuild_blocks' => 'Refresh list',
-		'select_childs' => 'Select interior',
+		'select_childs' => 'Select childs',
 		'add_to_page' => 'Add widget',
 		'defaultTemplate' => 'Default template',
 		'cache' => [
