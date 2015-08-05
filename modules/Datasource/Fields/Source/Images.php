@@ -105,7 +105,7 @@ class Images extends Relation\ManyToMany
 	 */
 	public function getAllowedTypes()
 	{
-		return $this->relatedSection->getFieldByKey('image')->getAllowedTypes();
+		return $this->relatedSection->getFields()->getByKey('image')->getAllowedTypes();
 	}
 
 	/**
@@ -113,6 +113,6 @@ class Images extends Relation\ManyToMany
 	 */
 	public function getMaxFileSize()
 	{
-		return $this->relatedSection->getFieldByKey('image')->getMaxFileSize();
+		return $this->relatedSection->getFields()->getByKey('image')->getMaxFileSize();
 	}
 }
