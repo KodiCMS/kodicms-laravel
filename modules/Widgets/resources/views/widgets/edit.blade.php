@@ -42,16 +42,17 @@
 
 @event('view.widget.edit.settings', [$widget])
 
-@if (acl_check('widgets.location') and !$widget->isHandler())
 <hr class="no-margin-vr" />
-<div class="panel-body">
-	{!! link_to_route('backend.widget.location', trans('widgets::core.button.location'), [$widget], [
-		'data-icon' => 'sitemap', 'class' => 'btn btn-xs btn-primary btn-labeled'
-	]) !!}
-</div>
-@endif
 
-@event('view.widget.edit.footer', [$widget])
+<div class="panel-body">
+	@if (acl_check('widgets.location') and !$widget->isHandler())
+		{!! link_to_route('backend.widget.location', trans('widgets::core.button.location'), [$widget], [
+			'data-icon' => 'sitemap', 'class' => 'btn btn-sm btn-primary btn-labeled'
+		]) !!}
+	@endif
+
+	@event('view.widget.edit.footer', [$widget])
+</div>
 
 <div class="form-actions panel-footer">
 	@include('cms::app.partials.actionButtons', ['route' => 'backend.widget.list'])

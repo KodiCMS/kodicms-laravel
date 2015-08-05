@@ -1,6 +1,6 @@
 <div class="panel-body">
 	<div class="form-group">
-		<label class="control-label col-md-3" for="related_section_id">@lang('datasource::fields.has_one.datasource')</label>
+		<label class="control-label col-md-3" for="related_section_id">@lang('datasource::fields.has_many.datasource')</label>
 
 		<div class="col-md-3">
 			@if($field->exists)

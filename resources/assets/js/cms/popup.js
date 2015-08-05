@@ -78,7 +78,7 @@ var Popup = {
 
 CMS.ui.add('popup', function ()
 {
-	$('.popup').on('click', function(e) {
+	$('body').on('click', '.popup', function(e) {
 		e.preventDefault();
 
 		var type = $(this).data('popup-type');

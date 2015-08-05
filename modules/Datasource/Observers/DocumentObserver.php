@@ -9,10 +9,7 @@ class DocumentObserver {
 	 */
 	public function creating(Document $document)
 	{
-		foreach ($document->getSectionFields() as $key => $field)
-		{
-			$field->onDocumentCreating($document, $document->getAttribute($key));
-		}
+
 	}
 
 	/**
@@ -20,7 +17,10 @@ class DocumentObserver {
 	 */
 	public function created(Document $document)
 	{
-
+		foreach ($document->getSectionFields() as $key => $field)
+		{
+			$field->onDocumentCreated($document, $document->getAttribute($key));
+		}
 	}
 
 	/**
@@ -28,9 +28,27 @@ class DocumentObserver {
 	 */
 	public function updating(Document $document)
 	{
-		foreach ($document->getSectionFields() as $key => $field)
+
+	}
+
+	/**
+	 * @param Document $document
+	 */
+	public function saving(Document $document)
+	{
+		if ($document->exists)
 		{
-			$field->onDocumentUpdating($document, $document->getAttribute($key));
+			foreach ($document->getSectionFields() as $key => $field)
+			{
+				$field->onDocumentUpdating($document, $document->getAttribute($key));
+			}
+		}
+		else
+		{
+			foreach ($document->getSectionFields() as $key => $field)
+			{
+				$field->onDocumentCreating($document, $document->getAttribute($key));
+			}
 		}
 	}
 
@@ -50,6 +68,11 @@ class DocumentObserver {
 		foreach ($document->getSectionFields() as $key => $field)
 		{
 			$field->onDocumentDeleting($document);
+		}
+
+		foreach ($document->getSection()->getRelatedFields() as $key => $field)
+		{
+			$field->onRelatedDocumentDeleting($document);
 		}
 	}
 

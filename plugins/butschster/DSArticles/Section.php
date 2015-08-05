@@ -1,12 +1,15 @@
-<?php namespace KodiCMS\Datasource\Sections\Article;
+<?php namespace Plugins\butschster\DSArticles;
 
-use KodiCMS\Datasource\Sections\Document;
 use KodiCMS\Datasource\Fields\Source\User;
 use KodiCMS\Datasource\Fields\Primitive\HTML;
+use KodiCMS\Datasource\FieldGroups\TabsGroup;
+use KodiCMS\Datasource\FieldGroups\TitleGroup;
 use KodiCMS\Datasource\Fields\Primitive\String;
 use KodiCMS\Datasource\Sections\SectionToolbar;
+use KodiCMS\Datasource\FieldGroups\SpoilerGroup;
 use KodiCMS\Datasource\Fields\Primitive\Primary;
 use KodiCMS\Datasource\Fields\Primitive\Boolean;
+use KodiCMS\Datasource\Fields\Primitive\Textarea;
 use KodiCMS\Datasource\Fields\Primitive\Timestamp;
 use KodiCMS\Datasource\Sections\SectionHeadlineDatatables;
 
@@ -57,50 +60,68 @@ class Section extends \KodiCMS\Datasource\Model\Section
 					]
 				]
 			]),
-			new String([
-				'key' => 'header',
-				'name' => 'Header',
-				'settings' => [
-					'is_required' => true,
-					'headline_parameters' => [
-						'visible' => true
+			(new TitleGroup())->setFields([
+				new String([
+					'key' => 'header',
+					'name' => 'Header',
+					'settings' => [
+						'is_required' => true,
+						'headline_parameters' => [
+							'visible' => true
+						]
 					]
-				]
-			]),
-			new Boolean([
-				'key' => 'published',
-				'name' => 'Published',
-				'settings' => [
-					'default_value' => true,
-					'headline_parameters' => [
-						'width' => 30,
-						'visible' => true
+				]),
+				new Boolean([
+					'key' => 'published',
+					'name' => 'Published',
+					'settings' => [
+						'default_value' => true,
+						'headline_parameters' => [
+							'width' => 30,
+							'visible' => true
+						]
 					]
-				]
+				]),
 			]),
-			new HTML([
-				'key' => 'description',
-				'name' => 'Description',
-				'settings' => [
-					'headline_parameters' => [
-						'visible' => true
+			(new SpoilerGroup(['name' => 'Meta']))->setFields([
+				new String([
+					'key' => 'meta_title',
+					'name' => 'Meta title'
+				]),
+				new String([
+					'key' => 'meta_keywords',
+					'name' => 'Meta keywords'
+				]),
+				new Textarea([
+					'key' => 'meta_description',
+					'name' => 'Meta description'
+				]),
+				new User([
+					'key' => 'created_by_id',
+					'name' => 'Created By',
+					'settings' => [
+						'current_only' => true,
+						'headline_parameters' => [
+							'width' => 100,
+							'visible' => true
+						]
 					]
-				]
+				]),
 			]),
-			new HTML([
-				'key' => 'text',
-				'name' => 'Text'
-			]),
-			new User([
-				'key' => 'created_by_id',
-				'name' => 'Created By',
-				'settings' => [
-					'current_only' => true,
-					'headline_parameters' => [
-						'width' => 100,
-						'visible' => true
+			(new TabsGroup())->setFields([
+				new HTML([
+					'key' => 'description',
+					'name' => 'Description',
+					'settings' => [
+						'headline_parameters' => [
+							'visible' => true
+						]
 					]
-				]
+				]),
+				new HTML([
+					'key' => 'text',
+					'name' => 'Text'
+				]),
 			]),
 			new Timestamp([
 				'key' => static::CREATED_AT,

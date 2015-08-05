@@ -9,7 +9,7 @@
 	@include('datasource::section.partials.fields', compact('section', 'fields'))
 </div>
 
-@include('datasource::widgets.partials.ordering', ['ordering' => $section->getHeadlineOrdering()])
+{!! $section->getHeadline()->renderOrderSettings() !!}
 
 <div class="form-actions panel-footer">
 	@include('cms::app.partials.actionButtons', ['route' => ['backend.datasource.list', $section->getId()]])

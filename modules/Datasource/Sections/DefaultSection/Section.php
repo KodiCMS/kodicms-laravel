@@ -1,6 +1,8 @@
 <?php namespace KodiCMS\Datasource\Sections\DefaultSection;
 
 use KodiCMS\Datasource\Sections\Document;
+use KodiCMS\Datasource\Fields\Primitive\HTML;
+use KodiCMS\Datasource\FieldGroups\TitleGroup;
 use KodiCMS\Datasource\Fields\Primitive\String;
 use KodiCMS\Datasource\Sections\SectionToolbar;
 use KodiCMS\Datasource\Fields\Primitive\Primary;
@@ -54,15 +56,21 @@ class Section extends \KodiCMS\Datasource\Model\Section
 					]
 				]
 			]),
-			new String([
-				'key' => 'header',
-				'name' => 'Header',
-				'settings' => [
-					'is_required' => true,
-					'headline_parameters' => [
-						'visible' => true
+			(new TitleGroup)->setFields([
+				new String([
+					'key' => 'header',
+					'name' => 'Header',
+					'settings' => [
+						'is_required' => true,
+						'headline_parameters' => [
+							'visible' => true
+						]
 					]
-				]
+				]),
+			]),
+			new HTML([
+				'key' => 'text',
+				'name' => 'Text'
 			]),
 			new Timestamp([
 				'key' => static::CREATED_AT,

@@ -1,9 +1,9 @@
 <?php namespace KodiCMS\Datasource;
 
-use KodiCMS\Datasource\Contracts\FieldInterface;
-use KodiCMS\Datasource\Contracts\FieldTypeOnlySystemInterface;
-use KodiCMS\Datasource\Contracts\SectionInterface;
 use Schema;
+use KodiCMS\Datasource\Contracts\FieldInterface;
+use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\Contracts\FieldTypeOnlySystemInterface;
 
 class FieldManager extends AbstractManager
 {

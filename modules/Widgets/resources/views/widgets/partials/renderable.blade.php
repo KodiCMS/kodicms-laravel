@@ -34,30 +34,3 @@ $defaultTemplateButton = $widget->getDefaultFrontendTemplate()
 		</div>
 	</div>
 </div>
-
-<hr class="no-margin-vr"/>
-
-<div class="panel-body">
-	<div class="form-group">
-		<div class="col-xs-12">
-			<label class="control-label">@lang('widgets::core.settings.related_widgets')</label>
-			{!! Form::select('relatedWidgets[]', $widgetList, $widget->getRalatedWidgets()->lists('id')->all(), [
-				'class' => 'form-control', 'multiple'
-			]) !!}
-		</div>
-	</div>
-</div>
-
-<div class="panel-heading panel-toggler" data-target-spoiler=".media-spoiler" data-hash="media">
-	<span class="panel-title" data-icon="file-o">@lang('widgets::core.title.assets')</h4>
-</div>
-<div class="panel-body panel-spoiler media-spoiler">
-	<div class="form-group">
-		<div class="col-xs-12">
-			<label class="control-label">@lang('widgets::core.settings.assets_package')</label>
-			{!! Form::select('settings[media_packages][]', $assetsPackages, $widget->getMediaPackages(), [
-				'class' => 'form-control', 'multiple'
-			]) !!}
-		</div>
-	</div>
-</div>

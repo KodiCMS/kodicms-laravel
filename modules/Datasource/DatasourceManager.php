@@ -7,6 +7,7 @@ use KodiCMS\Datasource\Model\Section;
 use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\Contracts\FieldGroupInterface;
 
 class DatasourceManager extends AbstractManager
 {
@@ -99,13 +100,40 @@ class DatasourceManager extends AbstractManager
 		{
 			foreach ($section->getSystemFields() as $field)
 			{
-				$field->is_system = true;
-				if($field = $section->fields()->save($field))
-				{
-					$field->setDatabaseFieldType($table);
-				}
+				$this->appendDatabaseField($table, $section, $field);
 			}
 		});
+	}
+
+	/**
+	 * @param $table
+	 * @param SectionInterface $section
+	 * @param FieldGroupInterface|FieldInterface $field
+	 * @param bool|true $system
+	 */
+	protected function appendDatabaseField($table, SectionInterface $section, $field, $system = true)
+	{
+		if ($field instanceof FieldInterface)
+		{
+			$field->is_system = $system;
+			if ($field = $section->fields()->save($field))
+			{
+				$field->setDatabaseFieldType($table);
+			}
+		}
+		else if ($field instanceof FieldGroupInterface)
+		{
+			$group = $field;
+
+			$group->section_id = $section->getId();
+			$group->save();
+
+			foreach ($group->getFields() as $field)
+			{
+				$field->group_id = $group->id;
+				$this->appendDatabaseField($table, $section, $field, $system);
+			}
+		}
 	}
 
 	/**

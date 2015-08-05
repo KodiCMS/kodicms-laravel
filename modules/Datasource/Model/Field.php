@@ -74,7 +74,9 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 * @var array
 	 */
 	protected $fillable = [
-		'section_id', 'key', 'type', 'name', 'related_section_id', 'related_field_id', 'position', 'settings', 'is_system'
+		'section_id', 'key', 'type', 'name', 'related_section_id',
+		'related_field_id', 'related_table', 'position', 'settings', 'is_system',
+		'froup_id'
 	];
 
 	/**
@@ -84,6 +86,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 */
 	protected $casts = [
 		'section_id' => 'integer',
+		'froup_id' => 'integer',
 		'key' => 'string',
 		'type' => 'string',
 		'name' => 'string',
@@ -263,11 +266,19 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	}
 
 	/**
-	 * @return mixed
+	 * @return integer
 	 */
 	public function getRelatedFieldId()
 	{
 		return $this->related_field_id;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRelatedTable()
+	{
+		return $this->related_table;
 	}
 
 	/**
@@ -467,6 +478,15 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 * @param DocumentInterface $document
 	 * @param $value
 	 */
+	public function onDocumentCreated(DocumentInterface $document, $value)
+	{
+
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param $value
+	 */
 	public function onDocumentUpdating(DocumentInterface $document, $value)
 	{
 
@@ -566,7 +586,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 */
 	public function setDatabaseFieldType(Blueprint $table)
 	{
-		return $table->string($this->getDBKey(), $this->getSetting('length', 255));
+		return $table->string($this->getDBKey(), $this->getSetting('length', 255))->nullable();
 	}
 
 	/**************************************************************************
@@ -631,21 +651,21 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 *
 	 * @return string
 	 */
-	public function renderBackendTemplate(DocumentInterface $document, $template = null)
+	public function renderDocumentTemplate(DocumentInterface $document, $template = null)
 	{
 		if (is_null($template))
 		{
-			$template = 'datasource::document.field.' . $this->getType()->getType();
+			$template = $this->getType()->getDocumentTemplate();
 		}
 
-		return view($template, array_merge($this->toArray(), $this->fetchBackendTemplateValues($document)))->render();
+		return view($template, array_merge($this->toArray(), $this->fetchDocumentTemplateValues($document)))->render();
 	}
 
 	/**
 	 * @param DocumentInterface $document
 	 * @return array
 	 */
-	protected function fetchBackendTemplateValues(DocumentInterface $document)
+	protected function fetchDocumentTemplateValues(DocumentInterface $document)
 	{
 		return [
 			'value' => $document->getFormValue($this->getDBKey()),
@@ -660,11 +680,17 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	public function toArray()
 	{
 		return [
+			'id' => $this->getId(),
 			'key' => $this->getDBKey(),
 			'name' => $this->getName(),
 			'hint' => $this->getHint(),
 			'field' => $this,
 		];
+	}
+
+	public function __toString()
+	{
+		return $this->renderDocumentTemplate();
 	}
 
 	/**************************************************************************

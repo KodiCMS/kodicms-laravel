@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class Datasources extends Migration
 {
@@ -17,7 +17,6 @@ class Datasources extends Migration
 			$table->text('description');
 
 			$table->boolean('is_indexable')->default(false);
-			$table->integer('count_docs')->default(0);
 			$table->integer('created_by_id');
 			$table->json('settings');
 

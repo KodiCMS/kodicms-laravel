@@ -126,4 +126,12 @@ class SectionHeadlineDatatables implements SectionHeadlineInterface
 			'section' => $this->section
 		]);
 	}
+
+	/**
+	 * @return \Illuminate\View\View|null
+	 */
+	public function renderOrderSettings()
+	{
+		return null;
+	}
 }

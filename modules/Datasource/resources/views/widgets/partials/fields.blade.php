@@ -1,5 +1,5 @@
 <div class="panel-heading">
-	<span class="panel-title" data-icon="th-list">Fields</span>
+	<span class="panel-title" data-icon="th-list">@lang('datasource::core.field.list')</span>
 </div>
 <table id="section-fields" class="table table-striped">
 	<colgroup>

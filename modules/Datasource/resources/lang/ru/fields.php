@@ -64,13 +64,29 @@ return [
 		'set_current' => 'При создании выбирать текущего пользователя',
 		'unique' => 'Уникальные пользователи'
 	],
+	'images' => [
+		'title' => 'Изображения',
+		'upload_new' => 'Загрузить новые изображения',
+		'remove_file' => 'Удалить'
+	],
 	'file' => [
 		'title' => 'Файл',
 		'upload_new' => 'Загрузить новый файл',
-		'allowed_types_list' => 'Разрешенные файлы [:types]',
+		'allowed_types' => 'Разрешенные типы файлов',
+		'allowed_types_list' => 'Разрешенные типы файлов [:types]',
+		'max_file_size' => 'Максимальный размер файла',
 		'max_size' => 'Максимальные размер [:size]',
 		'view_file' => 'Посмотреть',
 		'remove_file' => 'Удалить'
+	],
+	'image' => [
+		'title' => 'Изображение',
+		'max_file_size' => 'Максимальный размер файла',
+		'settings' => 'Настройки',
+		'size' => 'Размер',
+		'quality' => 'Качество',
+		'crop' => 'Обрезать',
+		'aspect_ratio' => 'Сохранять пропорции'
 	],
 	'has_one' => [
 		'title' => 'HasOne',
@@ -83,6 +99,11 @@ return [
 	],
 	'has_many' => [
 		'title' => 'HasMany',
+		'datasource' => 'Раздел',
+	],
+	'many_to_many' => [
+		'title' => 'ManyToMany',
+		'datasource' => 'Раздел',
 	],
 	'belongs_to' => [
 		'title' => 'Относится к'

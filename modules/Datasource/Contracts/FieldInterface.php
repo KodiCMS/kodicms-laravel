@@ -2,8 +2,8 @@
 
 use KodiCMS\Datasource\FieldType;
 use Illuminate\Validation\Validator;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Schema\Blueprint;
 use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 
 interface FieldInterface
@@ -59,9 +59,14 @@ interface FieldInterface
 	public function getRelatedSectionId();
 
 	/**
-	 * @return mixed
+	 * @return integer
 	 */
 	public function getRelatedFieldId();
+
+	/**
+	 * @return string
+	 */
+	public function getRelatedTable();
 
 	/**
 	 * @param DocumentInterface $document
@@ -92,6 +97,7 @@ interface FieldInterface
 	 * @return SectionInterface
 	 */
 	public function getSection();
+
 	/**
 	 * @return bool
 	 */
@@ -201,6 +207,12 @@ interface FieldInterface
 	 * @param DocumentInterface $document
 	 * @param $value
 	 */
+	public function onDocumentCreated(DocumentInterface $document, $value);
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param $value
+	 */
 	public function onDocumentUpdating(DocumentInterface $document, $value);
 
 	/**
@@ -255,5 +267,5 @@ interface FieldInterface
 	 *
 	 * @return string
 	 */
-	public function renderBackendTemplate(DocumentInterface $document, $template = null);
+	public function renderDocumentTemplate(DocumentInterface $document, $template = null);
 }

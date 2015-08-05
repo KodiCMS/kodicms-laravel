@@ -80,11 +80,6 @@ class PageMenu extends Decorator implements WidgetCacheable
 	 */
 	public function prepareSettingsData()
 	{
-		$linkedWidgets = WidgetManagerDatabase::getWidgetByTypeAndDsid()->map(function($widget)
-		{
-			return $widget->toArray();
-		})->lists('name', 'id')->all();
-
 		$pageSitemap = PageSitemap::get(true);
 
 		$select = [trans('pages::widgets.page_menu.label.linked_page')];
@@ -95,7 +90,7 @@ class PageMenu extends Decorator implements WidgetCacheable
 			$select[$page['id']] = $page['title'] . ' [ ' . $uri . ' ]';
 		}
 
-		return compact('select', 'pageSitemap', 'linkedWidgets');
+		return compact('select', 'pageSitemap');
 	}
 
 	public function getPageId()

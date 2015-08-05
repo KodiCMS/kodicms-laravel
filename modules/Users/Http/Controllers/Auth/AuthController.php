@@ -42,7 +42,7 @@ class AuthController extends FrontendController
 		$this->auth = $auth;
 
 		$this->redirectPath = backend_url();
-		$this->redirectAfterLogout = backend_url('/auth/login');
+		$this->loginPath = $this->redirectAfterLogout = backend_url('/auth/login');
 	}
 
 	public function initMiddleware()
@@ -116,14 +116,7 @@ class AuthController extends FrontendController
 	 */
 	protected function authenticated(Request $request, User $user)
 	{
-		// Update the number of logins
-		$user->logins = DB::raw('logins + 1');
-
-		// Set the last login date
-		$user->last_login = time();
-
-		$user->update();
-
+		$user->authenticated();
 		return redirect()->intended($this->redirectPath());
 	}
 

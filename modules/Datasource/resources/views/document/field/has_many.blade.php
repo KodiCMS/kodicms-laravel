@@ -21,8 +21,8 @@
 			</div>
 		</div>
 
-		<?php if($field->hint): ?>
-		<p class="help-block"><?php echo $field->hint; ?></p>
-		<?php endif; ?>
+		@if($hint)
+		<p class="help-block">{{ $hint }}</p>
+		@endif
 	</div>
 </div>

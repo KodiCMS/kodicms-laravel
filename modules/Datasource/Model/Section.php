@@ -2,11 +2,14 @@
 
 use DatasourceManager;
 use KodiCMS\Datasource\Document;
+use KodiCMS\Datasource\Fields\FieldsCollection;
 use KodiCMS\Datasource\Sections\SectionToolbar;
+use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Sections\SectionHeadline;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Exceptions\SectionException;
 use KodiCMS\Datasource\Contracts\SectionToolbarInterface;
+use KodiCMS\Datasource\Contracts\FieldsCollectionInterface;
 
 class Section extends DatasourceModel implements SectionInterface
 {
@@ -24,6 +27,11 @@ class Section extends DatasourceModel implements SectionInterface
 	 * @var string
 	 */
 	protected $table = 'datasources';
+
+	/**
+	 * @var bool
+	 */
+	protected $initializedFields = false;
 
 	/**
 	 * @var string
@@ -46,14 +54,14 @@ class Section extends DatasourceModel implements SectionInterface
 	protected $sectionTableName = 'datasource';
 
 	/**
-	 * @var array
+	 * @var FieldsCollection
 	 */
-	protected $sectionFields = [];
+	protected $sectionFields;
 
 	/**
-	 * @var array
+	 * @var FieldsCollection
 	 */
-	protected $relatedFields = [];
+	protected $relatedFields;
 
 	/**
 	 * @var array
@@ -174,11 +182,21 @@ class Section extends DatasourceModel implements SectionInterface
 	 * Fields
 	 **************************************************************************/
 	/**
-	 * @return array
+	 * @return FieldsCollectionInterface
 	 */
 	public function getFields()
 	{
+		$this->initializeFields();
 		return $this->sectionFields;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getRelatedFields()
+	{
+		$this->initializeFields();
+		return $this->relatedFields;
 	}
 
 	/**
@@ -189,24 +207,14 @@ class Section extends DatasourceModel implements SectionInterface
 		return [];
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getRelatedFields()
-	{
-		return $this->relatedFields;
-	}
-
 	protected function initializeFields()
 	{
-		foreach ($this->fields()->get() as $field)
+		if (!$this->initializedFields)
 		{
-			$this->sectionFields[$field->getId()] = $field;
-		}
+			$this->sectionFields = new FieldsCollection($this->fields()->get(), $this);
+			$this->relatedFields = new FieldsCollection($this->relatedFields()->get(), $this);
 
-		foreach ($this->relatedFields()->get() as $field)
-		{
-			$this->relatedFields[$field->getId()] = $field;
+			$this->initializedFields = true;
 		}
 	}
 
@@ -470,17 +478,13 @@ class Section extends DatasourceModel implements SectionInterface
 			return;
 		}
 
-		$this->initializeFields();
-
 		$headlineClass = $this->getHeadlineClass();
 		$this->headline = new $headlineClass($this);
 
 		$toolbarClass = $this->getToolbarClass();
 		$this->toolbar = new $toolbarClass($this);
 
-		$this->setSettings((array) $this->settings);
-
-		$this->initialized = true;
+		parent::initialize();
 	}
 
 	/**

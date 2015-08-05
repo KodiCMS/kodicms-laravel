@@ -1,6 +1,7 @@
 <?php
 
 return [
+	// Primitive
 	'primary' => [
 		'class' => KodiCMS\Datasource\Fields\Primitive\Primary::class,
 		'title' => trans('datasource::fields.primary.title')
@@ -54,20 +55,37 @@ return [
 		'edit_template' => 'datasource::field.types.date'
 	],
 
+
+	// File
 	'file' => [
 		'class' => KodiCMS\Datasource\Fields\File::class,
 		'title' => trans('datasource::fields.file.title'),
 		'edit_template' => 'datasource::field.types.file',
 		'category' => 'File'
 	],
+	'image' => [
+		'class' => KodiCMS\Datasource\Fields\File\Image::class,
+		'title' => trans('datasource::fields.image.title'),
+		'edit_template' => 'datasource::field.types.image',
+		'document_template' => 'datasource::document.field.file',
+		'category' => 'File'
+	],
 
+	// Source
 	'user' => [
 		'class' => KodiCMS\Datasource\Fields\Source\User::class,
 		'title' => trans('datasource::fields.user.title'),
 		'edit_template' => 'datasource::field.types.user',
 		'category' => 'Source'
 	],
+	'images' => [
+		'class' => KodiCMS\Datasource\Fields\Source\Images::class,
+		'title' => trans('datasource::fields.images.title'),
+		'edit_template' => 'datasource::field.types.images',
+		'category' => 'Source'
+	],
 
+	// Relations
 	'has_one' => [
 		'class' => KodiCMS\Datasource\Fields\Relation\HasOne::class,
 		'title' => trans('datasource::fields.has_one.title'),
@@ -78,6 +96,12 @@ return [
 		'class' => KodiCMS\Datasource\Fields\Relation\HasMany::class,
 		'title' => trans('datasource::fields.has_many.title'),
 		'edit_template' => 'datasource::field.types.has_many',
+		'category' => 'Relations'
+	],
+	'many_to_many' => [
+		'class' => KodiCMS\Datasource\Fields\Relation\ManyToMany::class,
+		'title' => trans('datasource::fields.many_to_many.title'),
+		'edit_template' => 'datasource::field.types.many_to_many',
 		'category' => 'Relations'
 	],
 	'belongs_to' => [

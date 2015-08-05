@@ -78,7 +78,7 @@ class SectionRepository extends BaseRepository
 	 */
 	public function create(array $data = [])
 	{
-		if(is_null($type = array_get($data, 'type')))
+		if (is_null($type = array_get($data, 'type')))
 		{
 			throw new SectionException("Type not set");
 		}
@@ -120,6 +120,7 @@ class SectionRepository extends BaseRepository
 		$section = $this->findOrFail($sectionId);
 
 		return \DB::table($section->getSectionTableName())
+			->select('*')
 			->selectRaw("{$section->getDocumentPrimaryKey()} as id")
 			->selectRaw("{$section->getDocumentTitleKey()} as text")
 			->where($section->getDocumentTitleKey(), 'like', '%' . $keyword . '%')
@@ -156,7 +157,7 @@ class SectionRepository extends BaseRepository
 	{
 		$document = $this->findOrFail($sectionId)->getEmptyDocument();
 
-		$data = array_only($data, array_keys($document->getEditableFields()));
+		$data = array_only($data, $document->getEditableFields()->getKeys());
 
 		$validator = $this->validator($data);
 		$validator->setRules($document->getValidationRules($validator));
@@ -171,7 +172,7 @@ class SectionRepository extends BaseRepository
 	 */
 	public function validateOnUpdateDocument(DocumentInterface $document, array $data = [])
 	{
-		$data = array_only($data, array_keys($document->getEditableFields()));
+		$data = array_only($data, $document->getEditableFields()->getKeys());
 
 		$validator = $this->validator($data);
 		$validator->setRules($document->getValidationRules($validator));
@@ -187,7 +188,7 @@ class SectionRepository extends BaseRepository
 	public function createDocument($sectionId, array $data)
 	{
 		$document = $this->findOrFail($sectionId)->getEmptyDocument();
-		$data = array_only($data, array_keys($document->getEditableFields()));
+		$data = array_only($data, $document->getEditableFields()->getKeys());
 
 		$document->fill($data)->save();
 
@@ -202,10 +203,8 @@ class SectionRepository extends BaseRepository
 	 */
 	public function updateDocument(DocumentInterface $document, array $data)
 	{
-		$data = array_only($data, array_keys($document->getEditableFields()));
-
+		$data = array_only($data, $document->getEditableFields()->getKeys());
 		$document->update($data);
-
 		return $document;
 	}
 

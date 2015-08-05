@@ -1,13 +1,13 @@
 <?php namespace KodiCMS\Datasource\Datatables;
 
-use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use yajra\Datatables\Helper;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Collection;
-use KodiCMS\Datasource\Sections\Document;
 use yajra\Datatables\Engines\QueryBuilderEngine;
+use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
 class DatasourceBuilderEngine extends QueryBuilderEngine
 {
@@ -17,11 +17,11 @@ class DatasourceBuilderEngine extends QueryBuilderEngine
 	protected $headline;
 
 	/**
-	 * @param Document $model
+	 * @param DocumentInterface $model
 	 * @param SectionHeadlineInterface $headline
 	 * @param Request $request
 	 */
-	public function __construct(Document $model, SectionHeadlineInterface $headline, Request $request)
+	public function __construct(DocumentInterface $model, SectionHeadlineInterface $headline, Request $request)
 	{
 		$this->request = $request;
 		$this->query_type = 'datasource';

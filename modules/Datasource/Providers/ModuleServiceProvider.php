@@ -3,6 +3,7 @@
 use Event;
 use KodiCMS\CMS\Navigation\Page;
 use KodiCMS\CMS\Navigation\Section;
+use KodiCMS\Datasource\FieldGroupManager;
 use KodiCMS\Datasource\FieldManager;
 use KodiCMS\Datasource\DatasourceManager;
 use KodiCMS\Datasource\Datatables\SectionDatatables;
@@ -20,6 +21,11 @@ class ModuleServiceProvider extends ServiceProvider {
 		$this->app->singleton('datasource.field.manager', function ()
 		{
 			return new FieldManager(config('fields', []));
+		});
+
+		$this->app->singleton('datasource.group.manager', function ()
+		{
+			return new FieldGroupManager(config('field_groups', []));
 		});
 
 		$this->registerConsoleCommand('datasource.migrate', '\KodiCMS\Datasource\Console\Commands\DatasourceMigrate');

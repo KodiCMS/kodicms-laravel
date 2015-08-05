@@ -15,6 +15,11 @@ abstract class Relation extends Field implements FieldTypeRelationInterface
 	protected $with = ['relatedSection'];
 
 	/**
+	 * @var bool
+	 */
+	protected $isOrderable = false;
+
+	/**
 	 * @return array
 	 */
 	public function getSectionList()
@@ -50,10 +55,10 @@ abstract class Relation extends Field implements FieldTypeRelationInterface
 	 * @param DocumentInterface $document
 	 * @return array
 	 */
-	protected function fetchBackendTemplateValues(DocumentInterface $document)
+	protected function fetchDocumentTemplateValues(DocumentInterface $document)
 	{
 		$relatedSection = $this->relatedSection;
-		return array_merge(parent::fetchBackendTemplateValues($document), [
+		return array_merge(parent::fetchDocumentTemplateValues($document), [
 			'relatedDocument' => $this->getDocumentRelation($document, $relatedSection)->first(),
 			'relatedSection' => $relatedSection,
 			'relatedField' => $this->relatedField
@@ -68,8 +73,16 @@ abstract class Relation extends Field implements FieldTypeRelationInterface
 	 */
 	public function onGetWidgetValue(DocumentInterface $document, $value)
 	{
-		return $document->relationLoaded($this->getRelationName())
-			? $document->getRelation($this->getRelationName())->toArray()
+		return !is_null($related = $document->getAttribute($this->getRelationName()))
+			? $related->toArray()
 			: $value;
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 */
+	public function onRelatedDocumentDeleting(DocumentInterface $document)
+	{
+
 	}
 }

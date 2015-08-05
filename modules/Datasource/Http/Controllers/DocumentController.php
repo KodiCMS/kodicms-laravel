@@ -31,7 +31,7 @@ class DocumentController extends BackendController
 		$this->templateScripts['DOCUMENT'] = $document;
 		$document->onControllerLoad($this);
 
-		$this->setContent('document.create', [
+		$this->setContent($document->getCreateTemplate(), [
 			'document' => $document,
 			'section' => $section,
 			'fields' => $document->getEditableFields()
@@ -69,7 +69,7 @@ class DocumentController extends BackendController
 		$this->templateScripts['SECTION'] = $section;
 		$this->templateScripts['DOCUMENT'] = $document;
 
-		$this->setContent('document.edit', [
+		$this->setContent($document->getEditTemplate(), [
 			'document' => $document,
 			'section' => $section,
 			'fields' => $document->getEditableFields()

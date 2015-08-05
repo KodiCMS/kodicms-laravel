@@ -2,5 +2,8 @@
 
 class Source extends Primitive
 {
-
+	/**
+	 * @var bool
+	 */
+	protected $isOrderable = false;
 }

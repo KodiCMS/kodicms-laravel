@@ -4,6 +4,6 @@
 	'enctype' => 'multipart/form-data'
 ]) !!}
 
-@include('datasource::document.partials.form', compact('fields', 'section', 'document'))
+@include($document->getFormTemplate(), compact('fields', 'section', 'document'))
 
 {!! Form::close() !!}

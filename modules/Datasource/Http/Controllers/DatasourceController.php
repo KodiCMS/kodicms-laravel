@@ -6,6 +6,8 @@ use KodiCMS\Datasource\Repository\SectionRepository;
 
 class DatasourceController extends BackendController
 {
+	const DS_COOKIE_NAME = 'currentDS';
+
 	/**
 	 * @var string
 	 */
@@ -19,7 +21,7 @@ class DatasourceController extends BackendController
 	{
 		if (is_null($sectionId))
 		{
-			$sectionId = $this->request->cookie('currentDS');
+			$sectionId = $this->request->cookie(static::DS_COOKIE_NAME);
 		}
 
 		if (is_null($sectionId))
@@ -37,7 +39,7 @@ class DatasourceController extends BackendController
 			$toolbar = $section->getToolbar()->render();
 			$this->setTitle($section->getName());
 
-			$this->response->withCookie(cookie()->forever('currentDS', $section->getId()));
+			$this->response->withCookie(cookie()->forever(static::DS_COOKIE_NAME, $section->getId()));
 		}
 		else
 		{
@@ -143,5 +145,7 @@ class DatasourceController extends BackendController
 	public function getRemove(SectionRepository $repository, $sectionId)
 	{
 		$repository->delete($sectionId);
+
+		return redirect(route('backend.datasource.list'))->withCookie(cookie()->forget(static::DS_COOKIE_NAME));
 	}
 }

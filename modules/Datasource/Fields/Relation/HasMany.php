@@ -67,9 +67,7 @@ class HasMany extends Relation
 		if(!is_null($relatedField = $this->relatedField))
 		{
 			$section = $relatedField->getSection();
-			return $section
-				->getEmptyDocument()
-				->where($relatedField->getDBKey(), $document->getId())
+			return $this->getDocumentRelation($document, $section)
 				->get()
 				->lists($section->getDocumentTitleKey(), $section->GetDocumentPrimaryKey())
 				->all();
@@ -126,9 +124,9 @@ class HasMany extends Relation
 	 * @param DocumentInterface $document
 	 * @return array
 	 */
-	protected function fetchBackendTemplateValues(DocumentInterface $document)
+	protected function fetchDocumentTemplateValues(DocumentInterface $document)
 	{
-		return array_merge(parent::fetchBackendTemplateValues($document), [
+		return array_merge(parent::fetchDocumentTemplateValues($document), [
 			'value' => $this->getRelatedDocumentValues($document)
 		]);
 	}

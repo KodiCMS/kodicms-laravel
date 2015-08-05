@@ -158,6 +158,17 @@ class SectionHeadline implements SectionHeadlineInterface
 			'fieldParams' => $this->getHeadlineFields(),
 			'items' => $this->getDocuments(),
 			'section' => $this->section
-		]);
+		])->render();
+	}
+
+	/**
+	 * @return \Illuminate\View\View
+	 */
+	public function renderOrderSettings()
+	{
+		return view('datasource::widgets.partials.ordering', [
+			'ordering' => $this->getOrderingRules(),
+			'fields' => $this->section->getFields()
+		])->render();
 	}
 }

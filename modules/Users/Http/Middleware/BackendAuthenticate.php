@@ -2,6 +2,7 @@
 
 use Lang;
 use Closure;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
 
@@ -52,7 +53,9 @@ class BackendAuthenticate {
 			return $this->acl->denyAccess(trans('users::core.messages.auth.deny_access'), true);
 		}
 
-		Lang::setLocale(auth()->user()->getLocale());
+		$locale = auth()->user()->getLocale();
+		Carbon::setLocale($locale);
+		Lang::setLocale($locale);
 
 		$this->acl->checkPermissions();
 

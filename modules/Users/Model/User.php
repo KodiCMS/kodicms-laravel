@@ -69,6 +69,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	protected $permissions = [];
 
 	/**
+	 * @param array $attributes
+	 */
+	public function __construct(array $attributes = [])
+	{
+		parent::__construct($attributes);
+		$this->addObservableEvents('authenticated');
+	}
+
+	/**
 	 * @return array
 	 */
 	protected function fieldCollection()
@@ -267,5 +276,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		}
 
 		return Locale::getSystemDefault();
+	}
+
+
+	public function authenticated()
+	{
+		$this->fireModelEvent('authenticated');
 	}
 }

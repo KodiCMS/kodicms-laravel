@@ -36,7 +36,7 @@
 				@if(!empty($value))
 				<div class="panel-body padding-sm">
 					@if($field->isImage($value))
-					{!! link_to($value, \HTML::image($value, null, ['style' => 'max-height: 150px']), ['target' => '_blank', 'class' => 'popup']) !!}
+					{!! link_to($value, \HTML::image($value, null, ['style' => 'max-height: 150px']), ['target' => '_blank', 'class' => 'popup img-thumbnail']) !!}
 					@else
 					{!! link_to($value, trans('datasource::fields.file.view_file'), ['data-icon' => 'file', 'target' => '_blank', 'class' => ['btn btn-default'], 'id' => 'uploaded-' . $key,]) !!}
 					@endif
@@ -53,3 +53,15 @@
 		</div>
 	</div>
 </div>
+
+<script>
+$(function() {
+	$('input[name="{{ $key }}_remove"]').on('change', function() {
+		var $cont = $('#file-{{ $key }} .panel-heading');
+		if($(this).is(':checked'))
+			$cont.hide();
+		else
+			$cont.show();
+	});
+});
+</script>
