@@ -181,7 +181,7 @@ class Document extends Model implements DocumentInterface
 
 		foreach($attributes as $key => $value)
 		{
-			if (!is_null($field = array_get($this->sectionFields, $key)))
+			if (!is_null($field = $this->getSectionFields()->getByKey($key)))
 			{
 				$field->onDocumentFill($this, $value);
 			}
@@ -274,7 +274,7 @@ class Document extends Model implements DocumentInterface
 	{
 		$value = parent::getAttributeValue($key);
 
-		if (!is_null($field = array_get($this->getSectionFields(), $key)))
+		if (!is_null($field = $this->getSectionFields()->getByKey($key)))
 		{
 			$value = $field->onGetHeadlineValue($this, $value);
 		}
