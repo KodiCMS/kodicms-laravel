@@ -37,9 +37,7 @@
 			<div class="panel-body padding-sm no-padding-hr clearfix">
 				@foreach ($value as $file)
 				<div class="thumbnail pull-left margin-xs-hr">
-					<a href="/{{ $file->image }}" rel="{{ $key }}" class="popup" data-title="false">
-						{!! HTML::image($file->image, null, ['style' => 'height: 100px']) !!}
-					</a>
+					{!! HTML::link($file->getEditLink(), HTML::image($file->image, null, ['style' => 'height: 100px']) ) !!}
 					<label class="checkbox-inline">{!! Form::checkbox("{$key}_remove[]", $file->getId()) !!} @lang('datasource::fields.images.remove_file')</label>
 				</div>
 				@endforeach
