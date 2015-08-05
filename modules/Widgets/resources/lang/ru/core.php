@@ -39,7 +39,7 @@ return [
 		'cache_tags' => 'Теги',
 		'cache_lifetime' => 'Время жизни кеша',
 		'template_parameters' => 'Параметры шаблона',
-		'related_widgets' => 'Загрузить виджеты в шаблон',
+		'related_widgets' => 'Связанные виджеты',
 	],
 	'button' => [
 		'create' => 'Создать',

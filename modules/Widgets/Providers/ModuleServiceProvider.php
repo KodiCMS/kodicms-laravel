@@ -91,17 +91,28 @@ class ModuleServiceProvider extends ServiceProvider
 			{
 				$commentKeys = WidgetManager::getTemplateKeysByType($widget->type);
 				$snippets = (new SnippetCollection())->getHTMLSelectChoices();
-				$assetsPackages = Package::getHTMLSelectChoice();
-				$widgetList = Widget::where('id', '!=', $widget->id)->lists('name', 'id')->all();
 
 				echo view('widgets::widgets.partials.renderable', compact(
-					'widget', 'commentKeys', 'snippets', 'assetsPackages', 'widgetList'
+					'widget', 'commentKeys', 'snippets'
 				))->render();
 			}
 
 			if ($widget->isCacheable() AND acl_check('widgets.cache'))
 			{
 				echo view('widgets::widgets.partials.cacheable', compact('widget'))->render();
+			}
+		});
+
+		Event::listen('view.widget.edit.footer', function ($widget)
+		{
+			if ($widget->isRenderable())
+			{
+				$assetsPackages = Package::getHTMLSelectChoice();
+				$widgetList = Widget::where('id', '!=', $widget->id)->lists('name', 'id')->all();
+
+				echo view('widgets::widgets.partials.renderable_buttons', compact(
+					'widget', 'commentKeys', 'snippets', 'assetsPackages', 'widgetList'
+				))->render();
 			}
 
 			if (acl_check('widgets.roles') AND !$widget->isHandler())
