@@ -39,7 +39,7 @@ return [
 		'cache_tags' => 'Tags',
 		'cache_lifetime' => 'Cache lifetime',
 		'template_parameters' => 'Template settings',
-		'related_widgets' => 'Download the widget template',
+		'related_widgets' => 'Related widgets',
 	],
 	'button' => [
 		'create' => 'Create',
@@ -55,9 +55,9 @@ return [
 		]
 	],
 	'messages' => [
-		'created' => 'The widget set',
-		'updated' => 'Widget saved',
-		'deleted' => 'Widget deleted',
+		'created' => 'The widget created',
+		'updated' => 'The widget saved',
+		'deleted' => 'The widget deleted',
 		'corrupted' => 'The widget is damaged and can not be used',
 		'is_handler' => 'To use the widget to submit your data to URL <code>:url</code> or use the Route <code>:route</code>',
 		'empty' => 'You do not have widgets',
