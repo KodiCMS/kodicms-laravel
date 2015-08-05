@@ -73,8 +73,8 @@ abstract class Relation extends Field implements FieldTypeRelationInterface
 	 */
 	public function onGetWidgetValue(DocumentInterface $document, $value)
 	{
-		return $document->relationLoaded($this->getRelationName())
-			? $document->getRelation($this->getRelationName())->toArray()
+		return !is_null($related = $document->getAttribute($this->getRelationName()))
+			? $related->toArray()
 			: $value;
 	}
 
