@@ -286,7 +286,9 @@ CMS.ui.add('flags', function () {
 		width: 'style'
 	})
 
-	$('select').not('.no-script').select2();
+	$('select').not('.no-script').select2({
+		minimumResultsForSearch: Infinity
+	});
 
 	$('.tags').select2({
 		tags: true,

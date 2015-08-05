@@ -219,7 +219,7 @@
 
   .select2-results__group {
 	color: @dropdown-header-color;
-	text-align: right;
+	background: lighten(#ccc, 10%);
 	border-bottom: 1px solid #ccc;
 	display: block;
 	padding: @padding-base-vertical @padding-base-horizontal;
@@ -260,6 +260,10 @@
 		.border-top-radius(0);
 		border-top-color: transparent;
 	  }
+	}
+
+	.select2-dropdown--below {
+	  border-top: 1px solid @input-border-focus;
 	}
   }
 
