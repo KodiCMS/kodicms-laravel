@@ -126,6 +126,11 @@ interface FieldInterface
 	/**
 	 * @return bool
 	 */
+	public function canBeUsedAsDocumentID();
+
+	/**
+	 * @return bool
+	 */
 	public function hasDatabaseColumn();
 
 	/**

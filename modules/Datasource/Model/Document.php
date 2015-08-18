@@ -444,7 +444,7 @@ class Document extends Model implements DocumentInterface
 
 		$result = $query->where($primaryKeyField, $id)->first();
 
-		return is_null($result) ? new static([], $this->section) : $this->newFromBuilder($result);
+		return is_null($result) ? new static([], $this->section) : $result;
 	}
 
 	/**

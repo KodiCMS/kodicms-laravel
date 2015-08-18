@@ -61,6 +61,11 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	/**
 	 * @var bool
 	 */
+	protected $canBeUsedAsDocumentID = false;
+
+	/**
+	 * @var bool
+	 */
 	protected $hasDatabaseColumn = true;
 
 	/**
@@ -207,6 +212,14 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	public function isUnique()
 	{
 		return (bool) $this->getSetting('is_unique');
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function canBeUsedAsDocumentID()
+	{
+		return (bool) $this->canBeUsedAsDocumentID;
 	}
 
 	/**

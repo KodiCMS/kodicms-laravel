@@ -12,6 +12,11 @@ class Primary extends Field implements FieldTypeOnlySystemInterface
 	protected $isEditable = false;
 
 	/**
+	 * @var bool
+	 */
+	protected $canBeUsedAsDocumentID = true;
+
+	/**
 	 * @return string
 	 */
 	public function getDBKey()

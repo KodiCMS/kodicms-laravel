@@ -6,6 +6,11 @@ use Illuminate\Database\Schema\Blueprint;
 class Slug extends Primitive
 {
 	/**
+	 * @var bool
+	 */
+	protected $canBeUsedAsDocumentID = true;
+
+	/**
 	 * @return array
 	 */
 	public function booleanSettings()

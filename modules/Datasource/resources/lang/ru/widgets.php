@@ -20,5 +20,19 @@ return [
 			'select_random_documents' => 'Выводить документы в произвольном порядке',
 			'search_key' => 'Ключ для поиска по документам [$_GET]'
 		]
+	],
+	'document' => [
+		'title' => 'Документ',
+		'settings' => [
+			'document_id_source' => 'Источник',
+			'document_id_source_key' => 'Ключ источника документа',
+			'document_id' => 'Поле идентификатор',
+			'throw_404' => 'Выводить ошибку, если документ не найден',
+			'meta_fields' => 'Мета поля',
+			'meta_title' => 'Заголовок',
+			'meta_keywords' => 'Ключевые слова',
+			'meta_description' => 'Описание',
+			'change_crumbs' => 'Изменять хлебные крошки'
+		]
 	]
 ];
