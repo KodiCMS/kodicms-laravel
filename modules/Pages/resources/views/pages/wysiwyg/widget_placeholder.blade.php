@@ -3,7 +3,7 @@
 		<span class="drag-handle">{!! UI::icon('arrows fa-fw'); !!}</span>
 		{{ $widget->getName() }} <span class="text-muted">[{{ $widget->getTypeTitle() }}]</span>
 
-		<div class="pull-right page-widget-placeholder-actions">
+		<div class="page-widget-placeholder-actions">
 			<a href="{{ route('backend.widget.edit', [$widget->getId()]) }}" class="popup" data-popup-parent="true">
 				{!! UI::icon('wrench fa-fw'); !!}
 			</a>

@@ -1,5 +1,6 @@
 <?php
 
 Package::add('page-wysiwyg')
-	->js(null, backend_resources_url() . '/js/page-wysiwyg/page-wysiwyg.js', ['jquery', 'sortable', 'libraries', 'core'])
-	->css(null, backend_resources_url() . '/js/page-wysiwyg/style.css');
+	->js('page-wysiwyg-libraries', resources_url() . '/js/page-wysiwyg-libraries.js')
+	->js(null, resources_url() . '/js/page-wysiwyg.js', ['page-wysiwyg-libraries'])
+	->css(null, resources_url() . '/css/page-wysiwyg.css');

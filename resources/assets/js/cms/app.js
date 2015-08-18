@@ -27,6 +27,5 @@ var CMS = {
 		this.content_height = contentContHeight - contentContPadding;
 
 		return this.content_height;
-	},
-
+	}
 };

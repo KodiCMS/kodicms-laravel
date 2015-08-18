@@ -16,6 +16,9 @@ elixir(function(mix) {
 		.less('common.less', 'public/cms/css')
 		.less('kodicms/jquery-ui/jquery-ui.less', 'public/cms/css/jquery-ui.css');
 
+	mix
+		.less('custom/page-wysiwyg.less', 'public/cms/css/page-wysiwyg.css')
+
 	mix.scripts([
 		'libs/jquery/js/jquery.min.js',
 		'libs/bootstrap/js/bootstrap.js',
@@ -55,6 +58,22 @@ elixir(function(mix) {
 		'cms/user.meta.js',
 		'cms/run.js'
 	], 'public/cms/js/backend.js');
+
+	mix.scripts([
+		'libs/jquery/js/jquery.min.js',
+		'libs/Sortable/js/Sortable.min.js',
+		'libs/Sortable/js/jquery.binding.js',
+		'libs/jquery-colorbox/js/jquery.colorbox-min.js',
+		'libs/underscore/js/underscore-min.js',
+	], 'public/cms/js/page-wysiwyg-libraries.js', 'public/cms/');
+
+	mix.scripts([
+		'cms/app.js',
+		'cms/components/ui.js',
+		'cms/popup.js',
+		'cms/api.js',
+		'cms/page-wysiwyg.js'
+	], 'public/cms/js/page-wysiwyg.js');
 
 	/**************************************************************
 	 * elFinder
