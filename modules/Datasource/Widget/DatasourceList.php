@@ -3,15 +3,15 @@
 use Illuminate\Support\Collection;
 use KodiCMS\Widgets\Widget\Decorator;
 use KodiCMS\Widgets\Traits\WidgetCache;
-use KodiCMS\Widgets\Traits\WidgetPaginator;
 use KodiCMS\Widgets\Contracts\WidgetCacheable;
 use KodiCMS\Datasource\Traits\WidgetDatasource;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Repository\SectionRepository;
+use KodiCMS\Datasource\Traits\WidgetDatasourceFields;
 
 class DatasourceList extends Decorator implements WidgetCacheable
 {
-	use WidgetCache, WidgetPaginator, WidgetDatasource;
+	use WidgetCache, WidgetDatasource, WidgetDatasourceFields;
 
 	/**
 	 * @var SectionRepository
@@ -34,32 +34,30 @@ class DatasourceList extends Decorator implements WidgetCacheable
 	protected $settingsTemplate = 'datasource::widgets.list.settings';
 
 	/**
-	 * @param SectionRepository $repository
+	 * @return array
 	 */
-	public function boot(SectionRepository $repository)
+	public function booleanSettings()
 	{
-		$this->sectionRepository = $repository;
+		return ['order_by_rand'];
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getSelectedFields()
+	public function defaultSettings()
 	{
-		return (array) $this->selected_fields;
+		return [
+			'order_by_rand' => false,
+			'document_uri' => '/document/:id'
+		];
 	}
 
 	/**
-	 * @return \Illuminate\Database\Eloquent\Model|SectionInterface|null
+	 * @param SectionRepository $repository
 	 */
-	public function getSection()
+	public function boot(SectionRepository $repository)
 	{
-		if (is_null($this->section) and $this->isDatasourceSelected())
-		{
-			$this->section = $this->sectionRepository->findOrFail($this->getSectionId());
-		}
-
-		return $this->section;
+		$this->sectionRepository = $repository;
 	}
 
 	/**
@@ -71,23 +69,6 @@ class DatasourceList extends Decorator implements WidgetCacheable
 		$ordering = (array) $this->ordering;
 
 		return compact('fields', 'ordering');
-	}
-
-	/**
-	 * @param array $filters
-	 */
-	public function setSettingFilters(array $filters)
-	{
-		$data = [];
-		foreach ($filters as $key => $rows)
-		{
-			foreach ($rows as $i => $row)
-			{
-				$data[$i][$key] = $row;
-			}
-		}
-
-		$this->settings['filters'] = $data;
 	}
 
 	/**
@@ -142,7 +123,7 @@ class DatasourceList extends Decorator implements WidgetCacheable
 	{
 		if (!is_null($this->documents))
 		{
-			return [];
+			return $this->documents;
 		}
 
 		if ($this->order_By_rand)
@@ -160,7 +141,7 @@ class DatasourceList extends Decorator implements WidgetCacheable
 		}
 
 		// TODO добавить кол-во выводимых документов
-		return $documents->paginate();
+		return $this->documents = $documents->paginate();
 	}
 
 	/**
@@ -169,7 +150,7 @@ class DatasourceList extends Decorator implements WidgetCacheable
 	 * @param string $preffix
 	 * @return array
 	 */
-	public function buildUrlParams(array $data, $preffix = null)
+	protected function buildUrlParams(array $data, $preffix = null)
 	{
 		$params = [];
 
@@ -190,5 +171,26 @@ class DatasourceList extends Decorator implements WidgetCacheable
 		}
 
 		return $params;
+	}
+
+	/****************************************************************************************************************
+	 * Settings
+	 ****************************************************************************************************************/
+
+	/**
+	 * @param array $filters
+	 */
+	public function setSettingFilters(array $filters)
+	{
+		$data = [];
+		foreach ($filters as $key => $rows)
+		{
+			foreach ($rows as $i => $row)
+			{
+				$data[$i][$key] = $row;
+			}
+		}
+
+		$this->settings['filters'] = $data;
 	}
 }
