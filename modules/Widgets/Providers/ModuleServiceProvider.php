@@ -57,10 +57,12 @@ class ModuleServiceProvider extends ServiceProvider
 				return new PageWidgetCollection($page->getId());
 			});
 
-			$this->app->singleton('layout.block', function($app) use($page)
+			$block = new Block(app('layout.widgets'));
+			$this->app->singleton('layout.block', function($app) use($block)
 			{
-				return new Block(app('layout.widgets'));
+				return $block;
 			});
+
 		}, 9000);
 
 //		Event::listen('view.page.edit', function($page)
