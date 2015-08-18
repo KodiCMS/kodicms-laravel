@@ -1,3 +1,7 @@
+CMS.messages = {
+	show: function(msg, type, icon) {}
+}
+
 CMS.ui.add('app', function () {
 	var block;
 	var pageId = $('meta[name="page-id"]').data('id');
@@ -33,7 +37,7 @@ CMS.ui.add('app', function () {
 		save();
 	});
 
-	$('body').on('click', '.page-block-placeholder-buttons .add-widget', function () {
+	$('body').on('click', '.page-block-add-widget', function () {
 		block = $(this).closest('.page-block-placeholder').data('name');
 	});
 
@@ -49,8 +53,22 @@ CMS.ui.add('app', function () {
 			return;
 		});
 	});
+}).add('icon', function () {
+	$('*[data-icon]').add('*[data-icon-prepend]').each(function () {
+		var cls = $(this).data('icon');
+		if ($(this).hasClass('btn-labeled')) cls += ' btn-label icon';
+
+		$(this).html('<i class="fa fa-' + cls + '"></i> ' + $(this).html());
+		$(this).removeAttr('data-icon-prepend').removeAttr('data-icon');
+	});
 });
 
 $(function () {
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+
 	CMS.ui.init();
 });

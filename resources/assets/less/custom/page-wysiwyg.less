@@ -1,3 +1,8 @@
+@import "../../../../public/cms/libs/font-awesome/less/font-awesome";
+@import "../../../../public/cms/libs/bootstrap/less/variables";
+@import "variables";
+@import "colorbox";
+
 body {
   padding: 10px !important;
 }
@@ -16,6 +21,11 @@ body {
 
 .page-block-placeholder-title {
   float: left;
+  background: @table-border-color;
+  color: @gray;
+  padding: 5px;
+  margin-bottom: -8px;
+  margin-left: 5px;
 }
 
 .page-widget-placeholder {
@@ -38,7 +48,7 @@ body {
 .page-block-placeholder-widgets {
   margin-top: 5px;
   padding: 5px 5px 0;
-  border: 3px dashed #ddd;
+  border: 3px dashed @table-border-color;
 }
 
 

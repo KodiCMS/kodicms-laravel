@@ -9,7 +9,7 @@
 
 	<div class="page-block-placeholder-buttons">
 		{!! link_to_route('backend.widget.popup_list', trans('widgets::core.button.add_to_page'), [$page->getId()], [
-			'class' => 'page-block-add-widget',
+			'class' => 'page-block-add-widget popup',
 			'data-icon' => 'plus fa-fw', 'data-popup-type' => 'ajax'
 		]) !!}
 	</div>

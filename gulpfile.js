@@ -61,9 +61,10 @@ elixir(function(mix) {
 
 	mix.scripts([
 		'libs/jquery/js/jquery.min.js',
-		'libs/Sortable/js/Sortable.min.js',
-		'libs/Sortable/js/jquery.binding.js',
+		'libs/sortable/js/Sortable.min.js',
+		'libs/sortable/js/jquery.binding.js',
 		'libs/jquery-colorbox/js/jquery.colorbox-min.js',
+		'libs/jquery-query-object/js/jquery.query-object.js',
 		'libs/underscore/js/underscore-min.js',
 	], 'public/cms/js/page-wysiwyg-libraries.js', 'public/cms/');
 
