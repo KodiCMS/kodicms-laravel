@@ -1,3 +1,5 @@
+@event('view.page.edit', [$page])
+
 {!! Form::model($page, [
 'route' => ['backend.page.edit.post', $page],
 'class' => 'panel form-horizontal'
@@ -27,6 +29,8 @@
 			</a>
 		</li>
 		@endif
+
+		@yield('page-tab')
 	</ul>
 </div>
 
@@ -35,6 +39,7 @@
 	{!! UI::icon('exclamation-triangle fa-fw') !!} {{ trans('pages::core.messages.layout_not_set') }}
 </div>
 @endif
+
 <div class="panel-heading">
 	{!! $page->renderField('title') !!}
 
@@ -52,8 +57,7 @@
 <hr class="no-margin-vr" />
 <div class="tab-content no-padding-vr">
 	<div class="tab-pane active" id="page-content-panel">
-		@event('view.page.edit', [$page])
-
+		@yield('page-content')
 		<div class="panel-body">
 			{!! $page->getPublicLink() !!}
 			<div class="text-right">
@@ -72,7 +76,6 @@
 				@endif
 			</div>
 		</div>
-
 	</div>
 
 	<div class="tab-pane fade" id="page-meta-panel">
@@ -90,6 +93,8 @@
 		@include('pages::pages.partials.behavior', ['behavior' => $behavior])
 	</div>
 	@endif
+
+	@yield('page-tab-content')
 </div>
 
 <div class="form-actions panel-footer">
