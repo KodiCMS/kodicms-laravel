@@ -439,6 +439,9 @@ class FrontendPage implements BehaviorPageInterface
 		return $this->parseMeta('meta_title');
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getLayout()
 	{
 		if (empty($this->layout_file) AND $parent = $this->getParent())
@@ -654,12 +657,22 @@ class FrontendPage implements BehaviorPageInterface
 	}
 
 	/**
-	 * @return null|Behavior
+	 * @return null|string
 	 */
 	public function getBehavior()
 	{
 		return $this->behavior;
 	}
+
+	/**
+	 * @return Behavior
+	 */
+	public function getBehaviorObject()
+	{
+		return $this->behaviorObject;
+	}
+
+
 
 	/**
 	 * @return bool
