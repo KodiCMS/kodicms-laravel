@@ -87,7 +87,7 @@ interface SectionInterface
 	public function getRelatedFields();
 
 	/**
-	 * @return array
+	 * @return FieldsCollectionInterface
 	 */
 	public function getFields();
 
