@@ -1,8 +1,9 @@
 <?php namespace KodiCMS\Datasource\Fields\File;
 
-use KodiCMS\Datasource\Fields\File;
 use Intervention\Image\ImageManager;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Datasource\Fields\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Image extends File
 {
@@ -19,14 +20,14 @@ class Image extends File
 	 */
 	public function defaultSettings()
 	{
-		$settings = parent::defaultSettings();
-		return array_merge($settings, [
+		return array_merge(parent::defaultSettings(), [
 			'allowed_types' => ['jpeg', 'png', 'gif', 'bmp', 'svg'],
 			'width' => 800,
 			'height' => 600,
 			'aspect_ratio' => true,
 			'quality' => 100,
 			'is_cropable' => false,
+			'same_image_fields' => []
 
 			// TODO: релазиовать добавления водяных знаков
 //			'watermark' => false,
@@ -182,6 +183,75 @@ class Image extends File
 	}
 
 	/**
+	 * @return array
+	 */
+	public function getSectionImageFields()
+	{
+		return array_map(function($field) {
+			return $field->getName();
+		}, array_filter($this->getSection()->getFields()->getFields(), function($field) {
+			return ($field instanceof Image) and $field->getId() != $this->getId();
+		}));
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getSelectedSameImageFields()
+	{
+		return (array) $this->getSetting('same_image_fields');
+	}
+
+	/**
+	 * @param $file
+	 *
+	 * @return bool|string
+	 */
+	public function copyImageFile($file)
+	{
+		if ($this->files->exists($this->getFilePath($file)))
+		{
+			$ext = pathinfo($file, PATHINFO_EXTENSION);
+			$filename = uniqid() . '.' . $ext;
+			$this->files->copy($this->getFilePath($file), $this->getFolder() . $filename);
+
+			return $this->folderRelativePath . $filename;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return void
+	 */
+	public function onDocumentFill(DocumentInterface $document, $value)
+	{
+		parent::onDocumentFill($document, $value);
+
+		if (($value instanceof UploadedFile) and !empty($this->getSelectedSameImageFields()))
+		{
+			$fields = $this->getSection()->getFields();
+			foreach($this->getSelectedSameImageFields() as $sameField)
+			{
+				if (
+					!is_null($field = $fields->offsetGet($sameField))
+					and
+					!($document->{$sameField} instanceof UploadedFile)
+				)
+				{
+					if($filePath = $field->copyImageFile($document->{$this->getDBKey()}))
+					{
+						$document->{$sameField} = $filePath;
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * @param DocumentInterface $document
 	 * @param value
 	 *
@@ -189,14 +259,14 @@ class Image extends File
 	 */
 	public function onDocumentUpdating(DocumentInterface $document, $value)
 	{
-		$file = parent::onDocumentUpdating($document, $value);
+		parent::onDocumentUpdating($document, $value);
 
-		if (is_null($file))
+		if (is_null($value) or $this->isRemoveFile)
 		{
 			return null;
 		}
 
-		$image = (new ImageManager)->make($this->getFilePath($file));
+		$image = (new ImageManager)->make($this->getFilePath($value));
 
 		$width = $this->getWidth();
 		$height = $this->getHeight();
@@ -227,6 +297,6 @@ class Image extends File
 			}
 		}
 
-		$image->save($file, $this->getQuality());
+		$image->save($value, $this->getQuality());
 	}
 }

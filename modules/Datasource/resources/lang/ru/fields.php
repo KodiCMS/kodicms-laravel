@@ -82,11 +82,12 @@ return [
 	'image' => [
 		'title' => 'Изображение',
 		'max_file_size' => 'Максимальный размер файла',
-		'settings' => 'Настройки',
+		'size_settings' => 'Настройки размера',
 		'size' => 'Размер',
 		'quality' => 'Качество',
 		'crop' => 'Обрезать',
-		'aspect_ratio' => 'Сохранять пропорции'
+		'aspect_ratio' => 'Сохранять пропорции',
+		'same_image_fields' => 'Загружать изображение также в поля'
 	],
 	'has_one' => [
 		'title' => 'HasOne',

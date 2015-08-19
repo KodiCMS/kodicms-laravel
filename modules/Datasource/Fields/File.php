@@ -200,35 +200,35 @@ class File extends Primitive
 
 	/**
 	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return null|string
+	 */
+	public function onDocumentFill(DocumentInterface $document, $value)
+	{
+		parent::onDocumentFill($document, $value);
+
+		if (($file = $document->{$this->getDBKey()}) instanceof UploadedFile)
+		{
+			$this->onDocumentDeleting($document);
+			$document->{$this->getDBKey()} = $filePath = $this->uploadFile($file);
+		}
+	}
+
+	/**
+	 * @param DocumentInterface $document
 	 * @param value
 	 *
 	 * @return array|null|UploadedFile
 	 */
 	public function onDocumentUpdating(DocumentInterface $document, $value)
 	{
-		parent::onDocumentUpdating($document, $value);
-
-		$this->isRemoveFile = (bool)Request::get($this->getDBKey() . '_remove');
-
-		$filePath = null;
+		$this->isRemoveFile = (bool) Request::get($this->getDBKey() . '_remove');
 
 		if ($this->isRemoveFile)
 		{
 			$this->onDocumentDeleting($document);
-			return $filePath;
 		}
-
-		if (
-			(($file = $document->{$this->getDBKey()}) instanceof UploadedFile)
-			and
-			!is_null($filePath = $this->uploadFile($file))
-		)
-		{
-			$this->onDocumentDeleting($document);
-			$document->{$this->getDBKey()} = $filePath;
-		}
-
-		return $filePath;
 	}
 
 	/**
