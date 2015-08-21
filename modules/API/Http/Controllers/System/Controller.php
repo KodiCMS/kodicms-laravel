@@ -57,9 +57,7 @@ abstract class Controller extends BaseController
 			$this->validateParameters([$key => $isRequired]);
 		}
 
-		$param = $this->request->input($key, $default);
-
-		return $param;
+		return array_get($this->request->all(), $key, $default);
 	}
 
 	/**
