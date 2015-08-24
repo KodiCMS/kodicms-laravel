@@ -7,7 +7,7 @@ class HandlerController extends Controller
 {
 	public function getHandle(WidgetRepository $repository, $handlerId)
 	{
-		event('handler.requested', [$handler]);
+		event('handler.requested', [$handlerId]);
 
 		$widget = $repository->findOrFail($handlerId);
 
