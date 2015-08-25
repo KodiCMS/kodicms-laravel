@@ -237,9 +237,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 				->get()
 				->lists('action')
 				->all();
+
+			return array_unique($permissions);
 		}
 
-		return array_unique($permissions);
+		return [];
 	}
 
 	/**
