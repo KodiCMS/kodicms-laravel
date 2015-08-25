@@ -46,7 +46,7 @@ class DatasourceDocument extends Decorator implements WidgetCacheable
 	 */
 	public function booleanSettings()
 	{
-		return ['throw_404', 'change_crumbs'];
+		return ['throw_404'];
 	}
 
 	/**
@@ -64,7 +64,10 @@ class DatasourceDocument extends Decorator implements WidgetCacheable
 	{
 		$document = $this->getDocument();
 
-		if(empty($document)) return;
+		if (!$document->exists and $this->getSetting('throw_404'))
+		{
+			abort(404);
+		}
 
 		Frontpage::setMetaParams('document_title', $document->getTitle(), 'title');
 		foreach(['title', 'keywords', 'description'] as $metaKey)

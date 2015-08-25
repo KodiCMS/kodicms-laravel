@@ -36,11 +36,6 @@
 				{!! Form::hidden('settings[throw_404]', 0) !!}
 				<label>{!! Form::switcher('settings[throw_404]', 1, $widget->throw_404) !!} @lang('datasource::widgets.document.settings.throw_404')</label>
 			</div>
-
-			<div class="checkbox">
-				{!! Form::hidden('settings[change_crumbs]', 0) !!}
-				<label>{!! Form::switcher('settings[change_crumbs]', 1, $widget->change_crumbs) !!} @lang('datasource::widgets.document.settings.change_crumbs')</label>
-			</div>
 		</div>
 	</div>
 </div>
