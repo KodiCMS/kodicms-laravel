@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Users\Repository;
 
-use KodiCMS\Users\Model\User;
 use KodiCMS\CMS\Repository\BaseRepository;
+use KodiCMS\Users\Model\User;
 
 class UserRepository extends BaseRepository
 {
@@ -65,14 +65,13 @@ class UserRepository extends BaseRepository
 	 */
 	public function create(array $data = [])
 	{
-		$user =  parent::create(array_only($data, [
+		$user = parent::create(array_only($data, [
 			'username', 'password', 'email', 'locale'
 		]));
 
-		if (isset($data['user_roles']))
+		if (isset($data['roles']))
 		{
-			$roles = $data['user_roles'];
-			$user->roles()->attach($roles);
+			$user->roles()->attach((array) $data['roles']);
 		}
 
 		return $user;
@@ -85,7 +84,7 @@ class UserRepository extends BaseRepository
 	 */
 	public function update($id, array $data = [])
 	{
-		if(array_key_exists('password', $data) AND empty($data['password']))
+		if (array_key_exists('password', $data) AND empty($data['password']))
 		{
 			unset($data['password']);
 		}
@@ -94,10 +93,9 @@ class UserRepository extends BaseRepository
 			'username', 'password', 'email', 'locale'
 		]));
 
-		if (isset($data['user_roles']))
+		if (isset($data['roles']))
 		{
-			$roles = $data['user_roles'];
-			$user->roles()->sync($roles);
+			$user->roles()->sync((array) $data['roles']);
 		}
 
 		return $user;
