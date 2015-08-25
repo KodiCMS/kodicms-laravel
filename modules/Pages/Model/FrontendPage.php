@@ -687,7 +687,7 @@ class FrontendPage implements BehaviorPageInterface
 	 */
 	public function getMime()
 	{
-		$mime = Mime::byFilename(pathinfo($this->getUri(), PATHINFO_EXTENSION));
+		$mime = Mime::byFilename($this->getUri());
 
 		return $mime === false ? 'text/html' : $mime;
 	}
