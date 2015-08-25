@@ -35,12 +35,19 @@ class UserController extends BackendController
 		}
 	}
 
+	/**
+	 * @param UserRepository $repository
+	 */
 	public function getIndex(UserRepository $repository)
 	{
 		$users = $repository->paginate();
 		$this->setContent('users.list', compact('users'));
 	}
 
+	/**
+	 * @param UserRepository $repository
+	 * @param null|int $id
+	 */
 	public function getProfile(UserRepository $repository, $id = NULL)
 	{
 
@@ -55,6 +62,9 @@ class UserController extends BackendController
 		$this->setContent('users.profile', compact('user', 'roles', 'permissions'));
 	}
 
+	/**
+	 * @param UserRepository $repository
+	 */
 	public function getCreate(UserRepository $repository)
 	{
 		$user = $repository->instance();
@@ -64,6 +74,11 @@ class UserController extends BackendController
 		$this->setContent('users.create', compact('user'));
 	}
 
+	/**
+	 * @param UserRepository $repository
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
 	public function postCreate(UserRepository $repository)
 	{
 		$data = $this->request->all();
@@ -74,6 +89,10 @@ class UserController extends BackendController
 			->with('success', trans($this->wrapNamespace('core.messages.user.created'), ['name' => $user->username]));
 	}
 
+	/**
+	 * @param UserRepository $repository
+	 * @param int $id
+	 */
 	public function getEdit(UserRepository $repository, $id)
 	{
 		$user = $repository->findOrFail($id);
@@ -85,6 +104,12 @@ class UserController extends BackendController
 		$this->setContent('users.edit', compact('user'));
 	}
 
+	/**
+	 * @param UserRepository $repository
+	 * @param int $id
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
 	public function postEdit(UserRepository $repository, $id)
 	{
 		$data = $this->request->all();
@@ -95,6 +120,12 @@ class UserController extends BackendController
 			->with('success', trans($this->wrapNamespace('core.messages.user.updated'), ['name' => $user->username]));
 	}
 
+	/**
+	 * @param UserRepository $repository
+	 * @param int $id
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
 	public function postDelete(UserRepository $repository, $id)
 	{
 		$user = $repository->delete($id);
