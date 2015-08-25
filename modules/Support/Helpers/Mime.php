@@ -43,14 +43,6 @@ class Mime
 			}
 		}
 
-		if (class_exists('finfo', false))
-		{
-			if ($info = new \finfo(defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME))
-			{
-				return $info->file($filename);
-			}
-		}
-
 		if (ini_get('mime_magic.magicfile') and function_exists('mime_content_type'))
 		{
 			// The mime_content_type function is only useful with a magic file
