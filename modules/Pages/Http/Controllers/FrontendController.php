@@ -2,7 +2,9 @@
 
 use KodiCMS\Pages\Model\FrontendPage;
 use KodiCMS\Pages\Exceptions\PageNotFoundException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use KodiCMS\Pages\Http\Controllers\System\FrontPageController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class FrontendController extends FrontPageController
 {
@@ -11,6 +13,7 @@ class FrontendController extends FrontPageController
 		event('frontend.requested', [$slug]);
 
 		$frontPage = FrontendPage::findByUri($slug);
+		$notFoundMessage = trans('pages::core.messages.not_found');
 
 		if ($frontPage instanceof FrontendPage)
 		{
@@ -20,11 +23,23 @@ class FrontendController extends FrontPageController
 			}
 			else
 			{
-				event('frontend.found', [$frontPage]);
+				try
+				{
+					event('frontend.found', [$frontPage]);
 
-				$layout = $frontPage->getLayoutView();
+					$layout = $frontPage->getLayoutView();
 
-				return $this->render($layout, $frontPage->getMime());
+					return $this->render($layout, $frontPage->getMime());
+				}
+				catch (NotFoundHttpException $e)
+				{
+					$notFoundMessage = $e->getMessage();
+				}
+				catch(HttpException $e)
+				{
+					$notFoundMessage = $e->getMessage();
+				}
+
 			}
 		}
 
@@ -34,6 +49,6 @@ class FrontendController extends FrontPageController
 		}
 
 		event('frontend.not_found', [$slug]);
-		throw new PageNotFoundException(trans('pages::core.messages.not_found'));
+		throw new PageNotFoundException($notFoundMessage);
 	}
 }
