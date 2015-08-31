@@ -54,6 +54,11 @@ return [
 		'title' => trans('datasource::fields.datetime.title'),
 		'edit_template' => 'datasource::field.types.date'
 	],
+	/*'select' => [
+		'class' => KodiCMS\Datasource\Fields\Primitive\Select::class,
+		'title' => trans('datasource::fields.select.title'),
+		'edit_template' => 'datasource::field.types.select'
+	],*/
 
 
 	// File

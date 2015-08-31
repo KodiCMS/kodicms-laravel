@@ -1,10 +1,11 @@
 <?php namespace KodiCMS\API\Http;
 
 use Request;
-use Illuminate\Database\Eloquent\MassAssignmentException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Yaml\Yaml;
+use KodiCMS\API\Exceptions\Exception;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\MassAssignmentException;
 
 class Response
 {

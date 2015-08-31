@@ -35,7 +35,7 @@ class ManyToMany extends Relation
 	public function onGetHeadlineValue(DocumentInterface $document, $value)
 	{
 		$documents = $document->getAttribute($this->getRelationName())->map(function($doc) {
-			return \HTML::link($doc->getEditLink(), $doc->getTitle(), ['class' => 'popup']);
+			return link_to($doc->getEditLink(), $doc->getTitle(), ['class' => 'popup']);
 		})->all();
 		return !empty($documents)
 			? implode(', ', $documents)
@@ -108,6 +108,7 @@ class ManyToMany extends Relation
 	public function onDocumentCreated(DocumentInterface $document, $value)
 	{
 		$document->{$this->getRelationName()}()->sync((array) $this->selectedDocuments);
+		parent::onDocumentCreated($document, $value);
 	}
 
 	/**
