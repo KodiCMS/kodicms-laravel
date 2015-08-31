@@ -5,8 +5,8 @@ use Illuminate\Http\Response;
 use KodiCMS\API\Http\Response as APIResponse;
 use KodiCMS\CMS\Http\Controllers\ErrorController;
 use KodiCMS\API\Exceptions\Exception as APIException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Debug\ExceptionHandler as SymfonyDisplayer;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -18,7 +18,8 @@ class Handler extends ExceptionHandler
 	 * @var array
 	 */
 	protected $dontReport = [
-		HttpException::class
+		HttpException::class,
+		ModelNotFoundException::class,
 	];
 
 	/**
@@ -46,6 +47,11 @@ class Handler extends ExceptionHandler
 		if ($request->ajax() OR ($e instanceof APIException))
 		{
 			return (new APIResponse(config('app.debug')))->createExceptionResponse($e);
+		}
+
+		if ($e instanceof ModelNotFoundException)
+		{
+			$e = new NotFoundHttpException($e->getMessage(), $e);
 		}
 
 		if (config('app.debug') or !App::installed())
@@ -100,11 +106,11 @@ class Handler extends ExceptionHandler
 				$action = 'error500';
 			}
 
-			return new Response($controller->callAction($action, [$e]));
+			return $this->toIlluminateResponse(new Response($controller->callAction($action, [$e])), $e);
 		}
 		catch (\Exception $ex)
 		{
-			return (new SymfonyDisplayer(config('app.debug')))->createResponse($e);
+			return $this->convertExceptionToResponse($ex);
 		}
 	}
 
@@ -117,8 +123,8 @@ class Handler extends ExceptionHandler
 	protected function renderExceptionWithWhoops(\Exception $e)
 	{
 		$whoops = new \Whoops\Run;
-		$whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler());
+		$whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
 
-		return new Response($whoops->handleException($e), $e->getStatusCode(), $e->getHeaders());
+		return $this->toIlluminateResponse(new Response($whoops->handleException($e)), $e);
 	}
 }
