@@ -12,10 +12,11 @@ use Illuminate\Session\Store as SessionStore;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 abstract class Controller extends BaseController
 {
-	use DispatchesJobs, ValidatesRequests;
+	use DispatchesJobs, ValidatesRequests, AuthorizesRequests;
 
 	/**
 	 * @var Request

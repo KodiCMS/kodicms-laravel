@@ -10,17 +10,19 @@ use KodiCMS\Support\Traits\Tentacle;
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Support\Model\ModelFieldTrait;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use KodiCMS\Users\Model\FieldCollections\UserFieldCollection;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 /**
  * Class User
  * @package KodiCMS\Users\Model
  */
-class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
+class User extends Model implements AuthenticatableContract, CanResetPasswordContract, AuthorizableContract {
 
-	use Authenticatable, CanResetPassword, ModelFieldTrait, Tentacle;
+	use Authenticatable, CanResetPassword, ModelFieldTrait, Authorizable, Tentacle;
 
 	/**
 	 * @var array

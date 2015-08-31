@@ -161,6 +161,7 @@ return [
 		 * App Service Providers must be here...
 		 */
 		App\Providers\AppServiceProvider::class,
+		App\Providers\AuthServiceProvider::class,
 	],
 
 	/*
@@ -210,6 +211,7 @@ return [
 		'URL'       => Illuminate\Support\Facades\URL::class,
 		'Validator' => Illuminate\Support\Facades\Validator::class,
 		'View'      => Illuminate\Support\Facades\View::class,
+		'Gate' 		=> Illuminate\Support\Facades\Gate::class,
 		'Form'		=> Illuminate\Html\FormFacade::class,
 		'HTML'		=> Illuminate\Html\HtmlFacade::class,
 
