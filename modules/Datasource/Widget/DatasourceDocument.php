@@ -34,14 +34,6 @@ class DatasourceDocument extends Decorator implements WidgetCacheable
 	protected $settingsTemplate = 'datasource::widgets.document.settings';
 
 	/**
-	 * @param SectionRepository $repository
-	 */
-	public function boot(SectionRepository $repository)
-	{
-		$this->sectionRepository = $repository;
-	}
-
-	/**
 	 * @return array
 	 */
 	public function booleanSettings()

@@ -1,7 +1,32 @@
 <?php namespace KodiCMS\Datasource\Traits;
 
+use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\Repository\SectionRepository;
+
 trait WidgetDatasource
 {
+
+	/**
+	 * @var SectionInterface|null
+	 */
+	protected $section;
+
+	/**
+	 * @param SectionRepository $repository
+	 */
+	public function boot(SectionRepository $repository)
+	{
+		$this->sectionRepository = $repository;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAllowedSectionTypes()
+	{
+		return [];
+	}
+
 	/**
 	 * @return bool
 	 */

@@ -5,8 +5,6 @@ use KodiCMS\Widgets\Widget\Decorator;
 use KodiCMS\Widgets\Traits\WidgetCache;
 use KodiCMS\Widgets\Contracts\WidgetCacheable;
 use KodiCMS\Datasource\Traits\WidgetDatasource;
-use KodiCMS\Datasource\Contracts\SectionInterface;
-use KodiCMS\Datasource\Repository\SectionRepository;
 use KodiCMS\Datasource\Traits\WidgetDatasourceFields;
 
 class DatasourceList extends Decorator implements WidgetCacheable
@@ -17,11 +15,6 @@ class DatasourceList extends Decorator implements WidgetCacheable
 	 * @var SectionRepository
 	 */
 	protected $sectionRepository;
-
-	/**
-	 * @var SectionInterface|null
-	 */
-	protected $section;
 
 	/**
 	 * @var array|null
@@ -50,14 +43,6 @@ class DatasourceList extends Decorator implements WidgetCacheable
 			'order_by_rand' => false,
 			'document_uri' => '/document/:id'
 		];
-	}
-
-	/**
-	 * @param SectionRepository $repository
-	 */
-	public function boot(SectionRepository $repository)
-	{
-		$this->sectionRepository = $repository;
 	}
 
 	/**
@@ -97,6 +82,8 @@ class DatasourceList extends Decorator implements WidgetCacheable
 
 		foreach ($result as $document)
 		{
+			$doc = [];
+
 			foreach ($visibleFields as $field)
 			{
 				$doc[$field->getDBKey()] = $document->getWidgetValue($field->getDBKey());
