@@ -6,5 +6,10 @@ return [
 			'title' => 'Теги',
 			'datasource' => 'Источник'
 		]
+	],
+	'widgets' => [
+		'tagscloud' => [
+			'title' => 'Облако тегов'
+		]
 	]
 ];

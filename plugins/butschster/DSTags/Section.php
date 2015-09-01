@@ -66,6 +66,8 @@ class Section extends \KodiCMS\Datasource\Model\Section
 					'name' => 'Name',
 					'settings' => [
 						'is_required' => true,
+						'is_unique' => true,
+						'is_configurable' => false,
 						'headline_parameters' => [
 							'visible' => true
 						]
