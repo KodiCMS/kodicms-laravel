@@ -40,7 +40,7 @@ class WidgetManager implements WidgetManagerInterface
 	 */
 	public static function isCorrupt($class)
 	{
-		if(!static::isClassExists($class))
+		if (!static::isClassExists($class))
 		{
 			return true;
 		}
@@ -84,7 +84,7 @@ class WidgetManager implements WidgetManagerInterface
 	public static function getAvailableTypes()
 	{
 		$types = [];
-		foreach(config('widgets', []) as $group => $widgets)
+		foreach (config('widgets', []) as $group => $widgets)
 		{
 			foreach($widgets as $type => $widget)
 			{
