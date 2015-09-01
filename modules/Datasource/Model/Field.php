@@ -187,7 +187,15 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 */
 	public function isEditable()
 	{
-		return (bool) $this->isEditable;
+		return (bool) $this->getSetting('is_editable', $this->isEditable);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isConfigurable()
+	{
+		return $this->getSetting('is_configurable', false);
 	}
 
 	/**

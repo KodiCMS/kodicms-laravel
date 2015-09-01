@@ -81,6 +81,7 @@ class DocumentController extends BackendController
 		$document = $repository->getDocumentById($sectionId, $documentId);
 
 		$data = $this->request->all();
+
 		$repository->validateOnUpdateDocument($document, $data);
 
 		$document = $repository->updateDocument($document, $data);

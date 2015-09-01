@@ -34,7 +34,7 @@
 	<span class="panel-title" data-icon="cog">@lang('datasource::core.field.settings')</span>
 </div>
 
-@if(!is_null($typeObject = $field->getType()))
+@if(!is_null($typeObject = $field->getType()) and $field->isConfigurable())
 <div class="panel-body">
 	@if(!is_null($editTemplate = $typeObject->getEditTemplate()))
 		@include($editTemplate, compact('field', 'section', 'sections'))

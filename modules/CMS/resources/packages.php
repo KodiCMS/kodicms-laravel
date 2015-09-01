@@ -30,6 +30,10 @@ Package::add('jquery-ui')
 	->js(NULL, resources_url() . '/libs/jquery-ui/js/jquery-ui.min.js', 'jquery')
 	->css(NULL, resources_url() . '/css/jquery-ui.css');
 
+Package::add('jquery-tagsinput')
+	->js(NULL, resources_url() . '/libs/jquery.tagsinput/js/jquery.tagsinput.js', ['jquery', 'jquery-ui'])
+	->css(NULL, resources_url() . '/libs/jquery.tagsinput//css/jquery.tagsinput.css');
+
 Package::add('dropzone')
 	->js(NULL, resources_url() . '/libs/dropzone/js/dropzone.min.js', 'jquery')
 	->css('dropzone-basic', resources_url() . '/libs/dropzone/css/basic.min.css')
