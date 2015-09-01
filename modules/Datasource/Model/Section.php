@@ -289,7 +289,7 @@ class Section extends DatasourceModel implements SectionInterface
 	/**
 	 * @return Document
 	 */
-	public function getEmptyDocument()
+	public function getEmptyDocument(array $attributes = [])
 	{
 		$documentClass = $this->getDocumentClass();
 
@@ -297,12 +297,25 @@ class Section extends DatasourceModel implements SectionInterface
 	}
 
 	/**
-	 * @param integer $id
+	 * @param array $attributes
+	 *
 	 * @return Document
 	 */
-	public function getDocumentById($id)
+	public function newDocumentQuery(array $attributes = [])
 	{
-		return $this->getEmptyDocument()->findOrFail($id);
+		$documentClass = $this->getDocumentClass();
+		return new $documentClass($attributes, $this);
+	}
+
+	/**
+	 * @param int $id
+	 * @param array $attributes
+	 *
+	 * @return Document
+	 */
+	public function getDocumentById($id, array $attributes = [])
+	{
+		return $this->newDocumentQuery($attributes)->findOrFail($id);
 	}
 
 	/**

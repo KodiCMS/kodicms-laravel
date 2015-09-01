@@ -99,13 +99,22 @@ interface SectionInterface
 	/**
 	 * @return Document
 	 */
-	public function getEmptyDocument();
+	public function getEmptyDocument(array $attributes = []);
 
 	/**
-	 * @param integer $id
+	 * @param array $attributes
+	 *
 	 * @return Document
 	 */
-	public function getDocumentById($id);
+	public function newDocumentQuery(array $attributes = []);
+
+	/**
+	 * @param int $id
+	 * @param array $attributes
+	 *
+	 * @return Document
+	 */
+	public function getDocumentById($id, array $attributes = []);
 
 	/**
 	 * @return string
