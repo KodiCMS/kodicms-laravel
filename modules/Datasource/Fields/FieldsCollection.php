@@ -1,12 +1,12 @@
 <?php namespace KodiCMS\Datasource\Fields;
 
-use Illuminate\Support\Collection;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Collection;
 use KodiCMS\Datasource\Contracts\FieldGroupInterface;
 use KodiCMS\Datasource\Contracts\FieldInterface;
-use KodiCMS\Datasource\FieldGroups\DefaultGroup;
-use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\FieldsCollectionInterface;
+use KodiCMS\Datasource\Contracts\SectionInterface;
+use KodiCMS\Datasource\FieldGroups\DefaultGroup;
 use KodiCMS\Datasource\Model\FieldGroup;
 
 class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countable, \ArrayAccess, \IteratorAggregate
@@ -63,6 +63,26 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
 	}
 
 	/**
+	 * @param string $type
+	 *
+	 * @return Collection
+	 */
+	public function getByType($type)
+	{
+		return new Collection(array_filter($this->getFields(), function($field) use($type)
+		{
+			if (is_array($type))
+			{
+				return in_array($field->type, $type);
+			}
+			else
+			{
+				return $field->type == $type;
+			}
+		}));
+	}
+
+	/**
 	 * @param string $key
 	 *
 	 * @return FieldInterface|null
@@ -97,7 +117,7 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
 	}
 
 	/**
-	 * @return Collection
+	 * @return array
 	 */
 	public function getFields()
 	{
