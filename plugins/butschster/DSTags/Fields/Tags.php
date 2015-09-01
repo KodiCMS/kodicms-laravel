@@ -60,6 +60,17 @@ class Tags extends ManyToMany
 
 	/**
 	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 *
+	 * @return mixed
+	 */
+	public function onGetWidgetValue(DocumentInterface $document, $value)
+	{
+		return $this->makeTagArray($value);
+	}
+
+	/**
+	 * @param DocumentInterface $document
 	 * @param TemplateController $controller
 	 */
 	public function onControllerLoad(DocumentInterface $document, TemplateController $controller)
