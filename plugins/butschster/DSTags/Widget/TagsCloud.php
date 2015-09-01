@@ -16,6 +16,10 @@ class TagsCloud extends Decorator implements WidgetCacheable
 	protected $settingsTemplate = 'butschster:dstags::widgets.tagscloud.settings';
 
 
+	/**
+	 * @var string
+	 */
+	protected $defaultFrontendTemplate = 'butschster:dstags::widgets.tagscloud.template';
 
 	/**
 	 * @return array
