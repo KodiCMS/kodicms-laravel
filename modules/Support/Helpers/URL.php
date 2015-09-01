@@ -119,4 +119,49 @@ class URL
 
 		return false;
 	}
+
+	/**
+	 * Merges the current GET parameters with an array of new or overloaded
+	 * parameters and returns the resulting query string.
+	 *
+	 *     // Returns "?sort=title&limit=10" combined with any existing GET values
+	 *     $query = URL::query(array('sort' => 'title', 'limit' => 10));
+	 *
+	 * Typically you would use this when you are sorting query results,
+	 * or something similar.
+	 *
+	 * [!!] Parameters with a NULL value are left out.
+	 *
+	 * @param   array    $params   Array of GET parameters
+	 * @param   boolean  $useGet  Include current request GET parameters
+	 * @return  string
+	 */
+	public static function query(array $params = null, $useGet = true)
+	{
+		if ($useGet)
+		{
+			if ($params === null)
+			{
+				// Use only the current parameters
+				$params = $_GET;
+			}
+			else
+			{
+				// Merge the current and new parameters
+				$params = array_merge_recursive($_GET, $params);
+			}
+		}
+
+		if (empty($params))
+		{
+			// No query parameters
+			return '';
+		}
+
+		// Note: http_build_query returns an empty string for a params array with only NULL values
+		$query = http_build_query($params, '', '&');
+
+		// Don't prepend '?' to an empty string
+		return ($query === '') ? '' : ('?' . $query);
+	}
 }
