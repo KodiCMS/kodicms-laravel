@@ -1,13 +1,13 @@
 <?php namespace KodiCMS\Datasource\Fields\Relation;
 
+use Schema;
+use KodiCMS\Datasource\Fields\Relation;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany as BelongsToManyRelation;
-use KodiCMS\Datasource\Contracts\DocumentInterface;
 use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Contracts\SectionInterface;
-use KodiCMS\Datasource\Fields\Relation;
 use KodiCMS\Datasource\Repository\FieldRepository;
-use Schema;
+use KodiCMS\Datasource\Contracts\DocumentInterface;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany as BelongsToManyRelation;
 
 class ManyToMany extends Relation
 {
@@ -27,6 +27,11 @@ class ManyToMany extends Relation
 	protected $relatedFieldKey = null;
 
 	/**
+	 * @var string
+	 */
+	protected $relatedFieldType = 'many_to_many';
+
+	/**
 	 * @param DocumentInterface $document
 	 * @param mixed $value
 	 *
@@ -35,7 +40,7 @@ class ManyToMany extends Relation
 	public function onGetHeadlineValue(DocumentInterface $document, $value)
 	{
 		$documents = $document->getAttribute($this->getRelationName())->map(function($doc) {
-			return \HTML::link($doc->getEditLink(), $doc->getTitle(), ['class' => 'popup']);
+			return link_to($doc->getEditLink(), $doc->getTitle(), ['class' => 'popup']);
 		})->all();
 		return !empty($documents)
 			? implode(', ', $documents)
@@ -76,7 +81,7 @@ class ManyToMany extends Relation
 
 			return $this->getDocumentRelation($document, $section, $relatedField)
 				->get()
-				->lists($section->getDocumentTitleKey(), $section->GetDocumentPrimaryKey())
+				->lists($section->getDocumentTitleKey(), $section->getDocumentPrimaryKey())
 				->all();
 		}
 
@@ -108,6 +113,33 @@ class ManyToMany extends Relation
 	public function onDocumentCreated(DocumentInterface $document, $value)
 	{
 		$document->{$this->getRelationName()}()->sync((array) $this->selectedDocuments);
+		parent::onDocumentCreated($document, $value);
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 * @param mixed $value
+	 */
+	public function onDocumentUpdating(DocumentInterface $document, $value)
+	{
+		$document->{$this->getRelationName()}()->sync((array) $this->selectedDocuments);
+		parent::onDocumentUpdating($document, $value);
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 */
+	public function onDocumentDeleting(DocumentInterface $document)
+	{
+		$document->{$this->getRelationName()}()->detach($document->getId());
+	}
+
+	/**
+	 * @param DocumentInterface $document
+	 */
+	public function onRelatedDocumentDeleting(DocumentInterface $document)
+	{
+		$document->{$this->relatedField->getRelationName()}()->detach($document->getId());
 	}
 
 	/**
@@ -134,7 +166,7 @@ class ManyToMany extends Relation
 		)
 		{
 			$relatedField = $repository->create([
-				'type' => 'many_to_many',
+				'type' => $this->relatedFieldType,
 				'section_id' => $this->getRelatedSectionId(),
 				'is_system' => 1,
 				'key' => $this->getRelatedDBKey(),
@@ -196,13 +228,5 @@ class ManyToMany extends Relation
 		{
 			Schema::dropIfExists($this->getRelatedTable());
 		}
-	}
-
-	/**
-	 * @param DocumentInterface $document
-	 */
-	public function onRelatedDocumentDeleting(DocumentInterface $document)
-	{
-		$document->{$this->relatedField->getRelationName()}()->detach($document->getId());
 	}
 }
