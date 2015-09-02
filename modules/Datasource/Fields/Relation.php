@@ -3,6 +3,7 @@
 use DatasourceManager;
 use KodiCMS\Datasource\Model\Field;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
 
 abstract class Relation extends Field implements FieldTypeRelationInterface
@@ -67,11 +68,12 @@ abstract class Relation extends Field implements FieldTypeRelationInterface
 
 	/**
 	 * @param DocumentInterface $document
+	 * @param WidgetInterface $widget
 	 * @param mixed $value
 	 *
 	 * @return mixed
 	 */
-	public function onGetWidgetValue(DocumentInterface $document, $value)
+	public function onGetWidgetValue(DocumentInterface $document, WidgetInterface $widget, $value)
 	{
 		return !is_null($related = $document->getAttribute($this->getRelationName()))
 			? $related->toArray()

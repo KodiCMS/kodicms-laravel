@@ -86,7 +86,7 @@ class DatasourceList extends Decorator implements WidgetCacheable
 
 			foreach ($visibleFields as $field)
 			{
-				$doc[$field->getDBKey()] = $document->getWidgetValue($field->getDBKey());
+				$doc[$field->getDBKey()] = $document->getWidgetValue($field->getDBKey(), $this);
 			}
 
 			$doc['href'] = strtr($this->document_uri, $this->buildUrlParams($doc));

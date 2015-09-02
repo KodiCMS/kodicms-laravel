@@ -4,6 +4,7 @@ use KodiCMS\Datasource\FieldType;
 use Illuminate\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
+use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 
 interface FieldInterface
@@ -188,11 +189,12 @@ interface FieldInterface
 
 	/**
 	 * @param DocumentInterface $document
+	 * @param WidgetInterface $widget
 	 * @param mixed $value
 	 *
 	 * @return mixed
 	 */
-	public function onGetWidgetValue(DocumentInterface $document, $value);
+	public function onGetWidgetValue(DocumentInterface $document, WidgetInterface $widget, $value);
 
 	/**
 	 * @param DocumentInterface $document

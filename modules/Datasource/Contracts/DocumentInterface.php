@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Datasource\Contracts;
 
 use Illuminate\Validation\Validator;
+use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 
 interface DocumentInterface
@@ -41,9 +42,10 @@ interface DocumentInterface
 	 * Get a plain attribute (not a relationship).
 	 *
 	 * @param  string $key
+	 * @param  WidgetInterface $widget
 	 * @return mixed
 	 */
-	public function getWidgetValue($key);
+	public function getWidgetValue($key, WidgetInterface $widget);
 
 	/**
 	 * @param  string $key

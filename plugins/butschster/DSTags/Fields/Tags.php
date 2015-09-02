@@ -6,6 +6,7 @@ use KodiCMS\Support\Helpers\UI;
 use Illuminate\Database\Schema\Blueprint;
 use KodiCMS\Datasource\Fields\Relation\ManyToMany;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 
 class Tags extends ManyToMany
@@ -60,11 +61,12 @@ class Tags extends ManyToMany
 
 	/**
 	 * @param DocumentInterface $document
+	 * @param WidgetInterface $widget
 	 * @param mixed $value
 	 *
 	 * @return mixed
 	 */
-	public function onGetWidgetValue(DocumentInterface $document, $value)
+	public function onGetWidgetValue(DocumentInterface $document, WidgetInterface $widget, $value)
 	{
 		return $this->makeTagArray($value);
 	}

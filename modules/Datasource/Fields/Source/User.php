@@ -8,6 +8,7 @@ use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
 
 class User extends Source implements FieldTypeRelationInterface
@@ -107,11 +108,12 @@ class User extends Source implements FieldTypeRelationInterface
 
 	/**
 	 * @param DocumentInterface $document
+	 * @param WidgetInterface $widget
 	 * @param mixed $value
 	 *
 	 * @return mixed
 	 */
-	public function onGetWidgetValue(DocumentInterface $document, $value)
+	public function onGetWidgetValue(DocumentInterface $document, WidgetInterface $widget, $value)
 	{
 		return !is_null($user = $document->getAttribute($this->getRelationName()))
 			? $user->toArray()

@@ -12,6 +12,7 @@ use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Exceptions\FieldException;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 
@@ -455,11 +456,12 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 
 	/**
 	 * @param DocumentInterface $document
+	 * @param WidgetInterface $widget
 	 * @param mixed $value
 	 *
 	 * @return mixed
 	 */
-	public function onGetWidgetValue(DocumentInterface $document, $value)
+	public function onGetWidgetValue(DocumentInterface $document, WidgetInterface $widget, $value)
 	{
 		return $value;
 	}

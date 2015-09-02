@@ -184,7 +184,7 @@ class DatasourceDocument extends Decorator implements WidgetCacheable
 		$document = [];
 		foreach ($visibleFields as $field)
 		{
-			$document[$field->getDBKey()] = $rawDocument->getWidgetValue($field->getDBKey());
+			$document[$field->getDBKey()] = $rawDocument->getWidgetValue($field->getDBKey(), $this);
 		}
 
 		return [

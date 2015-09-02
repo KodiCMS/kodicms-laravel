@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Collection;
 use KodiCMS\Support\Traits\Settings;
-use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 use KodiCMS\Widgets\Manager\WidgetManager;
+use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 
 abstract class Decorator implements WidgetInterface, \ArrayAccess
 {

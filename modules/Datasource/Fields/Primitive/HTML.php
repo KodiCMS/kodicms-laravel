@@ -5,6 +5,7 @@ use KodiCMS\Datasource\Fields\Primitive;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 
 class HTML extends Primitive
 {
@@ -114,11 +115,12 @@ class HTML extends Primitive
 
 	/**
 	 * @param DocumentInterface $document
+	 * @param WidgetInterface $widget
 	 * @param mixed $value
 	 *
 	 * @return mixed
 	 */
-	public function onGetWidgetValue(DocumentInterface $document, $value)
+	public function onGetWidgetValue(DocumentInterface $document, WidgetInterface $widget, $value)
 	{
 		return [
 			'html' => $value,

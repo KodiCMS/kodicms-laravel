@@ -7,6 +7,7 @@ use KodiCMS\Datasource\Fields\FieldsCollection;
 use KodiCMS\Datasource\Observers\DocumentObserver;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeDateInterface;
 use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 use KodiCMS\CMS\Http\Controllers\System\TemplateController;
@@ -315,14 +316,15 @@ class Document extends Model implements DocumentInterface
 	 * Get a plain attribute (not a relationship).
 	 *
 	 * @param  string $key
+	 * @param  WidgetInterface $widget
 	 * @return mixed
 	 */
-	public function getWidgetValue($key)
+	public function getWidgetValue($key, WidgetInterface $widget)
 	{
 		$value = parent::getAttributeValue($key);
 		if (!is_null($field = $this->getSectionFields()->getByKey($key)))
 		{
-			$value = $field->onGetWidgetValue($this, $value);
+			$value = $field->onGetWidgetValue($this, $widget, $value);
 		}
 
 		return $value;
