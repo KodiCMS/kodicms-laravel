@@ -393,11 +393,26 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 		{
 			$table = $this->getSection()->getSectionTableName();
 
-			$uniqueRule = "unique:{$table},{$this->getDBKey()}";
-			if ($document->exists)
+			if (is_null($uniqueRule = $this->getSetting('unique_rule')))
 			{
-				$uniqueRule .= ',' . $document->getId() . ',' . $document->getKeyName();
+				$uniqueRule = "unique::table,:field,:id,:id_field";
 			}
+
+			$replace = [
+				':table' => $table,
+				':field' => $this->getDBKey(),
+				':id' => $document->exists ? $document->getId() : 'NULL',
+				':id_field' => $document->getKeyName()
+			];
+
+			foreach ($validator->getData() as $field => $value)
+			{
+				$replace['@' . $field] = $value;
+			}
+
+			$uniqueRule = strtr($uniqueRule, $replace);
+
+			$uniqueRule = preg_replace('/(\,\@[a-z_-]+)/', ',NULL', $uniqueRule);
 
 			$rules[] = $uniqueRule;
 		}
