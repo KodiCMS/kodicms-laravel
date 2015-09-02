@@ -685,6 +685,19 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	}
 
 	/**
+	 * @param WidgetInterface $widget
+	 *
+	 * @return string
+	 */
+	public function renderWidgetFieldTemplate(WidgetInterface $widget)
+	{
+		return view($this->getType()->getWidgetTemplate(), [
+			'widget' => $widget,
+			'field' => $this
+		])->render();
+	}
+
+	/**
 	 * @param DocumentInterface $document
 	 * @return array
 	 */

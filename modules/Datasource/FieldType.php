@@ -60,12 +60,21 @@ class FieldType implements FieldTypeInterface
 	protected $document_template = null;
 
 	/**
+	 * @var string
+	 */
+	protected $widget_template = null;
+
+	/**
 	 * @param string $type
 	 * @param array $settings
 	 */
 	public function __construct($type, array $settings)
 	{
-		foreach (array_only($settings, ['class', 'type', 'title', 'icon', 'category', 'edit_template', 'document_template']) as $key => $value)
+		foreach (array_only($settings, [
+			'class', 'type', 'title', 'icon',
+			'category', 'edit_template',
+			'document_template', 'widget_template'
+		]) as $key => $value)
 		{
 			$this->{$key} = $value;
 		}
@@ -145,6 +154,19 @@ class FieldType implements FieldTypeInterface
 		if (is_null($template = $this->document_template))
 		{
 			$template = 'datasource::document.field.' . $this->getType();
+		}
+
+		return $template;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getWidgetTemplate()
+	{
+		if (is_null($template = $this->widget_template))
+		{
+			$template = 'datasource::widgets.partials.field';
 		}
 
 		return $template;
