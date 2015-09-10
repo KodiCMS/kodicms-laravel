@@ -1,6 +1,5 @@
 <?php namespace KodiCMS\Users\database\seeds;
 
-use DB;
 use KodiCMS\Users\Model\User;
 use Illuminate\Database\Seeder;
 use KodiCMS\Users\Model\UserRole;
@@ -15,8 +14,7 @@ class UsersTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		DB::table('users')->truncate();
-		DB::table('roles_users')->truncate();
+		User::truncate();
 
 		$roles = UserRole::get()->lists('id')->all();
 		$maxRolesToAtach = count($roles) > 4 ? 4 : count($roles);

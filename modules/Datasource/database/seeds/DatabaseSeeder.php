@@ -14,6 +14,6 @@ class DatabaseSeeder extends Seeder
 	{
 		Model::unguard();
 
-		$this->call('\KodiCMS\Datasource\database\seeds\DatasourceTableSeeder');
+		$this->call(DatasourceTableSeeder::class);
 	}
 }

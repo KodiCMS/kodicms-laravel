@@ -1,6 +1,5 @@
 <?php namespace KodiCMS\Users\database\seeds;
 
-use DB;
 use Illuminate\Database\Seeder;
 use KodiCMS\Users\Model\UserRole;
 
@@ -13,7 +12,7 @@ class RolesTableSeeder extends Seeder {
 	 */
 	public function run()
 	{
-		DB::table('roles')->truncate();
+		UserRole::truncate();
 
 		$roles = [
 			[

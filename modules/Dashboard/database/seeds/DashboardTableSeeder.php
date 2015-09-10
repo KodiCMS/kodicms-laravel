@@ -1,8 +1,9 @@
 <?php namespace KodiCMS\Dashboard\database\seeds;
 
+use DB;
+use KodiCMS\Users\Model\User;
 use Illuminate\Database\Seeder;
 use KodiCMS\Dashboard\Dashboard;
-use KodiCMS\Users\Model\User;
 
 class DashboardTableSeeder extends Seeder
 {
@@ -13,9 +14,11 @@ class DashboardTableSeeder extends Seeder
 	 */
 	public function run()
 	{
+		DB::table('user_meta')->truncate();
+
 		foreach (User::all() as $user)
 		{
-			\DB::table('user_meta')
+			DB::table('user_meta')
 				->insert([
 					[
 						'user_id' => $user->id,
