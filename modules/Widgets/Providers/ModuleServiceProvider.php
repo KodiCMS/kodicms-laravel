@@ -149,6 +149,11 @@ class ModuleServiceProvider extends ServiceProvider
 			return "<?php echo (new \\KodiCMS\\Widgets\\Engine\\WidgetRenderHTML{$expression})->render(); ?>";
 		});
 
+		Blade::directive('snippet', function($expression)
+		{
+			return "<?php echo (new \\KodiCMS\\Widgets\\Model\\SnippetCollection)->findAndRender{$expression}; ?>";
+		});
+
 		Widget::observe(new WidgetObserver);
 	}
 }
