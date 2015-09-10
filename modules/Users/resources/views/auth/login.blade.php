@@ -1,6 +1,6 @@
 <div class="frontend-header no-padding">
 	<a href="/" class="logo">
-		{!! HTML::image(resources_url() . '/images/logo-color.png') !!}
+		{!! HTML::image(resources_url('/images/logo-color.png')) !!}
 	</a>
 </div>
 

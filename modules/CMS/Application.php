@@ -50,17 +50,17 @@ class Application extends \Illuminate\Foundation\Application
 	/**
 	 * @return string
 	 */
-	public function resourcesURL()
+	public function resourcesURL($path = null)
 	{
-		return url('cms');
+		return url('cms' . $path);
 	}
 
 	/**
 	 * @return string
 	 */
-	public function backendResourcesURL()
+	public function backendResourcesURL($path = null)
 	{
-		return url(backend_url() . DIRECTORY_SEPARATOR .'cms');
+		return url(backend_url('/cms' . $path));
 	}
 
 	/**

@@ -55,7 +55,7 @@
 		@foreach ($themes as $theme)
 		<div class="col-md-2 col-sm-3 col-xs-4">
 			<a href="#" class="theme @if ($theme == $currentTheme) active @endif thumbnail" data-theme="{{ $theme }}">
-				{!! HTML::image(resources_url() . '/images/themes/' . $theme . '.jpg') !!}
+				{!! HTML::image(resources_url("/images/themes/$theme.jpg")) !!}
 			</a>
 		</div>
 		@endforeach

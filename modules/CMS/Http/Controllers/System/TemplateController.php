@@ -141,7 +141,7 @@ class TemplateController extends Controller
 	{
 		if (ModulesFileSystem::findFile('resources/js', $filename, 'js'))
 		{
-			Assets::js('include.' . $filename, backend_resources_url() . '/js/' . $filename . '.js', 'core', false);
+			Assets::js('include.' . $filename, backend_resources_url("/js/$filename.js"), 'core', false);
 		}
 	}
 

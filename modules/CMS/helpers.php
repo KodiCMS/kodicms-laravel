@@ -6,6 +6,7 @@ if (!function_exists('backend_url'))
 {
 	/**
 	 * @param null|string $path
+	 *
 	 * @return string
 	 */
 	function backend_url($path = null)
@@ -17,21 +18,23 @@ if (!function_exists('backend_url'))
 /**
  * @return string
  */
-function resources_url()
+function resources_url($path = null)
 {
-	return App::resourcesURL();
+	return App::resourcesURL(!is_null($path) ? '/' . ltrim($path, '/') : $path);
 }
 
 /**
  * @return string
  */
-function backend_resources_url()
+function backend_resources_url($path = null)
 {
-	return App::backendResourcesURL();
+
+	return App::backendResourcesURL(!is_null($path) ? '/' . ltrim($path, '/') : $path);
 }
 
 /**
  * @param string $path
+ *
  * @return string
  */
 function normalize_path($path)
@@ -58,6 +61,7 @@ function snippets_path()
 /**
  * @param array $arr1
  * @param array $arr2
+ *
  * @return array
  */
 function array_keys_exists_recursive(array $arr1, array $arr2)
@@ -89,6 +93,7 @@ function array_keys_exists_recursive(array $arr1, array $arr2)
 
 /**
  * @param $string
+ *
  * @return mixed
  */
 function __($string)
