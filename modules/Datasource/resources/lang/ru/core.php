@@ -47,7 +47,8 @@ return [
 		'section_id' => 'Раздел',
 		'related_section_id' => 'Связанный раздел',
 		'related' => 'Поля со связями относящиеся к текущему разделу',
-		'related_field_id' => 'Связанное поле'
+		'related_field_id' => 'Связанное поле',
+		'validation' => 'Правила валидации'
 	],
 	'messages' => [
 		'empty' => 'В разделе нет документов',

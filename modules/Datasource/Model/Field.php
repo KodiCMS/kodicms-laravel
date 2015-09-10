@@ -196,7 +196,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	 */
 	public function isConfigurable()
 	{
-		return $this->getSetting('is_configurable', false);
+		return $this->getSetting('is_configurable', true);
 	}
 
 	/**
@@ -407,7 +407,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 
 			foreach ($validator->getData() as $field => $value)
 			{
-				$replace['@' . $field] = $value;
+				$replace['@' . $field] = is_array($value) ? implode(',', $value) : $value;
 			}
 
 			$uniqueRule = strtr($uniqueRule, $replace);
@@ -415,6 +415,11 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 			$uniqueRule = preg_replace('/(\,\@[a-z_-]+)/', ',NULL', $uniqueRule);
 
 			$rules[] = $uniqueRule;
+		}
+
+		if (!is_null($customRules = $this->getSetting('validation_rules')))
+		{
+			$rules += explode('|', $customRules);
 		}
 
 		return $rules;

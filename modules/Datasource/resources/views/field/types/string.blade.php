@@ -16,3 +16,7 @@
 <hr />
 
 @include('datasource::field.partials.length', compact('field'))
+
+<hr />
+
+@include('datasource::field.partials.validation', compact('field'))
