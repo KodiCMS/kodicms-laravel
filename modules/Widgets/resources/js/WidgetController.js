@@ -96,7 +96,7 @@ CMS.controllers.add('page.get.edit', function() {
 CMS.controllers.add('widget.get.location', function() {
 	reload_blocks();
 
-	$('body').on('post:backend:api.layout.rebuild', function(e, response) {
+	$('body').on('get:api.layout.rebuild', function(e, response) {
 		reload_blocks();
 	});
 
