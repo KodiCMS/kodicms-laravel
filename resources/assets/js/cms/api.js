@@ -43,8 +43,7 @@ var Api = {
 				if(response.message)
 					CMS.messages.show(response.message, 'success', 'fa fa-exclamation-triangle');
 
-				var $event = method + url.replace(SITE_URL, ":").replace(/\//g, ':');
-				window.top.$('body').trigger($event.toLowerCase(), [this._response]);
+				window.top.$('body').trigger(Api.getEventKey(method, url), [this._response]);
 
 				if(typeof(callback) == 'function') callback(this._response);
 			})
