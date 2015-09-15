@@ -37,7 +37,7 @@
 <hr class="no-margin-vr" />
 <div class="tab-content no-padding-vr">
 	<div class="tab-pane active" id="page-content-panel">
-		@event('view.page.create')
+		@event('view.page.create', [$page])
 	</div>
 
 	<div class="tab-pane fade" id="page-meta-panel">

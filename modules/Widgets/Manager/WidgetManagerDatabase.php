@@ -129,17 +129,20 @@ class WidgetManagerDatabase extends WidgetManager
 	 */
 	public static function copyWidgets($formPageId, $toPageId)
 	{
+		intval($toPageId);
+		intval($formPageId);
+
 		$subSelect = DB::table('page_widgets as pw1')
-			->join('page_widgets as pw2', function($join) use($toPageId) {
-				return $join
-					->where('pw2.page_id', (int) $toPageId)
-					->on('pw1.widget_id', '=', 'pw2.widget_id');
+			->selectRaw("'$toPageId' as page_id, pw1.widget_id, pw1.block, pw1.position, pw1.set_crumbs")
+			->leftJoin('page_widgets as pw2', function($join) {
+				return $join->on('pw1.widget_id', '=', 'pw2.widget_id');
 			})
-			->where('pw2.page_id', (int) $formPageId)
-			->whereNull('pw2.page_id')
+			->where('pw1.page_id', $formPageId)
 			->toSQL();
 
-		DB::statement("INSERT into page_widgets ('page_id', 'widget_id', 'block', 'position') {$subSelect}");
+		DB::statement("INSERT into page_widgets (page_id, widget_id, block, position, set_crumbs) $subSelect", [
+			$formPageId
+		]);
 	}
 
 	/**
@@ -198,5 +201,16 @@ class WidgetManagerDatabase extends WidgetManager
 				'set_crumbs' => (bool) array_get($location, 'set_crumbs'),
 			]);
 		}
+	}
+
+	/**
+	 * @param int $pageId
+	 *
+	 * @return int
+	 */
+	public static function deleteWidgetsFromPage($pageId)
+	{
+		return DB::table('page_widgets')->where('page_id', (int)$pageId)->delete();
+
 	}
 }

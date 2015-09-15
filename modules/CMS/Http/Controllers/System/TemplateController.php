@@ -6,6 +6,7 @@ use View;
 use Assets;
 use ModulesFileSystem;
 use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Contracts\Support\Arrayable;
 
 class TemplateController extends Controller
 {
@@ -109,9 +110,14 @@ class TemplateController extends Controller
 		$scrpit = '';
 		foreach ($this->templateScripts as $var => $value)
 		{
+
 			if ($value instanceof Jsonable)
 			{
 				$value = $value->toJson();
+			}
+			else if ($value instanceof Arrayable)
+			{
+				$value = json_encode($value->toArray());
 			}
 			else
 			{

@@ -17,6 +17,9 @@ class PageWysiwygController extends TemplateController {
 
 	public function getPageWysiwyg($id)
 	{
+		$frontendPage = $this->getPage($id);
+		$this->templateScripts['PAGE'] = $frontendPage;
+
 		Meta::addMeta([
 			'name' => 'page-id',
 			'data-id' => $id,
@@ -25,8 +28,6 @@ class PageWysiwygController extends TemplateController {
 		])
 			->addPackage(['page-wysiwyg'], true)
 			->addToGroup('site-url', '<script type="text/javascript">' . $this->getTemplateScriptsAsString() . '</script>');
-
-		$frontendPage = $this->getPage($id);
 
 		app()->singleton('frontpage', function () use ($frontendPage)
 		{

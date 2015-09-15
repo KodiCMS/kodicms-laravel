@@ -4,7 +4,6 @@ CMS.messages = {
 
 CMS.ui.add('app', function () {
 	var block;
-	var pageId = $('meta[name="page-id"]').data('id');
 	var deletedContainer = $('.page-block-placeholder[data-name="-1"]');
 
 	var save = function (callback) {
@@ -45,7 +44,7 @@ CMS.ui.add('app', function () {
 		var widget_id = $(this).data('id');
 		Api.put('/api.widget', {
 			widget_id: widget_id,
-			page_id: pageId,
+			page_id: PAGE.id,
 			block: block
 		}, function (response) {
 			Popup.close();

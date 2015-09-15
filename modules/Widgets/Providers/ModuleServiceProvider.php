@@ -25,14 +25,19 @@ class ModuleServiceProvider extends ServiceProvider
 
 	public function boot()
 	{
-		Page::creating(function($page)
+		Page::created(function($page)
 		{
-			$postData = Request::input('widgets', []);
+			$pageId = array_get(Request::get('widgets'), 'from_page_id');
 
-			if (!empty($postData['from_page_id']))
+			if (!empty($pageId))
 			{
-				WidgetManagerDatabase::copyWidgets($postData['from_page_id'], $page->id);
+				WidgetManagerDatabase::copyWidgets($pageId, $page->id);
 			}
+		});
+
+		Page::deleted(function($page)
+		{
+			WidgetManagerDatabase::deleteWidgetsFromPage($page->id);
 		});
 
 		Page::saving(function($page)
@@ -65,19 +70,13 @@ class ModuleServiceProvider extends ServiceProvider
 
 		}, 9000);
 
-//		Event::listen('view.page.edit', function($page)
-//		{
-//			if (acl_check('widgets.index'))
-//			{
-//				$collection = new PageWidgetCollection($page->id);
-//
-//				echo view('widgets::widgets.page.list')
-//					->with('page', $page)
-//					->with('pages', PageSitemap::get(true)->exclude([$page->id])->flatten())
-//					->with('widgetsCollection', $collection)
-//					->render();
-//			}
-//		});
+		Event::listen('view.page.create', function($page)
+		{
+				echo view('widgets::widgets.page.create')
+					->with('page', $page)
+					->with('pages', $page->getSitemap())
+					->render();
+		});
 
 		Event::listen('view.page.edit', function($page)
 		{

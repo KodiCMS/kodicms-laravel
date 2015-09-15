@@ -70,29 +70,6 @@ CMS.controllers.add('widget.get.edit', function() {
 	};
 });
 
-CMS.controllers.add('page.get.edit', function() {
-	var layout_file = PAGE.layout;
-
-	reload_blocks(layout_file);
-	$('body').on('get:api.layout.rebuild', function(e, response) {
-		reload_blocks(layout_file);
-	});
-
-	$('body').on('click', '.popup-widget-item', function() {
-		var widget_id = $(this).data('id');
-
-		Api.put('/api.widget', {
-			widget_id: widget_id,
-			page_id: PAGE.id
-		}, function(response) {
-			window.location = '#widgets';
-			Popup.close();
-			$('#widget-list tbody').append(response.content);
-			reload_blocks(layout_file);
-		});
-	});
-});
-
 CMS.controllers.add('widget.get.location', function() {
 	reload_blocks();
 

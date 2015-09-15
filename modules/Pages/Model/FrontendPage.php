@@ -8,11 +8,13 @@ use KodiCMS\Users\Model\User;
 use KodiCMS\Support\Helpers\Mime;
 use KodiCMS\Support\Helpers\Text;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Contracts\Support\Arrayable;
 use KodiCMS\Pages\Contracts\BehaviorPageInterface;
 use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 
-class FrontendPage implements BehaviorPageInterface
+class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable
 {
 	const STATUS_DRAFT     = 1;
 	const STATUS_PUBLISHED = 100;
@@ -983,5 +985,37 @@ class FrontendPage implements BehaviorPageInterface
 	public function __toString()
 	{
 		return (string)$this->getId();
+	}
+
+	/**
+	 * @return array
+	 */
+	public function toArray()
+	{
+		return [
+			'id' => $this->getId(),
+			'parent_id' => $this->getParentId(),
+			'status' => $this->status,
+			'slug' => $this->getSlug(),
+			'title' => $this->getTitle(),
+			'breadcrumb' => $this->getBreadcrumb(),
+			'meta_title' => $this->getMetaTitle(),
+			'meta_keywords' => $this->getMetaKeywords(),
+			'meta_description' => $this->getMetaDescription(),
+			'robots' => $this->getMetaRobots(),
+			'layout_file' => $this->getLayout(),
+			'position' => $this->position
+		];
+	}
+
+	/**
+	 * Convert the object to its JSON representation.
+	 *
+	 * @param  int  $options
+	 * @return string
+	 */
+	public function toJson($options = 0)
+	{
+		return json_encode($this->toArray(), $options);
 	}
 }
