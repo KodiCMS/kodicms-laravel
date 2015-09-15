@@ -39,9 +39,11 @@ class PageController extends BackendController
 		$this->includeModuleMediaFile('BehaviorController');
 
 		$page = $repository->findOrFail($id);
-		$this->setTitle(trans('pages::core.title.pages.edit', [
-			'title' => $page->title
-		]));
+
+		foreach ($page->getBreadcrumbsChain() as $page)
+		{
+			$this->breadcrumbs->add($page->title, route('backend.page.edit', $page->id));
+		}
 
 		$this->templateScripts['PAGE'] = $page;
 
@@ -76,7 +78,8 @@ class PageController extends BackendController
 	{
 		$page = $repository->instance([
 			'parent_id' => $parentId,
-			'published_at' => new Carbon
+			'published_at' => new Carbon,
+			'status' => config('pages.default_status')
 		]);
 
 		$this->setTitle(trans('pages::core.title.pages.create'));

@@ -461,6 +461,21 @@ class Page extends Model implements BehaviorPageInterface
 	}
 
 	/**
+	 * @return array
+	 */
+	public function getBreadcrumbsChain()
+	{
+		$pages = [$this->id => $this];
+
+		if (!is_null($parent = $this->parent))
+		{
+			$pages = $parent->getPagesChain() + $pages;
+		}
+
+		return $pages;
+	}
+
+	/**
 	 * @param string $filed
 	 * @return User|null
 	 */
