@@ -35,15 +35,18 @@ class LayoutController extends AbstractFileController
 	{
 		$layouts = new LayoutCollection;
 
+		$response = [];
 		$blocks = [];
 
 		foreach ($layouts as $layout)
 		{
-			$blocks[$layout->getKey()] = view($this->wrapNamespace('layout.partials.blocks'), ['blocks' => $layout->findBlocks()])->render();
+			$blocks[$layout->getKey()] = $layout->findBlocks();
+			$response[$layout->getKey()] = view($this->wrapNamespace('layout.partials.blocks'), ['blocks' => $layout->findBlocks()])->render();
 		}
 
 		$this->setMessage(trans($this->wrapNamespace('layout.messages.rebuild')));
-		$this->setContent($blocks);
+		$this->setContent($response);
+		$this->blocks = $blocks;
 	}
 
 	public function getBlocks()
