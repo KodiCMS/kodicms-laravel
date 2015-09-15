@@ -209,8 +209,8 @@ function reload_blocks($layout) {
 
 function load_snippets(intervalID) {
 	clearInterval(intervalID);
-	$('#snippet-select').on('select2-opening', function(e, a) {
-		var response = Api.get('/api.snippet.list', {}, false, false);
+	$('#snippet-select').on('select2:opening', function(e, a) {
+		var response = Api.get('/api.snippet.list', {}, false, false).responseJSON;
 		var self = $(this);
 		if(response.content) {
 			$('option', this).remove();
@@ -219,7 +219,7 @@ function load_snippets(intervalID) {
 				self.append($('<option>', {value: key, text: response.content[key]}));
 		}
 
-		self.off();
+		self.off('select2:opening');
 		var intervalID = setInterval(function() {
 			load_snippets(intervalID);
 		}, 10000);
