@@ -47,18 +47,30 @@ class Collection implements \Countable, \Iterator
 	}
 
 	/**
-	 * @param string $name
+	 * @param string|static $name
 	 * @param bool $url
 	 * @param bool|null $isActive
 	 * @param integer|null $position
 	 * @param array $data
 	 * @return $this
 	 */
-	public function add($name, $url = FALSE, $isActive = NULL, $position = NULL, array $data = [])
+	public function add($name, $url = false, $isActive = null, $position = null, array $data = [])
 	{
-		$item = new Item($name, $url, $isActive, $data);
-		$position = $this->getNextPosition($position);
-		$this->items[$position] = $item;
+		if ($name instanceof static)
+		{
+			foreach ($name as $item)
+			{
+				$this->addItem($item);
+			}
+		}
+		else if ($name instanceof Item)
+		{
+			$this->addItem($name, $position);
+		}
+		else
+		{
+			$this->addItem(new Item($name, $url, $isActive, $data), $position);
+		}
 
 		return $this;
 	}
@@ -249,5 +261,15 @@ class Collection implements \Countable, \Iterator
 	public function __toString()
 	{
 		return (string) $this->render();
+	}
+
+	/**
+	 * @param Item $item
+	 * @param null|int $position
+	 */
+	protected function addItem(Item $item, $position = null)
+	{
+		$position = $this->getNextPosition($position);
+		$this->items[$position] = $item;
 	}
 }
