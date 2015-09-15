@@ -469,7 +469,7 @@ class Page extends Model implements BehaviorPageInterface
 
 		if (!is_null($parent = $this->parent))
 		{
-			$pages = $parent->getPagesChain() + $pages;
+			$pages = $parent->getBreadcrumbsChain() + $pages;
 		}
 
 		return $pages;
