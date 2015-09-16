@@ -6,6 +6,4 @@ interface WidgetHandler extends Widget {
 	 * @return string
 	 */
 	public function getHandlerLink();
-
-	public function handle();
 }

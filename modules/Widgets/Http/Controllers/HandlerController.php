@@ -1,5 +1,7 @@
 <?php namespace KodiCMS\Widgets\Http\Controllers;
 
+use KodiCMS\CMS\Exceptions\ValidationException;
+use KodiCMS\Widgets\Exceptions\WidgetException;
 use KodiCMS\Widgets\Repository\WidgetRepository;
 use KodiCMS\CMS\Http\Controllers\System\Controller;
 
@@ -13,9 +15,17 @@ class HandlerController extends Controller
 
 		if (!$widget->isHandler())
 		{
-
+			throw new WidgetException('Widget handler not found');
 		}
 
-		$widget->handle();
+
+		try
+		{
+			return app()->call([$widget->toWidget(), 'handle']);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->throwValidationException($this->request, $e->getValidator());
+		}
 	}
 }
