@@ -41,7 +41,7 @@ abstract class Relation extends Field implements FieldTypeRelationInterface
 	 */
 	public function getRelatedDBKey()
 	{
-		return $this->getDBKey() . '_related';
+		return $this->getDBKey() . '_related_' . $this->getId();
 	}
 
 	/**
