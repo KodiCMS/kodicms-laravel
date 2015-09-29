@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\Users\Providers;
 
 use Event;
-use KodiCMS\Users\ACL;
 use KodiCMS\Users\Model\User;
 use KodiCMS\Users\Model\UserRole;
 use KodiCMS\Users\Observers\RoleObserver;
@@ -31,11 +30,6 @@ class ModuleServiceProvider extends ServiceProvider {
 
 	public function register()
 	{
-		$this->app->singleton('acl', function ()
-		{
-			return new ACL(config('permissions', []));
-		});
-
 		$this->registerReflinksBroker();
 		$this->registerTokenRepository();
 		$this->registerConsoleCommand('cms.reflinks.clean', DeleteExpiredReflinksCommand::class);

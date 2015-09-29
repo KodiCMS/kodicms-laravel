@@ -161,7 +161,7 @@ return [
 		 * App Service Providers must be here...
 		 */
 		App\Providers\AppServiceProvider::class,
-		App\Providers\AuthServiceProvider::class,
+		KodiCMS\Users\Providers\AuthServiceProvider::class,
 	],
 
 	/*
