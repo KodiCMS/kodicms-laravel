@@ -108,7 +108,7 @@ Note that we are able to inject any dependencies we need into the command's cons
 
 When writing console commands, it is common to gather input from the user through arguments or options. Laravel makes it very convenient to define the input you expect from the user using the `signature` property on your commands. The `signature` property allows you to define the name, arguments, and options for the command in a single, expressive, route-like syntax.
 
-All user supplied arguments and options are wrapped in curly braces, for example:
+All user supplied arguments and options are wrapped in curly braces. In the following example, the command defines one **required** argument: `user`:
 
     /**
      * The name and signature of the console command.
@@ -117,7 +117,7 @@ All user supplied arguments and options are wrapped in curly braces, for example
      */
     protected $signature = 'email:send {user}';
 
-In this example, the command defines one **required** argument: `user`. You may also make arguments optional and define default values for optional arguments:
+You may also make arguments optional and define default values for optional arguments:
 
     // Optional argument...
     email:send {user?}
@@ -125,7 +125,7 @@ In this example, the command defines one **required** argument: `user`. You may 
     // Optional argument with default value...
     email:send {user=foo}
 
-Options, like arguments, also are a form of user input. However, they are prefixed by two hyphens (`--`) when they are specified on the command line. We can define options in the signature like so:
+Options, like arguments, are also a form of user input. However, they are prefixed by two hyphens (`--`) when they are specified on the command line. We can define options in the signature like so:
 
     /**
      * The name and signature of the console command.
@@ -187,11 +187,11 @@ To retrieve the value of an argument, use the `argument` method:
         //
     }
 
-If you need to retrieve all of the arguments as an `array`, call the `argument` with no parameters:
+If you need to retrieve all of the arguments as an `array`, call `argument` with no parameters:
 
     $arguments = $this->argument();
 
-Options may be retrieved just as easily as arguments using the `option` method. Like the `argument` method, you may call `option` without any arguments in order to retrieve all of the options as an `array`:
+Options may be retrieved just as easily as arguments using the `option` method. Like the `argument` method, you may call `option` without any parameters in order to retrieve all of the options as an `array`:
 
     // Retrieve a specific option...
     $queueName = $this->option('queue');
@@ -216,7 +216,7 @@ In addition to displaying output, you may also ask the user to provide input dur
         $name = $this->ask('What is your name?');
     }
 
-The `secret` method is similar to `ask`, but the user's input will not be visible to them as they type in the console. This method is useful for asking for sensitive information such as a password:
+The `secret` method is similar to `ask`, but the user's input will not be visible to them as they type in the console. This method is useful when asking for sensitive information such as a password:
 
     $password = $this->secret('What is the password?');
 
@@ -275,15 +275,15 @@ For long running tasks, it could be helpful to show a progress indicator. Using 
 
     $users = App\User::all();
 
-    $this->output->progressStart(count($users));
+    $bar = $this->output->createProgressBar(count($users));
 
     foreach ($users as $user) {
         $this->performTask($user);
 
-        $this->output->progressAdvance();
+        $bar->advance();
     }
 
-    $this->output->progressFinish();
+    $bar->finish();
 
 For more advanced options, check out the [Symfony Progress Bar component documentation](http://symfony.com/doc/2.7/components/console/helpers/progressbar.html).
 

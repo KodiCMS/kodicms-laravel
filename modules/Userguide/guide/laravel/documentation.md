@@ -1,5 +1,8 @@
 - Prologue
+    - [Release Notes](/docs/{{version}}/releases)
+    - [Upgrade Guide](/docs/{{version}}/upgrade)
     - [Contribution Guide](/docs/{{version}}/contributions)
+    - [API Documentation](/api/{{version}})
 - Setup
     - [Installation](/docs/{{version}}/installation)
     - [Homestead](/docs/{{version}}/homestead)
@@ -20,6 +23,7 @@
     - [Facades](/docs/{{version}}/facades)
 - Services
     - [Authentication](/docs/{{version}}/authentication)
+    - [Authorization](/docs/{{version}}/authorization)
     - [Artisan Console](/docs/{{version}}/artisan)
     - [Billing](/docs/{{version}}/billing)
     - [Cache](/docs/{{version}}/cache)

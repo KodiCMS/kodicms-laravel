@@ -41,7 +41,7 @@ Discussion regarding bugs, new features, and implementation of existing features
 
 **Major** new features should always be sent to the `master` branch, which contains the upcoming Laravel release.
 
-If you are unsure if your feature qualifies as a major or minor, please ask Taylor Otwell in the `#laravel-dev` IRC channel (Freenode).
+If you are unsure if your feature qualifies as a major or minor, please ask Taylor Otwell in the `#internals` channel of the [LaraChat](http://larachat.co) Slack team.
 
 <a name="security-vulnerabilities"></a>
 ## Security Vulnerabilities
@@ -52,3 +52,23 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## Coding Style
 
 Laravel follows the [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md) coding standard and the [PSR-4](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) autoloading standard.
+
+### DocBlocks
+
+`@param` tags should **not be aligned** and arguments should be separated by **2 spaces**. 
+
+Here's an example block:
+
+    /**
+     * Register a binding with the container.
+     *
+     * @param  string|array  $abstract
+     * @param  \Closure|string|null  $concrete
+     * @param  bool  $shared
+     * @return void
+     */
+    public function bind($abstract, $concrete = null, $shared = false)
+    {
+        // …
+    }
+

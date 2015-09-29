@@ -24,7 +24,6 @@ As an example, let's modify the `DatabaseSeeder` class which is included with a 
 
     <?php
 
-    use DB;
     use Illuminate\Database\Seeder;
     use Illuminate\Database\Eloquent\Model;
 
@@ -59,8 +58,8 @@ For example, let's create 50 users and attach a relationship to each user:
      */
     public function run()
     {
-        factory('App\User', 50)->create()->each(function($u) {
-            $u->posts()->save(factory('App\Post')->make());
+        factory(App\User::class, 50)->create()->each(function($u) {
+            $u->posts()->save(factory(App\Post::class)->make());
         });
     }
 

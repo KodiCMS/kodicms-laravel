@@ -11,6 +11,7 @@
     - [Connecting To Databases](#connecting-to-databases)
     - [Adding Additional Sites](#adding-additional-sites)
     - [Ports](#ports)
+    - [Bash Aliases](#bash-aliases)
 - [Blackfire Profiler](#blackfire-profiler)
 
 <a name="introduction"></a>
@@ -48,7 +49,7 @@ Homestead is currently built and tested using Vagrant 1.7.
 <a name="first-steps"></a>
 ### First Steps
 
-Before launching your Homestead environment, you must install [VirtualBox](https://www.virtualbox.org/wiki/Downloads) or [VMWare](http://www.vmware.com) as well as [Vagrant](http://www.vagrantup.com/downloads.html). All of these software packages provide easy-to-use visual installers for all popular operating systems.
+Before launching your Homestead environment, you must install [VirtualBox 5.x](https://www.virtualbox.org/wiki/Downloads) or [VMWare](http://www.vmware.com) as well as [Vagrant](http://www.vagrantup.com/downloads.html). All of these software packages provide easy-to-use visual installers for all popular operating systems.
 
 To use the VMware provider, you will need to purchase both VMware Fusion / Workstation and the [VMware Vagrant plug-in](http://www.vagrantup.com/vmware). VMware provides much faster shared folder performance out of the box.
 
@@ -147,7 +148,7 @@ Instead of installing Homestead globally and sharing the same Homestead box acro
 
 To install Homestead directly into your project, require it using Composer:
 
-    composer require laravel/homestead
+    composer require laravel/homestead --dev
 
 Once Homestead has been installed, use the `make` command to generate the `Vagrantfile` and `Homestead.yaml` file in your project root. The `make` command will automatically configure the `sites` and `folders` directives in the `Homestead.yaml` file.
 
@@ -187,8 +188,6 @@ To connect to your MySQL or Postgres database from your host machine via Navicat
 
 Once your Homestead environment is provisioned and running, you may want to add additional Nginx sites for your Laravel applications. You can run as many Laravel installations as you wish on a single Homestead environment. To add an additional site, simply add the site to your `Homestead.yaml` file and then run the `vagrant provision` terminal command from your Homestead directory.
 
-> **Note:** This process is destructive. When running the `provision` command, your existing databases will be destroyed and recreated.
-
 <a name="ports"></a>
 ### Ports
 
@@ -210,6 +209,11 @@ If you wish, you may forward additional ports to the Vagrant box, as well as spe
         - send: 7777
           to: 777
           protocol: udp
+
+<a name="bash-aliases"></a>
+### Bash Aliases
+
+To add additional Bash aliases to your Homestead box, edit the `aliases` file in your Homestead directory. These aliases will automatically be defined on the Homestead box when it starts.
 
 <a name="blackfire-profiler"></a>
 ## Blackfire Profiler
