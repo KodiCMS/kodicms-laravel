@@ -2,12 +2,21 @@
 
 return [
 	'public' => [
-		'driver' => \KodiCMS\Filemanager\elFinder\Connector::FILE_SYSTEM,
-		'path' => public_path('assets'), // TODO: поправить пути
-		'URL' => url('public/assets'),
-		'alias' => trans('filemanager::core.public'),
-		'uploadMaxSize' => '10M',
+		'driver' => \KodiCMS\Filemanager\elFinder\VolumeLocalFileSystem::class,
+		'path' => public_path('assets'),
+		'URL' => url('assets'),
+		'alias' => 'public\assets',
+		'uploadMaxSize' => '32M',
 		'mimeDetect' => 'internal',
 		'imgLib' => 'gd',
+		'attributes' => [
+			[
+				'pattern' => '/\.(tmb|quarantine|gitignore)/',
+				'read' => false,
+				'write' => false,
+				'locked' => true,
+				'hidden' => true
+			]
+		]
 	]
 ];

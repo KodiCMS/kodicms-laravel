@@ -1,3 +1,5 @@
+@event('view.page.edit', [$page])
+
 {!! Form::model($page, [
 'route' => ['backend.page.edit.post', $page],
 'class' => 'panel form-horizontal'
@@ -27,6 +29,8 @@
 			</a>
 		</li>
 		@endif
+
+		@yield('page-tab')
 	</ul>
 </div>
 
@@ -35,59 +39,25 @@
 	{!! UI::icon('exclamation-triangle fa-fw') !!} {{ trans('pages::core.messages.layout_not_set') }}
 </div>
 @endif
-<div class="panel-heading">
 
-	<div class="form-group form-group-lg">
-		<label class="control-label col-md-2" for="title">@lang('pages::core.field.title')</label>
-		<div class="col-md-10">
-			{!! Form::text('title', NULL, [
-				'class' => 'form-control slug-generator', 'id' => 'title'
-			]) !!}
-		</div>
-	</div>
+<div class="panel-heading">
+	{!! $page->renderField('title') !!}
+
 	@if ($page->id > 1)
 	<hr class="panel-wide" />
-	<div class="form-group form-group-sm">
-		<label class="control-label col-md-2" for="slug">
-			@lang('pages::core.field.slug')
-		</label>
-		<div class="col-md-10">
-			{!! Form::text('slug', NULL, [
-				'class' => 'form-control slugify', 'id' => 'slug'
-			]) !!}
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-md-offset-2 col-md-10">
-			<div class="checkbox-inline">
-				{!! Form::checkbox('is_redirect', 1, NULL, [
-					'id' => 'is_redirect'
-				]) !!}
 
-				<label for="is_redirect">
-					@lang('pages::core.field.is_redirect')
-				</label>
-			</div>
-		</div>
-	</div>
+	{!! $page->renderField('slug') !!}
 
-	<div class="form-group" id="redirect-to-container">
-		<label class="control-label col-md-2" for="redirect_url">
-			@lang('pages::core.field.redirect_url')
-		</label>
-		<div class="col-md-10">
-			{!! Form::text('redirect_url', NULL, [
-				'class' => 'form-control', 'id' => 'redirect_url'
-			]) !!}
-		</div>
+	<div class="well well-sm no-margin-b" id="redirect-container">
+		{!! $page->renderField('is_redirect') !!}
+		{!! $page->renderField('redirect_url') !!}
 	</div>
 	@endif
 </div>
 <hr class="no-margin-vr" />
 <div class="tab-content no-padding-vr">
 	<div class="tab-pane active" id="page-content-panel">
-		@event('view.page.edit', [$page])
-
+		@yield('page-content')
 		<div class="panel-body">
 			{!! $page->getPublicLink() !!}
 			<div class="text-right">
@@ -106,7 +76,6 @@
 				@endif
 			</div>
 		</div>
-
 	</div>
 
 	<div class="tab-pane fade" id="page-meta-panel">
@@ -115,9 +84,7 @@
 
 	<div class="tab-pane fade" id="page-options-panel">
 		@include('pages::pages.partials.settings', [
-			'page' => $page,
-			'pagesMap' => $pagesMap,
-			'behaviorList' => $behaviorList
+			'page' => $page
 		])
 	</div>
 
@@ -126,6 +93,8 @@
 		@include('pages::pages.partials.behavior', ['behavior' => $behavior])
 	</div>
 	@endif
+
+	@yield('page-tab-content')
 </div>
 
 <div class="form-actions panel-footer">

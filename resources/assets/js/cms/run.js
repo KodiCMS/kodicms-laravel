@@ -10,24 +10,21 @@ $(function() {
 			lng: LOCALE,
 			fallbackLng: 'ru',
 			useLocalStorage: true,
+			interpolationPrefix: ':',
+			interpolationSuffix: '',
 			localStorageExpirationTime: 86400000, // in ms, default 1 week
-			resGetPath: '/cms/js/locale/__lng__.json'
+			resGetPath: '/cms/js/locale/:lng.json'
 		}, runApplication);
 	} catch (err) {
 		runApplication();
 	}
 
-	function runApplication()
-	{
+	function runApplication() {
 		CMS.ui.init();
 		KodiCMS.start(null, CMS.settings);
 
 		CMS.controllers.call();
-
-		setTimeout(function() {
-			CMS.notifications.init();
-		}, 1500);
-
 		CMS.messages.init();
+		CMS.Notifications.init();
 	}
 });

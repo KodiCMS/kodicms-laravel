@@ -5,14 +5,16 @@ use Cache;
 use Request;
 use Carbon\Carbon;
 use KodiCMS\Users\Model\User;
-use KodiCMS\Support\Helpers\File;
+use KodiCMS\Support\Helpers\Mime;
 use KodiCMS\Support\Helpers\Text;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Contracts\Support\Arrayable;
 use KodiCMS\Pages\Contracts\BehaviorPageInterface;
 use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 
-class FrontendPage implements BehaviorPageInterface
+class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable
 {
 	const STATUS_DRAFT     = 1;
 	const STATUS_PUBLISHED = 100;
@@ -166,7 +168,7 @@ class FrontendPage implements BehaviorPageInterface
 			$slugs->where('published_at', '<=', DB::raw('NOW()'));
 		}
 
-		$slugs = $slugs->get()->lists('slug', 'id');
+		$slugs = $slugs->get()->lists('slug', 'id')->all();
 
 		$newSlugs = [];
 		foreach ($uriSlugs as $slug)
@@ -439,6 +441,9 @@ class FrontendPage implements BehaviorPageInterface
 		return $this->parseMeta('meta_title');
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getLayout()
 	{
 		if (empty($this->layout_file) AND $parent = $this->getParent())
@@ -521,7 +526,7 @@ class FrontendPage implements BehaviorPageInterface
 	 */
 	public function getBreadcrumbs($level = 0)
 	{
-		$crumbs = Breadcrumbs::factory();
+		$crumbs = new Breadcrumbs;
 
 		if (($parent = $this->getParent()) instanceof FrontendPage AND $this->getLevel() > $level)
 		{
@@ -654,12 +659,22 @@ class FrontendPage implements BehaviorPageInterface
 	}
 
 	/**
-	 * @return null|Behavior
+	 * @return null|string
 	 */
 	public function getBehavior()
 	{
 		return $this->behavior;
 	}
+
+	/**
+	 * @return Behavior
+	 */
+	public function getBehaviorObject()
+	{
+		return $this->behaviorObject;
+	}
+
+
 
 	/**
 	 * @return bool
@@ -674,7 +689,7 @@ class FrontendPage implements BehaviorPageInterface
 	 */
 	public function getMime()
 	{
-		$mime = File::mimeByExt(pathinfo($this->getUri(), PATHINFO_EXTENSION));
+		$mime = Mime::byFilename($this->getUri());
 
 		return $mime === false ? 'text/html' : $mime;
 	}
@@ -913,6 +928,7 @@ class FrontendPage implements BehaviorPageInterface
 	}
 
 	/**
+	 * @param bool $includeHidden
 	 * @return Builder
 	 */
 	public function getChildrenQuery($includeHidden = false)
@@ -969,5 +985,37 @@ class FrontendPage implements BehaviorPageInterface
 	public function __toString()
 	{
 		return (string)$this->getId();
+	}
+
+	/**
+	 * @return array
+	 */
+	public function toArray()
+	{
+		return [
+			'id' => $this->getId(),
+			'parent_id' => $this->getParentId(),
+			'status' => $this->status,
+			'slug' => $this->getSlug(),
+			'title' => $this->getTitle(),
+			'breadcrumb' => $this->getBreadcrumb(),
+			'meta_title' => $this->getMetaTitle(),
+			'meta_keywords' => $this->getMetaKeywords(),
+			'meta_description' => $this->getMetaDescription(),
+			'robots' => $this->getMetaRobots(),
+			'layout_file' => $this->getLayout(),
+			'position' => $this->position
+		];
+	}
+
+	/**
+	 * Convert the object to its JSON representation.
+	 *
+	 * @param  int  $options
+	 * @return string
+	 */
+	public function toJson($options = 0)
+	{
+		return json_encode($this->toArray(), $options);
 	}
 }

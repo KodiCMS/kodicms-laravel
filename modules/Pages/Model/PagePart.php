@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Pages\Model;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 class PagePart extends Model
@@ -38,7 +39,7 @@ class PagePart extends Model
 
 	public function page()
 	{
-		return $this->belongsTo('\KodiCMS\Pages\Model\Page', 'page_id');
+		return $this->belongsTo(Page::class, 'page_id');
 	}
 
 	/**
@@ -51,7 +52,9 @@ class PagePart extends Model
 	{
 		foreach ($positions as $pos => $id)
 		{
-			\DB::table($this->table)->where('id', $id)->update(['position' => (int)$pos]);
+			DB::table($this->table)
+				->where('id', $id)
+				->update(['position' => (int) $pos]);
 		}
 
 		return $this;

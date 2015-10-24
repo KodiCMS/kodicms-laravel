@@ -8,7 +8,8 @@ class WidgetManagerDatabase extends WidgetManager
 
 	/**
 	 * @param array $types
-	 * @return array
+	 *
+	 * @return \Illuminate\Support\Collection
 	 */
 	public static function getWidgetsByType(array $types = null)
 	{
@@ -22,23 +23,8 @@ class WidgetManagerDatabase extends WidgetManager
 		return static::buildWidgetCollection($widgets->get());
 	}
 
-	public static function getWidgetByTypeAndDsid(array $types = null, $dsId = null)
-	{
-		$widgets = static::getWidgetsByType($types);
-
-		if(is_null($dsId))
-		{
-			return $widgets;
-		}
-
-		return $widgets->filter(function($widget) use($dsId)
-		{
-			return $widget->ds_id == (int) $dsId;
-		});
-	}
-
 	/**
-	 * @return array
+	 * @return \Illuminate\Support\Collection
 	 */
 	public static function getAllWidgets()
 	{
@@ -49,7 +35,8 @@ class WidgetManagerDatabase extends WidgetManager
 
 	/**
 	 * @param int $pageId
-	 * @return array
+	 *
+	 * @return \Illuminate\Support\Collection
 	 */
 	public static function getWidgetsByPage($pageId)
 	{
@@ -64,6 +51,7 @@ class WidgetManagerDatabase extends WidgetManager
 
 	/**
 	 * @param int $pageId
+	 *
 	 * @return array
 	 */
 	public static function getPageWidgetBlocks($pageId)
@@ -83,7 +71,7 @@ class WidgetManagerDatabase extends WidgetManager
 
 	/**
 	 * @param $id
-	 * @return mixed
+	 * @return \KodiCMS\Widgets\Contracts\Widget
 	 */
 	public static function getWidgetById($id)
 	{
@@ -141,22 +129,23 @@ class WidgetManagerDatabase extends WidgetManager
 	 */
 	public static function copyWidgets($formPageId, $toPageId)
 	{
+		intval($toPageId);
+		intval($formPageId);
+
 		$subSelect = DB::table('page_widgets as pw1')
-			->join('page_widgets as pw2', function($join) use($toPageId) {
-				return $join
-					->where('pw2.page_id', (int) $toPageId)
-					->on('pw1.widget_id', '=', 'pw2.widget_id');
+			->selectRaw("'$toPageId' as page_id, pw1.widget_id, pw1.block, pw1.position, pw1.set_crumbs")
+			->leftJoin('page_widgets as pw2', function($join) {
+				return $join->on('pw1.widget_id', '=', 'pw2.widget_id');
 			})
-			->where('pw2.page_id', (int) $formPageId)
-			->whereNull('pw2.page_id')
+			->where('pw1.page_id', $formPageId)
 			->toSQL();
 
-		DB::statement("INSERT into page_widgets ('page_id', 'widget_id', 'block', 'position') {$subSelect}");
+		DB::statement("INSERT into page_widgets (page_id, widget_id, block, position, set_crumbs) $subSelect", [
+			$formPageId
+		]);
 	}
 
 	/**
-	 * // TODO: добавить установку хлебных крошек
-	 *
 	 * @param integer $widgetId
 	 * @param array $locations [(int) {pageId} => ['block' => (string) '...', 'position' => (int) '...', 'set_crumbs' => (bool) '...']]
 	 */
@@ -167,7 +156,7 @@ class WidgetManagerDatabase extends WidgetManager
 			->delete();
 
 		$insertData = [];
-		foreach($locations as $pageId => $options)
+		foreach ($locations as $pageId => $options)
 		{
 			if (is_null(array_get($options, 'block')) || $options['block'] == -1)
 			{
@@ -183,7 +172,7 @@ class WidgetManagerDatabase extends WidgetManager
 			];
 		}
 
-		if(count($insertData) > 0)
+		if (count($insertData) > 0)
 		{
 			DB::table('page_widgets')
 				->where('widget_id', (int) $widgetId)
@@ -212,5 +201,16 @@ class WidgetManagerDatabase extends WidgetManager
 				'set_crumbs' => (bool) array_get($location, 'set_crumbs'),
 			]);
 		}
+	}
+
+	/**
+	 * @param int $pageId
+	 *
+	 * @return int
+	 */
+	public static function deleteWidgetsFromPage($pageId)
+	{
+		return DB::table('page_widgets')->where('page_id', (int)$pageId)->delete();
+
 	}
 }

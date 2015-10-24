@@ -1,5 +1,5 @@
 <div class="page-block-placeholder {{ ($name == -1) ? 'page-block-placeholder-hidden' : ''}}" data-name="{{ $name }}">
-	<div class="page-block-placeholder-title pull-left">
+	<div class="page-block-placeholder-title">
 		@if ($name == '0')
 			@lang('widgets::core.label.hide')
 		@else
@@ -7,9 +7,9 @@
 		@endif
 	</div>
 
-	<div class="page-block-placeholder-buttons pull-right">
+	<div class="page-block-placeholder-buttons">
 		{!! link_to_route('backend.widget.popup_list', trans('widgets::core.button.add_to_page'), [$page->getId()], [
-			'class' => 'btn btn-success btn-xs popup add-widget',
+			'class' => 'page-block-add-widget popup',
 			'data-icon' => 'plus fa-fw', 'data-popup-type' => 'ajax'
 		]) !!}
 	</div>

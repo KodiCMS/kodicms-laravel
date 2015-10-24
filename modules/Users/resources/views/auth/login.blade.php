@@ -1,12 +1,11 @@
-<div class="frontend-header">
+<div class="frontend-header no-padding">
 	<a href="/" class="logo">
-		{!! HTML::image( CMS::resourcesURL() . '/images/logo-color.png') !!}
+		{!! HTML::image(resources_url('/images/logo-color.png')) !!}
 	</a>
 </div>
 
-<?php //TODO: добавить возможность включения своего кода в шаблон ?>
 <div class="page-signin-alt">
-	{!! Form::open(['route' => 'auth.login.post', 'class' => 'panel', 'id' => 'signin-form_id']) !!}
+	{!! Form::open(['route' => 'backend.auth.login.post', 'class' => 'panel', 'id' => 'signin-form_id']) !!}
 
 	@event('view.login.form.header')
 	<div class="panel-body">
@@ -21,7 +20,7 @@
 				'id' => 'password', 'class' => 'form-control input-lg', 'placeholder' =>  trans('users::core.field.auth.password')
 			]) !!}
 
-			{!! HTML::linkRoute('auth.password', trans('users::core.field.auth.forgot'), [], ['class' => 'forgot']) !!}
+			{!! HTML::linkRoute('backend.auth.password', trans('users::core.field.auth.forgot'), [], ['class' => 'forgot']) !!}
 		</div>
 
 		<div class="form-group">

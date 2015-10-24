@@ -53,14 +53,12 @@
 <table class="table table-noborder table-striped">
 	<colgroup>
 		<col width="50px" />
-		<?php /* <col width="450px" /> */ ?>
 		<col />
 	</colgroup>
 	<thead>
 	<tr>
 		<th></th>
 		<th></th>
-		<?php /* <td><th><?php echo __('Fetched widget'); ?></th> */ ?>
 	</tr>
 	</thead>
 	<tbody>
@@ -77,20 +75,6 @@
 		<td></td>
 		<th>{{ $page['title'] }}</th>
 		@endif
-		<?php /* <td>
-			<?php
-			$widgets = $linkedWidgets;
-
-			if (isset($widgets[$widget->getId()])) unset($widgets[$widget->getId()]);
-
-			if (!empty($widgets))
-			{
-				$widgets = [__('--- Not set ---')] + $widgets;
-				$selected = array_get($widget->linked_widgets, $page['id']);
-				echo Form::select('settings[linked_widgets]['.$page['id'].']', $widgets, $selected, ['class' => 'form-control']);
-			}
-			?>
-			*/ ?>
 		</td>
 	</tr>
 	@endforeach

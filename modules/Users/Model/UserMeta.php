@@ -44,7 +44,6 @@ class UserMeta
 	}
 
 	/**
-	 *
 	 * @param string $key
 	 * @param mixed $value
 	 * @param integer|User $userId
@@ -123,7 +122,6 @@ class UserMeta
 	}
 
 	/**
-	 * TODO: добавить кеширование
 	 * @param integer|User $userId
 	 * @return array
 	 */
@@ -159,7 +157,6 @@ class UserMeta
 	}
 
 	/**
-	 * TODO: добавить удаление из кеша БД
 	 * @param integer|User $userId
 	 */
 	protected static function clearCache($userId = null)

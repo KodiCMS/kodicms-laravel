@@ -56,6 +56,14 @@ class ItemDecorator
 	/**
 	 * @return string
 	 */
+	public function getKey()
+	{
+		return $this->getAttribute('name');
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getName()
 	{
 		$label = $this->getLabel();

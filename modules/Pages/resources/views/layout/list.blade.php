@@ -3,16 +3,19 @@
 	<div class="panel-heading">
 		@if (acl_check('layout.add'))
 		{!! link_to_route('backend.layout.create', trans('pages::layout.button.add'), [], [
-			'class' => 'btn btn-default', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
+			'class' => 'btn btn-default btn-labeled', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
 		]) !!}
 		@endif
 
 		@if ($collection->getTotal() > 0 and acl_check('layout.rebuild'))
-		{!! Form::button(trans('pages::layout.button.rebuild'), [
+		<div class="panel-heading-controls">
+			{!! Form::button(trans('pages::layout.button.rebuild'), [
 			'data-icon' => 'refresh',
-			'class' => 'btn btn-inverse btn-xs',
-			'data-api-url' => '/api.layout.rebuild'
-		]) !!}
+			'class' => 'btn btn-info btn-sm btn-labeled',
+			'data-api-url' => '/api.layout.rebuild',
+			'data-preloader' => '#layoutList'
+			]) !!}
+		</div>
 		@endif
 	</div>
 	@else
@@ -22,7 +25,7 @@
 	@endif
 
 	@if($collection->getTotal() > 0)
-	<table class="table-primary table table-striped table-hover">
+	<table class="table-primary table table-striped table-hover" id="layoutList">
 		<colgroup>
 			<col />
 			<col width="150px" />
@@ -55,13 +58,7 @@
 				@else
 				@endif
 
-				@if (count($layout->getBlocks()) > 0)
-				<span class="text-muted text-normal text-sm">
-					<strong>@lang('pages::layout.label.blocks'):</strong> <span class="layout-block-list">
-						<?php echo implode(', ', $layout->getBlocks()); ?>
-					</span>
-				</span>
-				@endif
+				<span class="layout-block-list">{!! view('pages::layout.partials.blocks', ['blocks' => $layout->getBlocks()]) !!}</span>
 			</th>
 			<td class="modified hidden-xs">
 				{{ $layout->getMTime() }}
@@ -74,10 +71,12 @@
 			</td>
 			<td class="actions text-right">
 				@if (acl_check('layout.delete'))
-				{!! link_to_route('backend.layout.delete', '', [$layout->getName()], [
-					'data-icon' => 'times fa-inverse',
-					'class' => 'btn btn-danger btn-xs btn-confirm'
-				]) !!}
+				{!! Form::open(['route' => ['backend.layout.delete', $layout->getName()]]) !!}
+					{!! Form::button('', [
+						'type' => 'submit',
+						'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
+					]) !!}
+				{!! Form::close() !!}
 				@endif
 			</td>
 		</tr>

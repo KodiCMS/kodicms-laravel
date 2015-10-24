@@ -1,6 +1,5 @@
 <?php namespace KodiCMS\Pages\Helpers;
 
-
 use Illuminate\Support\Collection;
 use KodiCMS\Pages\Model\FrontendPage;
 use KodiCMS\Widgets\Collection\WidgetCollection;
@@ -10,6 +9,10 @@ class BlockWysiwyg extends Block
 
 	protected $page;
 
+	/**
+	 * @param WidgetCollection $collection
+	 * @param FrontendPage $page
+	 */
 	public function __construct(WidgetCollection $collection, FrontendPage $page)
 	{
 		parent::__construct($collection);

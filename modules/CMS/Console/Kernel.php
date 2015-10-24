@@ -1,7 +1,14 @@
 <?php namespace KodiCMS\CMS\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
+use KodiCMS\CMS\Console\Commands\WysiwygListCommand;
+use KodiCMS\CMS\Console\Commands\PackagesListCommand;
+use KodiCMS\CMS\Console\Commands\ModulePublishCommand;
+use KodiCMS\CMS\Console\Commands\ControllerMakeCommand;
+use KodiCMS\CMS\Console\Commands\ModuleLocaleDiffCommand;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use KodiCMS\CMS\Console\Commands\ModuleLocalePublishCommand;
+use KodiCMS\CMS\Console\Commands\GenerateScriptTranslatesCommand;
 
 class Kernel extends ConsoleKernel {
 
@@ -11,11 +18,13 @@ class Kernel extends ConsoleKernel {
 	 * @var array
 	 */
 	protected $commands = [
-		'KodiCMS\CMS\Console\Commands\GenerateScriptTranslates',
-		'KodiCMS\CMS\Console\Commands\ModuleLocalePublish',
-		'KodiCMS\CMS\Console\Commands\ControllerMakeCommand',
-		'KodiCMS\CMS\Console\Commands\ModulePublishCommand',
-		'KodiCMS\CMS\Console\Commands\PackagesList'
+		GenerateScriptTranslatesCommand::class,
+		ModuleLocalePublishCommand::class,
+		ModuleLocaleDiffCommand::class,
+		ControllerMakeCommand::class,
+		ModulePublishCommand::class,
+		PackagesListCommand::class,
+		WysiwygListCommand::class
 	];
 
 	/**

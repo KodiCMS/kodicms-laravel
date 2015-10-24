@@ -1,18 +1,22 @@
 <?php namespace KodiCMS\Cron\Model;
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 
 class JobLog extends Model
 {
 	/**
+	 * The table associated with the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'cron_job_logs';
+
+	/**
 	 * @var array
 	 */
-	protected $fillable = [
-		'job_id',
-		'status'
-	];
+	protected $fillable = ['job_id', 'status'];
 
-	// TODO: вынести в отдельный Observer
 	protected static function boot()
 	{
 		parent::boot();
@@ -28,7 +32,7 @@ class JobLog extends Model
 	 */
 	public function job()
 	{
-		return $this->belongsTo('KodiCMS\Cron\Model\Job');
+		return $this->belongsTo(Job::class);
 	}
 
 	public function getStatusStringAttribute()
@@ -42,9 +46,9 @@ class JobLog extends Model
 	 */
 	public function setStatus($value)
 	{
-		if ( ! $this->exists)
+		if (!$this->exists)
 		{
-			throw new \Exception('Cannot set status because it is not loaded');
+			throw new Exception('Cannot set status because it is not loaded');
 		}
 
 		$this->job->status = $value;

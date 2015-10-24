@@ -19,7 +19,7 @@
 	<div class="form-group">
 		<label class="col-md-3 control-label">@lang('widgets::snippet.label.wysiwyg')</label>
 		<div class="col-md-9">
-			{!! Form::select('editor', WYSIWYG::htmlSelect(), NULL, [
+			{!! Form::select('editor', WYSIWYG::usedHtmlSelect(), NULL, [
 				'class' => 'form-control'
 			]) !!}
 		</div>
@@ -45,7 +45,7 @@
 			{!! Form::button(trans('widgets::snippet.button.filemanager'), [
 			'data-icon' => 'folder-open',
 			'data-el' => 'textarea_content',
-			'class' => 'btn btn-filemanager btn-flat btn-info btn-sm'
+			'class' => 'btn btn-filemanager btn-labeled btn-info btn-sm'
 			]) !!}
 		</div>
 	@endif
@@ -54,7 +54,7 @@
 'class' => 'form-control',
 'id' => 'textarea_content',
 'data-height' => 600,
-'data-readonly' => (!$snippet->isEditable() and !$snippet->isCreatable()) ? 'on' : 'off'
+'data-readonly' => (!$snippet->isEditable() and !$snippet->isCreatable()) ? 'true' : 'false'
 ]) !!}
 
 @if(!$snippet->isEditable() and !$snippet->isCreatable())

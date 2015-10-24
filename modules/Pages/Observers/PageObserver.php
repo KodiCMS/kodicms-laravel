@@ -148,7 +148,7 @@ class PageObserver
 	 */
 	public function deleted($page)
 	{
-		// TODO: подумать что лучше делать с дочерними страницами при удалении предка
+		// TODO: подумать что лучше делать с дочерними страницами при удалении родителя
 		$page->children()->delete();
 		$page->behaviorSettings()->delete();
 		$page->parts()->delete();

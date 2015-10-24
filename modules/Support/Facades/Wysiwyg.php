@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Support\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use KodiCMS\CMS\Wysiwyg\Manager;
+use KodiCMS\CMS\Wysiwyg\WysiwygManager;
 
 class Wysiwyg extends Facade {
 
@@ -10,6 +10,6 @@ class Wysiwyg extends Facade {
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return Manager::class; }
+    protected static function getFacadeAccessor() { return WysiwygManager::class; }
 
 }

@@ -48,7 +48,7 @@ return [
 
 		'sqlite' => [
 			'driver'   => 'sqlite',
-			'database' => storage_path().'/database.sqlite',
+			'database' => storage_path().DIRECTORY_SEPARATOR.'database.sqlite',
 			'prefix'   => '',
 		],
 
@@ -60,9 +60,15 @@ return [
 			'password'  => env('DB_PASSWORD', ''),
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
-			'prefix'    => '',
+			'prefix'    => env('DB_PREFIX', ''),
 			'strict'    => false,
 		],
+
+		'sqlite_cache' => [
+			'driver'   => 'sqlite',
+			'database' => storage_path().DIRECTORY_SEPARATOR.'framework'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'caches.sqlite',
+		],
+
 	],
 
 	/*

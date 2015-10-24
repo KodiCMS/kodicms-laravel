@@ -1,12 +1,14 @@
 <?php namespace KodiCMS\CMS\Exceptions;
 
-use CMS;
+use App;
 use Illuminate\Http\Response;
 use KodiCMS\API\Http\Response as APIResponse;
+use KodiCMS\CMS\Http\Controllers\ErrorController;
 use KodiCMS\API\Exceptions\Exception as APIException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Debug\ExceptionHandler as SymfonyDisplayer;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -16,7 +18,10 @@ class Handler extends ExceptionHandler
 	 *
 	 * @var array
 	 */
-	protected $dontReport = ['Symfony\Component\HttpKernel\Exception\HttpException'];
+	protected $dontReport = [
+		HttpException::class,
+		ModelNotFoundException::class,
+	];
 
 	/**
 	 * Report or log an exception.
@@ -45,7 +50,12 @@ class Handler extends ExceptionHandler
 			return (new APIResponse(config('app.debug')))->createExceptionResponse($e);
 		}
 
-		if (config('app.debug') or !CMS::isInstalled())
+		if ($e instanceof ModelNotFoundException)
+		{
+			$e = new NotFoundHttpException($e->getMessage(), $e);
+		}
+
+		if (config('app.debug') or !App::installed())
 		{
 			return $this->renderExceptionWithWhoops($e);
 		}
@@ -87,7 +97,7 @@ class Handler extends ExceptionHandler
 	{
 		try
 		{
-			$controller = app()->make('\KodiCMS\CMS\Http\Controllers\ErrorController');
+			$controller = app()->make(ErrorController::class);
 			if (method_exists($controller, 'error' . $code))
 			{
 				$action = 'error' . $code;
@@ -97,11 +107,11 @@ class Handler extends ExceptionHandler
 				$action = 'error500';
 			}
 
-			return new Response($controller->callAction($action, [$e]));
+			return $this->toIlluminateResponse(new Response($controller->callAction($action, [$e])), $e);
 		}
 		catch (\Exception $ex)
 		{
-			return (new SymfonyDisplayer(config('app.debug')))->createResponse($e);
+			return $this->convertExceptionToResponse($ex);
 		}
 	}
 
@@ -114,8 +124,8 @@ class Handler extends ExceptionHandler
 	protected function renderExceptionWithWhoops(\Exception $e)
 	{
 		$whoops = new \Whoops\Run;
-		$whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler());
+		$whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
 
-		return new Response($whoops->handleException($e), $e->getStatusCode(), $e->getHeaders());
+		return $this->toIlluminateResponse(new Response($whoops->handleException($e)), $e);
 	}
 }

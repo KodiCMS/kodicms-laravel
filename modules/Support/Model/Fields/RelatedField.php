@@ -1,7 +1,10 @@
 <?php namespace KodiCMS\Support\Model\Fields;
 
 use Form;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class RelatedField extends SelectField
 {
@@ -14,6 +17,11 @@ class RelatedField extends SelectField
 	 * @var string
 	 */
 	protected $valueField = 'name';
+
+	/**
+	 * @var bool
+	 */
+	protected $isMultiple = false;
 
 	/**
 	 * @var Relation
@@ -34,6 +42,31 @@ class RelatedField extends SelectField
 	}
 
 	/**
+	 * @param sreing|null $prefix
+	 * @return string
+	 */
+	public function getName($prefix = null)
+	{
+		$name = parent::getName($prefix);
+		return $this->isMultiple ? $name . '[]' : $name;
+	}
+
+	public function beforeRender()
+	{
+		if (
+			($this->getRelatedModel() instanceof BelongsToMany)
+			or
+			($this->getRelatedModel() instanceof HasMany)
+			or
+			($this->getRelatedModel() instanceof HasManyThrough)
+		)
+		{
+			$this->setAttributes(['multiple']);
+			$this->isMultiple = true;
+		}
+	}
+
+	/**
 	 * @param string $key
 	 * @param mixed $value
 	 * @return mixed
@@ -44,7 +77,10 @@ class RelatedField extends SelectField
 
 		if (empty($return) and !is_null($value))
 		{
-			$return = $this->getRelatedModel()->lists($this->valueField, $this->keyField);
+			$return = $this->getRelatedModel()
+				->getRelated()
+				->lists($this->valueField, $this->keyField)
+				->all();
 		}
 
 		return $return;

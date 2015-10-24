@@ -1,6 +1,6 @@
 <?php namespace KodiCMS\CMS\Console\Commands;
 
-use KodiCMS\Support\Facades\ModuleLoader;
+use ModulesLoader;
 use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Foundation\Console\VendorPublishCommand;
 
@@ -33,14 +33,14 @@ class ModulePublishCommand extends VendorPublishCommand {
 
 		if (!is_null($module))
 		{
-			if (!is_null($module = ModuleLoader::getRegisteredModule($this->option('module'))))
+			if (!is_null($module = ModulesLoader::getRegisteredModule($this->option('module'))))
 			{
 				$paths = $module->getPublishPath();
 			}
 		}
 		else
 		{
-			foreach (ModuleLoader::getRegisteredModules() as $module)
+			foreach (ModulesLoader::getRegisteredModules() as $module)
 			{
 				$paths = array_merge($paths, $module->getPublishPath());
 			}

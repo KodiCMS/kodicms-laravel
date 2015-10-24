@@ -1,7 +1,8 @@
 <?php namespace KodiCMS\Email\Support;
 
-use KodiCMS\Email\Model\EmailTemplate;
 use Mail;
+use Exception;
+use KodiCMS\Email\Model\EmailTemplate;
 
 class EmailSender
 {
@@ -29,21 +30,24 @@ class EmailSender
 				$message->from($parameters->email_from);
 				$message->to($parameters->email_to);
 				$message->subject($parameters->subject);
+
 				if (!empty($parameters->cc))
 				{
 					$message->cc($parameters->cc);
 				}
+
 				if (!empty($parameters->bcc))
 				{
 					$message->bcc($parameters->bcc);
 				}
+
 				if (!empty($parameters->reply_to))
 				{
 					$message->replyTo($parameters->reply_to);
 				}
 			});
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
 			return false;
 		}

@@ -87,7 +87,6 @@ function test_email_button_visible() {
 </script>
 @stop
 
-
 <div class="panel-heading" data-icon="envelope">
 	<span class="panel-title">@lang('email::core.settings.title')</span>
 </div>
@@ -112,8 +111,10 @@ function test_email_button_visible() {
 
 					<p class="help-block test-email-message">@lang('email::core.settings.test.label')</p>
 				</div>
-				<div class="col-md-3 input-group-btn">
-					<a href="#" class="btn btn-primary" id="send-test-email" data-icon="envelope">@lang('email::core.settings.test.btn')</a>
+				<div class="col-md-3">
+					<a href="#" class="btn btn-primary btn-labeled" id="send-test-email" data-icon="envelope">
+						@lang('email::core.settings.test.btn')
+					</a>
 				</div>
 			</div>
 

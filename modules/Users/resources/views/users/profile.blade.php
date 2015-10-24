@@ -1,35 +1,35 @@
 <div class="page-profile clearfix">
-	<div class="profile-full-name">
-		<span class="text-semibold">{{ $user->username }}</span>
-		@lang('users::core.field.last_login') {{ $user->last_login }}
-	</div>
-
 	<div class="profile-row">
 		<div class="left-col">
 			<div class="profile-block">
-				<div class="panel profile-photo">
-					{!! $currentUser->gravatar(100, NULL, ['class' => 'img-circle']) !!}
+				<div class="profile-photo">
+					{!! $currentUser->getAvatar(180, ['class' => 'img-thumbnail img-responsive']) !!}
 				</div>
 
-				<br />
+
+				<div class="profile-full-name">
+					<span class="text-semibold">{{ $user->username }}</span>
+				</div>
+
+				<span class="text-muted">@lang('users::core.field.last_login') {{ $user->last_login }}</span>
+
+				<hr />
 
 				@if (acl_check('users.edit') OR $user->id == auth()->id)
 				{!! link_to_route('backend.user.edit', trans('users::core.button.edit'), [$user], [
-					'class' => 'btn btn-success btn-sm',
+					'class' => 'btn btn-success btn-labeled',
 					'data-icon' => 'user'
 				]) !!}
 				@endif
 			</div>
 		</div>
 		<div class="right-col">
-			<hr class="profile-content-hr no-grid-gutter-h">
-
-			<div class="profile-content tabbable">
+			<div class="profile-content panel tabbable">
 				@event('view.user.profile.information', [$user->id])
 
 				@if (!empty($permissions) AND acl_check('users.view.permissions'))
 				<div class="panel-heading">
-					<span class="panel-title">@lang('users::core.title.permissions')</span>
+					<span class="panel-title" data-icon="wheelchair">@lang('users::core.title.permissions')</span>
 				</div>
 				<div class="panel-body no-padding tabbable">
 					@foreach($permissions as $section => $actions)

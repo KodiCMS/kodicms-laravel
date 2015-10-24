@@ -48,6 +48,7 @@ return [
 			'updated'   => 'Событие обновлено',
 			'deleted'   => 'Событие удалено',
 			'not_found' => 'Событие не найдено',
+			'job_not_found' => 'Событие :name не найдено'
 		],
 		'templates' => [
 			'created'   => 'Шаблон создан',

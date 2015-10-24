@@ -1,24 +1,25 @@
 <?php namespace KodiCMS\Pages\Model;
 
 use DB;
+use Cache;
 use KodiCMS\CMS\Model\File;
 
 class Layout extends File
 {
-
 	/**
-	 *
 	 * @var array
 	 */
 	protected $blocks = NULL;
 
 	/**
-	 *
 	 * @return array
 	 */
 	public function getBlocks()
 	{
-		return LayoutBlock::where('layout_name', $this->getName())->lists('block');
+		return Cache::remember($this->getCacheKey(), 120, function ()
+		{
+			return LayoutBlock::where('layout_name', $this->getName())->lists('block')->all();
+		});
 	}
 
 	/**
@@ -41,6 +42,9 @@ class Layout extends File
 		return parent::save($data);
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getViewFilename()
 	{
 		$filename = $this->getName();
@@ -54,7 +58,6 @@ class Layout extends File
 
 	/**
 	 * Обновление списка блоков шаблона
-	 * TODO: добавить кеширование
 	 * @return mixed
 	 */
 	public function findBlocks()
@@ -65,20 +68,30 @@ class Layout extends File
 			->where('layout_name', $this->getName())
 			->delete();
 
-		$insertData = [];
-		foreach ($blocks as $position => $block) {
-			$insertData[] = [
+		$this->clearCache();
+
+		foreach ($blocks as $position => $block)
+		{
+			LayoutBlock::create([
 				'position' => $position,
 				'block' => $block,
 				'layout_name' => $this->getName()
-			];
-		}
-
-		if (count($insertData) > 0)
-		{
-			DB::table('layout_blocks')->insert($insertData);
+			]);
 		}
 
 		return $blocks;
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function getCacheKey()
+	{
+		return "layout::blocks::{$this->getName()}";
+	}
+
+	protected function clearCache()
+	{
+		Cache::forget($this->getCacheKey());
 	}
 }

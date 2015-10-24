@@ -1,46 +1,62 @@
 <?php namespace KodiCMS\Users\Observers;
 
+use DB;
+
 /**
- * TODO: добавить логирование событий
  * Class UserObserver
  * @package KodiCMS\Users\Observers
  */
 class UserObserver {
 
 	/**
-	 * @param \KodiCMS\Users\Model\User $model
+	 * @param \KodiCMS\Users\Model\User $user
 	 * @return void
 	 */
-	public function created($model)
+	public function created($user)
 	{
 
 	}
 
 	/**
-	 * @param \KodiCMS\Users\Model\User $model
+	 * @param \KodiCMS\Users\Model\User $user
 	 * @return void
 	 */
-	public function updated($model)
+	public function updated($user)
 	{
 
 	}
 
 	/**
-	 * @param \KodiCMS\Users\Model\User $model
+	 * @param \KodiCMS\Users\Model\User $user
 	 * @return void
 	 */
-	public function deleting($model)
+	public function deleting($user)
 	{
 
 	}
 
 	/**
-	 * @param \KodiCMS\Users\Model\User $model
-	 * @return bool
+	 * @param \KodiCMS\Users\Model\User $user
+	 * @return void
 	 */
-	public function deleted($model)
+	public function deleted($user)
 	{
 		// Удаление связанных ролей
-		$model->roles()->sync([]);
+		$user->roles()->sync([]);
+	}
+
+	/**
+	 * @param \KodiCMS\Users\Model\User $user
+	 * @return void
+	 */
+	public function authenticated($user)
+	{
+		// Update the number of logins
+		$user->logins = DB::raw('logins + 1');
+
+		// Set the last login date
+		$user->last_login = time();
+
+		$user->update();
 	}
 }

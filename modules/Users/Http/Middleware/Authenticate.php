@@ -42,7 +42,7 @@ class Authenticate {
 			}
 			else
 			{
-				return redirect()->guest(\CMS::backendPath() . '/auth/login');
+				return redirect()->guest(backend_url('/auth/login'));
 			}
 		}
 

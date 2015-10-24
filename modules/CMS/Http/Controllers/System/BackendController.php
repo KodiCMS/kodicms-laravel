@@ -3,9 +3,11 @@
 use UI;
 use View;
 use Assets;
-use ModuleLoader;
-use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
+use KodiCMS\Support\Helpers\Callback;
+use KodiCMS\CMS\Exceptions\ValidationException;
 use KodiCMS\CMS\Navigation\Collection as Navigation;
+use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BackendController extends TemplateController
 {
@@ -27,21 +29,23 @@ class BackendController extends TemplateController
 	public function boot()
 	{
 		$this->navigation = Navigation::init($this->request->getUri(), config('sitemap', []));
-		$this->breadcrumbs = Breadcrumbs::factory();
+		$this->breadcrumbs = new Breadcrumbs;
+	}
 
-		if (is_null(array_get($this->permissions, $this->getCurrentAction()))) {
-			$this->permissions[$this->getCurrentAction()] = $this->getRouter()->currentRouteName();
-		}
+	public function initControllerAcl()
+	{
+		parent::initControllerAcl();
+		$this->acl->addPermission($this->getCurrentAction(), $this->getRouter()->currentRouteName());
 	}
 
 	public function before()
 	{
 		$currentPage = Navigation::getCurrentPage();
 
-		$this->breadcrumbs
-			->add(UI::icon('home'), route('backend.dashboard'));
+		$this->breadcrumbs->add(UI::icon('home'), route('backend.dashboard'));
 
-		if (!is_null($currentPage)) {
+		if (!is_null($currentPage))
+		{
 			$this->setTitle($currentPage->getName(), $currentPage->getUrl());
 		}
 
@@ -85,5 +89,38 @@ class BackendController extends TemplateController
 		Assets::package(['libraries', 'core']);
 		$this->includeModuleMediaFile($this->getRouterController());
 		$this->includeMergedMediaFile('backendEvents', 'js/backendEvents');
+	}
+
+	/**
+	 * Execute an action on the controller.
+	 *
+	 * @param  string  $method
+	 * @param  array   $parameters
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function callAction($method, $parameters)
+	{
+		try
+		{
+			return parent::callAction($method, $parameters);
+		}
+		catch (ModelNotFoundException $e)
+		{
+			$model = $e->getModel();
+			if (method_exists($model, 'getNotFoundMessage'))
+			{
+				$message = Callback::invoke($model . '@' . 'getNotFoundMessage');
+			}
+			else
+			{
+				$message = $e->getMessage();
+			}
+
+			$this->throwFailException($this->smartRedirect()->withErrors($message));
+		}
+		catch (ValidationException $e)
+		{
+			$this->throwValidationException($this->request, $e->getValidator());
+		}
 	}
 }

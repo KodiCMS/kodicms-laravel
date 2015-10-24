@@ -5,6 +5,11 @@ use WYSIWYG;
 class WYSIWYGField extends TextAreaField
 {
 	/**
+	 * @var string
+	 */
+	protected $template = 'cms::model_fields.wysiwyg';
+
+	/**
 	 * @param string $name
 	 * @param mixed $value
 	 * @param array $attributes
@@ -18,9 +23,7 @@ class WYSIWYGField extends TextAreaField
 
 	protected function addScriptToView()
 	{
-		WYSIWYG::loadAll(WYSIWYG::html());
-		$id = $this->getId();
-		view()->startSection('scripts', "<script>CMS.filters.switchOn('{$id}', DEFAULT_HTML_EDITOR)</script>");
+		WYSIWYG::loadHTMLEditors();
 	}
 
 }

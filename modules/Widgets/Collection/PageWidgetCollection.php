@@ -17,7 +17,11 @@ class PageWidgetCollection extends WidgetCollection {
 
 		foreach($widgets as $widget)
 		{
-			$this->addWidget($widget, array_get($blocks, $widget->getId() .'.0'), array_get($blocks, $widget->getId() .'.1'));
+			$this->addWidget(
+				$widget,
+				array_get($blocks, $widget->getId() .'.0'),
+				array_get($blocks, $widget->getId() .'.1')
+			);
 		}
 	}
 
@@ -28,9 +32,9 @@ class PageWidgetCollection extends WidgetCollection {
 	{
 		foreach ($this->registeredWidgets as $widget)
 		{
-			if($widget->getObject() instanceof WidgetRenderable)
+			if(($object = $widget->getObject()) instanceof WidgetRenderable)
 			{
-				Meta::addPackage($widget->getObject()->getMediaPackages());
+				Meta::addPackage($object->getMediaPackages());
 			}
 		}
 

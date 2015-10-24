@@ -30,7 +30,7 @@ return [
 	],
 
 	'stripe' => [
-		'model'  => 'User',
+		'model'  => KodiCMS\Users\Model\User::class,
 		'secret' => '',
 	],
 

@@ -1,29 +1,41 @@
 CMS.controllers.add(['widget.get.index'], function () {
-	var editable_template = {
-		type: 'select2',
-		title: i18n.t('widgets.core.field.template'),
-		send: 'always',
-		defaultValue: 0,
-		highlight: false,
-		emptytext: i18n.t('cms.core.label.not_set'),
-		ajaxOptions: {
-			dataType: 'json'
-		},
-		params: function(params) {
-			params.widget_id = $(this).closest('tr').data('id');
-			params.template = params.value;
+	Api.get('/api.snippet.xeditable', {}, function(resp) {
+		$('.editable-template').editable({
+			type: 'select2',
+			title: i18n.t('widgets.core.field.template'),
+			send: 'always',
+			defaultValue: 0,
+			highlight: false,
+			emptytext: i18n.t('cms.core.label.not_set'),
+			ajaxOptions: {
+				dataType: 'json'
+			},
+			params: function(params) {
+				console.log($(this).closest('tr').data('id'));
+				params.widget_id = $(this).closest('tr').data('id');
+				params.template = params.value;
 
-			return params;
-		},
-		url: '/api.widget.set.template',
-		source: '/api.snippet.xeditable',
-		select2: {
-			width: 200
-		},
-		success: function(response, newValue) {}
-	};
+				return params;
+			},
+			url: function(params) {
+				var d = new $.Deferred;
+				var response = Api.post('/api.widget.set.template', params, null, false).responseJSON;
 
-	$('.editable-template').editable(editable_template);
+				if(response.code != 200) {
+					return d.reject(response.message);
+				} else {
+					d.resolve();
+					return d.promise();
+				}
+			},
+			source: resp,
+			select2: {
+				width: 200
+			},
+			success: function(response, newValue) {}
+		});
+	});
+
 });
 
 
@@ -58,33 +70,10 @@ CMS.controllers.add('widget.get.edit', function() {
 	};
 });
 
-CMS.controllers.add('page.get.edit', function() {
-	var layout_file = PAGE.layout;
-
-	reload_blocks(layout_file);
-	$('body').on('get:api.layout.rebuild', function(e, response) {
-		reload_blocks(layout_file);
-	});
-
-	$('body').on('click', '.popup-widget-item', function() {
-		var widget_id = $(this).data('id');
-
-		Api.put('/api.widget', {
-			widget_id: widget_id,
-			page_id: PAGE.id
-		}, function(response) {
-			window.location = '#widgets';
-			Popup.close();
-			$('#widget-list tbody').append(response.content);
-			reload_blocks(layout_file);
-		});
-	});
-});
-
 CMS.controllers.add('widget.get.location', function() {
 	reload_blocks();
 
-	$('body').on('post:backend:api.layout.rebuild', function(e, response) {
+	$('body').on('get:api.layout.rebuild', function(e, response) {
 		reload_blocks();
 	});
 
@@ -130,13 +119,23 @@ CMS.controllers.add('widget.get.location', function() {
 });
 
 CMS.controllers.add('widget.get.template', function() {
-	$('#highlight_content').on('filter:switch:on', function(e, editor) {
-		cms.filters.exec('highlight_content', 'changeHeight', cms.content_height);
+
+	$('#textarea_content').on('filter:switch:on', function(e, editor) {
+		$('#content').setHeightFor('#textarea_contentDiv', {
+			contentHeight: true,
+			updateOnResize: true,
+			offset: 30,
+			minHeight: 300,
+			onCalculate: function(a, h) {
+				CMS.filters.exec('textarea_content', 'changeHeight', h);
+			},
+			onResize: function(a, h) {
+				CMS.filters.exec('textarea_content', 'changeHeight', h);
+			}
+		});
 	});
 
-	$(window).resize(function() {
-		$('#highlight_content').trigger('filter:switch:on');
-	});
+	CMS.filters.switchOn('textarea_content', DEFAULT_CODE_EDITOR, $('#textarea_content').data());
 });
 
 function format_dropdown_block(state, container) {
@@ -199,8 +198,8 @@ function reload_blocks($layout) {
 
 function load_snippets(intervalID) {
 	clearInterval(intervalID);
-	$('#snippet-select').on('select2-opening', function(e, a) {
-		var response = Api.get('/api.snippet.list', {}, false, false);
+	$('#snippet-select').on('select2:opening', function(e, a) {
+		var response = Api.get('/api.snippet.list', {}, false, false).responseJSON;
 		var self = $(this);
 		if(response.content) {
 			$('option', this).remove();
@@ -209,7 +208,7 @@ function load_snippets(intervalID) {
 				self.append($('<option>', {value: key, text: response.content[key]}));
 		}
 
-		self.off();
+		self.off('select2:opening');
 		var intervalID = setInterval(function() {
 			load_snippets(intervalID);
 		}, 10000);

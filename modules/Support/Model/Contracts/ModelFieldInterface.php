@@ -56,4 +56,17 @@ interface ModelFieldInterface {
 	 * @return string
 	 */
 	public function render(array $attributes = []);
+
+	/**
+	 * @param array $attributes
+	 * @param null|string $title
+	 * @return string
+	 */
+	public function renderLabel(array $attributes = [], $title = null);
+
+	/**
+	 * @param array $attributes
+	 * @return string
+	 */
+	public function renderGroup(array $attributes = []);
 }

@@ -35,7 +35,7 @@ abstract class BehaviorAbstract implements BehaviorInterface
 	/**
 	 * @var string
 	 */
-	protected $settingsClass = '\KodiCMS\Pages\Behavior\Settings';
+	protected $settingsClass = Settings::class;
 
 	/**
 	 * @var null|string

@@ -5,6 +5,7 @@ use KodiCMS\Support\Traits\Settings;
 use KodiCMS\Support\Helpers\Callback;
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Support\Traits\HtmlAttributes;
+use Illuminate\Database\Eloquent\Collection;
 use KodiCMS\Support\Model\Contracts\ModelFieldInterface;
 
 abstract class ModelField implements ModelFieldInterface
@@ -17,14 +18,19 @@ abstract class ModelField implements ModelFieldInterface
 	protected static $tabIndex = 100;
 
 	/**
-	 * @var string
-	 */
-	protected $prefix = '';
-
-	/**
 	 * @var Model
 	 */
 	protected $model;
+
+	/**
+	 * @var ModelFieldLabel
+	 */
+	protected $label;
+
+	/**
+	 * @var ModelFieldGroup
+	 */
+	protected $group;
 
 	/**
 	 * @var string
@@ -42,9 +48,9 @@ abstract class ModelField implements ModelFieldInterface
 	protected $title;
 
 	/**
-	 * @var string|null
+	 * @var string
 	 */
-	protected $cast = null;
+	protected $prefix = '';
 
 	/**
 	 * @var mixed
@@ -57,9 +63,9 @@ abstract class ModelField implements ModelFieldInterface
 	protected $settings = [];
 
 	/**
-	 * @var ModelFieldLabel
+	 * @var bool
 	 */
-	protected $label;
+	protected $hasInputGroups = false;
 
 	/**
 	 * @param string $key
@@ -84,6 +90,7 @@ abstract class ModelField implements ModelFieldInterface
 		}
 
 		$this->label = new ModelFieldLabel($this);
+		$this->group = new ModelFieldGroup($this);
 
 		$this->boot();
 	}
@@ -105,13 +112,11 @@ abstract class ModelField implements ModelFieldInterface
 	}
 
 	/**
-	 * @param string $title
-	 * @return $this
+	 * @return Model
 	 */
-	public function setTitle($title)
+	public function getModel()
 	{
-		$this->title = $title;
-		return $this;
+		return $this->model;
 	}
 
 	/**
@@ -121,15 +126,10 @@ abstract class ModelField implements ModelFieldInterface
 	{
 		if (isset($this->callbackValue))
 		{
-			return Callback::invoke($this->callbackValue, $this->callbackParameters);
+			$this->getCallbackValue();
 		}
 
-		$value = $this->model->{$this->getModelKey()};
-
-		if($value instanceof Model)
-		{
-			$value = $value->{$value->getKeyName()};
-		}
+		$value = $this->getModelValue();
 
 		if (is_null($value))
 		{
@@ -186,6 +186,119 @@ abstract class ModelField implements ModelFieldInterface
 	}
 
 	/**
+	 * @param array $attributes
+	 * @return $this
+	 */
+	public function getGroup(array $attributes = null)
+	{
+		if (!is_null($attributes))
+		{
+			$this->group->setAttributes($attributes);
+		}
+
+		return $this->group;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function hasAddInputGroup()
+	{
+		return $this->hasInputGroups;
+	}
+
+	/**
+	 * @param string $text
+	 * @return $this
+	 */
+	public function setSettingAppend($text)
+	{
+		$this->hasInputGroups = true;
+		$this->settings['append'] = $text;
+
+		return $this;
+	}
+
+	/**
+	 * @param string $text
+	 * @return $this
+	 */
+	public function setSettingPrepend($text)
+	{
+		$this->hasInputGroups = true;
+		$this->settings['prepend'] = $text;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSettingAppend()
+	{
+		return $this->addInputGroup(array_get($this->settings, 'append'));
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSettingPrepend()
+	{
+		return $this->addInputGroup(array_get($this->settings, 'prepend'));
+	}
+
+	/**
+	 * @param string $text
+	 * @return null|string
+	 */
+	public function addInputGroup($text)
+	{
+		if (empty($text))
+		{
+			return null;
+		}
+
+		$this->hasInputGroups = true;
+
+		return '<span class="input-group-addon">' . $text . '</span>';
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSettingHelpText()
+	{
+		if (empty($this->settings['helpText']))
+		{
+			return null;
+		}
+
+		return '<span class="help-block">' . $this->settings['helpText'] . '</span>';
+	}
+
+	/**
+	 * @param callable $callback
+	 * @return $this
+	 */
+	public function group(\Closure $callback)
+	{
+		$callback($this->getGroup());
+
+		return $this;
+	}
+
+	/**
+	 * @param callable $callback
+	 * @return $this
+	 */
+	public function label(\Closure $callback)
+	{
+		$callback($this->getLabel(), $this->getGroup());
+
+		return $this;
+	}
+
+	/**
 	 * @param sreing|null $prefix
 	 * @return string
 	 */
@@ -197,6 +310,16 @@ abstract class ModelField implements ModelFieldInterface
 		}
 
 		return empty($this->prefix) ? $this->getKey() : $this->prefix . '[' . $this->getKey() . ']';
+	}
+
+	/**
+	 * @param string $title
+	 * @return $this
+	 */
+	public function setTitle($title)
+	{
+		$this->title = $title;
+		return $this;
 	}
 
 	/**
@@ -260,11 +383,48 @@ abstract class ModelField implements ModelFieldInterface
 	 */
 	public function render(array $attributes = [])
 	{
-		$this->beforeRender();
+		if (method_exists($this, 'beforeLabelRender'))
+		{
+			$this->beforeLabelRender();
+		}
 
 		$this->setAttributes($attributes);
 
+		if (!isset($this->attributes['id']))
+		{
+			$this->attributes['id'] = $this->getId();
+		}
+
 		return $this->getFormFieldHTML($this->getName(), $this->getValue(), $this->getAttributes());
+	}
+
+	/**
+	 * @param array $attributes
+	 * @param null|string $title
+	 * @return string
+	 */
+	public function renderLabel(array $attributes = [], $title = null)
+	{
+		if (method_exists($this, 'beforeLabelRender'))
+		{
+			$this->beforeLabelRender();
+		}
+
+		return $this->getLabel()->render($attributes, $title);
+	}
+
+	/**
+	 * @param array $attributes
+	 * @return string
+	 */
+	public function renderGroup(array $attributes = [])
+	{
+		if (method_exists($this, 'beforeRender'))
+		{
+			$this->beforeRender();
+		}
+
+		return $this->getGroup()->render($attributes);
 	}
 
 	/**
@@ -272,18 +432,39 @@ abstract class ModelField implements ModelFieldInterface
 	 */
 	public function __toString()
 	{
-		return (string) $this->render();
+		return (string) $this->renderGroup();
 	}
 
-	protected function boot()
+	/**
+	 * @return mixed
+	 */
+	protected function getCallbackValue()
 	{
-
+		return Callback::invoke($this->callbackValue, $this->callbackParameters);
 	}
 
-	protected function beforeRender()
+	/**
+	 * @return mixed
+	 */
+	protected function getModelValue()
 	{
+		$value = $this->model->getAttribute($this->getModelKey());
 
+		if ($value instanceof Model)
+		{
+			$value = $value->getAttribute($value->getKeyName());
+		}
+		else if ($value instanceof Collection)
+		{
+			$value = $value->lists('id')->all();
+		}
+
+		return $value;
 	}
+
+	protected function boot() {}
+
+	protected function beforeRender() {}
 
 	/**
 	 * @param string $name

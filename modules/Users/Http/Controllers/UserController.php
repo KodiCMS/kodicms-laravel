@@ -1,20 +1,10 @@
 <?php namespace KodiCMS\Users\Http\Controllers;
 
-use KodiCMS\Users\Model\User;
-use KodiCMS\Users\Model\UserRole;
-use KodiCMS\Support\Helpers\Locale;
-use KodiCMS\Users\Services\UserCreator;
-use KodiCMS\Users\Services\UserUpdator;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use KodiCMS\Users\Repository\UserRepository;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class UserController extends BackendController
 {
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'users::';
-
 	/**
 	 * @var array
 	 */
@@ -45,117 +35,101 @@ class UserController extends BackendController
 		}
 	}
 
-	public function getIndex()
+	/**
+	 * @param UserRepository $repository
+	 */
+	public function getIndex(UserRepository $repository)
 	{
-		$users = User::with('roles')->paginate();
-
+		$users = $repository->paginate();
 		$this->setContent('users.list', compact('users'));
 	}
 
-	public function getProfile($id = NULL)
+	/**
+	 * @param UserRepository $repository
+	 * @param null|int $id
+	 */
+	public function getProfile(UserRepository $repository, $id = NULL)
 	{
-		$user = $this->getUser($id);
+
+		$user = $repository->findOrFail($id ?: $this->currentUser->id);
 		$roles = $user->roles;
 		$permissions = $user->getAllowedPermissions();
 
-		$this->setTitle(trans('users::core.title.profile_alternate', [
+		$this->setTitle(trans($this->wrapNamespace('core.title.profile_alternate'), [
 			'name' => ucfirst($user->username)
 		]));
 
 		$this->setContent('users.profile', compact('user', 'roles', 'permissions'));
 	}
 
-	public function getCreate()
+	/**
+	 * @param UserRepository $repository
+	 */
+	public function getCreate(UserRepository $repository)
 	{
-		$user = new User;
-		$this->setTitle(trans('users::core.title.create'));
+		$user = $repository->instance();
+		$this->setTitle(trans($this->wrapNamespace('core.title.create')));
 		$this->templateScripts['USER'] = $user;
 
-		$availableLocales = Locale::getAvailable();
-		$rolesList = UserRole::lists('name', 'id');
-		$locales = $user->getAvailableLocales();
-
-		$this->setContent('users.create', compact('user', 'availableLocales', 'rolesList', 'locales'));
+		$this->setContent('users.create', compact('user'));
 	}
 
-	public function postCreate(UserCreator $user)
+	/**
+	 * @param UserRepository $repository
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function postCreate(UserRepository $repository)
 	{
 		$data = $this->request->all();
-
-		$validator = $user->validator($data);
-
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
-		}
-
-		$user = $user->create($data);
+		$repository->validateOnCreate($data);
+		$user = $repository->create($data);
 
 		return $this->smartRedirect([$user])
-			->with('success', trans('users::core.messages.user.created', ['name' => $user->username]));
+			->with('success', trans($this->wrapNamespace('core.messages.user.created'), ['name' => $user->username]));
 	}
 
-	public function getEdit($id)
+	/**
+	 * @param UserRepository $repository
+	 * @param int $id
+	 */
+	public function getEdit(UserRepository $repository, $id)
 	{
-		$user = $this->getUser($id);
-		$this->setTitle(trans('users::core.title.edit', [
+		$user = $repository->findOrFail($id);
+		$this->setTitle(trans($this->wrapNamespace('core.title.edit'), [
 			'name' => ucfirst($user->username)
 		]));
 		$this->templateScripts['USER'] = $user;
 
-		$availableLocales = Locale::getAvailable();
-
-		$rolesList = UserRole::lists('name', 'id');
-		$userRoles = $user->roles()->lists('id');
-		$locales = $user->getAvailableLocales();
-
-		$this->setContent('users.edit', compact('user', 'availableLocales', 'rolesList', 'userRoles', 'locales'));
-	}
-
-	public function postEdit(UserUpdator $user, $id)
-	{
-		$data = $this->request->all();
-
-		$validator = $user->validator($id, $data);
-
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
-		}
-
-		$user = $user->update($id, $data);
-
-		return $this->smartRedirect([$user])
-			->with('success', trans('users::core.messages.user.updated', ['name' => $user->username]));
-	}
-
-	public function getDelete($id)
-	{
-		$user = $this->getUser($id);
-		$user->delete();
-
-		return $this->smartRedirect()
-			->with('success', trans('users::core.messages.user.deleted', ['name' => $user->username]));
+		$this->setContent('users.edit', compact('user'));
 	}
 
 	/**
-	 * @param integer|null $id
-	 * @return User
-	 * @throws HttpResponseException
+	 * @param UserRepository $repository
+	 * @param int $id
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
-	protected function getUser($id = NULL)
+	public function postEdit(UserRepository $repository, $id)
 	{
-		if (is_null($id)) {
-			return $this->currentUser;
-		}
+		$data = $this->request->all();
+		$repository->validateOnUpdate($id, $data);
+		$user = $repository->update($id, $data);
 
-		try {
-			return User::findOrFail($id);
-		}
-		catch (ModelNotFoundException $e) {
-			$this->throwFailException($this->smartRedirect()->withErrors(trans('users::core.messages.user.not_found')));
-		}
+		return $this->smartRedirect([$user])
+			->with('success', trans($this->wrapNamespace('core.messages.user.updated'), ['name' => $user->username]));
+	}
+
+	/**
+	 * @param UserRepository $repository
+	 * @param int $id
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function postDelete(UserRepository $repository, $id)
+	{
+		$user = $repository->delete($id);
+		return $this->smartRedirect()
+			->with('success', trans($this->wrapNamespace('core.messages.user.deleted'), ['name' => $user->username]));
 	}
 }

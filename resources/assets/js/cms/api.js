@@ -1,41 +1,19 @@
 var Api = {
 	_response: null,
 	get: function(uri, data, callback, async) {
-		var request = this.request('GET', uri, data, callback, async);
-
-		if(async === false)
-			this._response = request.responseJSON;
-
-		return this.response();
+		return this.request('GET', uri, data, callback, async);
 	},
 	post: function(uri, data, callback, async) {
-		var request = this.request('POST', uri, data, callback, async);
-
-		if(async === false)
-			this._response = request.responseJSON;
-
-		return this.response();
+		return this.request('POST', uri, data, callback, async);
 	},
 	put: function(uri, data, callback, async) {
-		var request = this.request('PUT', uri, data, callback, async);
-
-		if(async === false)
-			this._response = request.responseJSON;
-
-		return this.response();
+		return this.request('PUT', uri, data, callback, async);
 	},
 	'delete': function(uri, data, callback, async) {
-		var request = this.request('DELETE', uri, data, callback, async);
-
-		if(async === false)
-			this._response = request.responseJSON;
-
-		return this.response();
+		return this.request('DELETE', uri, data, callback, async);
 	},
 	request: function(method, uri, data, callback, async) {
-		url = uri;
-
-		var obj = new Object();
+		var url = this.parseUrl(uri);
 
 		$.ajaxSetup({
 			contentType : 'application/json'
@@ -65,8 +43,7 @@ var Api = {
 				if(response.message)
 					CMS.messages.show(response.message, 'success', 'fa fa-exclamation-triangle');
 
-				var $event = method + url.replace(SITE_URL, ":").replace(/\//g, ':');
-				window.top.$('body').trigger($event.toLowerCase(), [this._response]);
+				window.top.$('body').trigger(Api.getEventKey(method, url), [this._response]);
 
 				if(typeof(callback) == 'function') callback(this._response);
 			})
@@ -74,9 +51,15 @@ var Api = {
 				return Api.exception(e.responseJSON, callback);
 			});
 	},
+	parseUrl: function(url) {
+		return url;
+	},
+	getEventKey: function(method, url) {
+		var event = method + url.replace(SITE_URL, ":").replace(/\//g, ':');
+		return event.toLowerCase()
+	},
 	serializeObject: function(form) {
-		var self = form,
-			json = {},
+		var json = {},
 			push_counters = {},
 			patterns = {
 				"validate": /^[a-zA-Z][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/,
@@ -173,3 +156,60 @@ var Api = {
 		return this._response;
 	}
 };
+
+CMS.ui.add('api_buttons', function () {
+	$('.btn[data-api-url]').on('click', function (e) {
+		e.preventDefault();
+		var $self = $(this);
+
+		var $callback = function (response) {};
+		var $url = $self.data('api-url');
+		if (!$url) return;
+
+		var $callback = $self.data('callback');
+		if ($callback) $callback = window[$callback];
+		else $callback = function (response) {};
+
+		var $method = $self.data('method'),
+			$reload = $self.data('reload'),
+			$params = $self.data('params'),
+			$preloader = $self.data('preloader');
+
+		if ($reload) {
+			if ($reload === true) $callback = function () { window.location = '' }
+			else $callback = function () { window.location = $reload }
+		}
+
+		if (!$method) $method = 'GET';
+
+		if($preloader) {
+			var container = typeof($preloader) == "string" ? $preloader : 'body';
+			var loader = CMS.loader.show(container);
+			$(window).on(Api.getEventKey($method, Api.parseUrl($url)), function(e) {
+				CMS.loader.hide(loader);
+			});
+		}
+
+		Api.request($method, $url, $params, $callback);
+	})
+}).add('ajax_form', function () {
+	$('body').on('submit', 'form.form-ajax', function () {
+		var $self = $(this),
+			$buttons = $('button', $self).attr('disabled', 'disabled'),
+			$action = $self.attr('action');
+
+		if ($self.data('ajax-action'))
+			$action = $self.data('ajax-action');
+
+		var loader = CMS.loader.show($(this));
+
+		Api.post($action, $self, function (response) {
+			setTimeout(function () {
+				$buttons.removeAttr('disabled');
+				CMS.loader.hide(loader);
+			}, 1000);
+		});
+
+		return false;
+	});
+});

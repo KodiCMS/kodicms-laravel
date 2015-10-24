@@ -1,9 +1,9 @@
 <div class="panel">
 	<div class="panel-heading">
 		@if (acl_check('cron.create'))
-			{!! link_to_route('backend.cron.create', trans('cron::core.button.create'), [], [
-			'class' => 'btn btn-primary', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
-			]) !!}
+		{!! link_to_route('backend.cron.create', trans('cron::core.button.create'), [], [
+			'class' => 'btn btn-primary btn-labeled', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
+		]) !!}
 		@endif
 	</div>
 
@@ -49,11 +49,14 @@
 					{{ Date::format($job->next_run) }}
 				</td>
 				<td class="actions text-right">
-					@if (acl_check('cron.delete'))
-						{!! link_to_route('backend.cron.delete', '', [$job], [
-							'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
-						]) !!}
-					@endif
+				@if (acl_check('cron.delete'))
+				{!! Form::open(['route' => ['backend.cron.delete', $job]]) !!}
+					{!! Form::button('', [
+						'type' => 'submit',
+						'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
+					]) !!}
+				{!! Form::close() !!}
+				@endif
 				</td>
 			</tr>
 		@endforeach

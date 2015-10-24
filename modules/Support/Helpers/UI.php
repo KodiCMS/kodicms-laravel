@@ -6,6 +6,8 @@
  *
  * @package KodiCMS\CMS\Helpers
  */
+use HTML;
+
 class UI
 {
 
@@ -18,7 +20,7 @@ class UI
 	{
 		$attributes = static::buildAttributeClass($attributes, 'fa fa-' . e($name));
 
-		return '<i' . \HTML::attributes($attributes) . '></i>';
+		return '<i' . HTML::attributes($attributes) . '></i>';
 	}
 
 	/**
@@ -31,7 +33,7 @@ class UI
 	{
 		$attributes = static::buildAttributeClass($attributes, 'label label-' . e($type));
 
-		return '<span' . \HTML::attributes($attributes) . '>' . $text . '</span>';
+		return '<span' . HTML::attributes($attributes) . '>' . $text . '</span>';
 	}
 
 	/**
@@ -44,7 +46,7 @@ class UI
 	{
 		$attributes = static::buildAttributeClass($attributes, 'badge badge-' . e($type));
 
-		return '<span' . \HTML::attributes($attributes) . '>' . $text . '</span>';
+		return '<span' . HTML::attributes($attributes) . '>' . $text . '</span>';
 	}
 
 	/**
@@ -61,9 +63,15 @@ class UI
 			$attributes['class'] .= ' hidden-' . e($type);
 		}
 
-		return '<span' . \HTML::attributes($attributes) . '>' . $title . '</span>';
+		return '<span' . HTML::attributes($attributes) . '>' . $title . '</span>';
 	}
 
+	/**
+	 * @param array        $attributes
+	 * @param array|string $class
+	 *
+	 * @return array
+	 */
 	protected static function buildAttributeClass(array $attributes = [], $class)
 	{
 		if (!isset($attributes['class'])) {

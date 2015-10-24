@@ -15,7 +15,7 @@
 <?php
 $defaultTemplateButton = $widget->getDefaultFrontendTemplate()
 	? link_to_route('backend.widget.template', UI::hidden(trans('widgets::core.button.defaultTemplate'), ['sm', 'xs']), [$widget->id], [
-			'data-icon' => 'desktop', 'class' => 'btn popup fancybox.iframe btn-default',
+			'data-icon' => 'desktop', 'class' => 'btn popup fancybox.iframe btn-default btn-labeled',
 			'id' => 'defaultTemplateButton'
 	])
 	: null;
@@ -31,33 +31,6 @@ $defaultTemplateButton = $widget->getDefaultFrontendTemplate()
 		<label class="control-label col-xs-2">@lang('widgets::core.settings.header')</label>
 		<div class="col-xs-10">
 			{!! Form::text('settings[header]', $widget->getHeader(), ['class' => 'form-control', 'size' => 40]) !!}
-		</div>
-	</div>
-</div>
-
-<hr class="no-margin-vr"/>
-
-<div class="panel-body">
-	<div class="form-group">
-		<div class="col-xs-12">
-			<label class="control-label">@lang('widgets::core.settings.related_widgets')</label>
-			{!! Form::select('relatedWidgets[]', $widgetList, $widget->getRalatedWidgets()->lists('id'), [
-				'class' => 'form-control', 'multiple'
-			]) !!}
-		</div>
-	</div>
-</div>
-
-<div class="panel-heading panel-toggler" data-target-spoiler=".media-spoiler" data-hash="media">
-	<span class="panel-title" data-icon="file-o">@lang('widgets::core.title.assets')</h4>
-</div>
-<div class="panel-body panel-spoiler media-spoiler">
-	<div class="form-group">
-		<div class="col-xs-12">
-			<label class="control-label">@lang('widgets::core.settings.assets_package')</label>
-			{!! Form::select('settings[media_packages][]', $assetsPackages, $widget->getMediaPackages(), [
-				'class' => 'form-control', 'multiple'
-			]) !!}
 		</div>
 	</div>
 </div>

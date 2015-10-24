@@ -3,13 +3,16 @@
 use Blade;
 use Block;
 use Event;
-use KodiCMS\CMS\Providers\ServiceProvider;
-use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
-use KodiCMS\Pages\Helpers\Meta;
+use WYSIWYG;
 use KodiCMS\Pages\Model\Page;
-use KodiCMS\Pages\Model\PagePart as PagePartModel;
+use KodiCMS\Pages\Helpers\Meta;
 use KodiCMS\Pages\Observers\PageObserver;
 use KodiCMS\Pages\Observers\PagePartObserver;
+use KodiCMS\Pages\Model\PagePart as PagePartModel;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
+use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
+use KodiCMS\Pages\Console\Commands\RebuldLayoutBlocksCommand;
+use KodiCMS\Pages\Listeners\PlacePagePartsToBlocksEventHandler;
 
 class ModuleServiceProvider extends ServiceProvider {
 
@@ -29,9 +32,9 @@ class ModuleServiceProvider extends ServiceProvider {
 
 		Event::listen('view.page.edit', function ($page)
 		{
+			WYSIWYG::loadAllEditors();
 			echo view('pages::parts.list')->with('page', $page);
 		}, 999);
-
 
 		Event::listen('frontend.found', function($page)
 		{
@@ -47,27 +50,22 @@ class ModuleServiceProvider extends ServiceProvider {
 
 		}, 8000);
 
-		Event::listen('frontend.found', 'KodiCMS\Pages\Listeners\PlacePagePartsToBlocksEventHandler', 7000);
+		Event::listen('frontend.found', PlacePagePartsToBlocksEventHandler::class, 7000);
 
 
-		Blade::extend(function ($view, $compiler)
+		Blade::directive('meta', function($expression)
 		{
-			$pattern = $compiler->createMatcher('meta');
-
-			return preg_replace($pattern, '$1<?php meta$2; ?>', $view);
+			return "<?php meta{$expression}; ?>";
 		});
 
-		Blade::extend(function ($view, $compiler)
+		Blade::directive('block', function($expression)
 		{
-			$pattern = $compiler->createMatcher('block');
-
-			return preg_replace($pattern, '$1<?php Block::run$2; ?>', $view);
+			return "<?php Block::run{$expression}; ?>";
 		});
 
-		Blade::extend(function ($view, $compiler)
+		Blade::directive('part', function($expression)
 		{
-			$pattern = $compiler->createMatcher('part');
-			return preg_replace($pattern, '$1<?php echo \KodiCMS\Pages\PagePart::getContent$2; ?>', $view);
+			return "<?php echo \\KodiCMS\\Pages\\PagePart::getContent{$expression}; ?>";
 		});
 
 		Page::observe(new PageObserver);
@@ -76,6 +74,6 @@ class ModuleServiceProvider extends ServiceProvider {
 
 	public function register()
 	{
-		$this->registerConsoleCommand('layout.generate.key', '\KodiCMS\Pages\Console\Commands\RebuldLayoutBlocks');
+		$this->registerConsoleCommand('layout.generate.key', RebuldLayoutBlocksCommand::class);
 	}
 }

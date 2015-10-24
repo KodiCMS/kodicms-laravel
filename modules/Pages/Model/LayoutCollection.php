@@ -7,10 +7,10 @@ class LayoutCollection extends FileCollection
 	/**
 	 * @var string
 	 */
-	protected $fileClass = '\\KodiCMS\Pages\Model\Layout';
+	protected $fileClass = Layout::class;
 
 	public function __construct()
 	{
-		return parent::__construct(layouts_path());
+		return parent::__construct(layouts_path(), 'layouts');
 	}
 }

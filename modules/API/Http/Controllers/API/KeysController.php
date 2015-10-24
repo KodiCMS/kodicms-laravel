@@ -1,29 +1,32 @@
 <?php namespace KodiCMS\API\Http\Controllers\API;
 
-use DatabaseConfig;
-use KodiCMS\API\Model\ApiKey;
 use KodiCMS\API\Exceptions\Exception;
+use KodiCMS\Api\Repository\ApiKeyRepository;
 use KodiCMS\API\Exceptions\PermissionException;
 use KodiCMS\API\Http\Controllers\System\Controller;
 
 class KeysController extends Controller
 {
-	public function getKeys()
+	/**
+	 * @param ApiKeyRepository $repository
+	 */
+	public function getKeys(ApiKeyRepository $repository)
 	{
 		if (!acl_check('api.view_keys'))
 		{
 			throw new PermissionException('api.view_keys');
 		}
 
-		$keys = ApiKey::lists('description', 'id');
-		$systemKey = config('cms.api_key');
-
-		unset($keys[$systemKey]);
+		$keys = $repository->getList();
+		unset($keys[$repository->getSystemKey()]);
 
 		$this->setContent($keys);
 	}
 
-	public function putKey()
+	/**
+	 * @param ApiKeyRepository $repository
+	 */
+	public function putKey(ApiKeyRepository $repository)
 	{
 		if (!acl_check('api.create_keys'))
 		{
@@ -31,46 +34,46 @@ class KeysController extends Controller
 		}
 
 		$description = $this->getRequiredParameter('description');
-		$this->setContent(ApiKey::generate($description));
+		$this->setContent($repository->generate($description));
 	}
 
-	public function deleteKey()
+	/**
+	 * @param ApiKeyRepository $repository
+	 */
+	public function deleteKey(ApiKeyRepository $repository)
 	{
 		if (!acl_check('api.delete_keys'))
 		{
 			throw new PermissionException('api.delete_keys');
 		}
 
-		$systemKey = config('cms.api_key');
 		$key = $this->getRequiredParameter('key');
 
-		if ($key == $systemKey)
+		if ($repository->isSystemKey($key))
 		{
 			throw new Exception(trans('api.core.messages.system_api_remove'));
 		}
 
-		$this->setContent((bool) ApiKey::where('id', $key)->delete());
+		$this->setContent((bool) $repository->deleteByKey($key));
 	}
 
-	public function postRefresh()
+	public function postRefresh(ApiKeyRepository $repository)
 	{
 		if (!acl_check('api.refresh_key'))
 		{
 			throw new PermissionException('api.refresh_key');
 		}
 
-		$key = config('cms.api_key');
+		$key = $repository->getSystemKey();
 
-		if (is_null($key) or !ApiKey::isValid($key))
+		if (!$repository->isValid($key))
 		{
-			$key = ApiKey::generate();
+			$key = $repository->generate();
 		}
 		else
 		{
-			$key = ApiKey::refresh($key);
+			$key = $repository->refresh($key);
 		}
-
-		DatabaseConfig::set('cms', 'api_key', $key);
 
 		$this->setContent($key);
 	}

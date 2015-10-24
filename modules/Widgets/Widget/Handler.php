@@ -15,5 +15,4 @@ class Handler extends Decorator implements WidgetHandler
 
 		];
 	}
-
 }

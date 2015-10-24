@@ -1,11 +1,11 @@
 <?php namespace KodiCMS\Email\Http\Controllers\API;
 
-use KodiCMS\API\Http\Controllers\System\Controller;
-use KodiCMS\Email\Model\EmailTemplate;
-use KodiCMS\Email\Model\EmailType;
-use KodiCMS\Email\Repository\EmailEventRepository;
-use KodiCMS\Email\Support\EmailSender;
 use Mail;
+use KodiCMS\Email\Model\EmailType;
+use KodiCMS\Email\Support\EmailSender;
+use KodiCMS\Email\Repository\EmailEventRepository;
+use KodiCMS\API\Http\Controllers\System\Controller;
+use KodiCMS\Email\Repository\EmailTemplateRepository;
 
 class EmailEventController extends Controller
 {
@@ -22,16 +22,20 @@ class EmailEventController extends Controller
 		$this->setContent($options);
 	}
 
-	public function postSend()
+	/**
+	 * @param EmailTemplateRepository $repository
+	 */
+	public function postSend(EmailTemplateRepository $repository)
 	{
 		$subject = $this->getRequiredParameter('subject');
 		$to = $this->getRequiredParameter('to');
 		$body = $this->getRequiredParameter('message');
 
-		$parameters = new EmailTemplate;
-		$parameters->subject = $subject;
-		$parameters->email_to = $to;
-		$parameters->email_from = config('mail.default');
+		$parameters = $repository->instance([
+			'subject' => $subject,
+			'email_to' => $to,
+			'email_from' => config('mail.default')
+		]);
 
 		$this->setContent(['send' => EmailSender::send($body, $parameters)]);
 	}

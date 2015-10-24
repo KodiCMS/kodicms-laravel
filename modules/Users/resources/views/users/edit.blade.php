@@ -6,43 +6,13 @@
 	<span class="panel-title">@lang('users::core.tab.general')</span>
 </div>
 <div class="panel-body">
-	<div class="form-group form-group-lg">
-		<label class="control-label col-md-3" for="username">@lang('users::core.field.username')</label>
-		<div class="col-md-4">
-			<div class="input-group">
-				{!! Form::text('username', NULL, [
-					'class' => 'form-control', 'id' => 'username'
-				]) !!}
-				<span class="input-group-addon" data-icon="user"></span>
-			</div>
-		</div>
-		<div class="col-md-offset-3 col-md-9">
-			<p class="help-block">@lang('users::core.rule.username', ['num' => 3])</p>
-		</div>
-	</div>
+	{!! $user->renderField('username') !!}
 
-	<div class="form-group">
-		<label class="control-label col-md-3" for="email">@lang('users::core.field.email')</label>
-		<div class="col-md-4">
-			<div class="input-group">
-				{!! Form::email('email', NULL, [
-					'class' => 'form-control', 'id' => 'email'
-				]) !!}
-				<span class="input-group-addon" data-icon="envelope"></span>
-			</div>
-		</div>
-	</div>
+	{!! $user->renderField('email') !!}
 
 	<hr class="panel-wide" />
 
-	<div class="form-group">
-		<label class="control-label col-md-3" for="locale">@lang('users::core.field.locale')</label>
-		<div class="col-md-4">
-			{!! Form::select('locale', $locales, null, [
-				'class' => 'form-control', 'id' => 'locale'
-			]) !!}
-		</div>
-	</div>
+	{!! $user->renderField('locale') !!}
 </div>
 
 @if (acl_check('users.change_password') OR $user->id == auth()->user()->id)
@@ -55,22 +25,9 @@
 </div>
 
 <div class="panel-body">
-	<div class="form-group">
-		<label class="control-label col-md-3" for="email">@lang('users::core.field.password')</label>
-		<div class="col-md-3">
-			{!! Form::password('password', [
-				'class' => 'form-control', 'id' => 'password', 'autocomplete' => 'off', 'placeholder' => trans('users::core.field.password')
-			]) !!}
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="control-label col-md-3" for="email">@lang('users::core.field.password_confirm')</label>
-		<div class="col-md-3">
-			{!! Form::password('password_confirmation', [
-				'class' => 'form-control', 'id' => 'password_confirmation', 'autocomplete' => 'off', 'placeholder' => trans('users::core.field.password_confirm')
-			]) !!}
-		</div>
-	</div>
+
+	{!! $user->renderField('password') !!}
+	{!! $user->renderField('password_confirmation') !!}
 
 	@event('view.user.edit.form.password', [$user])
 </div>
@@ -81,12 +38,7 @@
 	<span class="panel-title">@lang('users::core.tab.roles')</span>
 </div>
 <div class="panel-body">
-	<div class="form-group">
-		<div class="col-md-12">
-			{!! Form::select('user_roles[]', $rolesList, $userRoles, ['class' => 'form-control', 'multiple']) !!}
-			<p class="help-block">@lang('users::core.rule.roles')</p>
-		</div>
-	</div>
+	{!! $user->renderField('roles') !!}
 </div>
 @endif
 
@@ -103,7 +55,7 @@
 		@foreach ($themes as $theme)
 		<div class="col-md-2 col-sm-3 col-xs-4">
 			<a href="#" class="theme @if ($theme == $currentTheme) active @endif thumbnail" data-theme="{{ $theme }}">
-				{!! HTML::image(resources_url() . '/images/themes/' . $theme . '.jpg') !!}
+				{!! HTML::image(resources_url("/images/themes/$theme.jpg")) !!}
 			</a>
 		</div>
 		@endforeach

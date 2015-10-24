@@ -2,42 +2,27 @@
 
 use DB;
 use CMS;
-use Illuminate\Database\DatabaseManager;
-use KodiCMS\Installer\Exceptions\InstallDatabaseException;
-use KodiCMS\Installer\Support\ModuleInstaller;
 use Lang;
-use Validator;
-use Artisan;
 use Config;
-use Illuminate\Support\Str;
+use Artisan;
+use Validator;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Session\Store as SessionStore;
+use KodiCMS\Installer\Support\ModulesInstaller;
 use KodiCMS\Installer\Exceptions\InstallException;
+use KodiCMS\Installer\Exceptions\InstallDatabaseException;
 use KodiCMS\Installer\Exceptions\InstallValidationException;
 
-class Installer {
-
-	const SESSION_KEY = 'installer::data';
+class Installer
+{
+	const POST_DATA_KEY = 'installer::data';
+	const POST_DATABASE_KEY = 'installer::data';
 
 	/**
-	 * @return array
+	 * @var Filesystem
 	 */
-	public static function getDefaultEnvironment()
-	{
-		return [
-			'APP_ENV' => 'local',
-			'APP_DEBUG' => 'true',
-			'APP_KEY' => Str::random(32),
-			'DB_HOST' => 'localhost',
-			'DB_DATABASE' => 'homestead',
-			'DB_USERNAME' => 'homestead',
-			'DB_PASSWORD' => '',
-			'CACHE_DRIVER' => 'file',
-			'SESSION_DRIVER' => 'database',
-			'QUEUE_DRIVER' => 'database',
-			'APP_URL' => 'http://localhost',
-			'ADMIN_DIR_NAME' => 'backend'
-		];
-	}
+	protected $files;
 
 	/**
 	 * @var SessionStore
@@ -45,7 +30,7 @@ class Installer {
 	protected $session;
 
 	/**
-	 * @var ModuleInstaller
+	 * @var ModulesInstaller
 	 */
 	protected $installer;
 
@@ -59,9 +44,13 @@ class Installer {
 	 */
 	protected $connection;
 
-	public function __construct()
+	/**
+	 * @param Filesystem $files
+	 */
+	public function __construct(Filesystem $files)
 	{
 		$this->session = app('session');
+		$this->files = $files;
 
 		// TODO доработать
 		event('installer.beforeInstall');
@@ -70,18 +59,35 @@ class Installer {
 	/**
 	 * @return array
 	 */
+	public function getDefaultEnvironment()
+	{
+		return [
+			'APP_ENV' => env('APP_ENV', 'local'),
+			'APP_DEBUG' => config('cms.debug', true),
+			'APP_KEY' => str_random(32),
+			'DB_HOST' => env('DB_HOST', 'localhost'),
+			'DB_DATABASE' => env('DB_DATABASE', 'homestead'),
+			'DB_USERNAME' => env('DB_USERNAME', 'homestead'),
+			'DB_PASSWORD' => env('DB_PASSWORD', ''),
+			'DB_PREFIX' => env('DB_PREFIX', ''),
+			'CACHE_DRIVER' => env('CACHE_DRIVER', 'file'),
+			'SESSION_DRIVER' => env('SESSION_DRIVER', 'file'),
+			'QUEUE_DRIVER' => env('QUEUE_DRIVER', 'sync'),
+			'APP_URL' => config('cms.url', 'http://localhost'),
+			'ADMIN_DIR_NAME' => env('ADMIN_DIR_NAME', 'backend')
+		];
+	}
+
+	/**
+	 * @return array
+	 */
 	public function getDefaultParameters()
 	{
 		return [
-			'db_host' => 'localhost',
-			'db_username' => 'root',
-			'db_database' => 'kodicms',
-			'site_name' => CMS::NAME,
+			'title' => CMS::NAME,
 			'username' => 'admin',
 			'email' => 'admin@yoursite.com',
-			'admin_dir_name' => 'backend',
-			'url_suffix' => '.html',
-			'password_generate' => FALSE,
+			'generate_password' => false,
 			'timezone' => date_default_timezone_get(),
 			'date_format' => 'd F Y',
 			'locale' => Lang::getLocale()
@@ -93,9 +99,16 @@ class Installer {
 	 */
 	public function getParameters()
 	{
-		return array_merge($this->getDefaultParameters(), $this->session->get(static::SESSION_KEY, []));
+		return array_merge($this->getDefaultParameters(), $this->session->get(static::POST_DATA_KEY, []));
 	}
 
+	/**
+	 * @return array
+	 */
+	public function getDatabaseParameters()
+	{
+		return $this->session->get(static::POST_DATABASE_KEY, []);
+	}
 	/**
 	 * @return array
 	 */
@@ -121,104 +134,98 @@ class Installer {
 	}
 
 	/**
-	 * @param array $post
+	 * @param array $config
+	 *
 	 * @return boolean
 	 * @throws InstallException
 	 */
-	public function install(array $post)
+	public function install(array $config, array $databaseConfig)
 	{
-		if (empty($post))
+		if (isset($config['password_generate']))
 		{
-			throw new InstallException('No install data!');
+			$config['password_field'] = str_random();
 		}
 
-		if (isset($post['password_generate']))
-		{
-			$post['password_field'] = str_random();
-		}
+		date_default_timezone_set($config['timezone']);
 
-//		if (isset($post['admin_dir_name']))
-//		{
-//			$post['admin_dir_name'] = URL::title($post['admin_dir_name']);
-//		}
+		$this->session->set(static::POST_DATA_KEY, $config);
+		$this->session->set(static::POST_DATABASE_KEY, $databaseConfig);
 
-		date_default_timezone_set($post['timezone']);
+		$this->validation = $this->checkPostData($config);
 
-		$this->session->set(static::SESSION_KEY, $post);
-		$this->validation = $this->checkPostData($post);
-		$this->connection = $this->checkDatabaseConnection($post);
+		$this->connection = $this->createDBConnection($databaseConfig);
 
+		$this->createEnvironmentFile($config);
 
-		if (isset($post['empty_database']))
-		{
-			$this->reset();
-		}
-
-//		$this->installModules();
-		$this->createEnvironmentFile($post);
-//		$this->databaseMigrate();
-//		$this->databaseSeed($post);
-
-		return $post;
+		return $config;
 	}
 
 	/**
 	 * Создание коннекта к БД
 	 *
-	 * @param array $post
+	 * @param array $config [host,database,username,password]
+	 *
 	 * @return DatabaseManager
 	 * @throws InstallDatabaseException
 	 */
-	public function checkDatabaseConnection(array $post)
+	public function createDBConnection(array $config)
 	{
 		// Сбрасываем подключение к БД
 		DB::purge();
 
-		$configs = [
-			'host' => 'db_host',
-			'database' => 'db_database',
-			'username' => 'db_username',
-			'password' => 'db_password'
-		];
-
 		// Обновляем данные подключения к БД
-		foreach($configs as $key => $env)
+		foreach ($config as $key => $value)
 		{
-			Config::set("database.connections.mysql.{$key}", array_get($post, $env));
+			Config::set("database.connections.mysql.{$key}", $value);
 		}
 
 		try
 		{
 			return DB::connection();
 		}
-		catch(\PDOException $e)
+		catch (\PDOException $e)
 		{
 			throw new InstallDatabaseException(trans('installer::core.messages.database_connection_failed'));
 		}
 	}
 
 	/**
+	 * Очистка базы
+	 */
+	public function resetDatabase()
+	{
+		$tables = DB::connection()->getPdo()->query("SHOW FULL TABLES")->fetchAll();
+
+		DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+
+		foreach ($tables as $table)
+		{
+			Schema::dropIfExists($table[0]);
+		}
+
+		DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+
+	}
+
+
+	/**
 	 * Проверка данных формы
 	 *
 	 * @param array $data
+	 *
 	 * @return Validator
 	 * @throws InstallValidationException
 	 */
 	protected function checkPostData(array $data)
 	{
-		$data['directory'] = TRUE;
+		$data['directory'] = true;
 
 		$validator = Validator::make($data, [
-			'admin_dir_name' => 'required',
-			'username' => 'required',
-			'email' => 'required|email',
-//			'cache_type' => 'required',
-//			'session_type' => 'required',
-			'password' => 'required|confirmed',
-			'password_confirmation' => 'required',
-			'db_host' => 'required',
-			'db_database' => 'required',
-			'db_username' => 'required'
+			'ADMIN_DIR_NAME' => 'required',
+			'USERNAME' => 'required',
+			'EMAIL' => 'required|email',
+			'PASSWORD' => 'required|confirmed',
+			'PASSWORD_CONFIRMATION' => 'required'
 		]);
 
 		if ($validator->fails())
@@ -236,7 +243,7 @@ class Installer {
 	 * Используется для установки данных из модулей
 	 *
 	 * Метод проходится по модулям, ищет в них файл install.php, если существует
-	 * запускает его и передает массив $post
+	 * запускает его и передает массив $config
 	 */
 	protected function installModules()
 	{
@@ -248,37 +255,96 @@ class Installer {
 		Artisan::call('cms:modules:migrate');
 	}
 
-	protected function databaseSeed(array $post)
+	protected function databaseSeed()
 	{
-		// TODO: реализовать передачу в файлы сидов данные из инсталлятора
+
 		Artisan::call('cms:modules:seed');
 	}
+
 
 	/**
 	 * Создание конфиг файла
 	 *
-	 * @param array $post
+	 * @param array $config
+	 *
 	 * @throws Installer_Exception
+	 * @return boolean
 	 */
-	protected function createEnvironmentFile(array $post)
+	public function createEnvironmentFile(array $config)
 	{
-		Artisan::call('cms:install', [
-			'-host'			=> $post['db_host'],
-			'-db'			=> $post['db_database'],
-			'-u'			=> $post['db_username'],
-			'-p'			=> $post['db_password'],
-//			'-prefix'		=> $post['db_prefix'],
-//			'-suffix'		=> $post['url_suffix'],
-			'-url'			=> url('/'),
-			'-dir'			=> $post['admin_dir_name']
-		]);
+		return $this->buildEnvFile($config);
+	}
+
+
+	/**
+	 * Get the stub file for the generator.
+	 *
+	 * @return string
+	 */
+	protected function getStub()
+	{
+		return __DIR__ . '/Console/Commands/stubs/env.stub';
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function getEnvPath()
+	{
+		return base_path(app()->environmentFile());
+	}
+
+
+	/**
+	 * Build the directory for the class if necessary.
+	 *
+	 * @param  string $path
+	 *
+	 * @return string
+	 */
+	protected function makeDirectory($path)
+	{
+		if (!$this->files->isDirectory(dirname($path)))
+		{
+			$this->files->makeDirectory(dirname($path), 0777, true, true);
+		}
+	}
+
+	/**
+	 *
+	 * @param $config array
+	 *
+	 * @return string
+	 */
+	protected function buildEnvFile(array $config)
+	{
+		$path = $this->getEnvPath();
+		$stub = $this->files->get($this->getStub());
+
+		$options = [];
+		foreach ($this->getDefaultEnvironment() as $key => $default)
+		{
+			$value = isset($config[$key]) ? $config[$key] : $default;
+			$options['{{' . $key . '}}'] = $value;
+		}
+
+
+		$stub = str_replace(array_keys($options), array_values($options), $stub);
+
+		$this->makeDirectory($path);
+		if ($this->files->put($path, $stub))
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	protected function reset()
 	{
-		$$this->installer->resetModules();
+		$this->installer->resetModules();
 
-		if(is_file(app()->environmentFile()))
+		if (is_file(app()->environmentFile()))
 		{
 			unlink(app()->environmentFile());
 		}

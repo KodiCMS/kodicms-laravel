@@ -8,7 +8,7 @@
 </div>
 <div class="panel-body panel-spoiler">
 	<div class="form-group">
-		<label class="control-label col-sm-3"><?php echo __( 'Job agent' ); ?></label>
+		<label class="control-label col-sm-3">@lang('cron::core.settings.agent')</label>
 		<div class="col-sm-3">
 			{!! Form::select('config[job][agent]', $agents, (int) config('job.agent'), ['class' => 'form-control']) !!}
 		</div>

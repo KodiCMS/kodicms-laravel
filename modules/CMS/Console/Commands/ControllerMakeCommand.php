@@ -1,9 +1,9 @@
 <?php namespace KodiCMS\CMS\Console\Commands;
 
-use ModuleLoader;
-use KodiCMS\CMS\Loader\ModuleContainer;
+use ModulesLoader;
 use RuntimeException;
 use Illuminate\Console\GeneratorCommand;
+use KodiCMS\ModulesLoader\ModuleContainer;
 use Symfony\Component\Console\Input\InputOption;
 
 class ControllerMakeCommand extends GeneratorCommand {
@@ -60,9 +60,9 @@ class ControllerMakeCommand extends GeneratorCommand {
 	{
 		$module = $this->input->getOption('module');
 
-		foreach(ModuleLoader::getRegisteredModules() as $moduleContainer)
+		foreach(ModulesLoader::getRegisteredModules() as $moduleContainer)
 		{
-			if(strtolower($moduleContainer->getName()) == strtolower($module))
+			if($moduleContainer->getKey() == strtolower($module))
 			{
 				return $moduleContainer;
 			}

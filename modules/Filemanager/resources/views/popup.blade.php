@@ -4,7 +4,7 @@
 		var params = $.extend({
 			lang: '{{ Lang::getLocale() }}',
 			url : '/api.filemanager',
-			height: CMS.content_height - 20,
+			height: CMS.content_height - 55,
 			resizable: false,
 			uiOptions: {
 				toolbar : [
@@ -25,12 +25,11 @@
 			@if (!acl_check('filemanager.edit')),allowShortcuts : false @endif
 		}, params);
 
-		var elfinder = $('body').elfinder(params).elfinder('instance');
+		var elfinder = $('#elfinder').elfinder(params).elfinder('instance');
 
 		$(window).resize(function() {
 			var node = elfinder.getUI('node');
-			var h = CMS.content_height - 20;
-			node.height(h);
+			var h = CMS.content_height - 55;
 			node.find('.elfinder-navbar')
 				.add(node.find('.elfinder-workzone'))
 				.add(node.find('.elfinder-cwd'))
@@ -54,3 +53,5 @@
 	});
 </script>
 @stop
+
+<div id="elfinder"></div>

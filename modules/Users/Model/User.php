@@ -1,22 +1,28 @@
 <?php namespace KodiCMS\Users\Model;
 
+use App;
 use ACL;
 use Carbon\Carbon;
 use KodiCMS\Support\Helpers\Locale;
 use KodiCMS\Users\Helpers\Gravatar;
 use Illuminate\Auth\Authenticatable;
+use KodiCMS\Support\Traits\Tentacle;
 use Illuminate\Database\Eloquent\Model;
+use KodiCMS\Support\Model\ModelFieldTrait;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use KodiCMS\Users\Model\FieldCollections\UserFieldCollection;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 /**
  * Class User
  * @package KodiCMS\Users\Model
  */
-class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
+class User extends Model implements AuthenticatableContract, CanResetPasswordContract, AuthorizableContract {
 
-	use Authenticatable, CanResetPassword;
+	use Authenticatable, CanResetPassword, ModelFieldTrait, Authorizable, Tentacle;
 
 	/**
 	 * @var array
@@ -65,6 +71,23 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	protected $permissions = [];
 
 	/**
+	 * @param array $attributes
+	 */
+	public function __construct(array $attributes = [])
+	{
+		parent::__construct($attributes);
+		$this->addObservableEvents('authenticated');
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function fieldCollection()
+	{
+		return new UserFieldCollection;
+	}
+
+	/**
 	 * @param integer $date
 	 * @return string
 	 */
@@ -97,6 +120,21 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 
 	/**
+	 * @param int $size
+	 * @param array $attributes
+	 * @return string
+	 */
+	public function getAvatar($size = 100, array $attributes = null)
+	{
+		if (empty($this->avatar) or !is_file(App::uploadPath() . 'avatars' . DIRECTORY_SEPARATOR . $this->avatar))
+		{
+			return $this->getGravatar($size, null, $attributes);
+		}
+
+		return HTML::image(App::uploadURL() . '/avatars/' . $this->avatar, null, $attributes);
+	}
+
+	/**
 	 * Получение аватара пользлователя из сервиса Gravatar
 	 *
 	 * @param integer $size
@@ -104,27 +142,33 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 * @param array $attributes
 	 * @return string HTML::image
 	 */
-	public function gravatar($size = 100, $default = NULL, array $attributes = NULL)
+	public function getGravatar($size = 100, $default = null, array $attributes = null)
 	{
 		return Gravatar::load($this->email, $size, $default, $attributes);
 	}
 	
 	/**
-	 * 
 	 * @param string $password
 	 */
 	public function setPasswordAttribute($password)
 	{
-		$this->attributes['password'] = \Hash::make($password);
+		$this->attributes['password'] = bcrypt($password);
 	}
 
 	/**
-	 * TODO: добавить кеширование ролей
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	 */
 	public function roles()
 	{
-		return $this->belongsToMany('KodiCMS\Users\Model\UserRole', 'roles_users', 'user_id', 'role_id');
+		return $this->belongsToMany(UserRole::class, 'roles_users', 'user_id', 'role_id');
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\hasMany
+	 */
+	public function reflinks()
+	{
+		return $this->hasMany(UserReflink::class);
 	}
 
 	/**
@@ -143,11 +187,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return $roles;
 	}
 
+	/**
+	 * @param string|array $role
+	 * @param bool         $allRequired
+	 *
+	 * @return bool
+	 */
 	public function hasRole($role, $allRequired = FALSE)
 	{
-		$status = TRUE;
-
-		$roles = $this->getRoles()->lists('name');
+		$roles = $this->getRoles()->lists('name')->all();
 
 		if (is_array($role))
 		{
@@ -157,13 +205,13 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 				// If the user doesn't have the role
 				if (!in_array($_role, $roles)) {
 					// Set the status false and get outta here
-					$status = FALSE;
+					$status = false;
 
 					if ($allRequired) {
 						break;
 					}
 				} elseif (!$allRequired) {
-					$status = TRUE;
+					$status = true;
 					break;
 				}
 			}
@@ -182,16 +230,20 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	public function getPermissionsByRoles()
 	{
 		$roles = $this->getRoles()
-			->lists('name', 'id');
+			->lists('name', 'id')
+			->all();
 
 		if(!empty($roles)) {
 			$permissions = (new RolePermission())
 				->whereIn('role_id', array_keys($roles))
 				->get()
-				->lists('action');
+				->lists('action')
+				->all();
+
+			return array_unique($permissions);
 		}
 
-		return array_unique($permissions);
+		return [];
 	}
 
 	/**
@@ -228,5 +280,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		}
 
 		return Locale::getSystemDefault();
+	}
+
+
+	public function authenticated()
+	{
+		$this->fireModelEvent('authenticated');
 	}
 }

@@ -26,7 +26,7 @@
 				<div class="input-group-btn">
 				{!! Form::button(trans('widgets::core.button.select_blocks'), [
 					'data-icon' => 'level-up fa-flip-horizontal',
-					'class' => 'btn btn-warning',
+					'class' => 'btn btn-warning btn-labeled',
 					'id' => 'select_for_all'
 				]) !!}
 				</div>
@@ -35,7 +35,7 @@
 			@if (acl_check('layout.rebuild'))
 			{!! Form::button(trans('widgets::core.button.rebuild_blocks'), [
 				'data-icon' => 'refresh',
-				'class' => 'btn btn-xs btn-danger',
+				'class' => 'btn btn-xs btn-info btn-labeled',
 				'data-api-url' => '/api.layout.rebuild'
 			]) !!}
 			@endif
@@ -44,7 +44,7 @@
 	<div class="panel-footer form-actions">
 		{!! Form::button(trans('cms::core.button.update'), [
 			'type' => 'submit',
-			'class' => 'btn-lg btn-primary btn',
+			'class' => 'btn-lg btn-primary btn btn-labeled',
 			'data-icon' => 'check',
 			'data-hotkeys' => 'ctrl+s'
 		]) !!}

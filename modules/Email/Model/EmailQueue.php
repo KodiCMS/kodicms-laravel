@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\Email\Model;
 
-use Illuminate\Database\Eloquent\Model;
-use KodiCMS\Email\Support\EmailSender;
 use Mail;
+use KodiCMS\Email\Support\EmailSender;
+use Illuminate\Database\Eloquent\Model;
 
 class EmailQueue extends Model
 {

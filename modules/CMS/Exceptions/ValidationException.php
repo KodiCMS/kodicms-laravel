@@ -15,19 +15,32 @@ class ValidationException extends Exception
 	protected $rules = [];
 
 	/**
-	 * @param Validator $object
+	 * @var Validator
+	 */
+	protected $validator;
+
+	/**
+	 * @param Validator $validator
 	 * @return $this
 	 */
-	public function setValidator(Validator $object)
+	public function setValidator(Validator $validator)
 	{
-		$this->messages = $object->errors()->getMessages();
-		$this->rules = $object->failed();
+		$this->validator = $validator;
+		$this->messages = $validator->errors()->getMessages();
+		$this->rules = $validator->failed();
 
 		return $this;
 	}
 
 	/**
-	 *
+	 * @return Validator
+	 */
+	public function getValidator()
+	{
+		return $this->validator;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getFailedRules()
@@ -36,7 +49,6 @@ class ValidationException extends Exception
 	}
 
 	/**
-	 *
 	 * @return array
 	 */
 	public function getErrorMessages()

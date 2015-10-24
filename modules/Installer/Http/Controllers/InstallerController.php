@@ -3,26 +3,21 @@
 use Lang;
 use Date;
 use Assets;
+use EnvironmentTester;
 use KodiCMS\Installer\Installer;
-use KodiCMS\Installer\EnvironmentTester;
+use KodiCMS\Support\Helpers\Locale;
 use KodiCMS\Installer\Exceptions\InstallValidationException;
 use KodiCMS\CMS\Http\Controllers\System\FrontendController;
 
 class InstallerController extends FrontendController {
-
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'installer::';
-
 	/**
 	 * @var Installer
 	 */
 	protected $installer;
 
-	public function boot()
+	public function boot(Installer $installer)
 	{
-		$this->installer = new Installer;
+		$this->installer = $installer;
 	}
 
 	public function error()
@@ -37,20 +32,33 @@ class InstallerController extends FrontendController {
 	{
 		Assets::package(['steps', 'validate']);
 
+		if ($locale = $this->request->get('lang') and array_key_exists($locale, Locale::getAvailable()))
+		{
+			$this->session->set('installer_locale', $locale);
+		}
+		else if ($locale = Locale::detectBrowser() and array_key_exists($locale, Locale::getAvailable()))
+		{
+			$this->session->set('installer_locale', $locale);
+		}
+
+		Lang::setLocale($this->session->get('installer_locale', Locale::getSystemDefault()));
+
 		list($failed, $tests, $optional) = EnvironmentTester::check();
 
 		$this->setContent('install', [
-			'environment' => view($this->moduleNamespace . 'env', [
+			'environment' => view("{$this->moduleNamespace}env", [
 				'failed' => $failed,
 				'tests' => $tests,
 				'optional' => $optional
 			]),
-			'title' => $this->template->title,
 			'data' => $this->installer->getParameters(),
+			'database' => $this->installer->getDatabaseParameters(),
 			'locales' => config('cms.locales'),
-			'selectedLocale' => $this->request->get('locale', Lang::locale()),
+			'selectedLocale' => Lang::locale(),
 			'dateFormats' => config('cms.date_format_list'),
-			'timezones' => Date::getTimezones()
+			'timezones' => Date::getTimezones(),
+			'cacheTypes' => ['file' => 'File'],
+			'sessionTypes' => ['file' => 'File', 'database' => 'Database']
 		]);
 
 		$this->templateScripts['FAILED'] = $failed;
@@ -59,12 +67,13 @@ class InstallerController extends FrontendController {
 	public function install()
 	{
 		$this->autoRender = FALSE;
-
-		$data = $this->request->get('install', []);
+		$installData = $this->request->get('install', []);
+		$databaseData = $this->request->get('database', []);
 
 		try
 		{
-			$data = $this->installer->install($data);
+			$data = $this->installer->install($installData, $databaseData);
+
 			return redirect(array_get($data, 'admin_dir_name'));
 		}
 		catch(InstallValidationException $e)

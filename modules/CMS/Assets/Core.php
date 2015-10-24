@@ -2,8 +2,8 @@
 
 use HTML;
 use Cache;
-use ModuleLoader;
 use Carbon\Carbon;
+use ModulesFileSystem;
 use Package as PackageManager;
 
 /**
@@ -377,16 +377,16 @@ class Core
 		$content = Cache::remember($cacheKey, Carbon::now()->minute(20), function() use($path, $ext)
 		{
 			$return = '';
-			$files = ModuleLoader::findFile('resources', $path, $ext, TRUE);
+			$files = ModulesFileSystem::findFile('resources', $path, $ext, TRUE);
 
 			foreach($files as $file)
 			{
 				if(config('app.debug'))
 				{
-					$return .= "{$file}\n";
+					$return .= "\n/**\n{$file}\n**/\n";
 				}
 
-				$return .= file_get_contents($file) . "\n";
+				$return .= file_get_contents($file) . "\n\n";
 			}
 
 			return $return;

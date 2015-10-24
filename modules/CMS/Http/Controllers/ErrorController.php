@@ -9,7 +9,7 @@ class ErrorController extends System\FrontendController {
 
 	public function error404(\Exception $e)
 	{
-		$this->render($e, 404, trans('cms::core.messages.route_not_found'));
+		$this->render($e, 404, trans($this->wrapNamespace('core.messages.route_not_found')));
 	}
 
 	/**

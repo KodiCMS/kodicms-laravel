@@ -5,6 +5,8 @@ use \KodiCMS\Pages\Model\FrontendPage;
 return [
 	'check_date' => false,
 
+	'default_status' => FrontendPage::STATUS_PUBLISHED,
+
 	'cache' => [
 		'findByField' => \Carbon\Carbon::now()->addMinutes(10)
 	],

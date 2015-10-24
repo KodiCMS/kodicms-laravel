@@ -7,11 +7,18 @@ return [
 		'system'    => 'Системные',
 		'dashboard' => 'Рабочий стол',
 		'design'    => 'Дизайн',
-		'system'    => 'Система'
+		'system'    => 'Система',
+		'update'	=> 'Обновление'
 	],
 	'label'      => [
 		'not_set'    => 'Не указан',
-		'date_never' => 'Никогда'
+		'date_never' => 'Никогда',
+		'toggler_close' => 'Свернуть',
+		'toggler_open' => 'Развернуть',
+		'update' => [
+			'new_files' => 'Новые файлы',
+			'changed_files' => 'Измененные файлы'
+		]
 	],
 	'button'     => [
 		'update'       => 'Сохранить',
@@ -19,6 +26,7 @@ return [
 		'create'       => 'Создать',
 		'create_close' => 'Создать и закрыть',
 		'cancel'       => 'Отмена',
+		'bug_report'   => 'Сообщить об ошибке'
 	],
 	'helpers'    => [
 		'not_select'  => 'Не выбран',
@@ -37,6 +45,9 @@ return [
 	'messages'   => [
 		'route_not_found' => 'Страница не найдена',
 		'cache_clear' => 'Кеш очищен',
-		'are_you_sure' => 'Вы уверены?'
+		'are_you_sure' => 'Вы уверены?',
+		'new_version' => 'Имеется более новая версия системы (:version)',
+		'no_new_version' => 'У вас установлена последняя версия.',
+		'update_information' => 'Если система клонирована из репозитория Github, используйте команду <strong>git pull</strong> для обновления'
 	],
 ];

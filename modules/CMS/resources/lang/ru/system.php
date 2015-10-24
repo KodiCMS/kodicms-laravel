@@ -18,7 +18,7 @@ return [
 	'label' => [
 		'about' => [
 			'cms' => 'Версия системы',
-			'framework' => 'Используемый фреймворк',
+			'framework' => 'Фреймворк',
 			'php_version' => 'Версия PHP',
 			'environment' => 'Текущее окружение',
 			'host' => 'Хост',
@@ -31,6 +31,7 @@ return [
 			'html_editor' => 'HTML редактор',
 			'code_editor' => 'Редактор кода',
 			'debug_mode' => 'Режим отладки',
+			'profiling_mode' => 'Режим профилирования',
 			'date_format' => 'Формат времени',
 			'default_locale' => 'Язык системы по умолчанию',
 			'site_title' => 'Заголовок сайта',
@@ -41,7 +42,9 @@ return [
 	'button' => [
 		'settings' => [
 			'save' => 'Сохранить'
-		]
+		],
+		'on'		   => 'Вкл',
+		'off'		   => 'Выкл'
 	],
 	'messages' => [
 		'settings' => [

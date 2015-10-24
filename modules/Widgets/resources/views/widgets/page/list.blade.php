@@ -1,3 +1,6 @@
+@section('page-content')
+	@parent
+
 <div class="panel-heading panel-toggler" data-hotkeys="shift+w">
 	<span class="panel-title" data-icon="cubes">@lang('widgets::core.title.list')</h4>
 </div>
@@ -42,6 +45,7 @@
 	</table>
 	@endif
 </div>
+@stop
 
 @section('scripts')
 <script src="/backend/cms/js/WidgetController.js"></script>

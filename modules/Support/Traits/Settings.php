@@ -2,6 +2,8 @@
 
 trait Settings {
 
+	use ModelSettings;
+
 	/**
 	 * @param string $name
 	 * @return mixed
@@ -27,7 +29,7 @@ trait Settings {
 	 */
 	public function __isset($name)
 	{
-		return isset($this->settings[$name]);
+		return isset($this->{$this->getSettingsProperty()}[$name]);
 	}
 
 	/**
@@ -35,7 +37,7 @@ trait Settings {
 	 */
 	public function __unset($name)
 	{
-		unset($this->settings[$name]);
+		unset($this->{$this->getSettingsProperty()}[$name]);
 	}
 
 	/**
@@ -54,7 +56,7 @@ trait Settings {
 	 */
 	public function offsetExists($offset)
 	{
-		return isset($this->settings[$offset]);
+		return isset($this->{$this->getSettingsProperty()}[$offset]);
 	}
 
 	/**
@@ -62,7 +64,7 @@ trait Settings {
 	 */
 	public function offsetUnset($offset)
 	{
-		unset($this->settings[$offset]);
+		unset($this->{$this->getSettingsProperty()}[$offset]);
 	}
 
 	/**
@@ -74,93 +76,14 @@ trait Settings {
 		return $this->getSetting($offset);
 	}
 
+
 	/**
+	 * Get the instance as an array.
+	 *
 	 * @return array
 	 */
-	public function getSettings()
+	public function toArray()
 	{
-		return $this->settings;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function booleanSettings()
-	{
-		return [];
-	}
-
-	/**
-	 * @param string $name
-	 * @param mixed $default
-	 * @return mixed|null
-	 */
-	public function getSetting($name, $default = null)
-	{
-		$method = 'getSetting' . studly_case($name);
-
-		if (method_exists($this, $method))
-		{
-			return $this->{$method}($default);
-		}
-
-		return array_get($this->settings, $name, $default);
-	}
-
-	/**
-	 * @param string $name
-	 * @param mixed $value
-	 * @return $this
-	 */
-	public function setSetting($name, $value = null)
-	{
-		if (is_array($name))
-		{
-			$this->setSettings($name);
-		}
-		else
-		{
-			$method = 'setSetting' . studly_case($name);
-			if (method_exists($this, $method))
-			{
-				return $this->{$method}($value);
-			}
-			else
-			{
-				$this->settings[$name] = $value;
-			}
-		}
-
-		return $this;
-	}
-
-	/**
-	 * @param array $settings
-	 * @return $this
-	 */
-	public function setSettings(array $settings)
-	{
-		$booleans = $this->booleanSettings();
-		foreach ($booleans as $key)
-		{
-			$settings[$key] = !empty($settings[$key]) ? true : false;
-		}
-
-		foreach ($settings as $key => $value)
-		{
-			$this->setSetting($key, $value);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * @param array $settings
-	 * @return $this
-	 */
-	public function replaceSettings(array $settings)
-	{
-		$this->settings = [];
-		return $this->setSettings($settings);
+		return $this->getSettings();
 	}
 }

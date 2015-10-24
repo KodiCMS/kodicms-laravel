@@ -1,7 +1,6 @@
 <?php namespace KodiCMS\CMS\Http\Controllers\System;
 
 use Assets;
-use ModuleLoader;
 
 class FrontendController extends TemplateController
 {

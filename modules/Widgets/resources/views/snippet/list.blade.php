@@ -3,7 +3,7 @@
 		<div class="panel-heading">
 			@if (acl_check('snippet.add'))
 				{!! link_to_route('backend.snippet.create', trans('widgets::snippet.button.add'), [], [
-				'class' => 'btn btn-default', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
+				'class' => 'btn btn-default btn-labeled', 'data-icon' => 'plus', 'data-hotkeys' => 'ctrl+a'
 				]) !!}
 			@endif
 		</div>
@@ -58,10 +58,13 @@
 			</td>
 			<td class="actions text-right">
 				@if (acl_check('snippet.delete'))
-					{!! link_to_route('backend.snippet.delete', '', [$snippet->getName()], [
-					'data-icon' => 'times fa-inverse',
-					'class' => 'btn btn-danger btn-xs btn-confirm'
-					]) !!}
+				{!! Form::open(['route' => ['backend.snippet.delete', $snippet->getName()]]) !!}
+					{!! Form::button('', [
+						'type' => 'submit',
+						'data-icon' => 'times fa-inverse', 'class' => 'btn btn-xs btn-danger btn-confirm'
+						])
+					!!}
+				{!! Form::close() !!}
 				@endif
 			</td>
 		</tr>

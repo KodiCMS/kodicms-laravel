@@ -22,7 +22,7 @@ return [
 				'name' => 'Information',
 				'label' => 'cms::core.title.about',
 				'url' => route('backend.about'),
-				'permissions' => 'system.about',
+				'permissions' => 'backend.about',
 				'priority' => 90,
 				'icon' => 'info-circle',
 			],
@@ -30,9 +30,17 @@ return [
 				'name' => 'Settings',
 				'label' => 'cms::core.title.settings',
 				'url' => route('backend.settings'),
-				'permissions' => 'system.settings',
+				'permissions' => 'backend.settings',
 				'priority' => 100,
 				'icon' => 'cog',
+			],
+			[
+				'name' => 'Update',
+				'label' => 'cms::core.title.update',
+				'url' => route('backend.update'),
+				'permissions' => 'backend.update',
+				'priority' => 500,
+				'icon' => 'cloud-download',
 			]
 		]
 	],

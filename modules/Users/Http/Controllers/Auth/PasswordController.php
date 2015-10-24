@@ -1,44 +1,14 @@
 <?php namespace KodiCMS\Users\Http\Controllers\Auth;
 
+use Reflinks;
+use Password;
 use KodiCMS\CMS\Http\Controllers\System\FrontendController;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Auth\PasswordBroker;
-use Illuminate\Foundation\Auth\ResetsPasswords;
-use Illuminate\Http\Response;
-
+use KodiCMS\Users\Reflinks\Generators\ForgotPasswordGenerator;
 
 class PasswordController extends FrontendController {
 
-	/**
-	 * @var string
-	 */
-	public $moduleNamespace = 'users::';
-
-	/*
-	|--------------------------------------------------------------------------
-	| Password Reset Controller
-	|--------------------------------------------------------------------------
-	|
-	| This controller is responsible for handling password reset requests
-	| and uses a simple trait to include this behavior. You're free to
-	| explore this trait and override any methods you wish to tweak.
-	|
-	*/
-
-	use ResetsPasswords;
-
-
-	/**
-	 * Create a new password controller instance.
-	 *
-	 * @param Guard $auth
-	 * @param PasswordBroker $passwords
-	 */
-	public function boot(Guard $auth, PasswordBroker $passwords)
+	public function boot()
 	{
-		$this->auth = $auth;
-		$this->passwords = $passwords;
-
 		$this->middleware('guest');
 	}
 
@@ -51,5 +21,22 @@ class PasswordController extends FrontendController {
 	{
 		$this->setContent('auth.password')
 			->with('status', $this->session->get('status'));
+	}
+
+	public function postEmail()
+	{
+		$this->validate($this->request, ['email' => 'required|email']);
+
+		$response = Reflinks::generateToken(new ForgotPasswordGenerator($this->request->input('email')));
+
+		switch ($response)
+		{
+			case Reflinks::TOKEN_GENERATED:
+				return back()->with('status', trans(Password::RESET_LINK_SENT));
+			default:
+				return redirect()->back()
+					->withInput($this->request->only('email'))
+					->withErrors(['email' => trans($response)]);
+		}
 	}
 }

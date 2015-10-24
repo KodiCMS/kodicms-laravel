@@ -1,16 +1,18 @@
 <?php namespace KodiCMS\Support\Model;
 
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use KodiCMS\Support\Model\Contracts\ModelFieldInterface;
+use KodiCMS\Support\Model\Contracts\ModelFieldsInterface;
 use KodiCMS\Support\Model\Contracts\ModelFieldCollectionInterface;
 
-class ModelFieldCollection implements \Iterator
+class ModelFieldCollection extends Collection
 {
 	/**
 	 * @var ModelFieldCollectionInterface
 	 */
-	protected $collection = [];
+	protected $items = [];
 
 	/**
 	 * @var Model
@@ -18,25 +20,21 @@ class ModelFieldCollection implements \Iterator
 	protected $model;
 
 	/**
+	 * @var ModelFieldsInterface
+	 */
+	protected $collection;
+
+	/**
 	 * @param Model $model
-	 * @param array $collection
+	 * @param ModelFieldsInterface $collection
 	 * @throws ModelFieldCollectionException
 	 */
-	public function __construct(Model $model, $collection = [])
+	public function __construct(Model $model, ModelFieldsInterface $collection)
 	{
 		$this->model = $model;
+		$this->collection = $collection;
 
-		if (!($collection instanceof ModelFieldsInterface))
-		{
-			$collection = $collection->fields();
-		}
-
-		if (!is_array($collection))
-		{
-			throw new ModelFieldCollectionException('Collection must be type [array]');
-		}
-
-		foreach ($collection as $field)
+		foreach ($collection->fields() as $field)
 		{
 			$this->addField($field);
 		}
@@ -47,7 +45,7 @@ class ModelFieldCollection implements \Iterator
 	 */
 	public function getFields()
 	{
-		return $this->collection;
+		return $this->items;
 	}
 
 	/**
@@ -63,7 +61,7 @@ class ModelFieldCollection implements \Iterator
 			list($name, $related) = explode('::', $name, 2);
 		}
 
-		if (is_null($field = array_get($this->collection, $name)))
+		if (is_null($field = array_get($this->items, $name)))
 		{
 			return null;
 		}
@@ -72,13 +70,18 @@ class ModelFieldCollection implements \Iterator
 		{
 			$relationship = $field->getRelatedModel();
 
-			if($relationship instanceof Model)
+			if ($relationship instanceof Model)
 			{
 				return $relationship->getField($related);
 			}
-			else if($relationship instanceof Relation)
+			else if ($relationship instanceof Relation)
 			{
-				return $relationship->getResults()->getField($related);
+				if (is_null($model = $relationship->getResults()))
+				{
+					$model = $relationship->getRelated();
+				}
+
+				return $model->getField($related)->setPrefix($name);
 			}
 		}
 
@@ -92,7 +95,7 @@ class ModelFieldCollection implements \Iterator
 	public function addField(ModelFieldInterface $field)
 	{
 		$field->setModel($this->model);
-		return $this->collection[$field->getKey()] = $field;
+		return $this->items[$field->getKey()] = $field;
 	}
 
 	/**
@@ -115,7 +118,7 @@ class ModelFieldCollection implements \Iterator
 	 */
 	public function setFieldPrefix($prefix)
 	{
-		foreach ($this->collection as $filed)
+		foreach ($this->items as $filed)
 		{
 			$filed->setPrefix($prefix);
 		}
@@ -129,7 +132,7 @@ class ModelFieldCollection implements \Iterator
 	 */
 	public function setFieldAttributes(array $attributes)
 	{
-		foreach ($this->collection as $filed)
+		foreach ($this->items as $filed)
 		{
 			$filed->setAttributes($attributes);
 		}
@@ -143,40 +146,11 @@ class ModelFieldCollection implements \Iterator
 	 */
 	public function setFieldLabelAttributes(array $attributes)
 	{
-		foreach ($this->collection as $filed)
+		foreach ($this->items as $filed)
 		{
 			$filed->setLabelAttributes($attributes);
 		}
 
 		return $this;
-	}
-
-	/************************************
-	 * Iterator
-	 ************************************/
-	public function rewind()
-	{
-		reset($this->collection);
-	}
-
-	public function current()
-	{
-		return current($this->collection);
-	}
-
-	public function key()
-	{
-		return key($this->collection);
-	}
-
-	public function next()
-	{
-		return next($this->collection);
-	}
-
-	public function valid()
-	{
-		$key = key($this->collection);
-		return ($key !== null && $key !== false);
 	}
 }

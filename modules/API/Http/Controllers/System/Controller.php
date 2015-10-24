@@ -1,13 +1,12 @@
 <?php namespace KodiCMS\API\Http\Controllers\System;
 
-use KodiCMS\API\Exceptions\AuthenticateException;
-use KodiCMS\API\Exceptions\PermissionException;
 use Validator;
 use Illuminate\View\View;
 use BadMethodCallException;
 use Illuminate\Http\Request;
 use KodiCMS\API\Http\Response;
 use Illuminate\Http\JsonResponse;
+use KodiCMS\API\Http\ControllerACL;
 use Illuminate\Http\RedirectResponse;
 use KodiCMS\API\Exceptions\ValidationException;
 use KodiCMS\API\Exceptions\MissingParameterException;
@@ -32,6 +31,14 @@ abstract class Controller extends BaseController
 	public $requiredFields = [];
 
 	/**
+	 * @return KodiCMS\API\Http\ControllerACL
+	 */
+	protected function getControllerAcl()
+	{
+		return new ControllerACL();
+	}
+
+	/**
 	 * Получение значения передаваемого параметра
 	 *
 	 * Если параметр указан как обязательный, то при его отсутсвии на запрос
@@ -50,9 +57,7 @@ abstract class Controller extends BaseController
 			$this->validateParameters([$key => $isRequired]);
 		}
 
-		$param = $this->request->input($key, $default);
-
-		return $param;
+		return array_get($this->request->all(), $key, $default);
 	}
 
 	/**
@@ -124,21 +129,6 @@ abstract class Controller extends BaseController
 	}
 
 	/**
-	 * @param string|array|null $message
-	 * @param bool $redirect
-	 * @return Response
-	 */
-	public function denyAccess($message = null, $redirect = false)
-	{
-		if (auth()->guest())
-		{
-			throw new AuthenticateException($message);
-		}
-
-		throw new PermissionException(array_get($this->permissions, $this->getCurrentAction()), $message);
-	}
-
-	/**
 	 * Execute an action on the controller.
 	 *
 	 * @param  string $method
@@ -172,6 +162,18 @@ abstract class Controller extends BaseController
 		}
 
 		return (new Response(config('app.debug')))->createResponse($this->responseArray);
+	}
+
+	/**
+	 * @param string $command
+	 *
+	 * @return $this
+	 */
+	public function addJavascriptCommand($command)
+	{
+		$this->responseArray['commands'][] = $command;
+
+		return $this;
 	}
 
 	/**

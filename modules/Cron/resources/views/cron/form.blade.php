@@ -8,7 +8,7 @@
 	<div class="panel-heading-controls">
 		@if ($job->exists && acl_check('cron.run'))
 			{!! link_to_route('backend.cron.run', trans('cron::core.button.run'), [$job], [
-				'data-icon' => 'bolt', 'class' => 'btn btn-danger btn-sm'
+				'data-icon' => 'bolt', 'class' => 'btn btn-danger btn-sm btn-labeled'
 			]) !!}
 		@endif
 	</div>

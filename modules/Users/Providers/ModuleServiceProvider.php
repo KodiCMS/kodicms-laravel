@@ -1,12 +1,14 @@
 <?php namespace KodiCMS\Users\Providers;
 
 use Event;
-use KodiCMS\Users\ACL;
 use KodiCMS\Users\Model\User;
 use KodiCMS\Users\Model\UserRole;
 use KodiCMS\Users\Observers\RoleObserver;
 use KodiCMS\Users\Observers\UserObserver;
-use KodiCMS\CMS\Providers\ServiceProvider;
+use KodiCMS\Users\Reflinks\ReflinksBroker;
+use KodiCMS\Users\Reflinks\ReflinkTokenRepository;
+use KodiCMS\ModulesLoader\Providers\ServiceProvider;
+use KodiCMS\Users\Console\Commands\DeleteExpiredReflinksCommand;
 
 class ModuleServiceProvider extends ServiceProvider {
 
@@ -17,25 +19,49 @@ class ModuleServiceProvider extends ServiceProvider {
 
 		Event::listen('view.navbar.right.after', function ()
 		{
-			echo view('users::parts.navbar');
+			echo view('users::parts.navbar')->render();
 		});
 
 		Event::listen('view.menu', function ($navigation)
 		{
-			echo view('users::parts.navigation');
+			echo view('users::parts.navigation')->render();
 		}, 999);
 	}
 
 	public function register()
 	{
-		$this->app->bind(
-			'Illuminate\Contracts\Auth\Registrar',
-			'KodiCMS\Users\Services\UserCreator'
-		);
+		$this->registerReflinksBroker();
+		$this->registerTokenRepository();
+		$this->registerConsoleCommand('cms.reflinks.clean', DeleteExpiredReflinksCommand::class);
+	}
 
-		$this->app->singleton('acl', function ()
+	/**
+	 * Register the reflink broker instance.
+	 *
+	 * @return void
+	 */
+	protected function registerReflinksBroker()
+	{
+		$this->app->singleton('reflinks', function ($app)
 		{
-			return new ACL(config('permissions', []));
+			$tokens = $app['reflink.tokens'];
+
+			return new ReflinksBroker($tokens);
+		});
+	}
+
+	/**
+	 * Register the token repository implementation.
+	 * @return void
+	 */
+	protected function registerTokenRepository()
+	{
+		$this->app->singleton('reflink.tokens', function ($app)
+		{
+			$key = $app['config']['app.key'];
+			$expire = 60;
+
+			return new ReflinkTokenRepository($key, $expire);
 		});
 	}
 }

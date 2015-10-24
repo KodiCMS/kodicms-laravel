@@ -1,7 +1,7 @@
 <?php namespace KodiCMS\Email\Repository;
 
-use KodiCMS\CMS\Repository\BaseRepository;
 use KodiCMS\Email\Model\EmailTemplate;
+use KodiCMS\CMS\Repository\BaseRepository;
 
 class EmailTemplateRepository extends BaseRepository
 {
@@ -21,7 +21,7 @@ class EmailTemplateRepository extends BaseRepository
 	/**
 	 * @param EmailTemplate $model
 	 */
-	function __construct(EmailTemplate $model)
+	public function __construct(EmailTemplate $model)
 	{
 		parent::__construct($model);
 	}

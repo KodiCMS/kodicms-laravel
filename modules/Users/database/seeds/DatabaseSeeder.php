@@ -14,9 +14,7 @@ class DatabaseSeeder extends Seeder
 	{
 		Model::unguard();
 
-		$this->call('\KodiCMS\Users\database\seeds\RolesTableSeeder');
-		$this->call('\KodiCMS\Users\database\seeds\UsersTableSeeder');
-		$this->call('\KodiCMS\Users\database\seeds\EmailEventsTableSeeder');
-		$this->call('\KodiCMS\Users\database\seeds\EmailTemplatesTableSeeder');
+		$this->call(RolesTableSeeder::class);
+		$this->call(UsersTableSeeder::class);
 	}
 }

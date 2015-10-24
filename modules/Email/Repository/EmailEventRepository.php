@@ -1,39 +1,45 @@
 <?php namespace KodiCMS\Email\Repository;
 
-use KodiCMS\CMS\Repository\BaseRepository;
 use KodiCMS\Email\Model\EmailEvent;
+use KodiCMS\CMS\Repository\BaseRepository;
 
 class EmailEventRepository extends BaseRepository
 {
 	/**
 	 * @param EmailEvent $model
 	 */
-	function __construct(EmailEvent $model)
+	public function __construct(EmailEvent $model)
 	{
 		parent::__construct($model);
 	}
 
 	/**
 	 * @param array $data
-	 * @return \Illuminate\Validation\Validator
+	 * @return bool
+	 * @throws \KodiCMS\CMS\Exceptions\ValidationException
 	 */
-	public function validatorOnCreate(array $data = [])
+	public function validateOnCreate(array $data = [])
 	{
-		return $this->validator($data, [
+		$validator = $this->validator($data, [
 			'name' => 'required',
 			'code' => 'required',
 		]);
+
+		return $this->_validate($validator);
 	}
 
 	/**
 	 * @param array $data
-	 * @return \Illuminate\Validation\Validator
+	 * @return bool
+	 * @throws \KodiCMS\CMS\Exceptions\ValidationException
 	 */
-	public function validatorOnUpdate(array $data = [])
+	public function validateOnUpdate(array $data = [])
 	{
-		return $this->validator($data, [
+		$validator = $this->validator($data, [
 			'name' => 'required',
 		]);
+
+		return $this->_validate($validator);
 	}
 
 	/**
@@ -41,6 +47,6 @@ class EmailEventRepository extends BaseRepository
 	 */
 	public function eventsList()
 	{
-		return $this->all()->lists('fullName', 'id');
+		return $this->all()->lists('fullName', 'id')->all();
 	}
 }

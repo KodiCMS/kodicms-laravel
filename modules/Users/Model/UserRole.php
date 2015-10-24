@@ -49,7 +49,7 @@ class UserRole extends Model
 	 */
 	public function permissions()
 	{
-		return $this->hasMany('KodiCMS\Users\Model\RolePermission', 'role_id');
+		return $this->hasMany(RolePermission::class, 'role_id');
 	}
 
 	public function attachPermissions(array $permissionsList = [])
@@ -75,6 +75,6 @@ class UserRole extends Model
 	 */
 	public function users()
 	{
-		return $this->belongsToMany('KodiCMS\Users\Model\User', 'roles_users', 'role_id');
+		return $this->belongsToMany(User::class, 'roles_users', 'role_id');
 	}
 }

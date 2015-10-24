@@ -41,11 +41,7 @@ abstract class Decorator extends WidgetDecorator implements WidgetDashboard, Wid
 		'min_size' => [2, 1]
 	];
 
-	/**
-	 * @param string $name
-	 * @param string $description
-	 */
-	public function __construct($name, $description = '')
+	public function __construct()
 	{
 		$this->type = WidgetManagerDashboard::getTypeByClassName(get_called_class());
 		$this->relatedWidgets = new Collection;

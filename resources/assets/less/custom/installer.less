@@ -20,11 +20,112 @@
   }
 
   .table tr.fail th, .table tr.fail td {
-	background-color: #FFE3E3 !important;
-	color: #8C0000 !important;
+	background-color: #ffe3e3 !important;
+	color: #8c0000 !important;
   }
 
   .wizard-content {
 	padding: 0;
+  }
+}
+
+.wizard {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+
+  > .steps {
+	a, a:hover, a:active {
+	  display: block;
+	  width: auto;
+	  padding: 8px 10px 5px;
+	  text-decoration: none;
+	}
+
+	.disabled {
+	  a, a:hover, a:active {
+		background: #eee;
+		color: #aaa;
+		cursor: default;
+	  }
+	}
+
+	.current {
+	  a, a:hover, a:active {
+		background: #2184be;
+		border-bottom-color: darken(#2184be, 5%);
+		color: #fff;
+		cursor: default;
+	  }
+	}
+	.done {
+	  a, a:hover, a:active {
+		background: #9dc8e2;
+		border-bottom-color: darken(#9dc8e2, 5%);
+		color: #fff;
+	  }
+	}
+
+	.error {
+	  a, a:hover, a:active {
+		background: #ff3111;
+		border-bottom-color: darken(#ff3111, 5%);
+		color: #fff;
+	  }
+	}
+  }
+
+  > .actions {
+	position: absolute;
+	display: block;
+	text-align: right;
+	top: 0;
+	right: 0;
+
+	a, a:hover, a:active {
+	  background: #2184be;
+	  color: #fff;
+	  display: block;
+	  text-decoration: none;
+	  padding: 5px 10px;
+	}
+	.disabled {
+	  a, a:hover, a:active {
+		background: #eee;
+		color: #aaa;
+	  }
+	}
+
+	> ul {
+	  text-align: right;
+
+	  > li {
+		display: inline-block;
+		margin-left: 5px;
+	  }
+	}
+  }
+
+  & > .steps .current-info {
+	position: absolute;
+	left: -999em;
+  }
+
+  > .content {
+	> .title {
+	  position: absolute;
+	  left: -999em;
+	}
+
+	> .body {
+	  ul {
+		list-style: disc !important;
+
+		> li {
+		  display: inline-block;
+		}
+	  }
+	}
   }
 }

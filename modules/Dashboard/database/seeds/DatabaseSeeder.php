@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use KodiCMS\Dashboard\database\seeds\DashboardTableSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,7 +14,6 @@ class DatabaseSeeder extends Seeder
 	public function run()
 	{
 		Model::unguard();
-
-		$this->call('\KodiCMS\Dashboard\database\seeds\DashboardTableSeeder');
+		$this->call(DashboardTableSeeder::class);
 	}
 }
