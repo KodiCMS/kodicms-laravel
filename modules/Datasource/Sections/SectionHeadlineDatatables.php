@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Datasource\Sections;
+<?php
+namespace KodiCMS\Datasource\Sections;
 
 use SectionDatatables;
 use Illuminate\Http\JsonResponse;
@@ -7,131 +8,134 @@ use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
 class SectionHeadlineDatatables implements SectionHeadlineInterface
 {
-	/**
-	 * @var SectionInterface
-	 */
-	protected $section;
 
-	/**
-	 * @var array
-	 */
-	protected $fields = null;
+    /**
+     * @var SectionInterface
+     */
+    protected $section;
 
-	/**
-	 * @var string
-	 */
-	protected $template = 'datasource::section.headline_datatables';
+    /**
+     * @var array
+     */
+    protected $fields = null;
 
-	/**
-	 * @param SectionInterface $section
-	 */
-	public function __construct(SectionInterface $section)
-	{
-		$this->section = $section;
-		\Assets::package('datatables');
-	}
+    /**
+     * @var string
+     */
+    protected $template = 'datasource::section.headline_datatables';
 
-	/**
-	 * @return array
-	 */
-	public function getHeadlineFields()
-	{
-		if (!is_null($this->fields))
-		{
-			return $this->fields;
-		}
 
-		$this->fields = [];
+    /**
+     * @param SectionInterface $section
+     */
+    public function __construct(SectionInterface $section)
+    {
+        $this->section = $section;
+        \Assets::package('datatables');
+    }
 
-		foreach ($this->section->getFields() as $field)
-		{
-			if (!$field->isVisible())
-			{
-				continue;
-			}
 
-			$this->fields[$field->getKey()] = $field->getHeadlineParameters($this);
+    /**
+     * @return array
+     */
+    public function getHeadlineFields()
+    {
+        if ( ! is_null($this->fields)) {
+            return $this->fields;
+        }
 
-			if ($this->section->getDocumentTitleKey() == $field->getDBKey())
-			{
-				$this->fields[$field->getKey()]['type'] = 'link';
-			}
-		}
+        $this->fields = [];
 
-		return $this->fields;
-	}
+        foreach ($this->section->getFields() as $field) {
+            if ( ! $field->isVisible()) {
+                continue;
+            }
 
-	/**
-	 * @return array
-	 */
-	public function getActiveFieldIds()
-	{
+            $this->fields[$field->getKey()] = $field->getHeadlineParameters($this);
 
-	}
+            if ($this->section->getDocumentTitleKey() == $field->getDBKey()) {
+                $this->fields[$field->getKey()]['type'] = 'link';
+            }
+        }
 
-	/**
-	 * @return array
-	 */
-	public function getSearchableFields()
-	{
+        return $this->fields;
+    }
 
-	}
 
-	/**
-	 * @return array
-	 */
-	public function getOrderingRules()
-	{
+    /**
+     * @return array
+     */
+    public function getActiveFieldIds()
+    {
 
-	}
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getDocuments()
-	{
-		$document = $this->section->getEmptyDocument();
-		return app('datatables')->usingDatasourceEngine($document, $this)->make();
-	}
 
-	/**
-	 * @return JsonResponse
-	 */
-	public function JsonResponse()
-	{
-		return $this->getDocuments();
-	}
+    /**
+     * @return array
+     */
+    public function getSearchableFields()
+    {
 
-	/**
-	 * @param string|null $template
-	 *
-	 * @return \Illuminate\View\View
-	 */
-	public function render($template = null)
-	{
-		if (is_null($template))
-		{
-			if (method_exists($this->section, 'getHeadlineTemplate'))
-			{
-				$template = $this->section->getHeadlineTemplate();
-			}
-			else
-			{
-				$template = $this->template;
-			}
-		}
+    }
 
-		return view($template, [
-			'fieldParams' => $this->getHeadlineFields(),
-			'section' => $this->section
-		]);
-	}
 
-	/**
-	 * @return \Illuminate\View\View|null
-	 */
-	public function renderOrderSettings()
-	{
-		return null;
-	}
+    /**
+     * @return array
+     */
+    public function getOrderingRules()
+    {
+
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getDocuments()
+    {
+        $document = $this->section->getEmptyDocument();
+
+        return app('datatables')->usingDatasourceEngine($document, $this)->make();
+    }
+
+
+    /**
+     * @return JsonResponse
+     */
+    public function JsonResponse()
+    {
+        return $this->getDocuments();
+    }
+
+
+    /**
+     * @param string|null $template
+     *
+     * @return \Illuminate\View\View
+     */
+    public function render($template = null)
+    {
+        if (is_null($template)) {
+            if (method_exists($this->section, 'getHeadlineTemplate')) {
+                $template = $this->section->getHeadlineTemplate();
+            } else {
+                $template = $this->template;
+            }
+        }
+
+        return view($template, [
+            'fieldParams' => $this->getHeadlineFields(),
+            'section'     => $this->section,
+        ]);
+    }
+
+
+    /**
+     * @return \Illuminate\View\View|null
+     */
+    public function renderOrderSettings()
+    {
+        return null;
+    }
 }

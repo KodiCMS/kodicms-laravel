@@ -1,33 +1,37 @@
-<?php namespace KodiCMS\Pages\Http\Controllers;
+<?php
+namespace KodiCMS\Pages\Http\Controllers;
 
 use KodiCMS\Pages\Model\LayoutCollection;
 use KodiCMS\CMS\Http\Controllers\AbstractFileController;
 
 class LayoutController extends AbstractFileController
 {
-	/**
-	 * @var array
-	 */
-	protected $editors = NULL;
 
-	/**
-	 * @var LayoutCollection
-	 */
-	protected $collection;
+    /**
+     * @var array
+     */
+    protected $editors = null;
 
-	/**
-	 * @return LayoutCollection
-	 */
-	protected function getCollection()
-	{
-		return new LayoutCollection();
-	}
+    /**
+     * @var LayoutCollection
+     */
+    protected $collection;
 
-	/**
-	 * @return string
-	 */
-	protected function getSectionPrefix()
-	{
-		return 'layout';
-	}
+
+    /**
+     * @return LayoutCollection
+     */
+    protected function getCollection()
+    {
+        return new LayoutCollection();
+    }
+
+
+    /**
+     * @return string
+     */
+    protected function getSectionPrefix()
+    {
+        return 'layout';
+    }
 }

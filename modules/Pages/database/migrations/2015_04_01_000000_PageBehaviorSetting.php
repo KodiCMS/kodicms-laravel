@@ -5,16 +5,18 @@ use Illuminate\Database\Schema\Blueprint;
 
 class PageBehaviorSetting extends Migration
 {
-	public function up()
-	{
-		Schema::create('page_behavior_settings', function (Blueprint $table) {
-			$table->unsignedInteger('page_id')->index()->unique();
-			$table->json('settings');
-		});
-	}
 
-	public function down()
-	{
-		Schema::dropIfExists('page_behavior_settings');
-	}
+    public function up()
+    {
+        Schema::create('page_behavior_settings', function (Blueprint $table) {
+            $table->unsignedInteger('page_id')->index()->unique();
+            $table->json('settings');
+        });
+    }
+
+
+    public function down()
+    {
+        Schema::dropIfExists('page_behavior_settings');
+    }
 }

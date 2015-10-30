@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Dashboard\Http\Controllers\API;
+<?php
+namespace KodiCMS\Dashboard\Http\Controllers\API;
 
 use Package;
 use KodiCMS\Dashboard\Dashboard;
@@ -9,64 +10,69 @@ use KodiCMS\Widgets\Engine\WidgetRenderSettingsHTML;
 
 class DashboardController extends Controller
 {
-	/**
-	 * @var array
-	 */
-	protected $permissions = [
-		'getWidgetSettings' => 'backend.dashboard.manage',
-		'putWidget' => 'backend.dashboard.manage',
-		'postWidget' => 'backend.dashboard.manage',
-		'deleteWidget' => 'backend.dashboard.manage',
-	];
 
-	public function putWidget()
-	{
-		$widgetType = $this->getRequiredParameter('widget_type');
+    /**
+     * @var array
+     */
+    protected $permissions = [
+        'getWidgetSettings' => 'backend.dashboard.manage',
+        'putWidget'         => 'backend.dashboard.manage',
+        'postWidget'        => 'backend.dashboard.manage',
+        'deleteWidget'      => 'backend.dashboard.manage',
+    ];
 
-		$widget = Dashboard::addWidget($widgetType);
 
-		if (count($widget->media_packages) > 0)
-		{
-			$this->media = Package::getScripts($widget->media_packages);
-		}
+    public function putWidget()
+    {
+        $widgetType = $this->getRequiredParameter('widget_type');
 
-		$this->size = $widget->getSize();
-		$this->id = $widget->getId();
+        $widget = Dashboard::addWidget($widgetType);
 
-		$this->setContent(view('dashboard::partials.temp_block', [
-			'widget' => (new WidgetRenderDashboardHTML($widget))
-		])->render());
-	}
+        if (count($widget->media_packages) > 0) {
+            $this->media = Package::getScripts($widget->media_packages);
+        }
 
-	public function getWidgetSettings()
-	{
-		$widgetId = $this->getRequiredParameter('id');
-		$widget = Dashboard::getWidgetById($widgetId);
+        $this->size = $widget->getSize();
+        $this->id   = $widget->getId();
 
-		$settingsView = (new WidgetRenderSettingsHTML($widget))->render();
-		$this->setContent(view('dashboard::partials.settings', compact('widget', 'settingsView'))->render());
-	}
+        $this->setContent(view('dashboard::partials.temp_block', [
+            'widget' => new WidgetRenderDashboardHTML($widget),
+        ])->render());
+    }
 
-	public function deleteWidget()
-	{
-		$widgetId = $this->getRequiredParameter('id');
-		Dashboard::deleteWidgetById($widgetId);
-	}
 
-	public function postWidget()
-	{
-		$widgetId = $this->getRequiredParameter('id');
-		$settings = $this->getParameter('settings', []);
+    public function getWidgetSettings()
+    {
+        $widgetId = $this->getRequiredParameter('id');
+        $widget   = Dashboard::getWidgetById($widgetId);
 
-		$widget = Dashboard::updateWidget($widgetId, $settings);
+        $settingsView = (new WidgetRenderSettingsHTML($widget))->render();
+        $this->setContent(
+            view('dashboard::partials.settings', compact('widget', 'settingsView'))->render()
+        );
+    }
 
-		if ($widget instanceof WidgetDashboard)
-		{
-			$this->updateSettingsPage = $widget->isUpdateSettingsPage();
-			$this->widgetId = $widgetId;
-			$this->setContent(view('dashboard::partials.temp_block', [
-				'widget' => (new WidgetRenderDashboardHTML($widget))
-			])->render());
-		}
-	}
+
+    public function deleteWidget()
+    {
+        $widgetId = $this->getRequiredParameter('id');
+        Dashboard::deleteWidgetById($widgetId);
+    }
+
+
+    public function postWidget()
+    {
+        $widgetId = $this->getRequiredParameter('id');
+        $settings = $this->getParameter('settings', []);
+
+        $widget = Dashboard::updateWidget($widgetId, $settings);
+
+        if ($widget instanceof WidgetDashboard) {
+            $this->updateSettingsPage = $widget->isUpdateSettingsPage();
+            $this->widgetId           = $widgetId;
+            $this->setContent(view('dashboard::partials.temp_block', [
+                'widget' => new WidgetRenderDashboardHTML($widget),
+            ])->render());
+        }
+    }
 }

@@ -1,3 +1,7 @@
-<?php namespace KodiCMS\CMS\Exceptions;
+<?php
+namespace KodiCMS\CMS\Exceptions;
 
-class EnvironmentException extends Exception {}
+class EnvironmentException extends Exception
+{
+
+}

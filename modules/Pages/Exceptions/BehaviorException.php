@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Pages\Exceptions;
+<?php
+namespace KodiCMS\Pages\Exceptions;
 
 use KodiCMS\CMS\Exceptions\Exception;
 

@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Users;
+<?php
+namespace KodiCMS\Users;
 
 use Illuminate\Contracts\Auth\Access\Gate;
 use KodiCMS\Users\Model\User as User;
@@ -17,17 +18,17 @@ class ACL
      * Список прав
      * @var array
      */
-    protected static $permissions = [ ];
+    protected static $permissions = [];
 
     /**
      * @var array
      */
-    protected $permissionsList = [ ];
+    protected $permissionsList = [];
 
     /**
      * @var array
      */
-    protected $actions = [ ];
+    protected $actions = [];
 
     /**
      * @var \Illuminate\Contracts\Auth\Authenticatable|null
@@ -44,7 +45,7 @@ class ACL
      * @param array $permissions
      * @param Gate  $gate
      */
-    public function __construct(array $permissions = [ ], Gate $gate)
+    public function __construct(array $permissions = [], Gate $gate)
     {
         $this->user = auth()->user();
         $this->gate = $gate;
@@ -93,12 +94,10 @@ class ACL
 
         if ($user instanceof User) {
             $user_id = $user->id;
-            $roles   = $user->getRoles()
-                            ->lists('name')
-                            ->all();
+            $roles   = $user->getRoles()->lists('name')->all();
         } else {
             $user_id = (int) $user;
-            $roles   = [ 'login' ];
+            $roles   = ['login'];
         }
 
         if ($user_id == static::ADMIN_USER OR in_array(static::ADMIN_ROLE, $roles)) {

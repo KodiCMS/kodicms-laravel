@@ -1,9 +1,11 @@
-<?php namespace KodiCMS\Widgets\Contracts;
+<?php
+namespace KodiCMS\Widgets\Contracts;
 
-interface WidgetHandler extends Widget {
+interface WidgetHandler extends Widget
+{
 
-	/**
-	 * @return string
-	 */
-	public function getHandlerLink();
+    /**
+     * @return string
+     */
+    public function getHandlerLink();
 }

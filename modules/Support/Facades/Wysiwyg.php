@@ -1,15 +1,20 @@
-<?php namespace KodiCMS\Support\Facades;
+<?php
+namespace KodiCMS\Support\Facades;
 
 use Illuminate\Support\Facades\Facade;
 use KodiCMS\CMS\Wysiwyg\WysiwygManager;
 
-class Wysiwyg extends Facade {
+class Wysiwyg extends Facade
+{
 
     /**
      * Get the registered name of the component.
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return WysiwygManager::class; }
+    protected static function getFacadeAccessor()
+    {
+        return WysiwygManager::class;
+    }
 
 }

@@ -1,18 +1,19 @@
-<?php namespace KodiCMS\Support\Model\Fields;
+<?php
+namespace KodiCMS\Support\Model\Fields;
 
 class DateTimeField extends TextField
 {
-	protected function boot()
-	{
-		parent::boot();
 
-		$this->setAttributes([
-			'class' => 'datetimepicker'
-		]);
+    protected function boot()
+    {
+        parent::boot();
 
-		$this->getGroup()
-			->setSettings([
-				'fieldCol' => 'col-md-3'
-			]);
-	}
+        $this->setAttributes([
+            'class' => 'datetimepicker',
+        ]);
+
+        $this->getGroup()->setSettings([
+                'fieldCol' => 'col-md-3',
+            ]);
+    }
 }

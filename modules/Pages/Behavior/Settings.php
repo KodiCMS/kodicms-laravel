@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Pages\Behavior;
+<?php
+namespace KodiCMS\Pages\Behavior;
 
 use KodiCMS\Pages\Contracts\BehaviorInterface;
 use KodiCMS\Support\Traits\Settings as SettingsTrait;
@@ -6,40 +7,43 @@ use KodiCMS\Pages\Contracts\BehaviorSettingsInterface;
 
 class Settings implements BehaviorSettingsInterface
 {
-	use SettingsTrait;
 
-	/**
-	 * @var array
-	 */
-	protected $settings = [];
+    use SettingsTrait;
 
-	/**
-	 * @var BehaviorInterface
-	 */
-	protected $behavior;
+    /**
+     * @var array
+     */
+    protected $settings = [];
 
-	/**
-	 * @param BehaviorInterface $behavior
-	 */
-	public function __construct(BehaviorInterface $behavior)
-	{
-		$this->behavior = $behavior;
-	}
+    /**
+     * @var BehaviorInterface
+     */
+    protected $behavior;
 
-	/**
-	 * @return string|null
-	 */
-	public function render()
-	{
-		$template = $this->behavior->getSettingsTemplate();
-		if (!is_null($template) and view()->exists($template))
-		{
-			return view($template, [
-				'settings' => $this,
-				'behavior' => $this->behavior,
-				'page' => $this->behavior->getPage()
-			])->render();
-		}
-		return null;
-	}
+
+    /**
+     * @param BehaviorInterface $behavior
+     */
+    public function __construct(BehaviorInterface $behavior)
+    {
+        $this->behavior = $behavior;
+    }
+
+
+    /**
+     * @return string|null
+     */
+    public function render()
+    {
+        $template = $this->behavior->getSettingsTemplate();
+        if ( ! is_null($template) and view()->exists($template)) {
+            return view($template, [
+                'settings' => $this,
+                'behavior' => $this->behavior,
+                'page'     => $this->behavior->getPage(),
+            ])->render();
+        }
+
+        return null;
+    }
 }

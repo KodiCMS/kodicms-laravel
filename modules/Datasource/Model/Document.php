@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Datasource\Model;
+<?php
+namespace KodiCMS\Datasource\Model;
 
 use Illuminate\Validation\Validator;
 use KodiCMS\Support\Traits\Tentacle;
@@ -16,28 +17,31 @@ use KodiCMS\Datasource\Contracts\FieldTypeOnlySystemInterface;
 
 class Document extends Model implements DocumentInterface
 {
+
 	use Tentacle;
 
-	const COND_EQ       = 0;
-	const COND_BTW      = 1;
-	const COND_GT       = 2;
-	const COND_LT       = 3;
-	const COND_GTEQ     = 4;
-	const COND_LTEQ     = 5;
+	const COND_EQ = 0;
+	const COND_BTW = 1;
+	const COND_GT = 2;
+	const COND_LT = 3;
+	const COND_GTEQ = 4;
+	const COND_LTEQ = 5;
 	const COND_CONTAINS = 6;
-	const COND_LIKE     = 7;
-	const COND_NULL     = 8;
+	const COND_LIKE = 7;
+	const COND_NULL = 8;
 
-	const FILTER_VALUE_PLAIN    = 20;
-	const FILTER_VALUE_GET      = 40;
-	const FILTER_VALUE_POST     = 50;
+	const FILTER_VALUE_PLAIN = 20;
+	const FILTER_VALUE_GET = 40;
+	const FILTER_VALUE_POST = 50;
 	const FILTER_VALUE_BEHAVIOR = 30;
+
 
 	protected static function boot()
 	{
 		parent::boot();
 		static::observe(new DocumentObserver);
 	}
+
 
 	/**
 	 * @var SectionInterface
@@ -80,61 +84,53 @@ class Document extends Model implements DocumentInterface
 	 */
 	protected $formTemplate = 'datasource::document.partials.form';
 
+
 	/**
-	 * @param array $attributes
+	 * @param array                 $attributes
 	 * @param SectionInterface|null $section
 	 */
 	public function __construct($attributes = [], SectionInterface $section = null)
 	{
-		if (!is_null($section))
-		{
+		if ( ! is_null($section)) {
 			$this->section = $section;
-			$this->table = $this->section->getSectionTableName();
+			$this->table   = $this->section->getSectionTableName();
 
 			$this->primaryKey = $section->getDocumentPrimaryKey();
-			if (!is_null($this->primaryKey))
-			{
+			if ( ! is_null($this->primaryKey)) {
 				$this->incrementing = true;
 			}
 
-			foreach ($this->getSectionFields() as $field)
-			{
-				if ($field instanceof FieldTypeDateInterface)
-				{
+			foreach ($this->getSectionFields() as $field) {
+				if ($field instanceof FieldTypeDateInterface) {
 					$this->dates[] = $field->getDBKey();
 				}
 
 				// TODO: подумать как это оптимизировать
-				if ($field instanceof FieldTypeRelationInterface)
-				{
+				if ($field instanceof FieldTypeRelationInterface) {
 					$relatedSection = $field->relatedSection;
-					$relatedField = $field->relatedField;
+					$relatedField   = $field->relatedField;
 
-					$this->addRelation($field->getRelationName(), function () use ($field, $relatedSection, $relatedField)
-					{
+					$this->addRelation($field->getRelationName(), function () use (
+						$field, $relatedSection, $relatedField
+					) {
 						return $field->getDocumentRelation($this, $relatedSection, $relatedField);
 					});
 				}
 
-				if (!($field instanceof FieldTypeOnlySystemInterface) and $field->hasDatabaseColumn())
-				{
+				if ( ! ( $field instanceof FieldTypeOnlySystemInterface ) and $field->hasDatabaseColumn()) {
 					$this->fillable[] = $field->getDBKey();
 					$this->setAttribute($field->getDBKey(), $field->getDefaultValue());
 				}
 			}
 
-			if (
-				$this->getSectionFields()->offsetExists(static::CREATED_AT)
-				and
-				$this->getSectionFields()->offsetExists(static::UPDATED_AT)
-			)
-			{
+			if ($this->getSectionFields()->offsetExists(static::CREATED_AT) and $this->getSectionFields()->offsetExists(static::UPDATED_AT)) {
 				$this->timestamps = true;
 			}
 		}
 
 		parent::__construct($attributes);
 	}
+
 
 	/**
 	 * @return string|integer
@@ -144,6 +140,7 @@ class Document extends Model implements DocumentInterface
 		return $this->getKey();
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -151,6 +148,7 @@ class Document extends Model implements DocumentInterface
 	{
 		return $this->{$this->section->getDocumentTitleKey()};
 	}
+
 
 	/**
 	 * @return string
@@ -160,6 +158,7 @@ class Document extends Model implements DocumentInterface
 		return route('backend.datasource.document.edit', [$this->section->getId(), $this->getKey()]);
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -168,10 +167,12 @@ class Document extends Model implements DocumentInterface
 		return route('backend.datasource.document.create', [$this->section->getId()]);
 	}
 
+
 	/**
 	 * Fill the model with an array of attributes.
 	 *
-	 * @param  array  $attributes
+	 * @param  array $attributes
+	 *
 	 * @return $this
 	 *
 	 * @throws \Illuminate\Database\Eloquent\MassAssignmentException
@@ -180,10 +181,8 @@ class Document extends Model implements DocumentInterface
 	{
 		parent::fill($attributes);
 
-		foreach($attributes as $key => $value)
-		{
-			if (!is_null($field = $this->getSectionFields()->getByKey($key)))
-			{
+		foreach ($attributes as $key => $value) {
+			if ( ! is_null($field = $this->getSectionFields()->getByKey($key))) {
 				$field->onDocumentFill($this, $value);
 			}
 		}
@@ -191,21 +190,21 @@ class Document extends Model implements DocumentInterface
 		return $this;
 	}
 
+
 	/**
 	 * Set a given attribute on the model.
 	 *
 	 * @param  string $key
-	 * @param  mixed $value
+	 * @param  mixed  $value
+	 *
 	 * @return void
 	 */
 	public function setAttribute($key, $value)
 	{
-		if (!is_null($field = $this->getSectionFields()->getByKey($key)))
-		{
+		if ( ! is_null($field = $this->getSectionFields()->getByKey($key))) {
 			$value = $field->onSetDocumentAttribute($this, $value);
 
-			if (method_exists($field, 'setDocumentAttribute'))
-			{
+			if (method_exists($field, 'setDocumentAttribute')) {
 				return $field->setDocumentAttribute($this, $value);
 			}
 		}
@@ -213,10 +212,12 @@ class Document extends Model implements DocumentInterface
 		parent::setAttribute($key, $value);
 	}
 
+
 	/**
 	 * Determine if a get mutator exists for an attribute.
 	 *
-	 * @param  string  $key
+	 * @param  string $key
+	 *
 	 * @return bool
 	 */
 	public function hasGetMutator($key)
@@ -224,8 +225,10 @@ class Document extends Model implements DocumentInterface
 		return $this->hasField($key);
 	}
 
+
 	/**
 	 * @param string $key
+	 *
 	 * @return bool
 	 */
 	public function hasField($key)
@@ -233,55 +236,58 @@ class Document extends Model implements DocumentInterface
 		return $this->getSectionFields()->offsetExists($key);
 	}
 
+
 	/**
 	 * Get the value of an attribute using its mutator.
 	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
+	 * @param  string $key
+	 * @param  mixed  $value
+	 *
 	 * @return mixed
 	 */
 	protected function mutateAttribute($key, $value)
 	{
-		return $this->getSectionFields()
-			->getByKey($key)
-			->onGetDocumentValue($this, $value);
+		return $this->getSectionFields()->getByKey($key)->onGetDocumentValue($this, $value);
 	}
+
 
 	/**
 	 * Get a plain attribute (not a relationship).
 	 *
 	 * @param  string $key
+	 *
 	 * @return mixed
 	 */
 	public function getFormValue($key)
 	{
 		$value = parent::getAttributeValue($key);
 
-		if (!is_null($field = $this->getSectionFields()->getByKey($key)))
-		{
+		if ( ! is_null($field = $this->getSectionFields()->getByKey($key))) {
 			$value = $field->onGetFormValue($this, $value);
 		}
 
 		return $value;
 	}
 
+
 	/**
 	 * Get a plain attribute (not a relationship).
 	 *
 	 * @param  string $key
+	 *
 	 * @return mixed
 	 */
 	public function getHeadlineValue($key)
 	{
 		$value = parent::getAttributeValue($key);
 
-		if (!is_null($field = $this->getSectionFields()->getByKey($key)))
-		{
+		if ( ! is_null($field = $this->getSectionFields()->getByKey($key))) {
 			$value = $field->onGetHeadlineValue($this, $value);
 		}
 
 		return $value;
 	}
+
 
 	/**
 	 * @param SectionHeadlineInterface $headline
@@ -293,18 +299,14 @@ class Document extends Model implements DocumentInterface
 		$fields = $headline->getHeadlineFields();
 
 		$attributes = [
-			0 => null,
-			'primaryKey' => $this->getKey()
+			0            => null,
+			'primaryKey' => $this->getKey(),
 		];
 
-		foreach ($fields as $key => $params)
-		{
-			if (array_get($params, 'type') == 'link')
-			{
+		foreach ($fields as $key => $params) {
+			if (array_get($params, 'type') == 'link') {
 				$attributes[$key] = link_to($this->getEditLink(), $this->getHeadlineValue($key));
-			}
-			else
-			{
+			} else {
 				$attributes[$key] = $this->getHeadlineValue($key);
 			}
 		}
@@ -312,23 +314,25 @@ class Document extends Model implements DocumentInterface
 		return $attributes;
 	}
 
+
 	/**
 	 * Get a plain attribute (not a relationship).
 	 *
-	 * @param  string $key
+	 * @param  string          $key
 	 * @param  WidgetInterface $widget
+	 *
 	 * @return mixed
 	 */
 	public function getWidgetValue($key, WidgetInterface $widget)
 	{
 		$value = parent::getAttributeValue($key);
-		if (!is_null($field = $this->getSectionFields()->getByKey($key)))
-		{
+		if ( ! is_null($field = $this->getSectionFields()->getByKey($key))) {
 			$value = $field->onGetWidgetValue($this, $widget, $value);
 		}
 
 		return $value;
 	}
+
 
 	/**
 	 * @return FieldsCollection
@@ -338,6 +342,7 @@ class Document extends Model implements DocumentInterface
 		return $this->getSection()->getFields();
 	}
 
+
 	/**
 	 * @return array
 	 */
@@ -345,6 +350,7 @@ class Document extends Model implements DocumentInterface
 	{
 		return $this->getSectionFields()->getNames();
 	}
+
 
 	/**
 	 * @return array
@@ -354,6 +360,7 @@ class Document extends Model implements DocumentInterface
 		return $this->getSectionFields()->getEditable();
 	}
 
+
 	/**
 	 * @return SectionInterface
 	 */
@@ -361,6 +368,7 @@ class Document extends Model implements DocumentInterface
 	{
 		return $this->section;
 	}
+
 
 	/**
 	 * @return string
@@ -370,6 +378,7 @@ class Document extends Model implements DocumentInterface
 		return $this->editTemplate;
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -377,6 +386,7 @@ class Document extends Model implements DocumentInterface
 	{
 		return $this->createTemplate;
 	}
+
 
 	/**
 	 * @return string
@@ -386,16 +396,17 @@ class Document extends Model implements DocumentInterface
 		return $this->formTemplate;
 	}
 
+
 	/**
 	 * @param TemplateController $controller
 	 */
 	public function onControllerLoad(TemplateController $controller)
 	{
-		foreach ($this->getSectionFields() as $field)
-		{
+		foreach ($this->getSectionFields() as $field) {
 			$field->onControllerLoad($this, $controller);
 		}
 	}
+
 
 	/**
 	 * @param Validator $validator
@@ -406,8 +417,7 @@ class Document extends Model implements DocumentInterface
 	{
 		$rules = [];
 
-		foreach($this->getEditableFields() as $field)
-		{
+		foreach ($this->getEditableFields() as $field) {
 			$rules[$field->getDBKey()] = $field->getValidationRules($this, $validator);
 		}
 
@@ -430,15 +440,15 @@ class Document extends Model implements DocumentInterface
 	 * Custom query builder by Headline/Widgets parameters
 	 **************************************************************************/
 	/**
-	 * @param integer|string $id
-	 * @param array|null $fields
+	 * @param integer|string      $id
+	 * @param array|null          $fields
 	 * @param string|integer|null $primaryKeyField
+	 *
 	 * @return DocumentInterface|null
 	 */
 	public function getDocumentById($id, array $fields = null, $primaryKeyField = null)
 	{
-		if (is_null($primaryKeyField))
-		{
+		if (is_null($primaryKeyField)) {
 			$primaryKeyField = $this->primaryKey;
 		}
 
@@ -449,10 +459,12 @@ class Document extends Model implements DocumentInterface
 		return is_null($result) ? new static([], $this->section) : $result;
 	}
 
+
 	/**
 	 * @param bool|array|null $fields
-	 * @param array $orderRules
-	 * @param array $filterRules
+	 * @param array           $orderRules
+	 * @param array           $filterRules
+	 *
 	 * @return Collection
 	 */
 	public function getDocuments($fields = true, array $orderRules = [], array $filterRules = [])
@@ -460,10 +472,12 @@ class Document extends Model implements DocumentInterface
 		return $this->buildQueryForWidget($fields, $orderRules, $filterRules);
 	}
 
+
 	/**
 	 * @param bool|array|null $fields
-	 * @param array $orderRules
-	 * @param array $filterRules
+	 * @param array           $orderRules
+	 * @param array           $filterRules
+	 *
 	 * @return Builder
 	 */
 	protected function buildQueryForWidget($fields = true, array $orderRules = [], array $filterRules = [])
@@ -474,106 +488,91 @@ class Document extends Model implements DocumentInterface
 
 		$selectFields = [];
 
-		if (is_array($fields))
-		{
-			foreach ($fields as $fieldKey)
-			{
-				if ($this->hasField($fieldKey))
-				{
+		if (is_array($fields)) {
+			foreach ($fields as $fieldKey) {
+				if ($this->hasField($fieldKey)) {
 					continue;
 				}
 
 				$selectFields[] = $this->getSectionFields()->getByKey($fieldKey);
 			}
-		}
-		else if ($fields === true)
-		{
+		} else if ($fields === true) {
 			$selectFields = $this->getSectionFields();
-		}
-		else if ($fields === false)
-		{
+		} else if ($fields === false) {
 			$query->selectRaw('COUNT(*) as total_docs');
 		}
 
 		// TODO: предусмотреть relation поля
-		if ($fields !== false)
-		{
-			foreach ($selectFields as $field)
-			{
+		if ($fields !== false) {
+			foreach ($selectFields as $field) {
 				$field->querySelectColumn($query, $this);
 			}
 		}
 
-		if (!empty($orderRules))
-		{
+		if ( ! empty( $orderRules )) {
 			$this->buildQueryOrdering($query, $orderRules, $t);
 		}
 
-		if (!empty($filterRules))
-		{
+		if ( ! empty( $filterRules )) {
 			$this->buildQueryFilters($query, $filterRules, $t);
 		}
 
 		return $query;
 	}
 
+
 	/**
 	 * @param DocumentQueryBuilder $query
-	 * @param array $orderRules
-	 * @param array $t
+	 * @param array                $orderRules
+	 * @param array                $t
 	 */
 	protected function buildQueryOrdering(DocumentQueryBuilder $query, array $orderRules, array & $t)
 	{
 		$j = 0;
 
-		foreach ($orderRules as $rule)
-		{
+		foreach ($orderRules as $rule) {
 			$field = null;
 
 			$fieldKey = key($rule);
-			$dir = $rule[key($rule)];
+			$dir      = $rule[key($rule)];
 
-			if (is_null($field = $this->getSectionFields()->getByKey($fieldKey)))
-			{
+			if (is_null($field = $this->getSectionFields()->getByKey($fieldKey))) {
 				continue;
 			}
 
 			// TODO: предусмотреть relation поля
 			$field->queryOrderBy($query, $dir);
 
-			unset($field);
+			unset( $field );
 
 			$j++;
 		}
 	}
 
+
 	/**
 	 * @param DocumentQueryBuilder $query
-	 * @param array $filterRules
-	 * @param array $t
+	 * @param array                $filterRules
+	 * @param array                $t
 	 */
 	protected function buildQueryFilters(DocumentQueryBuilder $query, array $filterRules, array & $t)
 	{
-		foreach ($filterRules as $rule)
-		{
+		foreach ($filterRules as $rule) {
 			$params = [];
-			$field = $rule['field'];
+			$field  = $rule['field'];
 
-			if (!empty($rule['params']))
-			{
+			if ( ! empty( $rule['params'] )) {
 				parse_str($rule['params'], $params);
 			}
 
 			$condition = $rule['condition'];
-			$type = $rule['type'];
-			$invert = !empty($rule['invert']);
+			$type      = $rule['type'];
+			$invert    = ! empty( $rule['invert'] );
 
 			$value = array_get($rule, 'value');
 
-			if (!is_null($value) and $type != static::FILTER_VALUE_PLAIN)
-			{
-				switch ($type)
-				{
+			if ( ! is_null($value) and $type != static::FILTER_VALUE_PLAIN) {
+				switch ($type) {
 					case self::FILTER_VALUE_BEHAVIOR:
 						// TODO: получение значения из behavior
 
@@ -591,53 +590,51 @@ class Document extends Model implements DocumentInterface
 				}
 			}
 
-			if (is_null($value))
-			{
+			if (is_null($value)) {
 				continue;
 			}
 
 			$fieldId = $field;
 
-			if (is_null($field = $this->getSectionFields()->getByKey($fieldId)))
-			{
+			if (is_null($field = $this->getSectionFields()->getByKey($fieldId))) {
 				continue;
 			}
 
 			// TODO: предусмотреть relation поля
 			$inCondition = false;
 
-			switch ($condition)
-			{
+			switch ($condition) {
 				case self::COND_EQ:
 					$value = explode(',', $value);
 
-					if ($value[0] == '*')
+					if ($value[0] == '*') {
 						break;
-					elseif (count($value) > 1)
+					} elseif (count($value) > 1) {
 						$inCondition = true;
-					else
+					} else {
 						$value = $value[0];
+					}
 					break;
 
 				case self::COND_CONTAINS:
-					$value = explode(',', $value);
+					$value       = explode(',', $value);
 					$inCondition = true;
 					break;
 				case self::COND_BTW:
 					$value = explode(',', $value, 2);
-					if (count($value) != 2) break;
+					if (count($value) != 2) {
+						break;
+					}
 					break;
 			}
 
 			$inCondition = $inCondition ? 'IN' : '=';
 
-			$conditions = array($inCondition, 'BETWEEN', '>', '<', '>=', '<=', 'IN', 'LIKE', 'NULL');
-			$condition = strtoupper(array_get($conditions, $condition, '='));
+			$conditions = [$inCondition, 'BETWEEN', '>', '<', '>=', '<=', 'IN', 'LIKE', 'NULL'];
+			$condition  = strtoupper(array_get($conditions, $condition, '='));
 
-			if ($invert)
-			{
-				switch ($condition)
-				{
+			if ($invert) {
+				switch ($condition) {
 					case '>':
 						$condition = '<=';
 						break;
@@ -673,22 +670,25 @@ class Document extends Model implements DocumentInterface
 	/**
 	 * Create a new instance of the given model.
 	 *
-	 * @param  array  $attributes
-	 * @param  bool   $exists
+	 * @param  array $attributes
+	 * @param  bool  $exists
+	 *
 	 * @return static
 	 */
 	public function newInstance($attributes = [], $exists = false)
 	{
-		$model = new static($attributes, $this->section);
+		$model         = new static($attributes, $this->section);
 		$model->exists = $exists;
 
 		return $model;
 	}
 
+
 	/**
 	 * Create a new Eloquent query builder for the model.
 	 *
 	 * @param  \Illuminate\Database\Query\Builder $query
+	 *
 	 * @return \Illuminate\Database\Eloquent\Builder|static
 	 */
 	public function newEloquentBuilder($query)

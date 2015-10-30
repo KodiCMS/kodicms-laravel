@@ -1,9 +1,11 @@
-<?php namespace KodiCMS\Pages\Contracts;
+<?php
+namespace KodiCMS\Pages\Contracts;
 
-interface BehaviorSettingsInterface {
+interface BehaviorSettingsInterface
+{
 
-	/**
-	 * @return string|null
-	 */
-	public function render();
+    /**
+     * @return string|null
+     */
+    public function render();
 }

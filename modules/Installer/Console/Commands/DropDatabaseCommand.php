@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Installer\Console\Commands;
+<?php
+namespace KodiCMS\Installer\Console\Commands;
 
 use DB;
 use Schema;
@@ -8,67 +9,67 @@ use Symfony\Component\Console\Input\InputOption;
 
 class DropDatabaseCommand extends Command
 {
-	use ConfirmableTrait;
 
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	protected $name = 'db:clear';
+    use ConfirmableTrait;
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
-	protected $description = 'Drop all database tables. (Only CLI)';
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'db:clear';
 
-	/**
-	 * Execute the console command.
-	 *
-	 * @return mixed
-	 */
-	public function fire()
-	{
-		if (php_sapi_name() !== 'cli')
-		{
-			$this->comment('Command Cancelled!');
-			return false;
-		}
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Drop all database tables. (Only CLI)';
 
-		if (!$this->confirmToProceed())
-		{
-			return;
-		}
 
-		$tables = [];
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function fire()
+    {
+        if (php_sapi_name() !== 'cli') {
+            $this->comment('Command Cancelled!');
 
-		DB::statement('SET FOREIGN_KEY_CHECKS=0');
+            return false;
+        }
 
-		foreach (DB::select('SHOW TABLES') as $k => $v)
-		{
-			$tables[] = array_values((array)$v)[0];
-		}
+        if ( ! $this->confirmToProceed()) {
+            return;
+        }
 
-		foreach ($tables as $table)
-		{
-			Schema::drop($table);
-			$this->info("Table [{$table}] has been dropped.");
-		}
+        $tables = [];
 
-		DB::statement('SET FOREIGN_KEY_CHECKS=1');
-	}
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
-	/**
-	 * Get the console command options.
-	 *
-	 * @return array
-	 */
-	protected function getOptions()
-	{
-		return [
-			['force', null, InputOption::VALUE_NONE, 'Force the operation to run when in production.'],
-		];
-	}
+        foreach (DB::select('SHOW TABLES') as $k => $v) {
+            $tables[] = array_values((array) $v)[0];
+        }
+
+        foreach ($tables as $table) {
+            Schema::drop($table);
+            $this->info("Table [{$table}] has been dropped.");
+        }
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+    }
+
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return [
+            ['force', null, InputOption::VALUE_NONE, 'Force the operation to run when in production.'],
+        ];
+    }
 }

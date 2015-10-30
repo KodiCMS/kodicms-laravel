@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Plugins\Loader;
+<?php
+namespace KodiCMS\Plugins\Loader;
 
 use CMS;
 use Event;
@@ -10,329 +11,346 @@ use KodiCMS\Support\Facades\PluginLoader as PluginLoaderFacade;
 
 abstract class BasePluginContainer extends ModuleContainer
 {
-	use Settings;
 
-	/**
-	 * @var array
-	 */
-	protected $settings = [];
+    use Settings;
 
-	/**
-	 * @var bool
-	 */
-	protected $isInstallable = true;
+    /**
+     * @var array
+     */
+    protected $settings = [];
 
-	/**
-	 * @var bool
-	 */
-	protected $isActivated = false;
+    /**
+     * @var bool
+     */
+    protected $isInstallable = true;
 
-	/**
-	 * @var bool
-	 */
-	protected $isPublishable = false;
+    /**
+     * @var bool
+     */
+    protected $isActivated = false;
 
-	/**
-	 * @var array
-	 */
-	protected $details = [];
+    /**
+     * @var bool
+     */
+    protected $isPublishable = false;
 
-	/**
-	 * @param string $moduleName
-	 * @param null|string $modulePath
-	 * @param null|string $namespace
-	 * @throws PluginContainerException
-	 */
-	public function __construct($moduleName, $modulePath = null, $namespace = null)
-	{
-		parent::__construct($moduleName, $modulePath, $namespace);
+    /**
+     * @var array
+     */
+    protected $details = [];
 
-		$this->name = strtolower($moduleName);
-		$this->details = array_merge($this->defaultDetails(), $this->details());
 
-		if (!isset($this->details['title']))
-		{
-			throw new PluginContainerException("Plugin title for plugin {$moduleName} not set");
-		}
+    /**
+     * @param string      $moduleName
+     * @param null|string $modulePath
+     * @param null|string $namespace
+     *
+     * @throws PluginContainerException
+     */
+    public function __construct($moduleName, $modulePath = null, $namespace = null)
+    {
+        parent::__construct($moduleName, $modulePath, $namespace);
 
-		$this->isInstallable = $this->checkPluginVersion();
-		$this->isActivated = in_array($this, PluginLoaderFacade::getActivated());
+        $this->name    = strtolower($moduleName);
+        $this->details = array_merge($this->defaultDetails(), $this->details());
 
-		$this->setSettings($this->defaultSettings());
-	}
+        if ( ! isset( $this->details['title'] )) {
+            throw new PluginContainerException("Plugin title for plugin {$moduleName} not set");
+        }
 
-	/**
-	 * @return array
-	 */
-	public function defaultSettings()
-	{
-		return [];
-	}
+        $this->isInstallable = $this->checkPluginVersion();
+        $this->isActivated   = in_array($this, PluginLoaderFacade::getActivated());
 
-	/**
-	 * @return string
-	 */
-	public function getTitle()
-	{
-		return array_get($this->details, 'title');
-	}
+        $this->setSettings($this->defaultSettings());
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getAuthor()
-	{
-		return array_get($this->details, 'author');
-	}
 
-	/**
-	 * @return string
-	 */
-	public function getDescription()
-	{
-		return array_get($this->details, 'description');
-	}
+    /**
+     * @return array
+     */
+    public function defaultSettings()
+    {
+        return [];
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getIcon()
-	{
-		return array_get($this->details, 'icon');
-	}
 
-	/**
-	 * @return boolean
-	 */
-	public function isInstallable()
-	{
-		return $this->isInstallable;
-	}
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return array_get($this->details, 'title');
+    }
 
-	/**
-	 * @return \Illuminate\View\View|null
-	 */
-	public function getSettingsTemplate()
-	{
-		if ($this->hasSettingsPage())
-		{
-			return view($this->details['settings_template'], [
-				'plugin' => $this
-			]);
-		}
 
-		return null;
-	}
+    /**
+     * @return string
+     */
+    public function getAuthor()
+    {
+        return array_get($this->details, 'author');
+    }
 
-	/**
-	 * @return boolean
-	 */
-	public function hasSettingsPage()
-	{
-		return (bool) array_get($this->details, 'settings_template', false);
-	}
 
-	/**
-	 * @return boolean
-	 */
-	public function isActivated()
-	{
-		return $this->isActivated;
-	}
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return array_get($this->details, 'description');
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getVersion()
-	{
-		return array_get($this->details, 'version', '0.0.0');
-	}
 
-	/**
-	 * @return string
-	 */
-	public function getRequiredVersion()
-	{
-		return array_get($this->details, 'required_cms_version', '0.0.0');
-	}
+    /**
+     * @return string
+     */
+    public function getIcon()
+    {
+        return array_get($this->details, 'icon');
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getSchemasPath()
-	{
-		return $this->getPath(['database', 'schemas']);
-	}
 
-	/**
-	 * @return bool
-	 */
-	public function checkActivation()
-	{
-		return $this->isActivated = in_array($this, PluginLoaderFacade::getActivated());
-	}
+    /**
+     * @return boolean
+     */
+    public function isInstallable()
+    {
+        return $this->isInstallable;
+    }
 
-	/**
-	 * @return bool
-	 * @throws PluginContainerException
-	 */
-	public function activate()
-	{
-		if ($this->isActivated())
-		{
-			throw new PluginContainerException("Plugin is activated");
-		}
 
-		if (!$this->isInstallable())
-		{
-			$CmsVersion = CMS::VERSION;
-			throw new PluginContainerException("
+    /**
+     * @return \Illuminate\View\View|null
+     */
+    public function getSettingsTemplate()
+    {
+        if ($this->hasSettingsPage()) {
+            return view($this->details['settings_template'], [
+                'plugin' => $this,
+            ]);
+        }
+
+        return null;
+    }
+
+
+    /**
+     * @return boolean
+     */
+    public function hasSettingsPage()
+    {
+        return (bool) array_get($this->details, 'settings_template', false);
+    }
+
+
+    /**
+     * @return boolean
+     */
+    public function isActivated()
+    {
+        return $this->isActivated;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getVersion()
+    {
+        return array_get($this->details, 'version', '0.0.0');
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getRequiredVersion()
+    {
+        return array_get($this->details, 'required_cms_version', '0.0.0');
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getSchemasPath()
+    {
+        return $this->getPath(['database', 'schemas']);
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function checkActivation()
+    {
+        return $this->isActivated = in_array($this, PluginLoaderFacade::getActivated());
+    }
+
+
+    /**
+     * @return bool
+     * @throws PluginContainerException
+     */
+    public function activate()
+    {
+        if ($this->isActivated()) {
+            throw new PluginContainerException("Plugin is activated");
+        }
+
+        if ( ! $this->isInstallable()) {
+            $CmsVersion = CMS::VERSION;
+            throw new PluginContainerException("
 				Plugin can`t be installed.
 				Required CMS version is: [{$this->getRequiredVersion()}]
 				Version of your CMS is: [{$CmsVersion}].
 			");
-		}
+        }
 
-		Plugin::create([
-			'name' => $this->getName(),
-			'path' => $this->getPath(),
-			'settings' => $this->getSettings()
-		]);
+        Plugin::create([
+            'name'     => $this->getName(),
+            'path'     => $this->getPath(),
+            'settings' => $this->getSettings(),
+        ]);
 
-		app('plugin.installer')->installSchemas($this->getSchemasPath());
+        app('plugin.installer')->installSchemas($this->getSchemasPath());
 
-		event('plugin.activate', [$this->getName()]);
+        event('plugin.activate', [$this->getName()]);
 
-		$this->isActivated = true;
+        $this->isActivated = true;
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * @param bool $removeTable
-	 * @return bool
-	 * @throws PluginContainerException
-	 */
-	public function deactivate($removeTable = false)
-	{
-		if (!$this->isActivated())
-		{
-			throw new PluginContainerException("Plugin is not activated");
-		}
 
-		if (is_null($plugin = Plugin::where('name', $this->getName())))
-		{
-			throw new PluginContainerException("Plugin not found");
-		}
+    /**
+     * @param bool $removeTable
+     *
+     * @return bool
+     * @throws PluginContainerException
+     */
+    public function deactivate($removeTable = false)
+    {
+        if ( ! $this->isActivated()) {
+            throw new PluginContainerException("Plugin is not activated");
+        }
 
-		$plugin->delete();
+        if (is_null($plugin = Plugin::where('name', $this->getName()))) {
+            throw new PluginContainerException("Plugin not found");
+        }
 
-		if ($removeTable)
-		{
-			app('plugin.installer')->dropSchemas($this->getSchemasPath());
-		}
+        $plugin->delete();
 
-		event('plugin.deactivate', [$this->getName()]);
+        if ($removeTable) {
+            app('plugin.installer')->dropSchemas($this->getSchemasPath());
+        }
 
-		$this->isActivated = false;
+        event('plugin.deactivate', [$this->getName()]);
 
-		return true;
-	}
+        $this->isActivated = false;
 
-	/**
-	 * @param array $settings
-	 */
-	public function saveSettings(array $settings)
-	{
-		$this->setSettings($settings);
+        return true;
+    }
 
-		$model = Plugin::where('name', $this->getName())->first();
 
-		if (!is_null($model))
-		{
-			$model->update(['settings' => $this->getSettings()]);
-		}
-	}
+    /**
+     * @param array $settings
+     */
+    public function saveSettings(array $settings)
+    {
+        $this->setSettings($settings);
 
-	/**
-	 * @return bool
-	 */
-	protected function checkPluginVersion()
-	{
-		return version_compare(CMS::VERSION, $this->getRequiredVersion(), '>=');
-	}
+        $model = Plugin::where('name', $this->getName())->first();
 
-	/**
-	 * @return array
-	 */
-	public function toArray()
-	{
-		$details = $this->details;
+        if ( ! is_null($model)) {
+            $model->update(['settings' => $this->getSettings()]);
+        }
+    }
 
-		$details['isInstallable'] = $this->isInstallable();
-		$details['isActivated'] = $this->isActivated();
-		$details['settings'] = $this->getSettings();
-		$details['settingsUrl'] = route('backend.plugins.settings.get', [$this->getName()]);
 
-		return array_merge(parent::toArray(), $details);
-	}
+    /**
+     * @return bool
+     */
+    protected function checkPluginVersion()
+    {
+        return version_compare(CMS::VERSION, $this->getRequiredVersion(), '>=');
+    }
 
-	/**
-	 * @param string $moduleName
-	 * @return string
-	 */
-	protected function getDefaultModulePath($moduleName)
-	{
-		return base_path('plugins/' . $moduleName);
-	}
 
-	/**
-	 * @return string
-	 */
-	protected function publishViewPath()
-	{
-		return base_path("/resources/views/plugins/{$this->getName()}");
-	}
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $details = $this->details;
 
-	protected function loadViews()
-	{
-		if (is_dir($appPath = $this->publishViewPath()))
-		{
-			app('view')->addNamespace($this->getKey(), $appPath);
-		}
-		else
-		{
-			app('view')->addNamespace($this->getKey(), $this->getViewsPath());
-		}
-	}
+        $details['isInstallable'] = $this->isInstallable();
+        $details['isActivated']   = $this->isActivated();
+        $details['settings']      = $this->getSettings();
+        $details['settingsUrl']   = route('backend.plugins.settings.get', [$this->getName()]);
 
-	/**
-	 * @return array
-	 */
-	protected function defaultDetails()
-	{
-		return [
-			'title' 				=> null,
-			'description' 			=> null,
-			'author' 				=> null,
-			'icon' 					=> 'puzzle-piece',
-			'version' 				=> '0.0.0',
-			'required_cms_version'  => '0.0.0',
-			'settings_template'		=> false
-		];
-	}
+        return array_merge(parent::toArray(), $details);
+    }
 
-	/**
-	 * @return array
-	 *
-	 * [
-	 * 		'title' 				=> '...',
-	 *		'description' 			=> '...',
-	 *		'author' 				=> '...',
-	 *		'icon' 					=> '...',
-	 * 		'version' 				=> '...',
-	 * 		'required_cms_version'  => '...'
-	 * ]
-	 */
-	abstract public function details();
+
+    /**
+     * @param string $moduleName
+     *
+     * @return string
+     */
+    protected function getDefaultModulePath($moduleName)
+    {
+        return base_path('plugins/' . $moduleName);
+    }
+
+
+    /**
+     * @return string
+     */
+    protected function publishViewPath()
+    {
+        return base_path("/resources/views/plugins/{$this->getName()}");
+    }
+
+
+    protected function loadViews()
+    {
+        if (is_dir($appPath = $this->publishViewPath())) {
+            app('view')->addNamespace($this->getKey(), $appPath);
+        } else {
+            app('view')->addNamespace($this->getKey(), $this->getViewsPath());
+        }
+    }
+
+
+    /**
+     * @return array
+     */
+    protected function defaultDetails()
+    {
+        return [
+            'title'                => null,
+            'description'          => null,
+            'author'               => null,
+            'icon'                 => 'puzzle-piece',
+            'version'              => '0.0.0',
+            'required_cms_version' => '0.0.0',
+            'settings_template'    => false,
+        ];
+    }
+
+
+    /**
+     * @return array
+     *
+     * [
+     *        'title'                => '...',
+     *        'description'            => '...',
+     *        'author'                => '...',
+     *        'icon'                    => '...',
+     *        'version'                => '...',
+     *        'required_cms_version'  => '...'
+     * ]
+     */
+    abstract public function details();
 }

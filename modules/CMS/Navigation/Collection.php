@@ -1,188 +1,198 @@
-<?php namespace KodiCMS\CMS\Navigation;
+<?php
+namespace KodiCMS\CMS\Navigation;
 
 use Event;
 
-/**
- * Class Collection
- * TODO: убрать статику. Greabock 20.05.2015
- *
- * @package KodiCMS\CMS\Navigation
- */
 class Collection
 {
 
-	/**
-	 * @var Section
-	 */
-	protected static $rootSection = NULL;
+    /**
+     * @var Section
+     */
+    protected static $rootSection = null;
 
-	/**
-	 * @var Page
-	 */
-	protected static $currentPage = NULL;
+    /**
+     * @var Page
+     */
+    protected static $currentPage = null;
 
-	/**
-	 * @param $uri
-	 * @param array $items
-	 * @return Section
-	 */
-	public static function init($uri, array $items)
-	{
-		static::build($items);
-		static::getRootSection()->findActivePageByUri(strtolower($uri));
-		static::getRootSection()->sort();
 
-		Event::fire('navigation.inited', [static::getRootSection()]);
-		return static::getRootSection();
-	}
+    /**
+     * @param string $uri
+     * @param array  $items
+     *
+     * @return Section
+     */
+    public static function init($uri, array $items)
+    {
+        static::build($items);
+        static::getRootSection()->findActivePageByUri(strtolower($uri));
+        static::getRootSection()->sort();
 
-	/**
-	 * @return Page
-	 */
-	public static function getCurrentPage()
-	{
-		return static::$currentPage;
-	}
+        Event::fire('navigation.inited', [static::getRootSection()]);
 
-	/**
-	 * @param array $items
-	 */
-	protected static function build(array $items)
-	{
-		foreach ($items as $section) {
-			if (!isset($section['name'])) {
-				continue;
-			}
+        return static::getRootSection();
+    }
 
-			if (isset($section['url'])) {
-				$sectionObject = self::getRootSection();
 
-				$page = new Page($section);
-				$sectionObject->addPage($page);
-			} else {
-				$sectionObject = self::getSection($section['name']);
-				$sectionObject->setAttribute(array_except($section, ['children']));
+    /**
+     * @return Page
+     */
+    public static function getCurrentPage()
+    {
+        return static::$currentPage;
+    }
 
-				if (!empty($section['children'])) {
-					$sectionObject->addPages($section['children']);
-				}
-			}
-		}
-	}
 
-	/**
-	 * @param $name
-	 * @param Section $parent
-	 * @param int $priority
-	 * @return Section
-	 */
-	public static function getSection($name, Section $parent = NULL, $priority = 1)
-	{
-		if ($parent === NULL) {
-			$parent = self::getRootSection();
-		}
+    /**
+     * @param array $items
+     */
+    protected static function build(array $items)
+    {
+        foreach ($items as $section) {
+            if ( ! isset( $section['name'] )) {
+                continue;
+            }
 
-		$section = $parent->findSection($name);
+            if (isset( $section['url'] )) {
+                $sectionObject = self::getRootSection();
 
-		if ($section === NULL) {
-			$section = new Section([
-				'name' => $name,
-				'priority' => $priority
-			]);
+                $page = new Page($section);
+                $sectionObject->addPage($page);
+            } else {
+                $sectionObject = self::getSection($section['name']);
+                $sectionObject->setAttribute(array_except($section, ['children']));
 
-			$parent->addPage($section);
-		}
+                if ( ! empty( $section['children'] )) {
+                    $sectionObject->addPages($section['children']);
+                }
+            }
+        }
+    }
 
-		return $section;
-	}
 
-	/**
-	 * @return void
-	 */
-	public static function setRootSection()
-	{
-		static::$rootSection = new Section([
-			'name' => 'root'
-		]);
-	}
+    /**
+     * @param         $name
+     * @param Section $parent
+     * @param int     $priority
+     *
+     * @return Section
+     */
+    public static function getSection($name, Section $parent = null, $priority = 1)
+    {
+        if ($parent === null) {
+            $parent = self::getRootSection();
+        }
 
-	/**
-	 * @return Section
-	 */
-	public static function getRootSection()
-	{
-		if (static::$rootSection === NULL) {
-			static::setRootSection();
-		}
+        $section = $parent->findSection($name);
 
-		return static::$rootSection;
-	}
+        if ($section === null) {
+            $section = new Section([
+                'name'     => $name,
+                'priority' => $priority,
+            ]);
 
-	/**
-	 * @param string $section
-	 * @param $name
-	 * @param $uri
-	 * @param int $priority
-	 * @return $this
-	 */
-	public static function addSection($section = 'Other', $name, $uri, $priority = 0)
-	{
-		return static::getSection($section)
-			->addPage(new Page([
-				'name' => $name,
-				'url' => $uri
-			]), $priority);
-	}
+            $parent->addPage($section);
+        }
 
-	/**
-	 * @param string $uri
-	 * @param array $data
-	 */
-	public static function update($uri, array $data)
-	{
-		$page = self::findPageByUri($uri);
+        return $section;
+    }
 
-		if ($page instanceof Page) {
-			foreach ($data as $key => $value) {
-				$page->{$key} = $value;
-			}
-		}
-	}
 
-	/**
-	 * @param string $uri
-	 * @return null|Page
-	 */
-	public static function & findPageByUri($uri)
-	{
-		foreach (static::getRootSection()->getSections() as $section) {
-			if ($page = $section->findPageByUri($uri)) {
-				return $page;
-			}
-		}
+    /**
+     * @return void
+     */
+    public static function setRootSection()
+    {
+        static::$rootSection = new Section([
+            'name' => 'root',
+        ]);
+    }
 
-		return NULL;
-	}
 
-	/**
-	 * @return void
-	 */
-	public static function sort()
-	{
-		uasort(self::getRootSection()->getSections(), function ($a, $b) {
-			if ($a->id() == $b->id()) {
-				return 0;
-			}
+    /**
+     * @return Section
+     */
+    public static function getRootSection()
+    {
+        if (static::$rootSection === null) {
+            static::setRootSection();
+        }
 
-			return ($a->id() < $b->id()) ? -1 : 1;
-		});
-	}
+        return static::$rootSection;
+    }
 
-	/**
-	 * @param Page $page
-	 */
-	public static function setCurrentPage(Page & $page)
-	{
-		static::$currentPage = $page;
-	}
+
+    /**
+     * @param string $section
+     * @param        $name
+     * @param        $uri
+     * @param int    $priority
+     *
+     * @return $this
+     */
+    public static function addSection($section = 'Other', $name, $uri, $priority = 0)
+    {
+        return static::getSection($section)->addPage(new Page([
+            'name' => $name,
+            'url'  => $uri,
+        ]), $priority);
+    }
+
+
+    /**
+     * @param string $uri
+     * @param array  $data
+     */
+    public static function update($uri, array $data)
+    {
+        $page = self::findPageByUri($uri);
+
+        if ($page instanceof Page) {
+            foreach ($data as $key => $value) {
+                $page->{$key} = $value;
+            }
+        }
+    }
+
+
+    /**
+     * @param string $uri
+     *
+     * @return null|Page
+     */
+    public static function & findPageByUri($uri)
+    {
+        foreach (static::getRootSection()->getSections() as $section) {
+            if ($page = $section->findPageByUri($uri)) {
+                return $page;
+            }
+        }
+
+        return null;
+    }
+
+
+    /**
+     * @return void
+     */
+    public static function sort()
+    {
+        uasort(self::getRootSection()->getSections(), function ($a, $b) {
+            if ($a->id() == $b->id()) {
+                return 0;
+            }
+
+            return ( $a->id() < $b->id() ) ? -1 : 1;
+        });
+    }
+
+
+    /**
+     * @param Page $page
+     */
+    public static function setCurrentPage(Page & $page)
+    {
+        static::$currentPage = $page;
+    }
 }

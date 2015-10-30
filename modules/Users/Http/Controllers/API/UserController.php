@@ -1,47 +1,48 @@
-<?php namespace KodiCMS\Users\Http\Controllers\API;
+<?php
+namespace KodiCMS\Users\Http\Controllers\API;
 
 use KodiCMS\API\Http\Controllers\System\Controller as APIController;
 use KodiCMS\Users\Model\User;
 
 class UserController extends APIController
 {
-	public function getRoles()
-	{
-		$userId = $this->getParameter('uid');
-		$this->setContent(User::findOrFail($userId)->roles()->get());
-	}
 
-	public function getUsers()
-	{
-		$userIds = $this->getParameter('uids');
+    public function getRoles()
+    {
+        $userId = $this->getParameter('uid');
+        $this->setContent(User::findOrFail($userId)->roles()->get());
+    }
 
-		if (!empty($userIds) AND !is_array($userIds))
-		{
-			$userIds = explode(',', $userIds);
-		}
 
-		$users = User::select();
+    public function getUsers()
+    {
+        $userIds = $this->getParameter('uids');
 
-		if (!empty($userIds))
-		{
-			$users->whereIn('id', $userIds);
-		}
+        if ( ! empty( $userIds ) AND ! is_array($userIds)) {
+            $userIds = explode(',', $userIds);
+        }
 
-		$this->setContent($users->get());
-	}
+        $users = User::select();
 
-	public function getLike()
-	{
-		$query = $this->getRequiredParameter('query');
-		$in = (array) $this->getParameter('in', ['username']);
+        if ( ! empty( $userIds )) {
+            $users->whereIn('id', $userIds);
+        }
 
-		$users = User::select();
+        $this->setContent($users->get());
+    }
 
-		foreach($in as $field)
-		{
-			$users->orWhere($field, 'like',  "{$query}%");
-		}
 
-		$this->setContent($users->get());
-	}
+    public function getLike()
+    {
+        $query = $this->getRequiredParameter('query');
+        $in    = (array) $this->getParameter('in', ['username']);
+
+        $users = User::select();
+
+        foreach ($in as $field) {
+            $users->orWhere($field, 'like', "{$query}%");
+        }
+
+        $this->setContent($users->get());
+    }
 }

@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Pages\Behavior;
+<?php
+namespace KodiCMS\Pages\Behavior;
 
 use KodiCMS\Support\Helpers\Callback;
 use KodiCMS\Pages\Model\FrontendPage;
@@ -8,142 +9,150 @@ use KodiCMS\Pages\Contracts\BehaviorPageInterface;
 
 abstract class BehaviorAbstract implements BehaviorInterface
 {
-	const ROUTE_TYPE_DEFAULT 	= 'default';
-	const ROUTE_TYPE_PAGE 		= 'page';
-	const ROUTE_TYPE_CUSTOM		= 'custom';
 
-	/**
-	 * @var Router
-	 */
-	protected $router;
+    const ROUTE_TYPE_DEFAULT = 'default';
+    const ROUTE_TYPE_PAGE = 'page';
+    const ROUTE_TYPE_CUSTOM = 'custom';
 
-	/**
-	 * @var FrontendPage
-	 */
-	protected $page = null;
+    /**
+     * @var Router
+     */
+    protected $router;
 
-	/**
-	 * @var array
-	 */
-	protected $parameters = [];
+    /**
+     * @var FrontendPage
+     */
+    protected $page = null;
 
-	/**
-	 * @var Settings
-	 */
-	protected $settings;
+    /**
+     * @var array
+     */
+    protected $parameters = [];
 
-	/**
-	 * @var string
-	 */
-	protected $settingsClass = Settings::class;
+    /**
+     * @var Settings
+     */
+    protected $settings;
 
-	/**
-	 * @var null|string
-	 */
-	protected $settingsTemplate = null;
+    /**
+     * @var string
+     */
+    protected $settingsClass = Settings::class;
 
-	/**
-	 * @param array $parameters
-	 */
-	public function __construct(array $parameters = [])
-	{
-		$this->parameters = $parameters;
+    /**
+     * @var null|string
+     */
+    protected $settingsTemplate = null;
 
-		$routes = $this->routeList();
-		if (isset($parameters['routes']) AND is_array($parameters['routes']))
-		{
-			$routes = $parameters['routes'] + $routes;
-		}
 
-		$settingsClass = $this->settingsClass;
+    /**
+     * @param array $parameters
+     */
+    public function __construct(array $parameters = [])
+    {
+        $this->parameters = $parameters;
 
-		$this->settings = new $settingsClass($this);
-		$this->router = new Router($routes);
-	}
+        $routes = $this->routeList();
+        if (isset( $parameters['routes'] ) AND is_array($parameters['routes'])) {
+            $routes = $parameters['routes'] + $routes;
+        }
 
-	/**
-	 * @param BehaviorPageInterface $page
-	 * @throws BehaviorException
-	 */
-	public function setPage(BehaviorPageInterface &$page)
-	{
-		if (!is_null($this->page))
-		{
-			throw new BehaviorException('You can\'t change behavior page');
-		}
+        $settingsClass = $this->settingsClass;
 
-		$this->page = &$page;
-		$this->settings->setSettings($page->getBehaviorSettings());
-	}
+        $this->settings = new $settingsClass($this);
+        $this->router   = new Router($routes);
+    }
 
-	/**
-	 * @return FrontendPage
-	 */
-	public function getPage()
-	{
-		return $this->page;
-	}
 
-	/**
-	 * @return array
-	 */
-	public function routeList()
-	{
-		return [];
-	}
+    /**
+     * @param BehaviorPageInterface $page
+     *
+     * @throws BehaviorException
+     */
+    public function setPage(BehaviorPageInterface &$page)
+    {
+        if ( ! is_null($this->page)) {
+            throw new BehaviorException('You can\'t change behavior page');
+        }
 
-	/**
-	 * @return Router
-	 */
-	public function getRouter()
-	{
-		return $this->router;
-	}
+        $this->page = &$page;
+        $this->settings->setSettings($page->getBehaviorSettings());
+    }
 
-	/**
-	 * @param string $uri
-	 * @return string
-	 */
-	public function executeRoute($uri)
-	{
-		if (empty($uri))
-		{
-			return null;
-		}
 
-		if (is_null($method = $this->getRouter()->findRouteByUri($uri)))
-		{
-			$this->page = FrontendPage::findByUri($uri, $this->page);
-			return null;
-		}
+    /**
+     * @return FrontendPage
+     */
+    public function getPage()
+    {
+        return $this->page;
+    }
 
-		if (strpos($method, '::') !== false)
-		{
-			Callback::invoke($method, [$this]);
-		}
-		else
-		{
-			$this->{$method}();
-		}
 
-		return $method;
-	}
+    /**
+     * @return array
+     */
+    public function routeList()
+    {
+        return [];
+    }
 
-	/**
-	 * @return null|string
-	 */
-	public function getSettingsTemplate()
-	{
-		return $this->settingsTemplate;
-	}
 
-	/**
-	 * @return Settings
-	 */
-	public function getSettings()
-	{
-		return $this->settings;
-	}
+    /**
+     * @return Router
+     */
+    public function getRouter()
+    {
+        return $this->router;
+    }
 
-	final public function stub() {}
+
+    /**
+     * @param string $uri
+     *
+     * @return string
+     */
+    public function executeRoute($uri)
+    {
+        if (empty( $uri )) {
+            return null;
+        }
+
+        if (is_null($method = $this->getRouter()->findRouteByUri($uri))) {
+            $this->page = FrontendPage::findByUri($uri, $this->page);
+
+            return null;
+        }
+
+        if (strpos($method, '::') !== false) {
+            Callback::invoke($method, [$this]);
+        } else {
+            $this->{$method}();
+        }
+
+        return $method;
+    }
+
+
+    /**
+     * @return null|string
+     */
+    public function getSettingsTemplate()
+    {
+        return $this->settingsTemplate;
+    }
+
+
+    /**
+     * @return Settings
+     */
+    public function getSettings()
+    {
+        return $this->settings;
+    }
+
+
+    final public function stub()
+    {
+    }
 }

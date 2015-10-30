@@ -1,18 +1,22 @@
-<?php namespace KodiCMS\Users\Contracts;
+<?php
+namespace KodiCMS\Users\Contracts;
 
 use KodiCMS\Users\Model\UserReflink;
 
-interface ReflinkHandlerInterface {
+interface ReflinkHandlerInterface
+{
 
-	/**
-	 * @param UserReflink $reflink
-	 */
-	public function __construct(UserReflink $reflink);
+    /**
+     * @param UserReflink $reflink
+     */
+    public function __construct(UserReflink $reflink);
 
-	/**
-	 * @return string
-	 */
-	public function getResponse();
 
-	public function handle();
+    /**
+     * @return string
+     */
+    public function getResponse();
+
+
+    public function handle();
 }

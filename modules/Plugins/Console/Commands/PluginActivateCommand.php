@@ -1,39 +1,42 @@
-<?php namespace KodiCMS\Plugins\Console\Commands;
+<?php
+namespace KodiCMS\Plugins\Console\Commands;
 
 use PluginLoader;
 use Illuminate\Console\Command;
 
-class PluginActivateCommand extends Command {
+class PluginActivateCommand extends Command
+{
 
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	protected $signature = 'cms:plugins:activate {plugin}';
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $signature = 'cms:plugins:activate {plugin}';
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
-	protected $description = 'Activate plugin';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Activate plugin';
 
-	/**
-	 * Execute the console command.
-	 *
-	 * @return mixed
-	 */
-	public function fire()
-	{
-		$pluginName = $this->argument('plugin');
 
-		if (PluginLoader::activatePlugin($pluginName))
-		{
-			$this->info("Plugin [{$pluginName}] activated");
-			return;
-		}
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function fire()
+    {
+        $pluginName = $this->argument('plugin');
 
-		$this->error("Can't activate plugin: [{$pluginName}]");
-	}
+        if (PluginLoader::activatePlugin($pluginName)) {
+            $this->info("Plugin [{$pluginName}] activated");
+
+            return;
+        }
+
+        $this->error("Can't activate plugin: [{$pluginName}]");
+    }
 }

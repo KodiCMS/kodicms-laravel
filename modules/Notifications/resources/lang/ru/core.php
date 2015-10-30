@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'no_unread_messages' => 'Нет новых уведомлений'
+    'no_unread_messages' => 'Нет новых уведомлений',
 ];

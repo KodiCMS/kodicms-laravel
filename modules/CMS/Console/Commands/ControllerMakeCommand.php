@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\CMS\Console\Commands;
+<?php
+namespace KodiCMS\CMS\Console\Commands;
 
 use ModulesLoader;
 use RuntimeException;
@@ -6,128 +7,135 @@ use Illuminate\Console\GeneratorCommand;
 use KodiCMS\ModulesLoader\ModuleContainer;
 use Symfony\Component\Console\Input\InputOption;
 
-class ControllerMakeCommand extends GeneratorCommand {
+class ControllerMakeCommand extends GeneratorCommand
+{
 
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	protected $name = 'cms:make:controller';
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'cms:make:controller';
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
-	protected $description = 'Create a new resource controller class';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Create a new resource controller class';
 
-	/**
-	 * The type of class being generated.
-	 *
-	 * @var string
-	 */
-	protected $type = 'Controller';
+    /**
+     * The type of class being generated.
+     *
+     * @var string
+     */
+    protected $type = 'Controller';
 
-	/**
-	 * @var ModuleContainer
-	 */
-	protected $module;
+    /**
+     * @var ModuleContainer
+     */
+    protected $module;
 
-	/**
-	 * Execute the console command.
-	 *
-	 * @return void
-	 */
-	public function fire()
-	{
-		$this->module = $this->findModule();
 
-		parent::fire();
-	}
+    /**
+     * Execute the console command.
+     *
+     * @return void
+     */
+    public function fire()
+    {
+        $this->module = $this->findModule();
 
-	/**
-	 * @param string $name
-	 * @return string
-	 */
-	public function getPath($name)
-	{
-		$name = str_replace($this->getAppNamespace(), '', $name);
-		return $this->module->getPath(str_replace('\\', '/', $name).'.php');
-	}
+        parent::fire();
+    }
 
-	public function findModule()
-	{
-		$module = $this->input->getOption('module');
 
-		foreach(ModulesLoader::getRegisteredModules() as $moduleContainer)
-		{
-			if($moduleContainer->getKey() == strtolower($module))
-			{
-				return $moduleContainer;
-			}
-		}
+    /**
+     * @param string $name
+     *
+     * @return string
+     */
+    public function getPath($name)
+    {
+        $name = str_replace($this->getAppNamespace(), '', $name);
 
-		throw new RuntimeException("Module {$module} not found.");
-	}
+        return $this->module->getPath(str_replace('\\', '/', $name) . '.php');
+    }
 
-	/**
-	 * Get the stub file for the generator.
-	 *
-	 * @return string
-	 */
-	protected function getStub()
-	{
-		$type = $this->input->getOption('type');
 
-		switch($type)
-		{
-			case 'api':
-				return __DIR__.'/stubs/controller.api.stub';
-			default:
-				return __DIR__.'/stubs/controller.stub';
-		}
-	}
+    public function findModule()
+    {
+        $module = $this->input->getOption('module');
 
-	/**
-	 * Get the default namespace for the class.
-	 *
-	 * @param  string  $rootNamespace
-	 * @return string
-	 */
-	protected function getDefaultNamespace($rootNamespace)
-	{
-		$type = $this->input->getOption('type');
+        foreach (ModulesLoader::getRegisteredModules() as $moduleContainer) {
+            if ($moduleContainer->getKey() == strtolower($module)) {
+                return $moduleContainer;
+            }
+        }
 
-		switch($type)
-		{
-			case 'api':
-				return $rootNamespace.'\Http\Controllers\API';
-			default:
-				return $rootNamespace.'\Http\Controllers';
-		}
-	}
+        throw new RuntimeException("Module {$module} not found.");
+    }
 
-	/**
-	 * Get the console command options.
-	 *
-	 * @return array
-	 */
-	protected function getOptions()
-	{
-		return [
-			['module', null, InputOption::VALUE_REQUIRED, 'Module name'],
-			['type', 'backend', InputOption::VALUE_OPTIONAL, 'Controller type [backend, api]'],
-		];
-	}
 
-	/**
-	 * @return string
-	 * @throws RuntimeException
-	 */
-	protected function getAppNamespace()
-	{
-		return $this->module->getNamespace();
-	}
+    /**
+     * Get the stub file for the generator.
+     *
+     * @return string
+     */
+    protected function getStub()
+    {
+        $type = $this->input->getOption('type');
+
+        switch ($type) {
+            case 'api':
+                return __DIR__ . '/stubs/controller.api.stub';
+            default:
+                return __DIR__ . '/stubs/controller.stub';
+        }
+    }
+
+
+    /**
+     * Get the default namespace for the class.
+     *
+     * @param  string $rootNamespace
+     *
+     * @return string
+     */
+    protected function getDefaultNamespace($rootNamespace)
+    {
+        $type = $this->input->getOption('type');
+
+        switch ($type) {
+            case 'api':
+                return $rootNamespace . '\Http\Controllers\API';
+            default:
+                return $rootNamespace . '\Http\Controllers';
+        }
+    }
+
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return [
+            ['module', null, InputOption::VALUE_REQUIRED, 'Module name'],
+            ['type', 'backend', InputOption::VALUE_OPTIONAL, 'Controller type [backend, api]'],
+        ];
+    }
+
+
+    /**
+     * @return string
+     * @throws RuntimeException
+     */
+    protected function getAppNamespace()
+    {
+        return $this->module->getNamespace();
+    }
 
 }

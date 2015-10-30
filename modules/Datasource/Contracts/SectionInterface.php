@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Datasource\Contracts;
+<?php
+namespace KodiCMS\Datasource\Contracts;
 
 use KodiCMS\Datasource\Document;
 use KodiCMS\Datasource\Model\Section;
@@ -6,129 +7,154 @@ use KodiCMS\Datasource\Model\SectionFolder;
 
 interface SectionInterface
 {
-	/**
-	 * @return integer
-	 */
-	public function getId();
 
-	/**
-	 * @return string
-	 */
-	public function getDocumentPrimaryKey();
+    /**
+     * @return integer
+     */
+    public function getId();
 
-	/**
-	 * @return string
-	 */
-	public function getDocumentTitleKey();
 
-	/**
-	 * @return string
-	 */
-	public function getName();
+    /**
+     * @return string
+     */
+    public function getDocumentPrimaryKey();
 
-	/**
-	 * @return string
-	 */
-	public function getIcon();
 
-	/**
-	 * @return string
-	 */
-	public function getLink();
+    /**
+     * @return string
+     */
+    public function getDocumentTitleKey();
 
-	/**
-	 * @return integer
-	 */
-	public function getMenuPosition();
 
-	/**
-	 * @return bool
-	 */
-	public function showInRootMenu();
+    /**
+     * @return string
+     */
+    public function getName();
 
-	/**
-	 * @return string
-	 */
-	public function getDescription();
 
-	/**
-	 * @return SectionType|null
-	 */
-	public function getType();
+    /**
+     * @return string
+     */
+    public function getIcon();
 
-	/**
-	 * @return SectionHeadlineInterface
-	 */
-	public function getHeadline();
 
-	/**
-	 * @return string
-	 */
-	public function getHeadlineClass();
+    /**
+     * @return string
+     */
+    public function getLink();
 
-	/**
-	 * @return array
-	 */
-	public function getHeadlineOrdering();
 
-	/**
-	 * @return string
-	 */
-	public function getToolbar();
+    /**
+     * @return integer
+     */
+    public function getMenuPosition();
 
-	/**
-	 * @return array
-	 */
-	public function getSystemFields();
 
-	/**
-	 * @return array
-	 */
-	public function getRelatedFields();
+    /**
+     * @return bool
+     */
+    public function showInRootMenu();
 
-	/**
-	 * @return FieldsCollectionInterface
-	 */
-	public function getFields();
 
-	/**
-	 * @return string
-	 */
-	public function getSectionTableName();
+    /**
+     * @return string
+     */
+    public function getDescription();
 
-	/**
-	 * @return Document
-	 */
-	public function getEmptyDocument(array $attributes = []);
 
-	/**
-	 * @param array $attributes
-	 *
-	 * @return Document
-	 */
-	public function newDocumentQuery(array $attributes = []);
+    /**
+     * @return SectionType|null
+     */
+    public function getType();
 
-	/**
-	 * @param int $id
-	 * @param array $attributes
-	 *
-	 * @return Document
-	 */
-	public function getDocumentById($id, array $attributes = []);
 
-	/**
-	 * @return string
-	 */
-	public function getDocumentClass();
+    /**
+     * @return SectionHeadlineInterface
+     */
+    public function getHeadline();
 
-	/**
-	 * @return string
-	 */
-	public function getCreateDocumentTitle();
 
-	/**
-	 * @param string $name
-	 * @return string
-	 */
-	public function getEditDocumentTitle($name = '');
+    /**
+     * @return string
+     */
+    public function getHeadlineClass();
+
+
+    /**
+     * @return array
+     */
+    public function getHeadlineOrdering();
+
+
+    /**
+     * @return string
+     */
+    public function getToolbar();
+
+
+    /**
+     * @return array
+     */
+    public function getSystemFields();
+
+
+    /**
+     * @return array
+     */
+    public function getRelatedFields();
+
+
+    /**
+     * @return FieldsCollectionInterface
+     */
+    public function getFields();
+
+
+    /**
+     * @return string
+     */
+    public function getSectionTableName();
+
+
+    /**
+     * @return Document
+     */
+    public function getEmptyDocument(array $attributes = []);
+
+
+    /**
+     * @param array $attributes
+     *
+     * @return Document
+     */
+    public function newDocumentQuery(array $attributes = []);
+
+
+    /**
+     * @param int   $id
+     * @param array $attributes
+     *
+     * @return Document
+     */
+    public function getDocumentById($id, array $attributes = []);
+
+
+    /**
+     * @return string
+     */
+    public function getDocumentClass();
+
+
+    /**
+     * @return string
+     */
+    public function getCreateDocumentTitle();
+
+
+    /**
+     * @param string $name
+     *
+     * @return string
+     */
+    public function getEditDocumentTitle($name = '');
 }

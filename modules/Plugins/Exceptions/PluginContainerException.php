@@ -1,5 +1,9 @@
-<?php namespace KodiCMS\Plugins\Exceptions;
+<?php
+namespace KodiCMS\Plugins\Exceptions;
 
 use KodiCMS\CMS\Exceptions\Exception;
 
-class PluginContainerException extends Exception {}
+class PluginContainerException extends Exception
+{
+
+}

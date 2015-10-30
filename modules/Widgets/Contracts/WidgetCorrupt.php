@@ -1,3 +1,7 @@
-<?php namespace KodiCMS\Widgets\Contracts;
+<?php
+namespace KodiCMS\Widgets\Contracts;
 
-interface WidgetCorrupt extends Widget {}
+interface WidgetCorrupt extends Widget
+{
+
+}

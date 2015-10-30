@@ -1,51 +1,54 @@
-<?php namespace KodiCMS\Widgets\Engine;
+<?php
+namespace KodiCMS\Widgets\Engine;
 
 use Illuminate\View\View;
 
 class WidgetRenderSettingsHTML extends WidgetRenderAbstract
 {
-	/**
-	 * @return string
-	 */
-	public function render()
-	{
-		$widget = $this->getWidget();
 
-		if (method_exists($widget, 'onSettingsRender'))
-		{
-			app()->call([$widget, 'onSettingsRender'], $this);
-		}
+    /**
+     * @return string
+     */
+    public function render()
+    {
+        $widget = $this->getWidget();
 
-		return $this->getContent();
-	}
+        if (method_exists($widget, 'onSettingsRender')) {
+            app()->call([$widget, 'onSettingsRender'], $this);
+        }
 
-	/**
-	 * @return string
-	 */
-	protected function getContent()
-	{
-		$widget = $this->getWidget();
-		$widget->setSettings($this->parameters);
+        return $this->getContent();
+    }
 
-		$preparedData = $widget->prepareSettingsData();
-		$preparedData['widget'] = $widget;
 
-		return $this->getWidgetTemplate($preparedData);
-	}
+    /**
+     * @return string
+     */
+    protected function getContent()
+    {
+        $widget = $this->getWidget();
+        $widget->setSettings($this->parameters);
 
-	/**
-	 * @param array $preparedData
-	 * @return View
-	 */
-	protected function getWidgetTemplate(array $preparedData)
-	{
-		$template = $this->getWidget()->getSettingsTemplate();
+        $preparedData           = $widget->prepareSettingsData();
+        $preparedData['widget'] = $widget;
 
-		if (empty($template))
-		{
-			return null;
-		}
+        return $this->getWidgetTemplate($preparedData);
+    }
 
-		return view($template, $preparedData);
-	}
+
+    /**
+     * @param array $preparedData
+     *
+     * @return View
+     */
+    protected function getWidgetTemplate(array $preparedData)
+    {
+        $template = $this->getWidget()->getSettingsTemplate();
+
+        if (empty( $template )) {
+            return null;
+        }
+
+        return view($template, $preparedData);
+    }
 }

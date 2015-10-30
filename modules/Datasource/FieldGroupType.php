@@ -1,91 +1,97 @@
-<?php namespace KodiCMS\Datasource;
+<?php
+namespace KodiCMS\Datasource;
 
 use KodiCMS\Datasource\Contracts\FieldTypeInterface;
 
 class FieldGroupType implements FieldTypeInterface
 {
-	/**
-	 * @param array $settings
-	 *
-	 * @return bool
-	 */
-	public static function isValid(array $settings)
-	{
-		if (!isset($settings['class']))
-		{
-			return false;
-		}
 
-		return true;
-	}
+    /**
+     * @param array $settings
+     *
+     * @return bool
+     */
+    public static function isValid(array $settings)
+    {
+        if ( ! isset( $settings['class'] )) {
+            return false;
+        }
 
-	/**
-	 * @var string
-	 */
-	protected $class;
-
-	/**
-	 * @var string
-	 */
-	protected $type;
-
-	/**
-	 * @var string
-	 */
-	protected $title;
+        return true;
+    }
 
 
-	/**
-	 * @param string $type
-	 * @param array $settings
-	 */
-	public function __construct($type, array $settings)
-	{
-		foreach (array_only($settings, ['class', 'type', 'title']) as $key => $value)
-		{
-			$this->{$key} = $value;
-		}
+    /**
+     * @var string
+     */
+    protected $class;
 
-		$this->type = $type;
-	}
+    /**
+     * @var string
+     */
+    protected $type;
 
-	/**
-	 * @return Field
-	 */
-	public function getObject()
-	{
-		return new $this->class;
-	}
+    /**
+     * @var string
+     */
+    protected $title;
 
-	/**
-	 * @return bool
-	 */
-	public function isExists()
-	{
-		return class_exists($this->class);
-	}
 
-	/**
-	 * @return string
-	 */
-	public function getClass()
-	{
-		return $this->class;
-	}
+    /**
+     * @param string $type
+     * @param array  $settings
+     */
+    public function __construct($type, array $settings)
+    {
+        foreach (array_only($settings, ['class', 'type', 'title']) as $key => $value) {
+            $this->{$key} = $value;
+        }
 
-	/**
-	 * @return string
-	 */
-	public function getType()
-	{
-		return $this->type;
-	}
+        $this->type = $type;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getTitle()
-	{
-		return $this->title;
-	}
+
+    /**
+     * @return Field
+     */
+    public function getObject()
+    {
+        return new $this->class;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isExists()
+    {
+        return class_exists($this->class);
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
 }

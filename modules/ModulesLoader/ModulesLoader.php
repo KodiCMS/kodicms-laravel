@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\ModulesLoader;
+<?php
+namespace KodiCMS\ModulesLoader;
 
 use Profiler;
 use KodiCMS\Support\Helpers\File;
@@ -7,139 +8,140 @@ use KodiCMS\ModulesLoader\Contracts\ModuleContainerInterface;
 
 class ModulesLoader
 {
-	/**
-	 * @var
-	 */
-	public static $defaultContainerClass = \KodiCMS\ModulesLoader\ModuleContainer::class;
 
-	/**
-	 * @var array
-	 */
-	protected $registeredModules = [];
+    /**
+     * @var
+     */
+    public static $defaultContainerClass = \KodiCMS\ModulesLoader\ModuleContainer::class;
 
-	/**
-	 * @param array $modulesList
-	 */
-	public function __construct(array $modulesList)
-	{
-		foreach ($modulesList as $moduleName => $modulePath)
-		{
-			$moduleNamespace = null;
+    /**
+     * @var array
+     */
+    protected $registeredModules = [];
 
-			if (is_array($modulePath))
-			{
-				$moduleNamespace = array_get($modulePath, 'namespace');
-				$modulePath = array_get($modulePath, 'path');
-			}
-			else if (is_numeric($moduleName))
-			{
-				$moduleName = $modulePath;
-				$modulePath = null;
-			}
 
-			if (is_null($modulePath))
-			{
-				$modulePath = base_path('modules' . DIRECTORY_SEPARATOR . $moduleName);
-			}
+    /**
+     * @param array $modulesList
+     */
+    public function __construct(array $modulesList)
+    {
+        foreach ($modulesList as $moduleName => $modulePath) {
+            $moduleNamespace = null;
 
-			$this->addModule($moduleName, $modulePath, $moduleNamespace);
-		}
+            if (is_array($modulePath)) {
+                $moduleNamespace = array_get($modulePath, 'namespace');
+                $modulePath      = array_get($modulePath, 'path');
+            } else if (is_numeric($moduleName)) {
+                $moduleName = $modulePath;
+                $modulePath = null;
+            }
 
-		$this->addModule('App', base_path(), '');
-	}
+            if (is_null($modulePath)) {
+                $modulePath = base_path('modules' . DIRECTORY_SEPARATOR . $moduleName);
+            }
 
-	/**
-	 * @return array
-	 */
-	public function getRegisteredModules()
-	{
-		return $this->registeredModules;
-	}
+            $this->addModule($moduleName, $modulePath, $moduleNamespace);
+        }
 
-	/**
-	 * @param string $moduleName
-	 *
-	 * @return ModuleContainerInterface|null
-	 */
-	public function getRegisteredModule($moduleName)
-	{
-		return array_get($this->getRegisteredModules(), $moduleName);
-	}
+        $this->addModule('App', base_path(), '');
+    }
 
-	/**
-	 * @param string $moduleName
-	 * @param string|null $modulePath
-	 * @param string|null $namespace
-	 * @param string|null $moduleContainerClass
-	 * @return $this
-	 */
-	public function addModule($moduleName, $modulePath = null, $namespace = null, $moduleContainerClass = null)
-	{
-		$token = Profiler::start('Modules Loader', $moduleName);
 
-		if (is_null($namespace))
-		{
-			$namespace = 'KodiCMS\\' . $moduleName;
-		}
+    /**
+     * @return array
+     */
+    public function getRegisteredModules()
+    {
+        return $this->registeredModules;
+    }
 
-		$namespace = trim($namespace, '\\');
 
-		if (is_null($moduleContainerClass))
-		{
-			$moduleContainerClass = '\\' . $namespace . '\\ModuleContainer';
-		}
+    /**
+     * @param string $moduleName
+     *
+     * @return ModuleContainerInterface|null
+     */
+    public function getRegisteredModule($moduleName)
+    {
+        return array_get($this->getRegisteredModules(), $moduleName);
+    }
 
-		$defaultModuleClass = '\\KodiCMS\\ModulesLoader\\' . $moduleName . 'ModuleContainer';
 
-		if (!class_exists($moduleContainerClass))
-		{
-			$moduleContainerClass = class_exists($defaultModuleClass)
-				? $defaultModuleClass
-				: static::$defaultContainerClass;
-		}
+    /**
+     * @param string      $moduleName
+     * @param string|null $modulePath
+     * @param string|null $namespace
+     * @param string|null $moduleContainerClass
+     *
+     * @return $this
+     */
+    public function addModule($moduleName, $modulePath = null, $namespace = null, $moduleContainerClass = null)
+    {
+        $token = Profiler::start('Modules Loader', $moduleName);
 
-		$moduleContainer = new $moduleContainerClass($moduleName, $modulePath, $namespace);
+        if (is_null($namespace)) {
+            $namespace = 'KodiCMS\\' . $moduleName;
+        }
 
-		$this->registerModule($moduleContainer);
+        $namespace = trim($namespace, '\\');
 
-		Profiler::stop($token);
+        if (is_null($moduleContainerClass)) {
+            $moduleContainerClass = '\\' . $namespace . '\\ModuleContainer';
+        }
 
-		return $this;
-	}
+        $defaultModuleClass = '\\KodiCMS\\ModulesLoader\\' . $moduleName . 'ModuleContainer';
 
-	/**
-	 * @param ModuleContainerInterface $module
-	 */
-	public function registerModule(ModuleContainerInterface $module)
-	{
-		$this->registeredModules[$module->getName()] = $module;
-	}
+        if ( ! class_exists($moduleContainerClass)) {
+            $moduleContainerClass = class_exists($defaultModuleClass)
+                ? $defaultModuleClass
+                : static::$defaultContainerClass;
+        }
 
-	/**
-	 * @param Application $app
-	 * @return $this
-	 */
-	public function registerModules(Application $app)
-	{
-		foreach ($this->getRegisteredModules() as $module)
-		{
-			$module->register($app);
-		}
+        $moduleContainer = new $moduleContainerClass($moduleName, $modulePath, $namespace);
 
-		return $this;
-	}
+        $this->registerModule($moduleContainer);
 
-	/**
-	 * @param Application $app
-	 * @return $this
-	 */
-	public function bootModules(Application $app)
-	{
-		foreach ($this->getRegisteredModules() as $module)
-		{
-			$module->boot($app);
-		}
+        Profiler::stop($token);
 
-		return $this;
-	}
+        return $this;
+    }
+
+
+    /**
+     * @param ModuleContainerInterface $module
+     */
+    public function registerModule(ModuleContainerInterface $module)
+    {
+        $this->registeredModules[$module->getName()] = $module;
+    }
+
+
+    /**
+     * @param Application $app
+     *
+     * @return $this
+     */
+    public function registerModules(Application $app)
+    {
+        foreach ($this->getRegisteredModules() as $module) {
+            $module->register($app);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @param Application $app
+     *
+     * @return $this
+     */
+    public function bootModules(Application $app)
+    {
+        foreach ($this->getRegisteredModules() as $module) {
+            $module->boot($app);
+        }
+
+        return $this;
+    }
 }

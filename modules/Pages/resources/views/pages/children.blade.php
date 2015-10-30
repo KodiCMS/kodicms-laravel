@@ -1,5 +1,5 @@
 <ul data-level="{{ $level }}" class="list-unstyled">
-	@foreach ($childrens as $child)
+	@foreach ($children as $child)
 	<li data-id="{{ $child->id }}" @if($child->isExpanded) class="item-expanded" @endif >
 		<div class="tree-item">
 			<div class="title col-xs-7">

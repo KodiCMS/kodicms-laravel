@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Installer\Console\Commands;
+<?php
+namespace KodiCMS\Installer\Console\Commands;
 
 use App;
 use Installer;
@@ -13,215 +14,243 @@ use KodiCMS\Installer\Exceptions\InstallDatabaseException;
 
 class InstallCommand extends GeneratorCommand
 {
-	use ConfirmableTrait;
 
-	/**
-	 * The console command name.
-	 */
-	protected $name = 'cms:install';
+    use ConfirmableTrait;
 
-	/**
-	 * @var array
-	 */
-	protected $env = [];
+    /**
+     * The console command name.
+     */
+    protected $name = 'cms:install';
 
-	/**
-	 * Configs DB
-	 */
-	protected $DBConfigs = [
-		'host' => 'DB_HOST',
-		'database' => 'DB_DATABASE',
-		'username' => 'DB_USERNAME',
-		'password' => 'DB_PASSWORD',
-		'prefix' => 'DB_PREFIX'
-	];
+    /**
+     * @var array
+     */
+    protected $env = [];
 
-	/**
-	 * @var array
-	 */
-	protected $testHeaders = ['Title', 'Passed', 'Motice', 'Message'];
+    /**
+     * Configs DB
+     */
+    protected $DBConfigs = [
+        'host' => 'DB_HOST',
+        'database' => 'DB_DATABASE',
+        'username' => 'DB_USERNAME',
+        'password' => 'DB_PASSWORD',
+        'prefix' => 'DB_PREFIX',
+    ];
 
-	/**
-	 * Execute the console command.
-	 */
-	public function fire()
-	{
-		list($failed, $tests, $optional) = EnvironmentTester::check();
-
-		$this->table($this->testHeaders, $tests);
-
-		if (!empty($optional))
-		{
-			$this->info('Optional tests');
-			$this->table($this->testHeaders, $optional);
-		}
-
-		if ($failed)
-		{
-			throw new InstallException('Environment test failed');
-		}
+    /**
+     * @var array
+     */
+    protected $testHeaders = ['Title', 'Passed', 'Motice', 'Message'];
 
 
-		if (!$this->confirmToProceed('.env file already exists!', function() {
-			return App::installed();
-		}))
-		{
-			return $this->error("Installation is aborted.");
-		}
+    /**
+     * Execute the console command.
+     */
+    public function fire()
+    {
+        list( $failed, $tests, $optional ) = EnvironmentTester::check();
 
-		$db = $this->createDBConnection();
+        $this->table($this->testHeaders, $tests);
 
-		while (!$db && $this->confirm('Do you want enter settings?'))
-		{
-			$this->askOptions();
-			$db = $this->createDBConnection();
-		}
+        if ( ! empty( $optional )) {
+            $this->info('Optional tests');
+            $this->table($this->testHeaders, $optional);
+        }
 
-		if (!$db)
-		{
-			return $this->error("Installation is aborted.");
-		}
+        if ($failed) {
+            throw new InstallException('Environment test failed');
+        }
 
-		if (Installer::createEnvironmentFile($this->getConfig()))
-		{
-			$this->info('.env file created successfully.');
-		}
+        if ( ! $this->confirmToProceed('.env file already exists!', function () {
+            return App::installed();
+        })
+        ) {
+            return $this->error("Installation is aborted.");
+        }
 
-		if ($this->confirm("Clear database? [yes/no]"))
-		{
-			$this->dropDatabase();
-		}
+        $db = $this->createDBConnection();
 
-		$this->initModules();
+        while ( ! $db && $this->confirm('Do you want enter settings?')) {
+            $this->askOptions();
+            $db = $this->createDBConnection();
+        }
 
-		$this->migrate();
-		if ($this->confirm('Install seed data?'))
-		{
-			$this->seed();
-		}
+        if ( ! $db) {
+            return $this->error("Installation is aborted.");
+        }
 
-		$this->info('Installation completed successfully');
-	}
+        if (Installer::createEnvironmentFile($this->getConfig())) {
+            $this->info('.env file created successfully.');
+        }
 
-	protected function initModules()
-	{
-		foreach (ModulesLoader::getRegisteredModules() as $module)
-		{
-			app()->call([$module, 'loadRoutes'], [app('router')]);
-		}
+        if ($this->confirm("Clear database? [yes/no]")) {
+            $this->dropDatabase();
+        }
 
-		ModulesFileSystem::loadConfigs();
-	}
+        $this->initModules();
 
-	/**
-	 * Get the stub file for the generator.
-	 *
-	 * @return string
-	 */
-	protected function getStub()
-	{
-		return __DIR__ . '/stubs/env.stub';
-	}
+        $this->migrate();
+        if ($this->confirm('Install seed data?')) {
+            $this->seed();
+        }
 
-	protected function dropDatabase()
-	{
-		$this->call('db:clear', ['--force' => true]);
-	}
+        $this->info('Installation completed successfully');
+    }
 
 
-	/**
-	 * Миграция данных
-	 */
-	protected function migrate()
-	{
-		$this->call('cms:modules:migrate', ['--force' => true]);
-	}
+    protected function initModules()
+    {
+        foreach (ModulesLoader::getRegisteredModules() as $module) {
+            app()->call([$module, 'loadRoutes'], [app('router')]);
+        }
 
-	/**
-	 * Сидирование данных
-	 */
-	protected function seed()
-	{
-		$this->call('cms:modules:seed', ['--force' => true]);
-	}
+        ModulesFileSystem::loadConfigs();
+    }
 
-	/**
-	 * Ask options
-	 */
-	protected function askOptions()
-	{
-		foreach ($this->getOptions() as $option)
-		{
-			if ($option[0] == 'force') continue;
 
-			$defVal = $this->input->getOption($option[0]);
-			$val = $this->ask($option[3] . "{" . $defVal . "}", $defVal);
-			$this->input->setOption($option[0], $val);
-		}
-	}
+    /**
+     * Get the stub file for the generator.
+     *
+     * @return string
+     */
+    protected function getStub()
+    {
+        return __DIR__ . '/stubs/env.stub';
+    }
 
-	private function getConfig()
-	{
-		$config = [];
-		foreach ($this->getOptions() as $option)
-		{
-			$config = array_add($config, $option[0], $this->input->getOption($option[0]));
-		}
 
-		return $config;
-	}
+    protected function dropDatabase()
+    {
+        $this->call('db:clear', ['--force' => true]);
+    }
 
-	private function createDBConnection()
-	{
-		try
-		{
-			$config = [];
-			foreach ($this->DBConfigs as $key => $value)
-			{
-				$config = array_add($config, $key, $this->input->getOption($value));
-			}
 
-			return Installer::createDBConnection($config);
-		}
-		catch (InstallDatabaseException $e)
-		{
-			$this->error($e->GetMessage());
+    /**
+     * Миграция данных
+     */
+    protected function migrate()
+    {
+        $this->call('cms:modules:migrate', ['--force' => true]);
+    }
 
-			return false;
-		}
-	}
 
-	/**
-	 * Get the console command arguments.
-	 *
-	 * @return array
-	 */
-	protected function getArguments()
-	{
-		return [];
-	}
+    /**
+     * Сидирование данных
+     */
+    protected function seed()
+    {
+        $this->call('cms:modules:seed', ['--force' => true]);
+    }
 
-	/**
-	 * Get the console command options.
-	 * @return array
-	 */
-	protected function getOptions()
-	{
-		$defaults = Installer::getDefaultEnvironment();
 
-		return [
-			['DB_HOST', 'host', InputOption::VALUE_OPTIONAL, "Database host", array_get($defaults, 'DB_HOST')],
-			['DB_DATABASE', 'db', InputOption::VALUE_OPTIONAL, 'Database name', array_get($defaults, 'DB_DATABASE')],
-			['DB_USERNAME', 'u', InputOption::VALUE_OPTIONAL, 'Database username', array_get($defaults, 'DB_USERNAME')],
-			['DB_PASSWORD', 'p', InputOption::VALUE_NONE, 'Database password'],
-			['DB_PREFIX', 'pr', InputOption::VALUE_NONE, 'Database prefix'],
-			['CACHE_DRIVER', 'cache', InputOption::VALUE_OPTIONAL, 'Cache driver [file|redis]', array_get($defaults, 'CACHE_DRIVER')],
-			['SESSION_DRIVER', 'session', InputOption::VALUE_OPTIONAL, 'Session driver [file|database]', array_get($defaults, 'SESSION_DRIVER')],
-			['APP_ENV', 'env', InputOption::VALUE_OPTIONAL, 'Application Environmet [local|production]', array_get($defaults, 'APP_ENV')],
-			['APP_DEBUG', 'debug', InputOption::VALUE_OPTIONAL, 'Application Debug [true|false]', array_get($defaults, 'APP_DEBUG')],
-			['APP_URL', 'url', InputOption::VALUE_OPTIONAL, 'Application host', array_get($defaults, 'APP_URL')],
-			['ADMIN_DIR_NAME', 'dir', InputOption::VALUE_OPTIONAL, 'Admin directory name', array_get($defaults, 'ADMIN_DIR_NAME')],
-			['force', null, InputOption::VALUE_OPTIONAL, 'Force the operation to run when in production.'],
-		];
-	}
+    /**
+     * Ask options
+     */
+    protected function askOptions()
+    {
+        foreach ($this->getOptions() as $option) {
+            if ($option[0] == 'force') {
+                continue;
+            }
+
+            $defVal = $this->input->getOption($option[0]);
+            $val    = $this->ask($option[3] . "{" . $defVal . "}", $defVal);
+            $this->input->setOption($option[0], $val);
+        }
+    }
+
+
+    private function getConfig()
+    {
+        $config = [];
+        foreach ($this->getOptions() as $option) {
+            $config = array_add($config, $option[0], $this->input->getOption($option[0]));
+        }
+
+        return $config;
+    }
+
+
+    private function createDBConnection()
+    {
+        try {
+            $config = [];
+            foreach ($this->DBConfigs as $key => $value) {
+                $config = array_add($config, $key, $this->input->getOption($value));
+            }
+
+            return Installer::createDBConnection($config);
+        } catch (InstallDatabaseException $e) {
+            $this->error($e->GetMessage());
+
+            return false;
+        }
+    }
+
+
+    /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments()
+    {
+        return [];
+    }
+
+
+    /**
+     * Get the console command options.
+     * @return array
+     */
+    protected function getOptions()
+    {
+        $defaults = Installer::getDefaultEnvironment();
+
+        return [
+            ['DB_HOST', 'host', InputOption::VALUE_OPTIONAL, "Database host", array_get($defaults, 'DB_HOST')],
+            ['DB_DATABASE', 'db', InputOption::VALUE_OPTIONAL, 'Database name', array_get($defaults, 'DB_DATABASE')],
+            ['DB_USERNAME', 'u', InputOption::VALUE_OPTIONAL, 'Database username', array_get($defaults, 'DB_USERNAME')],
+            ['DB_PASSWORD', 'p', InputOption::VALUE_NONE, 'Database password'],
+            ['DB_PREFIX', 'pr', InputOption::VALUE_NONE, 'Database prefix'],
+            [
+                'CACHE_DRIVER',
+                'cache',
+                InputOption::VALUE_OPTIONAL,
+                'Cache driver [file|redis]',
+                array_get($defaults, 'CACHE_DRIVER'),
+            ],
+            [
+                'SESSION_DRIVER',
+                'session',
+                InputOption::VALUE_OPTIONAL,
+                'Session driver [file|database]',
+                array_get($defaults, 'SESSION_DRIVER'),
+            ],
+            [
+                'APP_ENV',
+                'env',
+                InputOption::VALUE_OPTIONAL,
+                'Application Environmet [local|production]',
+                array_get($defaults, 'APP_ENV'),
+            ],
+            [
+                'APP_DEBUG',
+                'debug',
+                InputOption::VALUE_OPTIONAL,
+                'Application Debug [true|false]',
+                array_get($defaults, 'APP_DEBUG'),
+            ],
+            ['APP_URL', 'url', InputOption::VALUE_OPTIONAL, 'Application host', array_get($defaults, 'APP_URL')],
+            [
+                'ADMIN_DIR_NAME',
+                'dir',
+                InputOption::VALUE_OPTIONAL,
+                'Admin directory name',
+                array_get($defaults, 'ADMIN_DIR_NAME'),
+            ],
+            ['force', null, InputOption::VALUE_OPTIONAL, 'Force the operation to run when in production.'],
+        ];
+    }
 }

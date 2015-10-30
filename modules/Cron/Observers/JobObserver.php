@@ -1,63 +1,27 @@
-<?php namespace KodiCMS\Cron\Observers;
+<?php
+namespace KodiCMS\Cron\Observers;
 
 use KodiCMS\Cron\Model\Job;
 
 class JobObserver
 {
-	/**
-	 * @param \KodiCMS\Cron\Model\Job $job
-	 * @return void
-	 */
-	public function saving($job)
-	{
-		if ($job->isDirty('interval', 'crontime', 'last_run'))
-		{
-			$job->setNextRun();
-		}
-	}
 
-	/**
-	 * @param \KodiCMS\Cron\Model\Job $job
-	 * @return void
-	 */
-	public function creating($job)
-	{
-		$job->status = Job::STATUS_NEW;
-	}
+    /**
+     * @param Job $job
+     */
+    public function saving(Job $job)
+    {
+        if ($job->isDirty('interval', 'crontime', 'last_run')) {
+            $job->setNextRun();
+        }
+    }
 
-	/**
-	 * @param \KodiCMS\Cron\Model\Job $job
-	 * @return void
-	 */
-	public function created($job)
-	{
 
-	}
-
-	/**
-	 * @param \KodiCMS\Cron\Model\Job $job
-	 * @return void
-	 */
-	public function updating($job)
-	{
-
-	}
-
-	/**
-	 * @param \KodiCMS\Cron\Model\Job $job
-	 * @return void
-	 */
-	public function deleting($job)
-	{
-
-	}
-
-	/**
-	 * @param \KodiCMS\Cron\Model\Job $job
-	 * @return void
-	 */
-	public function deleted($job)
-	{
-
-	}
+    /**
+     * @param Job $job
+     */
+    public function creating(Job $job)
+    {
+        $job->status = Job::STATUS_NEW;
+    }
 }

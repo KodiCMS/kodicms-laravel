@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Support\Helpers;
+<?php
+namespace KodiCMS\Support\Helpers;
 
 /**
  * Class Valid
@@ -6,6 +7,7 @@
  *
  * @package KodiCMS\CMS\Helpers
  */
-class Valid {
+class Valid
+{
 
 }

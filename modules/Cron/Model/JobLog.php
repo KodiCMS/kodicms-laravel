@@ -1,61 +1,69 @@
-<?php namespace KodiCMS\Cron\Model;
+<?php
+namespace KodiCMS\Cron\Model;
 
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 
 class JobLog extends Model
 {
-	/**
-	 * The table associated with the model.
-	 *
-	 * @var string
-	 */
-	protected $table = 'cron_job_logs';
 
-	/**
-	 * @var array
-	 */
-	protected $fillable = ['job_id', 'status'];
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'cron_job_logs';
 
-	protected static function boot()
-	{
-		parent::boot();
+    /**
+     * @var array
+     */
+    protected $fillable = ['job_id', 'status'];
 
-		static::creating(function ($jobLog)
-		{
-			$jobLog->status = Job::STATUS_NEW;
-		});
-	}
 
-	/**
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-	 */
-	public function job()
-	{
-		return $this->belongsTo(Job::class);
-	}
+    protected static function boot()
+    {
+        parent::boot();
 
-	public function getStatusStringAttribute()
-	{
-		return trans('cron::core.statuses.' . $this->status);
-	}
+        static::creating(function ($jobLog) {
+            $jobLog->status = Job::STATUS_NEW;
+        });
+    }
 
-	/**
-	 * @param integer $value
-	 * @throws \Exception
-	 */
-	public function setStatus($value)
-	{
-		if (!$this->exists)
-		{
-			throw new Exception('Cannot set status because it is not loaded');
-		}
 
-		$this->job->status = $value;
-		$this->job->save();
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function job()
+    {
+        return $this->belongsTo(Job::class);
+    }
 
-		$this->status = $value;
-		$this->save();
-	}
+
+    /**
+     * @return string
+     */
+    public function getStatusStringAttribute()
+    {
+        return trans('cron::core.statuses.' . $this->status);
+    }
+
+
+    /**
+     * @param integer $value
+     *
+     * @throws \Exception
+     */
+    public function setStatus($value)
+    {
+        if ( ! $this->exists) {
+            throw new Exception('Cannot set status because it is not loaded');
+        }
+
+        $this->job->status = $value;
+        $this->job->save();
+
+        $this->status = $value;
+        $this->save();
+    }
 
 }

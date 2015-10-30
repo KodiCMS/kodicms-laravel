@@ -1,3 +1,7 @@
-<?php namespace KodiCMS\CMS\Exceptions;
+<?php
+namespace KodiCMS\CMS\Exceptions;
 
-class FileModelException extends Exception {}
+class FileModelException extends Exception
+{
+
+}

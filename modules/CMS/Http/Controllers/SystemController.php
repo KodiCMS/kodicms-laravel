@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\CMS\Http\Controllers;
+<?php
+namespace KodiCMS\CMS\Http\Controllers;
 
 use Date;
 use Assets;
@@ -6,39 +7,43 @@ use WYSIWYG;
 use KodiCMS\CMS\Helpers\Updater;
 use KodiCMS\Support\Helpers\Locale;
 
-class SystemController extends System\BackendController {
+class SystemController extends System\BackendController
+{
 
-	public function settings()
-	{
-		$htmlEditors = WYSIWYG::htmlSelect(WYSIWYG::html());
-		$codeEditors = WYSIWYG::htmlSelect(WYSIWYG::code());
-		$dateFormats = Date::getFormats();
+    public function settings()
+    {
+        $htmlEditors = WYSIWYG::htmlSelect(WYSIWYG::html());
+        $codeEditors = WYSIWYG::htmlSelect(WYSIWYG::code());
+        $dateFormats = Date::getFormats();
 
-		$availableLocales = Locale::getAvailable();
-		$this->setContent('system.settings', compact('htmlEditors', 'codeEditors', 'dateFormats', 'availableLocales'));
-	}
+        $availableLocales = Locale::getAvailable();
+        $this->setContent('system.settings', compact('htmlEditors', 'codeEditors', 'dateFormats', 'availableLocales'));
+    }
 
-	public function about()
-	{
-		$this->setContent('system.about');
-	}
 
-	public function phpInfo()
-	{
-		$this->autoRender = false;
+    public function about()
+    {
+        $this->setContent('system.about');
+    }
 
-		phpinfo();
-	}
 
-	public function update()
-	{
-		Assets::package('diff');
-		$updater = new Updater();
-		$repositoryVersion = $updater->getRemoteVersion();
-		$hasNewVersion = $updater->hasNewVersion();
+    public function phpInfo()
+    {
+        $this->autoRender = false;
 
-		$issueUrl = $updater->newIssueUrl();
+        phpinfo();
+    }
 
-		$this->setContent('system.update', compact('repositoryVersion', 'hasNewVersion', 'issueUrl'));
-	}
+
+    public function update()
+    {
+        Assets::package('diff');
+        $updater           = new Updater();
+        $repositoryVersion = $updater->getRemoteVersion();
+        $hasNewVersion     = $updater->hasNewVersion();
+
+        $issueUrl = $updater->newIssueUrl();
+
+        $this->setContent('system.update', compact('repositoryVersion', 'hasNewVersion', 'issueUrl'));
+    }
 }

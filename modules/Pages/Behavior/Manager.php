@@ -1,90 +1,94 @@
-<?php namespace KodiCMS\Pages\Behavior;
+<?php
+namespace KodiCMS\Pages\Behavior;
 
 use KodiCMS\Pages\Contracts\BehaviorInterface;
 use KodiCMS\Pages\Exceptions\BehaviorException;
 
 class Manager
 {
-	/**
-	 * @var array
-	 */
-	protected static $behaviors = [];
 
-	public static function init()
-	{
-		foreach (config('behaviors', []) as $name => $params)
-		{
-			if (empty($params['class'])) continue;
+    /**
+     * @var array
+     */
+    protected static $behaviors = [];
 
-			static::$behaviors[$name] = $params;
-		}
-	}
 
-	/**
-	 * @param $behavior
-	 * @return BehaviorInterface
-	 * @throws BehaviorException
-	 */
-	public static function load($behavior)
-	{
-		$behaviorParams = static::getBehavior($behavior);
+    public static function init()
+    {
+        foreach (config('behaviors', []) as $name => $params) {
+            if (empty( $params['class'] )) {
+                continue;
+            }
 
-		if (is_null($behaviorParams))
-		{
-			return null;
-		}
+            static::$behaviors[$name] = $params;
+        }
+    }
 
-		$behaviorClass = $behaviorParams['class'];
 
-		if (!empty($behaviorClass) and !class_exists($behaviorClass))
-		{
-			throw new BehaviorException("Behavior class \"{$behaviorClass}\" not found!");
-		}
+    /**
+     * @param $behavior
+     *
+     * @return BehaviorInterface
+     * @throws BehaviorException
+     */
+    public static function load($behavior)
+    {
+        $behaviorParams = static::getBehavior($behavior);
 
-		unset($behaviorParams['class']);
+        if (is_null($behaviorParams)) {
+            return null;
+        }
 
-		return new $behaviorClass($behaviorParams);
-	}
+        $behaviorClass = $behaviorParams['class'];
 
-	/**
-	 * @param $name
-	 * @return mixed
-	 */
-	public static function getBehavior($name)
-	{
-		return array_get(static::$behaviors, $name);
-	}
+        if ( ! empty( $behaviorClass ) and ! class_exists($behaviorClass)) {
+            throw new BehaviorException("Behavior class \"{$behaviorClass}\" not found!");
+        }
 
-	/**
-	 * @return array
-	 */
-	public static function getBehaviorsList()
-	{
-		return array_keys(static::$behaviors);
-	}
+        unset( $behaviorParams['class'] );
 
-	/**
-	 * @return array
-	 */
-	public static function formChoices()
-	{
-		$options = ['' => trans('cms::core.label.not_set')];
+        return new $behaviorClass($behaviorParams);
+    }
 
-		foreach(static::$behaviors as $name => $params)
-		{
 
-			if(isset($params['title']))
-			{
-				$title = $params['title'];
-			}
-			else
-			{
-				$title = ucfirst($name);
-			}
+    /**
+     * @param $name
+     *
+     * @return mixed
+     */
+    public static function getBehavior($name)
+    {
+        return array_get(static::$behaviors, $name);
+    }
 
-			$options[$name] = $title;
-		}
 
-		return $options;
-	}
+    /**
+     * @return array
+     */
+    public static function getBehaviorsList()
+    {
+        return array_keys(static::$behaviors);
+    }
+
+
+    /**
+     * @return array
+     */
+    public static function formChoices()
+    {
+        $options = ['' => trans('cms::core.label.not_set')];
+
+        foreach (static::$behaviors as $name => $params) {
+
+            if (isset( $params['title'] )) {
+                $title = $params['title'];
+            } else {
+                $title = ucfirst($name);
+            }
+
+            $options[$name] = $title;
+        }
+
+        return $options;
+    }
 }

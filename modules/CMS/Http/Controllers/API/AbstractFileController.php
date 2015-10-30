@@ -1,118 +1,136 @@
-<?php namespace KodiCMS\CMS\Http\Controllers\API;
+<?php
+namespace KodiCMS\CMS\Http\Controllers\API;
 
 use Illuminate\Http\JsonResponse;
 use KodiCMS\API\Exceptions\Exception;
 use KodiCMS\CMS\Model\FileCollection;
 use KodiCMS\API\Http\Controllers\System\Controller;
 
-abstract class AbstractFileController extends Controller {
+abstract class AbstractFileController extends Controller
+{
 
-	/**
-	 * @var FileCollection
-	 */
-	protected $collection;
+    /**
+     * @var FileCollection
+     */
+    protected $collection;
 
-	/**
-	 * @var string
-	 */
-	protected $sectionPrefix;
+    /**
+     * @var string
+     */
+    protected $sectionPrefix;
 
-	/**
-	 * @return FileCollection
-	 */
-	abstract protected function getCollection();
 
-	/**
-	 * @return string
-	 */
-	abstract protected function getSectionPrefix();
+    /**
+     * @return FileCollection
+     */
+    abstract protected function getCollection();
 
-	/**
-	 * @param string $filename
-	 * @return string
-	 */
-	abstract protected function getRedirectToEditUrl($filename);
 
-	public function before()
-	{
-		parent::before();
-		$this->collection = $this->getCollection();
-		$this->sectionPrefix = $this->getSectionPrefix();
-	}
+    /**
+     * @return string
+     */
+    abstract protected function getSectionPrefix();
 
-	public function postCreate()
-	{
-		$data = $this->request->all();
-		$file = $this->getFile();
 
-		$file->fill(array_only($data, ['name', 'content', 'editor', 'roles']));
+    /**
+     * @param string $filename
+     *
+     * @return string
+     */
+    abstract protected function getRedirectToEditUrl($filename);
 
-		$validator = $file->validator();
 
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
-		}
+    public function before()
+    {
+        parent::before();
+        $this->collection    = $this->getCollection();
+        $this->sectionPrefix = $this->getSectionPrefix();
+    }
 
-		$this->collection
-			->saveFile($file)
-			->saveSettings();
 
-		$this->setMessage(trans($this->wrapNamespace("{$this->sectionPrefix}.messages.created"), ['name' => $file->getName()]));
+    /**
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function postCreate()
+    {
+        $data = $this->request->all();
+        $file = $this->getFile();
 
-		return redirect($this->getRedirectToEditUrl($file->getName()));
-	}
+        $file->fill(array_only($data, ['name', 'content', 'editor', 'roles']));
 
-	public function postEdit()
-	{
-		$filename = $this->getRequiredParameter('name');
-		$data = $this->request->all();
+        $validator = $file->validator();
 
-		$file = $this->getFile($filename);
-		$file->fill(array_only($data, ['name', 'content', 'editor', 'roles']));
-		$validator = $file->validator();
+        if ($validator->fails()) {
+            $this->throwValidationException($this->request, $validator);
+        }
 
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$this->request, $validator
-			);
-		}
+        $this->collection->saveFile($file)->saveSettings();
 
-		$this->collection
-			->saveFile($file)
-			->saveSettings();
+        $this->setMessage(
+            trans($this->wrapNamespace("{$this->sectionPrefix}.messages.created"), [
+                'name' => $file->getName()
+            ])
+        );
 
-		$this->setMessage(trans($this->wrapNamespace("{$this->sectionPrefix}.messages.updated"), ['name' => $file->getName()]));
-	}
+        return redirect($this->getRedirectToEditUrl($file->getName()));
+    }
 
-	/**
-	 * @param null|string $filename
-	 * @return mixed
-	 */
-	public function getFile($filename = NULL)
-	{
-		if (is_null($filename))
-		{
-			return $this->collection->newFile();
-		}
 
-		if ($file = $this->collection->findFile($filename))
-		{
-			return $file;
-		}
+    public function postEdit()
+    {
+        $filename = $this->getRequiredParameter('name');
+        $data     = $this->request->all();
 
-		throw new Exception(trans($this->wrapNamespace("{$this->sectionPrefix}.messages.not_found")));
-	}
+        $file = $this->getFile($filename);
+        $file->fill(array_only($data, ['name', 'content', 'editor', 'roles']));
+        $validator = $file->validator();
 
-	public function getListForXEditable()
-	{
-		$collection = $this->collection->getHTMLSelectChoices();
+        if ($validator->fails()) {
+            $this->throwValidationException($this->request, $validator);
+        }
 
-		$data = array_map(function($value, $key) {
-			return ['id' => $key, 'text' => $value];
-		}, $collection, array_keys($collection));
+        $this->collection->saveFile($file)->saveSettings();
 
-		return new JsonResponse($data);
-	}
+        $this->setMessage(
+            trans($this->wrapNamespace("{$this->sectionPrefix}.messages.updated"), [
+                'name' => $file->getName()
+            ])
+        );
+    }
+
+
+    /**
+     * @param null|string $filename
+     *
+     * @return bool|\KodiCMS\CMS\Model\File
+     */
+    public function getFile($filename = null)
+    {
+        if (is_null($filename)) {
+            return $this->collection->newFile();
+        }
+
+        if ($file = $this->collection->findFile($filename)) {
+            return $file;
+        }
+
+        throw new Exception(
+            trans($this->wrapNamespace("{$this->sectionPrefix}.messages.not_found"))
+        );
+    }
+
+
+    /**
+     * @return JsonResponse
+     */
+    public function getListForXEditable()
+    {
+        $collection = $this->collection->getHTMLSelectChoices();
+
+        $data = array_map(function ($value, $key) {
+            return ['id' => $key, 'text' => $value];
+        }, $collection, array_keys($collection));
+
+        return new JsonResponse($data);
+    }
 }

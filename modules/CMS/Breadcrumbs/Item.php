@@ -1,102 +1,111 @@
-<?php namespace KodiCMS\CMS\Breadcrumbs;
+<?php
+namespace KodiCMS\CMS\Breadcrumbs;
 
 use KodiCMS\Support\Traits\Accessor;
 use KodiCMS\API\Exceptions\Exception;
 
-/**
- * Class Item
- *
- * @package KodiCMS\CMS\Breadcrumbs
- */
 class Item
 {
-	use Accessor;
 
-	/**
-	 * @var array
-	 */
-	protected $attributes = [];
+    use Accessor;
 
-	/**
-	 * @param string $name
-	 * @param null|string $url
-	 * @param bool $active
-	 * @param array $data
-	 * @throws Exception
-	 */
-	public function __construct($name, $url = NULL, $active = FALSE, array $data = [])
-	{
-		if (empty($name)) {
-			throw new Exception('Breadcrumbs: The breadcrumb name could not be empty!');
-		}
+    /**
+     * @var array
+     */
+    protected $attributes = [];
 
-		$this->name = $name;
 
-		if (!is_null($url)) {
-			$this->url =$url;
-		}
+    /**
+     * @param string      $name
+     * @param null|string $url
+     * @param bool        $active
+     * @param array       $data
+     *
+     * @throws Exception
+     */
+    public function __construct($name, $url = null, $active = false, array $data = [])
+    {
+        if (empty( $name )) {
+            throw new Exception('Breadcrumbs: The breadcrumb name could not be empty!');
+        }
 
-		$this->status = $active;
+        $this->name = $name;
 
-		$this->setAttribute($data);
-	}
+        if ( ! is_null($url)) {
+            $this->url = $url;
+        }
 
-	/**
-	 * @return string
-	 */
-	public function getUrl()
-	{
-		return $this->url;
-	}
+        $this->status = $active;
 
-	/**
-	 * @return string
-	 */
-	public function getName()
-	{
-		return $this->name;
-	}
+        $this->setAttribute($data);
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getLink()
-	{
-		return '<a href="' . $this->getUrl() . '">' . $this->getName() . '</a>';
-	}
 
-	/**
-	 * @return boolean
-	 */
-	public function isActive()
-	{
-		return (bool) $this->active;
-	}
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
 
-	/**
-	 * @param string $url
-	 * @return $this
-	 */
-	public function setUrl($url)
-	{
-		return $url;
-	}
 
-	/**
-	 * @param bool $status
-	 * @return $this
-	 */
-	public function setStatus($status)
-	{
-		return (bool)$status;
-	}
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
-	/**
-	 * @param bool $name
-	 * @return $this
-	 */
-	public function setName($name)
-	{
-		return $name;
-	}
+
+    /**
+     * @return string
+     */
+    public function getLink()
+    {
+        return '<a href="' . $this->getUrl() . '">' . $this->getName() . '</a>';
+    }
+
+
+    /**
+     * @return boolean
+     */
+    public function isActive()
+    {
+        return (bool) $this->active;
+    }
+
+
+    /**
+     * @param string $url
+     *
+     * @return $this
+     */
+    public function setUrl($url)
+    {
+        return $url;
+    }
+
+
+    /**
+     * @param bool $status
+     *
+     * @return $this
+     */
+    public function setStatus($status)
+    {
+        return (bool) $status;
+    }
+
+
+    /**
+     * @param bool $name
+     *
+     * @return $this
+     */
+    public function setName($name)
+    {
+        return $name;
+    }
 }

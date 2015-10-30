@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Installer\Console\Commands;
+<?php
+namespace KodiCMS\Installer\Console\Commands;
 
 use ModulesLoader;
 use Illuminate\Console\Command;
@@ -8,44 +9,47 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ModulesSeedCommand extends Command
 {
-	use ConfirmableTrait;
 
-	/**
-	 * The console command name.
-	 */
-	protected $name = 'cms:modules:seed';
+    use ConfirmableTrait;
 
-	/**
-	 * Execute the console command.
-	 */
-	public function fire()
-	{
-		if (!$this->confirmToProceed())
-		{
-			return;
-		}
+    /**
+     * The console command name.
+     */
+    protected $name = 'cms:modules:seed';
 
-		$this->output->writeln('<info>Seeding KodiCMS modules...</info>');
-		$installer = new ModulesInstaller(ModulesLoader::getRegisteredModules());
 
-		$installer->cleanOutputMessages();
-		$installer->seedModules();
+    /**
+     * Execute the console command.
+     */
+    public function fire()
+    {
+        if ( ! $this->confirmToProceed()) {
+            return;
+        }
 
-		foreach ($installer->getOutputMessages() as $message)
-		{
-			$this->output->writeln($message);
-		}
-	}
+        $this->output->writeln('<info>Seeding KodiCMS modules...</info>');
+        $installer = new ModulesInstaller(
+            ModulesLoader::getRegisteredModules()
+        );
 
-	/**
-	 * Get the console command options.
-	 *
-	 * @return array
-	 */
-	protected function getOptions()
-	{
-		return [
-			['force', null, InputOption::VALUE_NONE, 'Force the operation to run when in production.'],
-		];
-	}
+        $installer->cleanOutputMessages();
+        $installer->seedModules();
+
+        foreach ($installer->getOutputMessages() as $message) {
+            $this->output->writeln($message);
+        }
+    }
+
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return [
+            ['force', null, InputOption::VALUE_NONE, 'Force the operation to run when in production.'],
+        ];
+    }
 }

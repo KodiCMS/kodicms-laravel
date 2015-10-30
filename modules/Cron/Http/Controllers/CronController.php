@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Cron\Http\Controllers;
+<?php
+namespace KodiCMS\Cron\Http\Controllers;
 
 use Assets;
 use KodiCMS\Cron\Repository\CronRepository;
@@ -6,74 +7,123 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class CronController extends BackendController
 {
-	public function getIndex(CronRepository $repository)
-	{
-		$jobs = $repository->paginate();
-		$this->setContent('cron.list', compact('jobs'));
-	}
 
-	public function getCreate(CronRepository $repository)
-	{
-		$this->setTitle(trans('cron::core.title.cron.create'));
-		Assets::package('cron');
+    /**
+     * @param CronRepository $repository
+     */
+    public function getIndex(CronRepository $repository)
+    {
+        $jobs = $repository->paginate();
+        $this->setContent('cron.list', compact('jobs'));
+    }
 
-		$job = $repository->instance();
-		$action = 'backend.cron.create.post';
 
-		$this->templateScripts['JOB'] = $job->toArray();
+    /**
+     * @param CronRepository $repository
+     */
+    public function getCreate(CronRepository $repository)
+    {
+        $this->setTitle(trans('cron::core.title.cron.create'));
+        Assets::package('cron');
 
-		$this->setContent('cron.form', compact('job', 'action'));
-	}
+        $job    = $repository->instance();
+        $action = 'backend.cron.create.post';
 
-	public function postCreate(CronRepository $repository)
-	{
-		$data = $this->request->all();
-		$repository->validateOnCreate($data);
-		$job = $repository->create($data);
+        $this->templateScripts['JOB'] = $job->toArray();
 
-		return $this->smartRedirect([$job])
-			->with('success', trans('cron::core.messages.created', ['title' => $job->name]));
-	}
+        $this->setContent('cron.form', compact('job', 'action'));
+    }
 
-	public function getEdit(CronRepository $repository, $id)
-	{
-		$job = $repository->findOrFail($id);
 
-		Assets::package('cron');
-		$this->templateScripts['JOB'] = $job->toArray();
+    /**
+     * @param CronRepository $repository
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postCreate(CronRepository $repository)
+    {
+        $data = $this->request->all();
+        $repository->validateOnCreate($data);
+        $job = $repository->create($data);
 
-		$this->setTitle(trans('cron::core.title.cron.edit', [
-			'title' => $job->name
-		]));
-		$action = 'backend.cron.edit.post';
+        return $this->smartRedirect([$job])->with('success', trans('cron::core.messages.created', ['title' => $job->name]));
+    }
 
-		$this->setContent('cron.form', compact('job', 'action'));
-	}
 
-	public function postEdit(CronRepository $repository, $id)
-	{
-		$data = $this->request->all();
+    /**
+     * @param CronRepository $repository
+     * @param int            $id
+     */
+    public function getEdit(CronRepository $repository, $id)
+    {
+        $job = $repository->findOrFail($id);
 
-		$repository->validateOnUpdate($data);
+        Assets::package('cron');
+        $this->templateScripts['JOB'] = $job->toArray();
 
-		$job = $repository->update($id, $data);
+        $this->setTitle(trans('cron::core.title.cron.edit', [
+            'title' => $job->name,
+        ]));
 
-		return $this->smartRedirect([$job])
-			->with('success', trans('cron::core.messages.updated', ['title' => $job->name]));
-	}
+        $action = 'backend.cron.edit.post';
 
-	public function postDelete(CronRepository $repository, $id)
-	{
-		$job = $repository->delete($id);
-		return $this->smartRedirect()
-			->with('success', trans('cron::core.messages.deleted', ['title' => $job->name]));
-	}
+        $this->setContent('cron.form', compact('job', 'action'));
+    }
 
-	public function getRun(CronRepository $repository, $id)
-	{
-		$job = $repository->runJob($id);
-		return redirect(route('backend.cron.edit', $job))
-			->with('success', trans('cron::core.messages.runned', ['title' => $job->name]));
-	}
+
+    /**
+     * @param CronRepository $repository
+     * @param int            $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postEdit(CronRepository $repository, $id)
+    {
+        $data = $this->request->all();
+
+        $repository->validateOnUpdate($data);
+
+        $job = $repository->update($id, $data);
+
+        return $this->smartRedirect([$job])
+            ->with('success', trans('cron::core.messages.updated', [
+                'title' => $job->name
+            ]));
+    }
+
+
+    /**
+     * @param CronRepository $repository
+     * @param int            $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postDelete(CronRepository $repository, $id)
+    {
+        $job = $repository->delete($id);
+
+        return $this->smartRedirect()
+            ->with('success', trans('cron::core.messages.deleted', [
+                'title' => $job->name
+            ]));
+    }
+
+
+    /**
+     * @param CronRepository $repository
+     * @param int            $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function getRun(CronRepository $repository, $id)
+    {
+        $job = $repository->runJob($id);
+
+        return redirect()
+            ->route('backend.cron.edit', $job)
+            ->with('success', trans('cron::core.messages.runned', [
+                'title' => $job->name
+            ]));
+    }
 
 }

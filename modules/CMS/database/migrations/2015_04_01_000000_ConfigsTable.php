@@ -5,19 +5,21 @@ use Illuminate\Database\Schema\Blueprint;
 
 class ConfigsTable extends Migration
 {
-	public function up()
-	{
-		Schema::create('config', function (Blueprint $table) {
-			$table->string('group', 128);
-			$table->string('key', 128);
-			$table->json('value');
 
-			$table->primary(['group', 'key']);
-		});
-	}
+    public function up()
+    {
+        Schema::create('config', function (Blueprint $table) {
+            $table->string('group', 128);
+            $table->string('key', 128);
+            $table->json('value');
 
-	public function down()
-	{
-		Schema::dropIfExists('config');
-	}
+            $table->primary(['group', 'key']);
+        });
+    }
+
+
+    public function down()
+    {
+        Schema::dropIfExists('config');
+    }
 }

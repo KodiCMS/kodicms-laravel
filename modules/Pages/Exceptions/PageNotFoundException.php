@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Pages\Exceptions;
+<?php
+namespace KodiCMS\Pages\Exceptions;
 
 use Request;
 use Illuminate\Http\Response;
@@ -8,48 +9,52 @@ use KodiCMS\Pages\Model\FrontendPage;
 
 class PageNotFoundException extends Exception
 {
-	public function __construct($message = "", $code = 0, Exception $previous = null)
-	{
-		parent::__construct($message, $code, $previous);
 
-		if(config('app.debug')) return;
+    /**
+     * @param string         $message
+     * @param int            $code
+     * @param Exception|null $previous
+     */
+    public function __construct($message = "", $code = 0, Exception $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
 
-		$ext = pathinfo(Request::getUri(), PATHINFO_EXTENSION);
-		$mimeType = null;
+        if (config('app.debug')) {
+            return;
+        }
 
-		if (empty($ext) or ($ext and !($mimeType = Mime::byExt($ext))))
-		{
-			$mimeType = 'text/html';
-		}
+        $ext      = pathinfo(Request::getUri(), PATHINFO_EXTENSION);
+        $mimeType = null;
 
-		if ($mimeType AND $mimeType != 'text/html')
-		{
-			$response = new Response();
-			$this->sendResponse($response, $mimeType);
-		}
-		elseif (!is_null($page = FrontendPage::findByField('behavior', 'page.not.found')))
-		{
-			$controller = app()->make('\KodiCMS\Pages\Http\Controllers\FrontendController');
+        if (empty( $ext ) or ( $ext and ! ( $mimeType = Mime::byExt($ext) ) )) {
+            $mimeType = 'text/html';
+        }
 
-			$response = app()->call([$controller, 'run'], [$page->getUri()]);
-			$this->sendResponse($response, $mimeType);
-		}
-	}
+        if ($mimeType AND $mimeType != 'text/html') {
+            $response = new Response();
+            $this->sendResponse($response, $mimeType);
+        } elseif ( ! is_null($page = FrontendPage::findByField('behavior', 'page.not.found'))) {
+            $controller = app()->make('\KodiCMS\Pages\Http\Controllers\FrontendController');
 
-	/**
-	 * @param Response $response
-	 * @param string $mimeType
-	 */
-	protected function sendResponse(Response $response, $mimeType)
-	{
-		if(empty($mimeType))
-		{
-			$mimeType = 'text/html';
-		}
+            $response = app()->call([$controller, 'run'], [$page->getUri()]);
+            $this->sendResponse($response, $mimeType);
+        }
+    }
 
-		$response->header('Content-type', $mimeType);
-		$response->setStatusCode(404);
-		$response->send();
-		exit();
-	}
+
+    /**
+     * @param Response $response
+     * @param string   $mimeType
+     */
+    protected function sendResponse(Response $response, $mimeType)
+    {
+        if (empty( $mimeType )) {
+            $mimeType = 'text/html';
+        }
+
+        $response->header('Content-type', $mimeType);
+        $response->setStatusCode(404);
+        $response->send();
+        exit();
+    }
 }

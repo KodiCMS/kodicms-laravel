@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Dashboard;
+<?php
+namespace KodiCMS\Dashboard;
 
 use KodiCMS\Users\Model\UserMeta;
 use KodiCMS\Dashboard\Contracts\WidgetDashboard;
@@ -6,146 +7,161 @@ use KodiCMS\Dashboard\Contracts\WidgetDashboard;
 class Dashboard
 {
 
-	const WIDGET_BLOCKS_KEY   = 'dashboard';
-	const WIDGET_SETTINGS_KEY = 'dashboard_widget_settings';
+    const WIDGET_BLOCKS_KEY = 'dashboard';
+    const WIDGET_SETTINGS_KEY = 'dashboard_widget_settings';
 
-	/**
-	 * @param string $widgetId
-	 * @param int|null $userId
-	 * @return WidgetDashboard|null
-	 */
-	public static function getWidgetById($widgetId, $userId = null)
-	{
-		$widget = array_get(static::getSettings($userId), $widgetId);
 
-		if (is_null($widget = WidgetManagerDashboard::toWidget($widget)) or !($widget instanceof WidgetDashboard))
-		{
-			return null;
-		}
+    /**
+     * @param string   $widgetId
+     * @param int|null $userId
+     *
+     * @return WidgetDashboard|null
+     */
+    public static function getWidgetById($widgetId, $userId = null)
+    {
+        $widget = array_get(static::getSettings($userId), $widgetId);
 
-		return $widget;
-	}
+        if (is_null($widget = WidgetManagerDashboard::toWidget($widget)) or ! ( $widget instanceof WidgetDashboard )) {
+            return null;
+        }
 
-	/**
-	 * @param $type
-	 * @param array|null $settings
-	 * @param null|int $userId
-	 * @return WidgetDashboard|null
-	 */
-	public static function addWidget($type, array $settings = null, $userId = null)
-	{
-		$widgetSettings = static::getSettings($userId);
+        return $widget;
+    }
 
-		$widget = WidgetManagerDashboard::makeWidget($type, $type, null, $settings);
 
-		if(is_null($widget)) return false;
+    /**
+     * @param            $type
+     * @param array|null $settings
+     * @param null|int   $userId
+     *
+     * @return WidgetDashboard|null
+     */
+    public static function addWidget($type, array $settings = null, $userId = null)
+    {
+        $widgetSettings = static::getSettings($userId);
 
-		$widget->setId(uniqid());
+        $widget = WidgetManagerDashboard::makeWidget($type, $type, null, $settings);
 
-		$widgetSettings[$widget->getId()] = $widget->toArray();
+        if (is_null($widget)) {
+            return false;
+        }
 
-		static::saveSettings($widgetSettings, $userId);
+        $widget->setId(uniqid());
 
-		return $widget;
-	}
+        $widgetSettings[$widget->getId()] = $widget->toArray();
 
-	/**
-	 * @param string $widgetId
-	 * @param array $settings
-	 * @param null|int $userId
-	 * @return WidgetDashboard|null
-	 */
-	public static function updateWidget($widgetId, array $settings, $userId = null)
-	{
-		$widgetSettings = static::getSettings($userId);
-		$widget = array_get($widgetSettings, $widgetId);
+        static::saveSettings($widgetSettings, $userId);
 
-		if (is_array($widget) and is_null($widget = WidgetManagerDashboard::toWidget($widget)))
-		{
-			return null;
-		}
+        return $widget;
+    }
 
-		$widget->setSettings($settings);
 
-		$widgetSettings[$widgetId] = $widget->toArray();
-		static::saveSettings($widgetSettings, $userId);
-		return $widget;
-	}
+    /**
+     * @param string   $widgetId
+     * @param array    $settings
+     * @param null|int $userId
+     *
+     * @return WidgetDashboard|null
+     */
+    public static function updateWidget($widgetId, array $settings, $userId = null)
+    {
+        $widgetSettings = static::getSettings($userId);
+        $widget         = array_get($widgetSettings, $widgetId);
 
-	/**
-	 * @param string $widgetId
-	 * @param null|int $userId
-	 * @return bool
-	 */
-	public static function deleteWidgetById($widgetId, $userId = null)
-	{
-		$widgetSettings = static::getSettings($userId);
+        if (is_array($widget) and is_null($widget = WidgetManagerDashboard::toWidget($widget))) {
+            return null;
+        }
 
-		unset($widgetSettings[$widgetId]);
+        $widget->setSettings($settings);
 
-		static::saveSettings($widgetSettings, $userId);
-		return true;
-	}
+        $widgetSettings[$widgetId] = $widget->toArray();
+        static::saveSettings($widgetSettings, $userId);
 
-	/**
-	 * @param null|int $userId
-	 * @return array
-	 */
-	public static function getSettings($userId = null)
-	{
-		return UserMeta::get(self::WIDGET_SETTINGS_KEY, [], $userId);
-	}
+        return $widget;
+    }
 
-	/**
-	 * @param array $settings
-	 * @param null|int $userId
-	 */
-	protected static function saveSettings(array $settings, $userId = null)
-	{
-		UserMeta::set(self::WIDGET_SETTINGS_KEY, $settings, $userId);
-	}
 
-	/**
-	 * @param string $widgetId
-	 * @param string $column
-	 * @param null|int $userId
-	 * @return boolean
-	 */
-	public static function moveWidget($widgetId, $column, $userId = null)
-	{
-		$widgetSettings = static::getSettings($userId);
-		$found = false;
+    /**
+     * @param string   $widgetId
+     * @param null|int $userId
+     *
+     * @return bool
+     */
+    public static function deleteWidgetById($widgetId, $userId = null)
+    {
+        $widgetSettings = static::getSettings($userId);
 
-		foreach ($widgetSettings as $data)
-		{
-			foreach ($ids as $i => $id)
-			{
-				if ($id = $widgetId and $_column != $column)
-				{
-					$found = true;
-					unset($blocks[$_column][$i]);
-					break;
-				}
-			}
-		}
+        unset( $widgetSettings[$widgetId] );
 
-		if ($found === true)
-		{
-			$blocks[$column][] = $widgetId;
-			UserMeta::set(self::WIDGET_BLOCKS_KEY, $blocks, $userId);
+        static::saveSettings($widgetSettings, $userId);
 
-			return true;
-		}
+        return true;
+    }
 
-		return false;
-	}
 
-	/**
-	 * @return boolean
-	 */
-	public static function removeData()
-	{
-		UserMeta::clearByKey([static::WIDGET_SETTINGS_KEY, static::WIDGET_BLOCKS_KEY]);
-	}
+    /**
+     * @param null|int $userId
+     *
+     * @return array
+     */
+    public static function getSettings($userId = null)
+    {
+        return UserMeta::get(self::WIDGET_SETTINGS_KEY, [], $userId);
+    }
+
+
+    /**
+     * @param array    $settings
+     * @param null|int $userId
+     */
+    protected static function saveSettings(array $settings, $userId = null)
+    {
+        UserMeta::set(self::WIDGET_SETTINGS_KEY, $settings, $userId);
+    }
+
+
+    /**
+     * TODO: исправить ошибку в имени переменной
+     * @param string   $widgetId
+     * @param string   $column
+     * @param null|int $userId
+     *
+     * @return boolean
+     */
+    public static function moveWidget($widgetId, $column, $userId = null)
+    {
+        $widgetSettings = static::getSettings($userId);
+        $found          = false;
+
+        foreach ($widgetSettings as $data) {
+            foreach ($ids as $i => $id) {
+                if ($id = $widgetId and $column != $column) {
+                    $found = true;
+                    unset( $blocks[$column][$i] );
+                    break;
+                }
+            }
+        }
+
+        if ($found === true) {
+            $blocks[$column][] = $widgetId;
+            UserMeta::set(self::WIDGET_BLOCKS_KEY, $blocks, $userId);
+
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * @return boolean
+     */
+    public static function removeData()
+    {
+        UserMeta::clearByKey([
+            static::WIDGET_SETTINGS_KEY, static::WIDGET_BLOCKS_KEY
+        ]);
+    }
 
 }

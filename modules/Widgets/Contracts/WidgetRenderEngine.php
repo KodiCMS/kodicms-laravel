@@ -1,18 +1,21 @@
-<?php namespace KodiCMS\Widgets\Contracts;
-
-use KodiCMS\Widgets\Contracts\Widget;
+<?php
+namespace KodiCMS\Widgets\Contracts;
 
 interface WidgetRenderEngine
 {
-	/**
-	 * @param Widget $widget
-	 */
-	public function __construct(Widget $widget, array $parameters = []);
 
-	/**
-	 * @return Widget
-	 */
-	public function getWidget();
+    /**
+     * @param Widget $widget
+     * @param array  $parameters
+     */
+    public function __construct(Widget $widget, array $parameters = []);
 
-	public function render();
+
+    /**
+     * @return Widget
+     */
+    public function getWidget();
+
+
+    public function render();
 }

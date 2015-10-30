@@ -1,12 +1,14 @@
-<?php namespace KodiCMS\Widgets\Traits;
+<?php
+namespace KodiCMS\Widgets\Traits;
 
-trait WidgetHandler {
+trait WidgetHandler
+{
 
-	/**
-	 * @return string
-	 */
-	public function getHandlerLink()
-	{
-		return route('widget.handler', [$this->getId()]);
-	}
+    /**
+     * @return string
+     */
+    public function getHandlerLink()
+    {
+        return route('widget.handler', [$this->getId()]);
+    }
 }

@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\ModulesLoader;
+<?php
+namespace KodiCMS\ModulesLoader;
 
 use Cache;
 use Config;
@@ -7,247 +8,230 @@ use Illuminate\Filesystem\Filesystem;
 
 class ModulesFileSystem
 {
-	/**
-	 * @var ModuleLoader
-	 */
-	protected $moduleLoader;
 
-	/**
-	 * @var Filesystem
-	 */
-	protected $filesystem;
+    /**
+     * @var ModuleLoader
+     */
+    protected $moduleLoader;
 
-	/**
-	 * @var  array   File path cache, used when caching is true
-	 */
-	protected $files = [];
+    /**
+     * @var Filesystem
+     */
+    protected $filesystem;
 
-	/**
-	 * @var bool
-	 */
-	protected $filesChanged = false;
+    /**
+     * @var  array   File path cache, used when caching is true
+     */
+    protected $files = [];
 
-	/**
-	 * @param ModulesLoader $loader
-	 * @param Filesystem $filesystem
-	 */
-	public function __construct(ModulesLoader $loader, Filesystem $filesystem)
-	{
-		$this->moduleLoader = $loader;
-		$this->filesystem = $filesystem;
-	}
+    /**
+     * @var bool
+     */
+    protected $filesChanged = false;
 
-	public function loadConfigs()
-	{
-		/**
-		 * Загрузка конфигов модулей
-		 */
-		foreach ($this->moduleLoader->getRegisteredModules() as $module)
-		{
-			$config = $module->loadConfig();
-			foreach($config as $group => $data)
-			{
-				Config::set($group, $data);
-			}
-		}
-	}
 
-	/**
-	 * @param string|array|null $sub
-	 * @return array
-	 */
-	public function getPaths($sub = null)
-	{
-		$paths = [];
+    /**
+     * @param ModulesLoader $loader
+     * @param Filesystem    $filesystem
+     */
+    public function __construct(ModulesLoader $loader, Filesystem $filesystem)
+    {
+        $this->moduleLoader = $loader;
+        $this->filesystem   = $filesystem;
+    }
 
-		foreach ($this->moduleLoader->getRegisteredModules() as $module)
-		{
-			if (is_dir($dir = $module->getPath($sub)))
-			{
-				// This path has a file, add it to the list
-				$paths[$module->getName()] = $dir;
-			}
-		}
 
-		return $paths;
-	}
+    public function loadConfigs()
+    {
+        /**
+         * Загрузка конфигов модулей
+         */
+        foreach ($this->moduleLoader->getRegisteredModules() as $module) {
+            $config = $module->loadConfig();
+            foreach ($config as $group => $data) {
+                Config::set($group, $data);
+            }
+        }
+    }
 
-	/**
-	 * @param   string $dir directory name (views, i18n, classes, extensions, etc.)
-	 * @param   string $file filename with subdirectory
-	 * @param   string $ext extension to search for
-	 * @param   boolean $array return an array of files?
-	 * @return  array   a list of files when $array is TRUE
-	 * @return  string  single file path
-	 */
-	public function findFile($dir, $file, $ext = null, $array = false)
-	{
-		if ($ext === null)
-		{
-			// Use the default extension
-			$ext = '.php';
-		}
-		elseif ($ext)
-		{
-			// Prefix the extension with a period
-			$ext = ".{$ext}";
-		}
-		else
-		{
-			// Use no extension
-			$ext = '';
-		}
 
-		// Create a partial path of the filename
-		$path = normalize_path("{$dir}/{$file}{$ext}");
+    /**
+     * @param string|array|null $sub
+     *
+     * @return array
+     */
+    public function getPaths($sub = null)
+    {
+        $paths = [];
 
-		if (isset($this->files[$path . ($array ? '_array' : '_path')]))
-		{
-			// This path has been cached
-			return $this->files[$path . ($array ? '_array' : '_path')];
-		}
+        foreach ($this->moduleLoader->getRegisteredModules() as $module) {
+            if (is_dir($dir = $module->getPath($sub))) {
+                // This path has a file, add it to the list
+                $paths[$module->getName()] = $dir;
+            }
+        }
 
-		if ($array)
-		{
-			// Array of files that have been found
-			$found = [];
+        return $paths;
+    }
 
-			foreach ($this->moduleLoader->getRegisteredModules() as $module)
-			{
-				$dir = $module->getPath() . DIRECTORY_SEPARATOR;
 
-				if (is_file($dir . $path))
-				{
-					// This path has a file, add it to the list
-					$found[] = $dir . $path;
-				}
-			}
-		}
-		else
-		{
-			// The file has not been found yet
-			$found = false;
+    /**
+     * @param   string  $dir   directory name (views, i18n, classes, extensions, etc.)
+     * @param   string  $file  filename with subdirectory
+     * @param   string  $ext   extension to search for
+     * @param   boolean $array return an array of files?
+     *
+     * @return  array   a list of files when $array is TRUE
+     * @return  string  single file path
+     */
+    public function findFile($dir, $file, $ext = null, $array = false)
+    {
+        if ($ext === null) {
+            // Use the default extension
+            $ext = '.php';
+        } elseif ($ext) {
+            // Prefix the extension with a period
+            $ext = ".{$ext}";
+        } else {
+            // Use no extension
+            $ext = '';
+        }
 
-			foreach ($this->moduleLoader->getRegisteredModules() as $module)
-			{
-				$dir = $module->getPath() . DIRECTORY_SEPARATOR;
+        // Create a partial path of the filename
+        $path = normalize_path("{$dir}/{$file}{$ext}");
 
-				if (is_file($dir . $path))
-				{
-					// A path has been found
-					$found = $dir . $path;
+        if (isset( $this->files[$path . ( $array ? '_array' : '_path' )] )) {
+            // This path has been cached
+            return $this->files[$path . ( $array ? '_array' : '_path' )];
+        }
 
-					// Stop searching
-					break;
-				}
-			}
-		}
+        if ($array) {
+            // Array of files that have been found
+            $found = [];
 
-		// Add the path to the cache
-		$this->files[$path . ($array ? '_array' : '_path')] = $found;
+            foreach ($this->moduleLoader->getRegisteredModules() as $module) {
+                $dir = $module->getPath() . DIRECTORY_SEPARATOR;
 
-		// Files have been changed
-		$this->filesChanged = true;
+                if (is_file($dir . $path)) {
+                    // This path has a file, add it to the list
+                    $found[] = $dir . $path;
+                }
+            }
+        } else {
+            // The file has not been found yet
+            $found = false;
 
-		return $found;
-	}
+            foreach ($this->moduleLoader->getRegisteredModules() as $module) {
+                $dir = $module->getPath() . DIRECTORY_SEPARATOR;
 
-	/**
-	 * @param   string $directory directory name
-	 * @param   string|array $ext
-	 * @return  array
-	 */
-	public function listFiles($directory = null, $ext = null)
-	{
-		if ($directory !== null)
-		{
-			// Add the directory separator
-			$directory .= DIRECTORY_SEPARATOR;
-		}
+                if (is_file($dir . $path)) {
+                    // A path has been found
+                    $found = $dir . $path;
 
-		if ($ext === null)
-		{
-			// Use the default extension
-			$ext = 'php';
-		}
+                    // Stop searching
+                    break;
+                }
+            }
+        }
 
-		$paths = $this->getPaths();
+        // Add the path to the cache
+        $this->files[$path . ( $array ? '_array' : '_path' )] = $found;
 
-		// Create an array for the files
-		$found = [];
+        // Files have been changed
+        $this->filesChanged = true;
 
-		foreach ($paths as $moduleName => $path)
-		{
-			if (is_dir($path = normalize_path($path . DIRECTORY_SEPARATOR . $directory)))
-			{
-				foreach ($this->filesystem->allFiles($path) as $file)
-				{
-					$fileExt = $file->getExtension();
+        return $found;
+    }
 
-					// Relative filename is the array key
-					$key = $file->getRelativePathname();
 
-					if (!empty($ext) and is_array($ext) ? !in_array($fileExt, $ext) : ($fileExt != $ext))
-					{
-						continue;
-					}
+    /**
+     * @param   string       $directory directory name
+     * @param   string|array $ext
+     *
+     * @return  array
+     */
+    public function listFiles($directory = null, $ext = null)
+    {
+        if ($directory !== null) {
+            // Add the directory separator
+            $directory .= DIRECTORY_SEPARATOR;
+        }
 
-					if (!isset($found[$key]))
-					{
-						$found[$key] = $file;
-					}
-				}
-			}
-		}
+        if ($ext === null) {
+            // Use the default extension
+            $ext = 'php';
+        }
 
-		// Sort the results alphabetically
-		ksort($found);
+        $paths = $this->getPaths();
 
-		return $found;
-	}
+        // Create an array for the files
+        $found = [];
 
-	/**
-	 * @param string|null $namespace
-	 * @return string
-	 */
-	public function getModuleNameByNamespace($namespace = null)
-	{
-		$defaultNamespace = 'app';
+        foreach ($paths as $moduleName => $path) {
+            if (is_dir($path = normalize_path($path . DIRECTORY_SEPARATOR . $directory))) {
+                foreach ($this->filesystem->allFiles($path) as $file) {
+                    $fileExt = $file->getExtension();
 
-		if (app()->runningInConsole() or is_null($currentRoute = app('router')->getCurrentRoute()))
-		{
-			return $defaultNamespace;
-		}
+                    // Relative filename is the array key
+                    $key = $file->getRelativePathname();
 
-		if (is_null($namespace))
-		{
-			$namespace = $currentRoute->getAction()['namespace'];
-		}
+                    if ( ! empty( $ext ) and is_array($ext) ? ! in_array($fileExt, $ext) : ( $fileExt != $ext )) {
+                        continue;
+                    }
 
-		foreach ($this->moduleLoader->getRegisteredModules() as $module)
-		{
-			if (!empty($moduleNamespace = $module->getNamespace()))
-			{
-				if (strpos($namespace, $moduleNamespace) === 0)
-				{
-					return $module->getKey();
-				}
-			}
-		}
+                    if ( ! isset( $found[$key] )) {
+                        $found[$key] = $file;
+                    }
+                }
+            }
+        }
 
-		return $defaultNamespace;
-	}
+        // Sort the results alphabetically
+        ksort($found);
 
-	public function getFoundFilesFromCache()
-	{
-		$this->files = Cache::get('ModulesFileSystem::findFile', []);
-	}
+        return $found;
+    }
 
-	public function cacheFoundFiles()
-	{
-		if ($this->filesChanged)
-		{
-			Cache::put('ModulesFileSystem::findFile', $this->files, Carbon::now()->addMinutes(10));
-		}
-	}
+
+    /**
+     * @param string|null $namespace
+     *
+     * @return string
+     */
+    public function getModuleNameByNamespace($namespace = null)
+    {
+        $defaultNamespace = 'app';
+
+        if (app()->runningInConsole() or is_null($currentRoute = app('router')->getCurrentRoute())) {
+            return $defaultNamespace;
+        }
+
+        if (is_null($namespace)) {
+            $namespace = $currentRoute->getAction()['namespace'];
+        }
+
+        foreach ($this->moduleLoader->getRegisteredModules() as $module) {
+            if ( ! empty( $moduleNamespace = $module->getNamespace() )) {
+                if (strpos($namespace, $moduleNamespace) === 0) {
+                    return $module->getKey();
+                }
+            }
+        }
+
+        return $defaultNamespace;
+    }
+
+
+    public function getFoundFilesFromCache()
+    {
+        $this->files = Cache::get('ModulesFileSystem::findFile', []);
+    }
+
+
+    public function cacheFoundFiles()
+    {
+        if ($this->filesChanged) {
+            Cache::put('ModulesFileSystem::findFile', $this->files, Carbon::now()->addMinutes(10));
+        }
+    }
 }

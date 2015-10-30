@@ -1,9 +1,11 @@
-<?php namespace KodiCMS\Support\Model\Contracts;
+<?php
+namespace KodiCMS\Support\Model\Contracts;
 
-interface ModelFieldsInterface {
+interface ModelFieldsInterface
+{
 
-	/**
-	 * @return array
-	 */
-	public function fields();
+    /**
+     * @return array
+     */
+    public function fields();
 }

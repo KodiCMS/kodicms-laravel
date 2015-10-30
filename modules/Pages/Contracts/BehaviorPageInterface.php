@@ -1,9 +1,11 @@
-<?php namespace KodiCMS\Pages\Contracts;
+<?php
+namespace KodiCMS\Pages\Contracts;
 
-interface BehaviorPageInterface {
+interface BehaviorPageInterface
+{
 
-	/**
-	 * @return array
-	 */
-	public function getBehaviorSettings();
+    /**
+     * @return array
+     */
+    public function getBehaviorSettings();
 }

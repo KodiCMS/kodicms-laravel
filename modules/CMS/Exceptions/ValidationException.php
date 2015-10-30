@@ -1,58 +1,65 @@
-<?php namespace KodiCMS\CMS\Exceptions;
+<?php
+namespace KodiCMS\CMS\Exceptions;
 
 use Illuminate\Validation\Validator;
 
 class ValidationException extends Exception
 {
-	/**
-	 * @var array
-	 */
-	protected $messages = [];
 
-	/**
-	 * @var array
-	 */
-	protected $rules = [];
+    /**
+     * @var array
+     */
+    protected $messages = [];
 
-	/**
-	 * @var Validator
-	 */
-	protected $validator;
+    /**
+     * @var array
+     */
+    protected $rules = [];
 
-	/**
-	 * @param Validator $validator
-	 * @return $this
-	 */
-	public function setValidator(Validator $validator)
-	{
-		$this->validator = $validator;
-		$this->messages = $validator->errors()->getMessages();
-		$this->rules = $validator->failed();
+    /**
+     * @var Validator
+     */
+    protected $validator;
 
-		return $this;
-	}
 
-	/**
-	 * @return Validator
-	 */
-	public function getValidator()
-	{
-		return $this->validator;
-	}
+    /**
+     * @param Validator $validator
+     *
+     * @return $this
+     */
+    public function setValidator(Validator $validator)
+    {
+        $this->validator = $validator;
+        $this->messages  = $validator->errors()->getMessages();
+        $this->rules     = $validator->failed();
 
-	/**
-	 * @return array
-	 */
-	public function getFailedRules()
-	{
-		return $this->rules;
-	}
+        return $this;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getErrorMessages()
-	{
-		return $this->messages;
-	}
+
+    /**
+     * @return Validator
+     */
+    public function getValidator()
+    {
+        return $this->validator;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getFailedRules()
+    {
+        return $this->rules;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getErrorMessages()
+    {
+        return $this->messages;
+    }
 }

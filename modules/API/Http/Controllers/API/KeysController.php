@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\API\Http\Controllers\API;
+<?php
+namespace KodiCMS\API\Http\Controllers\API;
 
 use KodiCMS\API\Exceptions\Exception;
 use KodiCMS\Api\Repository\ApiKeyRepository;
@@ -7,74 +8,73 @@ use KodiCMS\API\Http\Controllers\System\Controller;
 
 class KeysController extends Controller
 {
-	/**
-	 * @param ApiKeyRepository $repository
-	 */
-	public function getKeys(ApiKeyRepository $repository)
-	{
-		if (!acl_check('api.view_keys'))
-		{
-			throw new PermissionException('api.view_keys');
-		}
 
-		$keys = $repository->getList();
-		unset($keys[$repository->getSystemKey()]);
+    /**
+     * @param ApiKeyRepository $repository
+     */
+    public function getKeys(ApiKeyRepository $repository)
+    {
+        if ( ! acl_check('api.view_keys')) {
+            throw new PermissionException('api.view_keys');
+        }
 
-		$this->setContent($keys);
-	}
+        $keys = $repository->getList();
+        unset( $keys[$repository->getSystemKey()] );
 
-	/**
-	 * @param ApiKeyRepository $repository
-	 */
-	public function putKey(ApiKeyRepository $repository)
-	{
-		if (!acl_check('api.create_keys'))
-		{
-			throw new PermissionException('api.create_keys');
-		}
+        $this->setContent($keys);
+    }
 
-		$description = $this->getRequiredParameter('description');
-		$this->setContent($repository->generate($description));
-	}
 
-	/**
-	 * @param ApiKeyRepository $repository
-	 */
-	public function deleteKey(ApiKeyRepository $repository)
-	{
-		if (!acl_check('api.delete_keys'))
-		{
-			throw new PermissionException('api.delete_keys');
-		}
+    /**
+     * @param ApiKeyRepository $repository
+     */
+    public function putKey(ApiKeyRepository $repository)
+    {
+        if ( ! acl_check('api.create_keys')) {
+            throw new PermissionException('api.create_keys');
+        }
 
-		$key = $this->getRequiredParameter('key');
+        $description = $this->getRequiredParameter('description');
+        $this->setContent($repository->generate($description));
+    }
 
-		if ($repository->isSystemKey($key))
-		{
-			throw new Exception(trans('api.core.messages.system_api_remove'));
-		}
 
-		$this->setContent((bool) $repository->deleteByKey($key));
-	}
+    /**
+     * @param ApiKeyRepository $repository
+     */
+    public function deleteKey(ApiKeyRepository $repository)
+    {
+        if ( ! acl_check('api.delete_keys')) {
+            throw new PermissionException('api.delete_keys');
+        }
 
-	public function postRefresh(ApiKeyRepository $repository)
-	{
-		if (!acl_check('api.refresh_key'))
-		{
-			throw new PermissionException('api.refresh_key');
-		}
+        $key = $this->getRequiredParameter('key');
 
-		$key = $repository->getSystemKey();
+        if ($repository->isSystemKey($key)) {
+            throw new Exception(trans('api.core.messages.system_api_remove'));
+        }
 
-		if (!$repository->isValid($key))
-		{
-			$key = $repository->generate();
-		}
-		else
-		{
-			$key = $repository->refresh($key);
-		}
+        $this->setContent((bool) $repository->deleteByKey($key));
+    }
 
-		$this->setContent($key);
-	}
+
+    /**
+     * @param ApiKeyRepository $repository
+     */
+    public function postRefresh(ApiKeyRepository $repository)
+    {
+        if ( ! acl_check('api.refresh_key')) {
+            throw new PermissionException('api.refresh_key');
+        }
+
+        $key = $repository->getSystemKey();
+
+        if ( ! $repository->isValid($key)) {
+            $key = $repository->generate();
+        } else {
+            $key = $repository->refresh($key);
+        }
+
+        $this->setContent($key);
+    }
 }

@@ -1,20 +1,22 @@
-<?php namespace KodiCMS\Support\Facades;
+<?php
+namespace KodiCMS\Support\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \KodiCMS\CMS\Loader\ModulesFileSystem
  */
-class ModulesFileSystem extends Facade {
+class ModulesFileSystem extends Facade
+{
 
-	/**
-	 * Get the registered name of the component.
-	 *
-	 * @return string
-	 */
-	protected static function getFacadeAccessor()
-	{
-		return 'modules.filesystem';
-	}
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor()
+    {
+        return 'modules.filesystem';
+    }
 
 }

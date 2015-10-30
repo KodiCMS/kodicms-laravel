@@ -1,12 +1,10 @@
-<?php namespace KodiCMS\CMS;
+<?php
+namespace KodiCMS\CMS;
 
-/**
- * Class Core
- * @package KodiCMS\CMS
-*/
-class CMS {
+class CMS
+{
 
-	const VERSION 	= '0.3.1 beta';
-	const NAME		= 'KodiCMS';
-	const WEBSITE	= 'http://kodicms.ru';
+    const VERSION = '0.3.1 beta';
+    const NAME = 'KodiCMS';
+    const WEBSITE = 'http://kodicms.ru';
 }

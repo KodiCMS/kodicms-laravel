@@ -1,160 +1,175 @@
-<?php namespace KodiCMS\CMS\Wysiwyg;
+<?php
+namespace KodiCMS\CMS\Wysiwyg;
 
 use Assets;
 use Illuminate\Contracts\Support\Arrayable;
 use KodiCMS\CMS\Contracts\WysiwygEditorInterface;
 use KodiCMS\CMS\Contracts\WysiwygFilterInterface;
 
-class WysiwygEditor implements WysiwygEditorInterface, Arrayable {
+class WysiwygEditor implements WysiwygEditorInterface, Arrayable
+{
 
-	/**
-	 * @var string
-	 */
-	protected $id;
+    /**
+     * @var string
+     */
+    protected $id;
 
-	/**
-	 * @var string
-	 */
-	protected $name;
+    /**
+     * @var string
+     */
+    protected $name;
 
-	/**
-	 * @var WysiwygFilterInterface
-	 */
-	protected $filter;
+    /**
+     * @var WysiwygFilterInterface
+     */
+    protected $filter;
 
-	/**
-	 * @var string
-	 */
-	protected $packageName;
+    /**
+     * @var string
+     */
+    protected $packageName;
 
-	/**
-	 * @var string
-	 */
-	protected $type;
+    /**
+     * @var string
+     */
+    protected $type;
 
-	/**
-	 * @var bool
-	 */
-	protected $used = false;
+    /**
+     * @var bool
+     */
+    protected $used = false;
 
-	/**
-	 * @param string $id
-	 * @param string|null $name
-	 * @param string|null $filter
-	 * @param string| null $package
-	 * @param string $type
-	 */
-	public function __construct($id, $name = null, $filter = null, $package = null, $type = null)
-	{
-		$this->id = $id;
 
-		$this->name = $name === null
-			? studly_case($id)
-			: $name;
+    /**
+     * @param string       $id
+     * @param string|null  $name
+     * @param string|null  $filter
+     * @param string| null $package
+     * @param string       $type
+     */
+    public function __construct($id, $name = null, $filter = null, $package = null, $type = null)
+    {
+        $this->id = $id;
 
-		$this->type = $type == WysiwygManager::TYPE_HTML
-			? WysiwygManager::TYPE_HTML
-			: WysiwygManager::TYPE_CODE;
+        $this->name = $name === null
+            ? studly_case($id)
+            : $name;
 
-		$this->filter = is_null($filter)
-			? $this->loadDefaultFilter()
-			: $this->loadFilter($filter);
+        $this->type = $type == WysiwygManager::TYPE_HTML
+            ? WysiwygManager::TYPE_HTML
+            : WysiwygManager::TYPE_CODE;
 
-		$this->packageName = $package === null
-			? $id
-			: $package;
-	}
+        $this->filter = is_null($filter)
+            ? $this->loadDefaultFilter()
+            : $this->loadFilter($filter);
 
-	/**
-	 * @return string
-	 */
-	public function getId()
-	{
-		return $this->id;
-	}
+        $this->packageName = $package === null
+            ? $id
+            : $package;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getName()
-	{
-		return $this->name;
-	}
 
-	/**
-	 * @return string
-	 */
-	public function getType()
-	{
-		return $this->type;
-	}
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
-	/**
-	 * @return WysiwygFilterInterface
-	 */
-	public function getFilter()
-	{
-		return $this->filter;
-	}
 
-	/**
-	 * @return bool
-	 */
-	public function isUsed()
-	{
-		return $this->used;
-	}
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
-	/**
-	 * @param string $text
-	 * @return string
-	 */
-	public function applyFilter($text)
-	{
-		return $this->getFilter()->apply($text);
-	}
 
-	public function load()
-	{
-		Assets::package($this->packageName);
-		return $this->used = true;
-	}
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
 
-	/**
-	 * Get the instance as an array.
-	 *
-	 * @return array
-	 */
-	public function toArray()
-	{
-		return [
-			'id' => $this->getId(),
-			'name' => $this->getName(),
-			'type' => $this->getType(),
-			'assetPackage' => $this->packageName,
-			'filter' => get_class($this->getFilter())
-		];
-	}
 
-	/**
-	 * @param string $filter
-	 * @return WysiwygFilterInterface
-	 */
-	protected function loadFilter($filter)
-	{
-		if (class_exists($filter) and (new ReflectionClass($filter))->implementsInterface(WysiwygFilterInterface::class))
-		{
-			return app()->make($filter);
-		}
+    /**
+     * @return WysiwygFilterInterface
+     */
+    public function getFilter()
+    {
+        return $this->filter;
+    }
 
-		return $this->loadDefaultFilter();
-	}
 
-	/**
-	 * @return WysiwygFilterInterface
-	 */
-	protected function loadDefaultFilter()
-	{
-		return app()->make(WysiwygDummyFilter::class);
-	}
+    /**
+     * @return bool
+     */
+    public function isUsed()
+    {
+        return $this->used;
+    }
+
+
+    /**
+     * @param string $text
+     *
+     * @return string
+     */
+    public function applyFilter($text)
+    {
+        return $this->getFilter()->apply($text);
+    }
+
+
+    public function load()
+    {
+        Assets::package($this->packageName);
+
+        return $this->used = true;
+    }
+
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'id'           => $this->getId(),
+            'name'         => $this->getName(),
+            'type'         => $this->getType(),
+            'assetPackage' => $this->packageName,
+            'filter'       => get_class($this->getFilter()),
+        ];
+    }
+
+
+    /**
+     * @param string $filter
+     *
+     * @return WysiwygFilterInterface
+     */
+    protected function loadFilter($filter)
+    {
+        if (class_exists($filter) and (new ReflectionClass($filter))->implementsInterface(WysiwygFilterInterface::class)) {
+            return app()->make($filter);
+        }
+
+        return $this->loadDefaultFilter();
+    }
+
+
+    /**
+     * @return WysiwygFilterInterface
+     */
+    protected function loadDefaultFilter()
+    {
+        return app()->make(WysiwygDummyFilter::class);
+    }
 }

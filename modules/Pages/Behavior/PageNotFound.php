@@ -1,3 +1,7 @@
-<?php namespace KodiCMS\Pages\Behavior;
+<?php
+namespace KodiCMS\Pages\Behavior;
 
-class PageNotFound extends BehaviorAbstract {}
+class PageNotFound extends BehaviorAbstract
+{
+
+}

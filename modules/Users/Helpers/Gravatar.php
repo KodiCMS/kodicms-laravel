@@ -1,44 +1,43 @@
-<?php namespace KodiCMS\Users\Helpers;
+<?php
+namespace KodiCMS\Users\Helpers;
 
 use HTML;
 
 class Gravatar
 {
 
-	/**
-	 *
-	 * @var array
-	 */
-	protected static $cache = [];
+    /**
+     * @var array
+     */
+    protected static $cache = [];
 
-	/**
-	 *
-	 * @param string $email
-	 * @param integer $size
-	 * @param string $default
-	 * @param array $attributes
-	 * @return string
-	 */
-	public static function load($email, $size = 100, $default = null, array $attributes = null)
-	{
-		if (empty($email))
-		{
-			$email = 'test@test.com';
-		}
 
-		if ($default === null)
-		{
-			$default = 'mm';
-		}
+    /**
+     *
+     * @param string  $email
+     * @param integer $size
+     * @param string  $default
+     * @param array   $attributes
+     *
+     * @return string
+     */
+    public static function load($email, $size = 100, $default = null, array $attributes = null)
+    {
+        if (empty( $email )) {
+            $email = 'test@test.com';
+        }
 
-		$hash = md5(strtolower(trim($email)));
-		$queryParams = http_build_query(['d' => urlencode($default), 's' => (int)$size]);
+        if ($default === null) {
+            $default = 'mm';
+        }
 
-		if (!isset(self::$cache[$email][$size]))
-		{
-			self::$cache[$email][$size] = HTML::image('http://www.gravatar.com/avatar/' . $hash . '?' . $queryParams, null, $attributes);
-		}
+        $hash        = md5(strtolower(trim($email)));
+        $queryParams = http_build_query(['d' => urlencode($default), 's' => (int) $size]);
 
-		return self::$cache[$email][$size];
-	}
+        if ( ! isset( self::$cache[$email][$size] )) {
+            self::$cache[$email][$size] = HTML::image('http://www.gravatar.com/avatar/' . $hash . '?' . $queryParams, null, $attributes);
+        }
+
+        return self::$cache[$email][$size];
+    }
 }

@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Plugins\Http\Controllers\API;
+<?php
+namespace KodiCMS\Plugins\Http\Controllers\API;
 
 use KodiCMS\Plugins\Exceptions\PluginContainerException;
 use PluginLoader;
@@ -7,46 +8,44 @@ use KodiCMS\API\Http\Controllers\System\Controller;
 
 class PluginController extends Controller
 {
-	public function getList()
-	{
-		if (!acl_check('backend.plugins.list'))
-		{
-			throw new PermissionException('backend.plugins.list');
-		}
 
-		$plugins = [];
-		foreach(PluginLoader::findPlugins() as $plugin)
-		{
-			$plugins[] = $plugin->toArray();
-		}
+    public function getList()
+    {
+        if ( ! acl_check('backend.plugins.list')) {
+            throw new PermissionException('backend.plugins.list');
+        }
 
-		$this->setContent($plugins);
-	}
+        $plugins = [];
+        foreach (PluginLoader::findPlugins() as $plugin) {
+            $plugins[] = $plugin->toArray();
+        }
 
-	public function changeStatus()
-	{
-		if (!acl_check('plugins.change_status'))
-		{
-			throw new PermissionException('plugins.change_status');
-		}
+        $this->setContent($plugins);
+    }
 
-		$name = $this->getRequiredParameter('name');
-		$removeTable = $this->getParameter('remove_data');
 
-		if (is_null($plugin = PluginLoader::getPluginContainer($name)))
-		{
-			throw new PluginContainerException("Plugin [{$name}] not found");
-		}
+    /**
+     * @throws PluginContainerException
+     */
+    public function changeStatus()
+    {
+        if ( ! acl_check('plugins.change_status')) {
+            throw new PermissionException('plugins.change_status');
+        }
 
-		if (PluginLoader::isActivated($name))
-		{
-			PluginLoader::deactivatePlugin($name, (bool) $removeTable);
-		}
-		else
-		{
-			PluginLoader::activatePlugin($name);
-		}
+        $name        = $this->getRequiredParameter('name');
+        $removeTable = $this->getParameter('remove_data');
 
-		$this->setContent($plugin);
-	}
+        if (is_null($plugin = PluginLoader::getPluginContainer($name))) {
+            throw new PluginContainerException("Plugin [{$name}] not found");
+        }
+
+        if (PluginLoader::isActivated($name)) {
+            PluginLoader::deactivatePlugin($name, (bool) $removeTable);
+        } else {
+            PluginLoader::activatePlugin($name);
+        }
+
+        $this->setContent($plugin);
+    }
 }

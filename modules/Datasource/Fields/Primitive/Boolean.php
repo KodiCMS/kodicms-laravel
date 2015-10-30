@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Datasource\Fields\Primitive;
+<?php
+namespace KodiCMS\Datasource\Fields\Primitive;
 
 use UI;
 use KodiCMS\Datasource\Fields\Primitive;
@@ -8,77 +9,85 @@ use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
 class Boolean extends Primitive
 {
-	const STYLE_RADIO = 0;
-	const STYLE_CHECKBOX = 1;
-	const STYLE_SELECT = 2;
 
-	/**
-	 * @var bool
-	 */
-	protected $changeableDatabaseField = false;
+    const STYLE_RADIO = 0;
+    const STYLE_CHECKBOX = 1;
+    const STYLE_SELECT = 2;
 
-	/**
-	 * @return array
-	 */
-	public function defaultSettings()
-	{
-		return [
-			'style' => static::STYLE_CHECKBOX,
-			'default_value' => false
-		];
-	}
+    /**
+     * @var bool
+     */
+    protected $changeableDatabaseField = false;
 
-	/**
-	 * @param DocumentInterface $document
-	 * @param mixed $value
-	 *
-	 * @return mixed
-	 */
-	public function onGetHeadlineValue(DocumentInterface $document, $value)
-	{
-		return (bool) $value ? UI::icon('check') : UI::icon('close');
-	}
 
-	/**
-	 * @param Blueprint $table
-	 * @return \Illuminate\Support\Fluent
-	 */
-	public function setDatabaseFieldType(Blueprint $table)
-	{
-		return $table->boolean($this->getDBKey());
-	}
+    /**
+     * @return array
+     */
+    public function defaultSettings()
+    {
+        return [
+            'style'         => static::STYLE_CHECKBOX,
+            'default_value' => false,
+        ];
+    }
 
-	/**
-	 * @param SectionHeadlineInterface $headline
-	 *
-	 * @return array
-	 */
-	public function getHeadlineParameters(SectionHeadlineInterface $headline)
-	{
-		$params = parent::getHeadlineParameters($headline);
-		$params['class'] = 'text-center';
 
-		return $params;
-	}
+    /**
+     * @param DocumentInterface $document
+     * @param mixed             $value
+     *
+     * @return mixed
+     */
+    public function onGetHeadlineValue(DocumentInterface $document, $value)
+    {
+        return (bool) $value ? UI::icon('check') : UI::icon('close');
+    }
 
-	/**
-	 * @return integer
-	 */
-	public function getDisplayStyle()
-	{
-		return $this->getSetting('style', static::STYLE_CHECKBOX);
-	}
 
-	/**
-	 * TODO: translate
-	 * @return array
-	 */
-	public function getDisplayStyles()
-	{
-		return [
-			static::STYLE_RADIO => 'Radio buttons',
-			static::STYLE_CHECKBOX => 'Checkbox',
-			static::STYLE_SELECT => 'Dropdown'
-		];
-	}
+    /**
+     * @param Blueprint $table
+     *
+     * @return \Illuminate\Support\Fluent
+     */
+    public function setDatabaseFieldType(Blueprint $table)
+    {
+        return $table->boolean($this->getDBKey());
+    }
+
+
+    /**
+     * @param SectionHeadlineInterface $headline
+     *
+     * @return array
+     */
+    public function getHeadlineParameters(SectionHeadlineInterface $headline)
+    {
+        $params          = parent::getHeadlineParameters($headline);
+        $params['class'] = 'text-center';
+
+        return $params;
+    }
+
+
+    /**
+     * @return integer
+     */
+    public function getDisplayStyle()
+    {
+        return $this->getSetting('style', static::STYLE_CHECKBOX);
+    }
+
+
+    /**
+     * TODO: translate
+     * @return array
+     */
+    public function getDisplayStyles()
+    {
+        return [
+            static::STYLE_RADIO    => 'Radio buttons',
+            static::STYLE_CHECKBOX => 'Checkbox',
+            static::STYLE_SELECT   => 'Dropdown',
+        ];
+    }
 }
