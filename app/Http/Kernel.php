@@ -2,4 +2,7 @@
 
 use KodiCMS\CMS\Http\Kernel as CMSHttpKernel;
 
-class Kernel extends CMSHttpKernel {}
+class Kernel extends CMSHttpKernel
+{
+
+}

@@ -2,4 +2,7 @@
 
 use KodiCMS\CMS\Exceptions\Handler as CMSExceptionHandler;
 
-class Handler extends CMSExceptionHandler {}
+class Handler extends CMSExceptionHandler
+{
+
+}
