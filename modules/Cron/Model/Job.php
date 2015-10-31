@@ -2,12 +2,59 @@
 namespace KodiCMS\Cron\Model;
 
 use Artisan;
+use Exception;
 use Carbon\Carbon;
-use KodiCMS\Cron\Support\Crontab;
+use Cron\CronExpression;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
+/**
+ * Class Job
+ * @package KodiCMS\Cron\Model
+ *
+ * @property integer $id
+ * @property string  $name
+ * @property string  $task_name
+ * @property string  $crontime
+ * @property integer $interval
+ * @property integer $status
+ * @property integer $attempts
+ *
+ * @property Carbon $date_start
+ * @property Carbon $date_end
+ * @property Carbon $last_run
+ * @property Carbon $next_run
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ *
+ * @property JobLog[] $logs
+ */
 class Job extends Model
 {
+    /**
+     * @return Collection
+     */
+    public static function runAll()
+    {
+        return static::onlyActive()
+                     ->where('next_run', '<',  new Carbon)
+                     ->get()
+                     ->each(function (Job $job) {
+                         $job->run();
+                     });
+    }
+
+    /**
+     * @return array
+     */
+    public static function agents()
+    {
+        return [
+            static::AGENT_SYSTEM => trans('cron::core.settings.agents.system'),
+            static::AGENT_CRON   => trans('cron::core.settings.agents.cron'),
+        ];
+    }
 
     /**
      * The table associated with the model.
@@ -27,46 +74,33 @@ class Job extends Model
     const MAX_ATEMTPS = 5;
 
     /**
+     * The attributes that are mass assignable.
+     *
      * @var array
      */
     protected $fillable = [
-        'name',
-        'task_name',
+        'name', 'task_name',
         'date_start',
         'date_end',
-        'last_run',
-        'next_run',
         'interval',
         'crontime',
-        'status',
-        'attempts',
     ];
 
     /**
-     * The attributes that should be mutated to dates.
+     * The model's dates.
      *
      * @var array
      */
     protected $dates = ['date_start', 'date_end', 'last_run', 'next_run'];
 
     /**
+     * The model's attributes.
+     *
      * @var array
      */
     protected $attributes = [
         'crontime' => '* * * * *',
     ];
-
-
-    /**
-     * @return array
-     */
-    public static function agents()
-    {
-        return [
-            static::AGENT_SYSTEM => trans('cron::core.settings.agents.system'),
-            static::AGENT_CRON   => trans('cron::core.settings.agents.cron'),
-        ];
-    }
 
 
     /**
@@ -80,15 +114,6 @@ class Job extends Model
     }
 
 
-    /**
-     * @param integer $value
-     */
-    public function setAttemptsAttribute($value)
-    {
-        $this->attributes['attempts'] = intval($value);
-    }
-
-
     public function setNextRun()
     {
         if (empty( $this->interval ) && empty( $this->crontime )) {
@@ -96,73 +121,37 @@ class Job extends Model
         }
 
         if ( ! empty( $this->crontime )) {
-            $this->next_run = Crontab::parse($this->crontime);
-        } else {
-            if ( ! empty( $this->interval )) {
-                $this->next_run = with(new Carbon())->addMinutes($this->interval);
-            }
+            $this->next_run = Carbon::create(
+                CronExpression::factory($this->crontime)->getNextRunDate()->format('Y-m-d H:i:s')
+            );
+        } else if ( ! empty( $this->interval )) {
+            $this->next_run = (new Carbon())->addMinutes($this->interval);
         }
     }
-
-
-    /**
-     * @return string
-     */
-    public function getStatusStringAttribute()
-    {
-        return trans('cron::core.statuses.' . $this->status);
-    }
-
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function logs()
-    {
-        return $this->hasMany(JobLog::class);
-    }
-
-
-    public static function runAll()
-    {
-        $now  = new Carbon;
-        $jobs = static::where('attempts', '<=', static::MAX_ATEMTPS)
-            ->where('date_start', '<=', $now)->where('date_end', '>=', $now)
-            ->where('next_run', '<', $now)->get();
-
-        foreach ($jobs as $job) {
-            $job->run();
-        }
-    }
-
 
     public function run()
     {
-        $log = new JobLog;
-        $log->job()->associate($this);
-        $log->save();
-
+        $log = $this->logs()->create();
         $log->setStatus(static::STATUS_RUNNING);
 
         try {
             $action = config('jobs.' . $this->task_name . '.action');
             if (is_null($action)) {
-                throw new \Exception('Job not found or action not set');
+                throw new Exception('Job not found or action not set');
             }
 
             if (strpos($action, '@') !== false) {
                 list( $class, $method ) = explode('@', $action);
                 $instance = app($class);
                 if ( ! method_exists($instance, $method)) {
-                    throw new \Exception('Invalid method ' . $method);
+                    throw new Exception('Invalid method ' . $method);
                 }
                 $instance->$method();
             } else {
                 Artisan::call($action);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->failed($log);
-
             return;
         }
 
@@ -176,24 +165,75 @@ class Job extends Model
     public function completed(JobLog $log)
     {
         $log->setStatus(static::STATUS_COMPLETED);
-        $this->update([
-            'last_run' => new Carbon,
-            'attempts' => 0,
-        ]);
+
+        $this->last_run = new Carbon;
+        $this->attempts =0;
+
+        $this->save();
     }
 
 
     /**
      * @param JobLog $log
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function failed(JobLog $log)
     {
         $log->setStatus(static::STATUS_FAILED);
-        $this->update([
-            'last_run' => new Carbon,
-            'attempts' => $this->attempts + 1,
-        ]);
+
+        $this->last_run = new Carbon;
+        $this->attempts += 1;
+
+        $this->save();
+    }
+
+    /*******************************************************
+     * Mutators
+     *******************************************************/
+
+    /**
+     * @param integer $value
+     */
+    public function setAttemptsAttribute($value)
+    {
+        $this->attributes['attempts'] = intval($value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusStringAttribute()
+    {
+        return trans('cron::core.statuses.' . $this->status);
+    }
+
+    /*******************************************************
+     * Scopes
+     *******************************************************/
+    /**
+     * @param Builder $query
+     *
+     * @return Builder
+     */
+    public function scopeOnlyActive(Builder $query)
+    {
+        $now = new Carbon;
+
+        return $query->where('attempts', '<=', static::MAX_ATEMTPS)
+                     ->where('date_start', '<=', $now)
+                     ->where('date_end', '>=', $now);
+    }
+
+    /*******************************************************
+     * Relations
+     *******************************************************/
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function logs()
+    {
+        return $this->hasMany(JobLog::class);
     }
 }

@@ -4,21 +4,22 @@ namespace KodiCMS\Cron\Model;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class JobLog
+ * @package KodiCMS\Cron\Model
+ *
+ * @property integer $id
+ * @property integer $job_id
+ * @property integer $status
+ * @property string  $status_string
+ *
+ * @property Job     $job
+ *
+ * @property Carbon  $created_at
+ * @property Carbon  $updated_at
+ */
 class JobLog extends Model
 {
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'cron_job_logs';
-
-    /**
-     * @var array
-     */
-    protected $fillable = ['job_id', 'status'];
-
 
     protected static function boot()
     {
@@ -31,21 +32,11 @@ class JobLog extends Model
 
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * The table associated with the model.
+     *
+     * @var string
      */
-    public function job()
-    {
-        return $this->belongsTo(Job::class);
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getStatusStringAttribute()
-    {
-        return trans('cron::core.statuses.' . $this->status);
-    }
+    protected $table = 'cron_job_logs';
 
 
     /**
@@ -64,6 +55,30 @@ class JobLog extends Model
 
         $this->status = $value;
         $this->save();
+    }
+
+    /*******************************************************
+     * Mutators
+     *******************************************************/
+
+    /**
+     * @return string
+     */
+    public function getStatusStringAttribute()
+    {
+        return trans('cron::core.statuses.' . $this->status);
+    }
+
+    /*******************************************************
+     * Relations
+     *******************************************************/
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function job()
+    {
+        return $this->belongsTo(Job::class);
     }
 
 }
