@@ -11,7 +11,7 @@ class NotificationsUsers extends Migration
         Schema::create('notifications_users', function (Blueprint $table) {
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('notification_id');
-            $table->boolean('is_read')->default(0);
+            $table->boolean('is_read')->default(false);
 
             $table->primary(['user_id', 'notification_id']);
         });

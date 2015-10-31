@@ -10,7 +10,7 @@ class RelatedWidgets extends Migration
     {
         Schema::create('related_widgets', function (Blueprint $table) {
             $table->integer('id');
-            $table->integer('to_widget_id');
+            $table->unsignedInteger('to_widget_id');
         });
     }
 

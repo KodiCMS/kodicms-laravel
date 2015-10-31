@@ -2,6 +2,8 @@
 namespace KodiCMS\Email\database\seeds;
 
 use Illuminate\Database\Seeder;
+use KodiCMS\Email\Model\EmailEvent;
+use KodiCMS\Email\Model\EmailQueue;
 use KodiCMS\Email\Repository\EmailEventRepository;
 
 class EmailEventsTableSeeder extends Seeder
@@ -26,6 +28,9 @@ class EmailEventsTableSeeder extends Seeder
      */
     public function run()
     {
+        EmailEvent::truncate();
+        EmailQueue::truncate();
+
         $this->repository->create([
             'code'   => 'user_request_password',
             'name'   => 'Запрос на восстановление пароля',

@@ -11,7 +11,7 @@ class DatasourceFieldGroups extends Migration
         Schema::create('datasource_field_groups', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('section_id')->index();
+            $table->unsignedInteger('section_id')->index();
             $table->string('name');
             $table->string('type');
             $table->integer('position')->default(0);

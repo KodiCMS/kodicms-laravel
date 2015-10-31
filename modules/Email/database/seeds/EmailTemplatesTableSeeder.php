@@ -34,6 +34,8 @@ class EmailTemplatesTableSeeder extends Seeder
      */
     public function run()
     {
+        EmailTemplate::truncate();
+
         $emailEvent = $this->emailEventRepository->query()->whereCode('user_request_password')->first();
         $this->emailTemplateRepository->create([
             'status'         => 1,

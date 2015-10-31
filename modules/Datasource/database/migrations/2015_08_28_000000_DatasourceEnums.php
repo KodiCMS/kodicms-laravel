@@ -11,7 +11,7 @@ class DatasourceEnums extends Migration
         Schema::create('datasource_enums', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('field_id')->nullable()->index();
+            $table->unsignedInteger('field_id')->nullable()->index();
             $table->string('value')->index();
             $table->integer('position')->default(0);
 
