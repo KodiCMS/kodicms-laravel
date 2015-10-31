@@ -1,10 +1,13 @@
-<?php namespace KodiCMS\CMS\Contracts;
+<?php
+namespace KodiCMS\CMS\Contracts;
 
-interface WysiwygFilterInterface {
+interface WysiwygFilterInterface
+{
 
-	/**
-	 * @param string $text
-	 * @return string
-	 */
-	public function apply($text);
+    /**
+     * @param string $text
+     *
+     * @return string
+     */
+    public function apply($text);
 }

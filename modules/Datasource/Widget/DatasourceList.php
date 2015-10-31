@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Datasource\Widget;
+<?php
+namespace KodiCMS\Datasource\Widget;
 
 use Illuminate\Support\Collection;
 use KodiCMS\Widgets\Widget\Decorator;
@@ -9,175 +10,170 @@ use KodiCMS\Datasource\Traits\WidgetDatasourceFields;
 
 class DatasourceList extends Decorator implements WidgetCacheable
 {
-	use WidgetCache, WidgetDatasource, WidgetDatasourceFields;
 
-	/**
-	 * @var SectionRepository
-	 */
-	protected $sectionRepository;
+    use WidgetCache, WidgetDatasource, WidgetDatasourceFields;
 
-	/**
-	 * @var array|null
-	 */
-	protected $documents = null;
+    /**
+     * @var SectionRepository
+     */
+    protected $sectionRepository;
 
-	/**
-	 * @var string
-	 */
-	protected $settingsTemplate = 'datasource::widgets.list.settings';
+    /**
+     * @var array|null
+     */
+    protected $documents = null;
 
-	/**
-	 * @return array
-	 */
-	public function booleanSettings()
-	{
-		return ['order_by_rand'];
-	}
+    /**
+     * @var string
+     */
+    protected $settingsTemplate = 'datasource::widgets.list.settings';
 
-	/**
-	 * @return array
-	 */
-	public function defaultSettings()
-	{
-		return [
-			'order_by_rand' => false,
-			'document_uri' => '/document/:id'
-		];
-	}
 
-	/**
-	 * @return array
-	 */
-	public function prepareSettingsData()
-	{
-		$fields = !$this->getSection() ? [] : $this->section->getFields();
-		$ordering = (array) $this->ordering;
+    /**
+     * @return array
+     */
+    public function booleanSettings()
+    {
+        return ['order_by_rand'];
+    }
 
-		return compact('fields', 'ordering');
-	}
 
-	/**
-	 * @return array [[Collection] $documents, [Collection] $documentsRaw, [KodiCMS\Datasource\Contracts\SectionInterface] $section, [Illuminate\Pagination\LengthAwarePaginator] $pagination]
-	 */
-	public function prepareData()
-	{
-		if (is_null($this->getSection()))
-		{
-			return [];
-		}
+    /**
+     * @return array
+     */
+    public function defaultSettings()
+    {
+        return [
+            'order_by_rand' => false,
+            'document_uri'  => '/document/:id',
+        ];
+    }
 
-		$result = $this->getDocuments();
 
-		$visibleFields = [];
+    /**
+     * @return array
+     */
+    public function prepareSettingsData()
+    {
+        $fields   = ! $this->getSection() ? [] : $this->section->getFields();
+        $ordering = (array) $this->ordering;
 
-		foreach ($this->getSection()->getFields() as $field)
-		{
-			if (in_array($field->getDBKey(), $this->getSelectedFields()))
-			{
-				$visibleFields[] = $field;
-			}
-		}
+        return compact('fields', 'ordering');
+    }
 
-		$documents = [];
 
-		foreach ($result as $document)
-		{
-			$doc = [];
+    /**
+     * @return array [[Collection] $documents, [Collection] $documentsRaw,
+     *               [KodiCMS\Datasource\Contracts\SectionInterface] $section,
+     *               [Illuminate\Pagination\LengthAwarePaginator] $pagination]
+     */
+    public function prepareData()
+    {
+        if (is_null($this->getSection())) {
+            return [];
+        }
 
-			foreach ($visibleFields as $field)
-			{
-				$doc[$field->getDBKey()] = $document->getWidgetValue($field->getDBKey(), $this);
-			}
+        $result = $this->getDocuments();
 
-			$doc['href'] = strtr($this->document_uri, $this->buildUrlParams($doc));
+        $visibleFields = [];
 
-			$documents[$document->getId()] = $doc;
-		}
+        foreach ($this->getSection()->getFields() as $field) {
+            if (in_array($field->getDBKey(), $this->getSelectedFields())) {
+                $visibleFields[] = $field;
+            }
+        }
 
-		return [
-			'section' => $this->getSection(),
-			'documentsRaw' => $result->items(),
-			'pagination' => $result,
-			'documents' => new Collection($documents)
-		];
-	}
+        $documents = [];
 
-	/**
-	 * @param int $recurse
-	 * @return array|null
-	 */
-	protected function getDocuments($recurse = 3)
-	{
-		if (!is_null($this->documents))
-		{
-			return $this->documents;
-		}
+        foreach ($result as $document) {
+            $doc = [];
 
-		if ($this->order_By_rand)
-		{
-			$this->ordering = [];
-		}
+            foreach ($visibleFields as $field) {
+                $doc[$field->getDBKey()] = $document->getWidgetValue($field->getDBKey(), $this);
+            }
 
-		$documents = $this->getSection()
-			->getEmptyDocument()
-			->getDocuments($this->selected_fields, (array) $this->ordering, (array) $this->filters);
+            $doc['href'] = strtr($this->document_uri, $this->buildUrlParams($doc));
 
-		if ($this->order_By_rand)
-		{
-			$documents->orderByRaw('RAND()');
-		}
+            $documents[$document->getId()] = $doc;
+        }
 
-		// TODO добавить кол-во выводимых документов
-		return $this->documents = $documents->paginate();
-	}
+        return [
+            'section'      => $this->getSection(),
+            'documentsRaw' => $result->items(),
+            'pagination'   => $result,
+            'documents'    => new Collection($documents),
+        ];
+    }
 
-	/**
-	 *
-	 * @param array $data
-	 * @param string $preffix
-	 * @return array
-	 */
-	protected function buildUrlParams(array $data, $preffix = null)
-	{
-		$params = [];
 
-		foreach ($data as $field => $value)
-		{
-			if (is_array($value))
-			{
-				$params += $this->buildUrlParams($value, $field);
-			}
-			else
-			{
-				$field = $preffix === null
-					? $field
-					: $preffix . '.' . $field;
+    /**
+     * @param int $recurse
+     *
+     * @return array|null
+     */
+    protected function getDocuments($recurse = 3)
+    {
+        if ( ! is_null($this->documents)) {
+            return $this->documents;
+        }
 
-				$params[':' . $field] = $value;
-			}
-		}
+        if ($this->order_By_rand) {
+            $this->ordering = [];
+        }
 
-		return $params;
-	}
+        $documents = $this->getSection()
+            ->getEmptyDocument()
+            ->getDocuments($this->selected_fields, (array) $this->ordering, (array) $this->filters);
 
-	/****************************************************************************************************************
-	 * Settings
-	 ****************************************************************************************************************/
+        if ($this->order_By_rand) {
+            $documents->orderByRaw('RAND()');
+        }
 
-	/**
-	 * @param array $filters
-	 */
-	public function setSettingFilters(array $filters)
-	{
-		$data = [];
-		foreach ($filters as $key => $rows)
-		{
-			foreach ($rows as $i => $row)
-			{
-				$data[$i][$key] = $row;
-			}
-		}
+        // TODO добавить кол-во выводимых документов
+        return $this->documents = $documents->paginate();
+    }
 
-		$this->settings['filters'] = $data;
-	}
+
+    /**
+     *
+     * @param array  $data
+     * @param string $preffix
+     *
+     * @return array
+     */
+    protected function buildUrlParams(array $data, $preffix = null)
+    {
+        $params = [];
+
+        foreach ($data as $field => $value) {
+            if (is_array($value)) {
+                $params += $this->buildUrlParams($value, $field);
+            } else {
+                $field = $preffix === null ? $field : $preffix . '.' . $field;
+
+                $params[':' . $field] = $value;
+            }
+        }
+
+        return $params;
+    }
+
+    /****************************************************************************************************************
+     * Settings
+     ****************************************************************************************************************/
+
+    /**
+     * @param array $filters
+     */
+    public function setSettingFilters(array $filters)
+    {
+        $data = [];
+        foreach ($filters as $key => $rows) {
+            foreach ($rows as $i => $row) {
+                $data[$i][$key] = $row;
+            }
+        }
+
+        $this->settings['filters'] = $data;
+    }
 }

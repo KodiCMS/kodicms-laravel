@@ -59,7 +59,7 @@ function checkbox_check() {
 <div class="btn-toolbar" role="toolbar">
 
 	<div class="btn-group">
-		{!! link_to_route('backend.datasource.document.create', trans('datasource::core.toolbar.create_document'), [$section->getId()], [
+		{!! link_to_route('backend.datasource.document.create', $section->getCreateDocumentButtonTitle(), [$section->getId()], [
 			'data-icon' => 'plus',
 			'data-hotkeys' => 'ctrl+a',
 			'class' => 'btn btn-primary'

@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Widgets\Engine;
+<?php
+namespace KodiCMS\Widgets\Engine;
 
 use Cache;
 use Illuminate\View\View;
@@ -10,108 +11,99 @@ use KodiCMS\Widgets\Contracts\WidgetCacheable;
 
 class WidgetRenderHTML extends WidgetRenderAbstract
 {
-	public function render()
-	{
-		$widget = $this->getWidget();
 
-		if (method_exists($widget, 'onRender'))
-		{
-			$widget->onRender($this);
-		}
+    public function render()
+    {
+        $widget = $this->getWidget();
 
-		if ($widget instanceof WidgetCacheable and $widget->isCacheEnabled())
-		{
-			if (Cache::getFacadeRoot()->store()->getStore() instanceof TaggableStore)
-			{
-				return Cache::tags($widget->getCacheTags())->remember($widget->getCacheKey(), $widget->getCacheLifetime(), function ()
-				{
-					return $this->getContent();
-				});
-			}
-			else
-			{
-				return Cache::remember($widget->getCacheKey(), $widget->getCacheLifetime(), function ()
-				{
-					return $this->getContent();
-				});
-			}
-		}
+        if (method_exists($widget, 'onRender')) {
+            $widget->onRender($this);
+        }
 
-		return $this->getContent();
-	}
+        if ($widget instanceof WidgetCacheable and $widget->isCacheEnabled()) {
+            if (Cache::getFacadeRoot()->store()->getStore() instanceof TaggableStore) {
+                return Cache::tags($widget->getCacheTags())->remember($widget->getCacheKey(), $widget->getCacheLifetime(), function (
+                ) {
+                    return $this->getContent();
+                });
+            } else {
+                return Cache::remember($widget->getCacheKey(), $widget->getCacheLifetime(), function () {
+                    return $this->getContent();
+                });
+            }
+        }
 
-	/**
-	 * @return string
-	 */
-	protected function getContent()
-	{
-		$widget = $this->getWidget();
-		$widget->setParameters($this->parameters);
+        return $this->getContent();
+    }
 
-		$preparedData = $widget->prepareData();
-		$preparedData['parameters'] = $widget->getParameters();
 
-		$allowHTMLComments = (bool) $widget->getParameter('comments', true);
+    /**
+     * @return string
+     */
+    protected function getContent()
+    {
+        $widget = $this->getWidget();
+        $widget->setParameters($this->parameters);
 
-		$preparedData['widgetId'] = $widget->getId();
-		$preparedData['settings'] = $widget->getSettings();
-		$preparedData['header'] = $widget->getSetting('header');
+        $preparedData               = $widget->prepareData();
+        $preparedData['parameters'] = $widget->getParameters();
 
-		$preparedData['relatedWidgets'] = WidgetManager::buildWidgetCollection($widget->getRalatedWidgets());
+        $allowHTMLComments = (bool) $widget->getParameter('comments', true);
 
-		$html = '';
+        $preparedData['widgetId'] = $widget->getId();
+        $preparedData['settings'] = $widget->getSettings();
+        $preparedData['header']   = $widget->getSetting('header');
 
-		if ($allowHTMLComments)
-		{
-			$html .= PHP_EOL . "<!--[Widget: {$widget->getName()}]-->" . PHP_EOL;
-		}
+        $preparedData['relatedWidgets'] = WidgetManager::buildWidgetCollection(
+            $widget->getRalatedWidgets()
+        );
 
-		$html .= $this->getWidgetTemplate($preparedData)->render();
+        $html = '';
 
-		if ($allowHTMLComments)
-		{
-			$html .= PHP_EOL . "<!--[/Widget: {$widget->getName()}]-->" . PHP_EOL;
-		}
+        if ($allowHTMLComments) {
+            $html .= PHP_EOL . "<!--[Widget: {$widget->getName()}]-->" . PHP_EOL;
+        }
 
-		return $html;
-	}
+        $html .= $this->getWidgetTemplate($preparedData)->render();
 
-	/**
-	 * @param array $preparedData
-	 * @return View
-	 */
-	protected function getWidgetTemplate(array $preparedData)
-	{
-		$template = $this->getWidget()->getFrontendTemplate();
+        if ($allowHTMLComments) {
+            $html .= PHP_EOL . "<!--[/Widget: {$widget->getName()}]-->" . PHP_EOL;
+        }
 
-		// Если не указан шаблон и указан шаблон по умолчанию
-		if (is_null($template) and !is_null($template = $this->getWidget()->getDefaultFrontendTemplate()))
-		{
-			if ($template instanceof View)
-			{
-				return $template->with($preparedData);
-			}
+        return $html;
+    }
 
-			return view($template)->with($preparedData);
-		}
 
-		if (!is_null($template))
-		{
-			if ($template instanceof View)
-			{
-				return $template->with($preparedData);
-			}
-			else if($template instanceof ViewPHP)
-			{
-				return $template->with($preparedData);
-			}
+    /**
+     * @param array $preparedData
+     *
+     * @return View
+     */
+    protected function getWidgetTemplate(array $preparedData)
+    {
+        $template = $this->getWidget()->getFrontendTemplate();
 
-			if ($snippet = (new SnippetCollection)->findFile($template))
-			{
-				return $snippet->toView($preparedData);
-			}
-		}
+        // Если не указан шаблон и указан шаблон по умолчанию
+        if (is_null($template) and ! is_null($template = $this->getWidget()->getDefaultFrontendTemplate())) {
+            if ($template instanceof View) {
+                return $template->with($preparedData);
+            }
 
-		return view('widgets::widgets.default', $preparedData);
-	}
+            return view($template)->with($preparedData);
+        }
+
+        if ( ! is_null($template)) {
+            if ($template instanceof View) {
+                return $template->with($preparedData);
+            } else if ($template instanceof ViewPHP) {
+                return $template->with($preparedData);
+            }
+
+            if ($snippet = (new SnippetCollection)->findFile($template)) {
+                return $snippet->toView($preparedData);
+            }
+        }
+
+        return view('widgets::widgets.default', $preparedData);
+    }
 }

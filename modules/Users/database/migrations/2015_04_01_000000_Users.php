@@ -5,30 +5,32 @@ use Illuminate\Database\Schema\Blueprint;
 
 class Users extends Migration
 {
-	public function up()
-	{
-		Schema::create('users', function (Blueprint $table) {
-			$table->increments('id');
 
-			$table->string('email', 127)->unique();
-			$table->string('username', 32)->unique();
+    public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->increments('id');
 
-			$table->char('password', 64);
+            $table->string('email', 127)->unique();
+            $table->string('username', 32)->unique();
 
-			$table->integer('logins')->default(0);
-			$table->integer('last_login')->nullable();
+            $table->char('password', 64);
 
-			$table->string('locale', 5)->default(config('app.locale'));
+            $table->integer('logins')->default(0);
+            $table->integer('last_login')->nullable();
 
-			$table->string('avatar', 100);
+            $table->string('locale', 5)->default(config('app.locale'));
 
-			$table->rememberToken();
-			$table->timestamps();
-		});
-	}
+            $table->string('avatar', 100);
 
-	public function down()
-	{
-		Schema::dropIfExists('users');
-	}
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
+
+
+    public function down()
+    {
+        Schema::dropIfExists('users');
+    }
 }

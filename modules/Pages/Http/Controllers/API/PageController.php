@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Pages\Http\Controllers\API;
+<?php
+namespace KodiCMS\Pages\Http\Controllers\API;
 
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Repository\PageRepository;
@@ -9,113 +10,118 @@ use KodiCMS\API\Http\Controllers\System\Controller as APIController;
 
 class PageController extends APIController
 {
-	/**
-	 * @param PageRepository $repository
-	 */
-	public function getChildren(PageRepository $repository)
-	{
-		$parentId = (int) $this->getRequiredParameter('parent_id');
-		$level = (int) $this->getParameter('level');
 
-		$this->setContent($this->_children($repository, $parentId, $level));
-	}
+    /**
+     * @param PageRepository $repository
+     */
+    public function getChildren(PageRepository $repository)
+    {
+        $parentId = (int) $this->getRequiredParameter('parent_id');
+        $level    = (int) $this->getParameter('level');
 
-	/**
-	 * @param PageRepository $repository
-	 * @param integer $parentId
-	 * @param integer $level
-	 * @return null|string
-	 */
-	protected function _children(PageRepository $repository, $parentId, $level)
-	{
-		$expandedRows = UserMeta::get('expanded_pages', []);
+        $this->setContent($this->_children($repository, $parentId, $level));
+    }
 
-		$page = $repository->find($parentId);
 
-		if (is_null($page))
-		{
-			return null;
-		}
+    /**
+     * @param PageRepository $repository
+     * @param integer        $parentId
+     * @param integer        $level
+     *
+     * @return null|string
+     */
+    protected function _children(PageRepository $repository, $parentId, $level)
+    {
+        $expandedRows = UserMeta::get('expanded_pages', []);
 
-		$childrens = $repository->getChildrenByPageId($parentId);
+        $page = $repository->find($parentId);
 
-		foreach ($childrens as $id => $child)
-		{
-			$childrens[$id]->hasChildren = $child->hasChildren();
-			$childrens[$id]->isExpanded = in_array($child->id, $expandedRows);
+        if (is_null($page)) {
+            return null;
+        }
 
-			if ($childrens[$id]->isExpanded === true)
-			{
-				$childrens[$id]->childrenRows = $this->_children($repository, $child->id, $level + 1);
-			}
-		}
+        $children = $repository->getChildrenByPageId($parentId);
 
-		return view('pages::pages.children', [
-			'childrens' => $childrens,
-			'level'     => $level + 1
-		])->render();
-	}
+        foreach ($children as $id => $child) {
+            $children[$id]->hasChildren = $child->hasChildren();
+            $children[$id]->isExpanded  = in_array($child->id, $expandedRows);
 
-	/**
-	 * @param PageRepository $repository
-	 */
-	public function getReorder(PageRepository $repository)
-	{
-		$pages = $repository->getSitemap(true)->asArray();
+            if ($children[$id]->isExpanded === true) {
+                $children[$id]->childrenRows = $this->_children($repository, $child->id, $level + 1);
+            }
+        }
 
-		$this->setContent(view('pages::pages.reorder', [
-			'pages' => $pages
-		]));
-	}
+        return view('pages::pages.children', [
+            'children' => $children,
+            'level'     => $level + 1,
+        ])->render();
+    }
 
-	/**
-	 * @param PageRepository $repository
-	 */
-	public function postReorder(PageRepository $repository)
-	{
-		$pages = $this->getRequiredParameter('pids', []);
 
-		if (empty($pages)) return;
+    /**
+     * @param PageRepository $repository
+     */
+    public function getReorder(PageRepository $repository)
+    {
+        $pages = $repository->getSitemap(true)->asArray();
 
-		$this->setContent($repository->reorder($pages));
-	}
+        $this->setContent(view('pages::pages.reorder', [
+            'pages' => $pages,
+        ]));
+    }
 
-	/**
-	 * @param PageRepository $repository
-	 */
-	public function postChangeStatus(PageRepository $repository)
-	{
-		$pageId = $this->getRequiredParameter('page_id');
-		$value = $this->getRequiredParameter('value');
 
-		$page = $repository->update($pageId, [
-			'status' => $value
-		]);
+    /**
+     * @param PageRepository $repository
+     */
+    public function postReorder(PageRepository $repository)
+    {
+        $pages = $this->getRequiredParameter('pids', []);
 
-		$this->setContent($page->getStatus());
-	}
+        if (empty( $pages )) {
+            return;
+        }
 
-	/**
-	 * @param PageRepository $repository
-	 */
-	public function getSearch(PageRepository $repository)
-	{
-		$query = trim($this->getRequiredParameter('search'));
+        $this->setContent($repository->reorder($pages));
+    }
 
-		$pages = $repository->searchByKeyword($query);
-		$childrens = [];
 
-		foreach ($pages as $page)
-		{
-			$page->isExpanded = false;
-			$page->hasChildren = false;
+    /**
+     * @param PageRepository $repository
+     */
+    public function postChangeStatus(PageRepository $repository)
+    {
+        $pageId = $this->getRequiredParameter('page_id');
+        $value  = $this->getRequiredParameter('value');
 
-			$childrens[] = $page;
-		}
+        $page = $repository->update($pageId, [
+            'status' => $value,
+        ]);
 
-		$this->setContent(view('pages::pages.children', [
-			'childrens' => $childrens,
-			'level'     => 0
-		]));
-	}
+        $this->setContent($page->getStatus());
+    }
+
+
+    /**
+     * @param PageRepository $repository
+     */
+    public function getSearch(PageRepository $repository)
+    {
+        $query = trim($this->getRequiredParameter('search'));
+
+        $pages    = $repository->searchByKeyword($query);
+        $children = [];
+
+        foreach ($pages as $page) {
+            $page->isExpanded  = false;
+            $page->hasChildren = false;
+
+            $children[] = $page;
+        }
+
+        $this->setContent(view('pages::pages.children', [
+            'children' => $children,
+            'level'     => 0,
+        ]));
+    }
 }

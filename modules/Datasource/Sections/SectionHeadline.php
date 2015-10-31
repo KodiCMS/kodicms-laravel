@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Datasource\Sections;
+<?php
+namespace KodiCMS\Datasource\Sections;
 
 use Illuminate\Http\JsonResponse;
 use KodiCMS\Datasource\Contracts\SectionInterface;
@@ -6,169 +7,167 @@ use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
 class SectionHeadline implements SectionHeadlineInterface
 {
-	/**
-	 * @var SectionInterface
-	 */
-	protected $section;
 
-	/**
-	 * @var array
-	 */
-	protected $fields = null;
+    /**
+     * @var SectionInterface
+     */
+    protected $section;
 
-	/**
-	 * @var integer
-	 */
-	protected $perPage = 20;
+    /**
+     * @var array
+     */
+    protected $fields = null;
 
-	/**
-	 * @var integer
-	 */
-	protected $currentPage;
+    /**
+     * @var integer
+     */
+    protected $perPage = 20;
 
-	/**
-	 * @var integer
-	 */
-	protected $offset = 0;
+    /**
+     * @var integer
+     */
+    protected $currentPage;
 
-	/**
-	 * @var string
-	 */
-	protected $template = 'datasource::section.headline';
+    /**
+     * @var integer
+     */
+    protected $offset = 0;
 
-	/**
-	 * @param SectionInterface $section
-	 */
-	public function __construct(SectionInterface $section)
-	{
-		$this->section = $section;
-	}
+    /**
+     * @var string
+     */
+    protected $template = 'datasource::section.headline';
 
-	/**
-	 * @return array
-	 */
-	public function getHeadlineFields()
-	{
-		if (!is_null($this->fields))
-		{
-			return $this->fields;
-		}
 
-		$this->fields = [];
+    /**
+     * @param SectionInterface $section
+     */
+    public function __construct(SectionInterface $section)
+    {
+        $this->section = $section;
+    }
 
-		foreach ($this->section->getFields() as $field)
-		{
-			if (!$field->isVisible())
-			{
-				continue;
-			}
 
-			$this->fields[$field->getKey()] = $field->getHeadlineParameters($this);
+    /**
+     * @return array
+     */
+    public function getHeadlineFields()
+    {
+        if ( ! is_null($this->fields)) {
+            return $this->fields;
+        }
 
-			if ($this->section->getDocumentTitleKey() == $field->getDBKey())
-			{
-				$this->fields[$field->getKey()]['type'] = 'link';
-			}
-		}
+        $this->fields = [];
 
-		return $this->fields;
-	}
+        foreach ($this->section->getFields() as $field) {
+            if ( ! $field->isVisible()) {
+                continue;
+            }
 
-	/**
-	 * @return array
-	 */
-	public function getActiveFieldIds()
-	{
-		$fields = [];
-		foreach ($this->section->getFields() as $field)
-		{
-			if (!$field->isVisible())
-			{
-				continue;
-			}
+            $this->fields[$field->getKey()] = $field->getHeadlineParameters($this);
 
-			$fields[] = $field->getDBKey();
-		}
+            if ($this->section->getDocumentTitleKey() == $field->getDBKey()) {
+                $this->fields[$field->getKey()]['type'] = 'link';
+            }
+        }
 
-		return $fields;
-	}
+        return $this->fields;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getSearchableFields()
-	{
-		$fields = array_filter($this->section->getFields(), function ($field)
-		{
-			return $field->isVisible() and $field->isSearchable();
-		});
 
-		return array_map(function ($field)
-		{
-			return $field->getName();
-		}, $fields);
-	}
+    /**
+     * @return array
+     */
+    public function getActiveFieldIds()
+    {
+        $fields = [];
+        foreach ($this->section->getFields() as $field) {
+            if ( ! $field->isVisible()) {
+                continue;
+            }
 
-	/**
-	 * @return array
-	 */
-	public function getOrderingRules()
-	{
-		return $this->section->getHeadlineOrdering();
-	}
+            $fields[] = $field->getDBKey();
+        }
 
-	/**
-	 * @return array
-	 */
-	public function getDocuments()
-	{
-		return $this->section->getEmptyDocument()
-			->getDocuments($this->getActiveFieldIds(), $this->getOrderingRules())
-			->paginate();
-	}
+        return $fields;
+    }
 
-	/**
-	 * @return JsonResponse
-	 */
-	public function JsonResponse()
-	{
-		return new JsonResponse($this->render());
-	}
 
-	/**
-	 * @param string|null $template
-	 *
-	 * @return \Illuminate\View\View
-	 */
-	public function render($template = null)
-	{
-		if (is_null($template))
-		{
-			if (method_exists($this->section, 'getHeadlineTemplate'))
-			{
-				$template = $this->section->getHeadlineTemplate();
-			}
-			else
-			{
-				$template = $template = $this->template;;
-			}
-		}
+    /**
+     * @return array
+     */
+    public function getSearchableFields()
+    {
+        $fields = array_filter($this->section->getFields(), function ($field) {
+            return $field->isVisible() and $field->isSearchable();
+        });
 
-		return view($template, [
-			'fieldParams' => $this->getHeadlineFields(),
-			'items' => $this->getDocuments(),
-			'section' => $this->section
-		])->render();
-	}
+        return array_map(function ($field) {
+            return $field->getName();
+        }, $fields);
+    }
 
-	/**
-	 * @return \Illuminate\View\View
-	 */
-	public function renderOrderSettings()
-	{
-		return view('datasource::widgets.partials.ordering', [
-			'ordering' => $this->getOrderingRules(),
-			'fields' => $this->section->getFields()
-		])->render();
-	}
+
+    /**
+     * @return array
+     */
+    public function getOrderingRules()
+    {
+        return $this->section->getHeadlineOrdering();
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getDocuments()
+    {
+        return $this->section->getEmptyDocument()
+            ->getDocuments($this->getActiveFieldIds(), $this->getOrderingRules())
+            ->paginate();
+    }
+
+
+    /**
+     * @return JsonResponse
+     */
+    public function JsonResponse()
+    {
+        return new JsonResponse($this->render());
+    }
+
+
+    /**
+     * @param string|null $template
+     *
+     * @return \Illuminate\View\View
+     */
+    public function render($template = null)
+    {
+        if (is_null($template)) {
+            if (method_exists($this->section, 'getHeadlineTemplate')) {
+                $template = $this->section->getHeadlineTemplate();
+            } else {
+                $template = $template = $this->template;;
+            }
+        }
+
+        return view($template, [
+            'fieldParams' => $this->getHeadlineFields(),
+            'items'       => $this->getDocuments(),
+            'section'     => $this->section,
+        ])->render();
+    }
+
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function renderOrderSettings()
+    {
+        return view('datasource::widgets.partials.ordering', [
+            'ordering' => $this->getOrderingRules(),
+            'fields'   => $this->section->getFields(),
+        ])->render();
+    }
 }

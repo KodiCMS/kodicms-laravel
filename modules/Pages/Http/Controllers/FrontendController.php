@@ -11,9 +11,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class FrontendController extends FrontPageController
 {
 
+    /**
+     * @param string $slug
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View|null
+     * @throws PageNotFoundException
+     * @throws \KodiCMS\Pages\Exceptions\LayoutNotFoundException
+     */
     public function run($slug)
     {
-        event('frontend.requested', [ $slug ]);
+        event('frontend.requested', [$slug]);
 
         $frontPage       = FrontendPage::findByUri($slug);
         $notFoundMessage = trans('pages::core.messages.not_found');
@@ -23,7 +30,7 @@ class FrontendController extends FrontPageController
                 return redirect($frontPage->getRedirectUrl(), 301);
             } else {
                 try {
-                    event('frontend.found', [ $frontPage ]);
+                    event('frontend.found', [$frontPage]);
 
                     return $this->render($frontPage->getLayoutView(), $frontPage->getMime());
                 } catch (NotFoundHttpException $e) {
@@ -39,7 +46,7 @@ class FrontendController extends FrontPageController
             return redirect($uri, 301);
         }
 
-        event('frontend.not_found', [ $slug ]);
+        event('frontend.not_found', [$slug]);
         throw new PageNotFoundException($notFoundMessage);
     }
 }

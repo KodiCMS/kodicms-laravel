@@ -1,5 +1,9 @@
-<?php namespace KodiCMS\Installer\Exceptions;
+<?php
+namespace KodiCMS\Installer\Exceptions;
 
 use KodiCMS\CMS\Exceptions\Exception;
 
-class InstallException extends Exception {}
+class InstallException extends Exception
+{
+
+}

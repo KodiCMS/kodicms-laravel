@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Pages;
+<?php
+namespace KodiCMS\Pages;
 
 use Carbon\Carbon;
 use KodiCMS\Pages\Model\FrontendPage;
@@ -8,98 +9,101 @@ use Cache;
 
 class PagePart
 {
-	/**
-	 *
-	 * @var array
-	 */
-	protected static $cached = [];
 
-	/**
-	 * @param FrontendPage $page
-	 * @param string $part
-	 * @param boolean $inherit
-	 * @return boolean
-	 */
-	public static function exists(FrontendPage $page, $part, $inherit = false)
-	{
-		$parts = static::loadPartsbyPageId($page->getId());
+    /**
+     *
+     * @var array
+     */
+    protected static $cached = [];
 
-		if (isset($parts[$page->getId()][$part]))
-		{
-			return $parts[$page->getId()][$part];
-		}
-		else if ($inherit !== false AND ($parent = $page->getParent()) instanceof FrontendPage)
-		{
-			return static::exists($parent, $part, true);
-		}
 
-		return false;
-	}
+    /**
+     * @param FrontendPage $page
+     * @param string       $part
+     * @param boolean      $inherit
+     *
+     * @return boolean
+     */
+    public static function exists(FrontendPage $page, $part, $inherit = false)
+    {
+        $parts = static::loadPartsbyPageId($page->getId());
 
-	/**
-	 * @param FrontendPage $page
-	 * @param string $part
-	 * @param boolean $inherit
-	 * @return string|null
-	 */
-	public static function getContent(FrontendPage $page, $part = 'body', $inherit = false)
-	{
-		if (static::exists($page, $part))
-		{
-			return static::get($page->getId(), $part);
-		}
-		else if ($inherit !== false AND ($parent = $page->getParent()) instanceof FrontendPage)
-		{
-			return static::getContent($parent, $part, true);
-		}
+        if (isset( $parts[$page->getId()][$part] )) {
+            return $parts[$page->getId()][$part];
+        } else if ($inherit !== false AND ( $parent = $page->getParent() ) instanceof FrontendPage) {
+            return static::exists($parent, $part, true);
+        }
 
-		return null;
-	}
+        return false;
+    }
 
-	/**
-	 * @param FrontendPage|integer $page
-	 * @param string $part
-	 * @return string
-	 */
-	public static function get($page, $part)
-	{
-		$html = null;
 
-		$pageId = ($page instanceof FrontendPage) ? $page->getId() : (int)$page;
+    /**
+     * @param FrontendPage $page
+     * @param string       $part
+     * @param boolean      $inherit
+     *
+     * @return string|null
+     */
+    public static function getContent(FrontendPage $page, $part = 'body', $inherit = false)
+    {
+        if (static::exists($page, $part)) {
+            return static::get($page->getId(), $part);
+        } else if ($inherit !== false AND ( $parent = $page->getParent() ) instanceof FrontendPage) {
+            return static::getContent($parent, $part, true);
+        }
 
-		$parts = static::loadPartsByPageId($pageId);
+        return null;
+    }
 
-		if (empty($parts[$pageId][$part]))
-		{
-			return null;
-		}
 
-		return array_get($parts, implode('.', [$pageId, $part, 'content_html']));
-	}
+    /**
+     * @param FrontendPage|integer $page
+     * @param string               $part
+     *
+     * @return string
+     */
+    public static function get($page, $part)
+    {
+        $html = null;
 
-	/**
-	 * TODO: добавить кеширование на основе тегов
-	 * @param integer $pageId
-	 * @return array|null
-	 */
-	final private static function loadPartsByPageId($pageId)
-	{
-		if (!array_key_exists($pageId, static::$cached))
-		{
-			self::$cached[$pageId] = Cache::remember("pageParts::{$pageId}", Carbon::now()->addHour(1), function () use ($pageId)
-			{
-				$parts = PagePartModel::select('id', 'name', 'content', 'content_html')->where('page_id', $pageId)->get();
+        $pageId = ( $page instanceof FrontendPage ) ? $page->getId() : (int) $page;
 
-				$return = [];
-				foreach($parts as $part)
-				{
-					$return[$pageId][$part->name] = $part->toArray();
-				}
+        $parts = static::loadPartsByPageId($pageId);
 
-				return $return;
-			});
-		}
+        if (empty( $parts[$pageId][$part] )) {
+            return null;
+        }
 
-		return self::$cached[$pageId];
-	}
+        return array_get($parts, implode('.', [$pageId, $part, 'content_html']));
+    }
+
+
+    /**
+     * TODO: добавить кеширование на основе тегов
+     *
+     * @param integer $pageId
+     *
+     * @return array|null
+     */
+    final private static function loadPartsByPageId($pageId)
+    {
+        if ( ! array_key_exists($pageId, static::$cached)) {
+            self::$cached[$pageId] = Cache::remember("pageParts::{$pageId}", Carbon::now()->addHour(1), function () use
+            (
+                $pageId
+            ) {
+                $parts = PagePartModel::select('id', 'name', 'content', 'content_html')->where('page_id', $pageId)->get();
+
+                $return = [];
+                foreach ($parts as $part) {
+                    $return[$pageId][$part->name] = $part->toArray();
+                }
+
+                return $return;
+            });
+        }
+
+        return self::$cached[$pageId];
+    }
 }

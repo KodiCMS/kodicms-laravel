@@ -1,7 +1,7 @@
 <?php
 return [
-	'dashboard' => [
-		'backend.dashboard',
-		'backend.dashboard.manage'
-	]
+    'dashboard' => [
+        'backend.dashboard',
+        'backend.dashboard.manage',
+    ],
 ];

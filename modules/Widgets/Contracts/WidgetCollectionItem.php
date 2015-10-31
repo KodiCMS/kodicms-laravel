@@ -1,30 +1,36 @@
-<?php namespace KodiCMS\Widgets\Contracts;
+<?php
+namespace KodiCMS\Widgets\Contracts;
 
-interface WidgetCollectionItem {
+interface WidgetCollectionItem
+{
 
-	/**
-	 * @param Widget $widget
-	 * @param string $block
-	 */
-	public function __construct(Widget $widget, $block);
+    /**
+     * @param Widget $widget
+     * @param string $block
+     */
+    public function __construct(Widget $widget, $block);
 
-	/**
-	 * @return Widget
-	 */
-	public function getObject();
 
-	/**
-	 * @return string
-	 */
-	public function getBlock();
+    /**
+     * @return Widget
+     */
+    public function getObject();
 
-	/**
-	 * @return int
-	 */
-	public function getPosition();
 
-	/**
-	 * @param $position
-	 */
-	public function setPosition($position);
+    /**
+     * @return string
+     */
+    public function getBlock();
+
+
+    /**
+     * @return int
+     */
+    public function getPosition();
+
+
+    /**
+     * @param $position
+     */
+    public function setPosition($position);
 }

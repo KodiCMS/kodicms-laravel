@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Pages\Widget;
+<?php
+namespace KodiCMS\Pages\Widget;
 
 use KodiCMS\Pages\Model\PageSitemap;
 use KodiCMS\Widgets\Contracts\WidgetCacheable;
@@ -9,59 +10,61 @@ use Frontpage;
 
 class PageBreadcrumbs extends Decorator implements WidgetCacheable
 {
-	use WidgetCache;
 
-	/**
-	 * @var array
-	 */
-	protected $settings = [
-		'cache_tags' => ['pages'],
-		'excluded_pages' => []
-	];
+    use WidgetCache;
 
-	/**
-	 * @var string
-	 */
-	protected $defaultFrontendTemplate = 'pages::widgets.page_breadcrumbs.default';
+    /**
+     * @var array
+     */
+    protected $settings = [
+        'cache_tags'     => ['pages'],
+        'excluded_pages' => [],
+    ];
 
-	/**
-	 * @var string
-	 */
-	protected $settingsTemplate = 'pages::widgets.page_breadcrumbs.settings';
+    /**
+     * @var string
+     */
+    protected $defaultFrontendTemplate = 'pages::widgets.page_breadcrumbs.default';
 
-	/**
-	 * @param array $pages
-	 */
-	public function setSettingExcludedPages(array $pages)
-	{
-		$this->settings['excluded_pages'] =  $pages;
-	}
+    /**
+     * @var string
+     */
+    protected $settingsTemplate = 'pages::widgets.page_breadcrumbs.settings';
 
-	/**
-	 * @return array
-	 */
-	public function prepareSettingsData()
-	{
-		$pageSitemap = PageSitemap::get(true);
-		return compact('pageSitemap');
-	}
 
-	/**
-	 * @return array [[KodiCMS\CMS\Breadcrumbs\Collection] $breadcrumbs]
-	 */
-	public function prepareData()
-	{
-		if (($breadcrumbs = Frontpage::getBreadcrumbs()) instanceof Breadcrumbs)
-		{
-			if (count($this->excluded_pages) > 0)
-			{
-				foreach($this->excluded_pages as $id)
-				{
-					$breadcrumbs->deleteBy('id', $id);
-				}
-			}
-		}
+    /**
+     * @param array $pages
+     */
+    public function setSettingExcludedPages(array $pages)
+    {
+        $this->settings['excluded_pages'] = $pages;
+    }
 
-		return compact('breadcrumbs');
-	}
+
+    /**
+     * @return array
+     */
+    public function prepareSettingsData()
+    {
+        $pageSitemap = PageSitemap::get(true);
+
+        return compact('pageSitemap');
+    }
+
+
+    /**
+     * @return array [[KodiCMS\CMS\Breadcrumbs\Collection] $breadcrumbs]
+     */
+    public function prepareData()
+    {
+        if (( $breadcrumbs = Frontpage::getBreadcrumbs() ) instanceof Breadcrumbs) {
+            if (count($this->excluded_pages) > 0) {
+                foreach ($this->excluded_pages as $id) {
+                    $breadcrumbs->deleteBy('id', $id);
+                }
+            }
+        }
+
+        return compact('breadcrumbs');
+    }
 }

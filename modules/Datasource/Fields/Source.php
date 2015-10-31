@@ -1,9 +1,11 @@
-<?php namespace KodiCMS\Datasource\Fields;
+<?php
+namespace KodiCMS\Datasource\Fields;
 
 class Source extends Primitive
 {
-	/**
-	 * @var bool
-	 */
-	protected $isOrderable = false;
+
+    /**
+     * @var bool
+     */
+    protected $isOrderable = false;
 }

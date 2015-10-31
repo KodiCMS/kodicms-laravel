@@ -1,4 +1,4 @@
 <?php
 return [
-	'title' => 'Articles'
+    'title' => 'Articles',
 ];

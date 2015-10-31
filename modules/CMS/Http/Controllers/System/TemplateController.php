@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\CMS\Http\Controllers\System;
+<?php
+namespace KodiCMS\CMS\Http\Controllers\System;
 
 use App;
 use Lang;
@@ -10,206 +11,208 @@ use Illuminate\Contracts\Support\Arrayable;
 
 class TemplateController extends Controller
 {
-	/**
-	 * @var  \View  page template
-	 */
-	public $template = 'cms::app.backend';
 
-	/**
-	 * @var  boolean  auto render template
-	 **/
-	public $autoRender = true;
+    /**
+     * @var  \View  page template
+     */
+    public $template = 'cms::app.backend';
 
-	/**
-	 * @var boolean
-	 */
-	public $onlyContent = false;
+    /**
+     * @var  boolean  auto render template
+     **/
+    public $autoRender = true;
 
-	/**
-	 * @var array
-	 */
-	public $templateScripts = [];
+    /**
+     * @var boolean
+     */
+    public $onlyContent = false;
 
-	/**
-	 * @param $view
-	 * @param array $data
-	 * @return View
-	 */
-	public function setContent($view, array $data = [])
-	{
-		if (!is_null($this->template))
-		{
-			$content = view($this->wrapNamespace($view), $data);
-			$this->template->with('content', $content);
+    /**
+     * @var array
+     */
+    public $templateScripts = [];
 
-			return $content;
-		}
 
-		return view($this->wrapNamespace($view), $data);
-	}
+    /**
+     * @param string $view
+     * @param array  $data
+     *
+     * @return View
+     */
+    public function setContent($view, array $data = [])
+    {
+        if ( ! is_null($this->template)) {
+            $content = view($this->wrapNamespace($view), $data);
+            $this->template->with('content', $content);
 
-	public function before()
-	{
-		parent::before();
+            return $content;
+        }
 
-		if ($this->autoRender === TRUE)
-		{
-			$this->registerMedia();
-		}
+        return view($this->wrapNamespace($view), $data);
+    }
 
-		View::share('adminDir', backend_url());
-		View::share('controllerAction', $this->getCurrentAction());
-		View::share('currentUser', $this->currentUser);
-		View::share('requestType', $this->requestType);
 
-		// Todo: подумать нужно ли передавать во view название модуля
-		//View::share('currentModule', substr($this->getModuleNamespace(), 0, -2));
-	}
+    public function before()
+    {
+        parent::before();
 
-	public function after()
-	{
-		parent::after();
+        if ($this->autoRender === true) {
+            $this->registerMedia();
+        }
 
-		if ($this->autoRender === TRUE)
-		{
-			if ($this->onlyContent)
-			{
-				$this->template = $this->template->content;
-			}
-			else
-			{
-				Assets::group('global', 'templateScripts', '<script type="text/javascript">' . $this->getTemplateScriptsAsString() . '</script>', 'global');
-			}
-		}
-	}
+        View::share('adminDir', backend_url());
+        View::share('controllerAction', $this->getCurrentAction());
+        View::share('currentUser', $this->currentUser);
+        View::share('requestType', $this->requestType);
 
-	public function registerMedia()
-	{
-		$this->templateScripts = [
-			'CURRENT_URL' => $this->request->url(),
-			'SITE_URL' => url(),
-			'BASE_URL' => url(backend_url()),
-			'BACKEND_PATH' => backend_url(),
-			'BACKEND_RESOURCES' => App::backendResourcesURL(),
-			'PUBLIC_URL' => url(),
-			'LOCALE' => Lang::getLocale(),
-			'ROUTE' => !is_null($this->getRouter()) ? $this->getRouter()->currentRouteAction() : null,
-			'ROUTE_PATH' => $this->getRouterPath(),
-			'REQUEST_TYPE' => $this->requestType,
-			'USER_ID' => \Auth::id(),
-			'MESSAGE_ERRORS' => view()->shared('errors')->getBag('default'),
-			'MESSAGE_SUCCESS' => (array) $this->session->get('success', []),
-		];
-	}
+        // Todo: подумать нужно ли передавать во view название модуля
+        //View::share('currentModule', substr($this->getModuleNamespace(), 0, -2));
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getTemplateScriptsAsString()
-	{
-		$scrpit = '';
-		foreach ($this->templateScripts as $var => $value)
-		{
 
-			if ($value instanceof Jsonable)
-			{
-				$value = $value->toJson();
-			}
-			else if ($value instanceof Arrayable)
-			{
-				$value = json_encode($value->toArray());
-			}
-			else
-			{
-				$value = json_encode($value);
-			}
+    public function after()
+    {
+        parent::after();
 
-			$scrpit .= "var {$var} = {$value};\n";
-		}
+        if ($this->autoRender === true) {
+            if ($this->onlyContent) {
+                $this->template = $this->template->content;
+            } else {
+                Assets::group('global', 'templateScripts', '<script type="text/javascript">' . $this->getTemplateScriptsAsString() . '</script>', 'global');
+            }
+        }
+    }
 
-		return $scrpit;
-	}
 
-	/**
-	 * @param string $key
-	 * @param string $file
-	 */
-	public function includeMergedMediaFile($key, $file)
-	{
-		$mediaContent = '<script type="text/javascript">' . Assets::mergeFiles($file, 'js') . "</script>";
-		Assets::group('global', $key, $mediaContent, 'global');
-	}
+    public function registerMedia()
+    {
+        $this->templateScripts = [
+            'CURRENT_URL'       => $this->request->url(),
+            'SITE_URL'          => url(),
+            'BASE_URL'          => url(backend_url()),
+            'BACKEND_PATH'      => backend_url(),
+            'BACKEND_RESOURCES' => App::backendResourcesURL(),
+            'PUBLIC_URL'        => url(),
+            'LOCALE'            => Lang::getLocale(),
+            'ROUTE'             => ! is_null($this->getRouter()) ? $this->getRouter()->currentRouteAction() : null,
+            'ROUTE_PATH'        => $this->getRouterPath(),
+            'REQUEST_TYPE'      => $this->requestType,
+            'USER_ID'           => \Auth::id(),
+            'MESSAGE_ERRORS'    => view()->shared('errors')->getBag('default'),
+            'MESSAGE_SUCCESS'   => (array) $this->session->get('success', []),
+        ];
+    }
 
-	/**
-	 * @param $filename
-	 */
-	public function includeModuleMediaFile($filename)
-	{
-		if (ModulesFileSystem::findFile('resources/js', $filename, 'js'))
-		{
-			Assets::js('include.' . $filename, backend_resources_url("/js/$filename.js"), 'core', false);
-		}
-	}
 
-	/**
-	 * Execute an action on the controller.
-	 *
-	 * @param  string $method
-	 * @param  array $parameters
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	public function callAction($method, $parameters)
-	{
-		if ($this->autoRender === true)
-		{
-			$this->setupLayout();
-		}
+    /**
+     * @return string
+     */
+    public function getTemplateScriptsAsString()
+    {
+        $script = '';
+        foreach ($this->templateScripts as $var => $value) {
 
-		$response = parent::callAction($method, $parameters);
+            if ($value instanceof Jsonable) {
+                $value = $value->toJson();
+            } else if ($value instanceof Arrayable) {
+                $value = json_encode($value->toArray());
+            } else {
+                $value = json_encode($value);
+            }
 
-		if (is_null($response) && $this->autoRender === true && !is_null($this->template))
-		{
-			$response = $this->response->setContent($this->template);
-		}
+            $script .= "var {$var} = {$value};\n";
+        }
 
-		return $response;
-	}
+        return $script;
+    }
 
-	/**
-	 * Setup the layout used by the controller.
-	 *
-	 * @return $this
-	 */
-	protected function setupLayout()
-	{
-		if (!is_null($this->template))
-		{
-			$this->template = view($this->template);
-		}
 
-		return $this;
-	}
+    /**
+     * @param string $key
+     * @param string $file
+     */
+    public function includeMergedMediaFile($key, $file)
+    {
+        $mediaContent = '<script type="text/javascript">' . Assets::mergeFiles($file, 'js') . "</script>";
+        Assets::group('global', $key, $mediaContent, 'global');
+    }
 
-	/**
-	 * Set the layout used by the controller.
-	 *
-	 * @param $name
-	 * @return $this
-	 */
-	protected function setLayout($name)
-	{
-		$this->template = $name;
-		return $this;
-	}
 
-	/**
-	 * @param $title
-	 * @return $this
-	 */
-	protected function setTitle($title)
-	{
-		// Initialize empty values
-		$this->template->with('title', $title);
-		return $this;
-	}
+    /**
+     * @param $filename
+     */
+    public function includeModuleMediaFile($filename)
+    {
+        if (ModulesFileSystem::findFile('resources/js', $filename, 'js')) {
+            Assets::js('include.' . $filename, backend_resources_url("/js/$filename.js"), 'core', false);
+        }
+    }
+
+
+    /**
+     * Execute an action on the controller.
+     *
+     * @param  string $method
+     * @param  array  $parameters
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function callAction($method, $parameters)
+    {
+        if ($this->autoRender === true) {
+            $this->setupLayout();
+        }
+
+        $response = parent::callAction($method, $parameters);
+
+        if (is_null($response) && $this->autoRender === true && ! is_null($this->template)) {
+            $response = $this->response->setContent($this->template);
+        }
+
+        return $response;
+    }
+
+
+    /**
+     * Setup the layout used by the controller.
+     *
+     * @return $this
+     */
+    protected function setupLayout()
+    {
+        if ( ! is_null($this->template)) {
+            $this->template = view($this->template);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * Set the layout used by the controller.
+     *
+     * @param $name
+     *
+     * @return $this
+     */
+    protected function setLayout($name)
+    {
+        $this->template = $name;
+
+        return $this;
+    }
+
+
+    /**
+     * @param $title
+     *
+     * @return $this
+     */
+    protected function setTitle($title)
+    {
+        // Initialize empty values
+        $this->template->with('title', $title);
+
+        return $this;
+    }
 }

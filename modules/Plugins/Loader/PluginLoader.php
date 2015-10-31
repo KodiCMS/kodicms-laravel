@@ -1,229 +1,233 @@
-<?php namespace KodiCMS\Plugins\Loader;
+<?php
+namespace KodiCMS\Plugins\Loader;
 
 use Artisan;
 use ModulesLoader;
 use KodiCMS\Plugins\Model\Plugin;
 use Illuminate\Filesystem\Filesystem;
 
-class PluginLoader {
+class PluginLoader
+{
 
-	/**
-	 * The filesystem instance.
-	 *
-	 * @var \Illuminate\Filesystem\Filesystem
-	 */
-	protected $files;
-	/**
-	 * @var string
-	 */
-	protected $path;
+    /**
+     * The filesystem instance.
+     *
+     * @var \Illuminate\Filesystem\Filesystem
+     */
+    protected $files;
 
-	/**
-	 * @var bool
-	 */
-	protected $init = false;
+    /**
+     * @var string
+     */
+    protected $path;
 
-	/**
-	 * @var array
-	 */
-	protected $activated = [];
+    /**
+     * @var bool
+     */
+    protected $init = false;
 
-	/**
-	 * @var array
-	 */
-	protected $foundPlugins = [];
+    /**
+     * @var array
+     */
+    protected $activated = [];
 
-	/**
-	 * @param Filesystem $files
-	 * @param string $path
-	 */
-	public function __construct(Filesystem $files, $path)
-	{
-		$this->path = $path;
-		$this->files = $files;
-	}
+    /**
+     * @var array
+     */
+    protected $foundPlugins = [];
 
-	/**
-	 * @return string
-	 */
-	public function getPath()
-	{
-		return $this->path;
-	}
 
-	public function init()
-	{
-		if($this->init) return;
+    /**
+     * @param Filesystem $files
+     * @param string     $path
+     */
+    public function __construct(Filesystem $files, $path)
+    {
+        $this->path  = $path;
+        $this->files = $files;
+    }
 
-		$this->loadActivated();
-		$this->init = true;
-	}
 
-	/**
-	 * @return array
-	 */
-	public function getActivated()
-	{
-		return $this->activated;
-	}
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function findPlugins()
-	{
-		foreach ($this->files->directories($this->getPath()) as $directory)
-		{
-			foreach ($this->files->directories($directory) as $plugin)
-			{
-				if (is_null($class = $this->initPlugin($plugin)))
-				{
-					continue;
-				}
 
-				$this->foundPlugins[] = $class;
-			}
-		}
+    public function init()
+    {
+        if ($this->init) {
+            return;
+        }
 
-		return $this->foundPlugins;
-	}
+        $this->loadActivated();
+        $this->init = true;
+    }
 
-	/**
-	 * @param $name
-	 * @return null|BasePluginContainer
-	 */
-	public function getPluginContainer($name)
-	{
-		foreach ($this->findPlugins() as $plugin)
-		{
-			if ($plugin->getName() == $name)
-			{
-				return $plugin;
-			}
-		}
 
-		return null;
-	}
+    /**
+     * @return array
+     */
+    public function getActivated()
+    {
+        return $this->activated;
+    }
 
-	/**
-	 * @param string $name
-	 * @return bool
-	 */
-	public function isActivated($name)
-	{
-		foreach($this->getActivated() as $plugin)
-		{
-			if ($plugin->getName() == $name)
-			{
-				return true;
-			}
-		}
 
-		return false;
-	}
+    /**
+     * @return array
+     */
+    public function findPlugins()
+    {
+        foreach ($this->files->directories($this->getPath()) as $directory) {
+            foreach ($this->files->directories($directory) as $plugin) {
+                if (is_null($class = $this->initPlugin($plugin))) {
+                    continue;
+                }
 
-	/**
-	 * @param string $name
-	 * @return bool
-	 */
-	public function activatePlugin($name)
-	{
-		$status = false;
-		if (!$this->isActivated($name) and !is_null($plugin = $this->getPluginContainer($name)))
-		{
-			$status = $plugin->activate();
+                $this->foundPlugins[] = $class;
+            }
+        }
 
-			if (app()->routesAreCached())
-			{
-				Artisan::call('route:cache');
-			}
+        return $this->foundPlugins;
+    }
 
-			$plugin->checkActivation();
-			$this->activated[get_class($plugin)] = $plugin;
-		}
 
-		return $status;
-	}
+    /**
+     * @param $name
+     *
+     * @return null|BasePluginContainer
+     */
+    public function getPluginContainer($name)
+    {
+        foreach ($this->findPlugins() as $plugin) {
+            if ($plugin->getName() == $name) {
+                return $plugin;
+            }
+        }
 
-	/**
-	 * @param string $name
-	 * @param bool $removeTable
-	 * @return bool
-	 */
-	public function deactivatePlugin($name, $removeTable = false)
-	{
-		$status = false;
-		if ($this->isActivated($name) and !is_null($plugin = $this->getPluginContainer($name)))
-		{
-			$status = $plugin->deactivate($removeTable);
+        return null;
+    }
 
-			if (app()->routesAreCached())
-			{
-				Artisan::call('route:cache');
-			}
 
-			$plugin->checkActivation();
-			unset($this->activated[get_class($plugin)]);
-		}
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function isActivated($name)
+    {
+        foreach ($this->getActivated() as $plugin) {
+            if ($plugin->getName() == $name) {
+                return true;
+            }
+        }
 
-		return $status;
-	}
+        return false;
+    }
 
-	/**
-	 * @param string $directory
-	 * @return BasePluginContainer|null
-	 */
-	protected function initPlugin($directory)
-	{
-		$pluginName = pathinfo($directory, PATHINFO_BASENAME);
-		$vendorName = pathinfo(pathinfo($directory, PATHINFO_DIRNAME), PATHINFO_BASENAME);
 
-		$namespace = "Plugins\\{$vendorName}\\{$pluginName}";
-		$class = "{$namespace}\\PluginContainer";
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function activatePlugin($name)
+    {
+        $status = false;
+        if ( ! $this->isActivated($name) and ! is_null($plugin = $this->getPluginContainer($name))) {
+            $status = $plugin->activate();
 
-		if (!class_exists($class))
-		{
-			return null;
-		}
+            if (app()->routesAreCached()) {
+                Artisan::call('route:cache');
+            }
 
-		if (isset($this->activated[$class]))
-		{
-			return $this->activated[$class];
-		}
+            $plugin->checkActivation();
+            $this->activated[get_class($plugin)] = $plugin;
+        }
 
-		return new $class($vendorName . ':' . $pluginName, $directory, $namespace);
-	}
+        return $status;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	protected function loadActivated()
-	{
-		$activated = Plugin::get();
 
-		foreach ($activated as $model)
-		{
-			if (
-				$this->files->isDirectory($model->path)
-				and
-				!is_null($pluginContainer = $this->initPlugin($model->path))
-			)
-			{
-				$this->activated[get_class($pluginContainer)] = $pluginContainer;
-				ModulesLoader::registerModule($pluginContainer);
+    /**
+     * @param string $name
+     * @param bool   $removeTable
+     *
+     * @return bool
+     */
+    public function deactivatePlugin($name, $removeTable = false)
+    {
+        $status = false;
+        if ($this->isActivated($name) and ! is_null($plugin = $this->getPluginContainer($name))) {
+            $status = $plugin->deactivate($removeTable);
 
-				$pluginContainer->checkActivation();
-				$pluginContainer->setSettings($model->settings);
-			}
-		}
-	}
+            if (app()->routesAreCached()) {
+                Artisan::call('route:cache');
+            }
 
-	/**
-	 * @param string $key
-	 * @return bool
-	 */
-	protected function pluginExists($key)
-	{
-		return $this->files->isDirectory($this->path . DIRECTORY_SEPARATOR . $key);
-	}
+            $plugin->checkActivation();
+            unset( $this->activated[get_class($plugin)] );
+        }
+
+        return $status;
+    }
+
+
+    /**
+     * @param string $directory
+     *
+     * @return BasePluginContainer|null
+     */
+    protected function initPlugin($directory)
+    {
+        $pluginName = pathinfo($directory, PATHINFO_BASENAME);
+        $vendorName = pathinfo(pathinfo($directory, PATHINFO_DIRNAME), PATHINFO_BASENAME);
+
+        $namespace = "Plugins\\{$vendorName}\\{$pluginName}";
+        $class     = "{$namespace}\\PluginContainer";
+
+        if ( ! class_exists($class)) {
+            return null;
+        }
+
+        if (isset( $this->activated[$class] )) {
+            return $this->activated[$class];
+        }
+
+        return new $class($vendorName . ':' . $pluginName, $directory, $namespace);
+    }
+
+
+    /**
+     * @return mixed
+     */
+    protected function loadActivated()
+    {
+        $activated = Plugin::get();
+
+        foreach ($activated as $model) {
+            if ($this->files->isDirectory($model->path) and ! is_null($pluginContainer = $this->initPlugin($model->path))) {
+                $this->activated[get_class($pluginContainer)] = $pluginContainer;
+                ModulesLoader::registerModule($pluginContainer);
+
+                $pluginContainer->checkActivation();
+                $pluginContainer->setSettings($model->settings);
+            }
+        }
+    }
+
+
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    protected function pluginExists($key)
+    {
+        return $this->files->isDirectory($this->path . DIRECTORY_SEPARATOR . $key);
+    }
 }

@@ -1,9 +1,11 @@
-<?php namespace Plugins\butschster\DSArticles;
+<?php
+namespace Plugins\butschster\DSArticles;
 
-class Document extends \KodiCMS\Datasource\Model\Document {
+class Document extends \KodiCMS\Datasource\Model\Document
+{
 
-	/**
-	 * @var string
-	 */
-	//protected $formTemplate = 'butschster:dsarticles::document_form';
+    /**
+     * @var string
+     */
+    //protected $formTemplate = 'butschster:dsarticles::document_form';
 }

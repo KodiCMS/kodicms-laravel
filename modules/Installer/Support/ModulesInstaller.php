@@ -1,208 +1,219 @@
-<?php namespace KodiCMS\Installer\Support;
+<?php
+namespace KodiCMS\Installer\Support;
 
 use App;
 use Schema;
-use KodiCMS\ModulesLoader\ModuleContainer;
+use KodiCMS\Support\Loader\ModuleContainer;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Database\Migrations\DatabaseMigrationRepository;
 
-class ModulesInstaller {
+class ModulesInstaller
+{
 
-	/**
-	 * @var array
-	 */
-	protected $_modules = [];
+    /**
+     * @var array
+     */
+    protected $_modules = [];
 
-	/**
-	 * @var Migrator
-	 */
-	protected $_migrator;
+    /**
+     * @var Migrator
+     */
+    protected $_migrator;
 
-	/**
-	 * @var DatabaseMigrationRepository
-	 */
-	protected $_repository;
+    /**
+     * @var DatabaseMigrationRepository
+     */
+    protected $_repository;
 
-	/**
-	 * @var array
-	 */
-	protected $_outputMessages = [];
+    /**
+     * @var array
+     */
+    protected $_outputMessages = [];
 
 
-	/**
-	 * @param array $modules
-	 */
-	public function __construct(array $modules)
-	{
-		$this->_modules = $modules;
-		$this->_migrator = App::make('migrator');
-		$this->_repository = App::make('migration.repository');
+    /**
+     * @param array $modules
+     */
+    public function __construct(array $modules)
+    {
+        $this->_modules    = $modules;
+        $this->_migrator   = App::make('migrator');
+        $this->_repository = App::make('migration.repository');
 
-		$this->init();
-	}
+        $this->init();
+    }
 
-	protected function init()
-	{
-		$firstUp = !Schema::hasTable('migrations');
-		if ($firstUp)
-		{
-			$this->_repository->createRepository();
-			$this->output('Migration table created successfully.');
-		}
-	}
 
-	protected function deinit()
-	{
-		Schema::dropIfExists('migrations');
-		$this->output('Migration table dropped.');
-	}
+    protected function init()
+    {
+        $firstUp = ! Schema::hasTable('migrations');
+        if ($firstUp) {
+            $this->_repository->createRepository();
+            $this->output('Migration table created successfully.');
+        }
+    }
 
-	/**
-	 * @return $this
-	 */
-	public function migrateModules()
-	{
-		$this->output('Starting process of migration...');
 
-		foreach ($this->_modules as $module)
-		{
-			$this->migrateModule($module);
-		}
+    protected function deinit()
+    {
+        Schema::dropIfExists('migrations');
+        $this->output('Migration table dropped.');
+    }
 
-		return $this;
-	}
 
-	/**
-	 * Run migrations on a single module
-	 *
-	 * @param ModuleContainer $module
-	 * @return $this
-	 */
-	public function migrateModule(ModuleContainer $module)
-	{
-		$this->_migrator->run($module->getPath(['database', 'migrations']));
+    /**
+     * @return $this
+     */
+    public function migrateModules()
+    {
+        $this->output('Starting process of migration...');
 
-		$this->output($module->getName());
-		foreach ($this->_migrator->getNotes() as $note)
-		{
-			$this->output(' - ' . $note);
-		}
+        foreach ($this->_modules as $module) {
+            $this->migrateModule($module);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @return $this
-	 */
-	public function resetModules()
-	{
-		$this->output('Starting process of reseting...');
 
-		foreach ($this->_modules as $module)
-		{
-			$this->addModuleToReset($module);
-		}
+    /**
+     * Run migrations on a single module
+     *
+     * @param ModuleContainer $module
+     *
+     * @return $this
+     */
+    public function migrateModule(ModuleContainer $module)
+    {
+        $this->_migrator->run($module->getPath(['database', 'migrations']));
 
-		return $this->rollbackModules();
-	}
+        $this->output($module->getName());
+        foreach ($this->_migrator->getNotes() as $note) {
+            $this->output(' - ' . $note);
+        }
 
-	/**
-	 * Reset migrations on a single module
-	 *
-	 * @param ModuleContainer $module
-	 * @return $this
-	 */
-	public function addModuleToReset(ModuleContainer $module)
-	{
-		$path = $module->getPath(['database', 'migrations']);
-		$this->_migrator->requireFiles($path, $this->_migrator->getMigrationFiles($path));
+        return $this;
+    }
 
-		return $this;
-	}
 
-	/**
-	 * @return $this
-	 */
-	public function rollbackModules()
-	{
-		while (true)
-		{
-			$count = $this->_migrator->rollback();
+    /**
+     * @return $this
+     */
+    public function resetModules()
+    {
+        $this->output('Starting process of reseting...');
 
-			foreach ($this->_migrator->getNotes() as $note)
-			{
-				$this->output($note);
-			}
+        foreach ($this->_modules as $module) {
+            $this->addModuleToReset($module);
+        }
 
-			if ($count == 0)
-			{
-				break;
-			}
-		}
+        return $this->rollbackModules();
+    }
 
-		return $this;
-	}
 
-	/**
-	 * @return $this
-	 */
-	public function seedModules(array $data = [])
-	{
-		foreach ($this->_modules as $module)
-		{
-			$this->seedModule($module, array_get($data, $module->getName(), []));
-		}
+    /**
+     * Reset migrations on a single module
+     *
+     * @param ModuleContainer $module
+     *
+     * @return $this
+     */
+    public function addModuleToReset(ModuleContainer $module)
+    {
+        $path = $module->getPath(['database', 'migrations']);
+        $this->_migrator->requireFiles($path, $this->_migrator->getMigrationFiles($path));
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Run seeds on a module
-	 *
-	 * @param ModuleContainer $module
-	 * @return $this
-	 */
-	public function seedModule(ModuleContainer $module, array $data = [])
-	{
-		$className = $module->getNamespace() . '\\database\\seeds\\DatabaseSeeder';
 
-		if (!class_exists($className)) {
-			return FALSE;
-		}
+    /**
+     * @return $this
+     */
+    public function rollbackModules()
+    {
+        while (true) {
+            $count = $this->_migrator->rollback();
 
-		$seeder = app($className, $data);
-		$seeder->run();
+            foreach ($this->_migrator->getNotes() as $note) {
+                $this->output($note);
+            }
 
-		$this->output(sprintf('<info>Seeded %s</info> ', $module));
-		return $this;
-	}
+            if ($count == 0) {
+                break;
+            }
+        }
 
-	/**
-	 * @param string $message
-	 * @return $this
-	 */
-	protected function output($message)
-	{
-		$this->_outputMessages[] = $message;
+        return $this;
+    }
 
-		return $this;
-	}
 
-	/**
-	 * @return array
-	 */
-	public function getOutputMessages()
-	{
-		return $this->_outputMessages;
-	}
+    /**
+     * @return $this
+     */
+    public function seedModules(array $data = [])
+    {
+        foreach ($this->_modules as $module) {
+            $this->seedModule($module, array_get($data, $module->getName(), []));
+        }
 
-	/**
-	 * @return $this
-	 */
-	public function cleanOutputMessages()
-	{
-		$this->_outputMessages = [];
+        return $this;
+    }
 
-		return $this;
-	}
+
+    /**
+     * Run seeds on a module
+     *
+     * @param ModuleContainer $module
+     *
+     * @return $this
+     */
+    public function seedModule(ModuleContainer $module, array $data = [])
+    {
+        $className = $module->getNamespace() . '\\database\\seeds\\DatabaseSeeder';
+
+        if ( ! class_exists($className)) {
+            return false;
+        }
+
+        $seeder = app($className, $data);
+        $seeder->run();
+
+        $this->output(sprintf('<info>Seeded %s</info> ', $module));
+
+        return $this;
+    }
+
+
+    /**
+     * @param string $message
+     *
+     * @return $this
+     */
+    protected function output($message)
+    {
+        $this->_outputMessages[] = $message;
+
+        return $this;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getOutputMessages()
+    {
+        return $this->_outputMessages;
+    }
+
+
+    /**
+     * @return $this
+     */
+    public function cleanOutputMessages()
+    {
+        $this->_outputMessages = [];
+
+        return $this;
+    }
 }

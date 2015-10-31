@@ -5,28 +5,29 @@ use Illuminate\Database\Migrations\Migration;
 
 class Notifications extends Migration
 {
-	public function up()
-	{
-		Schema::create('notifications', function (Blueprint $table)
-		{
-			$table->increments('id');
-			$table->integer('sender_id')->default(0);
 
-			$table->string('type');
-			$table->text('message')->nullable();
+    public function up()
+    {
+        Schema::create('notifications', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('sender_id')->default(0);
 
-			$table->integer('object_id')->unsigned()->nullable();
-			$table->string('object_type')->nullable();
+            $table->string('type');
+            $table->text('message')->nullable();
 
-			$table->json('parameters');
+            $table->integer('object_id')->unsigned()->nullable();
+            $table->string('object_type')->nullable();
 
-			$table->timestamps();
-			$table->timestamp('sent_at');
-		});
-	}
+            $table->json('parameters');
 
-	public function down()
-	{
-		Schema::dropIfExists('notifications');
-	}
+            $table->timestamps();
+            $table->timestamp('sent_at');
+        });
+    }
+
+
+    public function down()
+    {
+        Schema::dropIfExists('notifications');
+    }
 }

@@ -1,152 +1,153 @@
-<?php namespace KodiCMS\Users\Http;
+<?php
+namespace KodiCMS\Users\Http;
 
-use Illuminate\Routing\Router;
+use KodiCMS\CMS\Contracts\ControllerACLInterface;
 
-class ControllerACL {
+class ControllerACL implements ControllerACLInterface
+{
 
-	/**
-	 * @var array
-	 */
-	protected $permissions = [];
+    /**
+     * @var array
+     */
+    protected $permissions = [];
 
-	/**
-	 * @var array
-	 */
-	protected $allowedActions = [];
+    /**
+     * @var array
+     */
+    protected $allowedActions = [];
 
-	/**
-	 * @var string
-	 */
-	protected $action;
+    /**
+     * @var string
+     */
+    protected $action;
 
-	/**
-	 * @var string
-	 */
-	protected $loginPath;
+    /**
+     * @var string
+     */
+    protected $loginPath;
 
-	/**
-	 * @param string $path
-	 */
-	public function setLoginPath($path)
-	{
-		$this->loginPath = $path;
-	}
 
-	/**
-	 * @param string $action
-	 */
-	public function setCurrentAction($action)
-	{
-		$this->action = $action;
-	}
+    /**
+     * @param string $path
+     */
+    public function setLoginPath($path)
+    {
+        $this->loginPath = $path;
+    }
 
-	/**
-	 * @param array $permissions
-	 *
-	 * @return $this
-	 */
-	public function setPermissions(array $permissions)
-	{
-		foreach ($permissions as $action => $permission)
-		{
-			$this->putPermission($action, $permission);
-		}
 
-		return $this;
-	}
+    /**
+     * @param string $action
+     */
+    public function setCurrentAction($action)
+    {
+        $this->action = $action;
+    }
 
-	/**
-	 * Add the item to the permissions list if it does not already exist in the permissions
-	 *
-	 * @param string $action
-	 * @param string $permission
-	 *
-	 * @return $this
-	 */
-	public function addPermission($action, $permission)
-	{
-		if (is_null(array_get($this->permissions, $action)))
-		{
-			$this->permissions[$action] = $permission;
-		}
 
-		return $this;
-	}
+    /**
+     * @param array $permissions
+     *
+     * @return $this
+     */
+    public function setPermissions(array $permissions)
+    {
+        foreach ($permissions as $action => $permission) {
+            $this->putPermission($action, $permission);
+        }
 
-	/**
-	 * @param string $action
-	 * @param string $permission
-	 *
-	 * @return $this
-	 */
-	public function putPermission($action, $permission)
-	{
-		$this->permissions[$action] = $permission;
+        return $this;
+    }
 
-		return $this;
-	}
 
-	/**
-	 * @param array $actions
-	 *
-	 * @return $this
-	 */
-	public function setAllowedActions(array $actions)
-	{
-		foreach ($actions as $action)
-		{
-			$this->addAllowedAction($action);
-		}
+    /**
+     * Add the item to the permissions list if it does not already exist in the permissions
+     *
+     * @param string $action
+     * @param string $permission
+     *
+     * @return $this
+     */
+    public function addPermission($action, $permission)
+    {
+        if (is_null(array_get($this->permissions, $action))) {
+            $this->permissions[$action] = $permission;
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @param string $action
-	 *
-	 * @return $this
-	 */
-	public function addAllowedAction($action)
-	{
-		$this->allowedActions[] = $action;
 
-		return $this;
-	}
+    /**
+     * @param string $action
+     * @param string $permission
+     *
+     * @return $this
+     */
+    public function putPermission($action, $permission)
+    {
+        $this->permissions[$action] = $permission;
 
-	/**
-	 * Проверка прав текущего пользователя
-	 * @return Response
-	 */
-	public function checkPermissions()
-	{
-		$currentPermission = array_get($this->permissions, $this->action);
+        return $this;
+    }
 
-		if (
-			!in_array($this->action, $this->allowedActions)
-			and
-			!is_null($currentPermission)
-			and
-			!acl_check($currentPermission)
-		)
-		{
-			return $this->denyAccess(trans('users::core.messages.auth.no_permissions'));
-		}
 
-		return true;
-	}
+    /**
+     * @param array $actions
+     *
+     * @return $this
+     */
+    public function setAllowedActions(array $actions)
+    {
+        foreach ($actions as $action) {
+            $this->addAllowedAction($action);
+        }
 
-	/**
-	 * @param string|array|null $message
-	 * @param bool $redirect
-	 * @return Response
-	 */
-	public function denyAccess($message = null, $redirect = false)
-	{
-		if ($redirect)
-		{
-			return redirect()->guest($this->loginPath)->withErrors($message);
-		}
+        return $this;
+    }
 
-		return abort(403, $message);
-	}
+
+    /**
+     * @param string $action
+     *
+     * @return $this
+     */
+    public function addAllowedAction($action)
+    {
+        $this->allowedActions[] = $action;
+
+        return $this;
+    }
+
+
+    /**
+     * Проверка прав текущего пользователя
+     * @return Response
+     */
+    public function checkPermissions()
+    {
+        $currentPermission = array_get($this->permissions, $this->action);
+
+        if ( ! in_array($this->action, $this->allowedActions) and ! is_null($currentPermission) and ! acl_check($currentPermission)) {
+            return $this->denyAccess(trans('users::core.messages.auth.no_permissions'));
+        }
+
+        return true;
+    }
+
+
+    /**
+     * @param string|array|null $message
+     * @param bool              $redirect
+     *
+     * @return Response
+     */
+    public function denyAccess($message = null, $redirect = false)
+    {
+        if ($redirect) {
+            return redirect()->guest($this->loginPath)->withErrors($message);
+        }
+
+        return abort(403, $message);
+    }
 }

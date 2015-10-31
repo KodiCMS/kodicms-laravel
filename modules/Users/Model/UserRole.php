@@ -1,80 +1,86 @@
-<?php namespace KodiCMS\Users\Model;
+<?php
+namespace KodiCMS\Users\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
 class UserRole extends Model
 {
-	/**
-	 * The database table used by the model.
-	 *
-	 * @var string
-	 */
-	protected $table = 'roles';
 
-	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = FALSE;
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'roles';
 
-	/**
-	 * The attributes that should be casted to native types.
-	 *
-	 * @var array
-	 */
-	protected $casts = [
-		'name' => 'string',
-		'description' => 'string'
-	];
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = ['name', 'description'];
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'name'        => 'string',
+        'description' => 'string',
+    ];
 
-	/**
-	 * @param string $name
-	 */
-	public function setNameAttribute($name)
-	{
-		$this->attributes['name'] = str_slug($name);
-	}
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name', 'description'];
 
-	/**
-	 * Получение прав для роли
-	 * @return array
-	 */
-	public function permissions()
-	{
-		return $this->hasMany(RolePermission::class, 'role_id');
-	}
 
-	public function attachPermissions(array $permissionsList = [])
-	{
-		$this->permissions()->delete();
+    /**
+     * @param string $name
+     */
+    public function setNameAttribute($name)
+    {
+        $this->attributes['name'] = str_slug($name);
+    }
 
-		if (count($permissionsList) > 0) {
-			$permissions = [];
 
-			foreach (array_keys($permissionsList) as $action) {
-				$permissions[] = new RolePermission(['action' => $action]);
-			}
+    /**
+     * Получение прав для роли
+     * @return array
+     */
+    public function permissions()
+    {
+        return $this->hasMany(RolePermission::class, 'role_id');
+    }
 
-			$this->permissions()->saveMany($permissions);
-		}
 
-		return $this;
-	}
+    public function attachPermissions(array $permissionsList = [])
+    {
+        $this->permissions()->delete();
 
-	/**
-	 *
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-	 */
-	public function users()
-	{
-		return $this->belongsToMany(User::class, 'roles_users', 'role_id');
-	}
+        if (count($permissionsList) > 0) {
+            $permissions = [];
+
+            foreach (array_keys($permissionsList) as $action) {
+                $permissions[] = new RolePermission(['action' => $action]);
+            }
+
+            $this->permissions()->saveMany($permissions);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'roles_users', 'role_id');
+    }
 }

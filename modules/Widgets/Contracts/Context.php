@@ -1,6 +1,7 @@
-<?php namespace KodiCMS\Widgets\Contracts;
+<?php
+namespace KodiCMS\Widgets\Contracts;
 
-interface Context {
-
+interface Context
+{
 
 }

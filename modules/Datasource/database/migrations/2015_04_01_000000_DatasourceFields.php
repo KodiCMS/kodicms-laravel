@@ -5,35 +5,36 @@ use Illuminate\Database\Migrations\Migration;
 
 class DatasourceFields extends Migration
 {
-	public function up()
-	{
-		Schema::create('datasource_fields', function (Blueprint $table)
-		{
-			$table->increments('id');
 
-			$table->integer('group_id')->nullable()->index();
-			$table->integer('section_id')->index();
-			$table->boolean('is_system')->default(false);
+    public function up()
+    {
+        Schema::create('datasource_fields', function (Blueprint $table) {
+            $table->increments('id');
 
-			$table->string('key');
-			$table->string('type');
+            $table->integer('group_id')->nullable()->index();
+            $table->integer('section_id')->index();
+            $table->boolean('is_system')->default(false);
 
-			$table->string('name');
-			$table->integer('related_section_id')->index();
-			$table->integer('related_field_id');
-			$table->string('related_table');
+            $table->string('key');
+            $table->string('type');
 
-			$table->json('settings');
-			$table->integer('position')->default(0);
+            $table->string('name');
+            $table->integer('related_section_id')->index();
+            $table->integer('related_field_id');
+            $table->string('related_table');
 
-			$table->unique(['section_id', 'key']);
+            $table->json('settings');
+            $table->integer('position')->default(0);
 
-			$table->timestamps();
-		});
-	}
+            $table->unique(['section_id', 'key']);
 
-	public function down()
-	{
-		Schema::dropIfExists('datasource_fields');
-	}
+            $table->timestamps();
+        });
+    }
+
+
+    public function down()
+    {
+        Schema::dropIfExists('datasource_fields');
+    }
 }

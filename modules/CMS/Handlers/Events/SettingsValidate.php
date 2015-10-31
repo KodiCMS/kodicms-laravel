@@ -1,26 +1,18 @@
-<?php namespace KodiCMS\CMS\Handlers\Events;
+<?php
+namespace KodiCMS\CMS\Handlers\Events;
 
-use Validator;
+class SettingsValidate
+{
 
-class SettingsValidate {
+    /**
+     * Handle the event.
+     *
+     * @param array $settings
+     *
+     * @return void
+     */
+    public function handle(array $settings)
+    {
 
-	/**
-	 * Create a new event instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-
-	}
-
-	/**
-	 * Handle the event.
-	 *
-	 * @return void
-	 */
-	public function handle(array $settings)
-	{
-
-	}
+    }
 }

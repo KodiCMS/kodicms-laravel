@@ -1,3 +1,7 @@
-<?php namespace KodiCMS\Dashboard\Contracts;
+<?php
+namespace KodiCMS\Dashboard\Contracts;
 
-interface WidgetDashboard {}
+interface WidgetDashboard
+{
+
+}

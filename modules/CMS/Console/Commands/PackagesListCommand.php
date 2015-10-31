@@ -1,72 +1,69 @@
-<?php namespace KodiCMS\CMS\Console\Commands;
+<?php
+namespace KodiCMS\CMS\Console\Commands;
 
 use Package;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
 
-class PackagesListCommand extends Command {
+class PackagesListCommand extends Command
+{
 
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	protected $name = 'cms:packages:list';
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'cms:packages:list';
 
-	/**
-	 * The table headers for the command.
-	 *
-	 * @var array
-	 */
-	protected $headers = [
-		'Package', 'Files', 'Dependency'
-	];
+    /**
+     * The table headers for the command.
+     *
+     * @var array
+     */
+    protected $headers = [
+        'Package',
+        'Files',
+        'Dependency',
+    ];
 
-	/**
-	 * Execute the console command.
-	 *
-	 * @return mixed
-	 */
-	public function fire()
-	{
-		$packages = [];
 
-		$i = 0;
-		foreach(Package::getAll() as $id => $package)
-		{
-			foreach($package as $file)
-			{
-				if(isset($packages[$id]))
-				{
-					$packages[$i]['id'] = '';
-					$packages[$i]['files'] = $file['src'];
-					$packages[$i]['deps'] = $file['deps'];
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function fire()
+    {
+        $packages = [];
 
-					$i++;
-				}
-				else
-				{
-					$packages[$id]['id'] = $id;
-					$packages[$id]['files'] = $file['src'];
-					$packages[$id]['deps'] = $file['deps'];
-				}
-			}
+        $i = 0;
+        foreach (Package::getAll() as $id => $package) {
+            foreach ($package as $file) {
+                if (isset( $packages[$id] )) {
+                    $packages[$i]['id']    = '';
+                    $packages[$i]['files'] = $file['src'];
+                    $packages[$i]['deps']  = $file['deps'];
 
-			$packages[$i] = new TableSeparator;
-			$i++;
-		}
+                    $i++;
+                } else {
+                    $packages[$id]['id']    = $id;
+                    $packages[$id]['files'] = $file['src'];
+                    $packages[$id]['deps']  = $file['deps'];
+                }
+            }
 
-		foreach($packages as $i => $data)
-		{
-			foreach($data as $key => $rows)
-			{
-				if (is_array($rows))
-				{
-					$packages[$i][$key] = implode(', ', $rows);
-				}
-			}
-		}
+            $packages[$i] = new TableSeparator;
+            $i++;
+        }
 
-		$this->table($this->headers, $packages);
-	}
+        foreach ($packages as $i => $data) {
+            foreach ($data as $key => $rows) {
+                if (is_array($rows)) {
+                    $packages[$i][$key] = implode(', ', $rows);
+                }
+            }
+        }
+
+        $this->table($this->headers, $packages);
+    }
 }

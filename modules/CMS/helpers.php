@@ -2,17 +2,16 @@
 
 use KodiCMS\Support\Helpers\File;
 
-if (!function_exists('backend_url'))
-{
-	/**
-	 * @param null|string $path
-	 *
-	 * @return string
-	 */
-	function backend_url($path = null)
-	{
-		return App::backendUrlSegmentName() . (!is_null($path) ? '/' . ltrim($path, '/') : $path);
-	}
+if ( ! function_exists('backend_url')) {
+    /**
+     * @param null|string $path
+     *
+     * @return string
+     */
+    function backend_url($path = null)
+    {
+        return App::backendUrlSegmentName() . ( ! is_null($path) ? '/' . ltrim($path, '/') : $path );
+    }
 }
 
 /**
@@ -20,7 +19,7 @@ if (!function_exists('backend_url'))
  */
 function resources_url($path = null)
 {
-	return App::resourcesURL(!is_null($path) ? '/' . ltrim($path, '/') : $path);
+    return App::resourcesURL(! is_null($path) ? '/' . ltrim($path, '/') : $path);
 }
 
 /**
@@ -28,18 +27,7 @@ function resources_url($path = null)
  */
 function backend_resources_url($path = null)
 {
-
-	return App::backendResourcesURL(!is_null($path) ? '/' . ltrim($path, '/') : $path);
-}
-
-/**
- * @param string $path
- *
- * @return string
- */
-function normalize_path($path)
-{
-	return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+    return App::backendResourcesURL(! is_null($path) ? '/' . ltrim($path, '/') : $path);
 }
 
 /**
@@ -47,7 +35,7 @@ function normalize_path($path)
  */
 function layouts_path()
 {
-	return normalize_path(base_path('resources/layouts'));
+    return normalize_path(base_path('resources/layouts'));
 }
 
 /**
@@ -55,7 +43,7 @@ function layouts_path()
  */
 function snippets_path()
 {
-	return normalize_path(base_path('resources/snippets'));
+    return normalize_path(base_path('resources/snippets'));
 }
 
 /**
@@ -66,29 +54,23 @@ function snippets_path()
  */
 function array_keys_exists_recursive(array $arr1, array $arr2)
 {
-	$outputDiff = [];
+    $outputDiff = [];
 
-	foreach ($arr1 as $key => $value)
-	{
-		if (array_key_exists($key, $arr2))
-		{
-			if (is_array($value))
-			{
-				$recursiveDiff = array_keys_exists_recursive($value, $arr2[$key]);
+    foreach ($arr1 as $key => $value) {
+        if (array_key_exists($key, $arr2)) {
+            if (is_array($value)) {
+                $recursiveDiff = array_keys_exists_recursive($value, $arr2[$key]);
 
-				if (count($recursiveDiff))
-				{
-					$outputDiff[$key] = $recursiveDiff;
-				}
-			}
-		}
-		else
-		{
-			$outputDiff[$key] = $value;
-		}
-	}
+                if (count($recursiveDiff)) {
+                    $outputDiff[$key] = $recursiveDiff;
+                }
+            }
+        } else {
+            $outputDiff[$key] = $value;
+        }
+    }
 
-	return $outputDiff;
+    return $outputDiff;
 }
 
 /**
@@ -98,5 +80,5 @@ function array_keys_exists_recursive(array $arr1, array $arr2)
  */
 function __($string)
 {
-	return $string;
+    return $string;
 }

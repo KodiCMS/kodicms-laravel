@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Support\Model;
+<?php
+namespace KodiCMS\Support\Model;
 
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -9,148 +10,153 @@ use KodiCMS\Support\Model\Contracts\ModelFieldCollectionInterface;
 
 class ModelFieldCollection extends Collection
 {
-	/**
-	 * @var ModelFieldCollectionInterface
-	 */
-	protected $items = [];
 
-	/**
-	 * @var Model
-	 */
-	protected $model;
+    /**
+     * @var ModelFieldCollectionInterface
+     */
+    protected $items = [];
 
-	/**
-	 * @var ModelFieldsInterface
-	 */
-	protected $collection;
+    /**
+     * @var Model
+     */
+    protected $model;
 
-	/**
-	 * @param Model $model
-	 * @param ModelFieldsInterface $collection
-	 * @throws ModelFieldCollectionException
-	 */
-	public function __construct(Model $model, ModelFieldsInterface $collection)
-	{
-		$this->model = $model;
-		$this->collection = $collection;
+    /**
+     * @var ModelFieldsInterface
+     */
+    protected $collection;
 
-		foreach ($collection->fields() as $field)
-		{
-			$this->addField($field);
-		}
-	}
 
-	/**
-	 * @return array
-	 */
-	public function getFields()
-	{
-		return $this->items;
-	}
+    /**
+     * @param Model                $model
+     * @param ModelFieldsInterface $collection
+     *
+     * @throws ModelFieldCollectionException
+     */
+    public function __construct(Model $model, ModelFieldsInterface $collection)
+    {
+        $this->model      = $model;
+        $this->collection = $collection;
 
-	/**
-	 * @param string $name
-	 * @return ModelFieldInterface
-	 */
-	public function getField($name)
-	{
-		$related = null;
+        foreach ($collection->fields() as $field) {
+            $this->addField($field);
+        }
+    }
 
-		if (strpos($name, '::') !== false)
-		{
-			list($name, $related) = explode('::', $name, 2);
-		}
 
-		if (is_null($field = array_get($this->items, $name)))
-		{
-			return null;
-		}
+    /**
+     * @return array
+     */
+    public function getFields()
+    {
+        return $this->items;
+    }
 
-		if (!is_null($related) and method_exists($field, 'getRelatedModel'))
-		{
-			$relationship = $field->getRelatedModel();
 
-			if ($relationship instanceof Model)
-			{
-				return $relationship->getField($related);
-			}
-			else if ($relationship instanceof Relation)
-			{
-				if (is_null($model = $relationship->getResults()))
-				{
-					$model = $relationship->getRelated();
-				}
+    /**
+     * @param string $name
+     *
+     * @return ModelFieldInterface
+     */
+    public function getField($name)
+    {
+        $related = null;
 
-				return $model->getField($related)->setPrefix($name);
-			}
-		}
+        if (strpos($name, '::') !== false) {
+            list( $name, $related ) = explode('::', $name, 2);
+        }
 
-		return $field;
-	}
+        if (is_null($field = array_get($this->items, $name))) {
+            return null;
+        }
 
-	/**
-	 * @param ModelFieldInterface $field
-	 * @return ModelFieldInterface
-	 */
-	public function addField(ModelFieldInterface $field)
-	{
-		$field->setModel($this->model);
-		return $this->items[$field->getKey()] = $field;
-	}
+        if ( ! is_null($related) and method_exists($field, 'getRelatedModel')) {
+            $relationship = $field->getRelatedModel();
 
-	/**
-	 * @param string $name
-	 * @return mixed|null
-	 */
-	public function getFieldValue($name)
-	{
-		if (is_null($field = $this->getField($name)))
-		{
-			return null;
-		}
+            if ($relationship instanceof Model) {
+                return $relationship->getField($related);
+            } else if ($relationship instanceof Relation) {
+                if (is_null($model = $relationship->getResults())) {
+                    $model = $relationship->getRelated();
+                }
 
-		return $field->getValue();
-	}
+                return $model->getField($related)->setPrefix($name);
+            }
+        }
 
-	/**
-	 * @param string $prefix
-	 * @return $this
-	 */
-	public function setFieldPrefix($prefix)
-	{
-		foreach ($this->items as $filed)
-		{
-			$filed->setPrefix($prefix);
-		}
+        return $field;
+    }
 
-		return $this;
-	}
 
-	/**
-	 * @param array $attributes
-	 * @return $this
-	 */
-	public function setFieldAttributes(array $attributes)
-	{
-		foreach ($this->items as $filed)
-		{
-			$filed->setAttributes($attributes);
-		}
+    /**
+     * @param ModelFieldInterface $field
+     *
+     * @return ModelFieldInterface
+     */
+    public function addField(ModelFieldInterface $field)
+    {
+        $field->setModel($this->model);
 
-		return $this;
-	}
+        return $this->items[$field->getKey()] = $field;
+    }
 
-	/**
-	 * @param array $attributes
-	 * @return $this
-	 */
-	public function setFieldLabelAttributes(array $attributes)
-	{
-		foreach ($this->items as $filed)
-		{
-			$filed->setLabelAttributes($attributes);
-		}
 
-		return $this;
-	}
+    /**
+     * @param string $name
+     *
+     * @return mixed|null
+     */
+    public function getFieldValue($name)
+    {
+        if (is_null($field = $this->getField($name))) {
+            return null;
+        }
+
+        return $field->getValue();
+    }
+
+
+    /**
+     * @param string $prefix
+     *
+     * @return $this
+     */
+    public function setFieldPrefix($prefix)
+    {
+        foreach ($this->items as $filed) {
+            $filed->setPrefix($prefix);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @param array $attributes
+     *
+     * @return $this
+     */
+    public function setFieldAttributes(array $attributes)
+    {
+        foreach ($this->items as $filed) {
+            $filed->setAttributes($attributes);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @param array $attributes
+     *
+     * @return $this
+     */
+    public function setFieldLabelAttributes(array $attributes)
+    {
+        foreach ($this->items as $filed) {
+            $filed->setLabelAttributes($attributes);
+        }
+
+        return $this;
+    }
 }

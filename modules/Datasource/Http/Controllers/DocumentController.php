@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Datasource\Http\Controllers;
+<?php
+namespace KodiCMS\Datasource\Http\Controllers;
 
 use WYSIWYG;
 use KodiCMS\Datasource\Repository\SectionRepository;
@@ -6,87 +7,116 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class DocumentController extends BackendController
 {
-	public function getIndex()
-	{
-		return redirect(route('backend.datasource.list', $this->request->cookie('currentDS')));
-	}
 
-	/**
-	 * @param SectionRepository $repository
-	 * @param integer $sectionId
-	 */
-	public function getCreate(SectionRepository $repository, $sectionId)
-	{
-		WYSIWYG::loadAllEditors();
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function getIndex()
+    {
+        return redirect()->route('backend.datasource.list', $this->request->cookie('currentDS'));
+    }
 
-		$document = $repository->getEmptyDocument($sectionId);
-		$section = $document->getSection();
 
-		$this->breadcrumbs
-			->add($section->getName(), route('backend.datasource.list', $section->getId()));
+    /**
+     * @param SectionRepository $repository
+     * @param integer           $sectionId
+     */
+    public function getCreate(SectionRepository $repository, $sectionId)
+    {
+        WYSIWYG::loadAllEditors();
 
-		$this->setTitle($section->getCreateDocumentTitle());
+        $document = $repository->getEmptyDocument($sectionId);
+        $section  = $document->getSection();
 
-		$this->templateScripts['SECTION'] = $section;
-		$this->templateScripts['DOCUMENT'] = $document;
-		$document->onControllerLoad($this);
+        $this->breadcrumbs->add($section->getName(), route('backend.datasource.list', $section->getId()));
 
-		$this->setContent($document->getCreateTemplate(), [
-			'document' => $document,
-			'section' => $section,
-			'fields' => $document->getEditableFields()
-		]);
-	}
+        $this->setTitle($section->getCreateDocumentTitle());
 
-	public function postCreate(SectionRepository $repository, $sectionId)
-	{
-		$data = $this->request->all();
-		$repository->validateOnCreateDocument($sectionId, $data);
+        $this->templateScripts['SECTION']  = $section;
+        $this->templateScripts['DOCUMENT'] = $document;
+        $document->onControllerLoad($this);
 
-		$document = $repository->createDocument($sectionId, $data);
+        $this->setContent($document->getCreateTemplate(), [
+            'document' => $document,
+            'section'  => $section,
+            'fields'   => $document->getEditableFields(),
+        ]);
+    }
 
-		return $this->smartRedirect([$sectionId, $document->getId()])
-			->with('success', trans($this->wrapNamespace('core.messages.document_updated'), ['title' => $document->getTitle()]));
-	}
 
-	/**
-	 * @param SectionRepository $repository
-	 * @param integer $sectionId
-	 * @param integer|string $documentId
-	 */
-	public function getEdit(SectionRepository $repository, $sectionId, $documentId)
-	{
-		WYSIWYG::loadAllEditors();
-		$document = $repository->getDocumentById($sectionId, $documentId);
-		$section = $document->getSection();
+    /**
+     * @param SectionRepository $repository
+     * @param                   $sectionId
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postCreate(SectionRepository $repository, $sectionId)
+    {
+        $data = $this->request->all();
+        $repository->validateOnCreateDocument($sectionId, $data);
 
-		$document->onControllerLoad($this);
-		$this->breadcrumbs
-			->add($section->getName(), route('backend.datasource.list', $section->getId()));
+        $document = $repository->createDocument($sectionId, $data);
 
-		$this->setTitle($section->getEditDocumentTitle($document->getTitle()));
+        return $this->smartRedirect([
+            $sectionId,
+            $document->getId(),
+        ])
+            ->with('success', trans($this->wrapNamespace('core.messages.document_updated'), [
+                'title' => $document->getTitle()
+            ]));
+    }
 
-		$this->templateScripts['SECTION'] = $section;
-		$this->templateScripts['DOCUMENT'] = $document;
 
-		$this->setContent($document->getEditTemplate(), [
-			'document' => $document,
-			'section' => $section,
-			'fields' => $document->getEditableFields()
-		]);
-	}
+    /**
+     * @param SectionRepository $repository
+     * @param integer           $sectionId
+     * @param integer|string    $documentId
+     */
+    public function getEdit(SectionRepository $repository, $sectionId, $documentId)
+    {
+        WYSIWYG::loadAllEditors();
+        $document = $repository->getDocumentById($sectionId, $documentId);
+        $section  = $document->getSection();
 
-	public function postEdit(SectionRepository $repository, $sectionId, $documentId)
-	{
-		$document = $repository->getDocumentById($sectionId, $documentId);
+        $document->onControllerLoad($this);
+        $this->breadcrumbs->add($section->getName(), route('backend.datasource.list', $section->getId()));
 
-		$data = $this->request->all();
+        $this->setTitle($section->getEditDocumentTitle($document->getTitle()));
 
-		$repository->validateOnUpdateDocument($document, $data);
+        $this->templateScripts['SECTION']  = $section;
+        $this->templateScripts['DOCUMENT'] = $document;
 
-		$document = $repository->updateDocument($document, $data);
+        $this->setContent($document->getEditTemplate(), [
+            'document' => $document,
+            'section'  => $section,
+            'fields'   => $document->getEditableFields(),
+        ]);
+    }
 
-		return $this->smartRedirect([$sectionId, $document->getId()])
-			->with('success', trans($this->wrapNamespace('core.messages.document_updated'), ['title' => $document->getTitle()]));
-	}
+
+    /**
+     * @param SectionRepository $repository
+     * @param int               $sectionId
+     * @param int               $documentId
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postEdit(SectionRepository $repository, $sectionId, $documentId)
+    {
+        $document = $repository->getDocumentById($sectionId, $documentId);
+
+        $data = $this->request->all();
+
+        $repository->validateOnUpdateDocument($document, $data);
+
+        $document = $repository->updateDocument($document, $data);
+
+        return $this->smartRedirect([
+            $sectionId,
+            $document->getId(),
+        ])
+            ->with('success', trans($this->wrapNamespace('core.messages.document_updated'), [
+                'title' => $document->getTitle()
+            ]));
+    }
 }

@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Datasource\Contracts;
+<?php
+namespace KodiCMS\Datasource\Contracts;
 
 interface SectionTypeInterface
 {

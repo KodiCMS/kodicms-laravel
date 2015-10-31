@@ -1,5 +1,7 @@
-<?php namespace Plugins\butschster\DSTags;
+<?php
+namespace Plugins\butschster\DSTags;
 
-class Document extends \KodiCMS\Datasource\Model\Document {
+class Document extends \KodiCMS\Datasource\Model\Document
+{
 
 }

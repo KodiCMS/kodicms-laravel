@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Widgets\Storage;
+<?php
+namespace KodiCMS\Widgets\Storage;
 
 use KodiCMS\CMS\Exceptions\ValidationException;
 use KodiCMS\Widgets\Contracts\Widget;
@@ -9,85 +10,86 @@ use KodiCMS\Widgets\Services\WidgetUpdator;
 
 class WidgetSorageDatabase implements WidgetStorage
 {
-	/**
-	 * @return bool|Widget
-	 * @throws ValidationException
-	 * @throws \KodiCMS\Widgets\Exceptions\WidgetException
-	 */
-	public function create(Widget $widget)
-	{
-		if ($widget->isExists())
-		{
-			return false;
-		}
 
-		$data = [
-			'name' => $widget->getName(),
-			'description' => $widget->getDescription(),
-			'settings' => $widget->getSettings(),
-			'type' => $widget->getType()
-		];
+    /**
+     * @param Widget $widget
+     *
+     * @return bool|Widget
+     * @throws ValidationException
+     */
+    public function create(Widget $widget)
+    {
+        if ($widget->isExists()) {
+            return false;
+        }
 
-		$creator = new WidgetCreator;
+        $data = [
+            'name'        => $widget->getName(),
+            'description' => $widget->getDescription(),
+            'settings'    => $widget->getSettings(),
+            'type'        => $widget->getType(),
+        ];
 
-		$validator = $creator->validator($data);
+        $creator = new WidgetCreator;
 
-		if ($validator->fails())
-		{
-			throw (new ValidationException)->setValidator($validator);
-		}
+        $validator = $creator->validator($data);
 
-		$widgetModel = $creator->create($data);
+        if ($validator->fails()) {
+            throw (new ValidationException)->setValidator($validator);
+        }
 
-		$widget->setId($widgetModel->id);
+        $widgetModel = $creator->create($data);
 
-		return $widget;
-	}
+        $widget->setId($widgetModel->id);
 
-	/**
-	 * @param Widget $widget
-	 * @return bool
-	 * @throws ValidationException
-	 */
-	public function update(Widget $widget)
-	{
-		if (!$widget->isExists())
-		{
-			return false;
-		}
+        return $widget;
+    }
 
-		$data = [
-			'name' => $widget->getName(),
-			'description' => $widget->getDescription(),
-			'settings' => $widget->getSettings()
-		];
 
-		$updator = new WidgetUpdator;
-		$validator = $updator->validator($data);
+    /**
+     * @param Widget $widget
+     *
+     * @return bool
+     * @throws ValidationException
+     */
+    public function update(Widget $widget)
+    {
+        if ( ! $widget->isExists()) {
+            return false;
+        }
 
-		if ($validator->fails())
-		{
-			throw (new ValidationException)->setValidator($validator);
-		}
+        $data = [
+            'name'        => $widget->getName(),
+            'description' => $widget->getDescription(),
+            'settings'    => $widget->getSettings(),
+        ];
 
-		$updator->update($widget->getId(), $data);
+        $updater   = new WidgetUpdator;
+        $validator = $updater->validator($data);
 
-		return true;
-	}
+        if ($validator->fails()) {
+            throw (new ValidationException)->setValidator($validator);
+        }
 
-	/**
-	 * @param Widget $widget
-	 * @return bool
-	 */
-	public function delete(Widget $widget)
-	{
-		if (!$this->widget->isExists())
-		{
-			return false;
-		}
+        $updater->update($widget->getId(), $data);
 
-		WidgetModel::findOrFail($this->widget->getId())->delete();
+        return true;
+    }
 
-		return true;
-	}
+
+    /**
+     * @param Widget $widget
+     *
+     * @return bool
+     */
+    public function delete(Widget $widget)
+    {
+        if ( ! $this->widget->isExists()) {
+            return false;
+        }
+
+        WidgetModel::findOrFail($this->widget->getId())->delete();
+
+        return true;
+    }
 }

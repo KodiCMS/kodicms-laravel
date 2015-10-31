@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Users\Reflinks\Handlers;
+<?php
+namespace KodiCMS\Users\Reflinks\Handlers;
 
 use Bus;
 use Auth;
@@ -9,63 +10,68 @@ use KodiCMS\Users\Contracts\ReflinkHandlerInterface;
 
 class ForgotPasswordHandler implements ReflinkHandlerInterface
 {
-	/**
-	 * @var UserReflink
-	 */
-	protected $reflink;
 
-	/**
-	 * @var string
-	 */
-	protected $message;
+    /**
+     * @var UserReflink
+     */
+    protected $reflink;
 
-	/**
-	 * @var string|null
-	 */
-	protected $redirectUrl = null;
+    /**
+     * @var string
+     */
+    protected $message;
 
-	/**
-	 * @param UserReflink $reflink
-	 */
-	public function __construct(UserReflink $reflink)
-	{
-		$this->reflink = $reflink;
-	}
+    /**
+     * @var string|null
+     */
+    protected $redirectUrl = null;
 
-	/**
-	 * @return string
-	 */
-	public function getResponse()
-	{
-		return $this->message;
-	}
 
-	/**
-	 * @return string
-	 */
-	public function getRedirectUrl()
-	{
-		return $this->redirectUrl;
-	}
+    /**
+     * @param UserReflink $reflink
+     */
+    public function __construct(UserReflink $reflink)
+    {
+        $this->reflink = $reflink;
+    }
 
-	public function handle()
-	{
-		$password = str_random(8);
-		$user =  $this->reflink->user;
 
-		Bus::dispatch(new EmailSend('user_new_password', [
-			'password' => $password,
-			'username' => $user->username,
-			'email' => $user->email
-		]));
+    /**
+     * @return string
+     */
+    public function getResponse()
+    {
+        return $this->message;
+    }
 
-		$user->password = $password;
-		$user->save();
 
-		Auth::login($user);
+    /**
+     * @return string
+     */
+    public function getRedirectUrl()
+    {
+        return $this->redirectUrl;
+    }
 
-		$this->redirectUrl = backend_url();
 
-		$this->message = trans(Password::PASSWORD_RESET);
-	}
+    public function handle()
+    {
+        $password = str_random(8);
+        $user     = $this->reflink->user;
+
+        Bus::dispatch(new EmailSend('user_new_password', [
+            'password' => $password,
+            'username' => $user->username,
+            'email'    => $user->email,
+        ]));
+
+        $user->password = $password;
+        $user->save();
+
+        Auth::login($user);
+
+        $this->redirectUrl = backend_url();
+
+        $this->message = trans(Password::PASSWORD_RESET);
+    }
 }

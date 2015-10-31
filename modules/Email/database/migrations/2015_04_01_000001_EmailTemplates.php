@@ -5,34 +5,36 @@ use Illuminate\Database\Schema\Blueprint;
 
 class EmailTemplates extends Migration
 {
-	public function up()
-	{
-		Schema::create('email_templates', function (Blueprint $table) {
-			$table->increments('id');
-			$table->timestamps();
 
-			$table->unsignedInteger('email_event_id');
-			$table->foreign('email_event_id')->references('id')->on('email_events')->onDelete('cascade');
+    public function up()
+    {
+        Schema::create('email_templates', function (Blueprint $table) {
+            $table->increments('id');
+            $table->timestamps();
 
-			$table->tinyInteger('status');
+            $table->unsignedInteger('email_event_id');
+            $table->foreign('email_event_id')->references('id')->on('email_events')->onDelete('cascade');
 
-			$table->boolean('use_queue')->default(FALSE);
-			$table->string('email_from');
-			$table->string('email_to');
-			$table->string('subject');
+            $table->tinyInteger('status');
 
-			$table->text('message');
+            $table->boolean('use_queue')->default(false);
+            $table->string('email_from');
+            $table->string('email_to');
+            $table->string('subject');
 
-			$table->string('message_type', 5);
+            $table->text('message');
 
-			$table->string('cc');
-			$table->string('bcc');
-			$table->string('reply_to');
-		});
-	}
+            $table->string('message_type', 5);
 
-	public function down()
-	{
-		Schema::dropIfExists('email_templates');
-	}
+            $table->string('cc');
+            $table->string('bcc');
+            $table->string('reply_to');
+        });
+    }
+
+
+    public function down()
+    {
+        Schema::dropIfExists('email_templates');
+    }
 }

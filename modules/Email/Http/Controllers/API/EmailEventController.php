@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Email\Http\Controllers\API;
+<?php
+namespace KodiCMS\Email\Http\Controllers\API;
 
 use Mail;
 use KodiCMS\Email\Model\EmailType;
@@ -9,35 +10,37 @@ use KodiCMS\Email\Repository\EmailTemplateRepository;
 
 class EmailEventController extends Controller
 {
-	/**
-	 * @param EmailEventRepository $repository
-	 */
-	public function getOptions(EmailEventRepository $repository)
-	{
-		$uid = $this->getRequiredParameter('uid', 'required|numeric');
 
-		$emailEvent = $repository->findOrFail($uid);
-		$options = array_merge($emailEvent->fields, config('email.default_template_data'));
+    /**
+     * @param EmailEventRepository $repository
+     */
+    public function getOptions(EmailEventRepository $repository)
+    {
+        $uid = $this->getRequiredParameter('uid', 'required|numeric');
 
-		$this->setContent($options);
-	}
+        $emailEvent = $repository->findOrFail($uid);
+        $options    = array_merge($emailEvent->fields, config('email.default_template_data'));
 
-	/**
-	 * @param EmailTemplateRepository $repository
-	 */
-	public function postSend(EmailTemplateRepository $repository)
-	{
-		$subject = $this->getRequiredParameter('subject');
-		$to = $this->getRequiredParameter('to');
-		$body = $this->getRequiredParameter('message');
+        $this->setContent($options);
+    }
 
-		$parameters = $repository->instance([
-			'subject' => $subject,
-			'email_to' => $to,
-			'email_from' => config('mail.default')
-		]);
 
-		$this->setContent(['send' => EmailSender::send($body, $parameters)]);
-	}
+    /**
+     * @param EmailTemplateRepository $repository
+     */
+    public function postSend(EmailTemplateRepository $repository)
+    {
+        $subject = $this->getRequiredParameter('subject');
+        $to      = $this->getRequiredParameter('to');
+        $body    = $this->getRequiredParameter('message');
+
+        $parameters = $repository->instance([
+            'subject'    => $subject,
+            'email_to'   => $to,
+            'email_from' => config('mail.default'),
+        ]);
+
+        $this->setContent(['send' => EmailSender::send($body, $parameters)]);
+    }
 
 }

@@ -1,35 +1,43 @@
-<?php namespace KodiCMS\Pages\Contracts;
+<?php
+namespace KodiCMS\Pages\Contracts;
 
-interface BehaviorInterface {
+interface BehaviorInterface
+{
 
-	/**
-	 * @return FrontendPage
-	 */
-	public function getPage();
+    /**
+     * @return FrontendPage
+     */
+    public function getPage();
 
-	/**
-	 * @return array
-	 */
-	public function routeList();
 
-	/**
-	 * @return Router
-	 */
-	public function getRouter();
+    /**
+     * @return array
+     */
+    public function routeList();
 
-	/**
-	 * @param string $uri
-	 * @return string
-	 */
-	public function executeRoute($uri);
 
-	/**
-	 * @return Settings
-	 */
-	public function getSettings();
+    /**
+     * @return Router
+     */
+    public function getRouter();
 
-	/**
-	 * @return string
-	 */
-	public function getSettingsTemplate();
+
+    /**
+     * @param string $uri
+     *
+     * @return string
+     */
+    public function executeRoute($uri);
+
+
+    /**
+     * @return Settings
+     */
+    public function getSettings();
+
+
+    /**
+     * @return string
+     */
+    public function getSettingsTemplate();
 }

@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\CMS\Http\Controllers\System;
+<?php
+namespace KodiCMS\CMS\Http\Controllers\System;
 
 use UI;
 use View;
@@ -11,116 +12,120 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BackendController extends TemplateController
 {
-	/**
-	 * @var bool
-	 */
-	public $authRequired = TRUE;
 
-	/**
-	 * @var Navigation
-	 */
-	public $navigation;
+    /**
+     * @var bool
+     */
+    public $authRequired = true;
 
-	/**
-	 * @var Breadcrumbs
-	 */
-	public $breadcrumbs;
+    /**
+     * @var Navigation
+     */
+    public $navigation;
 
-	public function boot()
-	{
-		$this->navigation = Navigation::init($this->request->getUri(), config('sitemap', []));
-		$this->breadcrumbs = new Breadcrumbs;
-	}
+    /**
+     * @var Breadcrumbs
+     */
+    public $breadcrumbs;
 
-	public function initControllerAcl()
-	{
-		parent::initControllerAcl();
-		$this->acl->addPermission($this->getCurrentAction(), $this->getRouter()->currentRouteName());
-	}
 
-	public function before()
-	{
-		$currentPage = Navigation::getCurrentPage();
+    public function boot()
+    {
+        $this->navigation  = Navigation::init($this->request->getUri(), config('sitemap', []));
+        $this->breadcrumbs = new Breadcrumbs;
+    }
 
-		$this->breadcrumbs->add(UI::icon('home'), route('backend.dashboard'));
 
-		if (!is_null($currentPage))
-		{
-			$this->setTitle($currentPage->getName(), $currentPage->getUrl());
-		}
+    public function initControllerAcl()
+    {
+        parent::initControllerAcl();
+        $this->acl->addPermission($this->getCurrentAction(), $this->getRouter()->currentRouteName());
+    }
 
-		View::share('currentPage', $currentPage);
 
-		parent::before();
-	}
+    public function before()
+    {
+        $currentPage = Navigation::getCurrentPage();
 
-	public function after()
-	{
-		$this->template
-			->with('breadcrumbs', $this->breadcrumbs)
-			->with('navigation', $this->navigation)
-			->with('bodyId', $this->getRouterPath())
-			->with('theme', $this->currentUser->getCurrentTheme());
+        $this->breadcrumbs->add(UI::icon('home'), route('backend.dashboard'));
 
-		parent::after();
-	}
+        if ( ! is_null($currentPage)) {
+            $this->setTitle($currentPage->getName(), $currentPage->getUrl());
+        }
 
-	/**
-	 * @param $title
-	 * @param string|null $url
-	 * @return $this
-	 */
-	protected function setTitle($title, $url = NULL)
-	{
-		$this->breadcrumbs
-			->add($title, $url);
+        View::share('currentPage', $currentPage);
 
-		return parent::setTitle($title);
-	}
+        parent::before();
+    }
 
-	public function registerMedia()
-	{
-		parent::registerMedia();
 
-		$this->templateScripts['ACE_THEME'] = config('cms.default_ace_theme', 'textmate');
-		$this->templateScripts['DEFAULT_HTML_EDITOR'] = config('cms.default_html_editor', '');
-		$this->templateScripts['DEFAULT_CODE_EDITOR'] = config('cms.default_code_editor', '');
+    public function after()
+    {
+        $this->template->with('breadcrumbs', $this->breadcrumbs)
+            ->with('navigation', $this->navigation)
+            ->with('bodyId', $this->getRouterPath())
+            ->with('theme', $this->currentUser->getCurrentTheme());
 
-		Assets::package(['libraries', 'core']);
-		$this->includeModuleMediaFile($this->getRouterController());
-		$this->includeMergedMediaFile('backendEvents', 'js/backendEvents');
-	}
+        parent::after();
+    }
 
-	/**
-	 * Execute an action on the controller.
-	 *
-	 * @param  string  $method
-	 * @param  array   $parameters
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	public function callAction($method, $parameters)
-	{
-		try
-		{
-			return parent::callAction($method, $parameters);
-		}
-		catch (ModelNotFoundException $e)
-		{
-			$model = $e->getModel();
-			if (method_exists($model, 'getNotFoundMessage'))
-			{
-				$message = Callback::invoke($model . '@' . 'getNotFoundMessage');
-			}
-			else
-			{
-				$message = $e->getMessage();
-			}
 
-			$this->throwFailException($this->smartRedirect()->withErrors($message));
-		}
-		catch (ValidationException $e)
-		{
-			$this->throwValidationException($this->request, $e->getValidator());
-		}
-	}
+    /**
+     * @param string      $title
+     * @param string|null $url
+     *
+     * @return $this
+     */
+    protected function setTitle($title, $url = null)
+    {
+        $this->breadcrumbs->add($title, $url);
+
+        return parent::setTitle($title);
+    }
+
+
+    public function registerMedia()
+    {
+        parent::registerMedia();
+
+        $this->templateScripts['ACE_THEME']           = config('cms.default_ace_theme', 'textmate');
+        $this->templateScripts['DEFAULT_HTML_EDITOR'] = config('cms.default_html_editor', '');
+        $this->templateScripts['DEFAULT_CODE_EDITOR'] = config('cms.default_code_editor', '');
+
+        Assets::package(['libraries', 'core']);
+        $this->includeModuleMediaFile($this->getRouterController());
+        $this->includeMergedMediaFile('backendEvents', 'js/backendEvents');
+    }
+
+
+    /**
+     * Execute an action on the controller.
+     *
+     * @param  string $method
+     * @param  array  $parameters
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function callAction($method, $parameters)
+    {
+        try {
+            return parent::callAction($method, $parameters);
+        } catch (ModelNotFoundException $e) {
+            $model = $e->getModel();
+            if (method_exists($model, 'getNotFoundMessage')) {
+                $message = Callback::invoke($model . '@' . 'getNotFoundMessage');
+            } else {
+                $message = $e->getMessage();
+            }
+
+            $this->throwFailException(
+                $this->smartRedirect()->withErrors($message)
+            );
+
+        } catch (ValidationException $e) {
+            $this->throwValidationException(
+                $this->request, $e->getValidator()
+            );
+        }
+    }
 }

@@ -4,10 +4,11 @@ use KodiCMS\Users\Model\User;
 
 /**
  * @param string|array $action
- * @param User $user
+ * @param User         $user
+ *
  * @return bool
  */
-function acl_check($action, User $user = NULL)
+function acl_check($action, User $user = null)
 {
-	return ACL::check($action, $user);
+    return ACL::check($action, $user);
 }

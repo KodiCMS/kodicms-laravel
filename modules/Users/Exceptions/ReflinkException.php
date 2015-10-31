@@ -1,5 +1,9 @@
-<?php namespace KodiCMS\Users\Exceptions;
+<?php
+namespace KodiCMS\Users\Exceptions;
 
 use KodiCMS\CMS\Exceptions\Exception;
 
-class ReflinkException extends Exception {}
+class ReflinkException extends Exception
+{
+
+}

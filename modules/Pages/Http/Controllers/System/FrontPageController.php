@@ -42,7 +42,9 @@ abstract class FrontPageController extends Controller
     protected function getLayoutFile($layout)
     {
         if (is_null($layout = (new LayoutCollection)->findFile($layout))) {
-            throw new LayoutNotFoundException(trans('pages::core.messages.layout_not_set'));
+            throw new LayoutNotFoundException(
+                trans('pages::core.messages.layout_not_set')
+            );
         }
 
         return $layout->toView();
@@ -59,11 +61,13 @@ abstract class FrontPageController extends Controller
     protected function render(View $layout = null, $mime = 'text\html')
     {
         if (is_null($layout)) {
-            throw new LayoutNotFoundException(trans('pages::core.messages.layout_not_set'));
+            throw new LayoutNotFoundException(
+                trans('pages::core.messages.layout_not_set')
+            );
         }
 
         $html = $layout->render();
-        if (auth()->check() AND auth()->user()->hasRole([ 'administrator', 'developer' ])) {
+        if (auth()->check() AND auth()->user()->hasRole(['administrator', 'developer'])) {
             $injectHTML = (string) view('cms::app.partials.toolbar');
             // Insert system HTML before closed tag body
             $matches = preg_split('/(<\/body>)/i', $html, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
@@ -85,7 +89,7 @@ abstract class FrontPageController extends Controller
         $response->setContent($html);
 
         // Set the ETag header
-        $response->setEtag(sha1($html));
+        $response->setEtag(md5($html));
 
         // mark the response as either public or private
         $response->setPublic();
@@ -114,7 +118,7 @@ abstract class FrontPageController extends Controller
             $this->before();
         }
 
-        $response = call_user_func_array([ $this, $method ], $parameters);
+        $response = call_user_func_array([$this, $method], $parameters);
 
         if ($method != 'run') {
             $this->after($response);

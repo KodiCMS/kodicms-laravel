@@ -1,3 +1,7 @@
-<?php namespace KodiCMS\Widgets\Exceptions;
+<?php
+namespace KodiCMS\Widgets\Exceptions;
 
-class WidgetException extends \KodiCMS\CMS\Exceptions\Exception {}
+class WidgetException extends \KodiCMS\CMS\Exceptions\Exception
+{
+
+}

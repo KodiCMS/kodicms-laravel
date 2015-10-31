@@ -5,22 +5,23 @@ use Illuminate\Database\Migrations\Migration;
 
 class DatasourceFieldGroups extends Migration
 {
-	public function up()
-	{
-		Schema::create('datasource_field_groups', function (Blueprint $table)
-		{
-			$table->increments('id');
 
-			$table->integer('section_id')->index();
-			$table->string('name');
-			$table->string('type');
-			$table->integer('position')->default(0);
-			$table->timestamps();
-		});
-	}
+    public function up()
+    {
+        Schema::create('datasource_field_groups', function (Blueprint $table) {
+            $table->increments('id');
 
-	public function down()
-	{
-		Schema::dropIfExists('datasource_field_groups');
-	}
+            $table->integer('section_id')->index();
+            $table->string('name');
+            $table->string('type');
+            $table->integer('position')->default(0);
+            $table->timestamps();
+        });
+    }
+
+
+    public function down()
+    {
+        Schema::dropIfExists('datasource_field_groups');
+    }
 }

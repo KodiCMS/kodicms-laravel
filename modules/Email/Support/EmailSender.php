@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Email\Support;
+<?php
+namespace KodiCMS\Email\Support;
 
 use Mail;
 use Exception;

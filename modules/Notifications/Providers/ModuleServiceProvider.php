@@ -1,38 +1,38 @@
-<?php namespace KodiCMS\Notifications\Providers;
+<?php
+namespace KodiCMS\Notifications\Providers;
 
 use Event;
 use KodiCMS\Users\Model\User;
+use KodiCMS\Support\ServiceProvider;
 use KodiCMS\Notifications\Model\Notification;
-use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 use KodiCMS\Notifications\Console\Commands\DeleteExpiredCommand;
 
-class ModuleServiceProvider extends ServiceProvider {
+class ModuleServiceProvider extends ServiceProvider
+{
 
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-		$this->registerConsoleCommand('notifications.delete-expired', DeleteExpiredCommand::class);
-	}
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->registerConsoleCommand(DeleteExpiredCommand::class);
+    }
 
-	public function boot()
-	{
-		Event::listen('view.navbar.right.before', function ()
-		{
-			echo view('notifications::navbar')->render();
-		});
 
-		User::addRelation('notifications', function (User $model)
-		{
-			return $model->belongsToMany(Notification::class, 'notifications_users', 'user_id');
-		});
+    public function boot()
+    {
+        Event::listen('view.navbar.right.before', function () {
+            echo view('notifications::navbar')->render();
+        });
 
-		User::addRelation('newNotifications', function (User $model)
-		{
-			return $model->notifications()->wherePivot('is_read', 0);
-		});
-	}
+        User::addRelation('notifications', function (User $model) {
+            return $model->belongsToMany(Notification::class, 'notifications_users', 'user_id');
+        });
+
+        User::addRelation('newNotifications', function (User $model) {
+            return $model->notifications()->wherePivot('is_read', 0);
+        });
+    }
 }

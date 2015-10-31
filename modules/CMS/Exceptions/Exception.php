@@ -1,3 +1,7 @@
-<?php namespace KodiCMS\CMS\Exceptions;
+<?php
+namespace KodiCMS\CMS\Exceptions;
 
-class Exception extends \Exception {}
+class Exception extends \Exception
+{
+
+}

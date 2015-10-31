@@ -1,17 +1,19 @@
-<?php namespace KodiCMS\Widgets\Widget;
+<?php
+namespace KodiCMS\Widgets\Widget;
 
 use KodiCMS\Widgets\Contracts\WidgetCorrupt;
 
 class Temp extends Decorator implements WidgetCorrupt
 {
-	/**
-	 * @return array
-	 */
-	public function prepareData()
-	{
-		return [
 
-		];
-	}
+    /**
+     * @return array
+     */
+    public function prepareData()
+    {
+        return [
+
+        ];
+    }
 
 }

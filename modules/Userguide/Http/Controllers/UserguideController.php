@@ -1,4 +1,5 @@
-<?php namespace KodiCMS\Userguide\Http\Controllers;
+<?php
+namespace KodiCMS\Userguide\Http\Controllers;
 
 use Cache;
 use ModulesFileSystem;
@@ -8,163 +9,162 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class UserguideController extends BackendController
 {
-	public function before()
-	{
-		if (!class_exists('\Parsedown'))
-		{
-			throw new Exception('Markdown parser not found. Live documentation will not work in your environment.');
-		}
 
-		parent::before();
+    public function before()
+    {
+        if ( ! class_exists('\Parsedown')) {
+            throw new Exception(
+                'Markdown parser not found. Live documentation will not work in your environment.'
+            );
+        }
 
-		$this->setTitle(trans($this->wrapNamespace('core.title')));
-	}
+        parent::before();
 
-	public function getIndex()
-	{
-		$modules = $this->modules();
-		$this->setContent('index', compact('modules'));
-	}
+        $this->setTitle(trans($this->wrapNamespace('core.title')));
+    }
 
-	/**
-	 * @param string $module
-	 * @param string|null $page
-	 */
-	public function getModule($module, $page = null)
-	{
-		if (!config('userguide.modules.' . $module . '.enabled'))
-		{
-			abort(404, 'That module doesn\'t exist, or has userguide pages disabled.');
-		}
 
-		if (is_null($page))
-		{
-			$page = config('userguide.modules.' . $module . '.index_page', 'index');
-		}
+    public function getIndex()
+    {
+        $modules = $this->modules();
+        $this->setContent('index', compact('modules'));
+    }
 
-		$title = config('userguide.modules.' . $module . '.name');
 
-		// Find the markdown file for this page
-		$file = $this->file($module . '/' . $page);
+    /**
+     * @param string      $module
+     * @param string|null $page
+     */
+    public function getModule($module, $page = null)
+    {
+        if ( ! config('userguide.modules.' . $module . '.enabled')) {
+            abort(404, 'That module doesn\'t exist, or has userguide pages disabled.');
+        }
 
-		// If it's not found, show the error page
-		if ( ! $file)
-		{
-			abort(404, 'Userguide page not found');
-		}
+        if (is_null($page)) {
+            $page = config('userguide.modules.' . $module . '.index_page', 'index');
+        }
 
-		UserguideMarkdown::$baseUrl = route('backend.userguide.docs', [$module]);
+        $title = config('userguide.modules.' . $module . '.name');
 
-		$content = (new UserguideMarkdown)->text(file_get_contents($file));
-		$menuItems = (new UserguideMarkdown)->text($this->getAllMenuMarkdown($module));
+        // Find the markdown file for this page
+        $file = $this->file($module . '/' . $page);
 
-		$menu = view($this->wrapNamespace('menu'), compact('menuItems', 'title'));
+        // If it's not found, show the error page
+        if ( ! $file) {
+            abort(404, 'Userguide page not found');
+        }
 
-		$this->setTitle($title, UserguideMarkdown::$baseUrl);
-		$this->setTitle($this->title($module, $page));
+        UserguideMarkdown::$baseUrl = route('backend.userguide.docs', [$module]);
 
-		$this->setContent('doc', compact('title', 'menu', 'content'));
-	}
+        $content   = (new UserguideMarkdown)->text(file_get_contents($file));
+        $menuItems = (new UserguideMarkdown)->text($this->getAllMenuMarkdown($module));
 
-	/**
-	 * @param string $page
-	 *
-	 * @return string
-	 */
-	public function file($page)
-	{
-		return ModulesFileSystem::findFile('guide', $page, 'md');
-	}
+        $menu = view($this->wrapNamespace('menu'), compact('menuItems', 'title'));
 
-	/**
-	 * @param string $module
-	 * @param string $page
-	 *
-	 * @return string
-	 */
-	public function section($module, $page)
-	{
-		$markdown = $this->getAllMenuMarkdown($module);
+        $this->setTitle($title, UserguideMarkdown::$baseUrl);
+        $this->setTitle($this->title($module, $page));
 
-		if (preg_match('~\*{2}(.+?)\*{2}[^*]+\[[^\]]+\]\(' . preg_quote($page) . '\)~mu', $markdown, $matches))
-		{
-			return $matches[1];
-		}
+        $this->setContent('doc', compact('title', 'menu', 'content'));
+    }
 
-		return $page;
-	}
 
-	/**
-	 * @param string $module
-	 * @param string $page
-	 *
-	 * @return string
-	 */
-	public function title($module, $page)
-	{
-		$markdown = $this->getAllMenuMarkdown($module);
+    /**
+     * @param string $page
+     *
+     * @return string
+     */
+    public function file($page)
+    {
+        return ModulesFileSystem::findFile('guide', $page, 'md');
+    }
 
-		if (preg_match('~\[([^\]]+)\]\(.*'.preg_quote($page).'\)~mu', $markdown, $matches))
-		{
-			// Found a title for this link
-			return $matches[1];
-		}
 
-		return $page;
-	}
+    /**
+     * @param string $module
+     * @param string $page
+     *
+     * @return string
+     */
+    public function section($module, $page)
+    {
+        $markdown = $this->getAllMenuMarkdown($module);
 
-	/**
-	 * @param string $module
-	 *
-	 * @return string
-	 */
-	protected function getAllMenuMarkdown($module)
-	{
-		// Only do this once per request...
-		static $markdown = '';
+        if (preg_match('~\*{2}(.+?)\*{2}[^*]+\[[^\]]+\]\(' . preg_quote($page) . '\)~mu', $markdown, $matches)) {
+            return $matches[1];
+        }
 
-		if (empty($markdown))
-		{
-			// Get menu items
-			$file = $this->file($module . '/documentation');
+        return $page;
+    }
 
-			if ($file AND $text = file_get_contents($file))
-			{
-				$markdown .= $text;
-			}
 
-		}
+    /**
+     * @param string $module
+     * @param string $page
+     *
+     * @return string
+     */
+    public function title($module, $page)
+    {
+        $markdown = $this->getAllMenuMarkdown($module);
 
-		return $markdown;
-	}
+        if (preg_match('~\[([^\]]+)\]\(.*' . preg_quote($page) . '\)~mu', $markdown, $matches)) {
+            // Found a title for this link
+            return $matches[1];
+        }
 
-	/**
-	 * Get the list of modules from the config,
-	 * and reverses it so it displays in the order
-	 * the modules are added, but move Kohana to the top.
-	 *
-	 * @return array
-	 */
-	protected function modules()
-	{
-		$modules = array_reverse(config('userguide.modules'));
+        return $page;
+    }
 
-		if (isset($modules['laravel']))
-		{
-			$laravel = $modules['laravel'];
-			unset($modules['laravel']);
-			$modules = array_merge(['laravel' => $laravel], $modules);
-		}
 
-		// Remove modules that have been disabled via config
-		foreach ($modules as $key => $value)
-		{
-			if (!config('userguide.modules.' . $key . '.enabled'))
-			{
-				unset($modules[$key]);
-			}
-		}
+    /**
+     * @param string $module
+     *
+     * @return string
+     */
+    protected function getAllMenuMarkdown($module)
+    {
+        // Only do this once per request...
+        static $markdown = '';
 
-		return $modules;
-	}
+        if (empty( $markdown )) {
+            // Get menu items
+            $file = $this->file($module . '/documentation');
+
+            if ($file AND $text = file_get_contents($file)) {
+                $markdown .= $text;
+            }
+
+        }
+
+        return $markdown;
+    }
+
+
+    /**
+     * Get the list of modules from the config,
+     * and reverses it so it displays in the order
+     * the modules are added, but move Kohana to the top.
+     *
+     * @return array
+     */
+    protected function modules()
+    {
+        $modules = array_reverse(config('userguide.modules'));
+
+        if (isset( $modules['laravel'] )) {
+            $laravel = $modules['laravel'];
+            unset( $modules['laravel'] );
+            $modules = array_merge(['laravel' => $laravel], $modules);
+        }
+
+        // Remove modules that have been disabled via config
+        foreach ($modules as $key => $value) {
+            if ( ! config('userguide.modules.' . $key . '.enabled')) {
+                unset( $modules[$key] );
+            }
+        }
+
+        return $modules;
+    }
 }
