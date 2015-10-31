@@ -32,7 +32,7 @@ class ModuleServiceProvider extends ServiceProvider
             'Date' => Date::class,
         ]);
 
-        $this->registerProviders([
+        $this->registerConsoleCommand([
             GenerateScriptTranslatesCommand::class,
             ModuleLocalePublishCommand::class,
             ModuleLocaleDiffCommand::class,
