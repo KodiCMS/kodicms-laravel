@@ -1,7 +1,9 @@
 <?php
 namespace KodiCMS\Users\Http;
 
-class ControllerACL
+use KodiCMS\CMS\Contracts\ControllerACLInterface;
+
+class ControllerACL implements ControllerACLInterface
 {
 
     /**

@@ -50,10 +50,8 @@ class Handler extends ExceptionHandler
      */
     public function render($request, \Exception $e)
     {
-        if ($request->ajax() OR ( $e instanceof APIException )) {
-            return (
-                new APIResponse(config('app.debug'))
-            )->createExceptionResponse($e);
+        if ($request->ajax() or ( $e instanceof APIException )) {
+            return $this->renderApiException($e);
         }
 
         if ($e instanceof ModelNotFoundException) {
@@ -67,6 +65,17 @@ class Handler extends ExceptionHandler
         }
 
         return $this->renderHttpException($e);
+    }
+
+
+    /**
+     * @param Exception $e
+     *
+     * @return APIResponse
+     */
+    protected function renderApiException(Exception $e)
+    {
+        return (new APIResponse(config('app.debug')))->createExceptionResponse($e);
     }
 
 
@@ -98,6 +107,7 @@ class Handler extends ExceptionHandler
      * Render an exception using ErrorController
      *
      * @param  \Exception $e
+     * @param  int        $code
      *
      * @return \Illuminate\Http\Response
      */
@@ -105,15 +115,20 @@ class Handler extends ExceptionHandler
     {
         try {
             $controller = app()->make(ErrorController::class);
+
             if (method_exists($controller, 'error' . $code)) {
                 $action = 'error' . $code;
             } else {
-                $action = 'error500';
+                $action = 'errorDefault';
             }
 
-            return $this->toIlluminateResponse(
-                new Response($controller->callAction($action, [$e])), $e
-            );
+            $response = $controller->callAction($action, [$e]);
+
+            if ( ! ( $response instanceof Response )) {
+                $response = new Response($response);
+            }
+
+            return $this->toIlluminateResponse($response );
         } catch (\Exception $ex) {
             return $this->convertExceptionToResponse($ex);
         }
