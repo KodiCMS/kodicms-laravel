@@ -1,8 +1,8 @@
 <?php namespace App\Console;
 
-use KodiCMS\CMS\Console\Kernel as CMSConsoleKernel;
+use KodiCMS\Cron\Console\Kernel as CronConsoleKernel;
 
-class Kernel extends CMSConsoleKernel
+class Kernel extends CronConsoleKernel
 {
 
 }

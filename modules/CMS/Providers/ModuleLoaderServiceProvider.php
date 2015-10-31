@@ -1,11 +1,21 @@
 <?php
 namespace KodiCMS\CMS\Providers;
 
+use KodiCMS\CMS\CMS;
+use KodiCMS\Support\Facades\RouteAPI;
+use KodiCMS\Support\Helpers\Profiler;
 use Illuminate\Foundation\AliasLoader;
+use KodiCMS\Support\Facades\KeysHelper;
 use KodiCMS\Support\Loader\ModulesLoader;
+use KodiCMS\Support\Facades\DatabaseConfig;
 use KodiCMS\ModulesLoader\ModulesFileSystem;
 use KodiCMS\ModulesLoader\ModulesLoaderFacade;
+use KodiCMS\Users\Providers\AuthServiceProvider;
 use KodiCMS\ModulesLoader\ModulesFileSystemFacade;
+use KodiCMS\Plugins\Providers\PluginServiceProvider;
+use KodiCMS\ModulesLoader\Providers\AppServiceProvider;
+use KodiCMS\ModulesLoader\Providers\RouteServiceProvider;
+use KodiCMS\ModulesLoader\Providers\ConfigServiceProvider;
 use KodiCMS\ModulesLoader\Providers\ModuleServiceProvider as BaseModuleServiceProvider;
 
 class ModuleLoaderServiceProvider extends BaseModuleServiceProvider
@@ -16,13 +26,13 @@ class ModuleLoaderServiceProvider extends BaseModuleServiceProvider
      * @var array
      */
     protected $providers = [
-        \KodiCMS\Plugins\Providers\PluginServiceProvider::class,
-        \KodiCMS\ModulesLoader\Providers\RouteServiceProvider::class,
+        PluginServiceProvider::class,
+        RouteServiceProvider::class,
         EventServiceProvider::class,
-        \KodiCMS\CMS\Providers\BusServiceProvider::class,
-        \KodiCMS\ModulesLoader\Providers\AppServiceProvider::class,
-        \KodiCMS\ModulesLoader\Providers\ConfigServiceProvider::class,
-        \KodiCMS\Users\Providers\AuthServiceProvider::class,
+        BusServiceProvider::class,
+        AppServiceProvider::class,
+        ConfigServiceProvider::class,
+        AuthServiceProvider::class,
     ];
 
 
@@ -60,11 +70,11 @@ class ModuleLoaderServiceProvider extends BaseModuleServiceProvider
         AliasLoader::getInstance([
             'ModulesLoader'     => ModulesLoaderFacade::class,
             'ModulesFileSystem' => ModulesFileSystemFacade::class,
-            'Keys'              => \KodiCMS\Support\Facades\KeysHelper::class,
-            'RouteAPI'          => \KodiCMS\Support\Facades\RouteAPI::class,
-            'CMS'               => \KodiCMS\CMS\CMS::class,
-            'DatabaseConfig'    => \KodiCMS\Support\Facades\DatabaseConfig::class,
-            'Profiler'          => \KodiCMS\Support\Helpers\Profiler::class,
+            'Keys'              => KeysHelper::class,
+            'RouteAPI'          => RouteAPI::class,
+            'CMS'               => CMS::class,
+            'DatabaseConfig'    => DatabaseConfig::class,
+            'Profiler'          => Profiler::class,
         ]);
     }
 }

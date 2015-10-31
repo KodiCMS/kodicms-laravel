@@ -6,11 +6,21 @@ use Cache;
 use Config;
 use Event;
 use Profiler;
+use PDOException;
 use ModulesFileSystem;
+use KodiCMS\Support\Helpers\UI;
+use KodiCMS\Support\Helpers\Date;
 use KodiCMS\Support\ServiceProvider;
 use KodiCMS\CMS\Helpers\DatabaseConfig;
 use KodiCMS\Support\Cache\SqLiteTaggedStore;
 use KodiCMS\Support\Cache\DatabaseTaggedStore;
+use KodiCMS\CMS\Console\Commands\WysiwygListCommand;
+use KodiCMS\CMS\Console\Commands\PackagesListCommand;
+use KodiCMS\CMS\Console\Commands\ModulePublishCommand;
+use KodiCMS\CMS\Console\Commands\ControllerMakeCommand;
+use KodiCMS\CMS\Console\Commands\ModuleLocaleDiffCommand;
+use KodiCMS\CMS\Console\Commands\ModuleLocalePublishCommand;
+use KodiCMS\CMS\Console\Commands\GenerateScriptTranslatesCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -18,8 +28,18 @@ class ModuleServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerAliases([
-            'UI'   => \KodiCMS\Support\Helpers\UI::class,
-            'Date' => \KodiCMS\Support\Helpers\Date::class,
+            'UI'   => UI::class,
+            'Date' => Date::class,
+        ]);
+
+        $this->registerProviders([
+            GenerateScriptTranslatesCommand::class,
+            ModuleLocalePublishCommand::class,
+            ModuleLocaleDiffCommand::class,
+            ControllerMakeCommand::class,
+            ModulePublishCommand::class,
+            PackagesListCommand::class,
+            WysiwygListCommand::class,
         ]);
 
         Event::listen('config.loaded', function () {
@@ -32,7 +52,7 @@ class ModuleServiceProvider extends ServiceProvider
                     foreach ($config as $group => $data) {
                         Config::set($group, array_merge(Config::get($group, []), $data));
                     }
-                } catch (\PDOException $e) {
+                } catch (PDOException $e) {
                 }
             }
         }, 999);
