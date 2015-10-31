@@ -263,7 +263,7 @@ class Collection implements \Countable, \Iterator
     {
         $key = key($this->items);
 
-        return ( ! is_null($key) AND $key !== false );
+        return ( ! is_null($key) and $key !== false );
     }
 
 

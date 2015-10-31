@@ -82,7 +82,7 @@ class ModuleServiceProvider extends ServiceProvider
                 echo view('widgets::widgets.partials.renderable', compact('widget', 'commentKeys', 'snippets'))->render();
             }
 
-            if ($widget->isCacheable() AND acl_check('widgets.cache')) {
+            if ($widget->isCacheable() and acl_check('widgets.cache')) {
                 echo view('widgets::widgets.partials.cacheable', compact('widget'))->render();
             }
         });
@@ -95,7 +95,7 @@ class ModuleServiceProvider extends ServiceProvider
                 echo view('widgets::widgets.partials.renderable_buttons', compact('widget', 'commentKeys', 'snippets', 'assetsPackages', 'widgetList'))->render();
             }
 
-            if (acl_check('widgets.roles') AND ! $widget->isHandler()) {
+            if (acl_check('widgets.roles') and ! $widget->isHandler()) {
                 $usersRoles = UserRole::lists('name', 'id')->all();
                 echo view('widgets::widgets.partials.permissions', compact('widget', 'usersRoles'))->render();
             }

@@ -40,7 +40,7 @@
 					<span class="label label-warning">@lang('widgets::snippet.label.readonly')</span>
 				@endif
 
-				@if (acl_check('snippet.edit') OR acl_check('snippet.view'))
+				@if (acl_check('snippet.edit') or acl_check('snippet.view'))
 				{!! link_to_route('backend.snippet.edit', $snippet->getName(), [$snippet->getName()], [
 					'class' => $snippet->isReadOnly() ? 'popup' : ''
 				]) !!}

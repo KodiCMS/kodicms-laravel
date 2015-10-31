@@ -250,7 +250,7 @@ class TreeCollection implements \RecursiveIterator
             if (in_array($row['id'], $ids)) {
                 unset( $array[$i] );
 
-                if ($removeChilds !== true AND ! empty( $row['childs'] )) {
+                if ($removeChilds !== true and ! empty( $row['childs'] )) {
                     foreach ($row['childs'] as $child) {
                         $array[] = $child;
                     }
@@ -277,7 +277,7 @@ class TreeCollection implements \RecursiveIterator
     protected function _filter(& $array, $key, $value)
     {
         foreach ($array as $i => $row) {
-            if (isset( $row[$key] ) AND $row[$key] == $value) {
+            if (isset( $row[$key] ) and $row[$key] == $value) {
                 unset( $array[$i] );
             }
         }
@@ -296,7 +296,7 @@ class TreeCollection implements \RecursiveIterator
         foreach ($array as $row) {
             $return[$row['id']] = $row;
 
-            if ($childs !== false AND ! empty( $row['childs'] )) {
+            if ($childs !== false and ! empty( $row['childs'] )) {
                 $this->_flatten($row['childs'], $childs, $return);
             }
 

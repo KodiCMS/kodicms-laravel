@@ -11,7 +11,7 @@
 		</div>
 	</div>
 </div>
-@if (!$snippet->isReadOnly() OR $snippet->isNew())
+@if (!$snippet->isReadOnly() or $snippet->isNew())
 <div class="panel-toggler text-center panel-heading" data-target-spoiler=".spoiler-settings">
 	{!! UI::icon('chevron-down panel-toggler-icon') !!} <span class="muted">@lang('widgets::snippet.label.settings')</span>
 </div>
@@ -40,7 +40,7 @@
 	<span class="panel-title">@lang('widgets::snippet.field.content')</span>
 	{!! UI::badge($snippet->getRelativePath()) !!}
 
-	@if (!$snippet->isReadOnly() OR $snippet->isNew())
+	@if (!$snippet->isReadOnly() or $snippet->isNew())
 		<div class="panel-heading-controls">
 			{!! Form::button(trans('widgets::snippet.button.filemanager'), [
 			'data-icon' => 'folder-open',

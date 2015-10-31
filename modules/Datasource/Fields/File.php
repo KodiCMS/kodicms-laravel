@@ -175,7 +175,7 @@ class File extends Primitive
     {
         $disallowedTypes = explode(',', '/^php/,/^phtm/,py,pl,/^asp/,htaccess,cgi,_wc,/^shtm/,/^jsp/');
         foreach ($disallowedTypes as $disallowed) {
-            if (( ( strpos($disallowed, '/') !== false ) AND preg_match($disallowed, $type) ) OR $disallowed == $type) {
+            if (( ( strpos($disallowed, '/') !== false ) and preg_match($disallowed, $type) ) or $disallowed == $type) {
                 return false;
             }
         }

@@ -30,7 +30,7 @@ class PagePart
 
         if (isset( $parts[$page->getId()][$part] )) {
             return $parts[$page->getId()][$part];
-        } else if ($inherit !== false AND ( $parent = $page->getParent() ) instanceof FrontendPage) {
+        } else if ($inherit !== false and ( $parent = $page->getParent() ) instanceof FrontendPage) {
             return static::exists($parent, $part, true);
         }
 
@@ -49,7 +49,7 @@ class PagePart
     {
         if (static::exists($page, $part)) {
             return static::get($page->getId(), $part);
-        } else if ($inherit !== false AND ( $parent = $page->getParent() ) instanceof FrontendPage) {
+        } else if ($inherit !== false and ( $parent = $page->getParent() ) instanceof FrontendPage) {
             return static::getContent($parent, $part, true);
         }
 

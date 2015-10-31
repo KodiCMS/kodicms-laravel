@@ -40,7 +40,7 @@
 			</td>
 			<td class="last_login hidden-xs">{{ $user->last_login }}</td>
 			<td class="actions text-right">
-				@if ($user->id > 1 AND acl_check('users.delete'))
+				@if ($user->id > 1 and acl_check('users.delete'))
 				{!! Form::open(['route' => ['backend.user.delete', $user]]) !!}
 					{!! Form::button('', [
 						'type' => 'submit',

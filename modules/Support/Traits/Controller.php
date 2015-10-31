@@ -126,7 +126,7 @@ trait Controller
      */
     public function getCurrentAction()
     {
-        if ( ! is_null($this->getRouter()) AND ! is_null($this->getRouter()->currentRouteAction())) {
+        if ( ! is_null($this->getRouter()) and ! is_null($this->getRouter()->currentRouteAction())) {
             list( $class, $method ) = explode('@', $this->getRouter()->currentRouteAction(), 2);
         } else {
             $method = null;

@@ -41,7 +41,7 @@ abstract class Controller extends BaseController
         $this->responseArray['method'] = $this->request->method();
         $this->responseArray['code']   = Response::NO_ERROR;
 
-        if (isset( $this->requiredFields[$method] ) AND is_array($this->requiredFields[$method])) {
+        if (isset( $this->requiredFields[$method] ) and is_array($this->requiredFields[$method])) {
             $this->validateParameters($this->requiredFields[$method]);
         }
 

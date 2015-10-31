@@ -2,7 +2,7 @@
 $layoutName = $model->getLayout();
 $layoutLink = '';
 
-if ((acl_check('layout.edit') OR acl_check('layout.view')) AND ! empty($layoutName))
+if ((acl_check('layout.edit') or acl_check('layout.view')) and ! empty($layoutName))
 {
 	$layoutLink = link_to_route('backend.layout.edit', $layoutName, [$layoutName], [
 		'class' => 'popup fancybox.iframe'

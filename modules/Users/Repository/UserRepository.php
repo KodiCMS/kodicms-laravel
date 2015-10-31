@@ -97,7 +97,7 @@ class UserRepository extends BaseRepository
      */
     public function update($id, array $data = [])
     {
-        if (array_key_exists('password', $data) AND empty( $data['password'] )) {
+        if (array_key_exists('password', $data) and empty( $data['password'] )) {
             unset( $data['password'] );
         }
 

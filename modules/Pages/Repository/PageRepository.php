@@ -168,7 +168,7 @@ class PageRepository extends BaseRepository
     {
         $pages = $this->model;
 
-        if (strlen($keyword) == 2 AND $keyword[0] == '.') {
+        if (strlen($keyword) == 2 and $keyword[0] == '.') {
             $page_status = [
                 'd' => FrontendPage::STATUS_DRAFT,
                 'p' => FrontendPage::STATUS_PUBLISHED,

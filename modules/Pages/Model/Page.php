@@ -220,7 +220,7 @@ class Page extends Model implements BehaviorPageInterface
      */
     public function hasLayout()
     {
-        if (empty( $this->layout_file ) AND $parent = $this->parentPage()) {
+        if (empty( $this->layout_file ) and $parent = $this->parentPage()) {
             return $parent->hasLayout();
         }
 
@@ -234,7 +234,7 @@ class Page extends Model implements BehaviorPageInterface
      */
     public function getLayout()
     {
-        if (empty( $this->layout_file ) AND $parent = $this->parentPage()) {
+        if (empty( $this->layout_file ) and $parent = $this->parentPage()) {
             return $parent->getLayout();
         }
 

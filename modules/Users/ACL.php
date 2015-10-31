@@ -100,7 +100,7 @@ class ACL
             $roles   = ['login'];
         }
 
-        if ($user_id == static::ADMIN_USER OR in_array(static::ADMIN_ROLE, $roles)) {
+        if ($user_id == static::ADMIN_USER or in_array(static::ADMIN_ROLE, $roles)) {
             return true;
         }
 

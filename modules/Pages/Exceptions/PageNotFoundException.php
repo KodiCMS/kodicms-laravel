@@ -30,7 +30,7 @@ class PageNotFoundException extends Exception
             $mimeType = 'text/html';
         }
 
-        if ($mimeType AND $mimeType != 'text/html') {
+        if ($mimeType and $mimeType != 'text/html') {
             $response = new Response();
             $this->sendResponse($response, $mimeType);
         } elseif ( ! is_null($page = FrontendPage::findByField('behavior', 'page.not.found'))) {

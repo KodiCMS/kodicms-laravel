@@ -66,7 +66,7 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable
 
         $foundPageObject = new FrontendPage($foundPage);
 
-        if (is_null($parentPage) AND ! is_null($foundPageObject->getParentId())) {
+        if (is_null($parentPage) and ! is_null($foundPageObject->getParentId())) {
             $parentPage = static::findById($foundPageObject->getParentId());
         }
 
@@ -104,7 +104,7 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable
             $url = ltrim($url . '/' . $pageSlug, '/');
 
             if ($pageObject = static::findBySlug($pageSlug, $parentPage, $includeHidden)) {
-                if ($pageObject->hasBehavior() AND ! is_null($behavior = BehaviorManager::load($pageObject->getBehavior()))) {
+                if ($pageObject->hasBehavior() and ! is_null($behavior = BehaviorManager::load($pageObject->getBehavior()))) {
                     $behavior->setPage($pageObject);
                     $behavior->executeRoute(substr($uri, strlen($url)));
 
@@ -187,7 +187,7 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable
             }
         }
 
-        if ( ! config('pages.similar.return_parent_page') AND ( count($uriSlugs) != count($newSlugs) )) {
+        if ( ! config('pages.similar.return_parent_page') and ( count($uriSlugs) != count($newSlugs) )) {
             return false;
         }
 
@@ -448,7 +448,7 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable
      */
     public function getLayout()
     {
-        if (empty( $this->layout_file ) AND $parent = $this->getParent()) {
+        if (empty( $this->layout_file ) and $parent = $this->getParent()) {
             return $parent->getLayout();
         }
 
@@ -537,7 +537,7 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable
     {
         $crumbs = new Breadcrumbs;
 
-        if (( $parent = $this->getParent() ) instanceof FrontendPage AND $this->getLevel() > $level) {
+        if (( $parent = $this->getParent() ) instanceof FrontendPage and $this->getLevel() > $level) {
             $this->getParent()->recurseBreadcrumbs($level, $crumbs);
         }
 
@@ -616,7 +616,7 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable
      */
     public function getParent($level = null)
     {
-        if ($this->parentPage === null AND is_numeric($this->getParentId()) AND $this->getParentId() > 0) {
+        if ($this->parentPage === null and is_numeric($this->getParentId()) and $this->getParentId() > 0) {
             return static::findById($this->getParentId());
         }
 
@@ -847,7 +847,7 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable
                         }
                         break;
                     default: // Level
-                        if (is_numeric($field) AND $this->getLevel() != $field AND $this->getParent($field) instanceof FrontendPage) {
+                        if (is_numeric($field) and $this->getLevel() != $field and $this->getParent($field) instanceof FrontendPage) {
                             $method  = 'get' . ucfirst($key);
                             $parts[] = $this->getParent($field)->{$method}();
                         }
@@ -874,7 +874,7 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable
                 if ($param !== null) {
                     if (strpos($param, 'cms.') !== false) {
                         $parts[] = config('cms.' . substr($param, 5), $default);
-                    } else if (strpos($param, 'parent.') !== false AND $this->getParent() instanceof FrontendPage AND method_exists($this, ( $method = 'get' . ucfirst(substr($param, 7)) ))) {
+                    } else if (strpos($param, 'parent.') !== false and $this->getParent() instanceof FrontendPage and method_exists($this, ( $method = 'get' . ucfirst(substr($param, 7)) ))) {
                         $parts[] = $this->getParent()->{$method}();
                     } else if (method_exists($this, ( $method = 'get' . ucfirst($param) ))) {
                         $parts[] = $this->{$method}();
@@ -975,7 +975,7 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable
      */
     private function recurseBreadcrumbs($level, Breadcrumbs & $crumbs)
     {
-        if (( $parent = $this->getParent() ) instanceof FrontendPage AND $this->getLevel() > $level) {
+        if (( $parent = $this->getParent() ) instanceof FrontendPage and $this->getLevel() > $level) {
             $parent->recurseBreadcrumbs($level, $crumbs);
         }
 
