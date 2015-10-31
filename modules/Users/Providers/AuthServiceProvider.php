@@ -2,6 +2,7 @@
 namespace KodiCMS\Users\Providers;
 
 use KodiCMS\Users\ACL;
+use KodiCMS\Users\Model\User;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -26,6 +27,8 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(GateContract $gate)
     {
         parent::registerPolicies($gate);
+
+        $this->app['config']->set('auth.model', User::class);
 
         $this->app->singleton('acl', function () use ($gate) {
             return new ACL(config('permissions', []), $gate);

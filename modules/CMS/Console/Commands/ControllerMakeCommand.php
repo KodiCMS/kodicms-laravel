@@ -4,7 +4,7 @@ namespace KodiCMS\CMS\Console\Commands;
 use ModulesLoader;
 use RuntimeException;
 use Illuminate\Console\GeneratorCommand;
-use KodiCMS\ModulesLoader\ModuleContainer;
+use KodiCMS\Support\Loader\ModuleContainer;
 use Symfony\Component\Console\Input\InputOption;
 
 class ControllerMakeCommand extends GeneratorCommand

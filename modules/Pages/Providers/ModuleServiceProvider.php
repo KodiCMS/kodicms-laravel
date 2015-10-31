@@ -7,10 +7,10 @@ use Event;
 use WYSIWYG;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Helpers\Meta;
+use KodiCMS\Support\ServiceProvider;
 use KodiCMS\Pages\Observers\PageObserver;
 use KodiCMS\Pages\Observers\PagePartObserver;
 use KodiCMS\Pages\Model\PagePart as PagePartModel;
-use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 use KodiCMS\Pages\Console\Commands\RebuldLayoutBlocksCommand;
 use KodiCMS\Pages\Listeners\PlacePagePartsToBlocksEventHandler;
@@ -67,6 +67,15 @@ class ModuleServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->registerConsoleCommand('layout.generate.key', RebuldLayoutBlocksCommand::class);
+        $this->registerAliases([
+            'Frontpage' => \KodiCMS\Support\Facades\Frontpage::class,
+            'Meta'      => \KodiCMS\Support\Facades\FrontpageMeta::class,
+            'Package'   => \KodiCMS\Support\Facades\Package::class,
+            'Assets'    => \KodiCMS\Support\Facades\Assets::class,
+            'Block'     => \KodiCMS\Support\Facades\Block::class,
+            'WYSIWYG'   => \KodiCMS\Support\Facades\Wysiwyg::class,
+        ]);
+
+        $this->registerConsoleCommand(RebuldLayoutBlocksCommand::class);
     }
 }

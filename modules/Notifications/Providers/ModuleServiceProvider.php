@@ -3,8 +3,8 @@ namespace KodiCMS\Notifications\Providers;
 
 use Event;
 use KodiCMS\Users\Model\User;
+use KodiCMS\Support\ServiceProvider;
 use KodiCMS\Notifications\Model\Notification;
-use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 use KodiCMS\Notifications\Console\Commands\DeleteExpiredCommand;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -17,7 +17,7 @@ class ModuleServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerConsoleCommand('notifications.delete-expired', DeleteExpiredCommand::class);
+        $this->registerConsoleCommand(DeleteExpiredCommand::class);
     }
 
 

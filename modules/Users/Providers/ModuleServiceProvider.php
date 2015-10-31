@@ -4,11 +4,11 @@ namespace KodiCMS\Users\Providers;
 use Event;
 use KodiCMS\Users\Model\User;
 use KodiCMS\Users\Model\UserRole;
+use KodiCMS\Support\ServiceProvider;
 use KodiCMS\Users\Observers\RoleObserver;
 use KodiCMS\Users\Observers\UserObserver;
 use KodiCMS\Users\Reflinks\ReflinksBroker;
 use KodiCMS\Users\Reflinks\ReflinkTokenRepository;
-use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 use KodiCMS\Users\Console\Commands\DeleteExpiredReflinksCommand;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -31,9 +31,14 @@ class ModuleServiceProvider extends ServiceProvider
 
     public function register()
     {
+        $this->registerAliases([
+            'ACL'      => \KodiCMS\Support\Facades\ACL::class,
+            'Reflinks' => \KodiCMS\Support\Facades\Reflinks::class,
+        ]);
+
         $this->registerReflinksBroker();
         $this->registerTokenRepository();
-        $this->registerConsoleCommand('cms.reflinks.clean', DeleteExpiredReflinksCommand::class);
+        $this->registerConsoleCommand(DeleteExpiredReflinksCommand::class);
     }
 
 

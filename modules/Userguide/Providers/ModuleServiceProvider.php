@@ -4,7 +4,7 @@ namespace KodiCMS\Userguide\Providers;
 use Event;
 use KodiCMS\CMS\Navigation\Page;
 use KodiCMS\CMS\Navigation\Section;
-use KodiCMS\ModulesLoader\Providers\ServiceProvider;
+use KodiCMS\Support\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
 {

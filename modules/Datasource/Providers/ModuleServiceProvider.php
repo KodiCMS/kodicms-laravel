@@ -4,17 +4,24 @@ namespace KodiCMS\Datasource\Providers;
 use Event;
 use KodiCMS\CMS\Navigation\Page;
 use KodiCMS\CMS\Navigation\Section;
-use KodiCMS\Datasource\FieldGroupManager;
+use KodiCMS\Support\ServiceProvider;
 use KodiCMS\Datasource\FieldManager;
+use KodiCMS\Datasource\FieldGroupManager;
 use KodiCMS\Datasource\DatasourceManager;
 use KodiCMS\Datasource\Datatables\SectionDatatables;
-use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
 {
 
     public function register()
     {
+        $this->registerAliases([
+            'DatasourceManager' => \KodiCMS\Support\Facades\DatasourceManager::class,
+            'FieldManager'      => \KodiCMS\Support\Facades\FieldManager::class,
+            'FieldGroupManager' => \KodiCMS\Support\Facades\FieldGroupManager::class,
+            'SectionDatatables' => \KodiCMS\Datasource\Datatables\SectionDatatables::class,
+        ]);
+
         $this->app->singleton('datasource.manager', function () {
             return new DatasourceManager(config('datasources', []));
         });
@@ -33,7 +40,7 @@ class ModuleServiceProvider extends ServiceProvider
             return new SectionDatatables($request);
         });
 
-        $this->registerConsoleCommand('datasource.migrate', '\KodiCMS\Datasource\Console\Commands\DatasourceMigrate');
+        $this->registerConsoleCommand(\KodiCMS\Datasource\Console\Commands\DatasourceMigrate::class);
     }
 
 

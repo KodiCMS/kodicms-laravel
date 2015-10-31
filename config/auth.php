@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'model' => KodiCMS\Users\Model\User::class,
+    'model' => App\User::class,
 
     /*
     |--------------------------------------------------------------------------

@@ -5,7 +5,7 @@ use App;
 use Route;
 use Event;
 use Illuminate\Routing\Router;
-use KodiCMS\ModulesLoader\ModuleContainer as BaseModuleContainer;
+use KodiCMS\Support\Loader\ModuleContainer as BaseModuleContainer;
 
 class ModuleContainer extends BaseModuleContainer
 {

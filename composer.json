@@ -18,7 +18,8 @@
 		"erusev/parsedown": "1.*",
 		"doctrine/dbal": "~2.3",
 		"yajra/laravel-datatables-oracle": "~5.0",
-		"intervention/image": "^2.3"
+		"intervention/image": "^2.3",
+		"kodicms/module-loader": "~2.0"
 	},
 	"require-dev": {
 		"fzaninotto/faker": "~1.4",

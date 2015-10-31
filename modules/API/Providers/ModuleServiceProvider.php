@@ -3,7 +3,7 @@ namespace KodiCMS\API\Providers;
 
 use Event;
 use Illuminate\Routing\Router;
-use KodiCMS\ModulesLoader\Providers\ServiceProvider;
+use KodiCMS\Support\ServiceProvider;
 use KodiCMS\API\Console\Commands\GenerateApiKeyCommand;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -11,7 +11,7 @@ class ModuleServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->registerConsoleCommand('cms.api.generate.key', GenerateApiKeyCommand::class);
+        $this->registerConsoleCommand(GenerateApiKeyCommand::class);
     }
 
 

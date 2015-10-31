@@ -3,7 +3,7 @@ namespace KodiCMS\Installer\Support;
 
 use App;
 use Schema;
-use KodiCMS\ModulesLoader\ModuleContainer;
+use KodiCMS\Support\Loader\ModuleContainer;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Database\Migrations\DatabaseMigrationRepository;
 

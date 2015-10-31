@@ -2,9 +2,9 @@
 namespace KodiCMS\Plugins\Providers;
 
 use KodiCMS\Plugins\Model\Plugin;
+use KodiCMS\Support\ServiceProvider;
 use KodiCMS\Plugins\Loader\PluginLoader;
 use KodiCMS\Plugins\Loader\PluginInstaller;
-use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 use KodiCMS\Plugins\Console\Commands\PluginsListCommand;
 use KodiCMS\Plugins\Console\Commands\PluginActivateCommand;
 use KodiCMS\Plugins\Console\Commands\PluginDeactivateCommand;
@@ -27,6 +27,10 @@ class PluginServiceProvider extends ServiceProvider
 
     public function register()
     {
+        $this->registerAliases([
+            'PluginLoader' => \KodiCMS\Support\Facades\PluginLoader::class,
+        ]);
+
         $this->app->singleton('plugin.installer', function ($app) {
             return new PluginInstaller($app['db'], $app['files']);
         });
@@ -39,8 +43,10 @@ class PluginServiceProvider extends ServiceProvider
         } catch (\Exception $e) {
         }
 
-        $this->registerConsoleCommand('cms.plugins.list', PluginsListCommand::class);
-        $this->registerConsoleCommand('cms.plugins.activate', PluginActivateCommand::class);
-        $this->registerConsoleCommand('cms.plugins.deactivate', PluginDeactivateCommand::class);
+        $this->registerConsoleCommand([
+            PluginsListCommand::class,
+            PluginActivateCommand::class,
+            PluginDeactivateCommand::class,
+        ]);
     }
 }

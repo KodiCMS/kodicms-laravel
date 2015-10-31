@@ -1,24 +1,26 @@
 <?php
 namespace KodiCMS\Installer\Providers;
 
-use Artisan;
 use KodiCMS\Installer\Installer;
+use KodiCMS\Support\ServiceProvider;
 use KodiCMS\Installer\EnvironmentTester;
-use KodiCMS\ModulesLoader\Providers\ServiceProvider;
 use KodiCMS\Installer\Console\Commands\InstallCommand;
-use KodiCMS\Installer\Console\Commands\ModulesSeedCommand;
 use KodiCMS\Installer\Console\Commands\DropDatabaseCommand;
-use KodiCMS\Installer\Console\Commands\ModulesMigrateCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
 
     public function register()
     {
-        $this->registerConsoleCommand('cms.install', InstallCommand::class);
-        $this->registerConsoleCommand('modules.seed', ModulesSeedCommand::class);
-        $this->registerConsoleCommand('modules.migrate', ModulesMigrateCommand::class);
-        $this->registerConsoleCommand('db.clear', DropDatabaseCommand::class);
+        $this->registerAliases([
+            'Installer'         => \KodiCMS\Support\Facades\Installer::class,
+            'EnvironmentTester' => \KodiCMS\Support\Facades\EnvironmentTester::class,
+        ]);
+
+        $this->registerConsoleCommand([
+            InstallCommand::class,
+            DropDatabaseCommand::class,
+        ]);
 
         if ( ! $this->app->installed()) {
             putenv('APP_ENV=local');

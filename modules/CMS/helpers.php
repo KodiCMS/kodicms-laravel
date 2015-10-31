@@ -31,16 +31,6 @@ function backend_resources_url($path = null)
 }
 
 /**
- * @param string $path
- *
- * @return string
- */
-function normalize_path($path)
-{
-    return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
-}
-
-/**
  * @return string
  */
 function layouts_path()
