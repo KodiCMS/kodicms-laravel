@@ -2,10 +2,31 @@
 namespace KodiCMS\API\Model;
 
 use Keys;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class ApiKey
+ * @package KodiCMS\API\Model
+ *
+ * @property string $id
+ * @property string $description
+ *
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
 class ApiKey extends Model
 {
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function (ApiKey $key) {
+            $key->id = Keys::generate();
+        });
+    }
+
 
     /**
      * Indicates if the IDs are auto-incrementing.
@@ -26,7 +47,7 @@ class ApiKey extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'description'];
+    protected $fillable = ['description'];
 
 
     /**
@@ -37,7 +58,6 @@ class ApiKey extends Model
     public function generate($description = '')
     {
         $key = static::create([
-            'id'          => Keys::generate(),
             'description' => $description,
         ]);
 
@@ -52,28 +72,24 @@ class ApiKey extends Model
      */
     public function refresh($oldKey)
     {
-        $key = static::where('id', $oldKey)->first();
-
-        if (is_null($key) or ! $key->exists) {
+        if (is_null($key = static::where('id', $oldKey)->first())) {
             return false;
         }
 
-        $key->update([
-            'id' => Keys::generate(),
-        ]);
+        $key->id = Keys::generate();
+        $key->save();
 
         return $key->id;
     }
 
 
     /**
-     *
      * @param string $key
      *
      * @return bool
      */
     public function isValid($key)
     {
-        return static::where('id', e($key))->first()->exists;
+        return ! is_null(static::where('id', e($key))->first());
     }
 }
