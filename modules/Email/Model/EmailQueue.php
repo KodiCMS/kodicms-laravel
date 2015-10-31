@@ -1,34 +1,30 @@
 <?php
 namespace KodiCMS\Email\Model;
 
-use Mail;
 use KodiCMS\Email\Support\EmailSender;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * Class EmailQueue
+ * @package KodiCMS\Email\Model
+ *
+ * @property integer $id
+ * @property string  $status
+ * @property object  $parameters
+ * @property string  $message_type
+ * @property string  $body
+ * @property integer $attempts
+ *
+ * @property Carbon  $created_at
+ * @property Carbon  $updated_at
+ */
 class EmailQueue extends Model
 {
 
     const STATUS_PENDING = 'pending';
     const STATUS_SENT = 'sent';
     const STATUS_FAILED = 'failed';
-
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'status',
-        'parameters',
-        'message_type',
-        'body',
-        'attempts',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $casts = [
-        'parameters' => 'object',
-    ];
 
 
     protected static function boot()
@@ -39,6 +35,33 @@ class EmailQueue extends Model
             $instance->status   = static::STATUS_PENDING;
             $instance->attempts = 0;
         });
+    }
+
+
+    public static function sendAll()
+    {
+        set_time_limit(0);
+
+        $size     = config('email_queue.batch_size');
+        $interval = config('email_queue.interval');
+
+        $queue = static::pending()->get();
+
+        $i = 0;
+        foreach ($queue as $email) {
+            if ($i >= $size) {
+                $i = 0;
+                sleep($interval);
+            }
+            $email->send();
+            $i++;
+        }
+    }
+
+
+    public static function cleanOld()
+    {
+        static::notPending()->old()->delete();
     }
 
 
@@ -67,51 +90,34 @@ class EmailQueue extends Model
     }
 
 
-    public function scopePending($query)
-    {
-        $query->whereStatus(static::STATUS_PENDING);
-    }
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'parameters',
+        'message_type',
+        'body',
+    ];
 
-
-    public function scopeNotPending($query)
-    {
-        $query->where('status', '!=', static::STATUS_PENDING);
-    }
-
-
-    public function scopeOld($query)
-    {
-        $query->where('created_at', '<', \Carbon\Carbon::create()->subDays(10));
-    }
-
-
-    public static function sendAll()
-    {
-        set_time_limit(0);
-
-        $size     = config('email_queue.batch_size');
-        $interval = config('email_queue.interval');
-
-        $queue = static::pending()->get();
-
-        $i = 0;
-        foreach ($queue as $email) {
-            if ($i >= $size) {
-                $i = 0;
-                sleep($interval);
-            }
-            $email->send();
-            $i++;
-        }
-    }
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'parameters' => 'object',
+    ];
 
 
     public function send()
     {
-        $sended = EmailSender::send($this->body, $this->parameters, $this->message_type);
+        $sent = EmailSender::send($this->body, $this->parameters, $this->message_type);
 
         $this->attempts++;
-        if ($sended) {
+
+        if ($sent) {
             $this->status = static::STATUS_SENT;
         } elseif ($this->attempts >= config('email_queue.max_attempts')) {
             $this->status = static::STATUS_FAILED;
@@ -119,9 +125,32 @@ class EmailQueue extends Model
         $this->save();
     }
 
-
-    public static function cleanOld()
+    /*******************************************************
+     * Scopes
+     *******************************************************/
+    /**
+     * @param Builder $query
+     */
+    public function scopePending(Builder $query)
     {
-        static::notPending()->old()->delete();
+        $query->whereStatus(static::STATUS_PENDING);
     }
-} 
+
+
+    /**
+     * @param Builder $query
+     */
+    public function scopeNotPending(Builder $query)
+    {
+        $query->where('status', '!=', static::STATUS_PENDING);
+    }
+
+
+    /**
+     * @param Builder $query
+     */
+    public function scopeOld(Builder $query)
+    {
+        $query->where('created_at', '<', Carbon::create()->subDays(10));
+    }
+}

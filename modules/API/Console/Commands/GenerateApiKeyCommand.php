@@ -16,15 +16,15 @@ class GenerateApiKeyCommand extends Command
     /**
      * Execute the console command.
      *
-     * @param ApiKeyRepository $reposirory
+     * @param ApiKeyRepository $repository
      *
      * @return string
      */
-    public function fire(ApiKeyRepository $reposirory)
+    public function fire(ApiKeyRepository $repository)
     {
         $this->output->writeln('<info>Generating KodiCMS API key...</info>');
 
-        $key = $reposirory->generate();
+        $key = $repository->generate();
 
         if ( ! is_null($key)) {
             $this->output->writeln("<info>New API key generated: {$key}</info>");

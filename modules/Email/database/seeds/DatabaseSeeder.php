@@ -5,8 +5,6 @@ use DB;
 use Illuminate\Database\Seeder;
 use KodiCMS\Email\Model\EmailEvent;
 use KodiCMS\Email\Model\EmailTemplate;
-use KodiCMS\Users\database\seeds\EmailEventsTableSeeder;
-use KodiCMS\Users\database\seeds\EmailTemplatesTableSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,8 +17,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        EmailTemplate::truncate();
         EmailEvent::truncate();
+        EmailTemplate::truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         $this->call(EmailEventsTableSeeder::class);

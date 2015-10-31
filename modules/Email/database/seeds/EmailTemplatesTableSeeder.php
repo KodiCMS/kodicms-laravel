@@ -1,5 +1,5 @@
 <?php
-namespace KodiCMS\Users\database\seeds;
+namespace KodiCMS\Email\database\seeds;
 
 use Illuminate\Database\Seeder;
 use KodiCMS\Email\Model\EmailType;

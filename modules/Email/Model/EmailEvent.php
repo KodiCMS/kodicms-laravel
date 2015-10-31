@@ -4,10 +4,38 @@ namespace KodiCMS\Email\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class EmailEvent
+ * @package KodiCMS\Email\Model
+ *
+ * @property integer         $id
+ * @property string          $code
+ * @property string          $name
+ * @property string          $full_name
+ * @property array           $fields
+ *
+ * @property EmailTemplate[] $templates
+ *
+ * @property Carbon          $created_at
+ * @property Carbon          $updated_at
+ */
 class EmailEvent extends Model
 {
 
     /**
+     * @param string $code
+     *
+     * @return static
+     */
+    public static function get($code)
+    {
+        return static::whereCode($code)->first();
+    }
+
+
+    /**
+     * The attributes that are mass assignable.
+     *
      * @var array
      */
     protected $fillable = [
@@ -17,6 +45,8 @@ class EmailEvent extends Model
     ];
 
     /**
+     * The attributes that should be casted to native types.
+     *
      * @var array
      */
     protected $casts = [
@@ -30,35 +60,6 @@ class EmailEvent extends Model
     public function getNotFoundMessage()
     {
         return trans('email::core.messages.events.not_found');
-    }
-
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function templates()
-    {
-        return $this->hasMany(EmailTemplate::class, 'email_event_id');
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getFullNameAttribute()
-    {
-        return "{$this->name} ({$this->code})";
-    }
-
-
-    /**
-     * @param string $code
-     *
-     * @return EmailEvent
-     */
-    public static function get($code)
-    {
-        return static::whereCode($code)->first();
     }
 
 
@@ -90,5 +91,28 @@ class EmailEvent extends Model
         foreach ($templates as $template) {
             $template->send($options);
         }
+    }
+
+    /*******************************************************
+     * Mutators
+     *******************************************************/
+
+    /**
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return "{$this->name} ({$this->code})";
+    }
+
+    /*******************************************************
+     * Relations
+     *******************************************************/
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function templates()
+    {
+        return $this->hasMany(EmailTemplate::class, 'email_event_id');
     }
 }

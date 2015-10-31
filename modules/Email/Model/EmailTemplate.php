@@ -1,10 +1,34 @@
 <?php
 namespace KodiCMS\Email\Model;
 
-use Mail;
+use Carbon\Carbon;
 use KodiCMS\Email\Support\EmailSender;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * Class EmailTemplate
+ * @package KodiCMS\Email\Model
+ *
+ * @property integer    $id
+ * @property integer    $email_event_id
+ * @property integer    $status
+ * @property string     $status_string
+ * @property bool       $use_queue
+ * @property string     $email_from
+ * @property string     $email_to
+ * @property string     $subject
+ * @property string     $message
+ * @property string     $message_type
+ * @property string     $cc
+ * @property string     $bcc
+ * @property string     $reply_to
+ *
+ * @property EmailEvent $event
+ *
+ * @property Carbon     $created_at
+ * @property Carbon     $updated_at
+ */
 class EmailTemplate extends Model
 {
 
@@ -55,6 +79,8 @@ class EmailTemplate extends Model
 
 
     /**
+     * The attributes that are mass assignable.
+     *
      * @var array
      */
     protected $fillable = [
@@ -71,6 +97,15 @@ class EmailTemplate extends Model
         'reply_to',
     ];
 
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'use_queue' => 'boolean',
+    ];
+
 
     /**
      * @return string
@@ -78,30 +113,6 @@ class EmailTemplate extends Model
     public function getNotFoundMessage()
     {
         return trans('email::core.messages.templates.not_found');
-    }
-
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function event()
-    {
-        return $this->belongsTo(EmailEvent::class, 'email_event_id');
-    }
-
-
-    public function scopeActive($query)
-    {
-        $query->whereStatus(static::ACTIVE);
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getStatusStringAttribute()
-    {
-        return trans('email::core.statuses.' . $this->status);
     }
 
 
@@ -131,6 +142,42 @@ class EmailTemplate extends Model
     public function addToQueue(array $options = [])
     {
         return EmailQueue::addEmailTemplate($this, $options);
+    }
+
+    /*******************************************************
+     * Mutators
+     *******************************************************/
+
+    /**
+     * @return string
+     */
+    public function getStatusStringAttribute()
+    {
+        return trans('email::core.statuses.' . $this->status);
+    }
+
+    /*******************************************************
+     * Scopes
+     *******************************************************/
+
+    /**
+     * @param Builder $query
+     */
+    public function scopeActive(Builder $query)
+    {
+        $query->whereStatus(static::ACTIVE);
+    }
+
+    /*******************************************************
+     * Relations
+     *******************************************************/
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function event()
+    {
+        return $this->belongsTo(EmailEvent::class, 'email_event_id');
     }
 
 
