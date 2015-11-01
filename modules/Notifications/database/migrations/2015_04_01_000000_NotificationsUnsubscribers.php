@@ -9,7 +9,7 @@ class NotificationsUnsubscribers extends Migration
     public function up()
     {
         Schema::create('notifications_unsubscribers', function (Blueprint $table) {
-            $table->integer('user_id')->unsigned();
+            $table->unsignedInteger('user_id');
             $table->integer('object_type');
 
             $table->primary(['user_id', 'object_type']);

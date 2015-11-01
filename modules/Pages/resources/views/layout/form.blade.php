@@ -11,7 +11,7 @@
 		</div>
 	</div>
 </div>
-@if (!$layout->isReadOnly() OR $layout->isNew())
+@if (!$layout->isReadOnly() or $layout->isNew())
 <div class="panel-toggler text-center panel-heading" data-target-spoiler=".spoiler-settings">
 	{!! UI::icon('chevron-down panel-toggler-icon') !!} <span class="muted">@lang('pages::layout.label.settings')</span>
 </div>
@@ -40,7 +40,7 @@
 		</span>
 	@endif
 
-	@if (!$layout->isReadOnly() OR $layout->isNew())
+	@if (!$layout->isReadOnly() or $layout->isNew())
 		<div class="panel-heading-controls">
 			{!! Form::button(trans('pages::layout.button.filemanager'), [
 			'data-icon' => 'folder-open',

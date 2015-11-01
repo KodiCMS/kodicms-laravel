@@ -43,7 +43,7 @@
 		</tbody>
 	</table>
 
-	@if (acl_check('system.phpinfo') AND function_exists('phpinfo'))
+	@if (acl_check('system.phpinfo') and function_exists('phpinfo'))
 	<div class="panel-heading">
 		<span class="panel-title">@lang('cms::system.tab.about.php_info')</span>
 	</div>

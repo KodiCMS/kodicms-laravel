@@ -18,7 +18,7 @@ class UserController extends APIController
     {
         $userIds = $this->getParameter('uids');
 
-        if ( ! empty( $userIds ) AND ! is_array($userIds)) {
+        if ( ! empty( $userIds ) and ! is_array($userIds)) {
             $userIds = explode(',', $userIds);
         }
 

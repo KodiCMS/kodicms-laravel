@@ -64,7 +64,7 @@ class Num
      */
     public static function ordinal($number)
     {
-        if ($number % 100 > 10 AND $number % 100 < 14) {
+        if ($number % 100 > 10 and $number % 100 < 14) {
             return 'th';
         }
 
@@ -129,7 +129,7 @@ class Num
      */
     public static function round($value, $precision = 0, $mode = self::ROUND_HALF_UP, $native = true)
     {
-        if (version_compare(PHP_VERSION, '5.3', '>=') AND $native) {
+        if (version_compare(PHP_VERSION, '5.3', '>=') and $native) {
             return round($value, $precision, $mode);
         }
 

@@ -26,7 +26,7 @@ class FrontendController extends FrontPageController
         $notFoundMessage = trans('pages::core.messages.not_found');
 
         if ($frontPage instanceof FrontendPage) {
-            if ($frontPage->isRedirect() AND strlen($frontPage->getRedirectUrl()) > 0) {
+            if ($frontPage->isRedirect() and strlen($frontPage->getRedirectUrl()) > 0) {
                 return redirect($frontPage->getRedirectUrl(), 301);
             } else {
                 try {
@@ -42,7 +42,7 @@ class FrontendController extends FrontPageController
             }
         }
 
-        if (config('cms.find_similar') AND ( $uri = FrontendPage::findSimilar($slug) ) !== false) {
+        if (config('cms.find_similar') and ( $uri = FrontendPage::findSimilar($slug) ) !== false) {
             return redirect($uri, 301);
         }
 

@@ -229,7 +229,7 @@ class Text
         $format = ( $format === null ) ? '%01.2f %s' : (string) $format;
 
         // IEC prefixes (binary)
-        if ($si == false OR strpos($force_unit, 'i') !== false) {
+        if ($si == false or strpos($force_unit, 'i') !== false) {
             $units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
             $mod   = 1024;
         } // SI prefixes (decimal)

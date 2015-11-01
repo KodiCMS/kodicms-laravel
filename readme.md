@@ -30,18 +30,18 @@ password: **password**
 ### Консольные команды (Console commands)
 
  * `php artisan cms:install` - создание .env файла, миграция и добавление сидов (в будущем данная команда будет создавать файл и производить миграцию)
- * `php artisan cms:modules:migrate` - создание таблиц в БД
+ * `php artisan modules:migrate` - создание таблиц в БД
    - Для отката старых миграций необходимо добавить `--rollback`
    - Для сидирования данных необходимо добавить `--seed`
 
- * `php artisan cms:modules:seed` - заполнение таблиц тестовыми данными
+ * `php artisan modules:seed` - заполнение таблиц тестовыми данными
  
  * `php artisan cms:modules:publish` - публикация `view` шаблонов *(Publish view templates)*
  * `php artisan cms:modules:locale:publish` - генерация пакета lang файлов для перевода. Файлы будут скопированы в `/resources/lang/vendor`
  * `php artisan cms:modules:locale:diff --locale=en` - проверка наличия всех ключей в переводе в папке `/resources/lang/vendor` относительно модулей.
  * `php artisan cms:generate:translate:js` - генерация JS языковых файлов *(Generate javascript translate admin files)*
  
- * `php artisan cms:modules:list` - просмотр информации о добавленных модулях и плагинов *(Show modules information)*
+ * `php artisan modules:list` - просмотр информации о добавленных модулях и плагинов *(Show modules information)*
  * `php artisan cms:wysiwyg:list` - список установленных в системе редакторов текста *(Show wysiwyg information)*
  * `php artisan cms:packages:list` - список всех media пакетов *(Show asset packages list)*
  * `php artisan cms:plugins:list` - просмотр информации о добавленных плагинах *(Show plugins information)*
@@ -57,38 +57,17 @@ password: **password**
 
 ---
 
-### Структура модуля (Module structure)
-[https://github.com/KodiCMS/kodicms-laravel/wiki/Modules](https://github.com/KodiCMS/kodicms-laravel/wiki/Modules)
+### RoadMap
 
----
-
-### События (Events)
-[https://github.com/KodiCMS/kodicms-laravel/wiki/Events](https://github.com/KodiCMS/kodicms-laravel/wiki/Events)
-
----
-
-### Roadmap
-
- * ~~Добавление в Laravel модульной структуры~~
- * ~~Перенос ядра системы~~
- * ~~Перенос модуля "API"~~
- * ~~Перенос модуля "elFinder"~~
- * ~~Перенос модуля "Pages"~~
- * ~~Перенос модуля "Layouts"~~
- * ~~Перенос модуля "Snippets"~~
- * ~~Перенос модуля "Email"~~
- * ~~Перенос модуля "Cron jobs"~~
- * ~~Перенос модуля "Widgets"~~
- * ~~Перенос модуля "Dashboard"~~
- * ~~Перенос модуля "Users, Roles, ACL"~~
- * ~~Перенос модуля "Reflinks"~~
- * ~~Реализация подключения плагинов, со структурой аналогичной модулям~~
- * ~~Модуль уведомлений (Notifications)~~
- * Перенос модуля "Datasource"
- * Перенос плагина "Hybrid" и интеграция его в систему с расширенным функционалом
+ * ~~Переход на PSR-2~~
+ * Написание документации по созданию модулей и плагинов, и по работе с системой (можно также встроить ее через модуль Userguide)
+ * Настройка прав доступа для пользователя и группы
  * Реализация инсталлятора системы
- * Модуль поиска (Mysql, Sphinx)
- * Редактирование изображений
+ * Модуль поиска с использованием ElasticSearch
+ * Работа с изображениями. Загрузка, редактирование, изменение размера на лету, вставка в текст.
+ * Локализация
+ * Виджеты для вывода данныхх
+ * Развитие модуля DataSource
 
 ### Отдельное спасибо команде JetBrains за бесплатно предоставленый ключ для PHPStorm
 ![PHPStorm](https://www.jetbrains.com/phpstorm/documentation/docs/logo_phpstorm.png)

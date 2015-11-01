@@ -2,7 +2,6 @@
 namespace KodiCMS\Datasource\database\seeds;
 
 use Illuminate\Database\Seeder;
-use KodiCMS\Datasource\Repository\SectionRepository;
 
 class DatasourceTableSeeder extends Seeder
 {

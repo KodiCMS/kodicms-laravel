@@ -55,7 +55,7 @@ class Core
             static::$loadedPackages[] = $name;
 
             foreach ($package as $item) {
-                if ($loadDependencies === true AND isset( $item['deps'] ) AND is_array($item['deps'])) {
+                if ($loadDependencies === true and isset( $item['deps'] ) and is_array($item['deps'])) {
                     $this->package($item['deps'], true);
                 }
 
@@ -264,7 +264,7 @@ class Core
             return $this->js = [];
         }
 
-        if ($handle === true OR $handle === false) {
+        if ($handle === true or $handle === false) {
             foreach ($this->js as $handle => $data) {
                 if ($data['footer'] === $handle) {
                     unset( $this->js[$handle] );
@@ -311,7 +311,7 @@ class Core
      */
     public function getGroup($group, $handle)
     {
-        if ( ! isset( $this->groups[$group] ) OR ! isset( $this->groups[$group][$handle] )) {
+        if ( ! isset( $this->groups[$group] ) or ! isset( $this->groups[$group][$handle] )) {
             return false;
         }
 
@@ -387,7 +387,7 @@ class Core
                         // Remove dependency if doesn't exist, if its
                         // dependent on itself, or if the dependent
                         // is dependent on it
-                        if ( ! isset( $original[$v] ) OR $v === $key OR ( isset( $assets[$v] ) AND in_array($key, $assets[$v]['deps']) )) {
+                        if ( ! isset( $original[$v] ) or $v === $key or ( isset( $assets[$v] ) and in_array($key, $assets[$v]['deps']) )) {
                             unset( $assets[$key]['deps'][$k] );
                             continue;
                         }

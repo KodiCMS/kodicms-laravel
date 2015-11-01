@@ -37,7 +37,7 @@
 				{{ $role->description }}
 			</td>
 			<td class="actions text-right">
-				@if ($role->id > 2 AND acl_check('roles.delete'))
+				@if ($role->id > 2 and acl_check('roles.delete'))
 				{!! Form::open(['route' => ['backend.role.delete', $role]]) !!}
 					{!! Form::button('', [
 						'type' => 'submit',

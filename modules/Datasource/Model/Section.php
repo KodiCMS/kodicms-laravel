@@ -423,7 +423,7 @@ class Section extends DatasourceModel implements SectionInterface
      */
     public function userHasAccess($acl = 'section.edit', $checkOwn = true, $userId = null)
     {
-        return ( acl_check('section_id.' . $this->getId() . '.' . $acl) OR ( $checkOwn AND $this->userIsCreator($userId) ) );
+        return ( acl_check('section_id.' . $this->getId() . '.' . $acl) or ( $checkOwn and $this->userIsCreator($userId) ) );
     }
 
 

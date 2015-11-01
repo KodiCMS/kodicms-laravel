@@ -29,7 +29,7 @@ class UserController extends BackendController
             if (in_array($action, [
                     'getEdit',
                     'postEdit',
-                ]) AND $this->currentUser->id == $this->getRouter()->getCurrentRoute()->getParameter('id')
+                ]) and $this->currentUser->id == $this->getRouter()->getCurrentRoute()->getParameter('id')
             ) {
                 $this->allowedActions[] = $action;
             }

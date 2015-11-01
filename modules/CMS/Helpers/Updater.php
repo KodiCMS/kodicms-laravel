@@ -116,7 +116,7 @@ class Updater
                     if (isset( $row['size'] ) and $fileSize != $row['size']) {
                         $diff = $fileSize - $this->countFileLines($filePath) - $row['size'];
 
-                        if ($diff > 1 OR $diff < -1) {
+                        if ($diff > 1 or $diff < -1) {
                             $files['diff_files'][] = [
                                 'diff' => Text::bytes($diff),
                                 'path' => $row['path'],

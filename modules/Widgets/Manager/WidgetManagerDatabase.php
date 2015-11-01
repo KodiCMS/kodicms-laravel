@@ -16,7 +16,7 @@ class WidgetManagerDatabase extends WidgetManager
     {
         $widgets = new Widget;
 
-        if (is_array($types) AND count($types) > 0) {
+        if (is_array($types) and count($types) > 0) {
             $widgets->whereIn('widgets.type', $types);
         }
 

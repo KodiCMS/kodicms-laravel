@@ -15,7 +15,7 @@
 	{!! $user->renderField('locale') !!}
 </div>
 
-@if (acl_check('users.change_password') OR $user->id == auth()->user()->id)
+@if (acl_check('users.change_password') or $user->id == auth()->user()->id)
 <div class="panel-heading">
 	<span class="panel-title">@lang('users::core.tab.password')</span>
 </div>
@@ -33,7 +33,7 @@
 </div>
 @endif
 
-@if (acl_check('users.change_roles') AND ($user->id > 1))
+@if (acl_check('users.change_roles') and ($user->id > 1))
 <div class="panel-heading">
 	<span class="panel-title">@lang('users::core.tab.roles')</span>
 </div>

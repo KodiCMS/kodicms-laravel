@@ -67,7 +67,7 @@ abstract class FrontPageController extends Controller
         }
 
         $html = $layout->render();
-        if (auth()->check() AND auth()->user()->hasRole(['administrator', 'developer'])) {
+        if (auth()->check() and auth()->user()->hasRole(['administrator', 'developer'])) {
             $injectHTML = (string) view('cms::app.partials.toolbar');
             // Insert system HTML before closed tag body
             $matches = preg_split('/(<\/body>)/i', $html, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);

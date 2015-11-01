@@ -245,7 +245,7 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
      */
     public function valid()
     {
-        return ( ! is_null($key = key($this->fields)) AND $key !== false );
+        return ( ! is_null($key = key($this->fields)) and $key !== false );
     }
 
 

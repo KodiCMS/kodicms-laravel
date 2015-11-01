@@ -65,7 +65,7 @@ class KodiCMSRss extends Decorator
         $items = [];
 
         foreach ($feed as $item) {
-            if ($limit > 0 AND $i++ === $limit) {
+            if ($limit > 0 and $i++ === $limit) {
                 break;
             }
             $item_fields = (array) $item;

@@ -448,7 +448,7 @@ class File
      */
     public function save()
     {
-        if ($this->isReadOnly() AND ! $this->isNew()) {
+        if ($this->isReadOnly() and ! $this->isNew()) {
             return false;
         }
 
@@ -474,7 +474,7 @@ class File
             }
         }
 
-        if ($status AND $this->isChanged('content')) {
+        if ($status and $this->isChanged('content')) {
             $status = $this->filesSystem->put($this->getRealPath(), $this->changed['content']) !== false;
         }
 

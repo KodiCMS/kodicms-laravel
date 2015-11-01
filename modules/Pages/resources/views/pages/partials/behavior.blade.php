@@ -5,7 +5,7 @@
 		<div class="panel-heading">
 			<code class="panel-title">{{ $page->getFrontendUrl() }}{{ $route }}</code>
 
-			@if(isset($params['regex']) AND is_array($params['regex']))
+			@if(isset($params['regex']) and is_array($params['regex']))
 			@foreach ($params['regex'] as $key => $regex)
 				<span class="badge badge-success">{{ $key }}: <code class="label label-info">{{ $regex }}</code></span>
 			@endforeach

@@ -75,7 +75,7 @@ class Filter implements ArrayAccess
      */
     public function addRule($field, $rule, $default = null)
     {
-        if ( ! is_bool($rule) AND ! is_null($rule)) {
+        if ( ! is_bool($rule) and ! is_null($rule)) {
             // Store the rule and params for this rule
             $this->rules[$field]['rules'][] = $rule;
         }
@@ -119,7 +119,7 @@ class Filter implements ArrayAccess
 
             if ($this->offsetExists($field)) {
                 $value = $this->offsetGet($field);
-            } elseif ( ! $this->offsetExists($field) AND ! empty( $data['default'] )) {
+            } elseif ( ! $this->offsetExists($field) and ! empty( $data['default'] )) {
                 array_set($this->filterArray, $field, $data['default']);
                 continue;
             }
@@ -156,7 +156,7 @@ class Filter implements ArrayAccess
             $params           = [':value'];
 
             foreach ($params as $key => $param) {
-                if (is_string($param) AND array_key_exists($param, $_bound)) {
+                if (is_string($param) and array_key_exists($param, $_bound)) {
                     // Replace with bound value
                     $params[$key] = $_bound[$param];
                 }

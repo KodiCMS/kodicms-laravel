@@ -131,7 +131,7 @@ class UserguideController extends BackendController
             // Get menu items
             $file = $this->file($module . '/documentation');
 
-            if ($file AND $text = file_get_contents($file)) {
+            if ($file and $text = file_get_contents($file)) {
                 $markdown .= $text;
             }
 

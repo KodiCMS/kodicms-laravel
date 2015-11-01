@@ -156,7 +156,7 @@ class Section extends ItemDecorator implements \Countable, \Iterator
             $uri = substr($currentUri, $len);
             $pos = strpos($uri, $url);
 
-            if ( ! empty( $url ) AND $pos !== false and $pos < 5) {
+            if ( ! empty( $url ) and $pos !== false and $pos < 5) {
                 $page->setStatus(true);
                 Collection::setCurrentPage($page);
                 $found = true;
@@ -342,6 +342,6 @@ class Section extends ItemDecorator implements \Countable, \Iterator
     {
         $key = key($this->pages);
 
-        return ( $key !== null AND $key !== false );
+        return ( $key !== null and $key !== false );
     }
 }

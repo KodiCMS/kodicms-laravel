@@ -15,7 +15,7 @@
 
 				<hr />
 
-				@if (acl_check('users.edit') OR $user->id == auth()->id)
+				@if (acl_check('users.edit') or $user->id == auth()->id)
 				{!! link_to_route('backend.user.edit', trans('users::core.button.edit'), [$user], [
 					'class' => 'btn btn-success btn-labeled',
 					'data-icon' => 'user'
@@ -27,7 +27,7 @@
 			<div class="profile-content panel tabbable">
 				@event('view.user.profile.information', [$user->id])
 
-				@if (!empty($permissions) AND acl_check('users.view.permissions'))
+				@if (!empty($permissions) and acl_check('users.view.permissions'))
 				<div class="panel-heading">
 					<span class="panel-title" data-icon="wheelchair">@lang('users::core.title.permissions')</span>
 				</div>

@@ -46,7 +46,7 @@ abstract class Controller extends BaseController
             $route = route($route, $parameters);
         }
 
-        if ($isContinue AND $this->getCurrentAction() != 'postCreate') {
+        if ($isContinue and $this->getCurrentAction() != 'postCreate') {
             return back();
         }
 

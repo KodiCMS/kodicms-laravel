@@ -53,7 +53,7 @@ abstract class BehaviorAbstract implements BehaviorInterface
         $this->parameters = $parameters;
 
         $routes = $this->routeList();
-        if (isset( $parameters['routes'] ) AND is_array($parameters['routes'])) {
+        if (isset( $parameters['routes'] ) and is_array($parameters['routes'])) {
             $routes = $parameters['routes'] + $routes;
         }
 
