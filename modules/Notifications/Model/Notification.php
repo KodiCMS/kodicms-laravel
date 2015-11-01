@@ -1,13 +1,31 @@
 <?php
 namespace KodiCMS\Notifications\Model;
 
+use DB;
 use Carbon\Carbon;
 use KodiCMS\Users\Model\User;
 use Illuminate\Database\Eloquent\Model;
-use KodiCMS\Notifications\Types\DefaultNotificationType;
 use KodiCMS\Notifications\Contracts\NotificationTypeInterface;
-use KodiCMS\Notifications\Contracts\NotificationObjectInterface;
 
+/**
+ * Class Notification
+ * @package KodiCMS\Notifications\Model
+ *
+ * @property integer $id
+ * @property integer $sender_id
+ * @property string  $type
+ * @property string  $message
+ * @property integer $object_id
+ * @property string  $object_type
+ * @property array   $parameters
+ *
+ * @property User    $sender
+ * @property User[]  $users
+ *
+ * @property Carbon  $created_at
+ * @property Carbon  $updated_at
+ * @property Carbon  $sent_at
+ */
 class Notification extends Model
 {
 
@@ -43,25 +61,6 @@ class Notification extends Model
         'object_type' => 'string',
         'parameters'  => 'array',
     ];
-
-    /*******************************************************************************************
-     * Mutators
-     *******************************************************************************************/
-    /**
-     * @param string $type
-     *
-     * @return NotificationTypeInterface
-     */
-    public function getTypeAttribute($type)
-    {
-        $type = class_exists($type)
-            ? new $type
-            : new DefaultNotificationType;
-
-        $type->setObject($this);
-
-        return $type;
-    }
 
 
     /**
@@ -176,11 +175,62 @@ class Notification extends Model
             $hasObject = $this->hasValidObject();
 
             if ( ! $hasObject) {
-                throw new \Exception(sprintf("No valid object (%s with ID %s) associated with this notification.", $this->object_type, $this->object_id));
+                throw new \Exception(sprintf(
+                    "No valid object (%s with ID %s) associated with this notification.",
+                    $this->object_type,
+                    $this->object_id
+                ));
             }
         }
 
         return $this->relatedObject;
+    }
+
+
+    /**
+     * @param integer $userId
+     */
+    public function markRead($userId)
+    {
+        $this->users()
+            ->wherePivot('user_id', $userId)
+            ->rawUpdate([
+                'is_read' => true,
+            ]);
+    }
+
+
+    public function deleteExpired()
+    {
+        // Delete expired notifications_users rows
+        DB::table('notifications_users')
+           ->leftJoin($this->getTable(), 'notifications_users.notification_id', '=', $this->getTable() . '.id')
+           ->whereRaw('DATE(created_at) < CURDATE() + INTERVAL 5 DAY')
+           ->where('is_read', true)
+           ->delete();
+
+        // Delete expired notifications without unread
+        DB::table($this->getTable())
+           ->whereRaw('DATE(sent_at) < CURDATE() + INTERVAL 5 DAY')
+           ->whereRaw('(select COUNT(*) from notifications_users where is_read = 0 AND notification_id = id) = 0')
+           ->delete();
+    }
+
+    /*******************************************************************************************
+     * Mutators
+     *******************************************************************************************/
+    /**
+     * @param string $type
+     *
+     * @return NotificationTypeInterface
+     */
+    public function getTypeAttribute($type)
+    {
+        $type = class_exists($type) ? new $type : new DefaultNotificationType;
+
+        $type->setObject($this);
+
+        return $type;
     }
 
     /*******************************************************************************************
@@ -202,33 +252,5 @@ class Notification extends Model
     public function sender()
     {
         return $this->belongsTo(User::class, 'sender_id');
-    }
-
-
-    /**
-     * @param integer $userId
-     */
-    public function markRead($userId)
-    {
-        $this->users()->wherePivot('user_id', $userId)->rawUpdate([
-            'is_read' => true,
-        ]);
-    }
-
-
-    public function deleteExpired()
-    {
-        // Delete expired notifications_users rows
-        \DB::table('notifications_users')
-            ->leftJoin($this->getTable(), 'notifications_users.notification_id', '=', $this->getTable() . '.id')
-            ->whereRaw('DATE(created_at) < CURDATE() + INTERVAL 5 DAY')
-            ->where('is_read', true)
-            ->delete();
-
-        // Delete expired notifications without unread
-        \DB::table($this->getTable())
-            ->whereRaw('DATE(sent_at) < CURDATE() + INTERVAL 5 DAY')
-            ->whereRaw('(select COUNT(*) from notifications_users where is_read = 0 AND notification_id = id) = 0')
-            ->delete();
     }
 }
