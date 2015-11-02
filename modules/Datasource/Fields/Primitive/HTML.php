@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Datasource\Fields\Primitive;
 
+use Form;
 use WYSIWYG;
 use KodiCMS\Datasource\Fields\Primitive;
 use Illuminate\Database\Eloquent\Builder;
@@ -156,5 +157,16 @@ class HTML extends Primitive
 	{
 		parent::querySelectColumn($query, $document);
 		$query->addSelect($this->getDBFilteredColumnKey());
+	}
+
+
+	/**
+	 * @param DocumentInterface $document
+	 *
+	 * @return string
+	 */
+	public function getDefaultFormHTML(DocumentInterface $document)
+	{
+		return Form::textarea($this->getDBKey(), $document->getFormValue($this->getDBKey()));
 	}
 }

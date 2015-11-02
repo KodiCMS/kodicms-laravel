@@ -270,6 +270,13 @@ interface FieldInterface
 	 **************************************************************************/
 	/**
 	 * @param DocumentInterface $document
+	 *
+	 * @return string
+	 */
+	public function getDefaultFormHTML(DocumentInterface $document);
+
+	/**
+	 * @param DocumentInterface $document
 	 * @param string|null $template
 	 *
 	 * @return string

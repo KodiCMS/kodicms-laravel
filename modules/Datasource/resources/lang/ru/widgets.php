@@ -34,5 +34,11 @@ return [
 			'meta_description' => 'Описание',
 			'change_crumbs' => 'Изменять хлебные крошки'
 		]
+	],
+	'document_creator' => [
+		'title' => 'Создание документа',
+		'settings' => [
+			'allow_update_document' => 'Разрешить обновлять документ'
+		]
 	]
 ];

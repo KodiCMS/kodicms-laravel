@@ -1,8 +1,8 @@
 <?php namespace KodiCMS\Datasource\Fields\File;
 
+use KodiCMS\Datasource\Fields\File;
 use Intervention\Image\ImageManager;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
-use KodiCMS\Datasource\Fields\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Image extends File

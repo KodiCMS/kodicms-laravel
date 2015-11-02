@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Datasource\Fields;
 
+use Form;
 use Request;
 use Illuminate\Validation\Validator;
 use Illuminate\Filesystem\Filesystem;
@@ -329,5 +330,16 @@ class File extends Primitive
 		}
 
 		return null;
+	}
+
+
+	/**
+	 * @param DocumentInterface $document
+	 *
+	 * @return string
+	 */
+	public function getDefaultFormHTML(DocumentInterface $document)
+	{
+		return Form::file($this->getDBKey());
 	}
 }

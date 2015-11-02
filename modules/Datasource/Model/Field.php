@@ -1,6 +1,7 @@
 <?php namespace KodiCMS\Datasource\Model;
 
 use DB;
+use Form;
 use FieldManager;
 use KodiCMS\Datasource\FieldType;
 use Illuminate\Validation\Validator;
@@ -689,6 +690,16 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
 	/**************************************************************************
 	 * Render
 	 **************************************************************************/
+	/**
+	 * @param DocumentInterface $document
+	 *
+	 * @return string
+	 */
+	public function getDefaultFormHTML(DocumentInterface $document)
+	{
+		return Form::text($this->getDBKey(), $document->getFormValue($this->getDBKey()));
+	}
+
 	/**
 	 * @param DocumentInterface $document
 	 *

@@ -1,5 +1,6 @@
 <?php namespace KodiCMS\Datasource\Fields\Primitive;
 
+use Form;
 use KodiCMS\Datasource\Fields\Primitive;
 use Illuminate\Database\Schema\Blueprint;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
@@ -116,5 +117,16 @@ class Textarea extends Primitive
 	public function setDatabaseFieldType(Blueprint $table)
 	{
 		return $table->text($this->getDBKey());
+	}
+
+
+	/**
+	 * @param DocumentInterface $document
+	 *
+	 * @return string
+	 */
+	public function getDefaultFormHTML(DocumentInterface $document)
+	{
+		return Form::textarea($this->getDBKey(), $document->getFormValue($this->getDBKey()));
 	}
 }
