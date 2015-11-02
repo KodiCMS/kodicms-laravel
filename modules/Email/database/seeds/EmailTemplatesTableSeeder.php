@@ -3,6 +3,7 @@ namespace KodiCMS\Email\database\seeds;
 
 use Illuminate\Database\Seeder;
 use KodiCMS\Email\Model\EmailType;
+use KodiCMS\Email\Model\EmailTemplate;
 use KodiCMS\Email\Repository\EmailEventRepository;
 use KodiCMS\Email\Repository\EmailTemplateRepository;
 
