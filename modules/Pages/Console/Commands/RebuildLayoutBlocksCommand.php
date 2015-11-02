@@ -2,10 +2,11 @@
 namespace KodiCMS\Pages\Console\Commands;
 
 use Illuminate\Console\Command;
+use KodiCMS\Pages\Model\Layout;
 use KodiCMS\Pages\Model\LayoutCollection;
 use Symfony\Component\Console\Helper\TableSeparator;
 
-class RebuldLayoutBlocksCommand extends Command
+class RebuildLayoutBlocksCommand extends Command
 {
 
     /**
@@ -33,7 +34,10 @@ class RebuldLayoutBlocksCommand extends Command
 
         $layouts = [];
 
-        foreach (new LayoutCollection as $layout) {
+        /** @var Layout[] $collection */
+        $collection = new LayoutCollection;
+
+        foreach ($collection as $layout) {
             $blocks = $layout->findBlocks();
 
             $blocks = ! empty( $blocks ) ? '{' . implode('} {', $blocks) . '}' : 'null';

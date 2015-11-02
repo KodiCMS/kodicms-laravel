@@ -12,7 +12,7 @@ use KodiCMS\Pages\Observers\PageObserver;
 use KodiCMS\Pages\Observers\PagePartObserver;
 use KodiCMS\Pages\Model\PagePart as PagePartModel;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
-use KodiCMS\Pages\Console\Commands\RebuldLayoutBlocksCommand;
+use KodiCMS\Pages\Console\Commands\RebuildLayoutBlocksCommand;
 use KodiCMS\Pages\Listeners\PlacePagePartsToBlocksEventHandler;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -76,6 +76,6 @@ class ModuleServiceProvider extends ServiceProvider
             'WYSIWYG'   => \KodiCMS\Support\Facades\Wysiwyg::class,
         ]);
 
-        $this->registerConsoleCommand(RebuldLayoutBlocksCommand::class);
+        $this->registerConsoleCommand(RebuildLayoutBlocksCommand::class);
     }
 }
