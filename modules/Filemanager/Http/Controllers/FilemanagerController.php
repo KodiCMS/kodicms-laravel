@@ -4,7 +4,7 @@ namespace KodiCMS\Filemanager\Http\Controllers;
 use Meta;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
-class FileManagerController extends BackendController
+class FilemanagerController extends BackendController
 {
 
 	public function show()
