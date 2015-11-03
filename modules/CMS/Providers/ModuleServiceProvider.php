@@ -3,17 +3,12 @@ namespace KodiCMS\CMS\Providers;
 
 use Blade;
 use Cache;
-use Config;
-use Event;
-use Profiler;
-use PDOException;
 use ModulesFileSystem;
 use KodiCMS\Support\Helpers\UI;
 use KodiCMS\Assets\Facades\Meta;
 use KodiCMS\Support\Helpers\Date;
 use KodiCMS\Assets\Facades\Assets;
 use KodiCMS\Support\ServiceProvider;
-use KodiCMS\CMS\Helpers\DatabaseConfig;
 use KodiCMS\Assets\Facades\PackageManager;
 use KodiCMS\Support\Cache\SqLiteTaggedStore;
 use KodiCMS\Support\Cache\DatabaseTaggedStore;
@@ -46,27 +41,6 @@ class ModuleServiceProvider extends ServiceProvider
             WysiwygListCommand::class,
         ]);
 
-        Event::listen('config.loaded', function () {
-            if ($this->app->installed()) {
-                try {
-                    $databaseConfig = new DatabaseConfig;
-                    $this->app->instance('config.database', $databaseConfig);
-
-                    $config = $databaseConfig->getAll();
-                    foreach ($config as $group => $data) {
-                        Config::set($group, array_merge(Config::get($group, []), $data));
-                    }
-                } catch (PDOException $e) {
-                }
-            }
-        }, 999);
-
-        Event::listen('illuminate.query', function ($sql, $bindings, $time) {
-            $sql = str_replace(['%', '?'], ['%%', '%s'], $sql);
-            $sql = vsprintf($sql, $bindings);
-
-            Profiler::append('Database', $sql, $time / 1000);
-        });
     }
 
 
@@ -80,6 +54,11 @@ class ModuleServiceProvider extends ServiceProvider
             ModulesFileSystem::cacheFoundFiles();
         });
 
+        $this->registerCacheDrivers();
+    }
+
+    protected function registerCacheDrivers()
+    {
         Cache::extend('sqlite', function ($app, $config) {
             $connectionName   = array_get($config, 'connection');
             $connectionConfig = config('database.connections.' . $connectionName);
