@@ -64,7 +64,7 @@ class Item
      */
     public function getLink()
     {
-        return '<a href="' . $this->getUrl() . '">' . $this->getName() . '</a>';
+        return link_to($this->getUrl(), $this->getName());
     }
 
 

@@ -2,6 +2,7 @@
 namespace KodiCMS\CMS\Http\Controllers\System;
 
 use App;
+use Auth;
 use Lang;
 use View;
 use Assets;
@@ -98,7 +99,7 @@ class TemplateController extends Controller
             'ROUTE'             => ! is_null($this->getRouter()) ? $this->getRouter()->currentRouteAction() : null,
             'ROUTE_PATH'        => $this->getRouterPath(),
             'REQUEST_TYPE'      => $this->requestType,
-            'USER_ID'           => \Auth::id(),
+            'USER_ID'           => Auth::id(),
             'MESSAGE_ERRORS'    => view()->shared('errors')->getBag('default'),
             'MESSAGE_SUCCESS'   => (array) $this->session->get('success', []),
         ];

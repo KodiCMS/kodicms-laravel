@@ -1,7 +1,5 @@
 <?php
 
-use KodiCMS\Support\Helpers\File;
-
 if ( ! function_exists('backend_url')) {
     /**
      * @param null|string $path

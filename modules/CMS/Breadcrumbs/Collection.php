@@ -24,7 +24,7 @@ class Collection implements \Countable, \Iterator
      */
     public function __construct(array $options = [])
     {
-        $this->options = $options;
+        $this->options = array_merge($this->options, $options);
     }
 
 
@@ -68,8 +68,9 @@ class Collection implements \Countable, \Iterator
         } else if ($name instanceof Item) {
             $this->addItem($name, $position);
         } else {
-            $this->addItem(new Item(
-                $name, $url, $isActive, $data), $position
+            $this->addItem(
+                new Item($name, $url, $isActive, $data),
+                $position
             );
         }
 
@@ -87,7 +88,7 @@ class Collection implements \Countable, \Iterator
     {
         $position = $this->findBy($key, $value);
 
-        if ($position === null) {
+        if (is_null($position)) {
             return null;
         }
 
@@ -128,7 +129,7 @@ class Collection implements \Countable, \Iterator
     public function changeBy($key, $value, $url = false, $isActive = null, $position = null, array $data = [])
     {
         $item = $this->getBy($key, $value);
-        if ($item === null) {
+        if (is_null($item)) {
             return false;
         }
 
@@ -172,7 +173,7 @@ class Collection implements \Countable, \Iterator
     {
         $position = $this->findBy($key, $value);
 
-        if ($position === null) {
+        if (is_null($position)) {
             return false;
         }
 
