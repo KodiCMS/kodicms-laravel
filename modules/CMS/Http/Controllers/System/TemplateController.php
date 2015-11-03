@@ -6,6 +6,7 @@ use Lang;
 use View;
 use Assets;
 use ModulesFileSystem;
+use KodiCMS\Support\Helpers\File;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -133,7 +134,7 @@ class TemplateController extends Controller
      */
     public function includeMergedMediaFile($key, $file)
     {
-        $mediaContent = '<script type="text/javascript">' . Assets::mergeFiles($file, 'js') . "</script>";
+        $mediaContent = '<script type="text/javascript">' . File::mergeByPath($file, 'js') . "</script>";
         Assets::group('global', $key, $mediaContent, 'global');
     }
 
@@ -144,7 +145,7 @@ class TemplateController extends Controller
     public function includeModuleMediaFile($filename)
     {
         if (ModulesFileSystem::findFile('resources/js', $filename, 'js')) {
-            Assets::js('include.' . $filename, backend_resources_url("/js/$filename.js"), 'core', false);
+            Assets::addJs('include.' . $filename, backend_resources_url("/js/$filename.js"), 'core', false);
         }
     }
 

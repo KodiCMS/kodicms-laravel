@@ -1,7 +1,7 @@
 <?php
 namespace KodiCMS\Dashboard\Http\Controllers\API;
 
-use Package;
+use PackageManager;
 use KodiCMS\Dashboard\Dashboard;
 use KodiCMS\Dashboard\Contracts\WidgetDashboard;
 use KodiCMS\Dashboard\WidgetRenderDashboardHTML;
@@ -29,7 +29,7 @@ class DashboardController extends Controller
         $widget = Dashboard::addWidget($widgetType);
 
         if (count($widget->media_packages) > 0) {
-            $this->media = Package::getScripts($widget->media_packages);
+            $this->media = PackageManager::getScripts($widget->media_packages);
         }
 
         $this->size = $widget->getSize();

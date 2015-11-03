@@ -1,7 +1,7 @@
 <?php
 namespace KodiCMS\CMS\Wysiwyg;
 
-use Assets;
+use Meta;
 use Illuminate\Contracts\Support\Arrayable;
 use KodiCMS\CMS\Contracts\WysiwygEditorInterface;
 use KodiCMS\CMS\Contracts\WysiwygFilterInterface;
@@ -125,10 +125,12 @@ class WysiwygEditor implements WysiwygEditorInterface, Arrayable
     }
 
 
+    /**
+     * @return bool
+     */
     public function load()
     {
-        Assets::package($this->packageName);
-
+        Meta::loadPackage($this->packageName);
         return $this->used = true;
     }
 

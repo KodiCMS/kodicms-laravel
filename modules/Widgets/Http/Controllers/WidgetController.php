@@ -1,8 +1,7 @@
 <?php
 namespace KodiCMS\Widgets\Http\Controllers;
 
-use DB;
-use Assets;
+use Meta;
 use WYSIWYG;
 use Illuminate\View\View;
 use KodiCMS\Pages\Model\LayoutBlock;
@@ -20,7 +19,7 @@ class WidgetController extends BackendController
      */
     public function getIndex(WidgetRepository $repository)
     {
-        Assets::package(['editable']);
+        Meta::loadPackage('editable');
 
         $widgets = $repository->paginate();
         $this->setContent('widgets.list', compact('widgets'));

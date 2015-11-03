@@ -1,7 +1,7 @@
 <?php
 namespace KodiCMS\CMS\Http\Controllers\System;
 
-use Assets;
+use Meta;
 
 class FrontendController extends TemplateController
 {
@@ -15,7 +15,7 @@ class FrontendController extends TemplateController
     public function registerMedia()
     {
         parent::registerMedia();
-        Assets::package(['libraries', 'core']);
+        Meta::loadPackage('libraries', 'core');
 
         $this->includeModuleMediaFile($this->getRouterController());
         $this->includeMergedMediaFile('frontendEvents', 'js/frontendEvents');

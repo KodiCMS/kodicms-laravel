@@ -34,7 +34,7 @@ class PageWidgetCollection extends WidgetCollection
     {
         foreach ($this->registeredWidgets as $widget) {
             if (( $object = $widget->getObject() ) instanceof WidgetRenderable) {
-                Meta::addPackage($object->getMediaPackages());
+                Meta::loadPackage($object->getMediaPackages());
             }
         }
 

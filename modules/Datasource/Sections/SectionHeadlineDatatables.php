@@ -1,7 +1,7 @@
 <?php
 namespace KodiCMS\Datasource\Sections;
 
-use SectionDatatables;
+use Meta;
 use Illuminate\Http\JsonResponse;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
@@ -31,7 +31,7 @@ class SectionHeadlineDatatables implements SectionHeadlineInterface
     public function __construct(SectionInterface $section)
     {
         $this->section = $section;
-        \Assets::package('datatables');
+        Meta::loadPackage('datatables');
     }
 
 

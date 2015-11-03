@@ -3,7 +3,7 @@ namespace KodiCMS\CMS\Http\Controllers\System;
 
 use UI;
 use View;
-use Assets;
+use Meta;
 use KodiCMS\Support\Helpers\Callback;
 use KodiCMS\CMS\Exceptions\ValidationException;
 use KodiCMS\CMS\Navigation\Collection as Navigation;
@@ -92,7 +92,7 @@ class BackendController extends TemplateController
         $this->templateScripts['DEFAULT_HTML_EDITOR'] = config('cms.default_html_editor', '');
         $this->templateScripts['DEFAULT_CODE_EDITOR'] = config('cms.default_code_editor', '');
 
-        Assets::package(['libraries', 'core']);
+        Meta::loadPackage('libraries', 'core');
         $this->includeModuleMediaFile($this->getRouterController());
         $this->includeMergedMediaFile('backendEvents', 'js/backendEvents');
     }

@@ -2,7 +2,7 @@
 namespace KodiCMS\CMS\Http\Controllers;
 
 use Date;
-use Assets;
+use Meta;
 use WYSIWYG;
 use KodiCMS\CMS\Helpers\Updater;
 use KodiCMS\Support\Helpers\Locale;
@@ -37,7 +37,7 @@ class SystemController extends System\BackendController
 
     public function update()
     {
-        Assets::package('diff');
+        Meta::loadPackage('diff');
         $updater           = new Updater();
         $repositoryVersion = $updater->getRemoteVersion();
         $hasNewVersion     = $updater->hasNewVersion();

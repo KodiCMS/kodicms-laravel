@@ -1,7 +1,7 @@
 <?php
 namespace KodiCMS\Pages\Http\Controllers;
 
-use Assets;
+use Meta;
 use Carbon\Carbon;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Repository\PageRepository;
@@ -21,7 +21,7 @@ class PageController extends BackendController
      */
     public function getIndex(PageRepository $repository)
     {
-        Assets::package(['nestable', 'editable']);
+        Meta::loadPackage('nestable', 'editable');
 
         $this->templateScripts['PAGE_STATUSES'] = array_map(function ($value, $key) {
             return ['id' => $key, 'text' => $value];
@@ -39,7 +39,7 @@ class PageController extends BackendController
      */
     public function getEdit(PageRepository $repository, $id)
     {
-        Assets::package(['backbone', 'jquery-ui']);
+        Meta::loadPackage('backbone', 'jquery-ui');
         $this->includeModuleMediaFile('BehaviorController');
 
         $page = $repository->findOrFail($id);

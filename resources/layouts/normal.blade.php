@@ -2,16 +2,12 @@
 <html lang="en">
 <head>
 	{!!
-		Meta::addPackage(['jquery'])
-			->setFavicon(resources_url() . '/favicon.ico')
-			->build()
+		Meta::loadPackage(['jquery'])
+			->addJs('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js', 'jquery')
+			->addCss('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css')
+			->setFavicon(resources_url('favicon.ico'))
+			->render()
 	!!}
-
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
 	<style>
 		/* Space out content a bit */

@@ -1,7 +1,7 @@
 <?php
 namespace KodiCMS\Dashboard\Http\Controllers;
 
-use Assets;
+use Meta;
 use KodiCMS\Dashboard\Dashboard;
 use KodiCMS\Dashboard\WidgetManagerDashboard;
 use KodiCMS\Dashboard\Contracts\WidgetDashboard;
@@ -12,7 +12,7 @@ class DashboardController extends BackendController
 
     public function getIndex()
     {
-        Assets::package(['gridster']);
+        Meta::loadPackage('gridster');
 
         $widgets = WidgetManagerDashboard::getWidgets();
         $this->setContent('dashboard', compact('widgets'));

@@ -3,6 +3,7 @@ namespace KodiCMS\Pages\Model;
 
 use DB;
 use Cache;
+use KodiCMS\Assets\Contracts\MetaDataInterface;
 use Request;
 use Carbon\Carbon;
 use KodiCMS\Users\Model\User;
@@ -15,7 +16,7 @@ use KodiCMS\Pages\Contracts\BehaviorPageInterface;
 use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 
-class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable
+class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDataInterface
 {
 
     const STATUS_DRAFT = 1;
@@ -1026,4 +1027,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable
     {
         return json_encode($this->toArray(), $options);
     }
+
+
 }

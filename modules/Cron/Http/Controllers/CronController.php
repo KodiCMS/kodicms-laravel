@@ -1,7 +1,7 @@
 <?php
 namespace KodiCMS\Cron\Http\Controllers;
 
-use Assets;
+use Meta;
 use KodiCMS\Cron\Repository\CronRepository;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
@@ -24,7 +24,7 @@ class CronController extends BackendController
     public function getCreate(CronRepository $repository)
     {
         $this->setTitle(trans('cron::core.title.cron.create'));
-        Assets::package('cron');
+        Meta::loadPackage('cron');
 
         $job    = $repository->instance();
         $action = 'backend.cron.create.post';
@@ -58,7 +58,7 @@ class CronController extends BackendController
     {
         $job = $repository->findOrFail($id);
 
-        Assets::package('cron');
+        Meta::loadPackage('cron');
         $this->templateScripts['JOB'] = $job->toArray();
 
         $this->setTitle(trans('cron::core.title.cron.edit', [

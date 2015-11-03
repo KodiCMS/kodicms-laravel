@@ -9,13 +9,15 @@ use Profiler;
 use PDOException;
 use ModulesFileSystem;
 use KodiCMS\Support\Helpers\UI;
+use KodiCMS\Assets\Facades\Meta;
 use KodiCMS\Support\Helpers\Date;
+use KodiCMS\Assets\Facades\Assets;
 use KodiCMS\Support\ServiceProvider;
 use KodiCMS\CMS\Helpers\DatabaseConfig;
+use KodiCMS\Assets\Facades\PackageManager;
 use KodiCMS\Support\Cache\SqLiteTaggedStore;
 use KodiCMS\Support\Cache\DatabaseTaggedStore;
 use KodiCMS\CMS\Console\Commands\WysiwygListCommand;
-use KodiCMS\CMS\Console\Commands\PackagesListCommand;
 use KodiCMS\CMS\Console\Commands\ModulePublishCommand;
 use KodiCMS\CMS\Console\Commands\ControllerMakeCommand;
 use KodiCMS\CMS\Console\Commands\ModuleLocaleDiffCommand;
@@ -28,8 +30,11 @@ class ModuleServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerAliases([
-            'UI'   => UI::class,
-            'Date' => Date::class,
+            'UI'             => UI::class,
+            'Date'           => Date::class,
+            'Assets'         => Assets::class,
+            'PackageManager' => PackageManager::class,
+            'Meta'           => Meta::class,
         ]);
 
         $this->registerConsoleCommand([
@@ -38,7 +43,6 @@ class ModuleServiceProvider extends ServiceProvider
             ModuleLocaleDiffCommand::class,
             ControllerMakeCommand::class,
             ModulePublishCommand::class,
-            PackagesListCommand::class,
             WysiwygListCommand::class,
         ]);
 

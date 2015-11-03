@@ -9,10 +9,9 @@
 		<link href="{{ asset('cms/favicon.ico') }}" rel="favourites icon" />
 		@yield('head')
 
-		{!! Assets::group('global', 'templateScripts') !!}
-		{!! Assets::css() !!}
-		{!! Assets::js() !!}
-		{!! Assets::group('global', 'backendEvents') !!}
+		{!! Assets::getGroup('global', 'templateScripts') !!}
+		{!! Meta::render() !!}
+		{!! Assets::getGroup('global', 'backendEvents') !!}
 		@yield('scripts')
 	</head>
 	<body id="body.{{ $bodyId or 'backend' }}" class="{{ $requestType }} theme-{{ $theme or 'default' }} main-menu-fixed">
@@ -46,7 +45,7 @@
 			</div>
 		</div>
 
-		{!! Assets::js(true) !!}
+		{!! Assets::getJsList(true) !!}
 		@yield('footer_scripts')
 	</body>
 </html>

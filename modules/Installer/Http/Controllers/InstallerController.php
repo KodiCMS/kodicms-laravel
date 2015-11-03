@@ -3,7 +3,7 @@ namespace KodiCMS\Installer\Http\Controllers;
 
 use Lang;
 use Date;
-use Assets;
+use Meta;
 use EnvironmentTester;
 use KodiCMS\Installer\Installer;
 use KodiCMS\Support\Helpers\Locale;
@@ -39,7 +39,7 @@ class InstallerController extends FrontendController
 
     public function run()
     {
-        Assets::package(['steps', 'validate']);
+        Meta::loadPackage('steps', 'validate');
 
         if ($locale = $this->request->get('lang') and array_key_exists($locale, Locale::getAvailable())) {
             $this->session->set('installer_locale', $locale);

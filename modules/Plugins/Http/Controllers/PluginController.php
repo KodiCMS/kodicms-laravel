@@ -1,7 +1,7 @@
 <?php
 namespace KodiCMS\Plugins\Http\Controllers;
 
-use Assets;
+use Meta;
 use PluginLoader;
 use KodiCMS\Plugins\Loader\BasePluginContainer;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
@@ -11,7 +11,7 @@ class PluginController extends BackendController
 
     public function getIndex()
     {
-        Assets::package(['backbone']);
+        Meta::loadPackage('backbone');
         $this->setContent('list');
     }
 

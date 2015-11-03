@@ -3,8 +3,8 @@ namespace KodiCMS\Widgets\Providers;
 
 use Event;
 use Blade;
-use Package;
 use Request;
+use PackageManager;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Helpers\Block;
 use KodiCMS\Users\Model\UserRole;
@@ -89,7 +89,7 @@ class ModuleServiceProvider extends ServiceProvider
 
         Event::listen('view.widget.edit.footer', function ($widget) {
             if ($widget->isRenderable()) {
-                $assetsPackages = Package::getHTMLSelectChoice();
+                $assetsPackages = PackageManager::getHTMLSelectChoice();
                 $widgetList     = Widget::where('id', '!=', $widget->id)->lists('name', 'id')->all();
 
                 echo view('widgets::widgets.partials.renderable_buttons', compact('widget', 'commentKeys', 'snippets', 'assetsPackages', 'widgetList'))->render();
