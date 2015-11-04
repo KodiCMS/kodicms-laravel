@@ -2,7 +2,6 @@
 
 namespace KodiCMS\CMS\Console\Commands;
 
-use App;
 use ModulesLoader;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
@@ -41,7 +40,7 @@ class GenerateScriptTranslatesCommand extends Command
             }
         }
 
-        $langDirectory = App::backendResourcesPath().'js'.DIRECTORY_SEPARATOR.'locale';
+        $langDirectory = backend_resources_path('js/locale');
 
         if (! $files->exists($langDirectory)) {
             $files->makeDirectory($langDirectory, 0755, true);

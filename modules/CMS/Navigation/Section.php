@@ -125,7 +125,7 @@ class Section extends ItemDecorator implements \Countable, \Iterator
     public function findActivePageByUri($currentUri)
     {
         $found = false;
-        $adminDirName = backend_url();
+        $adminDirName = backend_url_segment();
 
         foreach ($this->getPages() as $page) {
             $url = $page->getUrl();

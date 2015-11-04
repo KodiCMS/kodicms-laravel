@@ -30,7 +30,7 @@ class BackendRedirectIfAuthenticated
     public function __construct(Guard $auth)
     {
         $this->auth = $auth;
-        $this->loginPath = '/'.backend_url();
+        $this->loginPath = '/'.backend_url_segment();
     }
 
     /**

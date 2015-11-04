@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
             $e = new NotFoundHttpException($e->getMessage(), $e);
         }
 
-        if (config('app.debug') or ! App::installed()) {
+        if (config('app.debug') or ! cms_installed()) {
             return $this->renderExceptionWithWhoops($e);
         } elseif (! $this->isHttpException($e)) {
             return $this->renderException($e);

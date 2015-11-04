@@ -45,7 +45,7 @@ class EventServiceProvider extends BaseEventServiceProvider
         });
 
         $events->listen('config.loaded', function () {
-            if ($this->app->installed()) {
+            if (cms_installed()) {
                 try {
                     $databaseConfig = new DatabaseConfig;
                     $this->app->instance('config.database', $databaseConfig);

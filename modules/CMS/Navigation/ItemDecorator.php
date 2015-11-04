@@ -92,7 +92,7 @@ class ItemDecorator
      */
     public function getUrl()
     {
-        return url($this->getAttribute('url'));
+        return $this->getAttribute('url');
     }
 
     /**

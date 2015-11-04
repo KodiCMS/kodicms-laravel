@@ -62,7 +62,7 @@ class InstallCommand extends GeneratorCommand
         }
 
         if (! $this->confirmToProceed('.env file already exists!', function () {
-            return App::installed();
+            return cms_installed();
         })
         ) {
             return $this->error('Installation is aborted.');

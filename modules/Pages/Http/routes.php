@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => backend_url(), 'as' => 'backend.'], function () {
+Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.'], function () {
     Route::get('page/wysiwyg/{id}', [
         'as'   => 'pages.wysiwyg',
         'uses' => 'PageWysiwygController@getPageWysiwyg',

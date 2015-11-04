@@ -42,8 +42,8 @@ class AuthController extends FrontendController
     {
         $this->auth = $auth;
 
-        $this->redirectPath = backend_url();
-        $this->loginPath = $this->redirectAfterLogout = backend_url('/auth/login');
+        $this->redirectPath = backend_url_segment();
+        $this->loginPath = $this->redirectAfterLogout = backend_url('auth/login');
     }
 
     public function initMiddleware()

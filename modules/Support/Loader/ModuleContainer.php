@@ -2,7 +2,6 @@
 
 namespace KodiCMS\Support\Loader;
 
-use App;
 use Illuminate\Routing\Router;
 use KodiCMS\ModulesLoader\ModuleContainer as BaseModuleContainer;
 
@@ -40,7 +39,7 @@ class ModuleContainer extends BaseModuleContainer
      */
     public function loadRoutes(Router $router)
     {
-        if (! App::installed()) {
+        if (! cms_installed()) {
             return;
         }
 
@@ -53,7 +52,7 @@ class ModuleContainer extends BaseModuleContainer
      */
     public function loadConfig()
     {
-        if (! App::installed()) {
+        if (! cms_installed()) {
             return [];
         }
 

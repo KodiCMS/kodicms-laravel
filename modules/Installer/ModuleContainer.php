@@ -2,7 +2,6 @@
 
 namespace KodiCMS\Installer;
 
-use App;
 use Event;
 use Route;
 use Illuminate\Routing\Router;
@@ -15,7 +14,7 @@ class ModuleContainer extends BaseModuleContainer
      */
     public function loadRoutes(Router $router)
     {
-        if (App::installed()) {
+        if (cms_installed()) {
             return;
         }
 
@@ -27,7 +26,7 @@ class ModuleContainer extends BaseModuleContainer
      */
     protected function loadSystemRoutes(Router $router)
     {
-        if (App::installed()) {
+        if (cms_installed()) {
             return;
         }
 

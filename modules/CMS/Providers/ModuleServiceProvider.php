@@ -4,7 +4,7 @@ namespace KodiCMS\CMS\Providers;
 
 use Blade;
 use Cache;
-use ModulesFileSystem;
+use KodiCMS\CMS\CMS;
 use KodiCMS\Support\Helpers\UI;
 use KodiCMS\Assets\Facades\Meta;
 use KodiCMS\Support\Helpers\Date;
@@ -40,16 +40,14 @@ class ModuleServiceProvider extends ServiceProvider
             ModulePublishCommand::class,
             WysiwygListCommand::class,
         ]);
+
+        $this->app->singleton('cms', CMS::class);
     }
 
     public function boot()
     {
         Blade::directive('event', function ($expression) {
             return "<?php event{$expression}; ?>";
-        });
-
-        $this->app->shutdown(function () {
-            ModulesFileSystem::cacheFoundFiles();
         });
 
         $this->registerCacheDrivers();

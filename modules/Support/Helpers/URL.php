@@ -66,7 +66,7 @@ class URL
      */
     public static function isBackend($url = null)
     {
-        return static::startWith(backend_url(), $url);
+        return static::startWith(backend_url_segment(), $url);
     }
 
     /**

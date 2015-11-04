@@ -41,7 +41,7 @@ class Authenticate
             if ($request->ajax()) {
                 throw new AuthenticateException('Unauthorized.');
             } else {
-                return redirect()->guest(backend_url('/auth/login'));
+                return redirect()->guest(backend_url('auth/login'));
             }
         }
 

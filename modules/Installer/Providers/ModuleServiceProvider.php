@@ -22,7 +22,7 @@ class ModuleServiceProvider extends ServiceProvider
             DropDatabaseCommand::class,
         ]);
 
-        if (! $this->app->installed()) {
+        if (! cms_installed()) {
             putenv('APP_ENV=local');
         }
 

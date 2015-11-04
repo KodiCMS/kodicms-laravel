@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => backend_url(), 'as' => 'backend.'], function () {
+Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.'], function () {
     Route::get('user/{id}/edit', ['as' => 'user.edit', 'uses' => 'UserController@getEdit'])->where('id', '[0-9]+');
     Route::post('user/{id}/edit', [
         'as'   => 'user.edit.post',

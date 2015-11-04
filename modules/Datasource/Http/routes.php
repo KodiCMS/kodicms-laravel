@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => backend_url(), 'as' => 'backend.datasource.'], function () {
+Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.datasource.'], function () {
     Route::get('datasource/{id?}', [
         'as'   => 'list',
         'uses' => 'DatasourceController@getIndex',
