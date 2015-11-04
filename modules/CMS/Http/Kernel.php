@@ -2,6 +2,8 @@
 
 namespace KodiCMS\CMS\Http;
 
+define('LARAVEL_START_MEMORY', memory_get_usage());
+
 use KodiCMS\Support\Helpers\Profiler;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
