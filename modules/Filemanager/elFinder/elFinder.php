@@ -1312,4 +1312,4 @@ class elFinder
 
         return (double) $time[1] + (double) $time[0];
     }
-} // END class
+}

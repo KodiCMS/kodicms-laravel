@@ -1510,4 +1510,4 @@ class VolumeFTP extends VolumeDriver
 
         return false;
     }
-} // END class
+}

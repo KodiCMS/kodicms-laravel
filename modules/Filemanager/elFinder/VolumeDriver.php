@@ -3629,4 +3629,4 @@ abstract class VolumeDriver
      * @author Alexey Sukhotin
      **/
     abstract protected function _checkArchivers();
-} // END class
+}
