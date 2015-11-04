@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Model;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -7,12 +8,10 @@ use KodiCMS\Datasource\Contracts\SectionInterface;
 
 class DocumentQueryBuilder extends Builder
 {
-
     /**
      * @var SectionInterface
      */
     protected $section;
-
 
     /**
      * Create a new Eloquent query builder instance.
@@ -27,7 +26,6 @@ class DocumentQueryBuilder extends Builder
         parent::__construct($query);
         $this->section = $section;
     }
-
 
     /**
      * Get the hydrated models without eager loading.

@@ -1,8 +1,8 @@
 <?php
+
 namespace KodiCMS\Email\Http\Controllers;
 
 use WYSIWYG;
-use KodiCMS\Email\Model\EmailType;
 use KodiCMS\Email\Model\EmailTemplate;
 use KodiCMS\Email\Repository\EmailEventRepository;
 use KodiCMS\Email\Repository\EmailTemplateRepository;
@@ -10,7 +10,6 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class EmailTemplateController extends BackendController
 {
-
     /**
      * @param EmailTemplateRepository $repository
      */
@@ -19,7 +18,6 @@ class EmailTemplateController extends BackendController
         $emailTemplates = $repository->paginate();
         $this->setContent('email.template.list', compact('emailTemplates'));
     }
-
 
     /**
      * @param EmailTemplateRepository $repository
@@ -38,12 +36,11 @@ class EmailTemplateController extends BackendController
             'email_type_id' => $this->request->get('email_type_id'),
         ]);
 
-        $action      = 'backend.email.template.create.post';
+        $action = 'backend.email.template.create.post';
         $emailEvents = $emailEventRepository->eventsList();
 
         $this->setContent('email.template.form', compact('emailTemplate', 'action', 'emailEvents'));
     }
-
 
     /**
      * @param EmailTemplateRepository $repository
@@ -62,11 +59,10 @@ class EmailTemplateController extends BackendController
             ]));
     }
 
-
     /**
      * @param EmailTemplateRepository $repository
      * @param EmailEventRepository    $emailEventRepository
-     * @param integer                 $id
+     * @param int                 $id
      */
     public function getEdit(EmailTemplateRepository $repository, EmailEventRepository $emailEventRepository, $id)
     {
@@ -83,10 +79,9 @@ class EmailTemplateController extends BackendController
         $this->setContent('email.template.form', compact('emailTemplate', 'action', 'emailEvents'));
     }
 
-
     /**
      * @param EmailTemplateRepository $repository
-     * @param integer                 $id
+     * @param int                 $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -103,10 +98,9 @@ class EmailTemplateController extends BackendController
             ]));
     }
 
-
     /**
      * @param EmailTemplateRepository $repository
-     * @param integer                 $id
+     * @param int                 $id
      *
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception

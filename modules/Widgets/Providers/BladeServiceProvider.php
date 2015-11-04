@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Providers;
 
 use Blade;
@@ -6,7 +7,6 @@ use KodiCMS\Support\ServiceProvider;
 
 class BladeServiceProvider extends ServiceProvider
 {
-
     public function boot()
     {
         Blade::directive('widget', function ($expression) {
@@ -18,9 +18,7 @@ class BladeServiceProvider extends ServiceProvider
         });
     }
 
-
     public function register()
     {
-
     }
 }

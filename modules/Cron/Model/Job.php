@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Cron\Model;
 
 use Artisan;
@@ -10,16 +11,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
- * Class Job
- * @package KodiCMS\Cron\Model
+ * Class Job.
  *
- * @property integer $id
+ * @property int $id
  * @property string  $name
  * @property string  $task_name
  * @property string  $crontime
- * @property integer $interval
- * @property integer $status
- * @property integer $attempts
+ * @property int $interval
+ * @property int $status
+ * @property int $attempts
  *
  * @property Carbon $date_start
  * @property Carbon $date_end
@@ -38,7 +38,7 @@ class Job extends Model
     public static function runAll()
     {
         return static::onlyActive()
-                     ->where('next_run', '<',  new Carbon)
+                     ->where('next_run', '<', new Carbon)
                      ->get()
                      ->each(function (Job $job) {
                          $job->run();
@@ -102,7 +102,6 @@ class Job extends Model
         'crontime' => '* * * * *',
     ];
 
-
     /**
      * @return array
      */
@@ -113,18 +112,17 @@ class Job extends Model
         }, config('jobs'));
     }
 
-
     public function setNextRun()
     {
-        if (empty( $this->interval ) && empty( $this->crontime )) {
+        if (empty($this->interval) && empty($this->crontime)) {
             return;
         }
 
-        if ( ! empty( $this->crontime )) {
+        if (! empty($this->crontime)) {
             $this->next_run = Carbon::create(
                 CronExpression::factory($this->crontime)->getNextRunDate()->format('Y-m-d H:i:s')
             );
-        } else if ( ! empty( $this->interval )) {
+        } elseif (! empty($this->interval)) {
             $this->next_run = (new Carbon())->addMinutes($this->interval);
         }
     }
@@ -135,16 +133,16 @@ class Job extends Model
         $log->setStatus(static::STATUS_RUNNING);
 
         try {
-            $action = config('jobs.' . $this->task_name . '.action');
+            $action = config('jobs.'.$this->task_name.'.action');
             if (is_null($action)) {
                 throw new Exception('Job not found or action not set');
             }
 
             if (strpos($action, '@') !== false) {
-                list( $class, $method ) = explode('@', $action);
+                list($class, $method) = explode('@', $action);
                 $instance = app($class);
-                if ( ! method_exists($instance, $method)) {
-                    throw new Exception('Invalid method ' . $method);
+                if (! method_exists($instance, $method)) {
+                    throw new Exception('Invalid method '.$method);
                 }
                 $instance->$method();
             } else {
@@ -152,12 +150,12 @@ class Job extends Model
             }
         } catch (Exception $e) {
             $this->failed($log);
+
             return;
         }
 
         $this->completed($log);
     }
-
 
     /**
      * @param JobLog $log
@@ -167,11 +165,10 @@ class Job extends Model
         $log->setStatus(static::STATUS_COMPLETED);
 
         $this->last_run = new Carbon;
-        $this->attempts =0;
+        $this->attempts = 0;
 
         $this->save();
     }
-
 
     /**
      * @param JobLog $log
@@ -193,7 +190,7 @@ class Job extends Model
      *******************************************************/
 
     /**
-     * @param integer $value
+     * @param int $value
      */
     public function setAttemptsAttribute($value)
     {
@@ -205,12 +202,13 @@ class Job extends Model
      */
     public function getStatusStringAttribute()
     {
-        return trans('cron::core.statuses.' . $this->status);
+        return trans('cron::core.statuses.'.$this->status);
     }
 
     /*******************************************************
      * Scopes
      *******************************************************/
+
     /**
      * @param Builder $query
      *

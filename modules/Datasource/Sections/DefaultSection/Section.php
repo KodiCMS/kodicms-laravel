@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Sections\DefaultSection;
 
 use KodiCMS\Datasource\Sections\Document;
@@ -12,12 +13,10 @@ use KodiCMS\Datasource\Sections\SectionHeadlineDatatables;
 
 class Section extends \KodiCMS\Datasource\Model\Section
 {
-
     /**
      * @var string
      */
     protected $sectionTableName = 'default';
-
 
     /**
      * @return string
@@ -27,7 +26,6 @@ class Section extends \KodiCMS\Datasource\Model\Section
         return Document::class;
     }
 
-
     /**
      * @return string
      */
@@ -36,7 +34,6 @@ class Section extends \KodiCMS\Datasource\Model\Section
         return SectionHeadlineDatatables::class;
     }
 
-
     /**
      * @return string
      */
@@ -44,7 +41,6 @@ class Section extends \KodiCMS\Datasource\Model\Section
     {
         return SectionToolbar::class;
     }
-
 
     /**
      * @return array

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Console\Commands;
 
 use WYSIWYG;
@@ -7,7 +8,6 @@ use Symfony\Component\Console\Helper\TableSeparator;
 
 class WysiwygListCommand extends Command
 {
-
     /**
      * The console command name.
      *
@@ -25,7 +25,6 @@ class WysiwygListCommand extends Command
         'Settings',
     ];
 
-
     /**
      * Execute the console command.
      *
@@ -37,7 +36,7 @@ class WysiwygListCommand extends Command
 
         foreach (WYSIWYG::getAvailable() as $editor) {
             $editors[] = [
-                $editor->getName() . ' [type: ' . $editor->getType() . ']',
+                $editor->getName().' [type: '.$editor->getType().']',
                 '',
             ];
             $editors[] = new TableSeparator;

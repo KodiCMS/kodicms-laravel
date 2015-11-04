@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Installer\Console\Commands;
 
 use App;
@@ -14,7 +15,6 @@ use KodiCMS\Installer\Exceptions\InstallDatabaseException;
 
 class InstallCommand extends GeneratorCommand
 {
-
     use ConfirmableTrait;
 
     /**
@@ -28,7 +28,7 @@ class InstallCommand extends GeneratorCommand
     protected $env = [];
 
     /**
-     * Configs DB
+     * Configs DB.
      */
     protected $DBConfigs = [
         'host' => 'DB_HOST',
@@ -43,17 +43,16 @@ class InstallCommand extends GeneratorCommand
      */
     protected $testHeaders = ['Title', 'Passed', 'Motice', 'Message'];
 
-
     /**
      * Execute the console command.
      */
     public function fire()
     {
-        list( $failed, $tests, $optional ) = EnvironmentTester::check();
+        list($failed, $tests, $optional) = EnvironmentTester::check();
 
         $this->table($this->testHeaders, $tests);
 
-        if ( ! empty( $optional )) {
+        if (! empty($optional)) {
             $this->info('Optional tests');
             $this->table($this->testHeaders, $optional);
         }
@@ -62,29 +61,29 @@ class InstallCommand extends GeneratorCommand
             throw new InstallException('Environment test failed');
         }
 
-        if ( ! $this->confirmToProceed('.env file already exists!', function () {
+        if (! $this->confirmToProceed('.env file already exists!', function () {
             return App::installed();
         })
         ) {
-            return $this->error("Installation is aborted.");
+            return $this->error('Installation is aborted.');
         }
 
         $db = $this->createDBConnection();
 
-        while ( ! $db && $this->confirm('Do you want enter settings?')) {
+        while (! $db && $this->confirm('Do you want enter settings?')) {
             $this->askOptions();
             $db = $this->createDBConnection();
         }
 
-        if ( ! $db) {
-            return $this->error("Installation is aborted.");
+        if (! $db) {
+            return $this->error('Installation is aborted.');
         }
 
         if (Installer::createEnvironmentFile($this->getConfig())) {
             $this->info('.env file created successfully.');
         }
 
-        if ($this->confirm("Clear database? [yes/no]")) {
+        if ($this->confirm('Clear database? [yes/no]')) {
             $this->dropDatabase();
         }
 
@@ -98,7 +97,6 @@ class InstallCommand extends GeneratorCommand
         $this->info('Installation completed successfully');
     }
 
-
     protected function initModules()
     {
         foreach (ModulesLoader::getRegisteredModules() as $module) {
@@ -108,7 +106,6 @@ class InstallCommand extends GeneratorCommand
         ModulesFileSystem::loadConfigs();
     }
 
-
     /**
      * Get the stub file for the generator.
      *
@@ -116,36 +113,32 @@ class InstallCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return __DIR__ . '/stubs/env.stub';
+        return __DIR__.'/stubs/env.stub';
     }
-
 
     protected function dropDatabase()
     {
         $this->call('db:clear', ['--force' => true]);
     }
 
-
     /**
-     * Миграция данных
+     * Миграция данных.
      */
     protected function migrate()
     {
         $this->call('cms:modules:migrate', ['--force' => true]);
     }
 
-
     /**
-     * Сидирование данных
+     * Сидирование данных.
      */
     protected function seed()
     {
         $this->call('cms:modules:seed', ['--force' => true]);
     }
 
-
     /**
-     * Ask options
+     * Ask options.
      */
     protected function askOptions()
     {
@@ -155,11 +148,10 @@ class InstallCommand extends GeneratorCommand
             }
 
             $defVal = $this->input->getOption($option[0]);
-            $val    = $this->ask($option[3] . "{" . $defVal . "}", $defVal);
+            $val = $this->ask($option[3].'{'.$defVal.'}', $defVal);
             $this->input->setOption($option[0], $val);
         }
     }
-
 
     private function getConfig()
     {
@@ -170,7 +162,6 @@ class InstallCommand extends GeneratorCommand
 
         return $config;
     }
-
 
     private function createDBConnection()
     {
@@ -188,7 +179,6 @@ class InstallCommand extends GeneratorCommand
         }
     }
 
-
     /**
      * Get the console command arguments.
      *
@@ -199,7 +189,6 @@ class InstallCommand extends GeneratorCommand
         return [];
     }
 
-
     /**
      * Get the console command options.
      * @return array
@@ -209,7 +198,7 @@ class InstallCommand extends GeneratorCommand
         $defaults = Installer::getDefaultEnvironment();
 
         return [
-            ['DB_HOST', 'host', InputOption::VALUE_OPTIONAL, "Database host", array_get($defaults, 'DB_HOST')],
+            ['DB_HOST', 'host', InputOption::VALUE_OPTIONAL, 'Database host', array_get($defaults, 'DB_HOST')],
             ['DB_DATABASE', 'db', InputOption::VALUE_OPTIONAL, 'Database name', array_get($defaults, 'DB_DATABASE')],
             ['DB_USERNAME', 'u', InputOption::VALUE_OPTIONAL, 'Database username', array_get($defaults, 'DB_USERNAME')],
             ['DB_PASSWORD', 'p', InputOption::VALUE_NONE, 'Database password'],

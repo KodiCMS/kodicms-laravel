@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Users\Observers;
 
 use DB;
 
 /**
- * Class UserObserver
- * @package KodiCMS\Users\Observers
+ * Class UserObserver.
  */
 class UserObserver
 {
@@ -19,7 +19,6 @@ class UserObserver
         // Удаление связанных ролей
         $user->roles()->sync([]);
     }
-
 
     /**
      * @param \KodiCMS\Users\Model\User $user

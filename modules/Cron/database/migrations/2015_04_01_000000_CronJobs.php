@@ -5,7 +5,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class CronJobs extends Migration
 {
-
     public function up()
     {
         Schema::create('cron_jobs', function (Blueprint $table) {
@@ -27,7 +26,6 @@ class CronJobs extends Migration
             $table->timestamps();
         });
     }
-
 
     public function down()
     {

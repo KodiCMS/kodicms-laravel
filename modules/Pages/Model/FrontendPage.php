@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Model;
 
 use DB;
@@ -18,7 +19,6 @@ use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 
 class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDataInterface
 {
-
     const STATUS_DRAFT = 1;
     const STATUS_PUBLISHED = 100;
     const STATUS_HIDDEN = 101;
@@ -28,12 +28,11 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
      */
     private static $pagesCache = [];
 
-
     /**
      * @param string        $field
      * @param mixed         $value
      * @param FrontendPage  $parentPage
-     * @param boolean|array $includeHidden
+     * @param bool|array $includeHidden
      *
      * @return bool|FrontendPage
      */
@@ -41,18 +40,18 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
     {
         $pageCacheId = static::getCacheId([$field, $value, $includeHidden ? 'TRUE' : 'FALSE'], $parentPage);
 
-        if (isset( static::$pagesCache[$pageCacheId] )) {
+        if (isset(static::$pagesCache[$pageCacheId])) {
             return static::$pagesCache[$pageCacheId];
         }
 
-        $query = DB::table('pages')->where('pages.' . $field, $value)
+        $query = DB::table('pages')->where('pages.'.$field, $value)
             ->whereIn('status', static::getStatuses($includeHidden));
 
         if (config('pages::checkDate') === true) {
             $query->where('published_at', '<=', DB::raw('NOW()'));
         }
 
-        if ( ! is_null($parentPage)) {
+        if (! is_null($parentPage)) {
             $query->where('parent_id', $parentPage->id);
         }
 
@@ -62,10 +61,10 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         });
 
         if (is_null($foundPage)) {
-            return null;
+            return;
         }
 
-        $foundPageObject = new FrontendPage($foundPage);
+        $foundPageObject = new self($foundPage);
 
         if (is_null($parentPage) and ! is_null($foundPageObject->getParentId())) {
             $parentPage = static::findById($foundPageObject->getParentId());
@@ -78,10 +77,9 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return $foundPageObject;
     }
 
-
     /**
      * @param string        $uri
-     * @param boolean|array $includeHidden
+     * @param bool|array $includeHidden
      * @param FrontendPage  $parentPage
      *
      * @return stdClass
@@ -98,11 +96,11 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
 
         $url = '';
 
-        $pageObject     = new \stdClass;
+        $pageObject = new \stdClass;
         $pageObject->id = 0;
 
         foreach ($urls as $pageSlug) {
-            $url = ltrim($url . '/' . $pageSlug, '/');
+            $url = ltrim($url.'/'.$pageSlug, '/');
 
             if ($pageObject = static::findBySlug($pageSlug, $parentPage, $includeHidden)) {
                 if ($pageObject->hasBehavior() and ! is_null($behavior = BehaviorManager::load($pageObject->getBehavior()))) {
@@ -123,11 +121,10 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return $pageObject;
     }
 
-
     /**
      * @param string        $slug
      * @param FrontendPage  $parentPage
-     * @param boolean|array $includeHidden
+     * @param bool|array $includeHidden
      *
      * @return bool|FrontendPage
      */
@@ -136,10 +133,9 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return self::findByField('slug', $slug, $parentPage, $includeHidden);
     }
 
-
     /**
      * @param int           $id
-     * @param boolean|array $includeHidden
+     * @param bool|array $includeHidden
      *
      * @return bool|FrontendPage
      */
@@ -148,15 +144,14 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return self::findByField('id', (int) $id, null, $includeHidden);
     }
 
-
     /**
      * @param string $uri
      *
-     * @return string|boolean
+     * @return string|bool
      */
     public static function findSimilar($uri)
     {
-        if (empty( $uri )) {
+        if (empty($uri)) {
             return false;
         }
 
@@ -181,14 +176,14 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
 
             $similarPages = Text::similarWord($slug, $slugs);
 
-            if ( ! empty( $similarPages )) {
-                $pageId     = key($similarPages);
-                $page       = static::findById($pageId);
+            if (! empty($similarPages)) {
+                $pageId = key($similarPages);
+                $page = static::findById($pageId);
                 $newSlugs[] = $page->getSlug();
             }
         }
 
-        if ( ! config('pages.similar.return_parent_page') and ( count($uriSlugs) != count($newSlugs) )) {
+        if (! config('pages.similar.return_parent_page') and (count($uriSlugs) != count($newSlugs))) {
             return false;
         }
 
@@ -198,7 +193,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
 
         return $page ? $uri : false;
     }
-
 
     /**
      * @param string       $slug
@@ -212,12 +206,11 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
             $slug = implode('::', $slug);
         }
 
-        return $slug . $parentPage;
+        return $slug.$parentPage;
     }
 
-
     /**
-     * @param boolean|array $includeHidden
+     * @param bool|array $includeHidden
      *
      * @return array
      */
@@ -227,13 +220,12 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
 
         if ($includeHidden === true) {
             $statuses[] = static::STATUS_HIDDEN;
-        } else if (is_array($includeHidden)) {
+        } elseif (is_array($includeHidden)) {
             $statuses = array_merge($statuses, $includeHidden);
         }
 
         return $statuses;
     }
-
 
     /**
      * @var int
@@ -281,12 +273,12 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
     protected $behavior;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $level = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $status;
 
@@ -311,12 +303,12 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
     protected $published_at;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $created_by_id;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $updated_by_id;
 
@@ -331,12 +323,12 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
     protected $updated_by = null;
 
     /**
-     * @var null|integer
+     * @var null|int
      */
     protected $parent_id = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $position = 0;
 
@@ -351,7 +343,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
     protected $redirect_url = null;
 
     /**
-     *
      * @var string
      */
     protected $layout_file = null;
@@ -371,14 +362,13 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
      */
     protected $metaParams = [];
 
-
     /**
      * @param \stdClass    $pageData
      * @param FrontendPage $parentPage
      */
     public function __construct($pageData, FrontendPage $parentPage = null)
     {
-        if ( ! is_null($parentPage)) {
+        if (! is_null($parentPage)) {
             $this->setParentPage($parentPage);
         }
 
@@ -386,11 +376,10 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
             $this->$key = $value;
         }
 
-        if ($this->getParent() instanceof FrontendPage) {
+        if ($this->getParent() instanceof self) {
             $this->buildUri();
         }
     }
-
 
     /**
      * @param FrontendPage $parentPage
@@ -399,7 +388,7 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
      */
     public function setParentPage(FrontendPage $parentPage = null)
     {
-        if ( ! is_null($parentPage)) {
+        if (! is_null($parentPage)) {
             $this->parentPage = $parentPage;
             $this->buildUri();
         }
@@ -407,15 +396,13 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return $this;
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
-
 
     /**
      * @return string
@@ -425,7 +412,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return $this->parseMeta('title');
     }
 
-
     /**
      * @return string
      */
@@ -433,7 +419,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
     {
         return $this->robots;
     }
-
 
     /**
      * @return string
@@ -443,19 +428,17 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return $this->parseMeta('meta_title');
     }
 
-
     /**
      * @return string
      */
     public function getLayout()
     {
-        if (empty( $this->layout_file ) and $parent = $this->getParent()) {
+        if (empty($this->layout_file) and $parent = $this->getParent()) {
             return $parent->getLayout();
         }
 
         return $this->layout_file;
     }
-
 
     /**
      * @return Layout
@@ -465,7 +448,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return (new LayoutCollection)->findFile($this->getLayout());
     }
 
-
     /**
      * @return \Illuminate\View\View|null
      */
@@ -473,13 +455,12 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
     {
         $layout = $this->getLayoutFile();
 
-        if ( ! $layout) {
-            return null;
+        if (! $layout) {
+            return;
         }
 
         return $layout->toView();
     }
-
 
     /**
      * @param null $default
@@ -490,9 +471,8 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
     {
         $meta = $this->parseMeta('meta_keywords');
 
-        return ! empty( $meta ) ? $meta : $default;
+        return ! empty($meta) ? $meta : $default;
     }
-
 
     /**
      * @param null $default
@@ -503,9 +483,8 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
     {
         $meta = $this->parseMeta('meta_description');
 
-        return ! empty( $meta ) ? $meta : $default;
+        return ! empty($meta) ? $meta : $default;
     }
-
 
     /**
      * @return string
@@ -515,19 +494,17 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return $this->slug;
     }
 
-
     /**
      * @return string
      */
     public function getBreadcrumb()
     {
-        if (empty( $this->breadcrumb )) {
+        if (empty($this->breadcrumb)) {
             $this->breadcrumb = $this->title;
         }
 
         return $this->parseMeta('breadcrumb');
     }
-
 
     /**
      * @param int $level
@@ -538,7 +515,7 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
     {
         $crumbs = new Breadcrumbs;
 
-        if (( $parent = $this->getParent() ) instanceof FrontendPage and $this->getLevel() > $level) {
+        if (($parent = $this->getParent()) instanceof self and $this->getLevel() > $level) {
             $this->getParent()->recurseBreadcrumbs($level, $crumbs);
         }
 
@@ -546,7 +523,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
 
         return $crumbs;
     }
-
 
     /**
      * @return int|null
@@ -556,7 +532,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return $this->parent_id;
     }
 
-
     /**
      * @return Carbon
      */
@@ -564,7 +539,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
     {
         return (new Carbon)->createFromFormat('Y-m-d H:i:s', $this->created_at);
     }
-
 
     /**
      * @return Carbon
@@ -574,7 +548,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return (new Carbon)->createFromFormat('Y-m-d H:i:s', $this->updated_at);
     }
 
-
     /**
      * @return Carbon
      */
@@ -582,7 +555,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
     {
         return (new Carbon)->createFromFormat('Y-m-d H:i:s', $this->published_at);
     }
-
 
     /**
      * @return User
@@ -596,7 +568,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return $this->created_by;
     }
 
-
     /**
      * @return User
      */
@@ -608,7 +579,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
 
         return $this->updated_by;
     }
-
 
     /**
      * @param null|intger $level
@@ -626,16 +596,15 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         }
 
         if ($level > $this->getLevel()) {
-            return null;
-        } else if ($this->getLevel() == $level) {
+            return;
+        } elseif ($this->getLevel() == $level) {
             return $this;
-        } else if ($this->getParent() instanceof FrontendPage) {
+        } elseif ($this->getParent() instanceof self) {
             return $this->getParent()->getParent($level);
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @return string
@@ -645,7 +614,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return $this->uri;
     }
 
-
     /**
      * @return string
      */
@@ -654,22 +622,20 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return app('url')->to($this->getUri());
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getLevel()
     {
         if ($this->level === null) {
-            $uri         = $this->getUri();
-            $this->level = empty( $uri )
+            $uri = $this->getUri();
+            $this->level = empty($uri)
                 ? 0
                 : substr_count($uri, '/') + 1;
         }
 
         return $this->level;
     }
-
 
     /**
      * @return null|string
@@ -679,7 +645,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return $this->behavior;
     }
 
-
     /**
      * @return Behavior
      */
@@ -688,15 +653,13 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return $this->behaviorObject;
     }
 
-
     /**
      * @return bool
      */
     public function hasBehavior()
     {
-        return ! empty( $this->behavior );
+        return ! empty($this->behavior);
     }
-
 
     /**
      * @return string
@@ -707,7 +670,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
 
         return $mime === false ? 'text/html' : $mime;
     }
-
 
     /**
      * @param null|string $label
@@ -724,7 +686,7 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
 
         if ($checkCurrent === true) {
             if ($this->isActive()) {
-                if ( ! isset( $attributes['class'] )) {
+                if (! isset($attributes['class'])) {
                     $attributes['class'] = '';
                 }
 
@@ -735,7 +697,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return \HTML::link($this->getUrl(), $label, $attributes);
     }
 
-
     /**
      * @return bool
      */
@@ -744,7 +705,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return (bool) $this->is_redirect;
     }
 
-
     /**
      * @return string
      */
@@ -752,7 +712,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
     {
         return $this->redirect_url;
     }
-
 
     /**
      * @param string|array $key
@@ -776,7 +735,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return $this;
     }
 
-
     /**
      * @return array
      */
@@ -784,7 +742,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
     {
         return $this->metaParams;
     }
-
 
     /**
      * @param string $key
@@ -797,20 +754,18 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return array_get($this->metaParams, $key, $default);
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function isActive()
     {
         $url = $this->getUri();
-        if (empty( $url )) {
+        if (empty($url)) {
             return false;
         }
 
-        return ( strpos(Request::path(), $url) === 1 );
+        return (strpos(Request::path(), $url) === 1);
     }
-
 
     /**
      * @param             $key
@@ -826,15 +781,15 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
 
         $fields = [];
 
-        $found = preg_match_all('/(?<!\{)\{(' . '((\$|\:)[A-Za-z0-9_\-\.\/]+(\|[\w\ ]*)?)' . // {$abc}, {:abc}
-            '|[\.]+' . ')\}(?!\})/u', $value, $fields);
+        $found = preg_match_all('/(?<!\{)\{('.'((\$|\:)[A-Za-z0-9_\-\.\/]+(\|[\w\ ]*)?)'.// {$abc}, {:abc}
+            '|[\.]+'.')\}(?!\})/u', $value, $fields);
 
         if ($found) {
             $fields = array_unique($fields[1]);
-            $parts  = [];
+            $parts = [];
 
             foreach ($fields as $i => $field) {
-                $patterns[] = '/(?<!\\{)\\{' . preg_quote($field, '/') . '\\}(?!\\})/u';
+                $patterns[] = '/(?<!\\{)\\{'.preg_quote($field, '/').'\\}(?!\\})/u';
                 switch ($field) {
                     case '.': // Current page
                         if ($key == 'meta_title') {
@@ -842,25 +797,25 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
                         }
                         break;
                     case '..': // Parent page
-                        if ($this->getParent() instanceof FrontendPage) {
-                            $method  = 'get' . ucfirst($key);
+                        if ($this->getParent() instanceof self) {
+                            $method = 'get'.ucfirst($key);
                             $parts[] = $this->getParent()->{$method}();
                         }
                         break;
                     default: // Level
-                        if (is_numeric($field) and $this->getLevel() != $field and $this->getParent($field) instanceof FrontendPage) {
-                            $method  = 'get' . ucfirst($key);
+                        if (is_numeric($field) and $this->getLevel() != $field and $this->getParent($field) instanceof self) {
+                            $method = 'get'.ucfirst($key);
                             $parts[] = $this->getParent($field)->{$method}();
                         }
                         break;
                 }
 
-                $param     = null;
+                $param = null;
                 $metaParam = null;
-                $default   = null;
+                $default = null;
 
                 if (strpos($field, '|') !== false) {
-                    list( $field, $default ) = explode('|', $field, 2);
+                    list($field, $default) = explode('|', $field, 2);
                 }
 
                 switch ($field{0}) {
@@ -874,10 +829,10 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
 
                 if ($param !== null) {
                     if (strpos($param, 'cms.') !== false) {
-                        $parts[] = config('cms.' . substr($param, 5), $default);
-                    } else if (strpos($param, 'parent.') !== false and $this->getParent() instanceof FrontendPage and method_exists($this, ( $method = 'get' . ucfirst(substr($param, 7)) ))) {
+                        $parts[] = config('cms.'.substr($param, 5), $default);
+                    } elseif (strpos($param, 'parent.') !== false and $this->getParent() instanceof self and method_exists($this, ($method = 'get'.ucfirst(substr($param, 7))))) {
                         $parts[] = $this->getParent()->{$method}();
-                    } else if (method_exists($this, ( $method = 'get' . ucfirst($param) ))) {
+                    } elseif (method_exists($this, ($method = 'get'.ucfirst($param)))) {
                         $parts[] = $this->{$method}();
                     }
                 }
@@ -893,11 +848,10 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return $value;
     }
 
-
     /**
-     * @param boolean $includeHidden
+     * @param bool $includeHidden
      *
-     * @return integer
+     * @return int
      */
     public function childrenCount($includeHidden = false)
     {
@@ -909,12 +863,11 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
             $query->whereRaw('published_at <= NOW()');
         }
 
-        return $query->count();;
+        return $query->count();
     }
 
-
     /**
-     * @param boolean $includeHidden
+     * @param bool $includeHidden
      *
      * @return array
      */
@@ -927,7 +880,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
 
         return $pages;
     }
-
 
     /**
      * @param bool $includeHidden
@@ -947,7 +899,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return $query;
     }
 
-
     /**
      * @return array
      */
@@ -958,41 +909,36 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         return is_null($settings) ? [] : $settings->settings;
     }
 
-
     /**
      * @return $this
      */
     protected function buildUri()
     {
-        $this->uri = trim($this->getParent()->getUri() . '/' . $this->getSlug(), '/');
+        $this->uri = trim($this->getParent()->getUri().'/'.$this->getSlug(), '/');
 
         return $this;
     }
 
-
     /**
-     * @param integer     $level
+     * @param int     $level
      * @param Breadcrumbs $crumbs
      */
-    private function recurseBreadcrumbs($level, Breadcrumbs & $crumbs)
+    private function recurseBreadcrumbs($level, Breadcrumbs &$crumbs)
     {
-        if (( $parent = $this->getParent() ) instanceof FrontendPage and $this->getLevel() > $level) {
+        if (($parent = $this->getParent()) instanceof self and $this->getLevel() > $level) {
             $parent->recurseBreadcrumbs($level, $crumbs);
         }
 
         $crumbs->add($this->getBreadcrumb(), $this->getUrl(), false, null, ['id' => $this->getId()]);
     }
 
-
     /**
-     *
      * @return string
      */
     public function __toString()
     {
         return (string) $this->getId();
     }
-
 
     /**
      * @return array
@@ -1015,7 +961,6 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
         ];
     }
 
-
     /**
      * Convert the object to its JSON representation.
      *
@@ -1027,6 +972,4 @@ class FrontendPage implements BehaviorPageInterface, Arrayable, Jsonable, MetaDa
     {
         return json_encode($this->toArray(), $options);
     }
-
-
 }

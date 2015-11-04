@@ -1,17 +1,16 @@
 <?php
+
 namespace KodiCMS\Pages\Widget;
 
 use KodiCMS\Pages\Model\FrontendPage;
 use KodiCMS\Pages\Model\PageSitemap;
 use KodiCMS\Widgets\Contracts\WidgetCacheable;
-use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 use KodiCMS\Widgets\Traits\WidgetCache;
 use KodiCMS\Widgets\Widget\Decorator;
 use Frontpage;
 
 class PageMenu extends Decorator implements WidgetCacheable
 {
-
     use WidgetCache;
 
     /**
@@ -37,7 +36,6 @@ class PageMenu extends Decorator implements WidgetCacheable
      */
     protected $settingsTemplate = 'pages::widgets.page_menu.settings';
 
-
     /**
      * @param bool $status
      */
@@ -45,7 +43,6 @@ class PageMenu extends Decorator implements WidgetCacheable
     {
         $this->settings['include_hidden'] = (bool) $status;
     }
-
 
     /**
      * @param bool $status
@@ -55,7 +52,6 @@ class PageMenu extends Decorator implements WidgetCacheable
         $this->settings['include_children'] = (bool) $status;
     }
 
-
     /**
      * @param array $pages
      */
@@ -63,7 +59,6 @@ class PageMenu extends Decorator implements WidgetCacheable
     {
         $this->settings['excluded_pages'] = $pages;
     }
-
 
     /**
      * @param int $level
@@ -73,7 +68,6 @@ class PageMenu extends Decorator implements WidgetCacheable
         $this->settings['page_level'] = (int) $level;
     }
 
-
     /**
      * @param int $id
      */
@@ -81,7 +75,6 @@ class PageMenu extends Decorator implements WidgetCacheable
     {
         $this->settings['page_id'] = (int) $id;
     }
-
 
     /**
      * @return array
@@ -93,13 +86,12 @@ class PageMenu extends Decorator implements WidgetCacheable
         $select = [trans('pages::widgets.page_menu.label.linked_page')];
 
         foreach ($pageSitemap->flatten() as $page) {
-            $uri                 = ! empty( $page['uri'] ) ? $page['uri'] : '/';
-            $select[$page['id']] = $page['title'] . ' [ ' . $uri . ' ]';
+            $uri = ! empty($page['uri']) ? $page['uri'] : '/';
+            $select[$page['id']] = $page['title'].' [ '.$uri.' ]';
         }
 
         return compact('select', 'pageSitemap');
     }
-
 
     /**
      * @return int|null
@@ -108,7 +100,7 @@ class PageMenu extends Decorator implements WidgetCacheable
     {
         if ($this->settings['page_id'] > 0) {
             return $this->settings['page_id'];
-        } else if ($this->settings['page_id'] == 0 and ( ( $page = Frontpage::getFacadeRoot() ) instanceof FrontendPage )) {
+        } elseif ($this->settings['page_id'] == 0 and (($page = Frontpage::getFacadeRoot()) instanceof FrontendPage)) {
             if ($this->page_level > 0) {
                 return ! is_null($parent = $page->getParent($this->page_level)) ? $parent->getId() : null;
             }
@@ -116,9 +108,8 @@ class PageMenu extends Decorator implements WidgetCacheable
             return $page->getId();
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @return array [[PageSitemap] $sitemap, [array] $pages]
@@ -127,7 +118,7 @@ class PageMenu extends Decorator implements WidgetCacheable
     {
         $pageSitemap = PageSitemap::get($this->include_hidden);
 
-        if ( ! is_null($pageId = $this->getPageId())) {
+        if (! is_null($pageId = $this->getPageId())) {
             $pageSitemap->find($pageId);
         }
 
@@ -140,5 +131,4 @@ class PageMenu extends Decorator implements WidgetCacheable
             'pages'   => $pageSitemap->asArray((bool) $this->include_children),
         ];
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 return [
     'title'       => [
         'information'     => 'Информация о разделе',

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Notifications\Types;
 
 use Carbon\Carbon;
@@ -7,7 +8,6 @@ use KodiCMS\Notifications\Contracts\NotificationTypeInterface;
 
 class DefaultNotification implements NotificationTypeInterface
 {
-
     /**
      * @var string
      */
@@ -18,7 +18,6 @@ class DefaultNotification implements NotificationTypeInterface
      */
     protected $notification;
 
-
     /**
      * @return string
      */
@@ -26,7 +25,6 @@ class DefaultNotification implements NotificationTypeInterface
     {
         return $this->notification->id;
     }
-
 
     /**
      * @return string
@@ -36,7 +34,6 @@ class DefaultNotification implements NotificationTypeInterface
         return 'information';
     }
 
-
     /**
      * @return string
      */
@@ -44,7 +41,6 @@ class DefaultNotification implements NotificationTypeInterface
     {
         return 'exclamation-triangle';
     }
-
 
     /**
      * @return string
@@ -54,7 +50,6 @@ class DefaultNotification implements NotificationTypeInterface
         return 'info';
     }
 
-
     /**
      * @return string
      */
@@ -62,7 +57,6 @@ class DefaultNotification implements NotificationTypeInterface
     {
         return $this->notification->message;
     }
-
 
     /**
      * @return Carbon
@@ -72,7 +66,6 @@ class DefaultNotification implements NotificationTypeInterface
         return (string) $this->notification->sent_at;
     }
 
-
     /**
      * @param Notification $notification
      */
@@ -80,7 +73,6 @@ class DefaultNotification implements NotificationTypeInterface
     {
         $this->notification = $notification;
     }
-
 
     /**
      * Get the instance as an array.

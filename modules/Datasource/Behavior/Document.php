@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Behavior;
 
 use KodiCMS\Pages\Model\FrontendPage;
@@ -6,12 +7,10 @@ use KodiCMS\Pages\Behavior\BehaviorAbstract;
 
 class Document extends BehaviorAbstract
 {
-
     /**
      * @var null|string
      */
     protected $settingsTemplate = 'datasource::behavior.document';
-
 
     /**
      * @return array
@@ -34,14 +33,12 @@ class Document extends BehaviorAbstract
         ];
     }
 
-
     public function executeById()
     {
         $id = $this->getRouter()->getParameter('id');
 
         return $this->execute($id);
     }
-
 
     public function executeBySlug()
     {
@@ -50,7 +47,6 @@ class Document extends BehaviorAbstract
         return $this->execute($slug);
     }
 
-
     /**
      * @param string $value
      *
@@ -58,12 +54,12 @@ class Document extends BehaviorAbstract
      */
     private function execute($value)
     {
-        if (empty( $value )) {
+        if (empty($value)) {
             return;
         }
 
         // Производим поиск страницы которая укзана в настройках типа страницы
-        if ( ! empty( $itemPageId = $this->getSettings()->getSetting('item_page_id') )) {
+        if (! empty($itemPageId = $this->getSettings()->getSetting('item_page_id'))) {
             $this->page = FrontendPage::findById($itemPageId);
 
             return;

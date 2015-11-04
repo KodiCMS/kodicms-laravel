@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Dashboard\Widget;
 
 use Cache as CacheFacade;
 
 class KodiCMSRss extends Decorator
 {
-
     /**
      * @var array
      */
@@ -21,7 +21,6 @@ class KodiCMSRss extends Decorator
      */
     protected $frontendTemplate = 'dashboard::widgets.kodicms_rss.template';
 
-
     /**
      * @return array
      */
@@ -35,7 +34,6 @@ class KodiCMSRss extends Decorator
             'feed' => $this->parseRss($request),
         ];
     }
-
 
     /**
      * @param string $rss
@@ -59,9 +57,9 @@ class KodiCMSRss extends Decorator
         $namespaces = $feed->getNamespaces(true);
 
         // Detect the feed type. RSS 1.0/2.0 and Atom 1.0 are supported.
-        $feed = isset( $feed->channel ) ? $feed->xpath('//item') : $feed->entry;
+        $feed = isset($feed->channel) ? $feed->xpath('//item') : $feed->entry;
 
-        $i     = 0;
+        $i = 0;
         $items = [];
 
         foreach ($feed as $item) {

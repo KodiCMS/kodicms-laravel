@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\API\Http\Controllers\System;
 
 use KodiCMS\API\Http\Response;
@@ -14,7 +15,7 @@ abstract class Controller extends BaseController
     use ControllerTrait, ControllerACLTrait;
 
     /**
-     * Массив возвращаемых значений, будет преобразован в формат JSON
+     * Массив возвращаемых значений, будет преобразован в формат JSON.
      * @var array
      */
     public $responseArray = ['content' => null];
@@ -37,11 +38,11 @@ abstract class Controller extends BaseController
      */
     public function callAction($method, $parameters)
     {
-        $this->responseArray['type']   = Response::TYPE_CONTENT;
+        $this->responseArray['type'] = Response::TYPE_CONTENT;
         $this->responseArray['method'] = $this->request->method();
-        $this->responseArray['code']   = Response::NO_ERROR;
+        $this->responseArray['code'] = Response::NO_ERROR;
 
-        if (isset( $this->requiredFields[$method] ) and is_array($this->requiredFields[$method])) {
+        if (isset($this->requiredFields[$method]) and is_array($this->requiredFields[$method])) {
             $this->validateParameters($this->requiredFields[$method]);
         }
 
@@ -50,10 +51,10 @@ abstract class Controller extends BaseController
         $this->after();
 
         if ($response instanceof RedirectResponse) {
-            $this->responseArray['type']      = Response::TYPE_REDIRECT;
+            $this->responseArray['type'] = Response::TYPE_REDIRECT;
             $this->responseArray['targetUrl'] = $response->getTargetUrl();
-            $this->responseArray['code']      = $response->getStatusCode();
-        } else if ($response instanceof JsonResponse) {
+            $this->responseArray['code'] = $response->getStatusCode();
+        } elseif ($response instanceof JsonResponse) {
             return $response;
         }
 

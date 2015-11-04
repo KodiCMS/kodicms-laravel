@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\database\seeds;
 
 use Illuminate\Database\Seeder;
@@ -6,7 +7,6 @@ use KodiCMS\Users\Model\UserRole;
 
 class RolesTableSeeder extends Seeder
 {
-
     /**
      * Run the database seeds.
      *

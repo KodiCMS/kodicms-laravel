@@ -1,15 +1,14 @@
 <?php
+
 namespace KodiCMS\Support\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * Class Installer
- * @package KodiCMS\Support\Facades
+ * Class Installer.
  */
 class Installer extends Facade
 {
-
     /**
      * Get the registered name of the component.
      *

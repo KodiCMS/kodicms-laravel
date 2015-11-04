@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Http\Controllers;
 
 use ACL;
@@ -7,7 +8,6 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class RoleController extends BackendController
 {
-
     /**
      * @param UserRoleRepository $repository
      */
@@ -16,7 +16,6 @@ class RoleController extends BackendController
         $roles = $repository->paginate();
         $this->setContent('roles.list', compact('roles'));
     }
-
 
     /**
      * @param UserRoleRepository $repository
@@ -29,7 +28,6 @@ class RoleController extends BackendController
         $permissions = ACL::getPermissionsList();
         $this->setContent('roles.create', compact('role', 'permissions'));
     }
-
 
     /**
      * @param UserRoleRepository $repository
@@ -44,10 +42,9 @@ class RoleController extends BackendController
 
         return $this->smartRedirect([$role])
             ->with('success', trans($this->wrapNamespace('role.messages.created'), [
-                'name' => $role->name
+                'name' => $role->name,
             ]));
     }
-
 
     /**
      * @param UserRoleRepository $repository
@@ -60,13 +57,12 @@ class RoleController extends BackendController
             'name' => ucfirst($role->name),
         ]));
 
-        $permissions         = ACL::getPermissionsList();
+        $permissions = ACL::getPermissionsList();
         $selectedPermissions = $role->permissions()->lists('action')->all();
 
         $users = $role->users()->with('roles')->paginate();
         $this->setContent('roles.edit', compact('role', 'permissions', 'selectedPermissions', 'users'));
     }
-
 
     /**
      * @param UserRoleRepository $repository
@@ -82,10 +78,9 @@ class RoleController extends BackendController
 
         return $this->smartRedirect([$role])
             ->with('success', trans($this->wrapNamespace('role.messages.updated'), [
-                'name' => $role->name
+                'name' => $role->name,
             ]));
     }
-
 
     /**
      * @param UserRoleRepository $repository
@@ -99,7 +94,7 @@ class RoleController extends BackendController
 
         return $this->smartRedirect()
             ->with('success', trans($this->wrapNamespace('role.messages.deleted'), [
-                'name' => $role->name
+                'name' => $role->name,
             ]));
     }
 }

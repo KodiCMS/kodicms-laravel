@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Support\Model;
 
 use Illuminate\Support\Collection;
@@ -10,7 +11,6 @@ use KodiCMS\Support\Model\Contracts\ModelFieldCollectionInterface;
 
 class ModelFieldCollection extends Collection
 {
-
     /**
      * @var ModelFieldCollectionInterface
      */
@@ -26,7 +26,6 @@ class ModelFieldCollection extends Collection
      */
     protected $collection;
 
-
     /**
      * @param Model                $model
      * @param ModelFieldsInterface $collection
@@ -35,14 +34,13 @@ class ModelFieldCollection extends Collection
      */
     public function __construct(Model $model, ModelFieldsInterface $collection)
     {
-        $this->model      = $model;
+        $this->model = $model;
         $this->collection = $collection;
 
         foreach ($collection->fields() as $field) {
             $this->addField($field);
         }
     }
-
 
     /**
      * @return array
@@ -51,7 +49,6 @@ class ModelFieldCollection extends Collection
     {
         return $this->items;
     }
-
 
     /**
      * @param string $name
@@ -63,19 +60,19 @@ class ModelFieldCollection extends Collection
         $related = null;
 
         if (strpos($name, '::') !== false) {
-            list( $name, $related ) = explode('::', $name, 2);
+            list($name, $related) = explode('::', $name, 2);
         }
 
         if (is_null($field = array_get($this->items, $name))) {
-            return null;
+            return;
         }
 
-        if ( ! is_null($related) and method_exists($field, 'getRelatedModel')) {
+        if (! is_null($related) and method_exists($field, 'getRelatedModel')) {
             $relationship = $field->getRelatedModel();
 
             if ($relationship instanceof Model) {
                 return $relationship->getField($related);
-            } else if ($relationship instanceof Relation) {
+            } elseif ($relationship instanceof Relation) {
                 if (is_null($model = $relationship->getResults())) {
                     $model = $relationship->getRelated();
                 }
@@ -86,7 +83,6 @@ class ModelFieldCollection extends Collection
 
         return $field;
     }
-
 
     /**
      * @param ModelFieldInterface $field
@@ -100,7 +96,6 @@ class ModelFieldCollection extends Collection
         return $this->items[$field->getKey()] = $field;
     }
 
-
     /**
      * @param string $name
      *
@@ -109,12 +104,11 @@ class ModelFieldCollection extends Collection
     public function getFieldValue($name)
     {
         if (is_null($field = $this->getField($name))) {
-            return null;
+            return;
         }
 
         return $field->getValue();
     }
-
 
     /**
      * @param string $prefix
@@ -130,7 +124,6 @@ class ModelFieldCollection extends Collection
         return $this;
     }
 
-
     /**
      * @param array $attributes
      *
@@ -144,7 +137,6 @@ class ModelFieldCollection extends Collection
 
         return $this;
     }
-
 
     /**
      * @param array $attributes

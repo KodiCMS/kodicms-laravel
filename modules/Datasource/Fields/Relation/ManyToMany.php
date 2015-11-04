@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Relation;
 
 use Schema;
@@ -12,7 +13,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany as BelongsToManyRelatio
 
 class ManyToMany extends Relation
 {
-
     /**
      * @var bool
      */
@@ -33,7 +33,6 @@ class ManyToMany extends Relation
      */
     protected $relatedFieldType = 'many_to_many';
 
-
     /**
      * @param DocumentInterface $document
      * @param mixed             $value
@@ -46,9 +45,8 @@ class ManyToMany extends Relation
             return link_to($doc->getEditLink(), $doc->getTitle(), ['class' => 'popup']);
         })->all();
 
-        return ! empty( $documents ) ? implode(', ', $documents) : null;
+        return ! empty($documents) ? implode(', ', $documents) : null;
     }
-
 
     /**
      * @param DocumentInterface   $document
@@ -61,11 +59,10 @@ class ManyToMany extends Relation
         DocumentInterface $document, SectionInterface $relatedSection = null, FieldInterface $relatedField = null
     ) {
         $relatedDocument = $relatedSection->getEmptyDocument();
-        $builder         = $relatedDocument->newQuery();
+        $builder = $relatedDocument->newQuery();
 
         return new BelongsToManyRelation($builder, $document, $this->getRelatedTable(), $this->getDBKey(), $relatedField->getDBKey(), $this->getRelationName());
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -74,7 +71,7 @@ class ManyToMany extends Relation
      */
     public function getRelatedDocumentValues(DocumentInterface $document)
     {
-        if ( ! is_null($relatedField = $this->relatedField)) {
+        if (! is_null($relatedField = $this->relatedField)) {
             $section = $relatedField->getSection();
 
             return $this->getDocumentRelation($document, $section, $relatedField)
@@ -86,7 +83,6 @@ class ManyToMany extends Relation
         return [];
     }
 
-
     /**
      * @param Builder           $query
      * @param DocumentInterface $document
@@ -96,7 +92,6 @@ class ManyToMany extends Relation
         $query->with($this->getRelationName());
     }
 
-
     /**
      * @param DocumentInterface $document
      * @param mixed             $value
@@ -105,7 +100,6 @@ class ManyToMany extends Relation
     {
         $this->selectedDocuments = $value;
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -117,7 +111,6 @@ class ManyToMany extends Relation
         parent::onDocumentCreated($document, $value);
     }
 
-
     /**
      * @param DocumentInterface $document
      * @param mixed             $value
@@ -128,7 +121,6 @@ class ManyToMany extends Relation
         parent::onDocumentUpdating($document, $value);
     }
 
-
     /**
      * @param DocumentInterface $document
      */
@@ -136,7 +128,6 @@ class ManyToMany extends Relation
     {
         $document->{$this->getRelationName()}()->detach($document->getId());
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -146,7 +137,6 @@ class ManyToMany extends Relation
         $document->{$this->relatedField->getRelationName()}()->detach($document->getId());
     }
 
-
     /**
      * @param FieldRepository $repository
      *
@@ -154,11 +144,11 @@ class ManyToMany extends Relation
      */
     public function onCreated(FieldRepository $repository)
     {
-        if ( ! is_null($this->getRelatedFieldId())) {
+        if (! is_null($this->getRelatedFieldId())) {
             return;
         }
 
-        $relatedTable = 'ds_mtm_' . uniqid();
+        $relatedTable = 'ds_mtm_'.uniqid();
         $relatedField = null;
 
         if (is_null($this->relatedFieldKey) or is_null($relatedSection = $this->relatedSection) or is_null($relatedField = $relatedSection->getFields()->getByKey($this->relatedFieldKey))) {
@@ -175,7 +165,7 @@ class ManyToMany extends Relation
             ]);
         }
 
-        if ( ! is_null($relatedField)) {
+        if (! is_null($relatedField)) {
             Schema::create($relatedTable, function ($table) use ($relatedField, $relatedTable) {
                 $table->integer($this->getDBKey());
                 $table->integer($relatedField->getDBKey());
@@ -190,7 +180,6 @@ class ManyToMany extends Relation
         }
     }
 
-
     /**
      * @param DocumentInterface $document
      *
@@ -199,7 +188,7 @@ class ManyToMany extends Relation
     protected function fetchDocumentTemplateValues(DocumentInterface $document)
     {
         $relatedSection = $this->relatedSection;
-        $relatedField   = $this->relatedField;
+        $relatedField = $this->relatedField;
 
         return [
             'value'            => $this->getRelatedDocumentValues($document),
@@ -211,17 +200,16 @@ class ManyToMany extends Relation
         ];
     }
 
-
     /**
      * @param FieldRepository $repository
      */
     public function onDeleted(FieldRepository $repository)
     {
-        if ( ! is_null($relatedField = $this->relatedField)) {
+        if (! is_null($relatedField = $this->relatedField)) {
             $relatedField->delete();
         }
 
-        if ( ! is_null($this->getRelatedTable())) {
+        if (! is_null($this->getRelatedTable())) {
             Schema::dropIfExists($this->getRelatedTable());
         }
     }

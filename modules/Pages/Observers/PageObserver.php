@@ -1,15 +1,14 @@
 <?php
+
 namespace KodiCMS\Pages\Observers;
 
 use Cache;
 use KodiCMS\Pages\Model\PageBehaviorSettings;
 use Request;
-use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Model\PagePart;
 
 class PageObserver
 {
-
     /**
      * @param \KodiCMS\Pages\Model\Page $page
      *
@@ -29,13 +28,12 @@ class PageObserver
             $page->is_redirect = false;
         }
 
-        if ( ! $page->is_redirect) {
+        if (! $page->is_redirect) {
             $page->redirect_url = null;
         }
 
         $this->clearCache($page);
     }
-
 
     /**
      * @param \KodiCMS\Pages\Model\Page $page
@@ -45,7 +43,7 @@ class PageObserver
     public function saved($page)
     {
         if ($page->hasBehavior()) {
-            $settings         = [
+            $settings = [
                 'settings' => Request::input('behavior_settings', []),
             ];
             $behaviorSettings = $page->behaviorSettings()->first();
@@ -57,7 +55,6 @@ class PageObserver
         }
     }
 
-
     /**
      * @param \KodiCMS\Pages\Model\Page $page
      *
@@ -65,11 +62,10 @@ class PageObserver
      */
     public function creating($page)
     {
-        if ( ! is_null($user = auth()->user())) {
+        if (! is_null($user = auth()->user())) {
             $page->created_by_id = $user->id;
         }
     }
-
 
     /**
      * @param \KodiCMS\Pages\Model\Page $page
@@ -78,9 +74,7 @@ class PageObserver
      */
     public function created($page)
     {
-
     }
-
 
     /**
      * @param \KodiCMS\Pages\Model\Page $page
@@ -89,11 +83,10 @@ class PageObserver
      */
     public function updating($page)
     {
-        if ( ! is_null($user = auth()->user())) {
+        if (! is_null($user = auth()->user())) {
             $page->updated_by_id = $user->id;
         }
     }
-
 
     /**
      * @param \KodiCMS\Pages\Model\Page $page
@@ -118,7 +111,6 @@ class PageObserver
         }
     }
 
-
     /**
      * @param \KodiCMS\Pages\Model\Page $page
      *
@@ -126,9 +118,7 @@ class PageObserver
      */
     public function reordering($page)
     {
-
     }
-
 
     /**
      * @param \KodiCMS\Pages\Model\Page $page
@@ -137,9 +127,7 @@ class PageObserver
      */
     public function reordered($page)
     {
-
     }
-
 
     /**
      * @param \KodiCMS\Pages\Model\Page $page
@@ -148,9 +136,7 @@ class PageObserver
      */
     public function deleting($page)
     {
-
     }
-
 
     /**
      * @param \KodiCMS\Pages\Model\Page $page
@@ -166,7 +152,6 @@ class PageObserver
 
         $this->clearCache($page);
     }
-
 
     /**
      * @param \KodiCMS\Pages\Model\Page $page

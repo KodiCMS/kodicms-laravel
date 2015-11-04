@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Filemanager\Http\Controllers\API;
 
 use Illuminate\Http\JsonResponse;
@@ -8,7 +9,6 @@ use KodiCMS\API\Http\Controllers\System\Controller;
 
 class FilemanagerController extends Controller
 {
-
     public function load()
     {
         $options = [

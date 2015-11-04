@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Plugins\Console\Commands;
 
 use PluginLoader;
@@ -6,7 +7,6 @@ use Illuminate\Console\Command;
 
 class PluginDeactivateCommand extends Command
 {
-
     /**
      * The console command name.
      *
@@ -20,7 +20,6 @@ class PluginDeactivateCommand extends Command
      * @var string
      */
     protected $description = 'Deactivate plugin';
-
 
     /**
      * Execute the console command.

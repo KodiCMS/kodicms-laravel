@@ -1,11 +1,11 @@
 <?php
+
 namespace Plugins\butschster\News;
 
 use KodiCMS\Plugins\Loader\BasePluginContainer;
 
 class PluginContainer extends BasePluginContainer
 {
-
     /**
      * @return array
      */

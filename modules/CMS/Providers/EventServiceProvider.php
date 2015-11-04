@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Providers;
 
 use Config;
@@ -13,7 +14,6 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as BaseEventSer
 
 class EventServiceProvider extends BaseEventServiceProvider
 {
-
     /**
      * The event handler mappings for the application.
      *
@@ -23,7 +23,6 @@ class EventServiceProvider extends BaseEventServiceProvider
         'backend.settings.validate' => [SettingsValidate::class],
         'backend.settings.save'     => [SettingsSave::class],
     ];
-
 
     /**
      * Register any other events for your application.

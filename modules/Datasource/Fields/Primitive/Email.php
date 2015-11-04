@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Primitive;
 
 use Illuminate\Html\HtmlFacade;
@@ -9,7 +10,6 @@ use KodiCMS\Datasource\Contracts\DocumentInterface;
 
 class Email extends Primitive
 {
-
     /**
      * @param DocumentInterface $document
      * @param mixed             $value
@@ -18,9 +18,8 @@ class Email extends Primitive
      */
     public function onGetHeadlineValue(DocumentInterface $document, $value)
     {
-        return empty( $value ) ? null : HtmlFacade::mailto($value);
+        return empty($value) ? null : HtmlFacade::mailto($value);
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -30,12 +29,11 @@ class Email extends Primitive
      */
     public function getValidationRules(DocumentInterface $document, Validator $validator)
     {
-        $rules   = parent::getValidationRules($document, $validator);
+        $rules = parent::getValidationRules($document, $validator);
         $rules[] = 'email';
 
         return $rules;
     }
-
 
     /**
      * @param Blueprint $table

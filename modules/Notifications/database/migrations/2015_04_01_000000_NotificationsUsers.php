@@ -5,7 +5,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class NotificationsUsers extends Migration
 {
-
     public function up()
     {
         Schema::create('notifications_users', function (Blueprint $table) {
@@ -16,7 +15,6 @@ class NotificationsUsers extends Migration
             $table->primary(['user_id', 'notification_id']);
         });
     }
-
 
     public function down()
     {

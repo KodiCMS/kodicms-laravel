@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Source;
 
 use Request;
 use DatasourceManager;
-use KodiCMS\Datasource\Fields\Source;
 use KodiCMS\Datasource\Fields\Relation;
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
@@ -11,12 +11,10 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Images extends Relation\ManyToMany
 {
-
     /**
      * @var array
      */
     protected $deletingDocuments = [];
-
 
     /**
      * @param DocumentInterface $document
@@ -25,7 +23,7 @@ class Images extends Relation\ManyToMany
      */
     public function getRelatedDocumentValues(DocumentInterface $document)
     {
-        if ( ! is_null($relatedField = $this->relatedField)) {
+        if (! is_null($relatedField = $this->relatedField)) {
             $section = $relatedField->getSection();
 
             return $this->getDocumentRelation($document, $section, $relatedField)->get()->all();
@@ -33,7 +31,6 @@ class Images extends Relation\ManyToMany
 
         return [];
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -63,10 +60,9 @@ class Images extends Relation\ManyToMany
         }
         Model::reguard();
 
-        $this->deletingDocuments = (array) Request::get($this->getDBKey() . '_remove');
-        $this->selectedDocuments = array_unique(array_merge($documentIds, (array) Request::get($this->getDBKey() . '_selected')));
+        $this->deletingDocuments = (array) Request::get($this->getDBKey().'_remove');
+        $this->selectedDocuments = array_unique(array_merge($documentIds, (array) Request::get($this->getDBKey().'_selected')));
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -77,7 +73,6 @@ class Images extends Relation\ManyToMany
         $document->{$this->getRelationName()}()->attach((array) $this->selectedDocuments);
     }
 
-
     /**
      * @param DocumentInterface $document
      * @param mixed             $value
@@ -87,11 +82,10 @@ class Images extends Relation\ManyToMany
         $relation = $document->{$this->getRelationName()}();
         $relation->attach((array) $this->selectedDocuments);
 
-        if ( ! empty( $this->deletingDocuments )) {
+        if (! empty($this->deletingDocuments)) {
             $relation->detach((array) $this->deletingDocuments);
         }
     }
-
 
     /**
      * @return array
@@ -101,7 +95,6 @@ class Images extends Relation\ManyToMany
         return DatasourceManager::getSectionsFormHTML(['images']);
     }
 
-
     /**
      * @return array
      */
@@ -110,9 +103,8 @@ class Images extends Relation\ManyToMany
         return $this->relatedSection->getFields()->getByKey('image')->getAllowedTypes();
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getMaxFileSize()
     {

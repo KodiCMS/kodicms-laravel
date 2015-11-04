@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource;
 
 use Schema;
@@ -8,7 +9,6 @@ use KodiCMS\Datasource\Contracts\FieldTypeOnlySystemInterface;
 
 class FieldManager extends AbstractManager
 {
-
     /**
      * @param array $config
      */
@@ -17,13 +17,12 @@ class FieldManager extends AbstractManager
         $this->config = $config;
 
         foreach ($this->config as $type => $data) {
-            if ( ! FieldType::isValid($data)) {
+            if (! FieldType::isValid($data)) {
                 continue;
             }
             $this->types[$type] = new FieldType($type, $data);
         }
     }
-
 
     /**
      * @return array
@@ -45,7 +44,6 @@ class FieldManager extends AbstractManager
         return $types;
     }
 
-
     /**
      * @return array
      */
@@ -58,7 +56,6 @@ class FieldManager extends AbstractManager
 
         return $objects;
     }
-
 
     /**
      * @param SectionInterface $section
@@ -76,7 +73,6 @@ class FieldManager extends AbstractManager
         return true;
     }
 
-
     /**
      * @param SectionInterface $section
      * @param FieldInterface   $field
@@ -85,7 +81,7 @@ class FieldManager extends AbstractManager
      */
     public function addFieldToSectionTable(SectionInterface $section, FieldInterface $field)
     {
-        if ( ! $field->hasDatabaseColumn()) {
+        if (! $field->hasDatabaseColumn()) {
             return true;
         }
 
@@ -97,7 +93,6 @@ class FieldManager extends AbstractManager
         return true;
     }
 
-
     /**
      * @param FieldInterface $field
      *
@@ -105,13 +100,13 @@ class FieldManager extends AbstractManager
      */
     public function updateSectionTableField(FieldInterface $field)
     {
-        if ( ! $field->hasDatabaseColumn() or ! $field->isChangeableDatabaseField()) {
+        if (! $field->hasDatabaseColumn() or ! $field->isChangeableDatabaseField()) {
             return true;
         }
 
         $section = $field->getSection();
 
-        if ( ! Schema::hasColumn($section->getSectionTableName(), $field->getDBKey())) {
+        if (! Schema::hasColumn($section->getSectionTableName(), $field->getDBKey())) {
             return false;
         }
 
@@ -123,7 +118,6 @@ class FieldManager extends AbstractManager
         return true;
     }
 
-
     /**
      * @param FieldInterface $field
      *
@@ -131,12 +125,12 @@ class FieldManager extends AbstractManager
      */
     public function dropSectionTableField(FieldInterface $field)
     {
-        if ( ! $field->hasDatabaseColumn()) {
+        if (! $field->hasDatabaseColumn()) {
             return true;
         }
 
         $section = $field->getSection();
-        if ( ! Schema::hasColumn($section->getSectionTableName(), $field->getDBKey())) {
+        if (! Schema::hasColumn($section->getSectionTableName(), $field->getDBKey())) {
             return false;
         }
 

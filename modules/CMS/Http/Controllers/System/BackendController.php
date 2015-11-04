@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Http\Controllers\System;
 
 use UI;
@@ -12,7 +13,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BackendController extends TemplateController
 {
-
     /**
      * @var bool
      */
@@ -28,13 +28,11 @@ class BackendController extends TemplateController
      */
     public $breadcrumbs;
 
-
     public function boot()
     {
-        $this->navigation  = Navigation::init($this->request->getUri(), config('sitemap', []));
+        $this->navigation = Navigation::init($this->request->getUri(), config('sitemap', []));
         $this->breadcrumbs = new Breadcrumbs;
     }
-
 
     public function initControllerAcl()
     {
@@ -42,14 +40,13 @@ class BackendController extends TemplateController
         $this->acl->addPermission($this->getCurrentAction(), $this->getRouter()->currentRouteName());
     }
 
-
     public function before()
     {
         $currentPage = Navigation::getCurrentPage();
 
         $this->breadcrumbs->add(UI::icon('home'), route('backend.dashboard'));
 
-        if ( ! is_null($currentPage)) {
+        if (! is_null($currentPage)) {
             $this->setTitle($currentPage->getName(), $currentPage->getUrl());
         }
 
@@ -57,7 +54,6 @@ class BackendController extends TemplateController
 
         parent::before();
     }
-
 
     public function after()
     {
@@ -68,7 +64,6 @@ class BackendController extends TemplateController
 
         parent::after();
     }
-
 
     /**
      * @param string      $title
@@ -83,12 +78,11 @@ class BackendController extends TemplateController
         return parent::setTitle($title);
     }
 
-
     public function registerMedia()
     {
         parent::registerMedia();
 
-        $this->templateScripts['ACE_THEME']           = config('cms.default_ace_theme', 'textmate');
+        $this->templateScripts['ACE_THEME'] = config('cms.default_ace_theme', 'textmate');
         $this->templateScripts['DEFAULT_HTML_EDITOR'] = config('cms.default_html_editor', '');
         $this->templateScripts['DEFAULT_CODE_EDITOR'] = config('cms.default_code_editor', '');
 
@@ -96,7 +90,6 @@ class BackendController extends TemplateController
         $this->includeModuleMediaFile($this->getRouterController());
         $this->includeMergedMediaFile('backendEvents', 'js/backendEvents');
     }
-
 
     /**
      * Execute an action on the controller.
@@ -113,7 +106,7 @@ class BackendController extends TemplateController
         } catch (ModelNotFoundException $e) {
             $model = $e->getModel();
             if (method_exists($model, 'getNotFoundMessage')) {
-                $message = Callback::invoke($model . '@' . 'getNotFoundMessage');
+                $message = Callback::invoke($model.'@'.'getNotFoundMessage');
             } else {
                 $message = $e->getMessage();
             }
@@ -121,7 +114,6 @@ class BackendController extends TemplateController
             $this->throwFailException(
                 $this->smartRedirect()->withErrors($message)
             );
-
         } catch (ValidationException $e) {
             $this->throwValidationException(
                 $this->request, $e->getValidator()

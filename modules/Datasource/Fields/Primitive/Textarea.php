@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Primitive;
 
 use KodiCMS\Datasource\Fields\Primitive;
@@ -7,12 +8,10 @@ use KodiCMS\Datasource\Contracts\DocumentInterface;
 
 class Textarea extends Primitive
 {
-
     /**
      * @var bool
      */
     protected $changeableDatabaseField = false;
-
 
     /**
      * @return array
@@ -21,7 +20,6 @@ class Textarea extends Primitive
     {
         return ['allow_html', 'filter_html'];
     }
-
 
     /**
      * @return array
@@ -36,24 +34,21 @@ class Textarea extends Primitive
         ];
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getRows()
     {
         return $this->getSetting('rows');
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function isFilterHTML()
     {
         return $this->getSetting('filter_html');
     }
-
 
     /**
      * @return array
@@ -63,18 +58,16 @@ class Textarea extends Primitive
         return $this->getSetting('allowed_tags');
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function isAllowHTML()
     {
         return $this->getSetting('allow_html');
     }
 
-
     /**
-     * @param integer $rows
+     * @param int $rows
      */
     public function setSettingRows($rows)
     {
@@ -85,7 +78,6 @@ class Textarea extends Primitive
 
         $this->fieldSettings['rows'] = $rows;
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -98,7 +90,6 @@ class Textarea extends Primitive
         return str_limit(strip_tags($value), 50);
     }
 
-
     /**
      * @param DocumentInterface $document
      * @param                   $value
@@ -107,7 +98,7 @@ class Textarea extends Primitive
      */
     public function onDocumentUpdating(DocumentInterface $document, $value)
     {
-        if ( ! $this->isAllowHTML()) {
+        if (! $this->isAllowHTML()) {
             $value = strip_tags($value);
         } elseif ($this->isFilterHTML()) {
             $value = $value;
@@ -115,7 +106,6 @@ class Textarea extends Primitive
 
         $document->setAttribute($this->getDBKey(), $value);
     }
-
 
     /**
      * @param Blueprint $table

@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Datasource;
 
 use KodiCMS\Datasource\Contracts\FieldTypeInterface;
 
 class FieldGroupType implements FieldTypeInterface
 {
-
     /**
      * @param array $settings
      *
@@ -13,13 +13,12 @@ class FieldGroupType implements FieldTypeInterface
      */
     public static function isValid(array $settings)
     {
-        if ( ! isset( $settings['class'] )) {
+        if (! isset($settings['class'])) {
             return false;
         }
 
         return true;
     }
-
 
     /**
      * @var string
@@ -36,7 +35,6 @@ class FieldGroupType implements FieldTypeInterface
      */
     protected $title;
 
-
     /**
      * @param string $type
      * @param array  $settings
@@ -50,7 +48,6 @@ class FieldGroupType implements FieldTypeInterface
         $this->type = $type;
     }
 
-
     /**
      * @return Field
      */
@@ -58,7 +55,6 @@ class FieldGroupType implements FieldTypeInterface
     {
         return new $this->class;
     }
-
 
     /**
      * @return bool
@@ -68,7 +64,6 @@ class FieldGroupType implements FieldTypeInterface
         return class_exists($this->class);
     }
 
-
     /**
      * @return string
      */
@@ -77,7 +72,6 @@ class FieldGroupType implements FieldTypeInterface
         return $this->class;
     }
 
-
     /**
      * @return string
      */
@@ -85,7 +79,6 @@ class FieldGroupType implements FieldTypeInterface
     {
         return $this->type;
     }
-
 
     /**
      * @return string

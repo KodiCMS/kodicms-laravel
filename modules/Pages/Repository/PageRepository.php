@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Repository;
 
 use KodiCMS\Pages\Model\Page;
@@ -9,7 +10,6 @@ use KodiCMS\CMS\Repository\BaseRepository;
 
 class PageRepository extends BaseRepository
 {
-
     /**
      * @param Page $model
      */
@@ -17,7 +17,6 @@ class PageRepository extends BaseRepository
     {
         parent::__construct($model);
     }
-
 
     /**
      * @param array $data
@@ -37,9 +36,8 @@ class PageRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
-     * @param integer $id
+     * @param int $id
      * @param array   $data
      *
      * @return bool
@@ -61,7 +59,6 @@ class PageRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
      * @param bool $includeHidden
      *
@@ -72,9 +69,8 @@ class PageRepository extends BaseRepository
         return PageSitemap::get($includeHidden);
     }
 
-
     /**
-     * @param integer $pageId
+     * @param int $pageId
      *
      * @return Builder
      */
@@ -89,7 +85,6 @@ class PageRepository extends BaseRepository
             ->keyBy('id')
             ->all();
     }
-
 
     /**
      * @param array $data
@@ -116,7 +111,6 @@ class PageRepository extends BaseRepository
         ]));
     }
 
-
     /**
      * @param int   $id
      * @param array $data
@@ -125,7 +119,7 @@ class PageRepository extends BaseRepository
      */
     public function update($id, array $data = [])
     {
-        if ( ! isset( $data['is_redirect'] )) {
+        if (! isset($data['is_redirect'])) {
             $data['is_redirect'] = 0;
         }
 
@@ -147,7 +141,6 @@ class PageRepository extends BaseRepository
         ]));
     }
 
-
     /**
      * @param array $pages
      *
@@ -157,7 +150,6 @@ class PageRepository extends BaseRepository
     {
         return $this->model->reorder($pages);
     }
-
 
     /**
      * @param string $keyword
@@ -175,7 +167,7 @@ class PageRepository extends BaseRepository
                 'h' => FrontendPage::STATUS_HIDDEN,
             ];
 
-            if (isset( $page_status[$keyword[1]] )) {
+            if (isset($page_status[$keyword[1]])) {
                 $pages->whereIn('status', $page_status[$keyword[1]]);
             }
         } else {

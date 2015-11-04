@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class LayoutBlocks extends Migration
 {
-
     public function up()
     {
         Schema::create('layout_blocks', function (Blueprint $table) {
@@ -16,7 +15,6 @@ class LayoutBlocks extends Migration
             $table->primary(['layout_name', 'block']);
         });
     }
-
 
     public function down()
     {

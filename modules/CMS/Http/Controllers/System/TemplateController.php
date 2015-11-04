@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Http\Controllers\System;
 
 use App;
@@ -13,19 +14,18 @@ use Illuminate\Contracts\Support\Arrayable;
 
 class TemplateController extends Controller
 {
-
     /**
      * @var  \View  page template
      */
     public $template = 'cms::app.backend';
 
     /**
-     * @var  boolean  auto render template
+     * @var  bool  auto render template
      **/
     public $autoRender = true;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $onlyContent = false;
 
@@ -33,7 +33,6 @@ class TemplateController extends Controller
      * @var array
      */
     public $templateScripts = [];
-
 
     /**
      * @param string $view
@@ -43,7 +42,7 @@ class TemplateController extends Controller
      */
     public function setContent($view, array $data = [])
     {
-        if ( ! is_null($this->template)) {
+        if (! is_null($this->template)) {
             $content = view($this->wrapNamespace($view), $data);
             $this->template->with('content', $content);
 
@@ -52,7 +51,6 @@ class TemplateController extends Controller
 
         return view($this->wrapNamespace($view), $data);
     }
-
 
     public function before()
     {
@@ -71,7 +69,6 @@ class TemplateController extends Controller
         //View::share('currentModule', substr($this->getModuleNamespace(), 0, -2));
     }
 
-
     public function after()
     {
         parent::after();
@@ -80,11 +77,10 @@ class TemplateController extends Controller
             if ($this->onlyContent) {
                 $this->template = $this->template->content;
             } else {
-                Assets::group('global', 'templateScripts', '<script type="text/javascript">' . $this->getTemplateScriptsAsString() . '</script>', 'global');
+                Assets::group('global', 'templateScripts', '<script type="text/javascript">'.$this->getTemplateScriptsAsString().'</script>', 'global');
             }
         }
     }
-
 
     public function registerMedia()
     {
@@ -105,7 +101,6 @@ class TemplateController extends Controller
         ];
     }
 
-
     /**
      * @return string
      */
@@ -113,10 +108,9 @@ class TemplateController extends Controller
     {
         $script = '';
         foreach ($this->templateScripts as $var => $value) {
-
             if ($value instanceof Jsonable) {
                 $value = $value->toJson();
-            } else if ($value instanceof Arrayable) {
+            } elseif ($value instanceof Arrayable) {
                 $value = json_encode($value->toArray());
             } else {
                 $value = json_encode($value);
@@ -128,17 +122,15 @@ class TemplateController extends Controller
         return $script;
     }
 
-
     /**
      * @param string $key
      * @param string $file
      */
     public function includeMergedMediaFile($key, $file)
     {
-        $mediaContent = '<script type="text/javascript">' . File::mergeByPath($file, 'js') . "</script>";
+        $mediaContent = '<script type="text/javascript">'.File::mergeByPath($file, 'js').'</script>';
         Assets::group('global', $key, $mediaContent, 'global');
     }
-
 
     /**
      * @param $filename
@@ -146,10 +138,9 @@ class TemplateController extends Controller
     public function includeModuleMediaFile($filename)
     {
         if (ModulesFileSystem::findFile('resources/js', $filename, 'js')) {
-            Assets::addJs('include.' . $filename, backend_resources_url("/js/$filename.js"), 'core', false);
+            Assets::addJs('include.'.$filename, backend_resources_url("/js/$filename.js"), 'core', false);
         }
     }
-
 
     /**
      * Execute an action on the controller.
@@ -174,7 +165,6 @@ class TemplateController extends Controller
         return $response;
     }
 
-
     /**
      * Setup the layout used by the controller.
      *
@@ -182,13 +172,12 @@ class TemplateController extends Controller
      */
     protected function setupLayout()
     {
-        if ( ! is_null($this->template)) {
+        if (! is_null($this->template)) {
             $this->template = view($this->template);
         }
 
         return $this;
     }
-
 
     /**
      * Set the layout used by the controller.
@@ -203,7 +192,6 @@ class TemplateController extends Controller
 
         return $this;
     }
-
 
     /**
      * @param $title

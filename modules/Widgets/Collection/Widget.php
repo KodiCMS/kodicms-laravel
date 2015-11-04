@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Collection;
 
 use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
@@ -6,7 +7,6 @@ use KodiCMS\Widgets\Contracts\WidgetCollectionItem;
 
 class Widget implements WidgetCollectionItem
 {
-
     /**
      * @var WidgetInterface
      */
@@ -22,7 +22,6 @@ class Widget implements WidgetCollectionItem
      */
     protected $position;
 
-
     /**
      * @param WidgetInterface $widget
      * @param string          $block
@@ -30,11 +29,10 @@ class Widget implements WidgetCollectionItem
      */
     public function __construct(WidgetInterface $widget, $block, $position = 500)
     {
-        $this->widget   = $widget;
-        $this->block    = $block;
+        $this->widget = $widget;
+        $this->block = $block;
         $this->position = $position;
     }
-
 
     /**
      * @return WidgetInterface
@@ -44,7 +42,6 @@ class Widget implements WidgetCollectionItem
         return $this->widget;
     }
 
-
     /**
      * @return string
      */
@@ -53,7 +50,6 @@ class Widget implements WidgetCollectionItem
         return $this->block;
     }
 
-
     /**
      * @return int
      */
@@ -61,7 +57,6 @@ class Widget implements WidgetCollectionItem
     {
         return $this->position;
     }
-
 
     /**
      * @param $position

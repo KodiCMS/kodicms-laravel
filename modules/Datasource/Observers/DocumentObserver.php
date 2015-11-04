@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Datasource\Observers;
 
 use KodiCMS\Datasource\Model\Document;
 
 class DocumentObserver
 {
-
     /**
      * @param Document $document
      */
@@ -15,7 +15,6 @@ class DocumentObserver
             $field->onDocumentCreated($document, $document->getAttribute($key));
         }
     }
-
 
     /**
      * @param Document $document
@@ -32,7 +31,6 @@ class DocumentObserver
             }
         }
     }
-
 
     /**
      * @param Document $document

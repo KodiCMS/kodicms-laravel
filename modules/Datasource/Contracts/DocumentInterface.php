@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Contracts;
 
 use Illuminate\Validation\Validator;
@@ -7,30 +8,25 @@ use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 
 interface DocumentInterface
 {
-
     /**
-     * @return string|integer
+     * @return string|int
      */
     public function getId();
-
 
     /**
      * @return string
      */
     public function getTitle();
 
-
     /**
      * @return string
      */
     public function getEditLink();
 
-
     /**
      * @return string
      */
     public function getCreateLink();
-
 
     /**
      * @param string $key
@@ -39,14 +35,12 @@ interface DocumentInterface
      */
     public function hasField($key);
 
-
     /**
      * @param  string $key
      *
      * @return mixed
      */
     public function getFormValue($key);
-
 
     /**
      * Get a plain attribute (not a relationship).
@@ -58,14 +52,12 @@ interface DocumentInterface
      */
     public function getWidgetValue($key, WidgetInterface $widget);
 
-
     /**
      * @param  string $key
      *
      * @return mixed
      */
     public function getHeadlineValue($key);
-
 
     /**
      * @param SectionHeadlineInterface $headline
@@ -74,48 +66,40 @@ interface DocumentInterface
      */
     public function toHeadlineArray(SectionHeadlineInterface $headline);
 
-
     /**
      * @return SectionInterface
      */
     public function getSection();
-
 
     /**
      * @return array
      */
     public function getFieldsNames();
 
-
     /**
      * @return array
      */
     public function getSectionFields();
-
 
     /**
      * @return array
      */
     public function getEditableFields();
 
-
     /**
      * @return string
      */
     public function getEditTemplate();
-
 
     /**
      * @return string
      */
     public function getCreateTemplate();
 
-
     /**
      * @return string
      */
     public function getFormTemplate();
-
 
     /**
      * @param Validator $validator
@@ -124,16 +108,14 @@ interface DocumentInterface
      */
     public function getValidationRules(Validator $validator);
 
-
     /**
-     * @param integer|string      $id
+     * @param int|string      $id
      * @param array|null          $fields
-     * @param string|integer|null $primaryKeyField
+     * @param string|int|null $primaryKeyField
      *
      * @return DocumentInterface|null
      */
     public function getDocumentById($id, array $fields = null, $primaryKeyField = null);
-
 
     /**
      * @param bool|array|null $fields
@@ -143,7 +125,6 @@ interface DocumentInterface
      * @return Collection
      */
     public function getDocuments($fields = true, array $orderRules = [], array $filterRules = []);
-
 
     /**
      * @param TemplateController $controller

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Model;
 
 use DB;
@@ -7,12 +8,10 @@ use KodiCMS\CMS\Model\File;
 
 class Layout extends File
 {
-
     /**
      * @var array
      */
     protected $blocks = null;
-
 
     /**
      * @return array
@@ -26,7 +25,6 @@ class Layout extends File
         });
     }
 
-
     /**
      * @return bool
      */
@@ -36,7 +34,6 @@ class Layout extends File
             ->where('layout_file', $this->getName())
             ->count();
     }
-
 
     /**
      * @param array $data
@@ -48,7 +45,6 @@ class Layout extends File
     {
         return parent::save($data);
     }
-
 
     /**
      * @return string
@@ -63,9 +59,8 @@ class Layout extends File
         return $filename;
     }
 
-
     /**
-     * Обновление списка блоков шаблона
+     * Обновление списка блоков шаблона.
      * @return mixed
      */
     public function findBlocks()
@@ -87,7 +82,6 @@ class Layout extends File
         return $blocks;
     }
 
-
     /**
      * @return string
      */
@@ -95,7 +89,6 @@ class Layout extends File
     {
         return "layout::blocks::{$this->getName()}";
     }
-
 
     protected function clearCache()
     {

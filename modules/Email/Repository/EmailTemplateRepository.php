@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Email\Repository;
 
 use KodiCMS\Email\Model\EmailTemplate;
@@ -6,7 +7,6 @@ use KodiCMS\CMS\Repository\BaseRepository;
 
 class EmailTemplateRepository extends BaseRepository
 {
-
     /**
      * @var array
      */
@@ -20,7 +20,6 @@ class EmailTemplateRepository extends BaseRepository
         'email_event_id' => 'required|exists:email_events,id',
     ];
 
-
     /**
      * @param EmailTemplate $model
      */
@@ -28,5 +27,4 @@ class EmailTemplateRepository extends BaseRepository
     {
         parent::__construct($model);
     }
-
 }

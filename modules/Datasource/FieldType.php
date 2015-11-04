@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource;
 
 use KodiCMS\Datasource\Fields\Field;
@@ -6,11 +7,9 @@ use KodiCMS\Datasource\Contracts\FieldTypeInterface;
 
 class FieldType implements FieldTypeInterface
 {
-
     const PRIMITIVE = 'Primitive';
     const FILE = 'File';
     const RELATION = 'Relation';
-
 
     /**
      * @param array $settings
@@ -19,13 +18,12 @@ class FieldType implements FieldTypeInterface
      */
     public static function isValid(array $settings)
     {
-        if ( ! isset( $settings['class'] )) {
+        if (! isset($settings['class'])) {
             return false;
         }
 
         return true;
     }
-
 
     /**
      * @var string
@@ -67,7 +65,6 @@ class FieldType implements FieldTypeInterface
      */
     protected $widget_template = null;
 
-
     /**
      * @param string $type
      * @param array  $settings
@@ -90,7 +87,6 @@ class FieldType implements FieldTypeInterface
         $this->type = $type;
     }
 
-
     /**
      * @return bool
      */
@@ -98,7 +94,6 @@ class FieldType implements FieldTypeInterface
     {
         return is_null($this->category) ? static::PRIMITIVE : $this->category;
     }
-
 
     /**
      * @return Field
@@ -108,7 +103,6 @@ class FieldType implements FieldTypeInterface
         return new $this->class;
     }
 
-
     /**
      * @return bool
      */
@@ -116,7 +110,6 @@ class FieldType implements FieldTypeInterface
     {
         return class_exists($this->class);
     }
-
 
     /**
      * @return string
@@ -126,7 +119,6 @@ class FieldType implements FieldTypeInterface
         return $this->class;
     }
 
-
     /**
      * @return string
      */
@@ -134,7 +126,6 @@ class FieldType implements FieldTypeInterface
     {
         return $this->type;
     }
-
 
     /**
      * @return string
@@ -144,7 +135,6 @@ class FieldType implements FieldTypeInterface
         return $this->title;
     }
 
-
     /**
      * @return string
      */
@@ -152,7 +142,6 @@ class FieldType implements FieldTypeInterface
     {
         return $this->icon;
     }
-
 
     /**
      * @return string|null
@@ -162,19 +151,17 @@ class FieldType implements FieldTypeInterface
         return $this->edit_template;
     }
 
-
     /**
      * @return string
      */
     public function getDocumentTemplate()
     {
         if (is_null($template = $this->document_template)) {
-            $template = 'datasource::document.field.' . $this->getType();
+            $template = 'datasource::document.field.'.$this->getType();
         }
 
         return $template;
     }
-
 
     /**
      * @return string

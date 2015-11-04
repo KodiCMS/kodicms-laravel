@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Http\Controllers;
 
 use KodiCMS\Users\Repository\UserRepository;
@@ -6,7 +7,6 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class UserController extends BackendController
 {
-
     /**
      * @var array
      */
@@ -14,10 +14,9 @@ class UserController extends BackendController
         'getProfile',
     ];
 
-
     /**
      * Execute on controller execute
-     * return void
+     * return void.
      */
     public function boot()
     {
@@ -36,7 +35,6 @@ class UserController extends BackendController
         }
     }
 
-
     /**
      * @param UserRepository $repository
      */
@@ -46,16 +44,14 @@ class UserController extends BackendController
         $this->setContent('users.list', compact('users'));
     }
 
-
     /**
      * @param UserRepository $repository
      * @param null|int       $id
      */
     public function getProfile(UserRepository $repository, $id = null)
     {
-
-        $user        = $repository->findOrFail($id ?: $this->currentUser->id);
-        $roles       = $user->roles;
+        $user = $repository->findOrFail($id ?: $this->currentUser->id);
+        $roles = $user->roles;
         $permissions = $user->getAllowedPermissions();
 
         $this->setTitle(trans($this->wrapNamespace('core.title.profile_alternate'), [
@@ -64,7 +60,6 @@ class UserController extends BackendController
 
         $this->setContent('users.profile', compact('user', 'roles', 'permissions'));
     }
-
 
     /**
      * @param UserRepository $repository
@@ -77,7 +72,6 @@ class UserController extends BackendController
 
         $this->setContent('users.create', compact('user'));
     }
-
 
     /**
      * @param UserRepository $repository
@@ -92,10 +86,9 @@ class UserController extends BackendController
 
         return $this->smartRedirect([$user])
             ->with('success', trans($this->wrapNamespace('core.messages.user.created'), [
-                'name' => $user->username
+                'name' => $user->username,
             ]));
     }
-
 
     /**
      * @param UserRepository $repository
@@ -112,7 +105,6 @@ class UserController extends BackendController
         $this->setContent('users.edit', compact('user'));
     }
 
-
     /**
      * @param UserRepository $repository
      * @param int            $id
@@ -127,10 +119,9 @@ class UserController extends BackendController
 
         return $this->smartRedirect([$user])
             ->with('success', trans($this->wrapNamespace('core.messages.user.updated'), [
-                'name' => $user->username
+                'name' => $user->username,
             ]));
     }
-
 
     /**
      * @param UserRepository $repository
@@ -144,7 +135,7 @@ class UserController extends BackendController
 
         return $this->smartRedirect()
             ->with('success', trans($this->wrapNamespace('core.messages.user.deleted'), [
-                'name' => $user->username
+                'name' => $user->username,
             ]));
     }
 }

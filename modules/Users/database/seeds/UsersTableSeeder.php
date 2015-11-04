@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\database\seeds;
 
 use KodiCMS\Users\Model\User;
@@ -7,7 +8,6 @@ use KodiCMS\Users\Model\UserRole;
 
 class UsersTableSeeder extends Seeder
 {
-
     /**
      * Run the database seeds.
      *
@@ -17,10 +17,10 @@ class UsersTableSeeder extends Seeder
     {
         User::truncate();
 
-        $roles           = UserRole::get()->lists('id')->all();
+        $roles = UserRole::get()->lists('id')->all();
         $maxRolesToAtach = count($roles) > 4 ? 4 : count($roles);
 
-        $faker      = \Faker\Factory::create();
+        $faker = \Faker\Factory::create();
         $totalUsers = 5;
 
         $user = User::create([

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Notifications\Model;
 
 use DB;
@@ -8,14 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 use KodiCMS\Notifications\Contracts\NotificationTypeInterface;
 
 /**
- * Class Notification
- * @package KodiCMS\Notifications\Model
+ * Class Notification.
  *
- * @property integer $id
- * @property integer $sender_id
+ * @property int $id
+ * @property int $sender_id
  * @property string  $type
  * @property string  $message
- * @property integer $object_id
+ * @property int $object_id
  * @property string  $object_type
  * @property array   $parameters
  *
@@ -28,7 +28,6 @@ use KodiCMS\Notifications\Contracts\NotificationTypeInterface;
  */
 class Notification extends Model
 {
-
     /**
      * @var Model
      */
@@ -62,7 +61,6 @@ class Notification extends Model
         'parameters'  => 'array',
     ];
 
-
     /**
      * @param string $message
      *
@@ -75,7 +73,6 @@ class Notification extends Model
         return $this;
     }
 
-
     /**
      * @param array $parameters
      *
@@ -87,7 +84,6 @@ class Notification extends Model
 
         return $this;
     }
-
 
     /**
      * @param NotificationTypeInterface $type
@@ -102,7 +98,6 @@ class Notification extends Model
         return $this;
     }
 
-
     /**
      * @param Model $object
      *
@@ -110,12 +105,11 @@ class Notification extends Model
      */
     public function regarding(Model $object)
     {
-        $this->object_id   = $object->getKey();
+        $this->object_id = $object->getKey();
         $this->object_type = get_class($object);
 
         return $this;
     }
-
 
     /**
      * @param User $user
@@ -128,7 +122,6 @@ class Notification extends Model
 
         return $this;
     }
-
 
     /**
      * @param array $users
@@ -147,14 +140,13 @@ class Notification extends Model
         return $this;
     }
 
-
     /**
      * @return bool
      */
     public function hasValidObject()
     {
         try {
-            $object = call_user_func_array($this->object_type . '::findOrFail', [$this->object_id]);
+            $object = call_user_func_array($this->object_type.'::findOrFail', [$this->object_id]);
         } catch (\Exception $e) {
             return false;
         }
@@ -163,7 +155,6 @@ class Notification extends Model
 
         return true;
     }
-
 
     /**
      * @return Model
@@ -174,9 +165,9 @@ class Notification extends Model
         if (is_null($this->relatedObject)) {
             $hasObject = $this->hasValidObject();
 
-            if ( ! $hasObject) {
+            if (! $hasObject) {
                 throw new \Exception(sprintf(
-                    "No valid object (%s with ID %s) associated with this notification.",
+                    'No valid object (%s with ID %s) associated with this notification.',
                     $this->object_type,
                     $this->object_id
                 ));
@@ -186,9 +177,8 @@ class Notification extends Model
         return $this->relatedObject;
     }
 
-
     /**
-     * @param integer $userId
+     * @param int $userId
      */
     public function markRead($userId)
     {
@@ -199,12 +189,11 @@ class Notification extends Model
             ]);
     }
 
-
     public function deleteExpired()
     {
         // Delete expired notifications_users rows
         DB::table('notifications_users')
-           ->leftJoin($this->getTable(), 'notifications_users.notification_id', '=', $this->getTable() . '.id')
+           ->leftJoin($this->getTable(), 'notifications_users.notification_id', '=', $this->getTable().'.id')
            ->whereRaw('DATE(created_at) < CURDATE() + INTERVAL 5 DAY')
            ->where('is_read', true)
            ->delete();
@@ -219,6 +208,7 @@ class Notification extends Model
     /*******************************************************************************************
      * Mutators
      *******************************************************************************************/
+
     /**
      * @param string $type
      *
@@ -236,15 +226,14 @@ class Notification extends Model
     /*******************************************************************************************
      * Relations
      *******************************************************************************************/
+
     /**
-     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function users()
     {
         return $this->belongsToMany(User::class, 'notifications_users', 'notification_id');
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

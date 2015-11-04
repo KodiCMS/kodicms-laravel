@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Console\Commands;
 
 use ModulesLoader;
@@ -8,14 +9,12 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ModuleLocalePublishCommand extends Command
 {
-
     /**
      * The console command name.
      *
      * @var string
      */
     protected $name = 'cms:modules:locale:publish';
-
 
     /**
      * Execute the console command.
@@ -33,7 +32,7 @@ class ModuleLocalePublishCommand extends Command
         $newLocale = $this->input->getOption('locale');
 
         foreach (ModulesLoader::getRegisteredModules() as $module) {
-            if ( ! is_dir($module->getLocalePath()) or ! $module->isPublishable()) {
+            if (! is_dir($module->getLocalePath()) or ! $module->isPublishable()) {
                 continue;
             }
 
@@ -56,20 +55,19 @@ class ModuleLocalePublishCommand extends Command
             foreach ($locales as $group => $file) {
                 $filename = pathinfo($file, PATHINFO_FILENAME);
 
-                $fileDir = $langDirectory . DIRECTORY_SEPARATOR . $namespace . DIRECTORY_SEPARATOR . $newLocale;
-                if ( ! $files->exists($fileDir)) {
+                $fileDir = $langDirectory.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$newLocale;
+                if (! $files->exists($fileDir)) {
                     $files->makeDirectory($fileDir, 0755, true);
                 }
 
-                $to = $fileDir . DIRECTORY_SEPARATOR . $filename . '.php';
-                $files->copy($file, $fileDir . DIRECTORY_SEPARATOR . $filename . '.php');
+                $to = $fileDir.DIRECTORY_SEPARATOR.$filename.'.php';
+                $files->copy($file, $fileDir.DIRECTORY_SEPARATOR.$filename.'.php');
                 $this->line("<info>Copied {$namespace}:{$filename}</info> <comment>[{$file}]</comment> <info>To</info> <comment>[{$to}]</comment>");
             }
         }
 
         $this->info('Publishing Complete!');
     }
-
 
     /**
      * Get the console command options.

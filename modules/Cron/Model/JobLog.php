@@ -1,16 +1,16 @@
 <?php
+
 namespace KodiCMS\Cron\Model;
 
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class JobLog
- * @package KodiCMS\Cron\Model
+ * Class JobLog.
  *
- * @property integer $id
- * @property integer $job_id
- * @property integer $status
+ * @property int $id
+ * @property int $job_id
+ * @property int $status
  * @property string  $status_string
  *
  * @property Job     $job
@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class JobLog extends Model
 {
-
     protected static function boot()
     {
         parent::boot();
@@ -30,7 +29,6 @@ class JobLog extends Model
         });
     }
 
-
     /**
      * The table associated with the model.
      *
@@ -38,15 +36,14 @@ class JobLog extends Model
      */
     protected $table = 'cron_job_logs';
 
-
     /**
-     * @param integer $value
+     * @param int $value
      *
      * @throws \Exception
      */
     public function setStatus($value)
     {
-        if ( ! $this->exists) {
+        if (! $this->exists) {
             throw new Exception('Cannot set status because it is not loaded');
         }
 
@@ -66,7 +63,7 @@ class JobLog extends Model
      */
     public function getStatusStringAttribute()
     {
-        return trans('cron::core.statuses.' . $this->status);
+        return trans('cron::core.statuses.'.$this->status);
     }
 
     /*******************************************************
@@ -80,5 +77,4 @@ class JobLog extends Model
     {
         return $this->belongsTo(Job::class);
     }
-
 }

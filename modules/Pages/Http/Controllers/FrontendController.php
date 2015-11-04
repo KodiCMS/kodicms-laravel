@@ -10,7 +10,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class FrontendController extends FrontPageController
 {
-
     /**
      * @param string $slug
      *
@@ -22,7 +21,7 @@ class FrontendController extends FrontPageController
     {
         event('frontend.requested', [$slug]);
 
-        $frontPage       = FrontendPage::findByUri($slug);
+        $frontPage = FrontendPage::findByUri($slug);
         $notFoundMessage = trans('pages::core.messages.not_found');
 
         if ($frontPage instanceof FrontendPage) {
@@ -38,11 +37,10 @@ class FrontendController extends FrontPageController
                 } catch (HttpException $e) {
                     $notFoundMessage = $e->getMessage();
                 }
-
             }
         }
 
-        if (config('cms.find_similar') and ( $uri = FrontendPage::findSimilar($slug) ) !== false) {
+        if (config('cms.find_similar') and ($uri = FrontendPage::findSimilar($slug)) !== false) {
             return redirect($uri, 301);
         }
 

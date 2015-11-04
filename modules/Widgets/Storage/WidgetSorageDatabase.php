@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Storage;
 
 use KodiCMS\CMS\Exceptions\ValidationException;
@@ -10,7 +11,6 @@ use KodiCMS\Widgets\Services\WidgetUpdator;
 
 class WidgetSorageDatabase implements WidgetStorage
 {
-
     /**
      * @param Widget $widget
      *
@@ -45,7 +45,6 @@ class WidgetSorageDatabase implements WidgetStorage
         return $widget;
     }
 
-
     /**
      * @param Widget $widget
      *
@@ -54,7 +53,7 @@ class WidgetSorageDatabase implements WidgetStorage
      */
     public function update(Widget $widget)
     {
-        if ( ! $widget->isExists()) {
+        if (! $widget->isExists()) {
             return false;
         }
 
@@ -64,7 +63,7 @@ class WidgetSorageDatabase implements WidgetStorage
             'settings'    => $widget->getSettings(),
         ];
 
-        $updater   = new WidgetUpdator;
+        $updater = new WidgetUpdator;
         $validator = $updater->validator($data);
 
         if ($validator->fails()) {
@@ -76,7 +75,6 @@ class WidgetSorageDatabase implements WidgetStorage
         return true;
     }
 
-
     /**
      * @param Widget $widget
      *
@@ -84,7 +82,7 @@ class WidgetSorageDatabase implements WidgetStorage
      */
     public function delete(Widget $widget)
     {
-        if ( ! $this->widget->isExists()) {
+        if (! $this->widget->isExists()) {
             return false;
         }
 

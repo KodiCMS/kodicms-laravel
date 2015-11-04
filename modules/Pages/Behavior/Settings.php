@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Behavior;
 
 use KodiCMS\Pages\Contracts\BehaviorInterface;
@@ -7,7 +8,6 @@ use KodiCMS\Pages\Contracts\BehaviorSettingsInterface;
 
 class Settings implements BehaviorSettingsInterface
 {
-
     use SettingsTrait;
 
     /**
@@ -20,7 +20,6 @@ class Settings implements BehaviorSettingsInterface
      */
     protected $behavior;
 
-
     /**
      * @param BehaviorInterface $behavior
      */
@@ -29,14 +28,13 @@ class Settings implements BehaviorSettingsInterface
         $this->behavior = $behavior;
     }
 
-
     /**
      * @return string|null
      */
     public function render()
     {
         $template = $this->behavior->getSettingsTemplate();
-        if ( ! is_null($template) and view()->exists($template)) {
+        if (! is_null($template) and view()->exists($template)) {
             return view($template, [
                 'settings' => $this,
                 'behavior' => $this->behavior,
@@ -44,6 +42,6 @@ class Settings implements BehaviorSettingsInterface
             ])->render();
         }
 
-        return null;
+        return;
     }
 }

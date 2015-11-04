@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Model\FieldCollections;
 
 use KodiCMS\Support\Model\Fields\RelatedField;
@@ -11,7 +12,6 @@ use KodiCMS\Support\Model\Contracts\ModelFieldsInterface;
 
 class UserFieldCollection implements ModelFieldsInterface
 {
-
     /**
      * @return array
      */

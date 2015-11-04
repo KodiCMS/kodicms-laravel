@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Model\FieldCollections;
 
 use KodiCMS\Support\Model\Fields\RelatedField;
@@ -12,7 +13,6 @@ use KodiCMS\Support\Model\Contracts\ModelFieldsInterface;
 
 class PageFieldCollection implements ModelFieldsInterface
 {
-
     /**
      * @return array
      */

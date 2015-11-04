@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Widget;
 
 use KodiCMS\Widgets\Contracts\WidgetRenderable;
@@ -8,14 +9,12 @@ use KodiCMS\Widgets\Widget\Decorator;
 
 class PagePart extends Decorator implements WidgetRenderable
 {
-
     use WidgetRender;
 
     /**
      * @var string
      */
     protected $html = '';
-
 
     /**
      * @return array
@@ -27,7 +26,6 @@ class PagePart extends Decorator implements WidgetRenderable
         ];
     }
 
-
     /**
      * @param string $html
      */
@@ -35,7 +33,6 @@ class PagePart extends Decorator implements WidgetRenderable
     {
         $this->html = $html;
     }
-
 
     /**
      * @return string
@@ -45,15 +42,13 @@ class PagePart extends Decorator implements WidgetRenderable
         return $this->getName();
     }
 
-
     /**
      * @return string
      */
     public function getName()
     {
-        return 'PagePart::' . parent::getName();
+        return 'PagePart::'.parent::getName();
     }
-
 
     /**
      * @return string|View

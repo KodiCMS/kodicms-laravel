@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Users\Observers;
 
 /**
- * Class RoleObserver
- * @package KodiCMS\Users\Observers
+ * Class RoleObserver.
  */
 class RoleObserver
 {
@@ -17,5 +17,4 @@ class RoleObserver
         $role->users()->detach();
         $role->permissions()->delete();
     }
-
 }

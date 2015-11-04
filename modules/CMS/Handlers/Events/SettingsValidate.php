@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\CMS\Handlers\Events;
 
 class SettingsValidate
 {
-
     /**
      * Handle the event.
      *
@@ -13,6 +13,5 @@ class SettingsValidate
      */
     public function handle(array $settings)
     {
-
     }
 }

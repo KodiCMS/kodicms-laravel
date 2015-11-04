@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Http;
 
 use KodiCMS\Support\Helpers\Profiler;
@@ -6,7 +7,6 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
-
     /**
      * The application's global HTTP middleware stack.
      *
@@ -33,7 +33,6 @@ class Kernel extends HttpKernel
         'guest'         => \KodiCMS\Users\Http\Middleware\RedirectIfAuthenticated::class,
     ];
 
-
     /**
      * Bootstrap the application for HTTP requests.
      *
@@ -42,18 +41,17 @@ class Kernel extends HttpKernel
     public function bootstrap()
     {
         foreach ($this->bootstrappers() as $bootstrapper) {
-            $this->app['events']->listen('bootstrapping: ' . $bootstrapper, function () use ($bootstrapper) {
+            $this->app['events']->listen('bootstrapping: '.$bootstrapper, function () use ($bootstrapper) {
                 Profiler::start('HttpKernel', $bootstrapper, md5($bootstrapper));
             });
 
-            $this->app['events']->listen('bootstrapped: ' . $bootstrapper, function () use ($bootstrapper) {
+            $this->app['events']->listen('bootstrapped: '.$bootstrapper, function () use ($bootstrapper) {
                 Profiler::stop(md5($bootstrapper));
             });
         }
 
         parent::bootstrap();
     }
-
 
     /**
      * Send the given request through the middleware / router.

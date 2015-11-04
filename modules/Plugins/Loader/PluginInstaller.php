@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Plugins\Loader;
 
 use Schema;
@@ -8,17 +9,15 @@ use Illuminate\Database\ConnectionResolverInterface as Resolver;
 
 class PluginInstaller extends Migrator
 {
-
     /**
      * @param Resolver   $resolver
      * @param Filesystem $files
      */
     public function __construct(Resolver $resolver, Filesystem $files)
     {
-        $this->files    = $files;
+        $this->files = $files;
         $this->resolver = $resolver;
     }
-
 
     /**
      * @param string $path
@@ -33,7 +32,6 @@ class PluginInstaller extends Migrator
         }
     }
 
-
     /**
      * @param string $path
      */
@@ -47,7 +45,6 @@ class PluginInstaller extends Migrator
         }
     }
 
-
     /**
      * Get all of the migration files in a given path.
      *
@@ -57,7 +54,7 @@ class PluginInstaller extends Migrator
      */
     public function getMigrationFiles($path)
     {
-        $files = $this->files->glob($path . '/*.php');
+        $files = $this->files->glob($path.'/*.php');
 
         if ($files === false) {
             return [];
@@ -73,7 +70,6 @@ class PluginInstaller extends Migrator
         return $files;
     }
 
-
     /**
      * Resolve a migration instance from a file.
      *
@@ -87,7 +83,6 @@ class PluginInstaller extends Migrator
 
         return new $class;
     }
-
 
     /**
      * Run "up" a migration instance.
@@ -105,12 +100,11 @@ class PluginInstaller extends Migrator
         if ($migration instanceof PluginSchema) {
             $tableName = $migration->getTableName();
 
-            if ( ! Schema::hasTable($tableName)) {
+            if (! Schema::hasTable($tableName)) {
                 $migration->up();
             }
         }
     }
-
 
     /**
      * Run "down" a migration instance.

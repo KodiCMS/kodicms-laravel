@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Helpers;
 
 use DB;
@@ -6,7 +7,6 @@ use Cache;
 
 class DatabaseConfig
 {
-
     /**
      * @var string
      */
@@ -16,7 +16,6 @@ class DatabaseConfig
      * @var array
      */
     protected $config = [];
-
 
     public function __construct()
     {
@@ -29,7 +28,6 @@ class DatabaseConfig
         }
     }
 
-
     /**
      * @return array
      */
@@ -37,7 +35,6 @@ class DatabaseConfig
     {
         return $this->config;
     }
-
 
     /**
      * @param string $key
@@ -50,7 +47,6 @@ class DatabaseConfig
         return array_get($this->config, $key, $default);
     }
 
-
     /**
      * @param string $group
      * @param string $key
@@ -62,7 +58,7 @@ class DatabaseConfig
     {
         $value = json_encode($value);
 
-        if (isset( $this->config[$group][$key] )) {
+        if (isset($this->config[$group][$key])) {
             $this->update($group, $key, $value);
         } else {
             $this->insert($group, $key, $value);
@@ -72,7 +68,6 @@ class DatabaseConfig
 
         return true;
     }
-
 
     /**
      * @param array $settings
@@ -90,15 +85,14 @@ class DatabaseConfig
         }
     }
 
-
     /**
-     * Insert the config values into the table
+     * Insert the config values into the table.
      *
      * @param string $group  The config group
      * @param string $key    The config key to write to
      * @param array  $config The serialized configuration to write
      *
-     * @return boolean
+     * @return bool
      */
     final protected function insert($group, $key, $config)
     {
@@ -109,15 +103,14 @@ class DatabaseConfig
         ]);
     }
 
-
     /**
-     * Update the config values in the table
+     * Update the config values in the table.
      *
      * @param string $group  The config group
      * @param string $key    The config key to write to
      * @param array  $config The serialized configuration to write
      *
-     * @return boolean
+     * @return bool
      */
     final protected function update($group, $key, $config)
     {

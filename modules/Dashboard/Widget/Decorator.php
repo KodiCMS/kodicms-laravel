@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Dashboard\Widget;
 
 use Illuminate\Support\Collection;
@@ -10,7 +11,6 @@ use KodiCMS\Widgets\Widget\Decorator as WidgetDecorator;
 
 abstract class Decorator extends WidgetDecorator implements WidgetDashboard, WidgetRenderable
 {
-
     use WidgetRender;
 
     /**
@@ -43,13 +43,11 @@ abstract class Decorator extends WidgetDecorator implements WidgetDashboard, Wid
         'min_size' => [2, 1],
     ];
 
-
     public function __construct()
     {
-        $this->type           = WidgetManagerDashboard::getTypeByClassName(get_called_class());
+        $this->type = WidgetManagerDashboard::getTypeByClassName(get_called_class());
         $this->relatedWidgets = new Collection;
     }
-
 
     /**
      * @return mixed
@@ -59,7 +57,6 @@ abstract class Decorator extends WidgetDecorator implements WidgetDashboard, Wid
         return $this->multiple;
     }
 
-
     /**
      * @return bool
      */
@@ -67,7 +64,6 @@ abstract class Decorator extends WidgetDecorator implements WidgetDashboard, Wid
     {
         return $this->updateSettingsPage;
     }
-
 
     /**
      * @return bool
@@ -77,7 +73,6 @@ abstract class Decorator extends WidgetDecorator implements WidgetDashboard, Wid
         return $this->hasSettingsPage;
     }
 
-
     /**
      * @return array
      */
@@ -86,7 +81,6 @@ abstract class Decorator extends WidgetDecorator implements WidgetDashboard, Wid
         return $this->size;
     }
 
-
     /**
      * @return array
      */
@@ -94,7 +88,6 @@ abstract class Decorator extends WidgetDecorator implements WidgetDashboard, Wid
     {
         return $this->mediaPackages;
     }
-
 
     /**
      * @return array

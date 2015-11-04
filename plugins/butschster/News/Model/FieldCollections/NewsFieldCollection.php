@@ -1,4 +1,5 @@
 <?php
+
 namespace Plugins\butschster\News\Model\FieldCollections;
 
 use KodiCMS\Support\Model\Fields\SlugField;
@@ -10,7 +11,6 @@ use KodiCMS\Support\Model\Contracts\ModelFieldsInterface;
 
 class NewsFieldCollection implements ModelFieldsInterface
 {
-
     /**
      * @return array
      */

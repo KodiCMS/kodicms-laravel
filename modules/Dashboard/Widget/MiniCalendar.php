@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Dashboard\Widget;
 
 class MiniCalendar extends Decorator
 {
-
     /**
      * @var array
      */
@@ -29,7 +29,6 @@ class MiniCalendar extends Decorator
      */
     protected $settingsTemplate = 'dashboard::widgets.mini_calendar.settings';
 
-
     /**
      * @return string
      */
@@ -37,7 +36,6 @@ class MiniCalendar extends Decorator
     {
         return array_get($this->settings, 'format', 'LLLL');
     }
-
 
     /**
      * @return array
@@ -48,7 +46,6 @@ class MiniCalendar extends Decorator
             'format' => $this->format,
         ];
     }
-
 
     /**
      * @return array

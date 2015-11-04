@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class ConfigsTable extends Migration
 {
-
     public function up()
     {
         Schema::create('config', function (Blueprint $table) {
@@ -16,7 +15,6 @@ class ConfigsTable extends Migration
             $table->primary(['group', 'key']);
         });
     }
-
 
     public function down()
     {

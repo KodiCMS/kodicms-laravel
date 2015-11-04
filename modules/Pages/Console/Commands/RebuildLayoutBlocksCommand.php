@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -8,7 +9,6 @@ use Symfony\Component\Console\Helper\TableSeparator;
 
 class RebuildLayoutBlocksCommand extends Command
 {
-
     /**
      * The console command name.
      */
@@ -23,7 +23,6 @@ class RebuildLayoutBlocksCommand extends Command
         'Layout',
         'Found blocks',
     ];
-
 
     /**
      * Execute the console command.
@@ -40,7 +39,7 @@ class RebuildLayoutBlocksCommand extends Command
         foreach ($collection as $layout) {
             $blocks = $layout->findBlocks();
 
-            $blocks = ! empty( $blocks ) ? '{' . implode('} {', $blocks) . '}' : 'null';
+            $blocks = ! empty($blocks) ? '{'.implode('} {', $blocks).'}' : 'null';
 
             $layouts[] = [$layout->getName(), $blocks];
             $layouts[] = new TableSeparator;

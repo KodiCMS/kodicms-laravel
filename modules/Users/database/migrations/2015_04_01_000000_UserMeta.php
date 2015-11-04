@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class UserMeta extends Migration
 {
-
     public function up()
     {
         Schema::create('user_meta', function (Blueprint $table) {
@@ -16,7 +15,6 @@ class UserMeta extends Migration
             $table->json('value');
         });
     }
-
 
     public function down()
     {

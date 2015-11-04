@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Email\database\seeds;
 
 use Illuminate\Database\Seeder;
@@ -8,18 +9,15 @@ use KodiCMS\Email\Repository\EmailEventRepository;
 
 class EmailEventsTableSeeder extends Seeder
 {
-
     /**
      * @var EmailEventRepository
      */
     protected $repository;
 
-
-    function __construct()
+    public function __construct()
     {
         $this->repository = app(EmailEventRepository::class);
     }
-
 
     /**
      * Run the database seeds.

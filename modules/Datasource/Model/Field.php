@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Model;
 
 use DB;
@@ -19,13 +20,11 @@ use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 
 class Field extends DatasourceModel implements FieldInterface, Arrayable
 {
-
     protected static function boot()
     {
         parent::boot();
         static::observe(new FieldObserver());
     }
-
 
     /**
      * @var string
@@ -114,15 +113,13 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         'settings'           => 'array',
     ];
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
-
 
     /**
      * @return string
@@ -132,7 +129,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return $this->key;
     }
 
-
     /**
      * @return string
      */
@@ -140,7 +136,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return $this->name;
     }
-
 
     /**
      * @return string
@@ -150,7 +145,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return $this->position;
     }
 
-
     /**
      * @return string
      */
@@ -158,7 +152,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return $this->tablePrefix;
     }
-
 
     /**
      * @param string $tablePrefix
@@ -168,15 +161,13 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         $this->tablePrefix = $tablePrefix;
     }
 
-
     /**
      * @return string
      */
     public function getDBKey()
     {
-        return $this->getTablePrefix() . $this->getKey();
+        return $this->getTablePrefix().$this->getKey();
     }
-
 
     /**
      * @return SectionInterface
@@ -186,7 +177,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return $this->section;
     }
 
-
     /**
      * @return bool
      */
@@ -194,7 +184,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return ! is_null($this->section_id);
     }
-
 
     /**
      * @return bool
@@ -204,7 +193,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return (bool) $this->is_system;
     }
 
-
     /**
      * @return bool
      */
@@ -212,7 +200,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return (bool) $this->getSetting('is_editable', $this->isEditable);
     }
-
 
     /**
      * @return bool
@@ -222,7 +209,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return $this->getSetting('is_configurable', true);
     }
 
-
     /**
      * @return bool
      */
@@ -230,7 +216,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return $this->isOrderable;
     }
-
 
     /**
      * @return bool
@@ -240,7 +225,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return (bool) $this->getSetting('is_required');
     }
 
-
     /**
      * @return bool
      */
@@ -248,7 +232,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return (bool) $this->getSetting('is_unique');
     }
-
 
     /**
      * @return bool
@@ -258,7 +241,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return (bool) $this->canBeUsedAsDocumentID;
     }
 
-
     /**
      * @return bool
      */
@@ -266,7 +248,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return $this->hasDatabaseColumn;
     }
-
 
     /**
      * @return bool
@@ -276,7 +257,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return $this->getSetting('headline_parameters.visible');
     }
 
-
     /**
      * @return bool
      */
@@ -284,7 +264,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return $this->getSetting('searchable', false);
     }
-
 
     /**
      * @return string
@@ -294,7 +273,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return $this->getDefaultValue();
     }
 
-
     /**
      * @return mixed
      */
@@ -302,7 +280,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return $this->getSetting('default_value');
     }
-
 
     /**
      * @return mixed
@@ -312,24 +289,21 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return $this->getSetting('hint');
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getRelatedSectionId()
     {
         return (int) $this->related_section_id;
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getRelatedFieldId()
     {
         return $this->related_field_id;
     }
-
 
     /**
      * @return string
@@ -338,7 +312,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return $this->related_table;
     }
-
 
     /**
      * @param SectionHeadlineInterface $headline
@@ -356,7 +329,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         ]);
     }
 
-
     /**
      * @return string
      */
@@ -368,6 +340,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     /**************************************************************************
      * Type
      **************************************************************************/
+
     /**
      * @return \KodiCMS\Datasource\FieldType|null
      * @throws FieldException
@@ -387,7 +360,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return $this->fieldType = $typeObject;
     }
 
-
     /**
      * @return string
      */
@@ -395,7 +367,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return $this->getType()->getTitle();
     }
-
 
     /**
      * @param bool $status
@@ -405,16 +376,14 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         $this->setSetting(['headline_parameters' => ['visible' => (bool) $status]]);
     }
 
-
     /**
      * @param array $params
      */
     public function setSettingHeadlineParameters($params)
     {
-        $headlineParams                             = array_get($this->fieldSettings, 'headline_parameters', []);
+        $headlineParams = array_get($this->fieldSettings, 'headline_parameters', []);
         $this->fieldSettings['headline_parameters'] = array_merge($headlineParams, $params);
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -434,7 +403,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
             $table = $this->getSection()->getSectionTableName();
 
             if (is_null($uniqueRule = $this->getSetting('unique_rule'))) {
-                $uniqueRule = "unique::table,:field,:id,:id_field";
+                $uniqueRule = 'unique::table,:field,:id,:id_field';
             }
 
             $replace = [
@@ -445,7 +414,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
             ];
 
             foreach ($validator->getData() as $field => $value) {
-                $replace['@' . $field] = is_array($value) ? implode(',', $value) : $value;
+                $replace['@'.$field] = is_array($value) ? implode(',', $value) : $value;
             }
 
             $uniqueRule = strtr($uniqueRule, $replace);
@@ -455,7 +424,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
             $rules[] = $uniqueRule;
         }
 
-        if ( ! is_null($customRules = $this->getSetting('validation_rules'))) {
+        if (! is_null($customRules = $this->getSetting('validation_rules'))) {
             $rules += explode('|', $customRules);
         }
 
@@ -465,23 +434,20 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     /**************************************************************************
      * Events
      **************************************************************************/
+
     /**
      * @param Blueprint $table
      */
     public function onDatabaseCreate(Blueprint $table)
     {
-
     }
-
 
     /**
      * @param Blueprint $table
      */
     public function onDatabaseUpdate(Blueprint $table)
     {
-
     }
-
 
     /**
      * @param Blueprint $table
@@ -490,7 +456,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         $table->dropColumn($this->getDBKey());
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -503,7 +468,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return $value;
     }
 
-
     /**
      * @param DocumentInterface $document
      * @param mixed             $value
@@ -514,7 +478,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return $value;
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -528,7 +491,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return $value;
     }
 
-
     /**
      * @param DocumentInterface $document
      * @param mixed             $value
@@ -539,7 +501,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return $value;
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -552,16 +513,13 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return $value;
     }
 
-
     /**
      * @param DocumentInterface $document
      * @param                   $value
      */
     public function onDocumentCreating(DocumentInterface $document, $value)
     {
-
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -569,9 +527,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
      */
     public function onDocumentCreated(DocumentInterface $document, $value)
     {
-
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -579,9 +535,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
      */
     public function onDocumentUpdating(DocumentInterface $document, $value)
     {
-
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -589,18 +543,14 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
      */
     public function onDocumentFill(DocumentInterface $document, $value)
     {
-
     }
-
 
     /**
      * @param DocumentInterface $document
      */
     public function onDocumentDeleting(DocumentInterface $document)
     {
-
     }
-
 
     /**
      * @param DocumentInterface  $document
@@ -608,12 +558,13 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
      */
     public function onControllerLoad(DocumentInterface $document, TemplateController $controller)
     {
-        $controller->includeModuleMediaFile('fields/' . $this->getType()->getType());
+        $controller->includeModuleMediaFile('fields/'.$this->getType()->getType());
     }
 
     /**************************************************************************
      * Database
      **************************************************************************/
+
     /**
      * @param Builder           $query
      * @param DocumentInterface $document
@@ -623,7 +574,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         $query->addSelect($this->getDBKey());
     }
 
-
     /**
      * @param Builder $query
      * @param string  $dir
@@ -632,7 +582,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         $query->orderBy($this->getDBKey(), $dir);
     }
-
 
     /**
      * @param Builder $query
@@ -666,7 +615,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         }
     }
 
-
     /**
      * @return bool
      */
@@ -674,7 +622,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return $this->changeableDatabaseField;
     }
-
 
     /**
      * @param Blueprint $table
@@ -689,6 +636,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     /**************************************************************************
      * Relations
      **************************************************************************/
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -697,7 +645,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return $this->belongsTo(\KodiCMS\Datasource\Model\Section::class, 'section_id');
     }
 
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -705,7 +652,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return $this->belongsTo(\KodiCMS\Datasource\Model\Section::class, 'related_section_id');
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -718,6 +664,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     /**************************************************************************
      * Other
      **************************************************************************/
+
     /**
      * @return string
      */
@@ -726,7 +673,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return 'fieldSettings';
     }
 
-
     /**
      * @return float|int
      */
@@ -734,7 +680,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     {
         return DB::table($this->getTable())->where('section_id', $this->section_id)->max('position');
     }
-
 
     /**
      * @return DatasourceManagerInterface
@@ -747,6 +692,7 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     /**************************************************************************
      * Render
      **************************************************************************/
+
     /**
      * @param DocumentInterface $document
      *
@@ -761,7 +707,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         return view($template, array_merge($this->toArray(), $this->fetchDocumentTemplateValues($document)))->render();
     }
 
-
     /**
      * @param WidgetInterface $widget
      *
@@ -774,7 +719,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
             'field'  => $this,
         ])->render();
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -790,7 +734,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         ];
     }
 
-
     /**
      * @return array
      */
@@ -805,12 +748,10 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         ];
     }
 
-
     public function __toString()
     {
         return $this->renderDocumentTemplate();
     }
-
 
     /**************************************************************************
      * Widgets

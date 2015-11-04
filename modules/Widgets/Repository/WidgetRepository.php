@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Repository;
 
 use DB;
@@ -7,15 +8,13 @@ use KodiCMS\CMS\Repository\BaseRepository;
 
 class WidgetRepository extends BaseRepository
 {
-
     /**
      * @param Widget $model
      */
-    function __construct(Widget $model)
+    public function __construct(Widget $model)
     {
         parent::__construct($model);
     }
-
 
     /**
      * @param array $data
@@ -33,7 +32,6 @@ class WidgetRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
      * @param array $data
      *
@@ -49,7 +47,6 @@ class WidgetRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
      * @param int   $id
      * @param array $data
@@ -60,7 +57,6 @@ class WidgetRepository extends BaseRepository
     {
         return parent::update($id, array_except($data, ['type']));
     }
-
 
     /**
      * @param $pageId

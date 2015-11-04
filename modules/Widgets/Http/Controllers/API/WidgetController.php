@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Http\Controllers\API;
 
 use DB;
@@ -8,12 +9,11 @@ use KodiCMS\Widgets\Model\Widget;
 
 class WidgetController extends Controller
 {
-
     public function putPlace()
     {
         $widgetId = (int) $this->getRequiredParameter('widget_id');
-        $pageId   = (int) $this->getRequiredParameter('page_id');
-        $block    = $this->getRequiredParameter('block');
+        $pageId = (int) $this->getRequiredParameter('page_id');
+        $block = $this->getRequiredParameter('block');
 
         DB::table('page_widgets')->insert([
                 'page_id'   => $pageId,
@@ -32,18 +32,17 @@ class WidgetController extends Controller
         $this->setMessage('Widget added to page');
     }
 
-
     public function postReorder()
     {
         $pageId = $this->getRequiredParameter('id');
-        $data   = (array) $this->getRequiredParameter('data');
+        $data = (array) $this->getRequiredParameter('data');
 
-        $page        = Page::find($pageId);
+        $page = Page::find($pageId);
         $widgetsData = [];
 
         foreach ($data as $block => $widgets) {
             foreach ($widgets as $position => $widgetId) {
-                $location               = [
+                $location = [
                     'block'    => $block,
                     'position' => $position,
                 ];
@@ -58,7 +57,6 @@ class WidgetController extends Controller
         $page->save();
         $this->setContent(true);
     }
-
 
     public function setTemplate()
     {

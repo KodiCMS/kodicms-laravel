@@ -1,14 +1,14 @@
 <?php
+
 namespace KodiCMS\Email\Model;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class EmailEvent
- * @package KodiCMS\Email\Model
+ * Class EmailEvent.
  *
- * @property integer         $id
+ * @property int         $id
  * @property string          $code
  * @property string          $name
  * @property string          $full_name
@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class EmailEvent extends Model
 {
-
     /**
      * @param string $code
      *
@@ -31,7 +30,6 @@ class EmailEvent extends Model
     {
         return static::whereCode($code)->first();
     }
-
 
     /**
      * The attributes that are mass assignable.
@@ -53,7 +51,6 @@ class EmailEvent extends Model
         'fields' => 'array',
     ];
 
-
     /**
      * @return string
      */
@@ -61,7 +58,6 @@ class EmailEvent extends Model
     {
         return trans('email::core.messages.events.not_found');
     }
-
 
     /**
      * @return array
@@ -80,13 +76,12 @@ class EmailEvent extends Model
         ];
     }
 
-
     /**
      * @param array $options
      */
     public function send(array $options = [])
     {
-        $options   = array_merge($options, $this->defaultOptions());
+        $options = array_merge($options, $this->defaultOptions());
         $templates = $this->templates()->active()->get();
         foreach ($templates as $template) {
             $template->send($options);
@@ -108,6 +103,7 @@ class EmailEvent extends Model
     /*******************************************************
      * Relations
      *******************************************************/
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

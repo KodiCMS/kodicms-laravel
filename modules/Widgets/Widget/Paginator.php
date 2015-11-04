@@ -1,7 +1,7 @@
 <?php
+
 namespace KodiCMS\Widgets\Widget;
 
-use Block;
 use Request;
 use KodiCMS\Widgets\Contracts\WidgetPaginator;
 use KodiCMS\Widgets\Contracts\WidgetRenderable;
@@ -11,7 +11,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class Paginator extends Decorator implements WidgetRenderable
 {
-
     use WidgetRender;
 
     protected $settings = [
@@ -34,7 +33,6 @@ class Paginator extends Decorator implements WidgetRenderable
      */
     protected $settingsTemplate = 'widgets::widgets.paginator.settings';
 
-
     /**
      * @param string $key
      */
@@ -42,7 +40,6 @@ class Paginator extends Decorator implements WidgetRenderable
     {
         $this->settings['query_key'] = (string) $key;
     }
-
 
     /**
      * @param int $id
@@ -52,23 +49,21 @@ class Paginator extends Decorator implements WidgetRenderable
         $this->settings['linked_widget_id'] = (int) $id;
     }
 
-
     public function afterLoad()
     {
         $linkedWidget = WidgetManagerDatabase::getWidgetById($this->linked_widget_id);
-        $paginator    = null;
+        $paginator = null;
 
-        if ( ! is_null($linkedWidget) and ( $linkedWidget instanceof WidgetPaginator )) {
+        if (! is_null($linkedWidget) and ($linkedWidget instanceof WidgetPaginator)) {
             $paginator = new LengthAwarePaginator([], $linkedWidget->getTotalDocuments(), $linkedWidget->list_size);
             $paginator->setPageName($this->query_key);
             $paginator->setPath(Request::path());
 
-            $linkedWidget->list_offset = (int) ( ( $paginator->currentPage() - 1 ) * $paginator->perPage() );
+            $linkedWidget->list_offset = (int) (($paginator->currentPage() - 1) * $paginator->perPage());
         }
 
         $this->paginator = $paginator;
     }
-
 
     /**
      * @return array
@@ -85,7 +80,6 @@ class Paginator extends Decorator implements WidgetRenderable
 
         return compact('widgets', 'select');
     }
-
 
     /**
      * @return array [[LengthAwarePaginator|null] $paginator]

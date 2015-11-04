@@ -1,32 +1,29 @@
 <?php
+
 namespace KodiCMS\Notifications\Types;
 
 use KodiCMS\CMS\Helpers\Updater;
-use KodiCMS\Notifications\Contracts\NotificationTypeInterface;
 
 class CMSNewVersionNotification extends DefaultNotification
 {
-
     /**
      * @var bool
      */
     protected $newVersion = false;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $version;
-
 
     /**
      * @param Updater $updater
      */
     public function __construct(Updater $updater)
     {
-        $this->version    = $updater->getRemoteVersion();
+        $this->version = $updater->getRemoteVersion();
         $this->newVersion = $updater->hasNewVersion();
     }
-
 
     /**
      * @return string
@@ -36,7 +33,6 @@ class CMSNewVersionNotification extends DefaultNotification
         return false;
     }
 
-
     /**
      * @return string
      */
@@ -45,12 +41,10 @@ class CMSNewVersionNotification extends DefaultNotification
         return 'Update';
     }
 
-
     public function getIcon()
     {
         return 'cloud-download';
     }
-
 
     /**
      * @return string
@@ -59,7 +53,6 @@ class CMSNewVersionNotification extends DefaultNotification
     {
         return 'warning';
     }
-
 
     /**
      * @return string
@@ -73,7 +66,6 @@ class CMSNewVersionNotification extends DefaultNotification
         }
     }
 
-
     /**
      * @return Carbon
      */
@@ -81,7 +73,6 @@ class CMSNewVersionNotification extends DefaultNotification
     {
         return date('Y-m-d H:i:d');
     }
-
 
     /**
      * Get the instance as an array.

@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Support\Model\Fields;
 
 use Form;
 
 class TextField extends KodiCMSField
 {
-
     /**
      * @param string $name
      * @param mixed  $value

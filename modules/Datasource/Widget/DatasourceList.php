@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Widget;
 
 use Illuminate\Support\Collection;
@@ -10,7 +11,6 @@ use KodiCMS\Datasource\Traits\WidgetDatasourceFields;
 
 class DatasourceList extends Decorator implements WidgetCacheable
 {
-
     use WidgetCache, WidgetDatasource, WidgetDatasourceFields;
 
     /**
@@ -28,7 +28,6 @@ class DatasourceList extends Decorator implements WidgetCacheable
      */
     protected $settingsTemplate = 'datasource::widgets.list.settings';
 
-
     /**
      * @return array
      */
@@ -36,7 +35,6 @@ class DatasourceList extends Decorator implements WidgetCacheable
     {
         return ['order_by_rand'];
     }
-
 
     /**
      * @return array
@@ -49,18 +47,16 @@ class DatasourceList extends Decorator implements WidgetCacheable
         ];
     }
 
-
     /**
      * @return array
      */
     public function prepareSettingsData()
     {
-        $fields   = ! $this->getSection() ? [] : $this->section->getFields();
+        $fields = ! $this->getSection() ? [] : $this->section->getFields();
         $ordering = (array) $this->ordering;
 
         return compact('fields', 'ordering');
     }
-
 
     /**
      * @return array [[Collection] $documents, [Collection] $documentsRaw,
@@ -105,7 +101,6 @@ class DatasourceList extends Decorator implements WidgetCacheable
         ];
     }
 
-
     /**
      * @param int $recurse
      *
@@ -113,7 +108,7 @@ class DatasourceList extends Decorator implements WidgetCacheable
      */
     protected function getDocuments($recurse = 3)
     {
-        if ( ! is_null($this->documents)) {
+        if (! is_null($this->documents)) {
             return $this->documents;
         }
 
@@ -133,9 +128,7 @@ class DatasourceList extends Decorator implements WidgetCacheable
         return $this->documents = $documents->paginate();
     }
 
-
     /**
-     *
      * @param array  $data
      * @param string $preffix
      *
@@ -149,9 +142,9 @@ class DatasourceList extends Decorator implements WidgetCacheable
             if (is_array($value)) {
                 $params += $this->buildUrlParams($value, $field);
             } else {
-                $field = $preffix === null ? $field : $preffix . '.' . $field;
+                $field = $preffix === null ? $field : $preffix.'.'.$field;
 
-                $params[':' . $field] = $value;
+                $params[':'.$field] = $value;
             }
         }
 

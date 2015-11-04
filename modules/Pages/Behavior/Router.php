@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Pages\Behavior;
 
 class Router
 {
-
     // Matches a URI group and captures the contents
     const REGEX_GROUP = '\(((?:(?>[^()]+)|(?R))*)\)';
 
@@ -27,7 +27,6 @@ class Router
     protected $parameters = [];
 
     /**
-     *
      * @var string
      */
     protected $matchedRoute = null;
@@ -37,18 +36,17 @@ class Router
      */
     protected $uri = null;
 
-
     /**
      * @param array $routes
      */
     public function __construct(array $routes)
     {
         foreach ($routes as $route => $params) {
-            if ( ! array_key_exists('type', $params)) {
+            if (! array_key_exists('type', $params)) {
                 $routes[$route]['type'] = BehaviorAbstract::ROUTE_TYPE_DEFAULT;
             }
 
-            if ( ! array_key_exists('method', $params)) {
+            if (! array_key_exists('method', $params)) {
                 $routes[$route]['method'] = $this->getDefaultMethod();
             }
         }
@@ -56,16 +54,13 @@ class Router
         $this->routes = $routes;
     }
 
-
     /**
-     *
      * @return array
      */
     public function getRoutes()
     {
         return $this->routes;
     }
-
 
     /**
      * @return string
@@ -75,7 +70,6 @@ class Router
         return $this->matchedRoute;
     }
 
-
     /**
      * @return null|string
      */
@@ -84,28 +78,24 @@ class Router
         return $this->uri;
     }
 
-
     /**
      * @param string $name
      * @param mixed  $default
      *
-     * @return string|NULL
+     * @return string|null
      */
     public function getParameter($name, $default = null)
     {
         return array_get($this->parameters, $name, $default);
     }
 
-
     /**
-     *
      * @return array
      */
     public function getParameters()
     {
         return $this->parameters;
     }
-
 
     /**
      * @return string
@@ -115,7 +105,6 @@ class Router
         return 'stub';
     }
 
-
     /**
      * @param $uri
      *
@@ -124,11 +113,10 @@ class Router
     public function findRouteByUri($uri)
     {
         $this->uri = $uri;
-        $method    = $this->matchRoute($uri);
+        $method = $this->matchRoute($uri);
 
         return $method;
     }
-
 
     /**
      * @param $uri
@@ -138,12 +126,12 @@ class Router
     final protected function matchRoute($uri)
     {
         foreach ($this->getRoutes() as $_uri => $params) {
-            if ( ! isset( $params['method'] )) {
+            if (! isset($params['method'])) {
                 $params['method'] = $this->getDefaultMethod();
             }
 
             $expression = $this->compileRoute($_uri, array_get($params, 'regex'));
-            if ( ! preg_match($expression, $uri, $matches)) {
+            if (! preg_match($expression, $uri, $matches)) {
                 continue;
             }
 
@@ -164,9 +152,8 @@ class Router
 
         $this->parameters = preg_split('/\//', $uri, -1, PREG_SPLIT_NO_EMPTY);
 
-        return null;
+        return;
     }
-
 
     /**
      * Returns the compiled regular expression for the route. This translates
@@ -180,7 +167,7 @@ class Router
     {
         // The URI should be considered literal except for keys and optional parts
         // Escape everything preg_quote would escape except for : ( ) < >
-        $expression = preg_replace('#' . static::REGEX_ESCAPE . '#', '\\\\$0', $uri);
+        $expression = preg_replace('#'.static::REGEX_ESCAPE.'#', '\\\\$0', $uri);
 
         if (strpos($expression, '(') !== false) {
             // Make optional parts of the URI non-capturing and optional
@@ -188,12 +175,12 @@ class Router
         }
 
         // Insert default regex for keys
-        $expression = str_replace(['<', '>'], ['(?P<', '>' . static::REGEX_SEGMENT . ')'], $expression);
+        $expression = str_replace(['<', '>'], ['(?P<', '>'.static::REGEX_SEGMENT.')'], $expression);
 
         if ($regex) {
             $search = $replace = [];
             foreach ($regex as $key => $value) {
-                $search[]  = "<$key>" . static::REGEX_SEGMENT;
+                $search[] = "<$key>".static::REGEX_SEGMENT;
                 $replace[] = "<$key>$value";
             }
 
@@ -201,6 +188,6 @@ class Router
             $expression = str_replace($search, $replace, $expression);
         }
 
-        return '#^' . $expression . '$#uD';
+        return '#^'.$expression.'$#uD';
     }
 }

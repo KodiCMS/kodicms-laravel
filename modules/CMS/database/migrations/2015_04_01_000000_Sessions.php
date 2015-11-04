@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class Sessions extends Migration
 {
-
     public function up()
     {
         Schema::create('sessions', function (Blueprint $table) {
@@ -14,7 +13,6 @@ class Sessions extends Migration
             $table->integer('last_activity');
         });
     }
-
 
     public function down()
     {

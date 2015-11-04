@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Model;
 
 use DB;
@@ -10,7 +11,6 @@ use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 
 class Widget extends Model
 {
-
     /**
      * @var array
      */
@@ -47,15 +47,13 @@ class Widget extends Model
      */
     protected $widget = null;
 
-
     /**
      * @param string $template
      */
     public function setTemplateAttribute($template)
     {
-        $this->attributes['template'] = empty( $template ) ? null : $template;
+        $this->attributes['template'] = empty($template) ? null : $template;
     }
-
 
     /**
      * @return string
@@ -63,7 +61,7 @@ class Widget extends Model
     public function getType()
     {
         foreach (WidgetManagerDatabase::getAvailableTypes() as $group => $types) {
-            if (isset( $types[$this->type] )) {
+            if (isset($types[$this->type])) {
                 return $types[$this->type];
             }
         }
@@ -71,14 +69,13 @@ class Widget extends Model
         return $this->type;
     }
 
-
     /**
      * @return \KodiCMS\Widgets\Contracts\Widget|null
      * @throws WidgetException
      */
     public function toWidget()
     {
-        if ( ! is_null($this->widget)) {
+        if (! is_null($this->widget)) {
             return $this->widget;
         }
 
@@ -88,7 +85,7 @@ class Widget extends Model
             return $this->widget;
         }
 
-        if ( ! is_null($this->widget = WidgetManagerDatabase::makeWidget($this->type, $this->name, $this->description, $this->settings))) {
+        if (! is_null($this->widget = WidgetManagerDatabase::makeWidget($this->type, $this->name, $this->description, $this->settings))) {
             $this->widget->setId($this->id);
 
             if ($this->isRenderable()) {
@@ -105,15 +102,13 @@ class Widget extends Model
         return $this->widget;
     }
 
-
     /**
      * @return bool
      */
     public function isWidgetable()
     {
-        return ( $this->exists and WidgetManagerDatabase::isWidgetable(get_class($this->toWidget())) );
+        return ($this->exists and WidgetManagerDatabase::isWidgetable(get_class($this->toWidget())));
     }
-
 
     /**
      * @return bool
@@ -123,7 +118,6 @@ class Widget extends Model
         return WidgetManagerDatabase::isHandler(get_class($this->toWidget()));
     }
 
-
     /**
      * @return bool
      */
@@ -131,7 +125,6 @@ class Widget extends Model
     {
         return WidgetManagerDatabase::isRenderable(get_class($this->toWidget()));
     }
-
 
     /**
      * @return bool
@@ -141,7 +134,6 @@ class Widget extends Model
         return WidgetManagerDatabase::isCacheable(get_class($this->toWidget()));
     }
 
-
     /**
      * @return bool
      */
@@ -149,7 +141,6 @@ class Widget extends Model
     {
         return WidgetManagerDatabase::isClassExists(get_class($this->toWidget()));
     }
-
 
     /**
      * @return bool
@@ -159,7 +150,6 @@ class Widget extends Model
         return WidgetManagerDatabase::isCorrupt(get_class($this->toWidget()));
     }
 
-
     public function scopeFilterByType($query, array $types)
     {
         if (count($types) > 0) {
@@ -167,20 +157,19 @@ class Widget extends Model
         }
     }
 
-
     /**
      * @return array
      */
     public function getLocations()
     {
-        if ( ! $this->exists) {
+        if (! $this->exists) {
             return [null, null];
         }
 
         $query = DB::table('page_widgets')->get();
 
         $blocksToExclude = []; // занятые блоки для исключения из списков
-        $widgetBlocks    = []; // выбранные блоки для текущего виджета
+        $widgetBlocks = []; // выбранные блоки для текущего виджета
 
         foreach ($query as $row) {
             if ($row->widget_id == $this->id) {
@@ -193,7 +182,6 @@ class Widget extends Model
         return [$widgetBlocks, $blocksToExclude];
     }
 
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -202,15 +190,13 @@ class Widget extends Model
         return $this->belongsToMany(Page::class, 'page_widgets', 'widget_id', 'page_id');
     }
 
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\hasManyThrough
      */
     public function related()
     {
-        return $this->belongsToMany(Widget::class, 'related_widgets', 'to_widget_id', 'id');
+        return $this->belongsToMany(self::class, 'related_widgets', 'to_widget_id', 'id');
     }
-
 
     /**
      * Handle dynamic method calls into the model.

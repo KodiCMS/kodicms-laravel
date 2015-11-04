@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Dashboard\Http\Controllers\API;
 
 use PackageManager;
@@ -10,7 +11,6 @@ use KodiCMS\Widgets\Engine\WidgetRenderSettingsHTML;
 
 class DashboardController extends Controller
 {
-
     /**
      * @var array
      */
@@ -20,7 +20,6 @@ class DashboardController extends Controller
         'postWidget'        => 'backend.dashboard.manage',
         'deleteWidget'      => 'backend.dashboard.manage',
     ];
-
 
     public function putWidget()
     {
@@ -33,18 +32,17 @@ class DashboardController extends Controller
         }
 
         $this->size = $widget->getSize();
-        $this->id   = $widget->getId();
+        $this->id = $widget->getId();
 
         $this->setContent(view('dashboard::partials.temp_block', [
             'widget' => new WidgetRenderDashboardHTML($widget),
         ])->render());
     }
 
-
     public function getWidgetSettings()
     {
         $widgetId = $this->getRequiredParameter('id');
-        $widget   = Dashboard::getWidgetById($widgetId);
+        $widget = Dashboard::getWidgetById($widgetId);
 
         $settingsView = (new WidgetRenderSettingsHTML($widget))->render();
         $this->setContent(
@@ -52,13 +50,11 @@ class DashboardController extends Controller
         );
     }
 
-
     public function deleteWidget()
     {
         $widgetId = $this->getRequiredParameter('id');
         Dashboard::deleteWidgetById($widgetId);
     }
-
 
     public function postWidget()
     {
@@ -69,7 +65,7 @@ class DashboardController extends Controller
 
         if ($widget instanceof WidgetDashboard) {
             $this->updateSettingsPage = $widget->isUpdateSettingsPage();
-            $this->widgetId           = $widgetId;
+            $this->widgetId = $widgetId;
             $this->setContent(view('dashboard::partials.temp_block', [
                 'widget' => new WidgetRenderDashboardHTML($widget),
             ])->render());

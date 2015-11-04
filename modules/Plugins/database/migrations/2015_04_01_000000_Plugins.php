@@ -5,7 +5,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class Plugins extends Migration
 {
-
     public function up()
     {
         Schema::create('installed_plugins', function (Blueprint $table) {
@@ -17,7 +16,6 @@ class Plugins extends Migration
             $table->json('settings');
         });
     }
-
 
     public function down()
     {

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Support\Traits;
 
 use KodiCMS\CMS\Contracts\ControllerACLInterface;
@@ -6,7 +7,6 @@ use KodiCMS\Users\Http\ControllerACL as UserControllerACL;
 
 trait ControllerACL
 {
-
     /**
      * @var bool
      */
@@ -32,7 +32,6 @@ trait ControllerACL
      */
     protected $acl;
 
-
     public function initControllerAcl()
     {
         $this->acl = $this->getControllerAcl();
@@ -44,7 +43,6 @@ trait ControllerACL
             ->setAllowedActions($this->allowedActions)
             ->setCurrentAction($this->getCurrentAction());
     }
-
 
     /**
      * @return ControllerACLInterface

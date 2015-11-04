@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Breadcrumbs;
 
 use KodiCMS\Support\Traits\Accessor;
@@ -6,14 +7,12 @@ use KodiCMS\API\Exceptions\Exception;
 
 class Item
 {
-
     use Accessor;
 
     /**
      * @var array
      */
     protected $attributes = [];
-
 
     /**
      * @param string      $name
@@ -25,13 +24,13 @@ class Item
      */
     public function __construct($name, $url = null, $active = false, array $data = [])
     {
-        if (empty( $name )) {
+        if (empty($name)) {
             throw new Exception('Breadcrumbs: The breadcrumb name could not be empty!');
         }
 
         $this->name = $name;
 
-        if ( ! is_null($url)) {
+        if (! is_null($url)) {
             $this->url = $url;
         }
 
@@ -39,7 +38,6 @@ class Item
 
         $this->setAttribute($data);
     }
-
 
     /**
      * @return string
@@ -49,7 +47,6 @@ class Item
         return $this->url;
     }
 
-
     /**
      * @return string
      */
@@ -57,7 +54,6 @@ class Item
     {
         return $this->name;
     }
-
 
     /**
      * @return string
@@ -67,15 +63,13 @@ class Item
         return link_to($this->getUrl(), $this->getName());
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function isActive()
     {
         return (bool) $this->active;
     }
-
 
     /**
      * @param string $url
@@ -87,7 +81,6 @@ class Item
         return $url;
     }
 
-
     /**
      * @param bool $status
      *
@@ -97,7 +90,6 @@ class Item
     {
         return (bool) $status;
     }
-
 
     /**
      * @param bool $name

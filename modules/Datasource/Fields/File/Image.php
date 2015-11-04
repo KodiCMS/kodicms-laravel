@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\File;
 
 use Intervention\Image\ImageManager;
@@ -8,7 +9,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Image extends File
 {
-
     /**
      * @return array
      */
@@ -16,7 +16,6 @@ class Image extends File
     {
         return ['crop', 'watermark', 'aspect_ratio'];
     }
-
 
     /**
      * @return array
@@ -30,7 +29,7 @@ class Image extends File
             'aspect_ratio'      => true,
             'quality'           => 100,
             'is_cropable'       => false,
-            'same_image_fields' => []
+            'same_image_fields' => [],
 
             // TODO: релазиовать добавления водяных знаков
 //			'watermark' => false,
@@ -41,9 +40,8 @@ class Image extends File
         ]);
     }
 
-
     /**
-     * @param integer $width
+     * @param int $width
      */
     public function seSettingWidth($width)
     {
@@ -56,9 +54,8 @@ class Image extends File
         $this->fieldSettings['width'] = $width;
     }
 
-
     /**
-     * @param integer $height
+     * @param int $height
      */
     public function setSettingHeight($height)
     {
@@ -71,9 +68,8 @@ class Image extends File
         $this->fieldSettings['height'] = $height;
     }
 
-
     /**
-     * @param integer $quality
+     * @param int $quality
      */
     public function setSettingQuality($quality)
     {
@@ -88,7 +84,6 @@ class Image extends File
         $this->fieldSettings['quality'] = $quality;
     }
 
-
     /**
      * @param string $path
      */
@@ -97,36 +92,33 @@ class Image extends File
         $path = normalize_path($path);
 
         if ($this->isImage($path)) {
-            $imagePath                                  = $this->folderPath($path);
+            $imagePath = $this->folderPath($path);
             $this->fieldSettings['watermark_file_path'] = $imagePath;
-            $this->fieldSettings['watermark']           = true;
+            $this->fieldSettings['watermark'] = true;
         } else {
-            $this->fieldSettings['watermark']           = false;
+            $this->fieldSettings['watermark'] = false;
             $this->fieldSettings['watermark_file_path'] = null;
         }
     }
 
-
     /**
-     * @param integer $x
+     * @param int $x
      */
     public function setSettingWatermarkOffsetX($x)
     {
         $this->fieldSettings['watermark_offset_x'] = (int) $x;
     }
 
-
     /**
-     * @param integer $y
+     * @param int $y
      */
     public function setSettingWatermarkOffsetY($y)
     {
         $this->fieldSettings['watermark_offset_y'] = (int) $y;
     }
 
-
     /**
-     * @param integer $opacity
+     * @param int $opacity
      */
     public function setSettingWatermarkOpacity($opacity)
     {
@@ -141,51 +133,45 @@ class Image extends File
         $this->fieldSettings['watermark_opacity'] = $opacity;
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getWidth()
     {
         return (int) $this->getSetting('width');
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getHeight()
     {
         return (int) $this->getSetting('height');
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getQuality()
     {
         return (int) $this->getSetting('quality');
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCropable()
     {
         return $this->getSetting('is_cropable');
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function aspectRatio()
     {
         return $this->getSetting('aspect_ratio');
     }
-
 
     /**
      * @return array
@@ -195,10 +181,9 @@ class Image extends File
         return array_map(function ($field) {
             return $field->getName();
         }, array_filter($this->getSection()->getFields()->getFields(), function ($field) {
-            return ( $field instanceof Image ) and $field->getId() != $this->getId();
+            return ($field instanceof Image) and $field->getId() != $this->getId();
         }));
     }
-
 
     /**
      * @return array
@@ -208,7 +193,6 @@ class Image extends File
         return (array) $this->getSetting('same_image_fields');
     }
 
-
     /**
      * @param $file
      *
@@ -217,16 +201,15 @@ class Image extends File
     public function copyImageFile($file)
     {
         if ($this->files->exists($this->getFilePath($file))) {
-            $ext      = pathinfo($file, PATHINFO_EXTENSION);
-            $filename = uniqid() . '.' . $ext;
-            $this->files->copy($this->getFilePath($file), $this->getFolder() . $filename);
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
+            $filename = uniqid().'.'.$ext;
+            $this->files->copy($this->getFilePath($file), $this->getFolder().$filename);
 
-            return $this->folderRelativePath . $filename;
+            return $this->folderRelativePath.$filename;
         }
 
         return false;
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -238,10 +221,10 @@ class Image extends File
     {
         parent::onDocumentFill($document, $value);
 
-        if (( $value instanceof UploadedFile ) and ! empty( $this->getSelectedSameImageFields() )) {
+        if (($value instanceof UploadedFile) and ! empty($this->getSelectedSameImageFields())) {
             $fields = $this->getSection()->getFields();
             foreach ($this->getSelectedSameImageFields() as $sameField) {
-                if ( ! is_null($field = $fields->offsetGet($sameField)) and ! ( $document->{$sameField} instanceof UploadedFile )) {
+                if (! is_null($field = $fields->offsetGet($sameField)) and ! ($document->{$sameField} instanceof UploadedFile)) {
                     if ($filePath = $field->copyImageFile($document->{$this->getDBKey()})) {
                         $document->{$sameField} = $filePath;
                     }
@@ -249,7 +232,6 @@ class Image extends File
             }
         }
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -262,19 +244,19 @@ class Image extends File
         parent::onDocumentUpdating($document, $value);
 
         if (is_null($value) or $this->isRemoveFile) {
-            return null;
+            return;
         }
 
         $image = (new ImageManager)->make($this->getFilePath($value));
 
-        $width       = $this->getWidth();
-        $height      = $this->getHeight();
-        $crop        = $this->isCropable();
+        $width = $this->getWidth();
+        $height = $this->getHeight();
+        $crop = $this->isCropable();
         $aspectRatio = $this->aspectRatio();
 
-        if ($width > 0 and empty( $height )) {
+        if ($width > 0 and empty($height)) {
             $image->widen($width);
-        } elseif (empty( $width ) and $height > 0) {
+        } elseif (empty($width) and $height > 0) {
             $image->heighten($height);
         } elseif ($width > 0 and $height > 0) {
             $image->resize($width, $height, function ($constraint) use ($aspectRatio) {

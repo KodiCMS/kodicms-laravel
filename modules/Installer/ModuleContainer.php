@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Installer;
 
 use App;
@@ -9,7 +10,6 @@ use KodiCMS\Support\Loader\ModuleContainer as BaseModuleContainer;
 
 class ModuleContainer extends BaseModuleContainer
 {
-
     /**
      * @param Router $router
      */
@@ -21,7 +21,6 @@ class ModuleContainer extends BaseModuleContainer
 
         $this->includeRoutes($router);
     }
-
 
     /**
      * @param Router $router

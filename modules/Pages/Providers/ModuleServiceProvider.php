@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Pages\Providers;
 
 use Block;
 use KodiCMS\Pages\Model\Page;
-use KodiCMS\Pages\Helpers\Meta;
 use KodiCMS\Support\ServiceProvider;
 use KodiCMS\Support\Facades\Frontpage;
 use KodiCMS\Pages\Observers\PageObserver;
@@ -15,7 +15,6 @@ use KodiCMS\Pages\Console\Commands\RebuildLayoutBlocksCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-
     public function boot()
     {
         app('view')->addNamespace('layouts', layouts_path());
@@ -23,7 +22,6 @@ class ModuleServiceProvider extends ServiceProvider
         Page::observe(new PageObserver);
         PagePartModel::observe(new PagePartObserver);
     }
-
 
     /**
      *
@@ -38,7 +36,7 @@ class ModuleServiceProvider extends ServiceProvider
 
         $this->registerProviders([
             BladeServiceProvider::class,
-            EventServiceProvider::class
+            EventServiceProvider::class,
         ]);
 
         $this->registerConsoleCommand(RebuildLayoutBlocksCommand::class);

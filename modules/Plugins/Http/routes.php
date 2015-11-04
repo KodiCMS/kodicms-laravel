@@ -1,4 +1,5 @@
 <?php
+
 Route::group(['prefix' => backend_url(), 'as' => 'backend.plugins.'], function () {
     Route::get('plugins', ['as' => 'list', 'uses' => 'PluginController@getIndex']);
     Route::get('plugins/settings/{plugin}', ['as' => 'settings.get', 'uses' => 'PluginController@getSettings']);

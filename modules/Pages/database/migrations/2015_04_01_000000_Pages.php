@@ -6,7 +6,6 @@ use KodiCMS\Pages\Model\FrontendPage;
 
 class Pages extends Migration
 {
-
     public function up()
     {
         Schema::create('pages', function (Blueprint $table) {
@@ -40,7 +39,6 @@ class Pages extends Migration
             $table->string('redirect_url')->nullable();
         });
     }
-
 
     public function down()
     {

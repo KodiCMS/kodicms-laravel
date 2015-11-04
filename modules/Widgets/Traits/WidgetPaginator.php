@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Widgets\Traits;
 
 trait WidgetPaginator
 {
-
     /**
      * @param int $offset
      */
@@ -12,7 +12,6 @@ trait WidgetPaginator
         $this->settings['list_offset'] = (int) $offset;
     }
 
-
     /**
      * @param int $size
      */
@@ -20,7 +19,6 @@ trait WidgetPaginator
     {
         $this->settings['list_size'] = (int) $size;
     }
-
 
     /**
      * @param int $default
@@ -33,7 +31,6 @@ trait WidgetPaginator
 
         return $size == 0 ? 10 : $size;
     }
-
 
     /**
      * @param int $default

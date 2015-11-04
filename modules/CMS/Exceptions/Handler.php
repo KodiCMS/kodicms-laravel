@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Exceptions;
 
 use App;
@@ -13,7 +14,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
-
     /**
      * A list of the exception types that should not be reported.
      *
@@ -23,7 +23,6 @@ class Handler extends ExceptionHandler
         HttpException::class,
         ModelNotFoundException::class,
     ];
-
 
     /**
      * Report or log an exception.
@@ -39,7 +38,6 @@ class Handler extends ExceptionHandler
         return parent::report($e);
     }
 
-
     /**
      * Render an exception into an HTTP response.
      *
@@ -50,7 +48,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, \Exception $e)
     {
-        if ($request->ajax() or ( $e instanceof APIException )) {
+        if ($request->ajax() or ($e instanceof APIException)) {
             return $this->renderApiException($e);
         }
 
@@ -60,13 +58,12 @@ class Handler extends ExceptionHandler
 
         if (config('app.debug') or ! App::installed()) {
             return $this->renderExceptionWithWhoops($e);
-        } else if ( ! $this->isHttpException($e)) {
+        } elseif (! $this->isHttpException($e)) {
             return $this->renderException($e);
         }
 
         return $this->renderHttpException($e);
     }
-
 
     /**
      * @param Exception $e
@@ -77,7 +74,6 @@ class Handler extends ExceptionHandler
     {
         return (new APIResponse(config('app.debug')))->createExceptionResponse($e);
     }
-
 
     /**
      * Render the given HttpException.
@@ -91,7 +87,6 @@ class Handler extends ExceptionHandler
         return $this->renderControllerException($e, $e->getStatusCode());
     }
 
-
     /**
      * @param  \Exception $e
      *
@@ -102,9 +97,8 @@ class Handler extends ExceptionHandler
         return $this->renderControllerException($e, 500);
     }
 
-
     /**
-     * Render an exception using ErrorController
+     * Render an exception using ErrorController.
      *
      * @param  \Exception $e
      * @param  int        $code
@@ -116,24 +110,23 @@ class Handler extends ExceptionHandler
         try {
             $controller = app()->make(ErrorController::class);
 
-            if (method_exists($controller, 'error' . $code)) {
-                $action = 'error' . $code;
+            if (method_exists($controller, 'error'.$code)) {
+                $action = 'error'.$code;
             } else {
                 $action = 'errorDefault';
             }
 
             $response = $controller->callAction($action, [$e]);
 
-            if ( ! ( $response instanceof Response )) {
+            if (! ($response instanceof Response)) {
                 $response = new Response($response);
             }
 
-            return $this->toIlluminateResponse($response );
+            return $this->toIlluminateResponse($response);
         } catch (\Exception $ex) {
             return $this->convertExceptionToResponse($ex);
         }
     }
-
 
     /**
      * Render an exception using Whoops.

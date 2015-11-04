@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Behavior;
 
 use KodiCMS\Support\Helpers\Callback;
@@ -9,7 +10,6 @@ use KodiCMS\Pages\Contracts\BehaviorPageInterface;
 
 abstract class BehaviorAbstract implements BehaviorInterface
 {
-
     const ROUTE_TYPE_DEFAULT = 'default';
     const ROUTE_TYPE_PAGE = 'page';
     const ROUTE_TYPE_CUSTOM = 'custom';
@@ -44,7 +44,6 @@ abstract class BehaviorAbstract implements BehaviorInterface
      */
     protected $settingsTemplate = null;
 
-
     /**
      * @param array $parameters
      */
@@ -53,16 +52,15 @@ abstract class BehaviorAbstract implements BehaviorInterface
         $this->parameters = $parameters;
 
         $routes = $this->routeList();
-        if (isset( $parameters['routes'] ) and is_array($parameters['routes'])) {
+        if (isset($parameters['routes']) and is_array($parameters['routes'])) {
             $routes = $parameters['routes'] + $routes;
         }
 
         $settingsClass = $this->settingsClass;
 
         $this->settings = new $settingsClass($this);
-        $this->router   = new Router($routes);
+        $this->router = new Router($routes);
     }
-
 
     /**
      * @param BehaviorPageInterface $page
@@ -71,14 +69,13 @@ abstract class BehaviorAbstract implements BehaviorInterface
      */
     public function setPage(BehaviorPageInterface &$page)
     {
-        if ( ! is_null($this->page)) {
+        if (! is_null($this->page)) {
             throw new BehaviorException('You can\'t change behavior page');
         }
 
         $this->page = &$page;
         $this->settings->setSettings($page->getBehaviorSettings());
     }
-
 
     /**
      * @return FrontendPage
@@ -88,7 +85,6 @@ abstract class BehaviorAbstract implements BehaviorInterface
         return $this->page;
     }
 
-
     /**
      * @return array
      */
@@ -96,7 +92,6 @@ abstract class BehaviorAbstract implements BehaviorInterface
     {
         return [];
     }
-
 
     /**
      * @return Router
@@ -106,7 +101,6 @@ abstract class BehaviorAbstract implements BehaviorInterface
         return $this->router;
     }
 
-
     /**
      * @param string $uri
      *
@@ -114,14 +108,14 @@ abstract class BehaviorAbstract implements BehaviorInterface
      */
     public function executeRoute($uri)
     {
-        if (empty( $uri )) {
-            return null;
+        if (empty($uri)) {
+            return;
         }
 
         if (is_null($method = $this->getRouter()->findRouteByUri($uri))) {
             $this->page = FrontendPage::findByUri($uri, $this->page);
 
-            return null;
+            return;
         }
 
         if (strpos($method, '::') !== false) {
@@ -133,7 +127,6 @@ abstract class BehaviorAbstract implements BehaviorInterface
         return $method;
     }
 
-
     /**
      * @return null|string
      */
@@ -142,7 +135,6 @@ abstract class BehaviorAbstract implements BehaviorInterface
         return $this->settingsTemplate;
     }
 
-
     /**
      * @return Settings
      */
@@ -150,7 +142,6 @@ abstract class BehaviorAbstract implements BehaviorInterface
     {
         return $this->settings;
     }
-
 
     final public function stub()
     {

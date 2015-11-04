@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Repository;
 
 use KodiCMS\CMS\Repository\BaseRepository;
@@ -6,7 +7,6 @@ use KodiCMS\Users\Model\User;
 
 class UserRepository extends BaseRepository
 {
-
     /**
      * @param User $model
      */
@@ -15,9 +15,8 @@ class UserRepository extends BaseRepository
         parent::__construct($model);
     }
 
-
     /**
-     * @param integer|null $perPage
+     * @param int|null $perPage
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
@@ -25,7 +24,6 @@ class UserRepository extends BaseRepository
     {
         return $this->model->with('roles')->paginate();
     }
-
 
     /**
      * @param array $data
@@ -44,9 +42,8 @@ class UserRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
-     * @param integer $id
+     * @param int $id
      * @param array   $data
      *
      * @return bool
@@ -60,12 +57,11 @@ class UserRepository extends BaseRepository
         ]);
 
         $validator->sometimes('password', 'required|confirmed|min:6', function ($input) {
-            return ! empty( $input->password );
+            return ! empty($input->password);
         });
 
         return $this->_validate($validator);
     }
-
 
     /**
      * @param array $data
@@ -81,13 +77,12 @@ class UserRepository extends BaseRepository
             'locale',
         ]));
 
-        if (isset( $data['roles'] )) {
+        if (isset($data['roles'])) {
             $user->roles()->attach((array) $data['roles']);
         }
 
         return $user;
     }
-
 
     /**
      * @param int   $id
@@ -97,8 +92,8 @@ class UserRepository extends BaseRepository
      */
     public function update($id, array $data = [])
     {
-        if (array_key_exists('password', $data) and empty( $data['password'] )) {
-            unset( $data['password'] );
+        if (array_key_exists('password', $data) and empty($data['password'])) {
+            unset($data['password']);
         }
 
         $user = parent::update($id, array_only($data, [
@@ -108,7 +103,7 @@ class UserRepository extends BaseRepository
             'locale',
         ]));
 
-        if (isset( $data['roles'] )) {
+        if (isset($data['roles'])) {
             $user->roles()->sync((array) $data['roles']);
         }
 

@@ -5,7 +5,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class DatasourceFolders extends Migration
 {
-
     public function up()
     {
         Schema::create('datasource_folders', function (Blueprint $table) {
@@ -15,7 +14,6 @@ class DatasourceFolders extends Migration
             $table->integer('position')->default(0);
         });
     }
-
 
     public function down()
     {

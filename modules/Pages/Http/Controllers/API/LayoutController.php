@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Http\Controllers\API;
 
 use KodiCMS\CMS\Http\Controllers\API\AbstractFileController;
@@ -7,7 +8,6 @@ use KodiCMS\Pages\Model\LayoutCollection;
 
 class LayoutController extends AbstractFileController
 {
-
     /**
      * @return LayoutCollection
      */
@@ -16,7 +16,6 @@ class LayoutController extends AbstractFileController
         return new LayoutCollection();
     }
 
-
     /**
      * @return string
      */
@@ -24,7 +23,6 @@ class LayoutController extends AbstractFileController
     {
         return 'layout';
     }
-
 
     /**
      * @param string $filename
@@ -36,16 +34,15 @@ class LayoutController extends AbstractFileController
         return route('backend.layout.edit', [$filename]);
     }
 
-
     public function getRebuildBlocks()
     {
         $layouts = new LayoutCollection;
 
         $response = [];
-        $blocks   = [];
+        $blocks = [];
 
         foreach ($layouts as $layout) {
-            $blocks[$layout->getKey()]   = $layout->findBlocks();
+            $blocks[$layout->getKey()] = $layout->findBlocks();
             $response[$layout->getKey()] = view($this->wrapNamespace('layout.partials.blocks'), ['blocks' => $layout->findBlocks()])->render();
         }
 
@@ -54,11 +51,10 @@ class LayoutController extends AbstractFileController
         $this->blocks = $blocks;
     }
 
-
     public function getBlocks()
     {
         $layoutName = $this->getParameter('layout', null);
-        $blocks     = (new LayoutBlock)->getBlocksGroupedByLayouts($layoutName);
+        $blocks = (new LayoutBlock)->getBlocksGroupedByLayouts($layoutName);
 
         $this->setContent($blocks);
     }

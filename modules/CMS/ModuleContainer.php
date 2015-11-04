@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS;
 
 use Event;
@@ -8,7 +9,6 @@ use KodiCMS\Support\Loader\ModuleContainer as BaseModuleContainer;
 
 class ModuleContainer extends BaseModuleContainer
 {
-
     /**
      * @param Router $router
      */

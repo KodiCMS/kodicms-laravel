@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Support\Html;
 
 class HtmlServiceProvider extends \Illuminate\Html\HtmlServiceProvider
 {
-
     /**
      * Register the service provider.
      *
@@ -19,7 +19,6 @@ class HtmlServiceProvider extends \Illuminate\Html\HtmlServiceProvider
         $this->app->alias('form', \KodiCMS\Support\Html\FormBuilder::class);
     }
 
-
     /**
      * Register the HTML builder instance.
      *
@@ -31,7 +30,6 @@ class HtmlServiceProvider extends \Illuminate\Html\HtmlServiceProvider
             return new HtmlBuilder($app['url']);
         });
     }
-
 
     /**
      * Register the form builder instance.

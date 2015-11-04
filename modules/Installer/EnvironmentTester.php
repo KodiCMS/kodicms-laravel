@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Installer;
 
 class EnvironmentTester
 {
-
     const KEY_HAS_ERROR = 0;
     const KEY_REQUIRED_TEST = 1;
     const KEY_OPTIONAL_TEST = 2;
@@ -20,7 +20,6 @@ class EnvironmentTester
      */
     protected $tests = [];
 
-
     /**
      * @return array
      */
@@ -34,7 +33,6 @@ class EnvironmentTester
         return $this->runTests();
     }
 
-
     /**
      * @param string $testName
      * @param array  $testData
@@ -47,7 +45,6 @@ class EnvironmentTester
 
         return $this;
     }
-
 
     /**
      * @return array
@@ -95,14 +92,12 @@ class EnvironmentTester
         return $result;
     }
 
-
     protected function buildExtendedTests()
     {
         foreach ($this->customTests as $key => $data) {
             $this->tests[$key] = $data;
         }
     }
-
 
     /**
      * @return array
@@ -122,11 +117,10 @@ class EnvironmentTester
         }
     }
 
-
     /**
      * @param $test
      *
-     * @return boolean
+     * @return bool
      */
     protected function runTest($test)
     {
@@ -140,6 +134,7 @@ class EnvironmentTester
     /***********************************************************************************
      * Tests
      ***********************************************************************************/
+
     /**
      * @return array
      */
@@ -155,13 +150,12 @@ class EnvironmentTester
         ];
     }
 
-
     /**
      * @return array
      */
     public function testCacheStorage()
     {
-        $storagePath = base_path('storage' . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR . 'cache');
+        $storagePath = base_path('storage'.DIRECTORY_SEPARATOR.'framework'.DIRECTORY_SEPARATOR.'cache');
 
         return [
             'title'           => 'Cache storage',
@@ -173,13 +167,12 @@ class EnvironmentTester
         ];
     }
 
-
     /**
      * @return array
      */
     public function testSessionsStorage()
     {
-        $storagePath = base_path('storage' . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR . 'sessions');
+        $storagePath = base_path('storage'.DIRECTORY_SEPARATOR.'framework'.DIRECTORY_SEPARATOR.'sessions');
 
         return [
             'title'           => 'Sessions storage',
@@ -191,13 +184,12 @@ class EnvironmentTester
         ];
     }
 
-
     /**
      * @return array
      */
     public function testViewsStorage()
     {
-        $storagePath = base_path('storage' . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR . 'views');
+        $storagePath = base_path('storage'.DIRECTORY_SEPARATOR.'framework'.DIRECTORY_SEPARATOR.'views');
 
         return [
             'title'           => 'Views storage',
@@ -209,13 +201,12 @@ class EnvironmentTester
         ];
     }
 
-
     /**
      * @return array
      */
     public function testLogsStorage()
     {
-        $storagePath = base_path('storage' . DIRECTORY_SEPARATOR . 'logs');
+        $storagePath = base_path('storage'.DIRECTORY_SEPARATOR.'logs');
 
         return [
             'title'           => 'Logs storage',
@@ -227,13 +218,12 @@ class EnvironmentTester
         ];
     }
 
-
     /**
      * @return array
      */
     public function testBootstrapCache()
     {
-        $storagePath = base_path('bootstrap' . DIRECTORY_SEPARATOR . 'cache');
+        $storagePath = base_path('bootstrap'.DIRECTORY_SEPARATOR.'cache');
 
         return [
             'title'           => 'Bootstrap cache',
@@ -244,7 +234,6 @@ class EnvironmentTester
             'success_message' => $storagePath,
         ];
     }
-
 
     /**
      * @return array
@@ -261,7 +250,6 @@ class EnvironmentTester
         ];
     }
 
-
     /**
      * @return array
      */
@@ -276,7 +264,6 @@ class EnvironmentTester
             'success_message' => trans('installer::core.tests.messages.pass'),
         ];
     }
-
 
     /**
      * @return array

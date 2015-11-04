@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Cron\Providers;
 
 use App;
@@ -25,9 +26,7 @@ class ModuleServiceProvider extends ServiceProvider
             $agents = Job::agents();
             echo view('cron::cron.settings', compact('agents'));
         });
-
     }
-
 
     public function boot()
     {

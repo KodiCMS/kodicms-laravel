@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Traits;
 
 use KodiCMS\Datasource\Contracts\SectionInterface;
@@ -6,12 +7,10 @@ use KodiCMS\Datasource\Repository\SectionRepository;
 
 trait WidgetDatasource
 {
-
     /**
      * @var SectionInterface|null
      */
     protected $section;
-
 
     /**
      * @param SectionRepository $repository
@@ -21,7 +20,6 @@ trait WidgetDatasource
         $this->sectionRepository = $repository;
     }
 
-
     /**
      * @return array
      */
@@ -29,7 +27,6 @@ trait WidgetDatasource
     {
         return [];
     }
-
 
     /**
      * @return bool
@@ -39,15 +36,13 @@ trait WidgetDatasource
         return $this->getSectionId() > 0;
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getSectionId()
     {
         return (int) $this->section_id;
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Model|SectionInterface|null

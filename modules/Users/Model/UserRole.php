@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Users\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
 class UserRole extends Model
 {
-
     /**
      * The database table used by the model.
      *
@@ -37,7 +37,6 @@ class UserRole extends Model
      */
     protected $fillable = ['name', 'description'];
 
-
     /**
      * @param string $name
      */
@@ -46,16 +45,14 @@ class UserRole extends Model
         $this->attributes['name'] = str_slug($name);
     }
 
-
     /**
-     * Получение прав для роли
+     * Получение прав для роли.
      * @return array
      */
     public function permissions()
     {
         return $this->hasMany(RolePermission::class, 'role_id');
     }
-
 
     public function attachPermissions(array $permissionsList = [])
     {
@@ -74,9 +71,7 @@ class UserRole extends Model
         return $this;
     }
 
-
     /**
-     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function users()

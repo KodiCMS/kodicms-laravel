@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Repository;
 
 use KodiCMS\Pages\Model\PagePart;
@@ -6,7 +7,6 @@ use KodiCMS\CMS\Repository\BaseRepository;
 
 class PagePartRepository extends BaseRepository
 {
-
     /**
      * @param PagePart $model
      */
@@ -14,7 +14,6 @@ class PagePartRepository extends BaseRepository
     {
         parent::__construct($model);
     }
-
 
     /**
      * @param $pageId
@@ -25,7 +24,6 @@ class PagePartRepository extends BaseRepository
     {
         return $this->model->where('page_id', (int) $pageId)->get();
     }
-
 
     /**
      * @param array $data

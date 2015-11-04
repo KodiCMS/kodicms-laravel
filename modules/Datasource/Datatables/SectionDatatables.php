@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Datatables;
 
 use KodiCMS\Datasource\Contracts\DocumentInterface;
@@ -6,7 +7,6 @@ use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
 class SectionDatatables extends \yajra\Datatables\Datatables
 {
-
     /**
      * @param DocumentInterface $builder
      *

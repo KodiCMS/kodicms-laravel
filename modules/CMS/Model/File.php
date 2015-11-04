@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Model;
 
 use Date;
@@ -16,7 +17,6 @@ use KodiCMS\CMS\Exceptions\FileValidationException;
 
 class File
 {
-
     public static $ext = '.php';
 
     /**
@@ -59,7 +59,6 @@ class File
      */
     protected $filesSystem;
 
-
     /**
      * @param SplFileObject|string $filename
      * @param string               $basePath
@@ -71,38 +70,37 @@ class File
     {
         $this->filesSystem = app('files');
 
-        if ( ! is_null($basePath)) {
+        if (! is_null($basePath)) {
             $this->basePath = $basePath;
         }
 
         if ($filename instanceof SplFileObject) {
             $this->file = $filename;
-        } else if ($filename instanceof SplFileInfo) {
+        } elseif ($filename instanceof SplFileInfo) {
             $this->file = new SplFileObject($filename->getRealPath());
-        } else if ( ! is_null($filename)) {
-            if (strpos($filename, File::$ext) === false) {
-                $filename .= File::$ext;
+        } elseif (! is_null($filename)) {
+            if (strpos($filename, self::$ext) === false) {
+                $filename .= self::$ext;
             }
 
             if (is_file($filename)) {
                 $this->file = new SplFileObject($filename);
-            } else if (is_file($this->basePath . DIRECTORY_SEPARATOR . $filename)) {
+            } elseif (is_file($this->basePath.DIRECTORY_SEPARATOR.$filename)) {
                 $this->file = new SplFileObject(
-                    $this->basePath . DIRECTORY_SEPARATOR . $filename
+                    $this->basePath.DIRECTORY_SEPARATOR.$filename
                 );
-            } else if ($onlyExists) {
+            } elseif ($onlyExists) {
                 throw new FileModelException("File [{$filename}] not found");
             } else {
                 $this->file = new SplTempFileObject();
                 $this->setName($filename);
             }
-        } else if ($onlyExists) {
+        } elseif ($onlyExists) {
             throw new FileModelException;
         } else {
             $this->file = new SplTempFileObject();
         }
     }
-
 
     /**
      * @return SplFileObject
@@ -112,7 +110,6 @@ class File
         return $this->file;
     }
 
-
     /**
      * @return string
      */
@@ -121,19 +118,17 @@ class File
         return $this->isNew() ? static::$ext : $this->file->getExtension();
     }
 
-
     /**
      * @return string
      */
     public function getName()
     {
         if ($this->isNew()) {
-            return null;
+            return;
         }
 
-        return $filename = str_replace(File::$ext, '', $this->file->getFilename());
+        return $filename = str_replace(self::$ext, '', $this->file->getFilename());
     }
-
 
     /**
      * @return string
@@ -143,19 +138,17 @@ class File
         return str_slug($this->getName());
     }
 
-
     /**
      * @return string
      */
     public function getFilename()
     {
         if ($this->isNew()) {
-            return null;
+            return;
         }
 
         return $this->file->getFilename();
     }
-
 
     /**
      * @return string
@@ -164,7 +157,6 @@ class File
     {
         return $this->file->getRealPath();
     }
-
 
     /**
      * @return string
@@ -176,7 +168,6 @@ class File
         );
     }
 
-
     /**
      * @return string
      */
@@ -186,7 +177,6 @@ class File
             ? $this->basePath
             : $this->file->getPath();
     }
-
 
     /**
      * @return int
@@ -202,19 +192,17 @@ class File
         return Text::bytes($size);
     }
 
-
     /**
      * @return null|string
      */
     public function getContent()
     {
         if ($this->isNew()) {
-            return null;
+            return;
         }
 
         return file_get_contents($this->getRealPath());
     }
-
 
     /**
      * @return string
@@ -224,7 +212,6 @@ class File
         return array_get($this->attributes, 'editor', config('cms.wysiwyg.default_code_editor'));
     }
 
-
     /**
      * @return array
      */
@@ -233,7 +220,6 @@ class File
         return (array) array_get($this->attributes, 'roles', []);
     }
 
-
     /**
      * @return array
      */
@@ -241,7 +227,6 @@ class File
     {
         return $this->attributes;
     }
-
 
     /**
      * @return int
@@ -253,7 +238,6 @@ class File
         );
     }
 
-
     /**
      * @return bool
      */
@@ -261,7 +245,6 @@ class File
     {
         return $this->file instanceof SplTempFileObject;
     }
-
 
     /**
      * @return bool
@@ -271,7 +254,6 @@ class File
         return $this->isNew() and ! $this->isDirReadOnly();
     }
 
-
     /**
      * @return bool
      */
@@ -280,15 +262,13 @@ class File
         return ! $this->isNew() and ! $this->isReadOnly();
     }
 
-
     /**
      * @return bool
      */
     public function isExists()
     {
-        return ! ( $this->file instanceof SplTempFileObject );
+        return ! ($this->file instanceof SplTempFileObject);
     }
-
 
     /**
      * @return bool
@@ -298,7 +278,6 @@ class File
         return ! is_writable($this->getPath());
     }
 
-
     /**
      * @return bool
      */
@@ -306,7 +285,6 @@ class File
     {
         return (bool) $this->readOnly || ! $this->file->isWritable();
     }
-
 
     /**
      * @param null|string $key
@@ -316,10 +294,9 @@ class File
     public function isChanged($key = null)
     {
         return is_null($key)
-            ? ! empty( $this->changed )
+            ? ! empty($this->changed)
             : array_key_exists($key, $this->changed);
     }
-
 
     /**
      * @return void
@@ -328,7 +305,6 @@ class File
     {
         $this->isReadOnly = true;
     }
-
 
     /**
      * @param string $name
@@ -340,7 +316,6 @@ class File
         $this->attributes['editor'] = $name;
     }
 
-
     /**
      * @param array $roles
      *
@@ -350,7 +325,6 @@ class File
     {
         $this->attributes['roles'] = $roles;
     }
-
 
     /**
      * @param string $name
@@ -366,7 +340,6 @@ class File
         return $this;
     }
 
-
     /**
      * @param string $content
      *
@@ -381,7 +354,6 @@ class File
         return $this;
     }
 
-
     /**
      * @param array|null $settings
      *
@@ -389,11 +361,10 @@ class File
      */
     public function setSettings(array $settings = null)
     {
-        if ( ! is_null($settings)) {
+        if (! is_null($settings)) {
             $this->attributes = $settings;
         }
     }
-
 
     /**
      * @return bool
@@ -403,24 +374,22 @@ class File
         return @unlink($this->getRealPath());
     }
 
-
     /**
      * @return bool
      * @throws FileValidationException
      */
     public function validator()
     {
-        if (isset( $this->changed['name'] )) {
+        if (isset($this->changed['name'])) {
             $filename = $this->changed['name'];
         } else {
             $filename = $this->getFilename();
         }
 
-        $validator = Validator::make(['name' => str_replace(File::$ext, '', $filename)], ['name' => 'required']);
+        $validator = Validator::make(['name' => str_replace(self::$ext, '', $filename)], ['name' => 'required']);
 
         return $validator;
     }
-
 
     /**
      * @param array $data
@@ -430,7 +399,7 @@ class File
     public function fill(array $data = [])
     {
         foreach ($data as $key => $value) {
-            $method = 'set' . camel_case($key);
+            $method = 'set'.camel_case($key);
             if (method_exists($this, $method)) {
                 $this->{$method}($value);
             } else {
@@ -440,7 +409,6 @@ class File
 
         return $this;
     }
-
 
     /**
      * @return bool
@@ -455,15 +423,15 @@ class File
         $status = true;
 
         if ($this->isNew()) {
-            $newFilename = normalize_path($this->basePath . DIRECTORY_SEPARATOR . $this->changed['name']);
-            $status      = touch($newFilename) !== false;
+            $newFilename = normalize_path($this->basePath.DIRECTORY_SEPARATOR.$this->changed['name']);
+            $status = touch($newFilename) !== false;
 
             if ($status) {
                 chmod($newFilename, 0777);
                 $this->file = new SplFileObject($newFilename);
             }
-        } else if ($this->isChanged('name')) {
-            $newFilename = normalize_path($this->getPath() . '/' . $this->changed['name']);
+        } elseif ($this->isChanged('name')) {
+            $newFilename = normalize_path($this->getPath().'/'.$this->changed['name']);
 
             if ($newFilename != $this->getRealPath()) {
                 $status = @$this->filesSystem->move($this->getRealPath(), $newFilename);
@@ -483,7 +451,6 @@ class File
         return $status;
     }
 
-
     /**
      * @param $key
      *
@@ -491,12 +458,11 @@ class File
      */
     public function __get($key)
     {
-        $method = 'get' . ucfirst($key);
+        $method = 'get'.ucfirst($key);
         if (method_exists($this, $method)) {
             return $this->{$method}();
         }
     }
-
 
     /**
      * @param $key
@@ -505,11 +471,10 @@ class File
      */
     public function __isset($key)
     {
-        $method = 'get' . ucfirst($key);
+        $method = 'get'.ucfirst($key);
 
         return method_exists($this, $method);
     }
-
 
     /**
      * @return array
@@ -526,7 +491,6 @@ class File
         ];
     }
 
-
     /**
      * @param array $parameters
      *
@@ -537,28 +501,25 @@ class File
         return view()->file($this->getRealPath())->with($parameters);
     }
 
-
     /**
-     *
      * @param string $filename
      *
      * @return string
      */
     public function filterName($filename)
     {
-        $filename = str_replace(File::$ext, '', $filename);
+        $filename = str_replace(self::$ext, '', $filename);
         $filename = preg_replace('/[^a-zA-Z0-9\-\_\.]/', '-', strtolower($filename));
         foreach (['-', '_', '\.'] as $separator) {
-            $filename = preg_replace('/' . $separator . '+/', trim($separator, '\\'), $filename);
+            $filename = preg_replace('/'.$separator.'+/', trim($separator, '\\'), $filename);
         }
 
-        if (strpos($filename, File::$ext) === false) {
-            $filename .= File::$ext;
+        if (strpos($filename, self::$ext) === false) {
+            $filename .= self::$ext;
         }
 
         return $filename;
     }
-
 
     /**
      * @return string

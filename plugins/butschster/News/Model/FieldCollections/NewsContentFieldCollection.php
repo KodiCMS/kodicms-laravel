@@ -1,4 +1,5 @@
 <?php
+
 namespace Plugins\butschster\News\Model\FieldCollections;
 
 use KodiCMS\Support\Model\Fields\WYSIWYGField;
@@ -6,7 +7,6 @@ use KodiCMS\Support\Model\Contracts\ModelFieldsInterface;
 
 class NewsContentFieldCollection implements ModelFieldsInterface
 {
-
     /**
      * @return array
      */

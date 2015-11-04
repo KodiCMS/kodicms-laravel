@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Support\Html;
 
 class FormBuilder extends \Illuminate\Html\FormBuilder
 {
-
     /**
      * @param string    $name
      * @param int       $value
