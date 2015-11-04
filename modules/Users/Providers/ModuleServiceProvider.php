@@ -4,8 +4,10 @@ namespace KodiCMS\Users\Providers;
 
 use Event;
 use KodiCMS\Users\Model\User;
+use KodiCMS\Support\Facades\ACL;
 use KodiCMS\Users\Model\UserRole;
 use KodiCMS\Support\ServiceProvider;
+use KodiCMS\Support\Facades\Reflinks;
 use KodiCMS\Users\Observers\RoleObserver;
 use KodiCMS\Users\Observers\UserObserver;
 use KodiCMS\Users\Reflinks\ReflinksBroker;
@@ -31,8 +33,8 @@ class ModuleServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerAliases([
-            'ACL'      => \KodiCMS\Support\Facades\ACL::class,
-            'Reflinks' => \KodiCMS\Support\Facades\Reflinks::class,
+            'ACL'      => ACL::class,
+            'Reflinks' => Reflinks::class,
         ]);
 
         $this->registerReflinksBroker();
