@@ -17,6 +17,9 @@ use KodiCMS\CMS\Exceptions\FileValidationException;
 
 class File
 {
+    /**
+     * @var string
+     */
     public static $ext = '.php';
 
     /**
@@ -47,7 +50,12 @@ class File
     /**
      * @var array
      */
-    protected $attributes = ['roles' => ['administrator', 'developer'], 'editor' => 'ace'];
+    protected $attributes = [
+        'roles' => [
+            'administrator', 'developer',
+        ],
+        'editor' => 'ace',
+    ];
 
     /**
      * @var array
