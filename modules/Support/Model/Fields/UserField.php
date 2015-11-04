@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Support\Model\Fields;
 
 use KodiCMS\Users\Model\User;
 
 class UserField extends RelatedField
 {
-
     /**
      * @var string
      */
@@ -15,7 +15,6 @@ class UserField extends RelatedField
      * @var string
      */
     protected $valueField = 'username';
-
 
     /**
      * @param string $key

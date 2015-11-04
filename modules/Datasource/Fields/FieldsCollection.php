@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields;
 
 use Illuminate\Contracts\Support\Arrayable;
@@ -12,7 +13,6 @@ use KodiCMS\Datasource\Model\FieldGroup;
 
 class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countable, \ArrayAccess, \IteratorAggregate
 {
-
     /**
      * @var array
      */
@@ -33,7 +33,6 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
      */
     protected $section;
 
-
     /**
      * @param Collection|array $fields
      */
@@ -42,7 +41,7 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
         foreach ($fields as $field) {
             if ($field instanceof FieldInterface) {
                 $this->add($field);
-            } else if ($field instanceof FieldGroupInterface) {
+            } elseif ($field instanceof FieldGroupInterface) {
                 foreach ($field->getFields() as $groupField) {
                     $this->add($groupField);
                 }
@@ -50,9 +49,8 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
         }
     }
 
-
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return FieldInterface|null
      */
@@ -60,7 +58,6 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
     {
         return array_get($this->fieldIds, $id);
     }
-
 
     /**
      * @param string $type
@@ -78,7 +75,6 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
         }));
     }
 
-
     /**
      * @param string $key
      *
@@ -89,7 +85,6 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
         return array_get($this->fields, $key);
     }
 
-
     /**
      * @return array
      */
@@ -97,7 +92,6 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
     {
         return array_keys($this->fieldIds);
     }
-
 
     /**
      * @return array
@@ -107,7 +101,6 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
         return array_keys($this->getFields());
     }
 
-
     /**
      * @return array
      */
@@ -116,7 +109,6 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
         return $this->fieldNames;
     }
 
-
     /**
      * @return array
      */
@@ -124,7 +116,6 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
     {
         return $this->fields;
     }
-
 
     /**
      * @return array
@@ -148,7 +139,6 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
         return $groups->add($defaultGroup);
     }
 
-
     /**
      * @param array| string $keys
      *
@@ -156,13 +146,12 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
      */
     public function getOnly($keys)
     {
-        if ( ! is_array($keys)) {
+        if (! is_array($keys)) {
             $keys = func_get_args();
         }
 
         return array_only($this->fields, $keys);
     }
-
 
     /**
      * @return array
@@ -174,7 +163,6 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
         }), $this->section);
     }
 
-
     /**
      * @param FieldInterface $field
      *
@@ -182,13 +170,12 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
      */
     public function add(FieldInterface $field)
     {
-        $this->fields[$field->getDBKey()]     = $field;
-        $this->fieldIds[$field->getId()]      = $field;
+        $this->fields[$field->getDBKey()] = $field;
+        $this->fieldIds[$field->getId()] = $field;
         $this->fieldNames[$field->getDBKey()] = $field->getName();
 
         return $this;
     }
-
 
     /**
      * Get the instance as an array.
@@ -200,36 +187,31 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
         return $this->getFields();
     }
 
-
     /**
-     * @return  integer
+     * @return  int
      */
     public function count()
     {
         return count($this->getFields());
     }
 
-
     public function rewind()
     {
         reset($this->fields);
     }
-
 
     public function current()
     {
         return current($this->fields);
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function key()
     {
         return key($this->fields);
     }
-
 
     /**
      * @return Item
@@ -239,15 +221,13 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
         return next($this->fields);
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function valid()
     {
-        return ( ! is_null($key = key($this->fields)) and $key !== false );
+        return (! is_null($key = key($this->fields)) and $key !== false);
     }
-
 
     /**
      * @param string $key
@@ -256,9 +236,8 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
      */
     public function __isset($key)
     {
-        return isset( $this->fields[$key] );
+        return isset($this->fields[$key]);
     }
-
 
     /**
      * @param string $key
@@ -270,26 +249,24 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
         return $this->getByKey($key);
     }
 
-
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Whether a offset exists
+     * Whether a offset exists.
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
      *
      * @param mixed $key <p>
      *                   An offset to check for.
      *                   </p>
      *
-     * @return boolean true on success or false on failure.
+     * @return bool true on success or false on failure.
      * </p>
      * <p>
      * The return value will be casted to boolean if non-boolean was returned.
      */
     public function offsetExists($key)
     {
-        return isset( $this->fields[$key] );
+        return isset($this->fields[$key]);
     }
-
 
     /**
      * @param string $key
@@ -301,7 +278,6 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
         return $this->getByKey($key);
     }
 
-
     /**
      * @param string $key
      *
@@ -312,7 +288,6 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
         // TODO: Implement offsetSet() method.
     }
 
-
     /**
      * @param string $key
      *
@@ -322,7 +297,6 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
     {
         // TODO: Implement offsetUnset() method.
     }
-
 
     /**
      * @return \ArrayIterator

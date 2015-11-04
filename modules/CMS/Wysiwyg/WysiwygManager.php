@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Wysiwyg;
 
 use KodiCMS\CMS\Exceptions\WysiwygException;
@@ -6,7 +7,6 @@ use Illuminate\Contracts\Foundation\Application;
 
 class WysiwygManager
 {
-
     const TYPE_HTML = 'html';
     const TYPE_CODE = 'code';
 
@@ -21,22 +21,20 @@ class WysiwygManager
     protected $config;
 
     /**
-     * Available wysiwyg editors
+     * Available wysiwyg editors.
      *
      * @var array
      */
     protected $available = [];
-
 
     /**
      * @param Application $app
      */
     public function __construct(Application $app)
     {
-        $this->app    = $app;
+        $this->app = $app;
         $this->config = $this->app['config'];
     }
-
 
     /**
      * @return string|null
@@ -46,7 +44,6 @@ class WysiwygManager
         return $this->config['cms.default_html_editor'];
     }
 
-
     /**
      * @return string|null
      */
@@ -55,9 +52,8 @@ class WysiwygManager
         return $this->config['cms.default_code_editor'];
     }
 
-
     /**
-     * Return TYPE_CODE constant
+     * Return TYPE_CODE constant.
      *
      * @return string
      */
@@ -66,9 +62,8 @@ class WysiwygManager
         return static::TYPE_CODE;
     }
 
-
     /**
-     * Return TYPE_HTML constant
+     * Return TYPE_HTML constant.
      *
      * @return string
      */
@@ -77,7 +72,6 @@ class WysiwygManager
         return static::TYPE_HTML;
     }
 
-
     /**
      * @param $editorId
      *
@@ -85,9 +79,8 @@ class WysiwygManager
      */
     public function isExists($editorId)
     {
-        return isset( $this->available[$editorId] );
+        return isset($this->available[$editorId]);
     }
-
 
     /**
      * @param string $editorId
@@ -96,16 +89,15 @@ class WysiwygManager
      */
     public function isLoaded($editorId)
     {
-        if ( ! is_null($editor = $this->getEditor($editorId))) {
+        if (! is_null($editor = $this->getEditor($editorId))) {
             return $editor->isUsed();
         }
 
         return false;
     }
 
-
     /**
-     * Список используемых редакторов на странице
+     * Список используемых редакторов на странице.
      *
      * @return array
      */
@@ -120,7 +112,6 @@ class WysiwygManager
 
         return $editors;
     }
-
 
     /**
      * @param string      $editorId
@@ -138,9 +129,8 @@ class WysiwygManager
         return $this;
     }
 
-
     /**
-     * Получения списка доступных редакторов в системе
+     * Получения списка доступных редакторов в системе.
      * @return array
      */
     public function getAvailable()
@@ -148,9 +138,8 @@ class WysiwygManager
         return $this->available;
     }
 
-
     /**
-     * Получения списка доступных редакторов определенного типа
+     * Получения списка доступных редакторов определенного типа.
      *
      * @param string $type
      *
@@ -169,9 +158,8 @@ class WysiwygManager
         return $editors;
     }
 
-
     /**
-     * Получение объекта редактора
+     * Получение объекта редактора.
      *
      * @param $editorId
      *
@@ -182,7 +170,6 @@ class WysiwygManager
         return array_get($this->getAvailable(), $editorId, new WysiwygEditor('dummy'));
     }
 
-
     /**
      * @return WysiwygEditor
      */
@@ -190,7 +177,6 @@ class WysiwygManager
     {
         return $this->getEditor($this->getDefaultHTMLEditorId());
     }
-
 
     /**
      * @return WysiwygEditor
@@ -200,9 +186,8 @@ class WysiwygManager
         return $this->getEditor($this->getDefaultCodeEditorId());
     }
 
-
     /**
-     * Загрузить в шаблон все редакторы
+     * Загрузить в шаблон все редакторы.
      */
     public function loadAllEditors()
     {
@@ -211,9 +196,8 @@ class WysiwygManager
         }
     }
 
-
     /**
-     * Загрузить в шаблон редакторы кода
+     * Загрузить в шаблон редакторы кода.
      */
     public function loadCodeEditors()
     {
@@ -222,9 +206,8 @@ class WysiwygManager
         }
     }
 
-
     /**
-     * Загрузить в шаблон редакторы текса
+     * Загрузить в шаблон редакторы текса.
      */
     public function loadHTMLEditors()
     {
@@ -233,27 +216,24 @@ class WysiwygManager
         }
     }
 
-
     /**
-     * Загрузить в шаблон редактор текста по умолчанию
+     * Загрузить в шаблон редактор текста по умолчанию.
      */
     public function loadDefaultHTMLEditor()
     {
         $this->loadEditor($this->getDefaultHTMLEditorId());
     }
 
-
     /**
-     * Загрузить в шаблон редактор кода по умолчанию
+     * Загрузить в шаблон редактор кода по умолчанию.
      */
     public function loadDefaultCodeEditor()
     {
         $this->loadEditor($this->getDefaultCodeEditorId());
     }
 
-
     /**
-     * Загрузить в шаблон редакторы по умолчанию
+     * Загрузить в шаблон редакторы по умолчанию.
      */
     public function loadDefaultEditors()
     {
@@ -261,9 +241,8 @@ class WysiwygManager
         $this->loadDefaultCodeEditor();
     }
 
-
     /**
-     * Загрузить редактор в шаблон по идентификатору
+     * Загрузить редактор в шаблон по идентификатору.
      *
      * @param string $editorId
      *
@@ -275,7 +254,7 @@ class WysiwygManager
             return false;
         }
 
-        if ( ! is_null($editor = $this->getEditor($editorId))) {
+        if (! is_null($editor = $this->getEditor($editorId))) {
             if ($editor->isUsed()) {
                 return true;
             }
@@ -286,9 +265,8 @@ class WysiwygManager
         return false;
     }
 
-
     /**
-     * Применить фильтр используемый редактором к тексту
+     * Применить фильтр используемый редактором к тексту.
      *
      * @param string $editorId
      * @param string $text
@@ -298,16 +276,15 @@ class WysiwygManager
      */
     public function applyFilter($editorId, $text)
     {
-        if ( ! is_null($editor = $this->getEditor($editorId))) {
+        if (! is_null($editor = $this->getEditor($editorId))) {
             return $editor->applyFilter($text);
         }
 
         throw new WysiwygException("Editor [{$editorId}] not found");
     }
 
-
     /**
-     * Получение списка редакторов для выпадающего списка
+     * Получение списка редакторов для выпадающего списка.
      *
      * @param string $type
      *
@@ -322,9 +299,8 @@ class WysiwygManager
         return $this->makeHTMLselect($editors);
     }
 
-
     /**
-     * Получение списка редакторов для выпадающего списка подключенных в шаблон
+     * Получение списка редакторов для выпадающего списка подключенных в шаблон.
      *
      * @return array
      */
@@ -332,7 +308,6 @@ class WysiwygManager
     {
         return $this->makeHTMLselect($this->getUsed());
     }
-
 
     /**
      * @param array $editors

@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Users\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
 class RolePermission extends Model
 {
-
     /**
      * The database table used by the model.
      *
@@ -26,7 +26,6 @@ class RolePermission extends Model
      * @var bool
      */
     public $timestamps = false;
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

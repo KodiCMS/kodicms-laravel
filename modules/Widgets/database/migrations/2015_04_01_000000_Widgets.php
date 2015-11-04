@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class Widgets extends Migration
 {
-
     public function up()
     {
         Schema::create('widgets', function (Blueprint $table) {
@@ -22,7 +21,6 @@ class Widgets extends Migration
             $table->json('settings');
         });
     }
-
 
     public function down()
     {

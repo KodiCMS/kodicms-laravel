@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Providers;
 
 use Blade;
@@ -21,7 +22,6 @@ use KodiCMS\CMS\Console\Commands\GenerateScriptTranslatesCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         $this->registerAliases([
@@ -40,9 +40,7 @@ class ModuleServiceProvider extends ServiceProvider
             ModulePublishCommand::class,
             WysiwygListCommand::class,
         ]);
-
     }
-
 
     public function boot()
     {
@@ -60,10 +58,10 @@ class ModuleServiceProvider extends ServiceProvider
     protected function registerCacheDrivers()
     {
         Cache::extend('sqlite', function ($app, $config) {
-            $connectionName   = array_get($config, 'connection');
-            $connectionConfig = config('database.connections.' . $connectionName);
+            $connectionName = array_get($config, 'connection');
+            $connectionConfig = config('database.connections.'.$connectionName);
 
-            if ( ! file_exists($connectionConfig['database'])) {
+            if (! file_exists($connectionConfig['database'])) {
                 touch($connectionConfig['database']);
             }
 

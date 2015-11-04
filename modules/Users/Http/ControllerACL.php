@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Users\Http;
 
 use KodiCMS\CMS\Contracts\ControllerACLInterface;
 
 class ControllerACL implements ControllerACLInterface
 {
-
     /**
      * @var array
      */
@@ -26,7 +26,6 @@ class ControllerACL implements ControllerACLInterface
      */
     protected $loginPath;
 
-
     /**
      * @param string $path
      */
@@ -35,7 +34,6 @@ class ControllerACL implements ControllerACLInterface
         $this->loginPath = $path;
     }
 
-
     /**
      * @param string $action
      */
@@ -43,7 +41,6 @@ class ControllerACL implements ControllerACLInterface
     {
         $this->action = $action;
     }
-
 
     /**
      * @param array $permissions
@@ -59,9 +56,8 @@ class ControllerACL implements ControllerACLInterface
         return $this;
     }
 
-
     /**
-     * Add the item to the permissions list if it does not already exist in the permissions
+     * Add the item to the permissions list if it does not already exist in the permissions.
      *
      * @param string $action
      * @param string $permission
@@ -77,7 +73,6 @@ class ControllerACL implements ControllerACLInterface
         return $this;
     }
 
-
     /**
      * @param string $action
      * @param string $permission
@@ -90,7 +85,6 @@ class ControllerACL implements ControllerACLInterface
 
         return $this;
     }
-
 
     /**
      * @param array $actions
@@ -106,7 +100,6 @@ class ControllerACL implements ControllerACLInterface
         return $this;
     }
 
-
     /**
      * @param string $action
      *
@@ -119,22 +112,20 @@ class ControllerACL implements ControllerACLInterface
         return $this;
     }
 
-
     /**
-     * Проверка прав текущего пользователя
+     * Проверка прав текущего пользователя.
      * @return Response
      */
     public function checkPermissions()
     {
         $currentPermission = array_get($this->permissions, $this->action);
 
-        if ( ! in_array($this->action, $this->allowedActions) and ! is_null($currentPermission) and ! acl_check($currentPermission)) {
+        if (! in_array($this->action, $this->allowedActions) and ! is_null($currentPermission) and ! acl_check($currentPermission)) {
             return $this->denyAccess(trans('users::core.messages.auth.no_permissions'));
         }
 
         return true;
     }
-
 
     /**
      * @param string|array|null $message

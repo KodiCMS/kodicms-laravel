@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Primitive;
 
 use KodiCMS\Datasource\Fields\Primitive;
@@ -6,12 +7,10 @@ use Illuminate\Database\Schema\Blueprint;
 
 class Slug extends Primitive
 {
-
     /**
      * @var bool
      */
     protected $canBeUsedAsDocumentID = true;
-
 
     /**
      * @return array
@@ -20,7 +19,6 @@ class Slug extends Primitive
     {
         return ['from_document_title', 'is_unique'];
     }
-
 
     /**
      * @return array
@@ -35,7 +33,6 @@ class Slug extends Primitive
         ];
     }
 
-
     /**
      * @return bool
      */
@@ -44,7 +41,6 @@ class Slug extends Primitive
         return (bool) $this->getSetting('from_document_title');
     }
 
-
     /**
      * @return string
      */
@@ -52,7 +48,6 @@ class Slug extends Primitive
     {
         return $this->getSetting('separator');
     }
-
 
     /**
      * @param Blueprint $table

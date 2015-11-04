@@ -7,7 +7,6 @@ use KodiCMS\CMS\Contracts\WysiwygFilterInterface;
 
 class WysiwygDummyFilter implements WysiwygFilterInterface
 {
-
     /**
      * @param string $text
      *

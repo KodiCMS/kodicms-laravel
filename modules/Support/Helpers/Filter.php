@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Support\Helpers;
 
 use ArrayAccess;
@@ -6,7 +7,6 @@ use KodiCMS\CMS\Exceptions\Exception;
 
 class Filter implements ArrayAccess
 {
-
     /**
      * Creates a new Filter instance.
      *
@@ -20,21 +20,19 @@ class Filter implements ArrayAccess
         return new static($array, $rules);
     }
 
-
     /**
-     * Array to filter
+     * Array to filter.
      *
      * @var array
      */
     protected $filterArray = [];
 
     /**
-     * Field rules
+     * Field rules.
      *
      * @var array
      */
     protected $rules = [];
-
 
     /**
      * Sets the unique "any field" key and creates an ArrayObject from the
@@ -47,13 +45,12 @@ class Filter implements ArrayAccess
     {
         $this->filterArray = $array;
 
-        if ( ! empty( $rules )) {
+        if (! empty($rules)) {
             foreach ($rules as $field => $data) {
                 $this->addRules($field, $data);
             }
         }
     }
-
 
     /**
      * Returns the array of data to be filter.
@@ -65,7 +62,6 @@ class Filter implements ArrayAccess
         return $this->filterArray;
     }
 
-
     /**
      * @param   string   $field   field name
      * @param   callback $rule    valid PHP callback or closure
@@ -75,7 +71,7 @@ class Filter implements ArrayAccess
      */
     public function addRule($field, $rule, $default = null)
     {
-        if ( ! is_bool($rule) and ! is_null($rule)) {
+        if (! is_bool($rule) and ! is_null($rule)) {
             // Store the rule and params for this rule
             $this->rules[$field]['rules'][] = $rule;
         }
@@ -84,7 +80,6 @@ class Filter implements ArrayAccess
 
         return $this;
     }
-
 
     /**
      * Add rules using an array.
@@ -103,23 +98,22 @@ class Filter implements ArrayAccess
         return $this;
     }
 
-
     /**
-     * Filters a values
+     * Filters a values.
      */
     public function filter()
     {
         $rules = $this->rules;
 
         // Get the filters for this column
-        $wildcards = empty( $rules[true] ) ? [] : $rules[true];
+        $wildcards = empty($rules[true]) ? [] : $rules[true];
 
         foreach ($rules as $field => $data) {
-            $data['rules'] = empty( $data['rules'] ) ? $wildcards : array_merge($wildcards, $data['rules']);
+            $data['rules'] = empty($data['rules']) ? $wildcards : array_merge($wildcards, $data['rules']);
 
             if ($this->offsetExists($field)) {
                 $value = $this->offsetGet($field);
-            } elseif ( ! $this->offsetExists($field) and ! empty( $data['default'] )) {
+            } elseif (! $this->offsetExists($field) and ! empty($data['default'])) {
                 array_set($this->filterArray, $field, $data['default']);
                 continue;
             }
@@ -131,9 +125,7 @@ class Filter implements ArrayAccess
         return $this;
     }
 
-
     /**
-     *
      * @param string $field
      * @param mixed  $value
      * @param array  $rules
@@ -142,18 +134,18 @@ class Filter implements ArrayAccess
      */
     public function filterFieldValue($field, $value, array $rules = null)
     {
-        if (empty( $rules )) {
-            $rules = array_get($this->rules, $field . '.rules', []);
+        if (empty($rules)) {
+            $rules = array_get($this->rules, $field.'.rules', []);
         }
 
         // Bind the field name and model so they can be used in the filter method
-        $_bound = [':field' => $field, ':filter' => $this,];
+        $_bound = [':field' => $field, ':filter' => $this];
 
         foreach ($rules as $filter) {
             // Value needs to be bound inside the loop so we are always using the
             // version that was modified by the filters that already ran
             $_bound[':value'] = $value;
-            $params           = [':value'];
+            $params = [':value'];
 
             foreach ($params as $key => $param) {
                 if (is_string($param) and array_key_exists($param, $_bound)) {
@@ -167,7 +159,6 @@ class Filter implements ArrayAccess
 
         return $value;
     }
-
 
     /**
      * Throws an exception because Filter is read-only.
@@ -185,7 +176,6 @@ class Filter implements ArrayAccess
         array_set($this->filterArray, $offset, $value);
     }
 
-
     /**
      * Checks if key is set in array data.
      * Implements ArrayAccess method.
@@ -198,7 +188,6 @@ class Filter implements ArrayAccess
     {
         return array_get($this->filterArray, $offset, '!isset') != '!isset';
     }
-
 
     /**
      * Throws an exception because Filter is read-only.
@@ -214,7 +203,6 @@ class Filter implements ArrayAccess
     {
         throw new Exception('Filter objects are read-only.');
     }
-
 
     /**
      * Gets a value from the array data.

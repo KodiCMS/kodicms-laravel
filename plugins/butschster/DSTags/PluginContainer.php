@@ -1,11 +1,11 @@
 <?php
+
 namespace Plugins\butschster\DSTags;
 
 use KodiCMS\Plugins\Loader\BasePluginContainer;
 
 class PluginContainer extends BasePluginContainer
 {
-
     /**
      * @return array
      */

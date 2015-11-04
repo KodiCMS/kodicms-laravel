@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Email\Providers;
 
 use Event;
@@ -8,7 +9,6 @@ use KodiCMS\Email\Console\Commands\QueueCleanCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         $this->registerConsoleCommand([
@@ -29,5 +29,4 @@ class ModuleServiceProvider extends ServiceProvider
             echo view('email::email.settings', compact('drivers'))->render();
         });
     }
-
 }

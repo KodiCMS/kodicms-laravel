@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Support\Loader;
 
 use Profiler;
@@ -6,12 +7,10 @@ use KodiCMS\ModulesLoader\ModulesLoader as BaseModulesLoader;
 
 class ModulesLoader extends BaseModulesLoader
 {
-
     /**
      * @var string
      */
     protected $defaultContainerClass = ModuleContainer::class;
-
 
     /**
      * @param string      $moduleName
@@ -26,7 +25,7 @@ class ModulesLoader extends BaseModulesLoader
         $token = Profiler::start('Modules Loader', $moduleName);
 
         if (is_null($namespace)) {
-            $namespace = 'KodiCMS\\' . $moduleName;
+            $namespace = 'KodiCMS\\'.$moduleName;
         }
 
         parent::addModule($moduleName, $modulePath, $namespace, $moduleContainerClass);

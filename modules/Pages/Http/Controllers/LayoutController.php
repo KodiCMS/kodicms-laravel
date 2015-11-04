@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Http\Controllers;
 
 use KodiCMS\Pages\Model\LayoutCollection;
@@ -6,7 +7,6 @@ use KodiCMS\CMS\Http\Controllers\AbstractFileController;
 
 class LayoutController extends AbstractFileController
 {
-
     /**
      * @var array
      */
@@ -17,7 +17,6 @@ class LayoutController extends AbstractFileController
      */
     protected $collection;
 
-
     /**
      * @return LayoutCollection
      */
@@ -25,7 +24,6 @@ class LayoutController extends AbstractFileController
     {
         return new LayoutCollection();
     }
-
 
     /**
      * @return string

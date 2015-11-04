@@ -1,4 +1,5 @@
 <?php
+
 namespace Plugins\butschster\DSTags;
 
 use KodiCMS\Datasource\FieldGroups\TitleGroup;
@@ -11,7 +12,6 @@ use KodiCMS\Datasource\Sections\SectionHeadlineDatatables;
 
 class Section extends \KodiCMS\Datasource\Model\Section
 {
-
     /**
      * @var string
      */
@@ -22,7 +22,6 @@ class Section extends \KodiCMS\Datasource\Model\Section
      */
     protected $documentTitleKey = 'name';
 
-
     /**
      * @return string
      */
@@ -30,7 +29,6 @@ class Section extends \KodiCMS\Datasource\Model\Section
     {
         return Document::class;
     }
-
 
     /**
      * @return string
@@ -40,7 +38,6 @@ class Section extends \KodiCMS\Datasource\Model\Section
         return SectionHeadlineDatatables::class;
     }
 
-
     /**
      * @return string
      */
@@ -48,7 +45,6 @@ class Section extends \KodiCMS\Datasource\Model\Section
     {
         return SectionToolbar::class;
     }
-
 
     /**
      * @return array

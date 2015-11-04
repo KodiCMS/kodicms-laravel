@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\CMS\Contracts;
 
 interface ModelCreator
 {
-
     /**
      * Get a validator for an incoming registration request.
      *
@@ -13,7 +13,6 @@ interface ModelCreator
      */
     public function validator(array $data);
 
-
     /**
      * Create a new user instance after a valid registration.
      *
@@ -22,5 +21,4 @@ interface ModelCreator
      * @return Model
      */
     public function create(array $data);
-
 }

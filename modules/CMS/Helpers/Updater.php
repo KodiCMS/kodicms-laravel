@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Helpers;
 
 use CMS;
@@ -9,7 +10,6 @@ use KodiCMS\Support\Helpers\Text;
 
 class Updater
 {
-
     const VERSION_NEW = 1;
     const VERSION_OLD = -1;
     const VERSION_CURRENT = 0;
@@ -36,44 +36,40 @@ class Updater
      */
     protected $newsVersion = false;
 
-
     public function __construct()
     {
         $this->repository = config('cms.update.repository');
-        $this->branch     = config('cms.update.branch');
+        $this->branch = config('cms.update.branch');
     }
 
-
     /**
-     * Получение номер версии с удаленного сервера
+     * Получение номер версии с удаленного сервера.
      * @return string
      */
     public function getRemoteVersion()
     {
-        if ( ! $this->remoteVersion) {
+        if (! $this->remoteVersion) {
             $this->checkVersion();
         }
 
         return $this->remoteVersion;
     }
 
-
     /**
      * @return bool
      */
     public function hasNewVersion()
     {
-        if ( ! $this->remoteVersion) {
+        if (! $this->remoteVersion) {
             $this->checkVersion();
         }
 
         return $this->newsVersion;
     }
 
-
     /**
-     * Проверка номера версии в репозитории Github
-     * @return integer
+     * Проверка номера версии в репозитории Github.
+     * @return int
      */
     public function checkVersion()
     {
@@ -89,7 +85,6 @@ class Updater
         return $this->newsVersion = version_compare($this->remoteVersion, CMS::VERSION) == static::VERSION_NEW;
     }
 
-
     /**
      * Проверка файлов на различия, проверяется по размеру файла и наличие файла в ФС
      * @retun array
@@ -101,26 +96,26 @@ class Updater
             $response = $this->request('https://api.github.com/repos/:rep/git/trees/:branch?recursive=true');
             $response = json_decode($response, true);
 
-            $files = ['new_files' => [], 'diff_files' => [], 'third_party_plugins' => [],];
+            $files = ['new_files' => [], 'diff_files' => [], 'third_party_plugins' => []];
 
-            if (isset( $response['tree'] )) {
+            if (isset($response['tree'])) {
                 foreach ($response['tree'] as $row) {
                     $filePath = base_path($row['path']);
 
-                    if ( ! file_exists($filePath)) {
+                    if (! file_exists($filePath)) {
                         $files['new_files'][] = $this->getFileUrlByPath($row['path']);
                         continue;
                     }
 
                     $fileSize = filesize($filePath);
-                    if (isset( $row['size'] ) and $fileSize != $row['size']) {
+                    if (isset($row['size']) and $fileSize != $row['size']) {
                         $diff = $fileSize - $this->countFileLines($filePath) - $row['size'];
 
                         if ($diff > 1 or $diff < -1) {
                             $files['diff_files'][] = [
                                 'diff' => Text::bytes($diff),
                                 'path' => $row['path'],
-                                'url'  => $this->buildRemoteUrl('https://raw.githubusercontent.com/:rep/:branch/' . $row['path']),
+                                'url'  => $this->buildRemoteUrl('https://raw.githubusercontent.com/:rep/:branch/'.$row['path']),
                             ];
                         }
                     }
@@ -133,7 +128,6 @@ class Updater
         return $cachedFiles;
     }
 
-
     /**
      * @return string
      */
@@ -142,7 +136,6 @@ class Updater
         return $this->buildRemoteUrl('https://github.com/:rep/issues/new');
     }
 
-
     /**
      * @param $path
      *
@@ -150,12 +143,11 @@ class Updater
      */
     public function getFileUrlByPath($path)
     {
-        return $this->buildRemoteUrl('https://raw.githubusercontent.com/:rep/:branch/' . $path);
+        return $this->buildRemoteUrl('https://raw.githubusercontent.com/:rep/:branch/'.$path);
     }
 
-
     /**
-     * Ссылка на удаленный репозиторий
+     * Ссылка на удаленный репозиторий.
      *
      * @param string $name
      *
@@ -165,7 +157,6 @@ class Updater
     {
         return HTML::link($this->buildRemoteUrl('https://github.com/:rep/archive/:branch.zip'), $name);
     }
-
 
     /**
      * @param $path
@@ -178,7 +169,6 @@ class Updater
             return $this->request($this->getFileUrlByPath($path));
         });
     }
-
 
     /**
      * @param string $url
@@ -193,7 +183,6 @@ class Updater
         ]);
     }
 
-
     /**
      * @param string $url
      *
@@ -206,9 +195,8 @@ class Updater
         return (string) $response->getBody();
     }
 
-
     /**
-     * Подсчет кол-ва строк в файле
+     * Подсчет кол-ва строк в файле.
      *
      * @param string $filePath
      *
@@ -216,8 +204,8 @@ class Updater
      */
     protected function countFileLines($filePath)
     {
-        $handle = fopen($filePath, "r");
-        $count  = 0;
+        $handle = fopen($filePath, 'r');
+        $count = 0;
         while (fgets($handle)) {
             $count++;
         }

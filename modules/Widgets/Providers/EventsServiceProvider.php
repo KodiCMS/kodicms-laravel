@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Providers;
 
 use PackageManager;
@@ -14,7 +15,6 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as BaseEventSer
 
 class EventsServiceProvider extends BaseEventServiceProvider
 {
-
     /**
      * Register any other events for your application.
      *
@@ -52,7 +52,7 @@ class EventsServiceProvider extends BaseEventServiceProvider
         $events->listen('view.widget.edit', function ($widget) {
             if ($widget->isRenderable()) {
                 $commentKeys = WidgetManager::getTemplateKeysByType($widget->type);
-                $snippets    = (new SnippetCollection())->getHTMLSelectChoices();
+                $snippets = (new SnippetCollection())->getHTMLSelectChoices();
 
                 echo view('widgets::widgets.partials.renderable', compact('widget', 'commentKeys', 'snippets'))->render();
             }
@@ -65,7 +65,7 @@ class EventsServiceProvider extends BaseEventServiceProvider
         $events->listen('view.widget.edit.footer', function ($widget) {
             if ($widget->isRenderable()) {
                 $assetsPackages = PackageManager::getHTMLSelectChoice();
-                $widgetList     = Widget::where('id', '!=', $widget->id)->lists('name', 'id')->all();
+                $widgetList = Widget::where('id', '!=', $widget->id)->lists('name', 'id')->all();
 
                 echo view('widgets::widgets.partials.renderable_buttons', compact(
                     'widget', 'commentKeys', 'snippets', 'assetsPackages', 'widgetList'

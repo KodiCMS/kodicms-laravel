@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Dashboard\Http\Controllers;
 
 use Meta;
@@ -9,7 +10,6 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class DashboardController extends BackendController
 {
-
     public function getIndex()
     {
         Meta::loadPackage('gridster');
@@ -18,14 +18,13 @@ class DashboardController extends BackendController
         $this->setContent('dashboard', compact('widgets'));
     }
 
-
     /**
      * @return \View
      */
     public function getWidgetList()
     {
         $widgetSettings = Dashboard::getSettings();
-        $types          = WidgetManagerDashboard::getAvailableTypes();
+        $types = WidgetManagerDashboard::getAvailableTypes();
 
         $placedWidgetsTypes = [];
         foreach ($widgetSettings as $widget) {
@@ -38,7 +37,7 @@ class DashboardController extends BackendController
 
         foreach ($types as $type => $data) {
             if (array_get($placedWidgetsTypes, $type) === false) {
-                unset( $types[$type] );
+                unset($types[$type]);
             }
         }
 

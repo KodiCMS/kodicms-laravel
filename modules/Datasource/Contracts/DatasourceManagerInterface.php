@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Datasource\Contracts;
 
 interface DatasourceManagerInterface
 {
-
     /**
      * @param string $type
      *
@@ -11,18 +11,15 @@ interface DatasourceManagerInterface
      */
     public function typeExists($type);
 
-
     /**
      * @return array
      */
     public function getAvailableTypes();
 
-
     /**
      * @return array
      */
     public function getAvailableTypesForSelect();
-
 
     /**
      * @param string $key
@@ -32,14 +29,12 @@ interface DatasourceManagerInterface
      */
     public function getFieldTypeBy($key, $value);
 
-
     /**
      * @param string $class
      *
      * @return string|null
      */
     public function getTypeByClassName($class);
-
 
     /**
      * @param string $type

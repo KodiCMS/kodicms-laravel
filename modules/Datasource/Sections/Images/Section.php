@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Sections\Images;
 
 use KodiCMS\Datasource\Fields\File\Image;
@@ -10,12 +11,10 @@ use KodiCMS\Datasource\Fields\Primitive\Timestamp;
 
 class Section extends \KodiCMS\Datasource\Model\Section
 {
-
     /**
      * @var string
      */
     protected $sectionTableName = 'images';
-
 
     /**
      * @return string
@@ -24,7 +23,6 @@ class Section extends \KodiCMS\Datasource\Model\Section
     {
         return Document::class;
     }
-
 
     /**
      * @return array

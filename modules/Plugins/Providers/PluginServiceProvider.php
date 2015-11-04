@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Plugins\Providers;
 
 use KodiCMS\Plugins\Model\Plugin;
@@ -11,7 +12,6 @@ use KodiCMS\Plugins\Console\Commands\PluginDeactivateCommand;
 
 class PluginServiceProvider extends ServiceProvider
 {
-
     /**
      * @param \Illuminate\Contracts\Foundation\Application $app
      */
@@ -23,7 +23,6 @@ class PluginServiceProvider extends ServiceProvider
             return new PluginLoader($app['files'], base_path('plugins'));
         });
     }
-
 
     public function register()
     {

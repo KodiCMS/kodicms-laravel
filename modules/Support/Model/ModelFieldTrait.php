@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Support\Model;
 
 use KodiCMS\Support\Model\Fields\TextField;
@@ -6,12 +7,10 @@ use KodiCMS\Support\Model\Fields\CheckboxField;
 
 trait ModelFieldTrait
 {
-
     /**
      * @var ModelFieldCollection
      */
     protected $fieldCollection = null;
-
 
     /**
      * @param string $name
@@ -28,7 +27,6 @@ trait ModelFieldTrait
         return $field->renderGroup($attributes);
     }
 
-
     /**
      * @param string $name
      * @param array  $attributes
@@ -44,7 +42,6 @@ trait ModelFieldTrait
         return $field->render($attributes);
     }
 
-
     /**
      * @param string      $name
      * @param array       $attributes
@@ -54,11 +51,10 @@ trait ModelFieldTrait
      */
     public function renderFormLabel($name, array $attributes = [], $title = null)
     {
-        if ( ! is_null($field = $this->getField($name))) {
+        if (! is_null($field = $this->getField($name))) {
             return $field->renderLabel($attributes, $title);
         }
     }
-
 
     /**
      * @param string $name
@@ -70,7 +66,6 @@ trait ModelFieldTrait
         return $this->getFieldCollection()->getField($name);
     }
 
-
     /**
      * @return array
      */
@@ -78,7 +73,6 @@ trait ModelFieldTrait
     {
         return $this->getFieldCollection()->getFields();
     }
-
 
     /**
      * @return ModelFieldCollection
@@ -91,7 +85,6 @@ trait ModelFieldTrait
 
         return $this->fieldCollection;
     }
-
 
     /**
      * @param string $key
@@ -129,7 +122,6 @@ trait ModelFieldTrait
         return (new TextField($key))->setModel($this);
     }
 
-
     /**
      * @return array
      */
@@ -137,7 +129,6 @@ trait ModelFieldTrait
     {
         return [];
     }
-
 
     protected function createFormFieldCollection()
     {

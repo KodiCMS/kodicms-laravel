@@ -1,14 +1,13 @@
 <?php
+
 namespace KodiCMS\Datasource\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use KodiCMS\CMS\Exceptions\Exception;
-use KodiCMS\Datasource\Contracts\DatasourceManagerInterface;
 use KodiCMS\Support\Traits\ModelSettings;
 
 class DatasourceModel extends Model
 {
-
     use ModelSettings;
 
     /**
@@ -16,13 +15,12 @@ class DatasourceModel extends Model
      */
     protected $initialized = false;
 
-
     /**
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
     {
-        if (empty( $attributes['type'] )) {
+        if (empty($attributes['type'])) {
             $attributes['type'] = $this->getManagerClass()->getTypeByClassName(get_called_class());
         }
 
@@ -33,7 +31,6 @@ class DatasourceModel extends Model
         }
     }
 
-
     /**
      * @return array
      */
@@ -41,7 +38,6 @@ class DatasourceModel extends Model
     {
         return [];
     }
-
 
     /**
      * @param array $settings
@@ -52,18 +48,16 @@ class DatasourceModel extends Model
         $this->attributes['settings'] = json_encode($this->{$this->getSettingsProperty()});
     }
 
-
     /**
      * @return array
      */
     public function getDirty()
     {
-        $dirty             = parent::getDirty();
+        $dirty = parent::getDirty();
         $dirty['settings'] = json_encode($this->{$this->getSettingsProperty()});
 
         return $dirty;
     }
-
 
     /**
      * @return string
@@ -72,7 +66,6 @@ class DatasourceModel extends Model
     {
         return 'sectionSettings';
     }
-
 
     /**
      * Create a new model instance that is existing.
@@ -92,7 +85,6 @@ class DatasourceModel extends Model
         return $model;
     }
 
-
     /**
      * Save a new model and return the instance.
      *
@@ -108,7 +100,6 @@ class DatasourceModel extends Model
         return $model;
     }
 
-
     /**
      * Create a new instance of the given model.
      *
@@ -119,12 +110,11 @@ class DatasourceModel extends Model
      */
     public function newInstance($attributes = [], $exists = false)
     {
-        $model         = static::getClassInstance((array) $attributes);
+        $model = static::getClassInstance((array) $attributes);
         $model->exists = $exists;
 
         return $model;
     }
-
 
     /**
      * @param array $attributes
@@ -136,15 +126,14 @@ class DatasourceModel extends Model
         // This method just provides a convenient way for us to generate fresh model
         // instances of this current model. It is particularly useful during the
         // hydration of new objects via the Eloquent query builder instances.
-        if (isset( $attributes['type'] ) and ! is_null($class = static::getManagerClass()->getClassNameByType($attributes['type']))) {
-            unset( $attributes['type'] );
+        if (isset($attributes['type']) and ! is_null($class = static::getManagerClass()->getClassNameByType($attributes['type']))) {
+            unset($attributes['type']);
 
             return new $class((array) $attributes);
         } else {
             return new static((array) $attributes);
         }
     }
-
 
     public function initialize()
     {
@@ -160,7 +149,6 @@ class DatasourceModel extends Model
 
         $this->initialized = true;
     }
-
 
     /**
      * @throws Exception

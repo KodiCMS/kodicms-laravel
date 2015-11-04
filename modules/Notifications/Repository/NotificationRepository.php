@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Notifications\Repository;
 
 use KodiCMS\Users\Model\User;
@@ -7,7 +8,6 @@ use KodiCMS\Notifications\Model\Notification;
 
 class NotificationRepository extends BaseRepository
 {
-
     /**
      * @param Notification $model
      */
@@ -15,7 +15,6 @@ class NotificationRepository extends BaseRepository
     {
         parent::__construct($model);
     }
-
 
     /**
      * @param User $user
@@ -27,9 +26,8 @@ class NotificationRepository extends BaseRepository
         return $user->newNotifications()->get()->lists('type');
     }
 
-
     /**
-     * @param integer $id
+     * @param int $id
      * @param User    $user
      */
     public function markRead($id, User $user)

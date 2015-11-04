@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Cron\Support;
 
 class Validator
@@ -15,4 +16,4 @@ class Validator
     {
         return (bool) preg_match(static::REGEX, trim($value));
     }
-} 
+}

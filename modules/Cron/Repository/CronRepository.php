@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Cron\Repository;
 
 use KodiCMS\Cron\Model\Job;
@@ -6,7 +7,6 @@ use KodiCMS\CMS\Repository\BaseRepository;
 
 class CronRepository extends BaseRepository
 {
-
     /**
      * @param Job $model
      */
@@ -14,7 +14,6 @@ class CronRepository extends BaseRepository
     {
         parent::__construct($model);
     }
-
 
     /**
      * @param array $data
@@ -36,7 +35,6 @@ class CronRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
      * @param array $data
      *
@@ -56,9 +54,8 @@ class CronRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return \Illuminate\Database\Eloquent\Model
      */

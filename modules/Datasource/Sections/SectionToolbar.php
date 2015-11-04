@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Sections;
 
 use KodiCMS\Datasource\Contracts\SectionInterface;
@@ -6,12 +7,10 @@ use KodiCMS\Datasource\Contracts\SectionToolbarInterface;
 
 class SectionToolbar implements SectionToolbarInterface
 {
-
     /**
      * @var SectionInterface
      */
     protected $section;
-
 
     /**
      * @param SectionInterface $section
@@ -20,7 +19,6 @@ class SectionToolbar implements SectionToolbarInterface
     {
         $this->section = $section;
     }
-
 
     /**
      * @param string|null $template

@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Support\Helpers;
 
 use KodiCMS\CMS\Exceptions\Exception;
 
 class Num
 {
-
     const ROUND_HALF_UP = 1;
     const ROUND_HALF_DOWN = 2;
     const ROUND_HALF_EVEN = 3;
@@ -50,7 +50,6 @@ class Num
         'YiB' => 80,
     ];
 
-
     /**
      * Returns the English ordinal suffix (th, st, nd, etc) of a number.
      *
@@ -58,7 +57,7 @@ class Num
      *     echo 10, Num::ordinal(10); // "10th"
      *     echo 33, Num::ordinal(33); // "33rd"
      *
-     * @param   integer $number
+     * @param   int $number
      *
      * @return  string
      */
@@ -80,7 +79,6 @@ class Num
         }
     }
 
-
     /**
      * Locale-aware number and monetary formatting.
      *
@@ -95,8 +93,8 @@ class Num
      *     echo Num::format(1200.05, 2, TRUE);
      *
      * @param   float   $number   number to format
-     * @param   integer $places   decimal places
-     * @param   boolean $monetary monetary formatting?
+     * @param   int $places   decimal places
+     * @param   bool $monetary monetary formatting?
      *
      * @return  string
      * @since   3.0.2
@@ -106,24 +104,23 @@ class Num
         $info = localeconv();
 
         if ($monetary) {
-            $decimal   = $info['mon_decimal_point'];
+            $decimal = $info['mon_decimal_point'];
             $thousands = $info['mon_thousands_sep'];
         } else {
-            $decimal   = $info['decimal_point'];
+            $decimal = $info['decimal_point'];
             $thousands = $info['thousands_sep'];
         }
 
         return number_format($number, $places, $decimal, $thousands);
     }
 
-
     /**
-     * Round a number to a specified precision, using a specified tie breaking technique
+     * Round a number to a specified precision, using a specified tie breaking technique.
      *
      * @param float   $value     Number to round
-     * @param integer $precision Desired precision
-     * @param integer $mode      Tie breaking mode, accepts the PHP_ROUND_HALF_* constants
-     * @param boolean $native    Set to false to force use of the userland implementation
+     * @param int $precision Desired precision
+     * @param int $mode      Tie breaking mode, accepts the PHP_ROUND_HALF_* constants
+     * @param bool $native    Set to false to force use of the userland implementation
      *
      * @return float Rounded number
      */
@@ -136,23 +133,23 @@ class Num
         if ($mode === static::ROUND_HALF_UP) {
             return round($value, $precision);
         } else {
-            $factor = ( $precision === 0 ) ? 1 : pow(10, $precision);
+            $factor = ($precision === 0) ? 1 : pow(10, $precision);
 
             switch ($mode) {
                 case static::ROUND_HALF_DOWN:
                 case static::ROUND_HALF_EVEN:
                 case static::ROUND_HALF_ODD:
                     // Check if we have a rounding tie, otherwise we can just call round()
-                    if (( $value * $factor ) - floor($value * $factor) === 0.5) {
+                    if (($value * $factor) - floor($value * $factor) === 0.5) {
                         if ($mode === static::ROUND_HALF_DOWN) {
                             // Round down operation, so we round down unless the value
                             // is -ve because up is down and down is up down there. ;)
-                            $up = ( $value < 0 );
+                            $up = ($value < 0);
                         } else {
                             // Round up if the integer is odd and the round mode is set to even
                             // or the integer is even and the round mode is set to odd.
                             // Any other instance round down.
-                            $up = ( ! ( ! ( floor($value * $factor) & 1 ) ) === ( $mode === static::ROUND_HALF_EVEN ) );
+                            $up = (! (! (floor($value * $factor) & 1)) === ($mode === static::ROUND_HALF_EVEN));
                         }
 
                         if ($up) {
@@ -170,12 +167,11 @@ class Num
         }
     }
 
-
     /**
      * Converts a file size number to a byte value. File sizes are defined in
      * the format: SB, where S is the size (1, 8.5, 300, etc.) and B is the
      * byte unit (K, MiB, GB, etc.). All valid byte units are defined in
-     * Num::$byte_units
+     * Num::$byte_units.
      *
      *     echo Num::bytes('200K');  // 204800
      *     echo Num::bytes('5MiB');  // 5242880
@@ -195,10 +191,10 @@ class Num
         $accepted = implode('|', array_keys(static::$byte_units));
 
         // Construct the regex pattern for verifying the size format
-        $pattern = '/^([0-9]+(?:\.[0-9]+)?)(' . $accepted . ')?$/Di';
+        $pattern = '/^([0-9]+(?:\.[0-9]+)?)('.$accepted.')?$/Di';
 
         // Verify the size format and store the matching parts
-        if ( ! preg_match($pattern, $size, $matches)) {
+        if (! preg_match($pattern, $size, $matches)) {
             throw new Exception("The byte unit size, [{$size}], is improperly formatted.");
         }
 

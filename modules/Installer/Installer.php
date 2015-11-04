@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Installer;
 
 use DB;
@@ -17,7 +18,6 @@ use KodiCMS\Installer\Exceptions\InstallValidationException;
 
 class Installer
 {
-
     const POST_DATA_KEY = 'installer::data';
     const POST_DATABASE_KEY = 'installer::data';
 
@@ -46,19 +46,17 @@ class Installer
      */
     protected $connection;
 
-
     /**
      * @param Filesystem $files
      */
     public function __construct(Filesystem $files)
     {
         $this->session = app('session');
-        $this->files   = $files;
+        $this->files = $files;
 
         // TODO доработать
         event('installer.beforeInstall');
     }
-
 
     /**
      * @return array
@@ -82,7 +80,6 @@ class Installer
         ];
     }
 
-
     /**
      * @return array
      */
@@ -99,7 +96,6 @@ class Installer
         ];
     }
 
-
     /**
      * @return array
      */
@@ -107,7 +103,6 @@ class Installer
     {
         return array_merge($this->getDefaultParameters(), $this->session->get(static::POST_DATA_KEY, []));
     }
-
 
     /**
      * @return array
@@ -117,7 +112,6 @@ class Installer
         return $this->session->get(static::POST_DATABASE_KEY, []);
     }
 
-
     /**
      * @return array
      */
@@ -125,7 +119,6 @@ class Installer
     {
         return ['file'];
     }
-
 
     /**
      * @return array
@@ -135,7 +128,6 @@ class Installer
         return ['file', 'database'];
     }
 
-
     /**
      * @return array
      */
@@ -144,17 +136,16 @@ class Installer
         return ['mysql'];
     }
 
-
     /**
      * @param array $config
      * @param array $databaseConfig
      *
-     * @return boolean
+     * @return bool
      * @throws InstallException
      */
     public function install(array $config, array $databaseConfig)
     {
-        if (isset( $config['password_generate'] )) {
+        if (isset($config['password_generate'])) {
             $config['password_field'] = str_random();
         }
 
@@ -172,9 +163,8 @@ class Installer
         return $config;
     }
 
-
     /**
-     * Создание коннекта к БД
+     * Создание коннекта к БД.
      *
      * @param array $config [host,database,username,password]
      *
@@ -198,13 +188,12 @@ class Installer
         }
     }
 
-
     /**
-     * Очистка базы
+     * Очистка базы.
      */
     public function resetDatabase()
     {
-        $tables = DB::connection()->getPdo()->query("SHOW FULL TABLES")->fetchAll();
+        $tables = DB::connection()->getPdo()->query('SHOW FULL TABLES')->fetchAll();
 
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
@@ -213,12 +202,10 @@ class Installer
         }
 
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
-
     }
 
-
     /**
-     * Проверка данных формы
+     * Проверка данных формы.
      *
      * @param array $data
      *
@@ -247,9 +234,8 @@ class Installer
         return $validator;
     }
 
-
     /**
-     * Используется для установки данных из модулей
+     * Используется для установки данных из модулей.
      *
      * Метод проходится по модулям, ищет в них файл install.php, если существует
      * запускает его и передает массив $config
@@ -259,33 +245,28 @@ class Installer
         Artisan::call('cms:modules:install');
     }
 
-
     protected function databaseMigrate()
     {
         Artisan::call('cms:modules:migrate');
     }
 
-
     protected function databaseSeed()
     {
-
         Artisan::call('cms:modules:seed');
     }
 
-
     /**
-     * Создание конфиг файла
+     * Создание конфиг файла.
      *
      * @param array $config
      *
      * @throws Installer_Exception
-     * @return boolean
+     * @return bool
      */
     public function createEnvironmentFile(array $config)
     {
         return $this->buildEnvFile($config);
     }
-
 
     /**
      * Get the stub file for the generator.
@@ -294,9 +275,8 @@ class Installer
      */
     protected function getStub()
     {
-        return __DIR__ . '/Console/Commands/stubs/env.stub';
+        return __DIR__.'/Console/Commands/stubs/env.stub';
     }
-
 
     /**
      * @return string
@@ -305,7 +285,6 @@ class Installer
     {
         return base_path(app()->environmentFile());
     }
-
 
     /**
      * Build the directory for the class if necessary.
@@ -316,14 +295,12 @@ class Installer
      */
     protected function makeDirectory($path)
     {
-        if ( ! $this->files->isDirectory(dirname($path))) {
+        if (! $this->files->isDirectory(dirname($path))) {
             $this->files->makeDirectory(dirname($path), 0777, true, true);
         }
     }
 
-
     /**
-     *
      * @param $config array
      *
      * @return string
@@ -335,8 +312,8 @@ class Installer
 
         $options = [];
         foreach ($this->getDefaultEnvironment() as $key => $default) {
-            $value                       = isset( $config[$key] ) ? $config[$key] : $default;
-            $options['{{' . $key . '}}'] = $value;
+            $value = isset($config[$key]) ? $config[$key] : $default;
+            $options['{{'.$key.'}}'] = $value;
         }
 
         $stub = str_replace(array_keys($options), array_values($options), $stub);
@@ -348,7 +325,6 @@ class Installer
 
         return false;
     }
-
 
     protected function reset()
     {

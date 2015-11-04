@@ -1,12 +1,11 @@
-<?php namespace App\Providers;
+<?php
 
-use File;
-use Event;
+namespace App\Providers;
+
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-
     /**
      * Bootstrap any application services.
      *
@@ -15,7 +14,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
     }
-
 
     /**
      * Register any application services.
@@ -30,5 +28,4 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind('Illuminate\Contracts\Auth\Registrar', 'App\Services\Registrar');
     }
-
 }

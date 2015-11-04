@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Installer\Console\Commands;
 
 use DB;
@@ -9,7 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 class DropDatabaseCommand extends Command
 {
-
     use ConfirmableTrait;
 
     /**
@@ -26,7 +26,6 @@ class DropDatabaseCommand extends Command
      */
     protected $description = 'Drop all database tables. (Only CLI)';
 
-
     /**
      * Execute the console command.
      *
@@ -40,7 +39,7 @@ class DropDatabaseCommand extends Command
             return false;
         }
 
-        if ( ! $this->confirmToProceed()) {
+        if (! $this->confirmToProceed()) {
             return;
         }
 
@@ -59,7 +58,6 @@ class DropDatabaseCommand extends Command
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
-
 
     /**
      * Get the console command options.

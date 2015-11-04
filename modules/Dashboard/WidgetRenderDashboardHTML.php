@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Dashboard;
 
 use Illuminate\View\View;
@@ -6,14 +7,12 @@ use KodiCMS\Widgets\Engine\WidgetRenderHTML;
 
 class WidgetRenderDashboardHTML extends WidgetRenderHTML
 {
-
     /**
      * @var array
      */
     protected $parameters = [
         'comments' => false,
     ];
-
 
     /**
      * @param array $preparedData
@@ -25,7 +24,7 @@ class WidgetRenderDashboardHTML extends WidgetRenderHTML
         $widget = $this->getWidget();
 
         $preparedData['widget'] = $widget;
-        $template               = $widget->getFrontendTemplate();
+        $template = $widget->getFrontendTemplate();
 
         return view($template, $preparedData);
     }

@@ -1,7 +1,8 @@
 <?php
+
 namespace KodiCMS\Support\Helpers;
 
-/**
+/*
  * Class UI
  * TODO: Выпилить статику... Greabock 20.05.2015
  *
@@ -11,7 +12,6 @@ use HTML;
 
 class UI
 {
-
     /**
      * @param string $name
      * @param array  $attributes
@@ -20,11 +20,10 @@ class UI
      */
     public static function icon($name, array $attributes = [])
     {
-        $attributes = static::buildAttributeClass($attributes, 'fa fa-' . e($name));
+        $attributes = static::buildAttributeClass($attributes, 'fa fa-'.e($name));
 
-        return '<i' . HTML::attributes($attributes) . '></i>';
+        return '<i'.HTML::attributes($attributes).'></i>';
     }
-
 
     /**
      * @param string $text
@@ -35,11 +34,10 @@ class UI
      */
     public static function label($text, $type = 'info', array $attributes = [])
     {
-        $attributes = static::buildAttributeClass($attributes, 'label label-' . e($type));
+        $attributes = static::buildAttributeClass($attributes, 'label label-'.e($type));
 
-        return '<span' . HTML::attributes($attributes) . '>' . $text . '</span>';
+        return '<span'.HTML::attributes($attributes).'>'.$text.'</span>';
     }
-
 
     /**
      * @param string $text
@@ -50,14 +48,12 @@ class UI
      */
     public static function badge($text, $type = 'info', array $attributes = [])
     {
-        $attributes = static::buildAttributeClass($attributes, 'badge badge-' . e($type));
+        $attributes = static::buildAttributeClass($attributes, 'badge badge-'.e($type));
 
-        return '<span' . HTML::attributes($attributes) . '>' . $text . '</span>';
+        return '<span'.HTML::attributes($attributes).'>'.$text.'</span>';
     }
 
-
     /**
-     *
      * @param string $title
      * @param array  $types
      *
@@ -68,12 +64,11 @@ class UI
         $attributes = ['class' => ''];
 
         foreach ($types as $type) {
-            $attributes['class'] .= ' hidden-' . e($type);
+            $attributes['class'] .= ' hidden-'.e($type);
         }
 
-        return '<span' . HTML::attributes($attributes) . '>' . $title . '</span>';
+        return '<span'.HTML::attributes($attributes).'>'.$title.'</span>';
     }
-
 
     /**
      * @param array        $attributes
@@ -83,9 +78,9 @@ class UI
      */
     protected static function buildAttributeClass(array $attributes = [], $class)
     {
-        if ( ! isset( $attributes['class'] )) {
+        if (! isset($attributes['class'])) {
             $attributes['class'] = [];
-        } else if ( ! is_array($attributes['class'])) {
+        } elseif (! is_array($attributes['class'])) {
             $attributes['class'] = explode(' ', $attributes['class']);
         }
 

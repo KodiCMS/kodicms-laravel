@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Traits;
 
 use Cache;
@@ -6,9 +7,7 @@ use Illuminate\Cache\TaggableStore;
 
 trait WidgetCache
 {
-
     use WidgetRender;
-
 
     /**
      * @return bool
@@ -18,7 +17,6 @@ trait WidgetCache
         return (bool) $this->cache;
     }
 
-
     /**
      * @return int
      */
@@ -26,7 +24,6 @@ trait WidgetCache
     {
         return (int) $this->getSetting('cache_lifetime', 0);
     }
-
 
     /**
      * @return array
@@ -36,7 +33,6 @@ trait WidgetCache
         return array_combine($this->getCacheTags(), $this->getCacheTags());
     }
 
-
     /**
      * @return array
      */
@@ -44,7 +40,6 @@ trait WidgetCache
     {
         return $this->getSetting('cache_tags', []);
     }
-
 
     /**
      * @return string
@@ -54,15 +49,13 @@ trait WidgetCache
         return implode(', ', $this->getCacheTags());
     }
 
-
     /**
      * @return string
      */
     public function getCacheKey()
     {
-        return 'Widget::' . $this->getType() . '::' . $this->getId();
+        return 'Widget::'.$this->getType().'::'.$this->getId();
     }
-
 
     /**
      * @param bool  $enabled
@@ -71,11 +64,10 @@ trait WidgetCache
      */
     public function setCacheSettings($enabled = true, $lifetime = 300, array $tags = [])
     {
-        $this->cache          = $enabled;
+        $this->cache = $enabled;
         $this->cache_lifetime = $lifetime;
-        $this->cache_tags     = $tags;
+        $this->cache_tags = $tags;
     }
-
 
     /**
      * @param bool $status
@@ -85,7 +77,6 @@ trait WidgetCache
         $this->settings['cache'] = (bool) $status;
     }
 
-
     /**
      * @param int $lifetime
      */
@@ -93,7 +84,6 @@ trait WidgetCache
     {
         $this->settings['cache_lifetime'] = (int) $lifetime;
     }
-
 
     /**
      * @param array | string $tags
@@ -103,18 +93,16 @@ trait WidgetCache
         $this->settings['cache_tags'] = array_unique($tags);
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function clearCache()
     {
         Cache::forget($this->getCacheKey());
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function clearCacheByTags()
     {

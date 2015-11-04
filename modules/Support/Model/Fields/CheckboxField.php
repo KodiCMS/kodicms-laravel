@@ -1,16 +1,15 @@
 <?php
+
 namespace KodiCMS\Support\Model\Fields;
 
 use Form;
 
 class CheckboxField extends KodiCMSField
 {
-
     /**
      * @var string
      */
     protected $template = 'cms::model_fields.checkbox';
-
 
     protected function boot()
     {
@@ -20,7 +19,6 @@ class CheckboxField extends KodiCMSField
             'fieldCol' => 'col-md-9 col-md-offset-3',
         ])->setTemplate($this->template);
     }
-
 
     /**
      * @param string $name

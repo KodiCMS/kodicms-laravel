@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Pages\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
 class PageBehaviorSettings extends Model
 {
-
     /**
      * The primary key for the model.
      *
@@ -50,7 +50,6 @@ class PageBehaviorSettings extends Model
         'page_id'  => 'integer',
         'settings' => 'array',
     ];
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

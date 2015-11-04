@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class PageParts extends Migration
 {
-
     public function up()
     {
         Schema::create('page_parts', function (Blueprint $table) {
@@ -26,7 +25,6 @@ class PageParts extends Migration
             $table->smallInteger('position')->default(0);
         });
     }
-
 
     public function down()
     {

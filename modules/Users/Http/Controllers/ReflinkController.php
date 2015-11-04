@@ -1,20 +1,17 @@
 <?php
+
 namespace KodiCMS\Users\Http\Controllers;
 
-use ACL;
 use Reflinks;
-use KodiCMS\Users\Jobs\ReflinkHandler;
 use KodiCMS\Users\Contracts\ReflinkHandlerInterface;
 use KodiCMS\CMS\Http\Controllers\System\FrontendController;
 
 class ReflinkController extends FrontendController
 {
-
     public function getForm()
     {
         $this->setContent('reflinks.form');
     }
-
 
     /**
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|ReflinkController
@@ -28,7 +25,6 @@ class ReflinkController extends FrontendController
         return $this->handle($this->request->input('token'));
     }
 
-
     /**
      * @param string $token
      *
@@ -39,7 +35,7 @@ class ReflinkController extends FrontendController
         $response = Reflinks::handle($token);
 
         if ($response instanceof ReflinkHandlerInterface) {
-            if ( ! method_exists($response, 'getRedirectUrl') or is_null($redirectUrl = $response->getRedirectUrl())) {
+            if (! method_exists($response, 'getRedirectUrl') or is_null($redirectUrl = $response->getRedirectUrl())) {
                 $redirectUrl = route('reflink.complete');
             }
 
@@ -48,7 +44,6 @@ class ReflinkController extends FrontendController
             return $this->buildFailedValidationResponse($this->request, ['token' => $response]);
         }
     }
-
 
     public function complete()
     {

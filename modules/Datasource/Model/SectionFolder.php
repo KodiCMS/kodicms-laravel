@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Model;
 
 use Illuminate\Database\Eloquent\Model;
@@ -6,7 +7,6 @@ use KodiCMS\Datasource\Contracts\FolderInterface;
 
 class SectionFolder extends Model implements FolderInterface
 {
-
     protected $table = 'datasource_folders';
 
     /**

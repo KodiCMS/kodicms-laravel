@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Widget;
 
 use Illuminate\Support\Collection;
@@ -8,7 +9,6 @@ use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 
 abstract class Decorator implements WidgetInterface, \ArrayAccess
 {
-
     use Settings;
 
     /**
@@ -61,23 +61,21 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
      */
     private $id;
 
-
     /**
      * @param string $name
      * @param string $description
      */
     public function __construct($name, $description = '')
     {
-        $this->type           = WidgetManager::getTypeByClassName(get_called_class());
-        $this->name           = $name;
-        $this->description    = $description;
+        $this->type = WidgetManager::getTypeByClassName(get_called_class());
+        $this->name = $name;
+        $this->description = $description;
         $this->relatedWidgets = new Collection;
 
         if (method_exists($this, 'boot')) {
             app()->call([$this, 'boot']);
         }
     }
-
 
     /**
      * @return bool
@@ -87,7 +85,6 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
         return strlen($this->getId()) > 0;
     }
 
-
     /**
      * @return int
      */
@@ -95,7 +92,6 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
     {
         return $this->id;
     }
-
 
     /**
      * @param int $id
@@ -111,7 +107,6 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
         $this->id = $id;
     }
 
-
     /**
      * @return string
      */
@@ -120,21 +115,19 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
         return $this->type;
     }
 
-
     /**
      * @return string
      */
     public function getTypeTitle()
     {
         foreach (WidgetManager::getAvailableTypes() as $group => $types) {
-            if (isset( $types[$this->type] )) {
+            if (isset($types[$this->type])) {
                 return $types[$this->type];
             }
         }
 
         return $this->type;
     }
-
 
     /**
      * @return string
@@ -144,7 +137,6 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
         return e($this->name);
     }
 
-
     /**
      * @return string
      */
@@ -152,7 +144,6 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
     {
         return e($this->description);
     }
-
 
     /**
      * @return array
@@ -162,7 +153,6 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
         return (array) $this->getSetting('roles', []);
     }
 
-
     /**
      * @param array $roles
      */
@@ -171,7 +161,6 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
         $this->settings['roles'] = array_unique($roles);
     }
 
-
     /**
      * @return Collection
      */
@@ -179,7 +168,6 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
     {
         return $this->relatedWidgets;
     }
-
 
     /**
      * @param Collection $widgets
@@ -201,7 +189,6 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
         return $this->parameters;
     }
 
-
     /**
      * @param string $name
      * @param mixed  $default
@@ -210,7 +197,7 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
      */
     public function getParameter($name, $default = null)
     {
-        $method = 'getParameter' . studly_case($name);
+        $method = 'getParameter'.studly_case($name);
 
         if (method_exists($this, $method)) {
             return $this->{$method}($default);
@@ -218,7 +205,6 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
 
         return array_get($this->parameters, $name, $default);
     }
-
 
     /**
      * @param string $name
@@ -231,7 +217,7 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
         if (is_array($name)) {
             $this->setParameters($name);
         } else {
-            $method = 'setParameter' . studly_case($name);
+            $method = 'setParameter'.studly_case($name);
             if (method_exists($this, $method)) {
                 return $this->{$method}($value);
             } else {
@@ -241,7 +227,6 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
 
         return $this;
     }
-
 
     /**
      * @param array $parameters
@@ -260,6 +245,7 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
     /**********************************************************************************************************
      * Settings
      **********************************************************************************************************/
+
     /**
      * @return array
      */
@@ -268,7 +254,6 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
         return [];
     }
 
-
     /**
      * @return string
      */
@@ -276,7 +261,6 @@ abstract class Decorator implements WidgetInterface, \ArrayAccess
     {
         return $this->settingsTemplate;
     }
-
 
     /**
      * @return array

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Notifications\Providers;
 
 use Event;
@@ -9,7 +10,6 @@ use KodiCMS\Notifications\Console\Commands\DeleteExpiredCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-
     /**
      * Register the service provider.
      *
@@ -19,7 +19,6 @@ class ModuleServiceProvider extends ServiceProvider
     {
         $this->registerConsoleCommand(DeleteExpiredCommand::class);
     }
-
 
     public function boot()
     {

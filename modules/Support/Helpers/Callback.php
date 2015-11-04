@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Support\Helpers;
 
 use Closure;
@@ -6,15 +7,11 @@ use ReflectionMethod;
 use KodiCMS\CMS\Exceptions\Exception;
 
 /**
- * Class Callback
- *
- * @package KodiCMS\CMS\Helpers
+ * Class Callback.
  */
 class Callback
 {
-
     /**
-     *
      * @param mixed $callback
      * @param array $parameters
      * @param array $binding
@@ -36,7 +33,6 @@ class Callback
         }
     }
 
-
     /**
      * @param array $callback
      * @param array $parameters
@@ -47,7 +43,7 @@ class Callback
     public static function invokeFunction(array $callback, array $parameters = [], array $binding = [])
     {
         foreach ($callback as $i => $value) {
-            if (is_string($value) && isset( $binding[$value] )) {
+            if (is_string($value) && isset($binding[$value])) {
                 $callback[$i] = $binding[$value];
             }
         }
@@ -58,7 +54,6 @@ class Callback
             return call_user_func_array($callback, $parameters);
         }
     }
-
 
     /**
      * @param Closure $callback
@@ -71,7 +66,6 @@ class Callback
         return call_user_func_array($callback, $parameters);
     }
 
-
     /**
      * @param string $callback
      * @param array  $parameters
@@ -81,15 +75,14 @@ class Callback
      */
     public static function invokeClassMethod($callback, array $parameters = [])
     {
-        list( $class, $method ) = explode('@', $callback);
+        list($class, $method) = explode('@', $callback);
         $instance = app($class);
-        if ( ! method_exists($instance, $method)) {
-            throw new Exception('Invalid method ' . $method);
+        if (! method_exists($instance, $method)) {
+            throw new Exception('Invalid method '.$method);
         }
 
         return call_user_func_array([$instance, $method], $parameters);
     }
-
 
     /**
      * @param string $callback
@@ -101,9 +94,9 @@ class Callback
     public static function invokeStaticClass($callback, array $parameters = null, array $binding = [])
     {
         // Split the class and method of the rule
-        list( $class, $method ) = explode('::', $callback, 2);
+        list($class, $method) = explode('::', $callback, 2);
 
-        if (isset( $binding[$class] )) {
+        if (isset($binding[$class])) {
             $class = $binding[$class];
         }
 
@@ -117,9 +110,7 @@ class Callback
         }
     }
 
-
     /**
-     *
      * @param string $callback
      * @param array  $parameters
      *

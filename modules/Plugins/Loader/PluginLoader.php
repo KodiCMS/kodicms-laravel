@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Plugins\Loader;
 
 use Artisan;
@@ -8,7 +9,6 @@ use Illuminate\Filesystem\Filesystem;
 
 class PluginLoader
 {
-
     /**
      * The filesystem instance.
      *
@@ -36,17 +36,15 @@ class PluginLoader
      */
     protected $foundPlugins = [];
 
-
     /**
      * @param Filesystem $files
      * @param string     $path
      */
     public function __construct(Filesystem $files, $path)
     {
-        $this->path  = $path;
+        $this->path = $path;
         $this->files = $files;
     }
-
 
     /**
      * @return string
@@ -55,7 +53,6 @@ class PluginLoader
     {
         return $this->path;
     }
-
 
     public function init()
     {
@@ -67,7 +64,6 @@ class PluginLoader
         $this->init = true;
     }
 
-
     /**
      * @return array
      */
@@ -75,7 +71,6 @@ class PluginLoader
     {
         return $this->activated;
     }
-
 
     /**
      * @return array
@@ -95,7 +90,6 @@ class PluginLoader
         return $this->foundPlugins;
     }
 
-
     /**
      * @param $name
      *
@@ -109,9 +103,8 @@ class PluginLoader
             }
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @param string $name
@@ -129,7 +122,6 @@ class PluginLoader
         return false;
     }
 
-
     /**
      * @param string $name
      *
@@ -138,7 +130,7 @@ class PluginLoader
     public function activatePlugin($name)
     {
         $status = false;
-        if ( ! $this->isActivated($name) and ! is_null($plugin = $this->getPluginContainer($name))) {
+        if (! $this->isActivated($name) and ! is_null($plugin = $this->getPluginContainer($name))) {
             $status = $plugin->activate();
 
             if (app()->routesAreCached()) {
@@ -151,7 +143,6 @@ class PluginLoader
 
         return $status;
     }
-
 
     /**
      * @param string $name
@@ -170,12 +161,11 @@ class PluginLoader
             }
 
             $plugin->checkActivation();
-            unset( $this->activated[get_class($plugin)] );
+            unset($this->activated[get_class($plugin)]);
         }
 
         return $status;
     }
-
 
     /**
      * @param string $directory
@@ -188,19 +178,18 @@ class PluginLoader
         $vendorName = pathinfo(pathinfo($directory, PATHINFO_DIRNAME), PATHINFO_BASENAME);
 
         $namespace = "Plugins\\{$vendorName}\\{$pluginName}";
-        $class     = "{$namespace}\\PluginContainer";
+        $class = "{$namespace}\\PluginContainer";
 
-        if ( ! class_exists($class)) {
-            return null;
+        if (! class_exists($class)) {
+            return;
         }
 
-        if (isset( $this->activated[$class] )) {
+        if (isset($this->activated[$class])) {
             return $this->activated[$class];
         }
 
-        return new $class($vendorName . ':' . $pluginName, $directory, $namespace);
+        return new $class($vendorName.':'.$pluginName, $directory, $namespace);
     }
-
 
     /**
      * @return mixed
@@ -220,7 +209,6 @@ class PluginLoader
         }
     }
 
-
     /**
      * @param string $key
      *
@@ -228,6 +216,6 @@ class PluginLoader
      */
     protected function pluginExists($key)
     {
-        return $this->files->isDirectory($this->path . DIRECTORY_SEPARATOR . $key);
+        return $this->files->isDirectory($this->path.DIRECTORY_SEPARATOR.$key);
     }
 }

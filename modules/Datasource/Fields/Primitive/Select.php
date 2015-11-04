@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Primitive;
 
 use DB;
@@ -6,12 +7,10 @@ use KodiCMS\Datasource\Fields\Primitive;
 
 class Select extends Primitive
 {
-
     /**
      * @var array|null
      */
     protected $options = null;
-
 
     /**
      * @return array
@@ -20,7 +19,6 @@ class Select extends Primitive
     {
         return ['custom_option', 'must_be_empty'];
     }
-
 
     /**
      * @return array
@@ -32,7 +30,6 @@ class Select extends Primitive
             'must_be_empty' => true,
         ];
     }
-
 
     /**
      * @return array
@@ -46,7 +43,6 @@ class Select extends Primitive
             ->all();
     }
 
-
     /**
      * @param array $ids
      */
@@ -54,7 +50,6 @@ class Select extends Primitive
     {
         DB::table('datasource_enums')->where('field_id', $this->getId())->whereIn('id', $ids)->delete();
     }
-
 
     /**
      * @param string $option
@@ -65,8 +60,8 @@ class Select extends Primitive
     {
         $option = trim($option);
 
-        if (empty( $option )) {
-            return null;
+        if (empty($option)) {
+            return;
         }
     }
 }

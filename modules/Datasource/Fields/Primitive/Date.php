@@ -1,15 +1,14 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Primitive;
 
 use Illuminate\Validation\Validator;
-use KodiCMS\Datasource\Fields\Primitive;
 use Illuminate\Database\Schema\Blueprint;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 use KodiCMS\Datasource\Contracts\FieldTypeDateInterface;
 
 class Date extends Timestamp implements FieldTypeDateInterface
 {
-
     /**
      * @var string
      */
@@ -25,7 +24,6 @@ class Date extends Timestamp implements FieldTypeDateInterface
      */
     protected $changeableDatabaseField = false;
 
-
     /**
      * @return array
      */
@@ -33,7 +31,6 @@ class Date extends Timestamp implements FieldTypeDateInterface
     {
         return ['set_current'];
     }
-
 
     /**
      * @return array
@@ -45,7 +42,6 @@ class Date extends Timestamp implements FieldTypeDateInterface
         ];
     }
 
-
     /**
      * @return array
      */
@@ -53,7 +49,6 @@ class Date extends Timestamp implements FieldTypeDateInterface
     {
         return (bool) $this->getSetting('set_current');
     }
-
 
     /**
      * @return mixed
@@ -67,7 +62,6 @@ class Date extends Timestamp implements FieldTypeDateInterface
         return $this->getSetting('default_value');
     }
 
-
     /**
      * @return string
      */
@@ -75,7 +69,6 @@ class Date extends Timestamp implements FieldTypeDateInterface
     {
         return $this->getSetting('default_value');
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -91,7 +84,6 @@ class Date extends Timestamp implements FieldTypeDateInterface
 
         return $rules;
     }
-
 
     /**
      * @param Blueprint $table

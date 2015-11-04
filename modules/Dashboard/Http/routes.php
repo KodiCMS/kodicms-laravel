@@ -1,4 +1,5 @@
 <?php
+
 Route::group(['prefix' => backend_url(), 'as' => 'backend.'], function () {
     Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@getIndex']);
 });

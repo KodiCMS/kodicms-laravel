@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Support\Model;
 
 use Form;
@@ -8,7 +9,6 @@ use KodiCMS\Support\Model\Contracts\ModelFieldInterface;
 
 class ModelFieldGroup
 {
-
     use Settings, HtmlAttributes;
 
     /**
@@ -26,7 +26,6 @@ class ModelFieldGroup
      */
     protected $settings = [];
 
-
     /**
      * @param ModelFieldInterface $field
      * @param array               $attributes
@@ -35,11 +34,10 @@ class ModelFieldGroup
     {
         $this->field = $field;
 
-        if ( ! is_null($attributes)) {
+        if (! is_null($attributes)) {
             $this->setAttributes($attributes);
         }
     }
-
 
     /**
      * @return $this
@@ -49,7 +47,6 @@ class ModelFieldGroup
         return $this->setAttribute('class', 'form-group-lg');
     }
 
-
     /**
      * @return $this
      */
@@ -58,7 +55,6 @@ class ModelFieldGroup
         return $this->setAttribute('class', 'form-group-xs');
     }
 
-
     /**
      * @return $this
      */
@@ -66,7 +62,6 @@ class ModelFieldGroup
     {
         return $this->setAttribute('class', 'form-group-sm');
     }
-
 
     /**
      * @param string $template
@@ -79,7 +74,6 @@ class ModelFieldGroup
 
         return $this;
     }
-
 
     /**
      * @param array $attributes
@@ -95,7 +89,6 @@ class ModelFieldGroup
             'label' => $this->field->getLabel(),
         ])->render();
     }
-
 
     /**
      * @return string

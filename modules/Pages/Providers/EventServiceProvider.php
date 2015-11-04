@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Providers;
 
 use WYSIWYG;

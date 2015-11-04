@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Widgets\Engine;
 
 use Illuminate\View\View;
 
 class WidgetRenderSettingsHTML extends WidgetRenderAbstract
 {
-
     /**
      * @return string
      */
@@ -20,7 +20,6 @@ class WidgetRenderSettingsHTML extends WidgetRenderAbstract
         return $this->getContent();
     }
 
-
     /**
      * @return string
      */
@@ -29,12 +28,11 @@ class WidgetRenderSettingsHTML extends WidgetRenderAbstract
         $widget = $this->getWidget();
         $widget->setSettings($this->parameters);
 
-        $preparedData           = $widget->prepareSettingsData();
+        $preparedData = $widget->prepareSettingsData();
         $preparedData['widget'] = $widget;
 
         return $this->getWidgetTemplate($preparedData);
     }
-
 
     /**
      * @param array $preparedData
@@ -45,8 +43,8 @@ class WidgetRenderSettingsHTML extends WidgetRenderAbstract
     {
         $template = $this->getWidget()->getSettingsTemplate();
 
-        if (empty( $template )) {
-            return null;
+        if (empty($template)) {
+            return;
         }
 
         return view($template, $preparedData);

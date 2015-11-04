@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS;
 
 use Closure;
@@ -7,12 +8,10 @@ use Illuminate\Support\ServiceProvider;
 
 class Application extends \Illuminate\Foundation\Application
 {
-
     /**
      * @var array
      */
     protected $shutdownCallbacks = [];
-
 
     /**
      * Create a new Illuminate application instance.
@@ -27,7 +26,6 @@ class Application extends \Illuminate\Foundation\Application
         register_shutdown_function([$this, 'shutdownHandler']);
     }
 
-
     /**
      * @return bool
      */
@@ -35,7 +33,6 @@ class Application extends \Illuminate\Foundation\Application
     {
         return is_file(base_path(app()->environmentFile()));
     }
-
 
     /**
      * @return string
@@ -45,15 +42,13 @@ class Application extends \Illuminate\Foundation\Application
         return config('cms.backend_path', 'backend');
     }
 
-
     /**
      * @return string
      */
     public function backendResourcesPath()
     {
-        return public_path('cms' . DIRECTORY_SEPARATOR);
+        return public_path('cms'.DIRECTORY_SEPARATOR);
     }
-
 
     /**
      * @param string|null $path
@@ -62,18 +57,16 @@ class Application extends \Illuminate\Foundation\Application
      */
     public function resourcesURL($path = null)
     {
-        return url('cms' . $path);
+        return url('cms'.$path);
     }
-
 
     /**
      * @return string
      */
     public function backendResourcesURL($path = null)
     {
-        return url(backend_url('/cms' . $path));
+        return url(backend_url('/cms'.$path));
     }
-
 
     /**
      * @param Closure $callback
@@ -83,7 +76,6 @@ class Application extends \Illuminate\Foundation\Application
         $this->shutdownCallbacks[] = $callback;
     }
 
-
     public function shutdownHandler()
     {
         $this['events']->fire('app.shutdown', [$this]);
@@ -92,7 +84,6 @@ class Application extends \Illuminate\Foundation\Application
             $this->call($callback);
         }
     }
-
 
     /**
      * Register a service provider with the application.
@@ -115,7 +106,6 @@ class Application extends \Illuminate\Foundation\Application
 
         return $provider;
     }
-
 
     /**
      * Boot the given service provider.

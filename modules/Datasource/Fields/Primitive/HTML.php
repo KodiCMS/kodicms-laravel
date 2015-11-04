@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Primitive;
 
 use WYSIWYG;
@@ -10,7 +11,6 @@ use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 
 class HTML extends Primitive
 {
-
     /**
      * @var bool
      */
@@ -21,7 +21,6 @@ class HTML extends Primitive
      */
     protected $isOrderable = false;
 
-
     /**
      * @return array
      */
@@ -29,7 +28,6 @@ class HTML extends Primitive
     {
         return ['remove_empty_tags', 'filter_html'];
     }
-
 
     /**
      * @return array
@@ -44,24 +42,21 @@ class HTML extends Primitive
         ];
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function isRemoveEmptyTags()
     {
         return $this->getSetting('remove_empty_tags');
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function isFilterHTML()
     {
         return $this->getSetting('filter_html');
     }
-
 
     /**
      * @return array
@@ -71,7 +66,6 @@ class HTML extends Primitive
         return $this->getSetting('allowed_tags');
     }
 
-
     /**
      * @return string
      */
@@ -80,7 +74,6 @@ class HTML extends Primitive
         return $this->getSetting('wysiwyg');
     }
 
-
     /**
      * @return string
      */
@@ -88,7 +81,6 @@ class HTML extends Primitive
     {
         return 'html';
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -106,12 +98,10 @@ class HTML extends Primitive
         $document->setAttribute($this->getDBFilteredColumnKey(), WYSIWYG::applyFilter($this->getWysiwyg(), $value));
     }
 
-
     public function getDBFilteredColumnKey()
     {
-        return $this->getDBKey() . '_filtered';
+        return $this->getDBKey().'_filtered';
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -123,7 +113,6 @@ class HTML extends Primitive
     {
         return str_limit(strip_tags($value), 50);
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -140,7 +129,6 @@ class HTML extends Primitive
         ];
     }
 
-
     /**
      * @param Blueprint $table
      *
@@ -153,7 +141,6 @@ class HTML extends Primitive
         return $table->text($this->getDBKey());
     }
 
-
     /**
      * @param Blueprint $table
      */
@@ -162,7 +149,6 @@ class HTML extends Primitive
         parent::onDatabaseDrop($table);
         $table->dropColumn($this->getDBFilteredColumnKey());
     }
-
 
     /**
      * @param Builder           $query

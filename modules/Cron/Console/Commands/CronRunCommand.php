@@ -1,18 +1,17 @@
 <?php
+
 namespace KodiCMS\Cron\Console\Commands;
 
 use KodiCMS\Cron\Model\Job;
 use Illuminate\Console\Command;
 
 /**
- * TODO: переделать на sheduler
+ * TODO: переделать на sheduler.
  *
  * Class CronRunCommand
- * @package KodiCMS\Cron\Console\Commands
  */
 class CronRunCommand extends Command
 {
-
     /**
      * The console command name.
      */
@@ -23,7 +22,6 @@ class CronRunCommand extends Command
      */
     protected $description = 'Run all cron tasks';
 
-
     /**
      * Execute the console command.
      */
@@ -32,5 +30,4 @@ class CronRunCommand extends Command
         Job::runAll();
         $this->info('All done');
     }
-
 }

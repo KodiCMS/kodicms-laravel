@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Model;
 
 use DB;
@@ -13,7 +14,6 @@ use KodiCMS\Pages\Model\FieldCollections\PageFieldCollection;
 
 class Page extends Model implements BehaviorPageInterface
 {
-
     use ModelFieldTrait;
 
     /**
@@ -26,9 +26,8 @@ class Page extends Model implements BehaviorPageInterface
      */
     private static $loadedUsers = [];
 
-
     /**
-     * Список статусов
+     * Список статусов.
      * @return array
      */
     public static function getStatusList()
@@ -39,7 +38,6 @@ class Page extends Model implements BehaviorPageInterface
             FrontendPage::STATUS_HIDDEN    => trans('pages::core.status.hidden'),
         ];
     }
-
 
     /**
      * The database table used by the model.
@@ -77,12 +75,12 @@ class Page extends Model implements BehaviorPageInterface
     ];
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $isExpanded = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $hasChildren = false;
 
@@ -90,7 +88,6 @@ class Page extends Model implements BehaviorPageInterface
      * @var array
      */
     public $childrenRows = null;
-
 
     /**
      * @param array $attributes
@@ -101,7 +98,6 @@ class Page extends Model implements BehaviorPageInterface
         $this->addObservableEvents(['reordering', 'reordered']);
     }
 
-
     /**
      * @return string
      */
@@ -109,7 +105,6 @@ class Page extends Model implements BehaviorPageInterface
     {
         return trans('pages::core.messages.not_found');
     }
-
 
     /**
      * @return array
@@ -119,7 +114,6 @@ class Page extends Model implements BehaviorPageInterface
         return new PageFieldCollection;
     }
 
-
     /**
      * @return array
      */
@@ -127,7 +121,6 @@ class Page extends Model implements BehaviorPageInterface
     {
         return ['breadcrumb', 'meta_title', 'meta_keywords', 'meta_description'];
     }
-
 
     /**
      * @return array
@@ -142,20 +135,19 @@ class Page extends Model implements BehaviorPageInterface
         ];
     }
 
-
     /**
-     * Статус страницы
+     * Статус страницы.
      * @return string
      */
     public function getStatus()
     {
         $status = trans('pages::core.status.none');
-        $label  = 'default';
+        $label = 'default';
 
         switch ($this->status) {
             case FrontendPage::STATUS_DRAFT:
                 $status = trans('pages::core.status.draft');
-                $label  = 'info';
+                $label = 'info';
                 break;
             case FrontendPage::STATUS_HIDDEN:
                 $status = trans('pages::core.status.hidden');
@@ -171,9 +163,8 @@ class Page extends Model implements BehaviorPageInterface
                 break;
         }
 
-        return UI::label($status, $label . ' editable-status', ['data-value' => $this->status]);
+        return UI::label($status, $label.' editable-status', ['data-value' => $this->status]);
     }
-
 
     /**
      * @return string
@@ -181,14 +172,13 @@ class Page extends Model implements BehaviorPageInterface
     public function getUri()
     {
         if ($parent = $this->parentPage()) {
-            $uri = $parent->getUri() . '/' . $this->slug;
+            $uri = $parent->getUri().'/'.$this->slug;
         } else {
             $uri = $this->slug;
         }
 
         return $uri;
     }
-
 
     /**
      * @return string
@@ -198,53 +188,49 @@ class Page extends Model implements BehaviorPageInterface
         return URL::frontend($this->getUri());
     }
 
-
     /**
-     * Получение ссылки на страницу
+     * Получение ссылки на страницу.
      * @return string
      */
     public function getPublicLink()
     {
         return link_to(
             $this->getFrontendUrl(),
-            UI::label(UI::icon('globe') . ' ' . trans('pages::core.button.view_front')), [
+            UI::label(UI::icon('globe').' '.trans('pages::core.button.view_front')), [
                 'class'  => 'item-preview',
                 'target' => '_blank',
             ]
         );
     }
 
-
     /**
      * @return bool
      */
     public function hasLayout()
     {
-        if (empty( $this->layout_file ) and $parent = $this->parentPage()) {
+        if (empty($this->layout_file) and $parent = $this->parentPage()) {
             return $parent->hasLayout();
         }
 
-        return ! empty( $this->layout_file );
+        return ! empty($this->layout_file);
     }
 
-
     /**
-     * Получение названия шаблона текущей страницы
+     * Получение названия шаблона текущей страницы.
      * @return string
      */
     public function getLayout()
     {
-        if (empty( $this->layout_file ) and $parent = $this->parentPage()) {
+        if (empty($this->layout_file) and $parent = $this->parentPage()) {
             return $parent->getLayout();
         }
 
         return $this->layout_file;
     }
 
-
     /**
-     * Проверка на существование внутренних страницы
-     * @return boolean
+     * Проверка на существование внутренних страницы.
+     * @return bool
      */
     public function hasChildren()
     {
@@ -253,7 +239,6 @@ class Page extends Model implements BehaviorPageInterface
             ->where('parent_id', $this->id)
             ->value('total') > 0;
     }
-
 
     /**
      * @param string $keyword
@@ -273,9 +258,8 @@ class Page extends Model implements BehaviorPageInterface
         });
     }
 
-
     /**
-     * Получение списка страниц за исключением текущей
+     * Получение списка страниц за исключением текущей.
      * @return array
      */
     public function getSitemap()
@@ -288,7 +272,6 @@ class Page extends Model implements BehaviorPageInterface
         return $sitemap->selectChoices();
     }
 
-
     /**
      * @return string
      */
@@ -296,7 +279,6 @@ class Page extends Model implements BehaviorPageInterface
     {
         return ! is_null($this->behavior);
     }
-
 
     /**
      * @return string
@@ -306,20 +288,18 @@ class Page extends Model implements BehaviorPageInterface
         return studly_case($this->behavior);
     }
 
-
     /**
      * @return null|\KodiCMS\Pages\Behavior\Decorator
      * @throws \KodiCMS\Pages\Exceptions\BehaviorException
      */
     public function getBehaviorObject()
     {
-        if ( ! $this->hasBehavior()) {
-            return null;
+        if (! $this->hasBehavior()) {
+            return;
         }
 
         return BehaviorManager::load($this->behavior);
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -329,7 +309,6 @@ class Page extends Model implements BehaviorPageInterface
         return $this->loadUserTableByField('created_by_id');
     }
 
-
     /**
      * @return User
      */
@@ -337,7 +316,6 @@ class Page extends Model implements BehaviorPageInterface
     {
         return $this->loadUserTableByField('updated_by_id');
     }
-
 
     /**
      * @return Page
@@ -351,24 +329,21 @@ class Page extends Model implements BehaviorPageInterface
         return static::$loadedPages[$this->parent_id] = $this->parent()->getResults();
     }
 
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function parent()
     {
-        return $this->belongsTo(Page::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function children()
     {
-        return $this->hasMany(Page::class, 'parent_id', 'id');
+        return $this->hasMany(self::class, 'parent_id', 'id');
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -378,7 +353,6 @@ class Page extends Model implements BehaviorPageInterface
         return $this->hasMany(PagePart::class, 'page_id', 'id');
     }
 
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -387,19 +361,17 @@ class Page extends Model implements BehaviorPageInterface
         return $this->hasOne(PageBehaviorSettings::class, 'page_id', 'id');
     }
 
-
     /**
      * @return array
      */
     public function getBehaviorSettings()
     {
-        if ( ! is_null($settings = $this->behaviorSettings()->first())) {
+        if (! is_null($settings = $this->behaviorSettings()->first())) {
             return $settings->settings;
         }
 
         return [];
     }
-
 
     /**
      * @param array $pages
@@ -409,9 +381,9 @@ class Page extends Model implements BehaviorPageInterface
     public function reorder(array $pages)
     {
         $pages = array_map(function ($page) {
-            $page['parent_id'] = empty( $page['parent_id'] ) ? 1 : $page['parent_id'];
-            $page['id']        = (int) $page['id'];
-            $page['position']  = (int) $page['position'];
+            $page['parent_id'] = empty($page['parent_id']) ? 1 : $page['parent_id'];
+            $page['id'] = (int) $page['id'];
+            $page['position'] = (int) $page['position'];
 
             return $page;
         }, $pages);
@@ -422,7 +394,7 @@ class Page extends Model implements BehaviorPageInterface
 
         $builder = DB::table('pages');
         $grammar = $builder->getGrammar();
-        $insert  = $grammar->compileInsert($builder, $pages);
+        $insert = $grammar->compileInsert($builder, $pages);
 
         $bindings = [];
 
@@ -441,7 +413,6 @@ class Page extends Model implements BehaviorPageInterface
         return true;
     }
 
-
     /**
      * @return array
      */
@@ -455,7 +426,7 @@ class Page extends Model implements BehaviorPageInterface
                 $layout = $parent->getLayout();
             }
 
-            if (empty( $layout )) {
+            if (empty($layout)) {
                 $layout = trans('pages::layout.label.not_set');
             }
 
@@ -475,7 +446,6 @@ class Page extends Model implements BehaviorPageInterface
         return $options;
     }
 
-
     /**
      * @return string
      */
@@ -483,7 +453,6 @@ class Page extends Model implements BehaviorPageInterface
     {
         return $this->getLayout();
     }
-
 
     /**
      * @return bool|FrontendPage
@@ -493,7 +462,6 @@ class Page extends Model implements BehaviorPageInterface
         return FrontendPage::findById($this->id);
     }
 
-
     /**
      * @return array
      */
@@ -501,13 +469,12 @@ class Page extends Model implements BehaviorPageInterface
     {
         $pages = [$this->id => $this];
 
-        if ( ! is_null($parent = $this->parent)) {
+        if (! is_null($parent = $this->parent)) {
             $pages = $parent->getBreadcrumbsChain() + $pages;
         }
 
         return $pages;
     }
-
 
     /**
      * @param string $filed

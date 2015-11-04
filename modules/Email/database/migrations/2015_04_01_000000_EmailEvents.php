@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class EmailEvents extends Migration
 {
-
     public function up()
     {
         Schema::create('email_events', function (Blueprint $table) {
@@ -17,7 +16,6 @@ class EmailEvents extends Migration
             $table->json('fields');
         });
     }
-
 
     public function down()
     {

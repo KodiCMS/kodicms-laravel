@@ -1,17 +1,15 @@
 <?php
+
 namespace KodiCMS\Support\Helpers;
 
 use Request;
 
 /**
  * Class URL
- * TODO: Убрать статику. Greabock 20.05.2015
- *
- * @package KodiCMS\CMS\Helpers
+ * TODO: Убрать статику. Greabock 20.05.2015.
  */
 class URL
 {
-
     /**
      * @param string $url
      *
@@ -22,13 +20,12 @@ class URL
         $suffix = strlen(rtrim($url, '/')) > 0 ? static::getSuffix() : null;
 
         $params = ['slug' => $url];
-        if ( ! empty( $suffix )) {
+        if (! empty($suffix)) {
             $params['suffix'] = $suffix;
         }
 
         return route('frontend.url', $params);
     }
-
 
     /**
      * @return string
@@ -37,7 +34,6 @@ class URL
     {
         return config('cms.url_suffix', '');
     }
-
 
     /**
      * @param string|null $url
@@ -52,7 +48,7 @@ class URL
         }
 
         $ext = pathinfo($url, PATHINFO_EXTENSION);
-        if ( ! empty( $ext )) {
+        if (! empty($ext)) {
             return true;
         }
 
@@ -60,9 +56,8 @@ class URL
             $suffix = static::getSuffix();
         }
 
-        return ! ( strstr($url, $suffix) === false );
+        return ! (strstr($url, $suffix) === false);
     }
-
 
     /**
      * @param string|null $url
@@ -74,12 +69,11 @@ class URL
         return static::startWith(backend_url(), $url);
     }
 
-
     /**
      * @param string      $segment
      * @param string|null $url
      *
-     * @return boolean
+     * @return bool
      */
     public static function startWith($segment, $url = null)
     {
@@ -87,18 +81,17 @@ class URL
             $url = Request::path();
         }
 
-        $parsed     = parse_url($url);
+        $parsed = parse_url($url);
         $path_parts = explode('/', $parsed['path']);
 
         return $path_parts[1] == $segment;
     }
 
-
     /**
      * @param string      $uri
      * @param string|null $url
      *
-     * @return boolean
+     * @return bool
      */
     public static function match($uri, $url = null)
     {
@@ -113,7 +106,7 @@ class URL
             return true;
         }
 
-        if (empty( $uri )) {
+        if (empty($uri)) {
             return false;
         }
 
@@ -123,7 +116,6 @@ class URL
 
         return false;
     }
-
 
     /**
      * Merges the current GET parameters with an array of new or overloaded
@@ -138,7 +130,7 @@ class URL
      * [!!] Parameters with a NULL value are left out.
      *
      * @param   array   $params Array of GET parameters
-     * @param   boolean $useGet Include current request GET parameters
+     * @param   bool $useGet Include current request GET parameters
      *
      * @return  string
      */
@@ -154,7 +146,7 @@ class URL
             }
         }
 
-        if (empty( $params )) {
+        if (empty($params)) {
             // No query parameters
             return '';
         }
@@ -163,6 +155,6 @@ class URL
         $query = http_build_query($params, '', '&');
 
         // Don't prepend '?' to an empty string
-        return ( $query === '' ) ? '' : ( '?' . $query );
+        return ($query === '') ? '' : ('?'.$query);
     }
 }

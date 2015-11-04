@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Behavior;
 
 use KodiCMS\Pages\Contracts\BehaviorInterface;
@@ -6,24 +7,21 @@ use KodiCMS\Pages\Exceptions\BehaviorException;
 
 class Manager
 {
-
     /**
      * @var array
      */
     protected static $behaviors = [];
 
-
     public static function init()
     {
         foreach (config('behaviors', []) as $name => $params) {
-            if (empty( $params['class'] )) {
+            if (empty($params['class'])) {
                 continue;
             }
 
             static::$behaviors[$name] = $params;
         }
     }
-
 
     /**
      * @param $behavior
@@ -36,20 +34,19 @@ class Manager
         $behaviorParams = static::getBehavior($behavior);
 
         if (is_null($behaviorParams)) {
-            return null;
+            return;
         }
 
         $behaviorClass = $behaviorParams['class'];
 
-        if ( ! empty( $behaviorClass ) and ! class_exists($behaviorClass)) {
+        if (! empty($behaviorClass) and ! class_exists($behaviorClass)) {
             throw new BehaviorException("Behavior class \"{$behaviorClass}\" not found!");
         }
 
-        unset( $behaviorParams['class'] );
+        unset($behaviorParams['class']);
 
         return new $behaviorClass($behaviorParams);
     }
-
 
     /**
      * @param $name
@@ -61,7 +58,6 @@ class Manager
         return array_get(static::$behaviors, $name);
     }
 
-
     /**
      * @return array
      */
@@ -69,7 +65,6 @@ class Manager
     {
         return array_keys(static::$behaviors);
     }
-
 
     /**
      * @return array
@@ -79,8 +74,7 @@ class Manager
         $options = ['' => trans('cms::core.label.not_set')];
 
         foreach (static::$behaviors as $name => $params) {
-
-            if (isset( $params['title'] )) {
+            if (isset($params['title'])) {
                 $title = $params['title'];
             } else {
                 $title = ucfirst($name);

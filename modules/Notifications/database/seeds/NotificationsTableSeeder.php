@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Notifications\database\seeds;
 
 use Bus;
@@ -7,7 +8,6 @@ use KodiCMS\Notifications\Jobs\NotificationSend;
 
 class NotificationsTableSeeder extends Seeder
 {
-
     /**
      * Run the database seeds.
      *

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Helpers;
 
 use Illuminate\Support\Collection;
@@ -7,12 +8,10 @@ use KodiCMS\Widgets\Collection\WidgetCollection;
 
 class BlockWysiwyg extends Block
 {
-
     /**
      * @var FrontendPage
      */
     protected $page;
-
 
     /**
      * @param WidgetCollection $collection
@@ -24,14 +23,13 @@ class BlockWysiwyg extends Block
         $this->page = $page;
     }
 
-
     /**
      * @param string $name
      * @param array  $params
      */
     public function run($name, array $params = [])
     {
-        $widgets    = static::getWidgetsByBlock($name, $params);
+        $widgets = static::getWidgetsByBlock($name, $params);
         $collection = new Collection($widgets);
         $collection->sortBy(function ($widget) {
             return $widget->getPosition();
@@ -43,5 +41,4 @@ class BlockWysiwyg extends Block
             'page'    => $this->page,
         ])->render();
     }
-
 }

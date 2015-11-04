@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Datasource\database\seeds;
 
 use Illuminate\Database\Seeder;
 
 class DatasourceTableSeeder extends Seeder
 {
-
     /**
      * Run the database seeds.
      * @return void

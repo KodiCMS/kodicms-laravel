@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Observers;
 
 use Cache;
@@ -7,7 +8,6 @@ use KodiCMS\Pages\Model\PagePart;
 
 class PagePartObserver
 {
-
     /**
      * @param \KodiCMS\Pages\Model\PagePart $part
      *
@@ -27,22 +27,19 @@ class PagePartObserver
             $part->name = 'part';
         }
 
-        if ( ! is_null($part->wysiwyg)) {
+        if (! is_null($part->wysiwyg)) {
             $part->content_html = WYSIWYG::applyFilter($part->wysiwyg, $part->content);
         }
 
         $this->clearCache($part->page_id);
     }
 
-
     /**
      * @param \KodiCMS\Pages\Model\PagePart $part
      */
     public function saved($part)
     {
-
     }
-
 
     /**
      * @param \KodiCMS\Pages\Model\PagePart $part
@@ -51,7 +48,6 @@ class PagePartObserver
     {
         $this->clearCache($part->page_id);
     }
-
 
     /**
      * @param int $pageId

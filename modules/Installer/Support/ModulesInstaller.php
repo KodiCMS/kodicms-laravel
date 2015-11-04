@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Installer\Support;
 
 use App;
@@ -9,7 +10,6 @@ use Illuminate\Database\Migrations\DatabaseMigrationRepository;
 
 class ModulesInstaller
 {
-
     /**
      * @var array
      */
@@ -30,19 +30,17 @@ class ModulesInstaller
      */
     protected $_outputMessages = [];
 
-
     /**
      * @param array $modules
      */
     public function __construct(array $modules)
     {
-        $this->_modules    = $modules;
-        $this->_migrator   = App::make('migrator');
+        $this->_modules = $modules;
+        $this->_migrator = App::make('migrator');
         $this->_repository = App::make('migration.repository');
 
         $this->init();
     }
-
 
     protected function init()
     {
@@ -53,13 +51,11 @@ class ModulesInstaller
         }
     }
 
-
     protected function deinit()
     {
         Schema::dropIfExists('migrations');
         $this->output('Migration table dropped.');
     }
-
 
     /**
      * @return $this
@@ -75,9 +71,8 @@ class ModulesInstaller
         return $this;
     }
 
-
     /**
-     * Run migrations on a single module
+     * Run migrations on a single module.
      *
      * @param ModuleContainer $module
      *
@@ -89,12 +84,11 @@ class ModulesInstaller
 
         $this->output($module->getName());
         foreach ($this->_migrator->getNotes() as $note) {
-            $this->output(' - ' . $note);
+            $this->output(' - '.$note);
         }
 
         return $this;
     }
-
 
     /**
      * @return $this
@@ -110,9 +104,8 @@ class ModulesInstaller
         return $this->rollbackModules();
     }
 
-
     /**
-     * Reset migrations on a single module
+     * Reset migrations on a single module.
      *
      * @param ModuleContainer $module
      *
@@ -125,7 +118,6 @@ class ModulesInstaller
 
         return $this;
     }
-
 
     /**
      * @return $this
@@ -147,7 +139,6 @@ class ModulesInstaller
         return $this;
     }
 
-
     /**
      * @return $this
      */
@@ -160,9 +151,8 @@ class ModulesInstaller
         return $this;
     }
 
-
     /**
-     * Run seeds on a module
+     * Run seeds on a module.
      *
      * @param ModuleContainer $module
      *
@@ -170,9 +160,9 @@ class ModulesInstaller
      */
     public function seedModule(ModuleContainer $module, array $data = [])
     {
-        $className = $module->getNamespace() . '\\database\\seeds\\DatabaseSeeder';
+        $className = $module->getNamespace().'\\database\\seeds\\DatabaseSeeder';
 
-        if ( ! class_exists($className)) {
+        if (! class_exists($className)) {
             return false;
         }
 
@@ -183,7 +173,6 @@ class ModulesInstaller
 
         return $this;
     }
-
 
     /**
      * @param string $message
@@ -197,7 +186,6 @@ class ModulesInstaller
         return $this;
     }
 
-
     /**
      * @return array
      */
@@ -205,7 +193,6 @@ class ModulesInstaller
     {
         return $this->_outputMessages;
     }
-
 
     /**
      * @return $this

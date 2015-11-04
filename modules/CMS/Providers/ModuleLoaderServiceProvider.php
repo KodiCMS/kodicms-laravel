@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Providers;
 
 use KodiCMS\CMS\CMS;
@@ -20,9 +21,8 @@ use KodiCMS\ModulesLoader\Providers\ModuleServiceProvider as BaseModuleServicePr
 
 class ModuleLoaderServiceProvider extends BaseModuleServiceProvider
 {
-
     /**
-     * Providers to register
+     * Providers to register.
      * @var array
      */
     protected $providers = [
@@ -34,7 +34,6 @@ class ModuleLoaderServiceProvider extends BaseModuleServiceProvider
         ConfigServiceProvider::class,
         AuthServiceProvider::class,
     ];
-
 
     /**
      * Register any application services.
@@ -61,9 +60,8 @@ class ModuleLoaderServiceProvider extends BaseModuleServiceProvider
         $this->registerConsoleCommands();
     }
 
-
     /**
-     * Register aliases
+     * Register aliases.
      */
     protected function registerAliases()
     {

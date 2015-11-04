@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\API\Providers;
 
 use Event;
@@ -8,7 +9,6 @@ use KodiCMS\API\Console\Commands\GenerateApiKeyCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         $this->registerAliases([
@@ -17,7 +17,6 @@ class ModuleServiceProvider extends ServiceProvider
 
         $this->registerConsoleCommand(GenerateApiKeyCommand::class);
     }
-
 
     public function boot()
     {

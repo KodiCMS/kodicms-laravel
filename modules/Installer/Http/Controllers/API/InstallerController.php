@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Installer\Http\Controllers\API;
 
 use Installer;
@@ -7,12 +8,10 @@ use KodiCMS\API\Http\Controllers\System\Controller;
 
 class InstallerController extends Controller
 {
-
     /**
      * @var bool
      */
     protected $authRequired = false;
-
 
     public function postDatabaseCheck()
     {

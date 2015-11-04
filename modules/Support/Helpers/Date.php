@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Support\Helpers;
 
 use DateTimeZone;
@@ -6,13 +7,10 @@ use Carbon\Carbon;
 
 /**
  * Class Date
- * TODO: убрать статику. Greabock 20.05.2015
- *
- * @package KodiCMS\CMS\Helpers
+ * TODO: убрать статику. Greabock 20.05.2015.
  */
 class Date
 {
-
     const YEAR = 525600;
     const MONTH = 43200;
     const WEEK = 10080;
@@ -20,9 +18,8 @@ class Date
     const HOUR = 60;
     const MINUTE = 1;
 
-
     /**
-     * @param integer|string|Carbon $date
+     * @param int|string|Carbon $date
      * @param string                $format
      *
      * @return string
@@ -35,17 +32,16 @@ class Date
 
         if ($date instanceof Carbon) {
             return $date->format($format);
-        } else if ( ! is_numeric($date)) {
+        } elseif (! is_numeric($date)) {
             $date = strtotime($date);
         }
 
-        if (empty( $date )) {
+        if (empty($date)) {
             return trans('cms::core.label.date_never');
         }
 
         return date($format, $date);
     }
-
 
     /**
      * @return array
@@ -60,7 +56,6 @@ class Date
 
         return $zones;
     }
-
 
     /**
      * @return array

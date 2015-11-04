@@ -1,13 +1,12 @@
 <?php
+
 namespace KodiCMS\Support\Cache;
 
 use Closure;
-use DateTime;
 use Illuminate\Contracts\Cache\Store;
 
 class DatabaseTaggedCache implements Store
 {
-
     /**
      * The cache store implementation.
      *
@@ -20,7 +19,6 @@ class DatabaseTaggedCache implements Store
      */
     protected $tags;
 
-
     /**
      * Create a new tagged cache instance.
      *
@@ -31,10 +29,9 @@ class DatabaseTaggedCache implements Store
      */
     public function __construct(SqLiteTaggedStore $store, array $tags)
     {
-        $this->tags  = $tags;
+        $this->tags = $tags;
         $this->store = $store;
     }
-
 
     /**
      * Determine if an item exists in the cache.
@@ -47,7 +44,6 @@ class DatabaseTaggedCache implements Store
     {
         return ! is_null($this->get($key));
     }
-
 
     /**
      * Retrieve an item from the cache by key.
@@ -64,7 +60,6 @@ class DatabaseTaggedCache implements Store
         return ! is_null($value) ? $value : value($default);
     }
 
-
     /**
      * Store an item in the cache for a given number of minutes.
      *
@@ -78,7 +73,7 @@ class DatabaseTaggedCache implements Store
     {
         $key = $this->taggedItemKey($key);
 
-        $expiration = $this->getTime() + ( $minutes * 60 );
+        $expiration = $this->getTime() + ($minutes * 60);
 
         $value = serialize($value);
 
@@ -91,7 +86,6 @@ class DatabaseTaggedCache implements Store
         }
     }
 
-
     /**
      * Store an item in the cache if the key does not exist.
      *
@@ -103,7 +97,7 @@ class DatabaseTaggedCache implements Store
      */
     public function add($key, $value, $minutes)
     {
-        if ( ! $this->has($key)) {
+        if (! $this->has($key)) {
             $this->put($key, $value, $minutes);
 
             return true;
@@ -111,7 +105,6 @@ class DatabaseTaggedCache implements Store
 
         return false;
     }
-
 
     /**
      * Increment the value of an item in the cache.
@@ -126,7 +119,6 @@ class DatabaseTaggedCache implements Store
         $this->store->increment($key, $value);
     }
 
-
     /**
      * Increment the value of an item in the cache.
      *
@@ -139,7 +131,6 @@ class DatabaseTaggedCache implements Store
     {
         $this->store->decrement($key, $value);
     }
-
 
     /**
      * Store an item in the cache indefinitely.
@@ -154,7 +145,6 @@ class DatabaseTaggedCache implements Store
         $this->store->forever($key, $value);
     }
 
-
     /**
      * Remove an item from the cache.
      *
@@ -167,7 +157,6 @@ class DatabaseTaggedCache implements Store
         return $this->store->forget($key);
     }
 
-
     /**
      * Remove all items from the cache.
      *
@@ -179,7 +168,6 @@ class DatabaseTaggedCache implements Store
             $this->table()->where('tags', 'like', "%<{$tag}>%")->delete();
         }
     }
-
 
     /**
      * Get an item from the cache, or store the default value.
@@ -195,7 +183,7 @@ class DatabaseTaggedCache implements Store
         // If the item exists in the cache we will just return this immediately
         // otherwise we will execute the given Closure and cache the result
         // of that execution for the given number of minutes in storage.
-        if ( ! is_null($value = $this->get($key))) {
+        if (! is_null($value = $this->get($key))) {
             return $value;
         }
 
@@ -203,7 +191,6 @@ class DatabaseTaggedCache implements Store
 
         return $value;
     }
-
 
     /**
      * Get an item from the cache, or store the default value forever.
@@ -218,7 +205,6 @@ class DatabaseTaggedCache implements Store
         return $this->rememberForever($key, $callback);
     }
 
-
     /**
      * Get an item from the cache, or store the default value forever.
      *
@@ -232,7 +218,7 @@ class DatabaseTaggedCache implements Store
         // If the item exists in the cache we will just return this immediately
         // otherwise we will execute the given Closure and cache the result
         // of that execution for the given number of minutes. It's easy.
-        if ( ! is_null($value = $this->get($key))) {
+        if (! is_null($value = $this->get($key))) {
             return $value;
         }
 
@@ -241,15 +227,13 @@ class DatabaseTaggedCache implements Store
         return $value;
     }
 
-
     /**
      * @return string
      */
     public function prepareTags()
     {
-        return '<' . implode('>,<', $this->tags) . '>';
+        return '<'.implode('>,<', $this->tags).'>';
     }
-
 
     /**
      * Get a fully qualified key for a tagged item.
@@ -260,9 +244,8 @@ class DatabaseTaggedCache implements Store
      */
     public function taggedItemKey($key)
     {
-        return $this->getPrefix() . $key;
+        return $this->getPrefix().$key;
     }
-
 
     /**
      * Get the cache key prefix.
@@ -274,7 +257,6 @@ class DatabaseTaggedCache implements Store
         return $this->store->getPrefix();
     }
 
-
     /**
      * Get the current system time.
      *
@@ -284,7 +266,6 @@ class DatabaseTaggedCache implements Store
     {
         return time();
     }
-
 
     /**
      * Get a query builder for the cache table.

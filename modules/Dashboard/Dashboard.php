@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Dashboard;
 
 use KodiCMS\Users\Model\UserMeta;
@@ -6,10 +7,8 @@ use KodiCMS\Dashboard\Contracts\WidgetDashboard;
 
 class Dashboard
 {
-
     const WIDGET_BLOCKS_KEY = 'dashboard';
     const WIDGET_SETTINGS_KEY = 'dashboard_widget_settings';
-
 
     /**
      * @param string   $widgetId
@@ -21,13 +20,12 @@ class Dashboard
     {
         $widget = array_get(static::getSettings($userId), $widgetId);
 
-        if (is_null($widget = WidgetManagerDashboard::toWidget($widget)) or ! ( $widget instanceof WidgetDashboard )) {
-            return null;
+        if (is_null($widget = WidgetManagerDashboard::toWidget($widget)) or ! ($widget instanceof WidgetDashboard)) {
+            return;
         }
 
         return $widget;
     }
-
 
     /**
      * @param            $type
@@ -55,7 +53,6 @@ class Dashboard
         return $widget;
     }
 
-
     /**
      * @param string   $widgetId
      * @param array    $settings
@@ -66,10 +63,10 @@ class Dashboard
     public static function updateWidget($widgetId, array $settings, $userId = null)
     {
         $widgetSettings = static::getSettings($userId);
-        $widget         = array_get($widgetSettings, $widgetId);
+        $widget = array_get($widgetSettings, $widgetId);
 
         if (is_array($widget) and is_null($widget = WidgetManagerDashboard::toWidget($widget))) {
-            return null;
+            return;
         }
 
         $widget->setSettings($settings);
@@ -79,7 +76,6 @@ class Dashboard
 
         return $widget;
     }
-
 
     /**
      * @param string   $widgetId
@@ -91,13 +87,12 @@ class Dashboard
     {
         $widgetSettings = static::getSettings($userId);
 
-        unset( $widgetSettings[$widgetId] );
+        unset($widgetSettings[$widgetId]);
 
         static::saveSettings($widgetSettings, $userId);
 
         return true;
     }
-
 
     /**
      * @param null|int $userId
@@ -109,7 +104,6 @@ class Dashboard
         return UserMeta::get(self::WIDGET_SETTINGS_KEY, [], $userId);
     }
 
-
     /**
      * @param array    $settings
      * @param null|int $userId
@@ -119,25 +113,24 @@ class Dashboard
         UserMeta::set(self::WIDGET_SETTINGS_KEY, $settings, $userId);
     }
 
-
     /**
-     * TODO: исправить ошибку в имени переменной
+     * TODO: исправить ошибку в имени переменной.
      * @param string   $widgetId
      * @param string   $column
      * @param null|int $userId
      *
-     * @return boolean
+     * @return bool
      */
     public static function moveWidget($widgetId, $column, $userId = null)
     {
         $widgetSettings = static::getSettings($userId);
-        $found          = false;
+        $found = false;
 
         foreach ($widgetSettings as $data) {
             foreach ($ids as $i => $id) {
                 if ($id = $widgetId and $column != $column) {
                     $found = true;
-                    unset( $blocks[$column][$i] );
+                    unset($blocks[$column][$i]);
                     break;
                 }
             }
@@ -153,15 +146,13 @@ class Dashboard
         return false;
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public static function removeData()
     {
         UserMeta::clearByKey([
-            static::WIDGET_SETTINGS_KEY, static::WIDGET_BLOCKS_KEY
+            static::WIDGET_SETTINGS_KEY, static::WIDGET_BLOCKS_KEY,
         ]);
     }
-
 }

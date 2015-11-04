@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Email\Model;
 
 use Carbon\Carbon;
@@ -7,12 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * Class EmailTemplate
- * @package KodiCMS\Email\Model
+ * Class EmailTemplate.
  *
- * @property integer    $id
- * @property integer    $email_event_id
- * @property integer    $status
+ * @property int    $id
+ * @property int    $email_event_id
+ * @property int    $status
  * @property string     $status_string
  * @property bool       $use_queue
  * @property string     $email_from
@@ -31,7 +31,6 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class EmailTemplate extends Model
 {
-
     const TYPE_HTML = 'html';
     const TYPE_TEXT = 'plain';
 
@@ -41,18 +40,16 @@ class EmailTemplate extends Model
     const USE_QUEUE = 1;
     const USE_DIRECT = 0;
 
-
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($emailTemplate) {
-            if (empty( $emailTemplate->message_type )) {
+            if (empty($emailTemplate->message_type)) {
                 $emailTemplate->message_type = 'html';
             }
         });
     }
-
 
     /**
      * @return array
@@ -65,7 +62,6 @@ class EmailTemplate extends Model
         ];
     }
 
-
     /**
      * @return array
      */
@@ -76,7 +72,6 @@ class EmailTemplate extends Model
             static::USE_QUEUE  => trans('email::core.queue.1'),
         ];
     }
-
 
     /**
      * The attributes that are mass assignable.
@@ -106,7 +101,6 @@ class EmailTemplate extends Model
         'use_queue' => 'boolean',
     ];
 
-
     /**
      * @return string
      */
@@ -114,7 +108,6 @@ class EmailTemplate extends Model
     {
         return trans('email::core.messages.templates.not_found');
     }
-
 
     /**
      * @param array $options
@@ -132,7 +125,6 @@ class EmailTemplate extends Model
             return EmailSender::send($this->message, $this, $this->message_type);
         }
     }
-
 
     /**
      * @param array $options
@@ -153,7 +145,7 @@ class EmailTemplate extends Model
      */
     public function getStatusStringAttribute()
     {
-        return trans('email::core.statuses.' . $this->status);
+        return trans('email::core.statuses.'.$this->status);
     }
 
     /*******************************************************
@@ -180,7 +172,6 @@ class EmailTemplate extends Model
         return $this->belongsTo(EmailEvent::class, 'email_event_id');
     }
 
-
     /**
      * @param array $options
      *
@@ -190,12 +181,11 @@ class EmailTemplate extends Model
     {
         $prepared = [];
         foreach ($options as $key => $value) {
-            $prepared['{' . $key . '}'] = $value;
+            $prepared['{'.$key.'}'] = $value;
         }
 
         return $prepared;
     }
-
 
     /**
      * @param array $options

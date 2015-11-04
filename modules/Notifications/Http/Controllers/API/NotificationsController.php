@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Notifications\Http\Controllers\API;
 
 use KodiCMS\Notifications\Repository\NotificationRepository;
@@ -6,7 +7,6 @@ use KodiCMS\API\Http\Controllers\System\Controller as APIController;
 
 class NotificationsController extends APIController
 {
-
     /**
      * @param NotificationRepository $repository
      */
@@ -14,7 +14,6 @@ class NotificationsController extends APIController
     {
         $this->setContent($repository->getNew($this->currentUser));
     }
-
 
     /**
      * @param NotificationRepository $repository

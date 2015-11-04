@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Manager;
 
 use Illuminate\Support\Collection;
@@ -11,9 +12,8 @@ use KodiCMS\Widgets\Contracts\WidgetManager as WidgetManagerInterface;
 
 class WidgetManager implements WidgetManagerInterface
 {
-
     /**
-     * Проверка переданного класса на существоавние
+     * Проверка переданного класса на существоавние.
      *
      * @param string $class
      *
@@ -24,9 +24,8 @@ class WidgetManager implements WidgetManagerInterface
         return class_exists($class);
     }
 
-
     /**
-     * Проверка переданного класса на возможность быть виджетом
+     * Проверка переданного класса на возможность быть виджетом.
      *
      * @param string $class
      *
@@ -37,9 +36,8 @@ class WidgetManager implements WidgetManagerInterface
         return ! static::isCorrupt($class);
     }
 
-
     /**
-     * Проверка переданного класса на существование и наличие интерфейса [\KodiCMS\Widgets\Contracts\Widget]
+     * Проверка переданного класса на существование и наличие интерфейса [\KodiCMS\Widgets\Contracts\Widget].
      *
      * @param string $class
      *
@@ -47,7 +45,7 @@ class WidgetManager implements WidgetManagerInterface
      */
     public static function isCorrupt($class)
     {
-        if ( ! static::isClassExists($class)) {
+        if (! static::isClassExists($class)) {
             return true;
         }
 
@@ -56,9 +54,8 @@ class WidgetManager implements WidgetManagerInterface
         return in_array(WidgetCorrupt::class, $interfaces) or ! in_array(Widget::class, $interfaces);
     }
 
-
     /**
-     * Проверка переданного класса на возможность быть Виджетом обработчиком
+     * Проверка переданного класса на возможность быть Виджетом обработчиком.
      *
      * @param string $class
      *
@@ -68,7 +65,6 @@ class WidgetManager implements WidgetManagerInterface
     {
         return static::isClassExists($class) and in_array(WidgetHandler::class, class_implements($class));
     }
-
 
     /**
      * @param string $class
@@ -80,7 +76,6 @@ class WidgetManager implements WidgetManagerInterface
         return static::isClassExists($class) and in_array(WidgetRenderable::class, class_implements($class));
     }
 
-
     /**
      * @param string $class
      *
@@ -91,7 +86,6 @@ class WidgetManager implements WidgetManagerInterface
         return static::isClassExists($class) and in_array(WidgetCacheable::class, class_implements($class));
     }
 
-
     /**
      * @return array
      */
@@ -100,7 +94,7 @@ class WidgetManager implements WidgetManagerInterface
         $types = [];
         foreach (config('widgets', []) as $group => $widgets) {
             foreach ($widgets as $type => $widget) {
-                if ( ! isset( $widget['class'] ) or static::isCorrupt($widget['class'])) {
+                if (! isset($widget['class']) or static::isCorrupt($widget['class'])) {
                     continue;
                 }
 
@@ -110,7 +104,6 @@ class WidgetManager implements WidgetManagerInterface
 
         return $types;
     }
-
 
     /**
      * @param string $needleType
@@ -126,15 +119,15 @@ class WidgetManager implements WidgetManagerInterface
         }
 
         $reflector = new \ReflectionClass($class);
-        $comments  = $reflector->getMethod('prepareData')->getDocComment();
+        $comments = $reflector->getMethod('prepareData')->getDocComment();
 
         $keys = [];
 
-        if ( ! empty( $comments )) {
+        if (! empty($comments)) {
             $comments = str_replace(['/', '*', "\t", "\n", "\r"], '', $comments);
             preg_match_all("/\[(?s)(?m)(.*)\]/i", $comments, $found);
 
-            if ( ! empty( $found[1] )) {
+            if (! empty($found[1])) {
                 $keys = explode(',', $found[1][0]);
             }
         }
@@ -147,7 +140,6 @@ class WidgetManager implements WidgetManagerInterface
         return $keys;
     }
 
-
     /**
      * @param string $needleType
      *
@@ -157,7 +149,7 @@ class WidgetManager implements WidgetManagerInterface
     {
         foreach (config('widgets', []) as $group => $widgets) {
             foreach ($widgets as $type => $widget) {
-                if ( ! isset( $widget['class'] ) or static::isCorrupt($widget['class'])) {
+                if (! isset($widget['class']) or static::isCorrupt($widget['class'])) {
                     continue;
                 }
 
@@ -167,9 +159,8 @@ class WidgetManager implements WidgetManagerInterface
             }
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @param string $needleClass
@@ -180,7 +171,7 @@ class WidgetManager implements WidgetManagerInterface
     {
         foreach (config('widgets', []) as $group => $widgets) {
             foreach ($widgets as $type => $widget) {
-                if ( ! isset( $widget['class'] ) or static::isCorrupt($widget['class'])) {
+                if (! isset($widget['class']) or static::isCorrupt($widget['class'])) {
                     continue;
                 }
                 if (strpos($widget['class'], $needleClass) !== false) {
@@ -189,9 +180,8 @@ class WidgetManager implements WidgetManagerInterface
             }
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @param Collection $widgets
@@ -203,12 +193,11 @@ class WidgetManager implements WidgetManagerInterface
         return $widgets->map(function ($widget) {
             return $widget->toWidget();
         })->filter(function ($widget) {
-            return ! ( $widget instanceof WidgetCorrupt );
+            return ! ($widget instanceof WidgetCorrupt);
         })->keyBy(function ($widget) {
             return $widget->getId();
         });
     }
-
 
     /**
      * @param string      $type
@@ -222,13 +211,13 @@ class WidgetManager implements WidgetManagerInterface
     {
         $class = static::getClassNameByType($type);
 
-        if ( ! static::isWidgetable($class)) {
-            return null;
+        if (! static::isWidgetable($class)) {
+            return;
         }
 
         $widget = new $class($name, $description);
 
-        if ( ! is_null($settings)) {
+        if (! is_null($settings)) {
             $widget->setSettings($settings);
         }
 

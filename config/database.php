@@ -46,7 +46,7 @@ return [
 
         'sqlite'       => [
             'driver'   => 'sqlite',
-            'database' => storage_path() . DIRECTORY_SEPARATOR . 'database.sqlite',
+            'database' => storage_path().DIRECTORY_SEPARATOR.'database.sqlite',
             'prefix'   => '',
         ],
         'mysql'        => [
@@ -62,7 +62,7 @@ return [
         ],
         'sqlite_cache' => [
             'driver'   => 'sqlite',
-            'database' => storage_path() . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'caches.sqlite',
+            'database' => storage_path().DIRECTORY_SEPARATOR.'framework'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'caches.sqlite',
         ],
 
     ],

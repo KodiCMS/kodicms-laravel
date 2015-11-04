@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Http\Controllers;
 
 use Date;
@@ -9,7 +10,6 @@ use KodiCMS\Support\Helpers\Locale;
 
 class SystemController extends System\BackendController
 {
-
     public function settings()
     {
         $htmlEditors = WYSIWYG::htmlSelect(WYSIWYG::html());
@@ -20,12 +20,10 @@ class SystemController extends System\BackendController
         $this->setContent('system.settings', compact('htmlEditors', 'codeEditors', 'dateFormats', 'availableLocales'));
     }
 
-
     public function about()
     {
         $this->setContent('system.about');
     }
-
 
     public function phpInfo()
     {
@@ -34,13 +32,12 @@ class SystemController extends System\BackendController
         phpinfo();
     }
 
-
     public function update()
     {
         Meta::loadPackage('diff');
-        $updater           = new Updater();
+        $updater = new Updater();
         $repositoryVersion = $updater->getRemoteVersion();
-        $hasNewVersion     = $updater->hasNewVersion();
+        $hasNewVersion = $updater->hasNewVersion();
 
         $issueUrl = $updater->newIssueUrl();
 

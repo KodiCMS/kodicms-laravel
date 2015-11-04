@@ -5,7 +5,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class DatasourceFields extends Migration
 {
-
     public function up()
     {
         Schema::create('datasource_fields', function (Blueprint $table) {
@@ -31,7 +30,6 @@ class DatasourceFields extends Migration
             $table->timestamps();
         });
     }
-
 
     public function down()
     {

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Relation;
 
 use KodiCMS\Datasource\Fields\Relation;
@@ -11,12 +12,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany as HasManyRelation;
 
 class HasMany extends Relation
 {
-
     /**
      * @var bool
      */
     protected $hasDatabaseColumn = false;
-
 
     /**
      * @param DocumentInterface $document
@@ -30,9 +29,8 @@ class HasMany extends Relation
             return \HTML::link($doc->getEditLink(), $doc->getTitle(), ['class' => 'popup']);
         })->all();
 
-        return ! empty( $documents ) ? implode(', ', $documents) : null;
+        return ! empty($documents) ? implode(', ', $documents) : null;
     }
-
 
     /**
      * @param Builder           $query
@@ -43,20 +41,18 @@ class HasMany extends Relation
         $query->with($this->getRelationName());
     }
 
-
     /**
      * @param DocumentInterface $document
      * @param mixed             $value
      */
     public function onDocumentFill(DocumentInterface $document, $value)
     {
-        if ( ! is_null($relatedField = $this->relatedField)) {
+        if (! is_null($relatedField = $this->relatedField)) {
             $documents = $relatedField->getSection()->getEmptyDocument()->whereIn('id', $value)->get();
 
             $document->{$this->getRelationName()}()->saveMany($documents);
         }
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -65,7 +61,7 @@ class HasMany extends Relation
      */
     public function getRelatedDocumentValues(DocumentInterface $document)
     {
-        if ( ! is_null($relatedField = $this->relatedField)) {
+        if (! is_null($relatedField = $this->relatedField)) {
             $section = $relatedField->getSection();
 
             return $this->getDocumentRelation($document, $section)
@@ -76,7 +72,6 @@ class HasMany extends Relation
 
         return [];
     }
-
 
     /**
      * @param DocumentInterface     $document
@@ -91,11 +86,10 @@ class HasMany extends Relation
         $instance = $relatedSection->getEmptyDocument()->newQuery();
 
         $foreignKey = $this->relatedField->getDBKey();
-        $localKey   = $relatedSection->getDocumentPrimaryKey();
+        $localKey = $relatedSection->getDocumentPrimaryKey();
 
         return new HasManyRelation($instance, $document, $foreignKey, $localKey);
     }
-
 
     /**
      * @param FieldRepository $repository
@@ -104,7 +98,7 @@ class HasMany extends Relation
      */
     public function onCreated(FieldRepository $repository)
     {
-        if ( ! is_null($this->getRelatedFieldId())) {
+        if (! is_null($this->getRelatedFieldId())) {
             return;
         }
 
@@ -112,17 +106,16 @@ class HasMany extends Relation
             'type'               => 'has_one',
             'section_id'         => $this->getRelatedSectionId(),
             'is_system'          => 1,
-            'key'                => $this->getDBKey() . '_has_many',
+            'key'                => $this->getDBKey().'_has_many',
             'name'               => $this->getSection()->getName(),
             'related_section_id' => $this->getSection()->getId(),
             'related_field_id'   => $this->getId(),
         ]);
 
-        if ( ! is_null($relatedField)) {
+        if (! is_null($relatedField)) {
             $this->update(['related_field_id' => $relatedField->getId()]);
         }
     }
-
 
     /**
      * @param DocumentInterface $document

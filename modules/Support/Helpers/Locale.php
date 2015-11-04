@@ -1,17 +1,15 @@
 <?php
+
 namespace KodiCMS\Support\Helpers;
 
 use Request;
 
 /**
- * Class Locale
- * @package KodiCMS\CMS\Helpers
+ * Class Locale.
  */
 class Locale
 {
-
     const DEFAULT_LOCALE = 'sys';
-
 
     /**
      * @return string
@@ -21,7 +19,6 @@ class Locale
         return substr(Request::server('http_accept_language'), 0, 2);
     }
 
-
     /**
      * @return array
      */
@@ -29,7 +26,6 @@ class Locale
     {
         return config('cms.locales', []);
     }
-
 
     /**
      * @return string

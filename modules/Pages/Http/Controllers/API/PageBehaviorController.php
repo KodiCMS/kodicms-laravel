@@ -1,14 +1,13 @@
 <?php
+
 namespace KodiCMS\Pages\Http\Controllers\API;
 
-use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Behavior\Manager as BehaviorManager;
 use KodiCMS\API\Http\Controllers\System\Controller as APIController;
 use KodiCMS\Pages\Repository\PageRepository;
 
 class PageBehaviorController extends APIController
 {
-
     /**
      * @param PageRepository $pageRepository
      *
@@ -16,10 +15,10 @@ class PageBehaviorController extends APIController
      */
     public function getSettings(PageRepository $pageRepository)
     {
-        $pageId   = $this->getParameter('pid');
+        $pageId = $this->getParameter('pid');
         $behavior = $this->getRequiredParameter('behavior');
 
-        if ( ! is_null($behavior = BehaviorManager::load($behavior))) {
+        if (! is_null($behavior = BehaviorManager::load($behavior))) {
             $page = $pageRepository->findOrFail($pageId);
             if ($page->hasBehavior()) {
                 $behavior->setPage($page);

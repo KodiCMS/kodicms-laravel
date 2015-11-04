@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Model;
 
 use Illuminate\Contracts\View\View;
@@ -6,12 +7,10 @@ use KodiCMS\CMS\Model\FileCollection;
 
 class SnippetCollection extends FileCollection
 {
-
     public function __construct()
     {
         return parent::__construct(snippets_path(), 'snippets');
     }
-
 
     /**
      * @param string|View $filename
@@ -25,6 +24,6 @@ class SnippetCollection extends FileCollection
             return $snippet->toView($parameters);
         }
 
-        return null;
+        return;
     }
 }

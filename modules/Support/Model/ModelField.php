@@ -1,7 +1,7 @@
 <?php
+
 namespace KodiCMS\Support\Model;
 
-use Form;
 use KodiCMS\Support\Traits\Settings;
 use KodiCMS\Support\Helpers\Callback;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +11,6 @@ use KodiCMS\Support\Model\Contracts\ModelFieldInterface;
 
 abstract class ModelField implements ModelFieldInterface
 {
-
     use Settings, HtmlAttributes;
 
     /**
@@ -69,7 +68,6 @@ abstract class ModelField implements ModelFieldInterface
      */
     protected $hasInputGroups = false;
 
-
     /**
      * @param string     $key
      * @param array|null $attributes
@@ -77,16 +75,16 @@ abstract class ModelField implements ModelFieldInterface
      */
     public function __construct($key, array $attributes = null, array $settings = null)
     {
-        $this->key      = $key;
+        $this->key = $key;
         $this->modelKey = $key;
 
-        if ( ! is_null($settings)) {
+        if (! is_null($settings)) {
             $this->setSettings($settings);
         }
 
         $this->title = ucwords(str_replace(['_'], ' ', $key));
 
-        if ( ! is_null($attributes)) {
+        if (! is_null($attributes)) {
             $this->setAttributes($attributes);
         }
 
@@ -96,15 +94,13 @@ abstract class ModelField implements ModelFieldInterface
         $this->boot();
     }
 
-
     /**
      * @return string
      */
     public function getId()
     {
-        return $this->getAttribute('id', $this->model->getTable() . '_' . $this->getKey());
+        return $this->getAttribute('id', $this->model->getTable().'_'.$this->getKey());
     }
-
 
     /**
      * @return string
@@ -114,7 +110,6 @@ abstract class ModelField implements ModelFieldInterface
         return $this->title;
     }
 
-
     /**
      * @return Model
      */
@@ -123,13 +118,12 @@ abstract class ModelField implements ModelFieldInterface
         return $this->model;
     }
 
-
     /**
      * @return mixed
      */
     public function getValue()
     {
-        if (isset( $this->callbackValue )) {
+        if (isset($this->callbackValue)) {
             $this->getCallbackValue();
         }
 
@@ -142,7 +136,6 @@ abstract class ModelField implements ModelFieldInterface
         return $value;
     }
 
-
     /**
      * @return mixed
      */
@@ -150,7 +143,6 @@ abstract class ModelField implements ModelFieldInterface
     {
         return $this->defaultValue;
     }
-
 
     /**
      * @return string
@@ -160,7 +152,6 @@ abstract class ModelField implements ModelFieldInterface
         return $this->key;
     }
 
-
     /**
      * @return string
      */
@@ -168,7 +159,6 @@ abstract class ModelField implements ModelFieldInterface
     {
         return $this->modelKey;
     }
-
 
     /**
      * @return int
@@ -178,7 +168,6 @@ abstract class ModelField implements ModelFieldInterface
         return self::$tabIndex++;
     }
 
-
     /**
      * @param array $attributes
      *
@@ -186,13 +175,12 @@ abstract class ModelField implements ModelFieldInterface
      */
     public function getLabel(array $attributes = null)
     {
-        if ( ! is_null($attributes)) {
+        if (! is_null($attributes)) {
             $this->label->setAttributes($attributes);
         }
 
         return $this->label;
     }
-
 
     /**
      * @param array $attributes
@@ -201,13 +189,12 @@ abstract class ModelField implements ModelFieldInterface
      */
     public function getGroup(array $attributes = null)
     {
-        if ( ! is_null($attributes)) {
+        if (! is_null($attributes)) {
             $this->group->setAttributes($attributes);
         }
 
         return $this->group;
     }
-
 
     /**
      * @return bool
@@ -217,7 +204,6 @@ abstract class ModelField implements ModelFieldInterface
         return $this->hasInputGroups;
     }
 
-
     /**
      * @param string $text
      *
@@ -225,12 +211,11 @@ abstract class ModelField implements ModelFieldInterface
      */
     public function setSettingAppend($text)
     {
-        $this->hasInputGroups     = true;
+        $this->hasInputGroups = true;
         $this->settings['append'] = $text;
 
         return $this;
     }
-
 
     /**
      * @param string $text
@@ -239,12 +224,11 @@ abstract class ModelField implements ModelFieldInterface
      */
     public function setSettingPrepend($text)
     {
-        $this->hasInputGroups      = true;
+        $this->hasInputGroups = true;
         $this->settings['prepend'] = $text;
 
         return $this;
     }
-
 
     /**
      * @return string
@@ -254,7 +238,6 @@ abstract class ModelField implements ModelFieldInterface
         return $this->addInputGroup(array_get($this->settings, 'append'));
     }
 
-
     /**
      * @return string
      */
@@ -263,7 +246,6 @@ abstract class ModelField implements ModelFieldInterface
         return $this->addInputGroup(array_get($this->settings, 'prepend'));
     }
 
-
     /**
      * @param string $text
      *
@@ -271,28 +253,26 @@ abstract class ModelField implements ModelFieldInterface
      */
     public function addInputGroup($text)
     {
-        if (empty( $text )) {
-            return null;
+        if (empty($text)) {
+            return;
         }
 
         $this->hasInputGroups = true;
 
-        return '<span class="input-group-addon">' . $text . '</span>';
+        return '<span class="input-group-addon">'.$text.'</span>';
     }
-
 
     /**
      * @return string
      */
     public function getSettingHelpText()
     {
-        if (empty( $this->settings['helpText'] )) {
-            return null;
+        if (empty($this->settings['helpText'])) {
+            return;
         }
 
-        return '<span class="help-block">' . $this->settings['helpText'] . '</span>';
+        return '<span class="help-block">'.$this->settings['helpText'].'</span>';
     }
-
 
     /**
      * @param callable $callback
@@ -306,7 +286,6 @@ abstract class ModelField implements ModelFieldInterface
         return $this;
     }
 
-
     /**
      * @param callable $callback
      *
@@ -319,7 +298,6 @@ abstract class ModelField implements ModelFieldInterface
         return $this;
     }
 
-
     /**
      * @param sreing|null $prefix
      *
@@ -327,13 +305,12 @@ abstract class ModelField implements ModelFieldInterface
      */
     public function getName($prefix = null)
     {
-        if ( ! is_null($prefix)) {
+        if (! is_null($prefix)) {
             $this->setPrefix($prefix);
         }
 
-        return empty( $this->prefix ) ? $this->getKey() : $this->prefix . '[' . $this->getKey() . ']';
+        return empty($this->prefix) ? $this->getKey() : $this->prefix.'['.$this->getKey().']';
     }
-
 
     /**
      * @param string $title
@@ -347,7 +324,6 @@ abstract class ModelField implements ModelFieldInterface
         return $this;
     }
 
-
     /**
      * @param string|array $prefix
      *
@@ -358,9 +334,9 @@ abstract class ModelField implements ModelFieldInterface
         if (is_array($prefix)) {
             $firstSegment = array_shift($prefix);
 
-            if ( ! empty( $prefix )) {
+            if (! empty($prefix)) {
                 $prefix = implode('][', $prefix);
-                $prefix = $firstSegment . '[' . $prefix . ']';
+                $prefix = $firstSegment.'['.$prefix.']';
             } else {
                 $prefix = $firstSegment;
             }
@@ -370,7 +346,6 @@ abstract class ModelField implements ModelFieldInterface
 
         return $this;
     }
-
 
     /**
      * @param Model $model
@@ -384,7 +359,6 @@ abstract class ModelField implements ModelFieldInterface
         return $this;
     }
 
-
     /**
      * @param string $key
      *
@@ -397,7 +371,6 @@ abstract class ModelField implements ModelFieldInterface
         return $this;
     }
 
-
     /**
      * @param mixed $value
      *
@@ -409,7 +382,6 @@ abstract class ModelField implements ModelFieldInterface
 
         return $this;
     }
-
 
     /**
      * @param array $attributes
@@ -424,13 +396,12 @@ abstract class ModelField implements ModelFieldInterface
 
         $this->setAttributes($attributes);
 
-        if ( ! isset( $this->attributes['id'] )) {
+        if (! isset($this->attributes['id'])) {
             $this->attributes['id'] = $this->getId();
         }
 
         return $this->getFormFieldHTML($this->getName(), $this->getValue(), $this->getAttributes());
     }
-
 
     /**
      * @param array       $attributes
@@ -447,7 +418,6 @@ abstract class ModelField implements ModelFieldInterface
         return $this->getLabel()->render($attributes, $title);
     }
 
-
     /**
      * @param array $attributes
      *
@@ -462,7 +432,6 @@ abstract class ModelField implements ModelFieldInterface
         return $this->getGroup()->render($attributes);
     }
 
-
     /**
      * @return string
      */
@@ -471,7 +440,6 @@ abstract class ModelField implements ModelFieldInterface
         return (string) $this->renderGroup();
     }
 
-
     /**
      * @return mixed
      */
@@ -479,7 +447,6 @@ abstract class ModelField implements ModelFieldInterface
     {
         return Callback::invoke($this->callbackValue, $this->callbackParameters);
     }
-
 
     /**
      * @return mixed
@@ -490,23 +457,20 @@ abstract class ModelField implements ModelFieldInterface
 
         if ($value instanceof Model) {
             $value = $value->getAttribute($value->getKeyName());
-        } else if ($value instanceof Collection) {
+        } elseif ($value instanceof Collection) {
             $value = $value->lists('id')->all();
         }
 
         return $value;
     }
 
-
     protected function boot()
     {
     }
 
-
     protected function beforeRender()
     {
     }
-
 
     /**
      * @param string $name

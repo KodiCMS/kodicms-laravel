@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Http\Controllers\System;
 
 use ModulesFileSystem;
@@ -7,13 +8,12 @@ use KodiCMS\Support\Helpers\Mime;
 
 class VirtualMediaLinksController extends Controller
 {
-
     public function find()
     {
         $route = $this->getRouter()->getCurrentRoute();
 
         $file = $route->getParameter('file');
-        $ext  = $route->getParameter('ext');
+        $ext = $route->getParameter('ext');
 
         if ($file = ModulesFileSystem::findFile('resources', $file, $ext)) {
             return (new Response(file_get_contents($file)))

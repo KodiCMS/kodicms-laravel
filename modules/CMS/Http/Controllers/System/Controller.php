@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Http\Controllers\System;
 
 use Illuminate\Http\RedirectResponse;
@@ -12,9 +13,7 @@ use KodiCMS\Support\Traits\Controller as ControllerTrait;
 
 abstract class Controller extends BaseController
 {
-
     use DispatchesJobs, ValidatesRequests, AuthorizesRequests, ControllerTrait, ControllerACL;
-
 
     public function initMiddleware()
     {
@@ -22,7 +21,6 @@ abstract class Controller extends BaseController
             $this->middleware('backend.auth');
         }
     }
-
 
     /**
      * @param array       $parameters
@@ -36,11 +34,11 @@ abstract class Controller extends BaseController
 
         if ($route === null) {
             if ($isContinue) {
-                $route = action('\\' . get_called_class() . '@getEdit', $parameters);
+                $route = action('\\'.get_called_class().'@getEdit', $parameters);
             } else {
-                $route = action('\\' . get_called_class() . '@getIndex');
+                $route = action('\\'.get_called_class().'@getIndex');
             }
-        } else if (strpos($route, '@') !== false) {
+        } elseif (strpos($route, '@') !== false) {
             $route = action($route, $parameters);
         } else {
             $route = route($route, $parameters);
@@ -52,7 +50,6 @@ abstract class Controller extends BaseController
 
         return redirect($route);
     }
-
 
     /**
      * @param RedirectResponse $response

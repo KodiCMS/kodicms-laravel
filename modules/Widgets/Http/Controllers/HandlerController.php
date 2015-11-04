@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Http\Controllers;
 
 use KodiCMS\CMS\Exceptions\ValidationException;
@@ -8,7 +9,6 @@ use KodiCMS\CMS\Http\Controllers\System\Controller;
 
 class HandlerController extends Controller
 {
-
     /**
      * @param WidgetRepository $repository
      * @param int              $handlerId
@@ -22,7 +22,7 @@ class HandlerController extends Controller
 
         $widget = $repository->findOrFail($handlerId);
 
-        if ( ! $widget->isHandler()) {
+        if (! $widget->isHandler()) {
             throw new WidgetException('Widget handler not found');
         }
 

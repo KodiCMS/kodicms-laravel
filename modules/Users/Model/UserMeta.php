@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Model;
 
 use DB;
@@ -6,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 
 class UserMeta
 {
-
     const TABLE = 'user_meta';
 
     /**
@@ -14,11 +14,10 @@ class UserMeta
      */
     protected static $cache = [];
 
-
     /**
      * @param string       $key
      * @param mixed        $default
-     * @param integer|User $userId
+     * @param int|User $userId
      *
      * @return mixed
      */
@@ -45,13 +44,12 @@ class UserMeta
         return $value;
     }
 
-
     /**
      * @param string       $key
      * @param mixed        $value
-     * @param integer|User $userId
+     * @param int|User $userId
      *
-     * @return boolean
+     * @return bool
      */
     public static function set($key, $value, $userId = null)
     {
@@ -59,7 +57,7 @@ class UserMeta
         static::load($userId);
         $value = json_encode($value);
 
-        if (isset( static::$cache[$userId][$key] )) {
+        if (isset(static::$cache[$userId][$key])) {
             $status = (bool) DB::table(static::TABLE)
                 ->where('key', $key)
                 ->where('user_id', $userId)
@@ -78,12 +76,11 @@ class UserMeta
         return $status;
     }
 
-
     /**
      * @param string       $key
-     * @param integer|User $userId
+     * @param int|User $userId
      *
-     * @return boolean
+     * @return bool
      */
     public static function delete($key, $userId = null)
     {
@@ -96,12 +93,11 @@ class UserMeta
             ->delete();
     }
 
-
     /**
-     * TODO: используется не объявленный параметр
+     * TODO: используется не объявленный параметр.
      * @param string|array $key
      *
-     * @return boolean
+     * @return bool
      */
     public static function clearByKey($key)
     {
@@ -113,11 +109,10 @@ class UserMeta
             ->delete();
     }
 
-
     /**
-     * @param integer|User $userId
+     * @param int|User $userId
      *
-     * @return boolean
+     * @return bool
      */
     public static function clear($userId = null)
     {
@@ -129,9 +124,8 @@ class UserMeta
             ->delete();
     }
 
-
     /**
-     * @param integer|User $userId
+     * @param int|User $userId
      *
      * @return array
      */
@@ -139,7 +133,7 @@ class UserMeta
     {
         $userId = static::getUser($userId);
 
-        if ( ! isset( static::$cache[$userId] )) {
+        if (! isset(static::$cache[$userId])) {
             static::$cache[$userId] = DB::table(static::TABLE)
                 ->select('key', 'value')
                 ->where('user_id', $userId)
@@ -149,38 +143,35 @@ class UserMeta
         return static::$cache[$userId];
     }
 
-
     /**
-     * @param integer|User $userId
+     * @param int|User $userId
      * @param string       $key
      *
      * @return mixed|null
      */
     protected static function getFromCache($userId, $key)
     {
-        $value = array_get(static::$cache, $userId . '.' . $key);
-        if ( ! is_null($value)) {
+        $value = array_get(static::$cache, $userId.'.'.$key);
+        if (! is_null($value)) {
             return json_decode($value, true);
         }
 
-        return null;
+        return;
     }
 
-
     /**
-     * @param integer|User $userId
+     * @param int|User $userId
      */
     protected static function clearCache($userId = null)
     {
         $userId = static::getUser($userId);
-        unset( static::$cache[$userId] );
+        unset(static::$cache[$userId]);
     }
 
-
     /**
-     * @param integer|User $userId
+     * @param int|User $userId
      *
-     * @return integer
+     * @return int
      */
     protected static function getUser($userId = null)
     {

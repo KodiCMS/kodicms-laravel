@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Plugins\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Plugin extends Model
 {
-
     /**
      * The table associated with the model.
      *

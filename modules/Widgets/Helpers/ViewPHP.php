@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Widgets\Helpers;
 
 class ViewPHP
 {
-
     /**
      * @var string
      */
@@ -14,7 +14,6 @@ class ViewPHP
      */
     protected $data = [];
 
-
     /**
      * @param string $phpCode
      */
@@ -22,7 +21,6 @@ class ViewPHP
     {
         $this->phpCode = $phpCode;
     }
-
 
     /**
      * Add a piece of data to the view.
@@ -43,7 +41,6 @@ class ViewPHP
         return $this;
     }
 
-
     /**
      * @return string
      * @throws Exception
@@ -58,7 +55,7 @@ class ViewPHP
         ob_start();
 
         try {
-            eval( '?>' . $this->phpCode );
+            eval('?>'.$this->phpCode);
         } catch (\Exception $e) {
             // Delete the output buffer
             ob_end_clean();

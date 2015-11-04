@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\database\seeds;
 
 use Carbon\Carbon;
@@ -9,7 +10,6 @@ use KodiCMS\Pages\Model\PagePart;
 
 class PagesTableSeeder extends Seeder
 {
-
     /**
      * Run the database seeds.
      *

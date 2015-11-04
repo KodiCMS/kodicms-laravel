@@ -1,23 +1,21 @@
 <?php
+
 namespace KodiCMS\Support\Helpers;
 
 class TreeCollection implements \RecursiveIterator
 {
-
     /**
      * @var int
      */
     private $position = 0;
 
     /**
-     * Список элементов
+     * Список элементов.
      * @var array
      */
     protected $elements = [];
 
-
     /**
-     *
      * @param array $array
      */
     public function __construct(array $array = [])
@@ -25,11 +23,10 @@ class TreeCollection implements \RecursiveIterator
         $this->elements = $array;
     }
 
-
     /**
-     * Поиск страницы по ID
+     * Поиск страницы по ID.
      *
-     * @param integer $id
+     * @param int $id
      *
      * @return $this
      */
@@ -40,9 +37,7 @@ class TreeCollection implements \RecursiveIterator
         return $this;
     }
 
-
     /**
-     *
      * @param string $key
      * @param string $value
      *
@@ -55,9 +50,8 @@ class TreeCollection implements \RecursiveIterator
         return $this;
     }
 
-
     /**
-     * Фильтрация массива
+     * Фильтрация массива.
      *
      * @param string $key
      * @param mixed  $value
@@ -71,14 +65,13 @@ class TreeCollection implements \RecursiveIterator
         return $this;
     }
 
-
     /**
-     * Получение внутренних страниц относительно текущей
+     * Получение внутренних страниц относительно текущей.
      * @return $this
      */
     public function children()
     {
-        if ( ! empty( $this->elements[0]['childs'] )) {
+        if (! empty($this->elements[0]['childs'])) {
             $this->elements = $this->elements[0]['childs'];
         } else {
             $this->elements = [];
@@ -87,41 +80,39 @@ class TreeCollection implements \RecursiveIterator
         return $this;
     }
 
-
     /**
-     * Исключение из карты сайта страниц по ID
+     * Исключение из карты сайта страниц по ID.
      *
      * @param array   $ids
-     * @param boolean $removeChilds
+     * @param bool $removeChilds
      *
      * @return $this
      */
     public function exclude(array $ids, $removeChilds = true)
     {
-        if ( ! empty( $ids )) {
+        if (! empty($ids)) {
             $array = $this->elements;
             $this->_exclude($array, $ids, $removeChilds);
             $this->elements = $array;
-            unset( $array );
+            unset($array);
         }
 
         return $this;
     }
 
-
     /**
-     * Вывов спсика страниц в виде массива
+     * Вывов спсика страниц в виде массива.
      *
-     * @param boolean $childs Показывать дочерние эелементы
+     * @param bool $childs Показывать дочерние эелементы
      *
      * @return array
      */
     public function asArray($childs = true)
     {
         if ($childs === false) {
-            foreach ($this->elements as & $row) {
-                if (isset( $row['childs'] )) {
-                    unset( $row['childs'] );
+            foreach ($this->elements as &$row) {
+                if (isset($row['childs'])) {
+                    unset($row['childs']);
                 }
             }
         }
@@ -129,11 +120,10 @@ class TreeCollection implements \RecursiveIterator
         return $this->elements;
     }
 
-
     /**
-     * Сделать список страниц плоским
+     * Сделать список страниц плоским.
      *
-     * @param boolean $childs Показывать дочерние эелементы
+     * @param bool $childs Показывать дочерние эелементы
      *
      * @return array
      */
@@ -142,27 +132,25 @@ class TreeCollection implements \RecursiveIterator
         return $this->_flatten($this->elements, $childs);
     }
 
-
     /**
-     * Получить хлебные крошки для текущей страницы
+     * Получить хлебные крошки для текущей страницы.
      *
      * @return array
      */
     public function breadcrumbs()
     {
-        if (isset( $this->elements[0] )) {
+        if (isset($this->elements[0])) {
             return array_reverse($this->_breadcrumbs($this->elements[0]));
         }
 
         return [];
     }
 
-
     /**
-     * Получить список страниц для выпадающего списка <select>
+     * Получить список страниц для выпадающего списка <select>.
      *
      * @param string  $titleKey
-     * @param boolean $level
+     * @param bool $level
      * @param bool    $emptyValue
      *
      * @return array
@@ -184,12 +172,11 @@ class TreeCollection implements \RecursiveIterator
                 $levelString = '';
             }
 
-            $options[$row['id']] = $levelString . $row[$titleKey];
+            $options[$row['id']] = $levelString.$row[$titleKey];
         }
 
         return $options;
     }
-
 
     /**
      * @param array  $array
@@ -206,10 +193,10 @@ class TreeCollection implements \RecursiveIterator
                 return [$row];
             }
 
-            if ( ! empty( $row['childs'] )) {
+            if (! empty($row['childs'])) {
                 $found = $this->_find($row['childs'], $key, $value);
 
-                if ( ! empty( $found )) {
+                if (! empty($found)) {
                     return $found;
                 }
             }
@@ -217,7 +204,6 @@ class TreeCollection implements \RecursiveIterator
 
         return $found;
     }
-
 
     /**
      * @param array $data
@@ -229,122 +215,113 @@ class TreeCollection implements \RecursiveIterator
     {
         $crumbs[] = $data;
 
-        if ( ! empty( $data['parent'] )) {
+        if (! empty($data['parent'])) {
             $this->_breadcrumbs($data['parent'], $crumbs);
         }
 
         return $crumbs;
     }
 
-
     /**
      * @param array   $array
      * @param array   $ids
-     * @param boolean $removeChilds
+     * @param bool $removeChilds
      *
      * @return array
      */
     protected function _exclude(&$array, array $ids, $removeChilds = true)
     {
-        foreach ($array as $i => & $row) {
+        foreach ($array as $i => &$row) {
             if (in_array($row['id'], $ids)) {
-                unset( $array[$i] );
+                unset($array[$i]);
 
-                if ($removeChilds !== true and ! empty( $row['childs'] )) {
+                if ($removeChilds !== true and ! empty($row['childs'])) {
                     foreach ($row['childs'] as $child) {
                         $array[] = $child;
                     }
                 }
             }
 
-            if ( ! empty( $row['childs'] )) {
+            if (! empty($row['childs'])) {
                 $childs = $row['childs'];
                 $this->_exclude($childs, $ids, $removeChilds);
                 $row['childs'] = $childs;
-                unset( $childs );
+                unset($childs);
             }
         }
 
         return $array;
     }
 
-
     /**
      * @param array  $array
      * @param string $key
      * @param mixed  $value
      */
-    protected function _filter(& $array, $key, $value)
+    protected function _filter(&$array, $key, $value)
     {
         foreach ($array as $i => $row) {
-            if (isset( $row[$key] ) and $row[$key] == $value) {
-                unset( $array[$i] );
+            if (isset($row[$key]) and $row[$key] == $value) {
+                unset($array[$i]);
             }
         }
     }
 
-
     /**
      * @param array   $array
-     * @param boolean $childs
+     * @param bool $childs
      * @param array   $return
      *
      * @return array
      */
-    protected function _flatten(array $array, $childs = true, & $return = [])
+    protected function _flatten(array $array, $childs = true, &$return = [])
     {
         foreach ($array as $row) {
             $return[$row['id']] = $row;
 
-            if ($childs !== false and ! empty( $row['childs'] )) {
+            if ($childs !== false and ! empty($row['childs'])) {
                 $this->_flatten($row['childs'], $childs, $return);
             }
 
-            unset( $return[$row['id']]['childs'] );
+            unset($return[$row['id']]['childs']);
         }
 
         return $return;
     }
 
-
     /*********************************************
      * RecursiveIterator Methods
      **********************************************/
+
     public function hasChildren()
     {
         return is_array($this->elements[$this->position]['childs']);
     }
-
 
     public function getChildren()
     {
         return new static($this->elements[$this->position]['childs']);
     }
 
-
     public function current()
     {
         return $this->elements[$this->position];
     }
-
 
     public function next()
     {
         $this->position++;
     }
 
-
     public function key()
     {
         return $this->position;
     }
 
-
     public function valid()
     {
-        return isset( $this->elements[$this->position] );
+        return isset($this->elements[$this->position]);
     }
-
 
     public function rewind()
     {

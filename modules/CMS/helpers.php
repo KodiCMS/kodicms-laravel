@@ -1,6 +1,6 @@
 <?php
 
-if ( ! function_exists('backend_url')) {
+if (! function_exists('backend_url')) {
     /**
      * @param null|string $path
      *
@@ -8,7 +8,7 @@ if ( ! function_exists('backend_url')) {
      */
     function backend_url($path = null)
     {
-        return App::backendUrlSegmentName() . ( ! is_null($path) ? '/' . ltrim($path, '/') : $path );
+        return App::backendUrlSegmentName().(! is_null($path) ? '/'.ltrim($path, '/') : $path);
     }
 }
 
@@ -17,7 +17,7 @@ if ( ! function_exists('backend_url')) {
  */
 function resources_url($path = null)
 {
-    return App::resourcesURL(! is_null($path) ? '/' . ltrim($path, '/') : $path);
+    return App::resourcesURL(! is_null($path) ? '/'.ltrim($path, '/') : $path);
 }
 
 /**
@@ -25,7 +25,7 @@ function resources_url($path = null)
  */
 function backend_resources_url($path = null)
 {
-    return App::backendResourcesURL(! is_null($path) ? '/' . ltrim($path, '/') : $path);
+    return App::backendResourcesURL(! is_null($path) ? '/'.ltrim($path, '/') : $path);
 }
 
 /**

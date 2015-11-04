@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Cron\Observers;
 
 use KodiCMS\Cron\Model\Job;
 
 class JobObserver
 {
-
     /**
      * @param Job $job
      */
@@ -15,7 +15,6 @@ class JobObserver
             $job->setNextRun();
         }
     }
-
 
     /**
      * @param Job $job

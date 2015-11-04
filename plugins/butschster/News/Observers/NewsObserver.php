@@ -1,9 +1,9 @@
 <?php
+
 namespace Plugins\butschster\News\Observers;
 
 class NewsObserver
 {
-
     /**
      * @param \Plugins\butschster\News\Model\News $news
      *
@@ -13,7 +13,6 @@ class NewsObserver
     {
         $news->user()->associate(auth()->user());
     }
-
 
     /**
      * @param \Plugins\butschster\News\Model\News $news

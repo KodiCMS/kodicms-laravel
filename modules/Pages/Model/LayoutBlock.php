@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Model;
 
 use DB;
@@ -6,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class LayoutBlock extends Model
 {
-
     /**
      * The table associated with the model.
      *
@@ -35,9 +35,8 @@ class LayoutBlock extends Model
      */
     protected $guarded = [];
 
-
     /**
-     * Метод служит для поиска в переданном шаблоне размеченных блоков
+     * Метод служит для поиска в переданном шаблоне размеченных блоков.
      *
      * @param string $content
      *
@@ -54,7 +53,6 @@ class LayoutBlock extends Model
         );
     }
 
-
     /**
      * @param string $content
      *
@@ -66,7 +64,6 @@ class LayoutBlock extends Model
 
         return is_array($blocks[1]) ? $blocks[1] : [];
     }
-
 
     /**
      * @param string $content
@@ -80,9 +77,8 @@ class LayoutBlock extends Model
         return is_array($blocks[2]) ? $blocks[2] : [];
     }
 
-
     /**
-     * Получение списка блоков по умолчанию
+     * Получение списка блоков по умолчанию.
      * @return array
      */
     public static function getDefaultBlocks()
@@ -95,7 +91,6 @@ class LayoutBlock extends Model
         ];
     }
 
-
     /**
      * @param null|string $layoutName
      *
@@ -107,12 +102,12 @@ class LayoutBlock extends Model
 
         $query = DB::table($this->getTable());
 
-        if ( ! is_null($layoutName)) {
+        if (! is_null($layoutName)) {
             $query->where('layout_name', $layoutName);
         }
 
         foreach ($query->get() as $row) {
-            if (empty( $data[$row->layout_name] )) {
+            if (empty($data[$row->layout_name])) {
                 $data[$row->layout_name] = static::getDefaultBlocks();
             }
 
@@ -121,12 +116,12 @@ class LayoutBlock extends Model
 
         foreach ($data as $layoutName => $blocks) {
             $post = $blocks['POST'];
-            unset( $data[$layoutName]['POST'] );
+            unset($data[$layoutName]['POST']);
             $data[$layoutName]['POST'] = $post;
         }
 
         foreach ((new LayoutCollection)->getFiles() as $file) {
-            if ( ! isset( $data[$file->getName()] )) {
+            if (! isset($data[$file->getName()])) {
                 $data[$file->getName()] = static::getDefaultBlocks();
             }
         }

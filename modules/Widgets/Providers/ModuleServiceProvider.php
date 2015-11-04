@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Providers;
 
 use Request;
@@ -10,13 +11,12 @@ use KodiCMS\Widgets\Manager\WidgetManagerDatabase;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-
     public function boot()
     {
         Page::created(function ($page) {
             $pageId = array_get(Request::get('widgets'), 'from_page_id');
 
-            if ( ! empty( $pageId )) {
+            if (! empty($pageId)) {
                 WidgetManagerDatabase::copyWidgets($pageId, $page->id);
             }
         });
@@ -40,7 +40,6 @@ class ModuleServiceProvider extends ServiceProvider
         Widget::observe(new WidgetObserver);
     }
 
-
     public function register()
     {
         $this->registerProviders([
@@ -48,5 +47,4 @@ class ModuleServiceProvider extends ServiceProvider
             EventsServiceProvider::class,
         ]);
     }
-
 }

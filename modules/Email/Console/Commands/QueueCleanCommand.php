@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Email\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -6,7 +7,6 @@ use KodiCMS\Email\Model\EmailQueue;
 
 class QueueCleanCommand extends Command
 {
-
     /**
      * The console command name.
      */
@@ -16,7 +16,6 @@ class QueueCleanCommand extends Command
      * @var string
      */
     protected $description = 'Clean old queued emails';
-
 
     /**
      * Execute the console command.

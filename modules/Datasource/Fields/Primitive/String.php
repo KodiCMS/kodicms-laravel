@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Primitive;
 
 use KodiCMS\Datasource\Fields\Primitive;
@@ -6,7 +7,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class String extends Primitive
 {
-
     /**
      * @return array
      */
@@ -14,7 +14,6 @@ class String extends Primitive
     {
         return ['use_filemanager'];
     }
-
 
     /**
      * @return array
@@ -26,7 +25,6 @@ class String extends Primitive
         ];
     }
 
-
     /**
      * @return array
      */
@@ -35,12 +33,10 @@ class String extends Primitive
         return (bool) $this->getSetting('use_filemanager');
     }
 
-
     public function getLength()
     {
         return $this->getSetting('length');
     }
-
 
     /**
      * @param Blueprint $table
@@ -55,6 +51,7 @@ class String extends Primitive
     /**************************************************************************
      * Setting mutators
      **************************************************************************/
+
     /**
      * @param int $defaultLength
      *

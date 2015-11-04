@@ -1,4 +1,5 @@
 <?php
+
 return [
     'users' => [
         'user.list',

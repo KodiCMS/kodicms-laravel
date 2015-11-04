@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Console\Commands;
 
 use App;
@@ -8,14 +9,12 @@ use Illuminate\Filesystem\Filesystem;
 
 class GenerateScriptTranslatesCommand extends Command
 {
-
     /**
      * The console command name.
      *
      * @var string
      */
     protected $name = 'cms:generate:translate:js';
-
 
     /**
      * @param Filesystem $files
@@ -27,7 +26,7 @@ class GenerateScriptTranslatesCommand extends Command
         $data = [];
 
         foreach (ModulesLoader::getRegisteredModules() as $module) {
-            if ( ! is_dir($module->getLocalePath()) or ! $module->isPublishable()) {
+            if (! is_dir($module->getLocalePath()) or ! $module->isPublishable()) {
                 continue;
             }
 
@@ -42,9 +41,9 @@ class GenerateScriptTranslatesCommand extends Command
             }
         }
 
-        $langDirectory = App::backendResourcesPath() . 'js' . DIRECTORY_SEPARATOR . 'locale';
+        $langDirectory = App::backendResourcesPath().'js'.DIRECTORY_SEPARATOR.'locale';
 
-        if ( ! $files->exists($langDirectory)) {
+        if (! $files->exists($langDirectory)) {
             $files->makeDirectory($langDirectory, 0755, true);
         }
 
@@ -52,7 +51,7 @@ class GenerateScriptTranslatesCommand extends Command
 
         foreach ($data as $locale => $translates) {
             $data = json_encode($translates);
-            $file = $langDirectory . DIRECTORY_SEPARATOR . $locale . '.json';
+            $file = $langDirectory.DIRECTORY_SEPARATOR.$locale.'.json';
             $files->put($file, $data);
 
             $this->output->progressAdvance();
@@ -61,7 +60,6 @@ class GenerateScriptTranslatesCommand extends Command
 
         $this->output->progressFinish();
     }
-
 
     /**
      * @param Filesystem $files

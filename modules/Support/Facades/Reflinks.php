@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Support\Facades;
 
 use Illuminate\Support\Facades\Facade;
@@ -8,7 +9,6 @@ use Illuminate\Support\Facades\Facade;
  */
 class Reflinks extends Facade
 {
-
     /**
      * @var string
      */
@@ -29,7 +29,6 @@ class Reflinks extends Facade
      */
     const TOKEN_HANDLED = 'users::reflinks.messages.token_handled';
 
-
     /**
      * Get the registered name of the component.
      *
@@ -39,5 +38,4 @@ class Reflinks extends Facade
     {
         return 'reflinks';
     }
-
 }

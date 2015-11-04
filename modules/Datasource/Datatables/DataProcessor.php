@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Datatables;
 
 use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
@@ -7,7 +8,6 @@ use yajra\Datatables\Processors\RowProcessor;
 
 class DataProcessor extends \yajra\Datatables\Processors\DataProcessor
 {
-
     /**
      * Columns to escape value.
      *
@@ -16,7 +16,7 @@ class DataProcessor extends \yajra\Datatables\Processors\DataProcessor
     private $escapeColumns = [];
 
     /**
-     * Processed data output
+     * Processed data output.
      *
      * @var array
      */
@@ -52,7 +52,6 @@ class DataProcessor extends \yajra\Datatables\Processors\DataProcessor
      */
     protected $headline;
 
-
     /**
      * @param array                    $results
      * @param SectionHeadlineInterface $headline
@@ -61,18 +60,17 @@ class DataProcessor extends \yajra\Datatables\Processors\DataProcessor
      */
     public function __construct($results, SectionHeadlineInterface $headline, array $columnDef, array $templates)
     {
-        $this->results       = $results;
-        $this->headline      = $headline;
+        $this->results = $results;
+        $this->headline = $headline;
         $this->appendColumns = $columnDef['append'];
-        $this->editColumns   = $columnDef['edit'];
+        $this->editColumns = $columnDef['edit'];
         $this->excessColumns = $columnDef['excess'];
         $this->escapeColumns = $columnDef['escape'];
-        $this->templates     = $templates;
+        $this->templates = $templates;
     }
 
-
     /**
-     * Process data to output on browser
+     * Process data to output on browser.
      *
      * @param bool $object
      *
@@ -96,7 +94,6 @@ class DataProcessor extends \yajra\Datatables\Processors\DataProcessor
         return $this->escapeColumns($this->output);
     }
 
-
     /**
      * @param array $array
      *
@@ -104,7 +101,7 @@ class DataProcessor extends \yajra\Datatables\Processors\DataProcessor
      */
     public function flatten(array $array)
     {
-        $return     = [];
+        $return = [];
         $exceptions = ['DT_RowId', 'DT_RowClass', 'DT_RowData', 'DT_RowAttr'];
 
         foreach ($array as $key => $value) {
@@ -118,7 +115,6 @@ class DataProcessor extends \yajra\Datatables\Processors\DataProcessor
         return $return;
     }
 
-
     /**
      * Process add columns.
      *
@@ -131,12 +127,11 @@ class DataProcessor extends \yajra\Datatables\Processors\DataProcessor
     {
         foreach ($this->appendColumns as $key => $value) {
             $value['content'] = Helper::compileContent($value['content'], $data, $row);
-            $data             = Helper::includeInArray($value, $data);
+            $data = Helper::includeInArray($value, $data);
         }
 
         return $data;
     }
-
 
     /**
      * Process edit columns.
@@ -149,13 +144,12 @@ class DataProcessor extends \yajra\Datatables\Processors\DataProcessor
     protected function editColumns(array $data, $row)
     {
         foreach ($this->editColumns as $key => $value) {
-            $value['content']     = Helper::compileContent($value['content'], $data, $row);
+            $value['content'] = Helper::compileContent($value['content'], $data, $row);
             $data[$value['name']] = $value['content'];
         }
 
         return $data;
     }
-
 
     /**
      * Setup additional DT row variables.
@@ -177,7 +171,6 @@ class DataProcessor extends \yajra\Datatables\Processors\DataProcessor
             ->getData();
     }
 
-
     /**
      * Remove declared hidden columns.
      *
@@ -188,12 +181,11 @@ class DataProcessor extends \yajra\Datatables\Processors\DataProcessor
     protected function removeExcessColumns(array $data)
     {
         foreach ($this->excessColumns as $value) {
-            unset( $data[$value] );
+            unset($data[$value]);
         }
 
         return $data;
     }
-
 
     /**
      * Escape column values as declared.

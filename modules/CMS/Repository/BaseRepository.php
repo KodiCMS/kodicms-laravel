@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Repository;
 
 use Validator;
@@ -8,7 +9,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BaseRepository
 {
-
     /**
      * @var Model
      */
@@ -19,7 +19,6 @@ class BaseRepository
      */
     protected $validationRules = [];
 
-
     /**
      * @param Model $model
      */
@@ -27,7 +26,6 @@ class BaseRepository
     {
         $this->model = $model;
     }
-
 
     /**
      * @return array
@@ -37,7 +35,6 @@ class BaseRepository
         return [];
     }
 
-
     /**
      * @return Model
      */
@@ -45,7 +42,6 @@ class BaseRepository
     {
         return $this->model;
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Collection|Model[]
@@ -55,9 +51,8 @@ class BaseRepository
         return $this->model->all();
     }
 
-
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return Model|null
      */
@@ -66,9 +61,8 @@ class BaseRepository
         return $this->model->find($id);
     }
 
-
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return Model
      * @throws ModelNotFoundException
@@ -78,7 +72,6 @@ class BaseRepository
         return $this->model->findOrFail($id);
     }
 
-
     /**
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -86,7 +79,6 @@ class BaseRepository
     {
         return $this->model->query();
     }
-
 
     /**
      * @param array $attributes
@@ -100,7 +92,6 @@ class BaseRepository
         return new $model($attributes);
     }
 
-
     /**
      * @param int|null $perPage
      *
@@ -110,7 +101,6 @@ class BaseRepository
     {
         return $this->model->paginate($perPage);
     }
-
 
     /**
      * @param array $data
@@ -129,7 +119,6 @@ class BaseRepository
         return Validator::make($data, $rules, $messages, $customAttributes);
     }
 
-
     /**
      * @param array $data
      * @param null  $rules
@@ -146,7 +135,6 @@ class BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
      * @param array $data
      *
@@ -157,9 +145,8 @@ class BaseRepository
         return $this->model->create($data);
     }
 
-
     /**
-     * @param integer $id
+     * @param int $id
      * @param array   $data
      *
      * @return Model
@@ -172,9 +159,8 @@ class BaseRepository
         return $instance;
     }
 
-
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return Model
      * @throws \Exception
@@ -187,7 +173,6 @@ class BaseRepository
         return $model;
     }
 
-
     /**
      * @param \Illuminate\Validation\Validator $validator
      *
@@ -196,7 +181,7 @@ class BaseRepository
      */
     protected function _validate(\Illuminate\Validation\Validator $validator)
     {
-        if ( ! empty( $attributeNames = $this->validatorAttributeNames() )) {
+        if (! empty($attributeNames = $this->validatorAttributeNames())) {
             $validator->setAttributeNames($attributeNames);
         }
 
@@ -206,4 +191,4 @@ class BaseRepository
 
         return true;
     }
-} 
+}

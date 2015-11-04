@@ -1,14 +1,13 @@
 <?php
+
 namespace KodiCMS\Email\Jobs;
 
 use KodiCMS\Email\Exceptions\EmailEventException;
 use KodiCMS\Email\Model\EmailEvent;
 use Illuminate\Contracts\Bus\SelfHandling;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class EmailSend implements SelfHandling
 {
-
     /**
      * @var string
      */
@@ -19,17 +18,15 @@ class EmailSend implements SelfHandling
      */
     protected $options = [];
 
-
     /**
      * @param string $code
      * @param array  $options
      */
-    function __construct($code, $options = [])
+    public function __construct($code, $options = [])
     {
-        $this->code    = $code;
+        $this->code = $code;
         $this->options = $options;
     }
-
 
     public function handle()
     {
@@ -43,5 +40,4 @@ class EmailSend implements SelfHandling
 
         $emailEvent->send($this->options);
     }
-
 }

@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Datasource\Model;
 
 use DatasourceManager;
 use KodiCMS\Datasource\Document;
 use KodiCMS\Datasource\Fields\FieldsCollection;
 use KodiCMS\Datasource\Sections\SectionToolbar;
-use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Sections\SectionHeadline;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Exceptions\SectionException;
@@ -14,7 +14,6 @@ use KodiCMS\Datasource\Contracts\FieldsCollectionInterface;
 
 class Section extends DatasourceModel implements SectionInterface
 {
-
     /**
      * @var SectionHeadlineInterface
      */
@@ -105,15 +104,13 @@ class Section extends DatasourceModel implements SectionInterface
         'settings'      => 'array',
     ];
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
-
 
     /**
      * @return string
@@ -123,7 +120,6 @@ class Section extends DatasourceModel implements SectionInterface
         return $this->documentPrimaryKey;
     }
 
-
     /**
      * @return string
      */
@@ -132,33 +128,29 @@ class Section extends DatasourceModel implements SectionInterface
         return $this->documentTitleKey;
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getName()
     {
         return $this->name;
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getDescription()
     {
         return $this->description;
     }
 
-
     /**
      * @return string
      */
     public function getSectionTableName()
     {
-        return $this->sectionTablePrefix . $this->sectionTableName . $this->getId();
+        return $this->sectionTablePrefix.$this->sectionTableName.$this->getId();
     }
-
 
     /**
      * @return string
@@ -168,24 +160,21 @@ class Section extends DatasourceModel implements SectionInterface
         return route('backend.datasource.list', [$this->id]);
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getIcon()
     {
         return $this->getSetting('icon', $this->getType()->getIcon());
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getMenuPosition()
     {
         return $this->getSetting('menu_position', 0);
     }
-
 
     /**
      * @return bool
@@ -198,6 +187,7 @@ class Section extends DatasourceModel implements SectionInterface
     /**************************************************************************
      * Fields
      **************************************************************************/
+
     /**
      * @return FieldsCollectionInterface
      */
@@ -207,7 +197,6 @@ class Section extends DatasourceModel implements SectionInterface
 
         return $this->sectionFields;
     }
-
 
     /**
      * @return array
@@ -219,7 +208,6 @@ class Section extends DatasourceModel implements SectionInterface
         return $this->relatedFields;
     }
 
-
     /**
      * @return array
      */
@@ -228,10 +216,9 @@ class Section extends DatasourceModel implements SectionInterface
         return [];
     }
 
-
     protected function initializeFields()
     {
-        if ( ! $this->initializedFields) {
+        if (! $this->initializedFields) {
             $this->sectionFields = new FieldsCollection($this->fields()->get(), $this);
             $this->relatedFields = new FieldsCollection($this->relatedFields()->get(), $this);
 
@@ -242,6 +229,7 @@ class Section extends DatasourceModel implements SectionInterface
     /**************************************************************************
      * Headline
      **************************************************************************/
+
     /**
      * @return SectionHeadlineInterface
      */
@@ -249,7 +237,6 @@ class Section extends DatasourceModel implements SectionInterface
     {
         return $this->headline;
     }
-
 
     /**
      * @return string
@@ -259,7 +246,6 @@ class Section extends DatasourceModel implements SectionInterface
         return SectionHeadline::class;
     }
 
-
     /**
      * @return array
      */
@@ -268,15 +254,14 @@ class Section extends DatasourceModel implements SectionInterface
         return $this->getSetting('ordering', []);
     }
 
-
     /**************************************************************************
      * Toolbar
      **************************************************************************/
+
     public function getToolbar()
     {
         return $this->toolbar;
     }
-
 
     /**
      * @return string
@@ -289,6 +274,7 @@ class Section extends DatasourceModel implements SectionInterface
     /**************************************************************************
      * Type
      **************************************************************************/
+
     /**
      * @return \KodiCMS\Datasource\SectionType|null
      * @throws SectionException
@@ -309,6 +295,7 @@ class Section extends DatasourceModel implements SectionInterface
     /**************************************************************************
      * Documents
      **************************************************************************/
+
     /**
      * @return Document
      */
@@ -318,7 +305,6 @@ class Section extends DatasourceModel implements SectionInterface
 
         return new $documentClass([], $this);
     }
-
 
     /**
      * @param array $attributes
@@ -332,7 +318,6 @@ class Section extends DatasourceModel implements SectionInterface
         return new $documentClass($attributes, $this);
     }
 
-
     /**
      * @param int   $id
      * @param array $attributes
@@ -344,13 +329,12 @@ class Section extends DatasourceModel implements SectionInterface
         return $this->newDocumentQuery($attributes)->findOrFail($id);
     }
 
-
     /**
      * @return string
      */
     public function getDocumentClass()
     {
-        return null;
+        return;
     }
 
     /**************************************************************************
@@ -394,13 +378,12 @@ class Section extends DatasourceModel implements SectionInterface
         ];
     }
 
-
     /**
-     * Пользователь - создатель раздела
+     * Пользователь - создатель раздела.
      *
-     * @param integer|null $userId
+     * @param int|null $userId
      *
-     * @return boolean
+     * @return bool
      */
     public function userIsCreator($userId = null)
     {
@@ -408,29 +391,27 @@ class Section extends DatasourceModel implements SectionInterface
             $userId = auth()->user()->id;
         }
 
-        return ACL::isAdmin($userId) or ( $this->created_by_id == (int) $userId );
+        return ACL::isAdmin($userId) or ($this->created_by_id == (int) $userId);
     }
 
-
     /**
-     * Проверка прав доступа
+     * Проверка прав доступа.
      *
      * @param string       $acl
      * @param bool         $checkOwn
-     * @param null|integer $userId
+     * @param null|int $userId
      *
      * @return bool
      */
     public function userHasAccess($acl = 'section.edit', $checkOwn = true, $userId = null)
     {
-        return ( acl_check('section_id.' . $this->getId() . '.' . $acl) or ( $checkOwn and $this->userIsCreator($userId) ) );
+        return (acl_check('section_id.'.$this->getId().'.'.$acl) or ($checkOwn and $this->userIsCreator($userId)));
     }
 
-
     /**
-     * Проверка прав на редактирование
+     * Проверка прав на редактирование.
      *
-     * @param null|integer $userId
+     * @param null|int $userId
      *
      * @return bool
      */
@@ -439,39 +420,36 @@ class Section extends DatasourceModel implements SectionInterface
         return $this->userHasAccess('section.edit', true, $userId);
     }
 
-
     /**
-     * Проверка прав на редактирование
+     * Проверка прав на редактирование.
      *
-     * @param null|integer $userId
+     * @param null|int $userId
      *
      * @return bool
      */
     public function userHasAccessCreate($userId = null)
     {
-        return acl_check($this->type . '.' . 'section.create');
+        return acl_check($this->type.'.'.'section.create');
     }
 
-
     /**
-     * Проверка прав на просмотр
+     * Проверка прав на просмотр.
      *
-     * @param null|integer $userId
+     * @param null|int $userId
      *
-     * @return boolean
+     * @return bool
      */
     public function userHasAccessView($userId = null)
     {
         return $this->userHasAccess('section.view', true, $userId);
     }
 
-
     /**
-     * Проверка прав на удаление
+     * Проверка прав на удаление.
      *
-     * @param null|integer $userId
+     * @param null|int $userId
      *
-     * @return boolean
+     * @return bool
      */
     public function userHasAccessRemove($userId = null)
     {
@@ -481,6 +459,7 @@ class Section extends DatasourceModel implements SectionInterface
     /**************************************************************************
      * Relations
      **************************************************************************/
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -489,7 +468,6 @@ class Section extends DatasourceModel implements SectionInterface
         return $this->hasMany(\KodiCMS\Datasource\Model\Field::class, 'section_id')->orderBy('position');
     }
 
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -497,7 +475,6 @@ class Section extends DatasourceModel implements SectionInterface
     {
         return $this->hasMany(\KodiCMS\Datasource\Model\Field::class, 'related_section_id')->orderBy('position');
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -510,6 +487,7 @@ class Section extends DatasourceModel implements SectionInterface
     /**************************************************************************
      * Titles
      **************************************************************************/
+
     /**
      * @return string
      */
@@ -517,7 +495,6 @@ class Section extends DatasourceModel implements SectionInterface
     {
         return trans('datasource::core.title.create_document');
     }
-
 
     /**
      * @param string $name
@@ -529,7 +506,6 @@ class Section extends DatasourceModel implements SectionInterface
         return trans('datasource::core.title.edit_document', ['name' => $name]);
     }
 
-
     /**
      * @return string
      */
@@ -538,25 +514,24 @@ class Section extends DatasourceModel implements SectionInterface
         return trans('datasource::core.toolbar.create_document');
     }
 
-
     /**************************************************************************
      * Other
      **************************************************************************/
+
     public function initialize()
     {
         if ($this->initialized) {
             return;
         }
 
-        $headlineClass  = $this->getHeadlineClass();
+        $headlineClass = $this->getHeadlineClass();
         $this->headline = new $headlineClass($this);
 
-        $toolbarClass  = $this->getToolbarClass();
+        $toolbarClass = $this->getToolbarClass();
         $this->toolbar = new $toolbarClass($this);
 
         parent::initialize();
     }
-
 
     /**
      * @return DatasourceManagerInterface

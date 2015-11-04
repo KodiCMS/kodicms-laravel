@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Primitive;
 
 use KodiCMS\Datasource\Model\Field;
@@ -7,7 +8,6 @@ use KodiCMS\Datasource\Contracts\FieldTypeOnlySystemInterface;
 
 class Primary extends Field implements FieldTypeOnlySystemInterface
 {
-
     /**
      * @var bool
      */
@@ -18,7 +18,6 @@ class Primary extends Field implements FieldTypeOnlySystemInterface
      */
     protected $canBeUsedAsDocumentID = true;
 
-
     /**
      * @return string
      */
@@ -26,7 +25,6 @@ class Primary extends Field implements FieldTypeOnlySystemInterface
     {
         return $this->getKey();
     }
-
 
     /**
      * @param Blueprint $table
@@ -37,7 +35,6 @@ class Primary extends Field implements FieldTypeOnlySystemInterface
     {
         return $table->increments($this->getDBKey());
     }
-
 
     /**
      * @return string

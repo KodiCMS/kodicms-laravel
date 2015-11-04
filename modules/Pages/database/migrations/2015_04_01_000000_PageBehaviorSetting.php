@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class PageBehaviorSetting extends Migration
 {
-
     public function up()
     {
         Schema::create('page_behavior_settings', function (Blueprint $table) {
@@ -13,7 +12,6 @@ class PageBehaviorSetting extends Migration
             $table->json('settings');
         });
     }
-
 
     public function down()
     {

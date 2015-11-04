@@ -1,4 +1,5 @@
 <?php
+
 namespace Plugins\butschster\DSTags\Widget;
 
 use KodiCMS\Datasource\Traits\WidgetDatasource;
@@ -9,7 +10,6 @@ use KodiCMS\Widgets\Widget\Decorator;
 
 class TagsCloud extends Decorator implements WidgetCacheable
 {
-
     use WidgetCache, WidgetDatasource, WidgetDatasourceFields;
 
     /**
@@ -21,7 +21,6 @@ class TagsCloud extends Decorator implements WidgetCacheable
      * @var string
      */
     protected $defaultFrontendTemplate = 'butschster:dstags::widgets.tagscloud.template';
-
 
     /**
      * @return array
@@ -35,7 +34,6 @@ class TagsCloud extends Decorator implements WidgetCacheable
         ];
     }
 
-
     /**
      * @return array
      */
@@ -43,7 +41,6 @@ class TagsCloud extends Decorator implements WidgetCacheable
     {
         return ! $this->getSection() ? [] : $this->section->getFields()->getByType('tags')->lists('name', 'id')->all();
     }
-
 
     /**
      * @return array
@@ -54,7 +51,6 @@ class TagsCloud extends Decorator implements WidgetCacheable
 
         return compact('fields');
     }
-
 
     /**
      * @return array [[array] $tags, [KodiCMS\Datasource\Contracts\SectionInterface] $section]
@@ -74,13 +70,13 @@ class TagsCloud extends Decorator implements WidgetCacheable
             $tmin = min($tags);
             $tmax = max($tags);
 
-            ( $tmin == $tmin ) ? $tmax++ : null;
+            ($tmin == $tmin) ? $tmax++ : null;
 
             foreach ($tags as $tag => $frequency) {
-                $fontSize = floor(( $frequency - $tmin ) / ( $tmax - $tmin ) * ( $fmax - $fmin ) + $fmin);
-                $r        = $g = 0;
-                $b        = floor(255 * ( $frequency / $tmax ));
-                $color    = '#' . sprintf('%02s', dechex($r)) . sprintf('%02s', dechex($g)) . sprintf('%02s', dechex($b));
+                $fontSize = floor(($frequency - $tmin) / ($tmax - $tmin) * ($fmax - $fmin) + $fmin);
+                $r = $g = 0;
+                $b = floor(255 * ($frequency / $tmax));
+                $color = '#'.sprintf('%02s', dechex($r)).sprintf('%02s', dechex($g)).sprintf('%02s', dechex($b));
 
                 $cloud[$tag] = [
                     'count' => $frequency,
@@ -96,7 +92,6 @@ class TagsCloud extends Decorator implements WidgetCacheable
         ];
     }
 
-
     /**
      * @return array
      */
@@ -105,8 +100,8 @@ class TagsCloud extends Decorator implements WidgetCacheable
         $field = $this->getSection()->getFields()->getById($this->field_id);
 
         $sectionTable = $field->relatedSection->getSectionTableName();
-        $pivotTable   = $field->getRelatedTable();
-        $query        = \DB::table($sectionTable)->select('name', 'count')->join($pivotTable, $field->getRelatedDBKey(), '=', 'id');
+        $pivotTable = $field->getRelatedTable();
+        $query = \DB::table($sectionTable)->select('name', 'count')->join($pivotTable, $field->getRelatedDBKey(), '=', 'id');
 
         switch ($this->order_by) {
             case 'name_asc':
@@ -146,7 +141,6 @@ class TagsCloud extends Decorator implements WidgetCacheable
 
         $this->settings['min_size'] = $size;
     }
-
 
     /**
      * @param int $size

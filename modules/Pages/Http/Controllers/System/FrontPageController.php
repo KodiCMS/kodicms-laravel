@@ -13,16 +13,14 @@ use KodiCMS\Pages\Exceptions\LayoutNotFoundException;
 
 abstract class FrontPageController extends Controller
 {
-
     /**
      * @var WidgetCollection;
      */
     protected $widgetCollection;
 
-
     /**
      * Execute before an action executed
-     * return void
+     * return void.
      */
     public function before()
     {
@@ -31,7 +29,6 @@ abstract class FrontPageController extends Controller
             return new Block($collection);
         });
     }
-
 
     /**
      * @param string $layout
@@ -49,7 +46,6 @@ abstract class FrontPageController extends Controller
 
         return $layout->toView();
     }
-
 
     /**
      * @param View   $layout
@@ -74,7 +70,7 @@ abstract class FrontPageController extends Controller
 
             if (count($matches) > 1) {
                 /* assemble the HTML output back with the iframe code in it */
-                $html = $matches[0] . $injectHTML . $matches[1] . $matches[2];
+                $html = $matches[0].$injectHTML.$matches[1].$matches[2];
             }
         }
 
@@ -83,7 +79,7 @@ abstract class FrontPageController extends Controller
         $response->header('Content-Type', $mime);
 
         if (config('cms.show_response_sign', true)) {
-            $response->header('X-Powered-CMS', CMS::NAME . '/' . CMS::VERSION);
+            $response->header('X-Powered-CMS', CMS::NAME.'/'.CMS::VERSION);
         }
 
         $response->setContent($html);
@@ -102,7 +98,6 @@ abstract class FrontPageController extends Controller
 
         return $response;
     }
-
 
     /**
      * Execute an action on the controller.

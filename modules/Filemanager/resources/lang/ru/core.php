@@ -1,4 +1,5 @@
 <?php
+
 return [
     'public' => 'Корень',
     'title'  => [

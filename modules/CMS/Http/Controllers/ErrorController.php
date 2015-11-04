@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\CMS\Http\Controllers;
 
 use Exception;
 
 class ErrorController extends System\FrontendController
 {
-
     /**
      * @param Exception $e
      */
@@ -14,7 +14,6 @@ class ErrorController extends System\FrontendController
         $this->render($e, 500, $e->getMessage());
     }
 
-
     /**
      * @param Exception $e
      */
@@ -22,7 +21,6 @@ class ErrorController extends System\FrontendController
     {
         $this->render($e, 404, trans($this->wrapNamespace('core.messages.route_not_found')));
     }
-
 
     /**
      * @param Exception  $e

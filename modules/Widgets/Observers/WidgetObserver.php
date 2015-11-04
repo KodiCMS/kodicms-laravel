@@ -1,15 +1,14 @@
 <?php
+
 namespace KodiCMS\Widgets\Observers;
 
 use Request;
 
 /**
- * Class WidgetObserver
- * @package KodiCMS\Widgets\Observers
+ * Class WidgetObserver.
  */
 class WidgetObserver
 {
-
     /**
      * @param \KodiCMS\Widgets\Model\Widget $ $widget
      *
@@ -18,8 +17,8 @@ class WidgetObserver
     public function saving($widget)
     {
         $ids = Request::get('relatedWidgets', []);
-        if (( $key = array_search($widget->id, $ids) ) !== false) {
-            unset( $ids[$key] );
+        if (($key = array_search($widget->id, $ids)) !== false) {
+            unset($ids[$key]);
         }
 
         $widget->related()->sync($ids);

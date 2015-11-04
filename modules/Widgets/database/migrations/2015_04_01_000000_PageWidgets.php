@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class PageWidgets extends Migration
 {
-
     public function up()
     {
         Schema::create('page_widgets', function (Blueprint $table) {
@@ -18,7 +17,6 @@ class PageWidgets extends Migration
             $table->index(['page_id', 'block']);
         });
     }
-
 
     public function down()
     {

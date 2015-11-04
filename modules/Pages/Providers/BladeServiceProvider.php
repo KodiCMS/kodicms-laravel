@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Providers;
 
 use Blade;
@@ -23,6 +24,5 @@ class BladeServiceProvider extends ServiceProvider
 
     public function register()
     {
-
     }
 }

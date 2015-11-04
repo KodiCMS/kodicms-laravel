@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Plugins\Console\Commands;
 
 use PluginLoader;
@@ -6,7 +7,6 @@ use Illuminate\Console\Command;
 
 class PluginActivateCommand extends Command
 {
-
     /**
      * The console command name.
      *
@@ -20,7 +20,6 @@ class PluginActivateCommand extends Command
      * @var string
      */
     protected $description = 'Activate plugin';
-
 
     /**
      * Execute the console command.

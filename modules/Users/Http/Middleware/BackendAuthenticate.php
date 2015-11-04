@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Http\Middleware;
 
 use Lang;
@@ -9,7 +10,6 @@ use Illuminate\Contracts\Auth\Guard;
 
 class BackendAuthenticate
 {
-
     /**
      * The Guard implementation.
      *
@@ -22,7 +22,6 @@ class BackendAuthenticate
      */
     protected $acl;
 
-
     /**
      * Create a new filter instance.
      *
@@ -31,11 +30,10 @@ class BackendAuthenticate
     public function __construct(Guard $auth)
     {
         $this->auth = $auth;
-        $this->acl  = app('acl.controller');
+        $this->acl = app('acl.controller');
 
         $this->acl->setLoginPath(backend_url('auth/login'));
     }
-
 
     /**
      * Handle an incoming request.
@@ -51,7 +49,7 @@ class BackendAuthenticate
             return $this->acl->denyAccess(trans('users::core.messages.auth.unauthorized'), true);
         }
 
-        if ( ! auth()->user()->hasRole('login')) {
+        if (! auth()->user()->hasRole('login')) {
             auth()->logout();
 
             return $this->acl->denyAccess(trans('users::core.messages.auth.deny_access'), true);

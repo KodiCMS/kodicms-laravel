@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\API\Http;
 
 use KodiCMS\API\Exceptions\PermissionException;
@@ -6,7 +7,6 @@ use KodiCMS\API\Exceptions\AuthenticateException;
 
 class ControllerACL extends \KodiCMS\Users\Http\ControllerACL
 {
-
     /**
      * @param string|array|null $message
      * @param bool              $redirect

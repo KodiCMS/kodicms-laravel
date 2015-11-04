@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Http\Controllers;
 
 use Meta;
@@ -13,7 +14,6 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class WidgetController extends BackendController
 {
-
     /**
      * @param WidgetRepository $repository
      */
@@ -25,10 +25,9 @@ class WidgetController extends BackendController
         $this->setContent('widgets.list', compact('widgets'));
     }
 
-
     /**
      * @param WidgetRepository $repository
-     * @param integer          $pageId
+     * @param int          $pageId
      *
      * @return \View
      */
@@ -39,7 +38,6 @@ class WidgetController extends BackendController
         return $this->setContent('widgets.page.ajax_list', compact('widgets'));
     }
 
-
     public function getCreate()
     {
         $this->setTitle(trans($this->wrapNamespace('core.title.create')));
@@ -48,7 +46,6 @@ class WidgetController extends BackendController
 
         $this->setContent('widgets.create', compact('types'));
     }
-
 
     /**
      * @param WidgetRepository $repository
@@ -64,14 +61,13 @@ class WidgetController extends BackendController
 
         return $this->smartRedirect([$widget])
             ->with('success', trans($this->wrapNamespace('core.messages.created'), [
-                'name' => $widget->name
+                'name' => $widget->name,
             ]));
     }
 
-
     /**
      * @param WidgetRepository $repository
-     * @param integer          $id
+     * @param int          $id
      */
     public function getEdit(WidgetRepository $repository, $id)
     {
@@ -86,10 +82,9 @@ class WidgetController extends BackendController
         $this->setContent('widgets.edit', compact('widget', 'settingsView', 'usersRoles'));
     }
 
-
     /**
      * @param WidgetRepository $repository
-     * @param integer          $id
+     * @param int          $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -102,14 +97,13 @@ class WidgetController extends BackendController
 
         return $this->smartRedirect([$widget])
             ->with('success', trans($this->wrapNamespace('core.messages.updated'), [
-                'name' => $widget->name
+                'name' => $widget->name,
             ]));
     }
 
-
     /**
      * @param WidgetRepository $repository
-     * @param integer          $id
+     * @param int          $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -119,20 +113,19 @@ class WidgetController extends BackendController
 
         return $this->smartRedirect()
             ->with('success', trans($this->wrapNamespace('core.messages.deleted'), [
-                'name' => $widget->name
+                'name' => $widget->name,
             ]));
     }
-
 
     /**
      * @param WidgetRepository $repository
      * @param PageRepository   $pageRepository
-     * @param integer          $id
+     * @param int          $id
      */
     public function getLocation(WidgetRepository $repository, PageRepository $pageRepository, $id)
     {
         $widget = $repository->findOrFail($id);
-        list( $widgetBlocks, $blocksToExclude ) = $widget->getLocations();
+        list($widgetBlocks, $blocksToExclude) = $widget->getLocations();
 
         $pages = $pageRepository->getSitemap(true);
 
@@ -150,10 +143,9 @@ class WidgetController extends BackendController
         );
     }
 
-
     /**
      * @param WidgetRepository $repository
-     * @param integer          $id
+     * @param int          $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -165,10 +157,9 @@ class WidgetController extends BackendController
         return back();
     }
 
-
     /**
      * @param WidgetRepository $repository
-     * @param integer          $id
+     * @param int          $id
      */
     public function getTemplate(WidgetRepository $repository, $id)
     {
@@ -178,7 +169,7 @@ class WidgetController extends BackendController
         $template = $widget->getDefaultFrontendTemplate();
 
         $content = null;
-        if ( ! ( $template instanceof View )) {
+        if (! ($template instanceof View)) {
             $template = view($template);
         }
 

@@ -1,16 +1,15 @@
 <?php
+
 namespace KodiCMS\Support\Model\Fields;
 
 use KodiCMS\Support\Model\ModelField;
 
 abstract class KodiCMSField extends ModelField
 {
-
     /**
      * @var string
      */
     protected $template = 'cms::model_fields.default';
-
 
     protected function boot()
     {
@@ -29,7 +28,6 @@ abstract class KodiCMSField extends ModelField
                 'fieldCol' => 'col-md-9',
             ])->setTemplate($this->template);
     }
-
 
     /**
      * @param array $attributes

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Providers;
 
 use KodiCMS\Users\ACL;
@@ -8,14 +9,12 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 
 class AuthServiceProvider extends ServiceProvider
 {
-
     /**
      * The policy mappings for the application.
      *
      * @var array
      */
     protected $policies = [];
-
 
     /**
      * Register any application authentication / authorization services.

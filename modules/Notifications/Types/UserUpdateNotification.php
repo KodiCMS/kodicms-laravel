@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Notifications\Types;
 
 class UserUpdateNotification extends DefaultNotification
 {
-
     /**
      * @return string
      */
@@ -11,7 +11,6 @@ class UserUpdateNotification extends DefaultNotification
     {
         return 'users';
     }
-
 
     /**
      * @return string

@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Datasource;
 
 use KodiCMS\Datasource\Contracts\SectionTypeInterface;
 
 class SectionType implements SectionTypeInterface
 {
-
     /**
      * @param array $settings
      *
@@ -13,9 +13,8 @@ class SectionType implements SectionTypeInterface
      */
     public static function isValid(array $settings)
     {
-        return isset( $settings['class'] );
+        return isset($settings['class']);
     }
-
 
     /**
      * @var string
@@ -52,7 +51,6 @@ class SectionType implements SectionTypeInterface
      */
     protected $edit_template = null;
 
-
     /**
      * @param string $type
      * @param array  $settings
@@ -73,7 +71,6 @@ class SectionType implements SectionTypeInterface
         $this->type = $type;
     }
 
-
     /**
      * @return bool
      */
@@ -81,7 +78,6 @@ class SectionType implements SectionTypeInterface
     {
         return class_exists($this->class);
     }
-
 
     /**
      * @return bool
@@ -91,7 +87,6 @@ class SectionType implements SectionTypeInterface
         return class_exists($this->document);
     }
 
-
     /**
      * @return string
      */
@@ -99,7 +94,6 @@ class SectionType implements SectionTypeInterface
     {
         return $this->class;
     }
-
 
     /**
      * @return string
@@ -113,7 +107,6 @@ class SectionType implements SectionTypeInterface
         return \KodiCMS\Datasource\Document::class;
     }
 
-
     /**
      * @return string
      */
@@ -121,7 +114,6 @@ class SectionType implements SectionTypeInterface
     {
         return $this->type;
     }
-
 
     /**
      * @return string
@@ -131,7 +123,6 @@ class SectionType implements SectionTypeInterface
         return $this->icon;
     }
 
-
     /**
      * @return string
      */
@@ -139,7 +130,6 @@ class SectionType implements SectionTypeInterface
     {
         return $this->title;
     }
-
 
     /**
      * @return string
@@ -149,7 +139,6 @@ class SectionType implements SectionTypeInterface
         return is_null($this->create_template) ? 'datasource::section.create' : $this->create_template;
     }
 
-
     /**
      * @return string
      */
@@ -157,7 +146,6 @@ class SectionType implements SectionTypeInterface
     {
         return is_null($this->edit_template) ? 'datasource::section.edit' : $this->edit_template;
     }
-
 
     /**
      * @return string

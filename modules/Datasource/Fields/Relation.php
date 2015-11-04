@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields;
 
 use DatasourceManager;
@@ -9,7 +10,6 @@ use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
 
 abstract class Relation extends Field implements FieldTypeRelationInterface
 {
-
     /**
      * The relations to eager load on every query.
      *
@@ -22,7 +22,6 @@ abstract class Relation extends Field implements FieldTypeRelationInterface
      */
     protected $isOrderable = false;
 
-
     /**
      * @return array
      */
@@ -31,9 +30,8 @@ abstract class Relation extends Field implements FieldTypeRelationInterface
         return DatasourceManager::getSectionsFormHTML();
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getRelatedSectionId()
     {
@@ -44,24 +42,21 @@ abstract class Relation extends Field implements FieldTypeRelationInterface
         return $this->related_section_id;
     }
 
-
     /**
      * @return string
      */
     public function getRelatedDBKey()
     {
-        return $this->getDBKey() . '_related_' . $this->getId();
+        return $this->getDBKey().'_related_'.$this->getId();
     }
-
 
     /**
      * @return string
      */
     public function getRelationName()
     {
-        return camel_case($this->getDBKey() . '_relation');
+        return camel_case($this->getDBKey().'_relation');
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -79,7 +74,6 @@ abstract class Relation extends Field implements FieldTypeRelationInterface
         ]);
     }
 
-
     /**
      * @param DocumentInterface $document
      * @param WidgetInterface   $widget
@@ -92,12 +86,10 @@ abstract class Relation extends Field implements FieldTypeRelationInterface
         return ! is_null($related = $document->getAttribute($this->getRelationName())) ? $related->toArray() : $value;
     }
 
-
     /**
      * @param DocumentInterface $document
      */
     public function onRelatedDocumentDeleting(DocumentInterface $document)
     {
-
     }
 }

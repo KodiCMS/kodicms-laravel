@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Datasource\Traits;
 
 trait WidgetDatasourceFields
 {
-
     /**
      * @return array
      */
@@ -11,7 +11,6 @@ trait WidgetDatasourceFields
     {
         return (array) $this->selected_fields;
     }
-
 
     /**
      * @param array $fields

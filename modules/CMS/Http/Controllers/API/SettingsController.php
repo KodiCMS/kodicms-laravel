@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\CMS\Http\Controllers\API;
 
 use KodiCMS\API\Http\Controllers\System\Controller;
 
 class SettingsController extends Controller
 {
-
     public function post()
     {
         event('backend.settings.validate', [$this->getParameter('config', [])]);

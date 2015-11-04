@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Console\Commands;
 
 use ModulesLoader;
@@ -9,7 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ControllerMakeCommand extends GeneratorCommand
 {
-
     /**
      * The console command name.
      *
@@ -36,7 +36,6 @@ class ControllerMakeCommand extends GeneratorCommand
      */
     protected $module;
 
-
     /**
      * Execute the console command.
      *
@@ -49,7 +48,6 @@ class ControllerMakeCommand extends GeneratorCommand
         parent::fire();
     }
 
-
     /**
      * @param string $name
      *
@@ -59,9 +57,8 @@ class ControllerMakeCommand extends GeneratorCommand
     {
         $name = str_replace($this->getAppNamespace(), '', $name);
 
-        return $this->module->getPath(str_replace('\\', '/', $name) . '.php');
+        return $this->module->getPath(str_replace('\\', '/', $name).'.php');
     }
-
 
     public function findModule()
     {
@@ -76,7 +73,6 @@ class ControllerMakeCommand extends GeneratorCommand
         throw new RuntimeException("Module {$module} not found.");
     }
 
-
     /**
      * Get the stub file for the generator.
      *
@@ -88,12 +84,11 @@ class ControllerMakeCommand extends GeneratorCommand
 
         switch ($type) {
             case 'api':
-                return __DIR__ . '/stubs/controller.api.stub';
+                return __DIR__.'/stubs/controller.api.stub';
             default:
-                return __DIR__ . '/stubs/controller.stub';
+                return __DIR__.'/stubs/controller.stub';
         }
     }
-
 
     /**
      * Get the default namespace for the class.
@@ -108,12 +103,11 @@ class ControllerMakeCommand extends GeneratorCommand
 
         switch ($type) {
             case 'api':
-                return $rootNamespace . '\Http\Controllers\API';
+                return $rootNamespace.'\Http\Controllers\API';
             default:
-                return $rootNamespace . '\Http\Controllers';
+                return $rootNamespace.'\Http\Controllers';
         }
     }
-
 
     /**
      * Get the console command options.
@@ -128,7 +122,6 @@ class ControllerMakeCommand extends GeneratorCommand
         ];
     }
 
-
     /**
      * @return string
      * @throws RuntimeException
@@ -137,5 +130,4 @@ class ControllerMakeCommand extends GeneratorCommand
     {
         return $this->module->getNamespace();
     }
-
 }

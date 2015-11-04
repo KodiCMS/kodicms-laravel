@@ -1,18 +1,17 @@
 <?php
+
 namespace KodiCMS\Datasource\Contracts;
 
 use Illuminate\Support\Collection;
 
 interface FieldsCollectionInterface
 {
-
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return FieldInterface|null
      */
     public function getById($id);
-
 
     /**
      * @param string $key
@@ -21,7 +20,6 @@ interface FieldsCollectionInterface
      */
     public function getByKey($key);
 
-
     /**
      * @param string $type
      *
@@ -29,18 +27,15 @@ interface FieldsCollectionInterface
      */
     public function getByType($type);
 
-
     /**
      * @return array
      */
     public function getIds();
 
-
     /**
      * @return array
      */
     public function getKeys();
-
 
     /**
      * @param array| string $keys
@@ -49,18 +44,15 @@ interface FieldsCollectionInterface
      */
     public function getOnly($keys);
 
-
     /**
      * @return Collection
      */
     public function getFields();
 
-
     /**
      * @return array
      */
     public function getNames();
-
 
     /**
      * @return array

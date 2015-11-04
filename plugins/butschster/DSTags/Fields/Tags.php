@@ -1,4 +1,5 @@
 <?php
+
 namespace Plugins\butschster\DSTags\Fields;
 
 use Assets;
@@ -12,7 +13,6 @@ use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 
 class Tags extends ManyToMany
 {
-
     /**
      * @var bool
      */
@@ -28,7 +28,6 @@ class Tags extends ManyToMany
      */
     protected $newTags = [];
 
-
     /**
      * @return array
      */
@@ -36,7 +35,6 @@ class Tags extends ManyToMany
     {
         return DatasourceManager::getSectionsFormHTML(['tags']);
     }
-
 
     /**
      * @param Blueprint $table
@@ -48,7 +46,6 @@ class Tags extends ManyToMany
         return $table->text($this->getDBKey())->default('');
     }
 
-
     /**
      * @param DocumentInterface $document
      * @param mixed             $value
@@ -57,11 +54,10 @@ class Tags extends ManyToMany
      */
     public function onGetHeadlineValue(DocumentInterface $document, $value)
     {
-        return ! empty( $value ) ? implode(' ', array_map(function ($tag) {
+        return ! empty($value) ? implode(' ', array_map(function ($tag) {
             return UI::label($tag);
         }, $this->makeTagArray($value))) : null;
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -75,7 +71,6 @@ class Tags extends ManyToMany
         return $this->makeTagArray($value);
     }
 
-
     /**
      * @param DocumentInterface  $document
      * @param TemplateController $controller
@@ -86,7 +81,6 @@ class Tags extends ManyToMany
         parent::onControllerLoad($document, $controller);
     }
 
-
     /**
      * @param DocumentInterface $document
      * @param mixed             $value
@@ -94,9 +88,8 @@ class Tags extends ManyToMany
     public function onDocumentFill(DocumentInterface $document, $value)
     {
         $this->selectedDocuments = $this->makeTagArray($value);
-        $this->currentDocuments  = $this->getRelatedDocumentValues($document);
+        $this->currentDocuments = $this->getRelatedDocumentValues($document);
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -107,7 +100,6 @@ class Tags extends ManyToMany
         $this->selectedDocuments = $this->tag($this->selectedDocuments);
         parent::onDocumentCreated($document, $value);
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -121,15 +113,14 @@ class Tags extends ManyToMany
         $newTags = $this->tag($newTags);
         $oldTags = $this->untag($oldTags);
 
-        if ( ! empty( $oldTags )) {
+        if (! empty($oldTags)) {
             $document->{$this->getRelationName()}()->detach($oldTags);
         }
 
-        if ( ! empty( $newTags )) {
+        if (! empty($newTags)) {
             $document->{$this->getRelationName()}()->attach($newTags);
         }
     }
-
 
     /**
      * @param array $tagNames
@@ -149,7 +140,6 @@ class Tags extends ManyToMany
         return $ids;
     }
 
-
     /**
      * @param array $tagNames
      *
@@ -166,7 +156,6 @@ class Tags extends ManyToMany
         return $ids;
     }
 
-
     /**
      * @param DocumentInterface $document
      *
@@ -181,7 +170,6 @@ class Tags extends ManyToMany
         ];
     }
 
-
     /**
      * @param string $tagName
      *
@@ -192,10 +180,10 @@ class Tags extends ManyToMany
         $relatedSection = $this->relatedSection;
 
         $tagName = trim($tagName);
-        $tag     = $relatedSection->getEmptyDocument()->where('name', $tagName)->first();
+        $tag = $relatedSection->getEmptyDocument()->where('name', $tagName)->first();
 
         if (is_null($tag)) {
-            $tag       = $relatedSection->getEmptyDocument();
+            $tag = $relatedSection->getEmptyDocument();
             $tag->name = $tagName;
 
             $tag->save();
@@ -205,7 +193,6 @@ class Tags extends ManyToMany
 
         return $tag->getId();
     }
-
 
     /**
      * @param string $tagName
@@ -221,7 +208,7 @@ class Tags extends ManyToMany
         $tag = $relatedSection->getEmptyDocument()->where('name', $tagName)->first();
 
         if (is_null($tag)) {
-            $tag       = $relatedSection->getEmptyDocument();
+            $tag = $relatedSection->getEmptyDocument();
             $tag->name = $tagName;
 
             $tag->save();
@@ -234,7 +221,6 @@ class Tags extends ManyToMany
         return $tag->getId();
     }
 
-
     /**
      * @param string|array $tagNames
      *
@@ -244,7 +230,7 @@ class Tags extends ManyToMany
     {
         if (is_string($tagNames)) {
             $tagNames = explode(',', $tagNames);
-        } elseif ( ! is_array($tagNames)) {
+        } elseif (! is_array($tagNames)) {
             $tagNames = [null];
         }
 

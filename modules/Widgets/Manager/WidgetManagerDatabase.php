@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Manager;
 
 use DB;
@@ -6,7 +7,6 @@ use KodiCMS\Widgets\Model\Widget;
 
 class WidgetManagerDatabase extends WidgetManager
 {
-
     /**
      * @param array $types
      *
@@ -23,7 +23,6 @@ class WidgetManagerDatabase extends WidgetManager
         return static::buildWidgetCollection($widgets->get());
     }
 
-
     /**
      * @return \Illuminate\Support\Collection
      */
@@ -33,7 +32,6 @@ class WidgetManagerDatabase extends WidgetManager
 
         return static::buildWidgetCollection($widgets);
     }
-
 
     /**
      * @param int $pageId
@@ -49,7 +47,6 @@ class WidgetManagerDatabase extends WidgetManager
 
         return static::buildWidgetCollection($widgets);
     }
-
 
     /**
      * @param int $pageId
@@ -68,7 +65,6 @@ class WidgetManagerDatabase extends WidgetManager
         return $data;
     }
 
-
     /**
      * @param $id
      *
@@ -79,9 +75,8 @@ class WidgetManagerDatabase extends WidgetManager
         return Widget::find($id)->toWidget();
     }
 
-
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return array
      *
@@ -108,7 +103,7 @@ class WidgetManagerDatabase extends WidgetManager
     {
         $query = DB::table('page_widgets');
 
-        $otherWidgets  = []; // занятые блоки для исключения из списков
+        $otherWidgets = []; // занятые блоки для исключения из списков
         $widgetOnPages = []; // выбранные блоки для текущего виджета
 
         foreach ($query->get() as $row) {
@@ -122,10 +117,9 @@ class WidgetManagerDatabase extends WidgetManager
         return [$widgetOnPages, $otherWidgets];
     }
 
-
     /**
-     * @param integer $formPageId
-     * @param integer $toPageId
+     * @param int $formPageId
+     * @param int $toPageId
      */
     public static function copyWidgets($formPageId, $toPageId)
     {
@@ -143,9 +137,8 @@ class WidgetManagerDatabase extends WidgetManager
         ]);
     }
 
-
     /**
-     * @param integer $widgetId
+     * @param int $widgetId
      * @param array   $locations [(int) {pageId} => ['block' => (string) '...', 'position' => (int) '...', 'set_crumbs'
      *                           => (bool) '...']]
      */
@@ -173,7 +166,6 @@ class WidgetManagerDatabase extends WidgetManager
         }
     }
 
-
     /**
      * @param int   $widgetId
      * @param int   $pageId
@@ -194,7 +186,6 @@ class WidgetManagerDatabase extends WidgetManager
         }
     }
 
-
     /**
      * @param int $pageId
      *
@@ -203,6 +194,5 @@ class WidgetManagerDatabase extends WidgetManager
     public static function deleteWidgetsFromPage($pageId)
     {
         return DB::table('page_widgets')->where('page_id', (int) $pageId)->delete();
-
     }
 }

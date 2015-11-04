@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\CMS\Navigation;
 
 class Section extends ItemDecorator implements \Countable, \Iterator
 {
-
     /**
      * @var array
      */
@@ -15,10 +15,9 @@ class Section extends ItemDecorator implements \Countable, \Iterator
     protected $sections = [];
 
     /**
-     * @var integer
+     * @var int
      */
     protected $currentKey = 0;
-
 
     /**
      * @param array $data
@@ -30,7 +29,6 @@ class Section extends ItemDecorator implements \Countable, \Iterator
         return new static($data);
     }
 
-
     /**
      * @return string
      */
@@ -38,7 +36,6 @@ class Section extends ItemDecorator implements \Countable, \Iterator
     {
         return $this->getAttribute('id');
     }
-
 
     /**
      * @return array
@@ -48,7 +45,6 @@ class Section extends ItemDecorator implements \Countable, \Iterator
         return $this->pages;
     }
 
-
     /**
      * @return array
      */
@@ -56,7 +52,6 @@ class Section extends ItemDecorator implements \Countable, \Iterator
     {
         return $this->sections;
     }
-
 
     /**
      * @param array $pages
@@ -66,18 +61,16 @@ class Section extends ItemDecorator implements \Countable, \Iterator
     public function addPages(array $pages)
     {
         foreach ($pages as $page) {
-            if (isset( $page['children'] )) {
-
+            if (isset($page['children'])) {
                 $section = Collection::getSection($page['name'], $this);
 
-                if (isset( $page['icon'] )) {
+                if (isset($page['icon'])) {
                     $section->icon = $page['icon'];
                 }
 
                 if (count($page['children']) > 0) {
                     $section->addPages($page['children']);
                 }
-
             } else {
                 $page = new Page($page);
                 $this->addPage($page);
@@ -87,34 +80,31 @@ class Section extends ItemDecorator implements \Countable, \Iterator
         return $this;
     }
 
-
     /**
      * @param ItemDecorator $page
-     * @param integer       $priority
+     * @param int       $priority
      *
      * @return $this
      */
-    public function addPage(ItemDecorator & $page, $priority = 1)
+    public function addPage(ItemDecorator &$page, $priority = 1)
     {
         $priority = (int) $priority;
 
         $permissions = $page->getPermissions();
-        if ( ! empty( $permissions ) and ! acl_check($permissions)) {
+        if (! empty($permissions) and ! acl_check($permissions)) {
             return $this;
         }
 
-        if (isset( $page->priority )) {
+        if (isset($page->priority)) {
             $priority = (int) $page->priority;
         }
 
-        if ($page instanceof Section) {
-
+        if ($page instanceof self) {
             $this->sections[] = $page;
             $page->setSection($this);
-
         } else {
-            if (isset( $this->pages[$priority] )) {
-                while (isset( $this->pages[$priority] )) {
+            if (isset($this->pages[$priority])) {
+                while (isset($this->pages[$priority])) {
                     $priority++;
                 }
             }
@@ -127,19 +117,17 @@ class Section extends ItemDecorator implements \Countable, \Iterator
         return $this->update()->sort();
     }
 
-
     /**
      * @param string $currentUri
      *
-     * @return boolean
+     * @return bool
      */
     public function findActivePageByUri($currentUri)
     {
-        $found        = false;
+        $found = false;
         $adminDirName = backend_url();
 
         foreach ($this->getPages() as $page) {
-
             $url = $page->getUrl();
             $len = strpos($url, $adminDirName);
             if ($len !== false) {
@@ -156,7 +144,7 @@ class Section extends ItemDecorator implements \Countable, \Iterator
             $uri = substr($currentUri, $len);
             $pos = strpos($uri, $url);
 
-            if ( ! empty( $url ) and $pos !== false and $pos < 5) {
+            if (! empty($url) and $pos !== false and $pos < 5) {
                 $page->setStatus(true);
                 Collection::setCurrentPage($page);
                 $found = true;
@@ -176,7 +164,6 @@ class Section extends ItemDecorator implements \Countable, \Iterator
         return $found;
     }
 
-
     /**
      * @param string $name
      *
@@ -192,21 +179,20 @@ class Section extends ItemDecorator implements \Countable, \Iterator
 
         foreach ($this->getSections() as $section) {
             $found = $section->findSection($name);
-            if ( ! is_null($found)) {
+            if (! is_null($found)) {
                 return $found;
             }
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @param string $uri
      *
      * @return null|Page
      */
-    public function & findPageByUri($uri)
+    public function &findPageByUri($uri)
     {
         foreach ($this->getPages() as $page) {
             if ($page->getUrl() == $uri) {
@@ -216,14 +202,13 @@ class Section extends ItemDecorator implements \Countable, \Iterator
 
         foreach ($this->getSections() as $section) {
             $found = $section->findPageByUri($uri);
-            if ( ! is_null($found)) {
+            if (! is_null($found)) {
                 return $found;
             }
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @return Section
@@ -232,7 +217,6 @@ class Section extends ItemDecorator implements \Countable, \Iterator
     {
         return $this;
     }
-
 
     /**
      * @return Section
@@ -244,7 +228,7 @@ class Section extends ItemDecorator implements \Countable, \Iterator
                 return 0;
             }
 
-            return ( $a->priority < $b->priority ) ? -1 : 1;
+            return ($a->priority < $b->priority) ? -1 : 1;
         });
 
         ksort($this->pages);
@@ -252,45 +236,41 @@ class Section extends ItemDecorator implements \Countable, \Iterator
         return $this;
     }
 
-
     /**
      * Implements [Countable::count], returns the total number of rows.
      *
      *     echo count($result);
      *
-     * @return  integer
+     * @return  int
      */
     public function count()
     {
         return count($this->pages);
     }
 
-
     /**
      * Implements [Iterator::key], returns the current row number.
      *
      *     echo key($result);
      *
-     * @return  integer
+     * @return  int
      */
     public function key()
     {
         return key($this->pages);
     }
 
-
     /**
      * Implements [Iterator::key], returns the current breadcrumb item.
      *
      *     echo key($result);
      *
-     * @return  integer
+     * @return  int
      */
     public function current()
     {
         return current($this->pages);
     }
-
 
     /**
      * Implements [Iterator::next], moves to the next row.
@@ -304,7 +284,6 @@ class Section extends ItemDecorator implements \Countable, \Iterator
         next($this->pages);
     }
 
-
     /**
      * Implements [Iterator::prev], moves to the previous row.
      *
@@ -316,7 +295,6 @@ class Section extends ItemDecorator implements \Countable, \Iterator
     {
         --$this->currentKey;
     }
-
 
     /**
      * Implements [Iterator::rewind], sets the current row to zero.
@@ -330,18 +308,17 @@ class Section extends ItemDecorator implements \Countable, \Iterator
         reset($this->pages);
     }
 
-
     /**
      * Implements [Iterator::valid], checks if the current row exists.
      *
      * [!!] This method is only used internally.
      *
-     * @return  boolean
+     * @return  bool
      */
     public function valid()
     {
         $key = key($this->pages);
 
-        return ( $key !== null and $key !== false );
+        return ($key !== null and $key !== false);
     }
 }

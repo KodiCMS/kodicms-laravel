@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Http\Controllers;
 
 use Meta;
@@ -11,12 +12,10 @@ use KodiCMS\CMS\Http\Controllers\System\TemplateController;
 
 class PageWysiwygController extends TemplateController
 {
-
     /**
      * @var bool
      */
     protected $authRequired = true;
-
 
     /**
      * @param int $id
@@ -25,7 +24,7 @@ class PageWysiwygController extends TemplateController
      */
     public function getPageWysiwyg($id)
     {
-        $frontendPage                  = $this->getPage($id);
+        $frontendPage = $this->getPage($id);
         $this->templateScripts['PAGE'] = $frontendPage;
 
         Meta::addMeta([
@@ -35,7 +34,7 @@ class PageWysiwygController extends TemplateController
                 'content' => csrf_token(),
             ])
             ->loadPackage(['page-wysiwyg'], true)
-            ->addToGroup('site-url', '<script type="text/javascript">' . $this->getTemplateScriptsAsString() . '</script>');
+            ->addToGroup('site-url', '<script type="text/javascript">'.$this->getTemplateScriptsAsString().'</script>');
 
         app()->singleton('frontpage', function () use ($frontendPage) {
             return $frontendPage;
@@ -56,15 +55,14 @@ class PageWysiwygController extends TemplateController
         $html = $layout->with('page', $frontendPage)->render();
 
         $injectHTML = view('pages::pages.wysiwyg.system_blocks');
-        $matches    = preg_split('/(<\/body>)/i', $html, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+        $matches = preg_split('/(<\/body>)/i', $html, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
         if (count($matches) > 1) {
-            $html = $matches[0] . $injectHTML->render() . $matches[1] . $matches[2];
+            $html = $matches[0].$injectHTML->render().$matches[1].$matches[2];
         }
 
         return $html;
     }
-
 
     /**
      * @param int $id
@@ -84,5 +82,4 @@ class PageWysiwygController extends TemplateController
             );
         }
     }
-
-} 
+}

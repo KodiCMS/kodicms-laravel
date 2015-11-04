@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Http\Controllers;
 
 use Meta;
@@ -9,12 +10,10 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class PageController extends BackendController
 {
-
     /**
      * @var array
      */
     public $allowedActions = ['children'];
-
 
     /**
      * @param PageRepository $repository
@@ -32,10 +31,9 @@ class PageController extends BackendController
         $this->setContent('pages.index', compact('page'));
     }
 
-
     /**
      * @param PageRepository $repository
-     * @param integer        $id
+     * @param int        $id
      */
     public function getEdit(PageRepository $repository, $id)
     {
@@ -57,10 +55,9 @@ class PageController extends BackendController
         $this->setContent('pages.edit', compact('page', 'updator', 'creator'));
     }
 
-
     /**
      * @param PageRepository $repository
-     * @param integer        $id
+     * @param int        $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -73,14 +70,13 @@ class PageController extends BackendController
 
         return $this->smartRedirect([$page])
             ->with('success', trans('pages::core.messages.updated', [
-                'title' => $page->title
+                'title' => $page->title,
             ]));
     }
 
-
     /**
      * @param PageRepository $repository
-     * @param integer|null   $parentId
+     * @param int|null   $parentId
      */
     public function getCreate(PageRepository $repository, $parentId = null)
     {
@@ -96,7 +92,6 @@ class PageController extends BackendController
         $this->setContent('pages.create', compact('page'));
     }
 
-
     /**
      * @param PageRepository $repository
      *
@@ -110,14 +105,13 @@ class PageController extends BackendController
 
         return $this->smartRedirect([$page])
             ->with('success', trans('pages::core.messages.created', [
-                'title' => $page->title
+                'title' => $page->title,
             ]));
     }
 
-
     /**
      * @param PageRepository $repository
-     * @param integer        $id
+     * @param int        $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -127,7 +121,7 @@ class PageController extends BackendController
 
         return $this->smartRedirect()
             ->with('success', trans('pages::core.messages.deleted', [
-                'title' => $page->title
+                'title' => $page->title,
             ]));
     }
 }
