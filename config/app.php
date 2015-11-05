@@ -139,7 +139,6 @@ return [
          * KodiCMS Service Providers...
          */
         KodiCMS\Support\Html\HtmlServiceProvider::class,
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         KodiCMS\CMS\Providers\ModuleLoaderServiceProvider::class,
         KodiCMS\Assets\AssetsServiceProvider::class,
 
@@ -147,6 +146,8 @@ return [
          * App Service Providers must be here...
          */
         App\Providers\AppServiceProvider::class,
+
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     ],
     /*
     |--------------------------------------------------------------------------
