@@ -41,7 +41,7 @@ class EventServiceProvider extends BaseEventServiceProvider
         });
 
         $events->listen('view.menu', function ($navigation) {
-            echo view('cms::navigation.list')->with('navigation', $navigation);
+            echo view('cms::navigation.list')->with('navigation', $navigation)->render();
         });
 
         $events->listen('config.loaded', function () {
