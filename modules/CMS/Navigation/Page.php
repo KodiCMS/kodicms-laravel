@@ -2,7 +2,7 @@
 
 namespace KodiCMS\CMS\Navigation;
 
-class Page extends ItemDecorator
+class Page extends ItemDecorator implements NavigationPageInterface
 {
     /**
      * @param string $name

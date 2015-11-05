@@ -2,15 +2,18 @@
 
 namespace KodiCMS\CMS\Navigation;
 
-class Section extends ItemDecorator implements \Countable, \Iterator
+use Iterator;
+use Countable;
+
+class Section extends ItemDecorator implements Countable, Iterator, NavigationSectionInterface
 {
     /**
-     * @var array
+     * @var Page[]
      */
     protected $pages = [];
 
     /**
-     * @var array
+     * @var Section[]
      */
     protected $sections = [];
 
@@ -38,7 +41,7 @@ class Section extends ItemDecorator implements \Countable, \Iterator
     }
 
     /**
-     * @return array
+     * @return Page[]
      */
     public function getPages()
     {
@@ -46,7 +49,7 @@ class Section extends ItemDecorator implements \Countable, \Iterator
     }
 
     /**
-     * @return array
+     * @return Section[]
      */
     public function getSections()
     {
@@ -81,12 +84,12 @@ class Section extends ItemDecorator implements \Countable, \Iterator
     }
 
     /**
-     * @param ItemDecorator $page
-     * @param int       $priority
+     * @param NavigationPageInterface $page
+     * @param int                     $priority
      *
      * @return $this
      */
-    public function addPage(ItemDecorator &$page, $priority = 1)
+    public function addPage(NavigationPageInterface &$page, $priority = 1)
     {
         $priority = (int) $priority;
 

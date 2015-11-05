@@ -80,7 +80,7 @@ class ItemDecorator
      */
     public function getLabel()
     {
-        if (($label = $this->getAttribute('label')) !== null) {
+        if (! is_null($label = $this->getAttribute('label'))) {
             return trans($label);
         }
 
