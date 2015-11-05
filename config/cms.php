@@ -19,7 +19,7 @@ return [
         'Dashboard',
         'Datasource',
         'Userguide',
-        'SleepingOwlAdmin'
+        'SleepingOwlAdmin',
     ],
     'theme'               => [
         'default' => 'default',
