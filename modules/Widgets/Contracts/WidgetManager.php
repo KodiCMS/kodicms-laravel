@@ -1,14 +1,13 @@
 <?php
+
 namespace KodiCMS\Widgets\Contracts;
 
 interface WidgetManager
 {
-
     /**
      * @return array
      */
     public static function getAvailableTypes();
-
 
     /**
      * @param string $needleType
@@ -16,7 +15,6 @@ interface WidgetManager
      * @return string|null
      */
     public static function getClassNameByType($needleType);
-
 
     /**
      * @param string      $type

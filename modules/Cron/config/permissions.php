@@ -1,4 +1,5 @@
 <?php
+
 return [
     'cron' => [
         'backend.cron.list',

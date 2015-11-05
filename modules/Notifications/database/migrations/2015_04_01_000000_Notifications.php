@@ -5,7 +5,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class Notifications extends Migration
 {
-
     public function up()
     {
         Schema::create('notifications', function (Blueprint $table) {
@@ -24,7 +23,6 @@ class Notifications extends Migration
             $table->timestamp('sent_at');
         });
     }
-
 
     public function down()
     {

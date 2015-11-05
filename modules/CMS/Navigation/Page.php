@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\CMS\Navigation;
 
-class Page extends ItemDecorator
+class Page extends ItemDecorator implements NavigationPageInterface
 {
-
     /**
      * @param string $name
      * @param mixed  $value
@@ -14,7 +14,7 @@ class Page extends ItemDecorator
     {
         parent::__set($name, $value);
 
-        if ( ! is_null($this->sectionObject)) {
+        if (! is_null($this->sectionObject)) {
             $this->getSection()->update();
         }
 

@@ -1,7 +1,12 @@
 <?php
+
 namespace KodiCMS\CMS\Providers;
 
+use Config;
 use WYSIWYG;
+use Profiler;
+use PDOException;
+use KodiCMS\CMS\Helpers\DatabaseConfig;
 use KodiCMS\CMS\Handlers\Events\SettingsSave;
 use KodiCMS\CMS\Handlers\Events\SettingsValidate;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
@@ -9,7 +14,6 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as BaseEventSer
 
 class EventServiceProvider extends BaseEventServiceProvider
 {
-
     /**
      * The event handler mappings for the application.
      *
@@ -19,7 +23,6 @@ class EventServiceProvider extends BaseEventServiceProvider
         'backend.settings.validate' => [SettingsValidate::class],
         'backend.settings.save'     => [SettingsSave::class],
     ];
-
 
     /**
      * Register any other events for your application.
@@ -38,7 +41,29 @@ class EventServiceProvider extends BaseEventServiceProvider
         });
 
         $events->listen('view.menu', function ($navigation) {
-            echo view('cms::navigation.list')->with('navigation', $navigation);
+            echo view('cms::navigation.list')->with('navigation', $navigation)->render();
+        });
+
+        $events->listen('config.loaded', function () {
+            if (cms_installed()) {
+                try {
+                    $databaseConfig = new DatabaseConfig;
+                    $this->app->instance('config.database', $databaseConfig);
+
+                    $config = $databaseConfig->getAll();
+                    foreach ($config as $group => $data) {
+                        Config::set($group, array_merge(Config::get($group, []), $data));
+                    }
+                } catch (PDOException $e) {
+                }
+            }
+        }, 999);
+
+        $events->listen('illuminate.query', function ($sql, $bindings, $time) {
+            $sql = str_replace(['%', '?'], ['%%', '%s'], $sql);
+            $sql = vsprintf($sql, $bindings);
+
+            Profiler::append('Database', $sql, $time / 1000);
         });
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Reflinks;
 
 use KodiCMS\CMS\Exceptions\Exception;
@@ -7,7 +8,6 @@ use KodiCMS\Users\Contracts\ReflinkGeneratorInterface;
 
 class ReflinksBroker
 {
-
     /**
      * @var string
      */
@@ -29,10 +29,9 @@ class ReflinksBroker
     const TOKEN_HANDLED = 'users::reflinks.messages.token_handled';
 
     /**
-     * @var ReflinkTokenRepository $tokens
+     * @var ReflinkTokenRepository
      */
     protected $tokens;
-
 
     /**
      * @param ReflinkTokenRepository $tokens
@@ -41,7 +40,6 @@ class ReflinksBroker
     {
         $this->tokens = $tokens;
     }
-
 
     /**
      * @param ReflinkGeneratorInterface $generator
@@ -67,7 +65,6 @@ class ReflinksBroker
         }
     }
 
-
     /**
      * @param string $token
      *
@@ -77,16 +74,16 @@ class ReflinksBroker
      */
     public function handle($token)
     {
-        if ( ! $this->tokens->exists($token)) {
+        if (! $this->tokens->exists($token)) {
             return static::INVALID_TOKEN;
         }
 
-        $reflink             = $this->tokens->load($token);
+        $reflink = $this->tokens->load($token);
         $reflinkHandlerClass = $reflink->handler;
 
-        if (empty( $reflinkHandlerClass )) {
+        if (empty($reflinkHandlerClass)) {
             throw new ReflinkException("Reflink token [{$token}] hasn't handler");
-        } else if ( ! class_exists($reflinkHandlerClass)) {
+        } elseif (! class_exists($reflinkHandlerClass)) {
             throw new ReflinkException("Class [{$reflinkHandlerClass}] is not found");
         }
 

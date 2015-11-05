@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class NewsContent extends PluginSchema
 {
-
     /**
      * @return string
      */
@@ -13,7 +12,6 @@ class NewsContent extends PluginSchema
     {
         return 'news_content';
     }
-
 
     public function up()
     {
@@ -26,7 +24,6 @@ class NewsContent extends PluginSchema
             $table->string('content_filtered');
         });
     }
-
 
     public function down()
     {

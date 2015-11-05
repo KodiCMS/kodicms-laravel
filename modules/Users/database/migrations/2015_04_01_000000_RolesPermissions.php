@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class RolesPermissions extends Migration
 {
-
     public function up()
     {
         Schema::create('roles_permissions', function (Blueprint $table) {
@@ -14,7 +13,6 @@ class RolesPermissions extends Migration
             $table->unique(['role_id', 'action']);
         });
     }
-
 
     public function down()
     {

@@ -1,7 +1,7 @@
 <?php
+
 namespace KodiCMS\Users\Http\Controllers\Auth;
 
-use DB;
 use Illuminate\Http\Request;
 use KodiCMS\Users\Model\User;
 use Illuminate\Contracts\Auth\Guard;
@@ -11,7 +11,6 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 class AuthController extends FrontendController
 {
-
     /*
     |--------------------------------------------------------------------------
     | Registration & Login Controller
@@ -34,7 +33,6 @@ class AuthController extends FrontendController
      */
     protected $redirectAfterLogout = '/';
 
-
     /**
      * Create a new authentication controller instance.
      *
@@ -44,16 +42,14 @@ class AuthController extends FrontendController
     {
         $this->auth = $auth;
 
-        $this->redirectPath = backend_url();
-        $this->loginPath    = $this->redirectAfterLogout = backend_url('/auth/login');
+        $this->redirectPath = backend_url_segment();
+        $this->loginPath = $this->redirectAfterLogout = backend_url('auth/login');
     }
-
 
     public function initMiddleware()
     {
         $this->middleware('backend.guest', ['except' => ['getLogout']]);
     }
-
 
     /**
      * Show the application login form.
@@ -68,7 +64,6 @@ class AuthController extends FrontendController
 
         $this->setContent('auth.login');
     }
-
 
     /**
      * Handle a login request to the application.
@@ -111,7 +106,6 @@ class AuthController extends FrontendController
             ]);
     }
 
-
     /**
      * @param Request $request
      * @param User    $user
@@ -125,11 +119,9 @@ class AuthController extends FrontendController
         return redirect()->intended($this->redirectPath());
     }
 
-
     public function checkPermissions()
     {
     }
-
 
     /**
      * Get the failed login message.

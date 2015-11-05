@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class EmailTemplates extends Migration
 {
-
     public function up()
     {
         Schema::create('email_templates', function (Blueprint $table) {
@@ -31,7 +30,6 @@ class EmailTemplates extends Migration
             $table->string('reply_to');
         });
     }
-
 
     public function down()
     {

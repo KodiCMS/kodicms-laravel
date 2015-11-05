@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class RolesUsers extends Migration
 {
-
     public function up()
     {
         Schema::create('roles_users', function (Blueprint $table) {
@@ -15,7 +14,6 @@ class RolesUsers extends Migration
             $table->primary(['user_id', 'role_id']);
         });
     }
-
 
     public function down()
     {

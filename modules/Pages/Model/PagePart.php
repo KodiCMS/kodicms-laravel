@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Model;
 
 use DB;
@@ -6,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class PagePart extends Model
 {
-
     const PART_NOT_PROTECTED = 0;
     const PART_PROTECTED = 1;
 
@@ -39,15 +39,13 @@ class PagePart extends Model
         'name'         => 'string',
     ];
 
-
     public function page()
     {
         return $this->belongsTo(Page::class, 'page_id');
     }
 
-
     /**
-     * TODO: сбрасывать кеширование частей страницы после сортировки
+     * TODO: сбрасывать кеширование частей страницы после сортировки.
      *
      * @param array $positions
      *

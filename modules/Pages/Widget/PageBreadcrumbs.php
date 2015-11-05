@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Widget;
 
 use KodiCMS\Pages\Model\PageSitemap;
@@ -10,7 +11,6 @@ use Frontpage;
 
 class PageBreadcrumbs extends Decorator implements WidgetCacheable
 {
-
     use WidgetCache;
 
     /**
@@ -31,7 +31,6 @@ class PageBreadcrumbs extends Decorator implements WidgetCacheable
      */
     protected $settingsTemplate = 'pages::widgets.page_breadcrumbs.settings';
 
-
     /**
      * @param array $pages
      */
@@ -39,7 +38,6 @@ class PageBreadcrumbs extends Decorator implements WidgetCacheable
     {
         $this->settings['excluded_pages'] = $pages;
     }
-
 
     /**
      * @return array
@@ -51,13 +49,12 @@ class PageBreadcrumbs extends Decorator implements WidgetCacheable
         return compact('pageSitemap');
     }
 
-
     /**
      * @return array [[KodiCMS\CMS\Breadcrumbs\Collection] $breadcrumbs]
      */
     public function prepareData()
     {
-        if (( $breadcrumbs = Frontpage::getBreadcrumbs() ) instanceof Breadcrumbs) {
+        if (($breadcrumbs = Frontpage::getBreadcrumbs()) instanceof Breadcrumbs) {
             if (count($this->excluded_pages) > 0) {
                 foreach ($this->excluded_pages as $id) {
                     $breadcrumbs->deleteBy('id', $id);

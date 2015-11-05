@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Relation;
 
 use KodiCMS\Datasource\Fields\Relation;
@@ -12,10 +13,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne as HasOneRelation;
 
 class HasOne extends Relation
 {
-
     const ONE_TO_ONE = 'one_to_one';
     const ONE_TO_MANY = 'one_to_many';
-
 
     /**
      * @param DocumentInterface     $document
@@ -29,13 +28,12 @@ class HasOne extends Relation
     ) {
         $instance = $relatedSection->getEmptyDocument()->newQuery();
 
-        $foreignKey = $relatedSection->getSectionTableName() . '.' . $relatedSection->getDocumentPrimaryKey();
-        $otherKey   = $this->getDBKey();
-        $relation   = $this->getRelationName();
+        $foreignKey = $relatedSection->getSectionTableName().'.'.$relatedSection->getDocumentPrimaryKey();
+        $otherKey = $this->getDBKey();
+        $relation = $this->getRelationName();
 
         return new HasOneRelation($instance, $document, $foreignKey, $otherKey, $relation);
     }
-
 
     /**
      * @return array
@@ -48,7 +46,6 @@ class HasOne extends Relation
         ];
     }
 
-
     /**
      * @return array
      */
@@ -56,9 +53,11 @@ class HasOne extends Relation
     {
         return $this->getSetting('relation_type', static::ONE_TO_ONE);
     }
+
     /**************************************************************************
      * Database
      **************************************************************************/
+
     /**
      * @param Blueprint $table
      *
@@ -69,7 +68,6 @@ class HasOne extends Relation
         return $table->integer($this->getDBKey())->nullable();
     }
 
-
     /**
      * @param Builder           $query
      * @param DocumentInterface $document
@@ -78,7 +76,6 @@ class HasOne extends Relation
     {
         $query->addSelect($this->getDBKey())->with($this->getRelationName());
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -113,7 +110,6 @@ class HasOne extends Relation
             : null;
     }
 
-
     /**
      * @param FieldRepository $repository
      *
@@ -121,7 +117,7 @@ class HasOne extends Relation
      */
     public function onCreated(FieldRepository $repository)
     {
-        if ( ! is_null($this->getRelatedFieldId())) {
+        if (! is_null($this->getRelatedFieldId())) {
             return;
         }
 
@@ -143,24 +139,23 @@ class HasOne extends Relation
             case static::ONE_TO_ONE:
                 $relatedField = $repository->create(array_merge([
                     'type' => 'belongs_to',
-                    'key'  => $this->getDBKey() . '_belongs_to',
+                    'key'  => $this->getDBKey().'_belongs_to',
                 ], $data));
 
                 break;
             case static::ONE_TO_MANY:
                 $relatedField = $repository->create(array_merge([
                     'type' => 'has_many',
-                    'key'  => $this->getDBKey() . '_has_many',
+                    'key'  => $this->getDBKey().'_has_many',
                 ], $data));
 
                 break;
         }
 
-        if ( ! is_null($relatedField)) {
+        if (! is_null($relatedField)) {
             $this->update(['related_field_id' => $relatedField->getId()]);
         }
     }
-
 
     /**
      * @param FieldRepository $repository

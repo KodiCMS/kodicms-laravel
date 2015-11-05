@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Reflinks;
 
 use KodiCMS\Users\Model\User;
@@ -6,7 +7,6 @@ use KodiCMS\Users\Model\UserReflink;
 
 class ReflinkTokenRepository
 {
-
     /**
      * The hashing key.
      *
@@ -26,7 +26,6 @@ class ReflinkTokenRepository
      */
     protected $model;
 
-
     /**
      * @param string $hashKey
      * @param int    $expires
@@ -38,7 +37,6 @@ class ReflinkTokenRepository
         $this->hashKey = $hashKey;
         $this->expires = $expires * 60;
     }
-
 
     /**
      * @param User   $user
@@ -59,7 +57,6 @@ class ReflinkTokenRepository
         return $this->getModel()->create($this->getPayload($user->id, $handler, $properties, $token));
     }
 
-
     /**
      * @param string $token
      *
@@ -69,7 +66,6 @@ class ReflinkTokenRepository
     {
         return $this->getModel()->where('token', $token)->first();
     }
-
 
     /**
      * @param string $token
@@ -83,7 +79,6 @@ class ReflinkTokenRepository
         return $token && ! $this->tokenExpired($token->toArray());
     }
 
-
     /**
      * Delete a token record by token.
      *
@@ -96,7 +91,6 @@ class ReflinkTokenRepository
         $this->getTable()->where('token', $token)->delete();
     }
 
-
     /**
      * Create a new token for the user.
      *
@@ -106,7 +100,6 @@ class ReflinkTokenRepository
     {
         return hash_hmac('sha256', str_random(40), $this->hashKey);
     }
-
 
     /**
      * Delete expired tokens.
@@ -120,7 +113,6 @@ class ReflinkTokenRepository
         $this->getModel()->where('created_at', '<', $expiredAt)->delete();
     }
 
-
     /**
      * @param User   $user
      * @param string $handler
@@ -132,9 +124,8 @@ class ReflinkTokenRepository
         return $this->getModel()->where('user_id', $user->id)->where('handler', $handler)->delete();
     }
 
-
     /**
-     * @param integer $userId
+     * @param int $userId
      * @param string  $handler
      * @param array   $properties
      * @param string  $token
@@ -151,7 +142,6 @@ class ReflinkTokenRepository
         ];
     }
 
-
     /**
      * Determine if the token has expired.
      *
@@ -166,7 +156,6 @@ class ReflinkTokenRepository
         return $expirationTime < $this->getCurrentTime();
     }
 
-
     /**
      * Get the current UNIX timestamp.
      *
@@ -176,7 +165,6 @@ class ReflinkTokenRepository
     {
         return time();
     }
-
 
     /**
      * Begin a new database query against the table.

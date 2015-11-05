@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\CMS\Navigation;
 
 use Event;
 
 class Collection
 {
-
     /**
      * @var Section
      */
@@ -15,7 +15,6 @@ class Collection
      * @var Page
      */
     protected static $currentPage = null;
-
 
     /**
      * @param string $uri
@@ -34,7 +33,6 @@ class Collection
         return static::getRootSection();
     }
 
-
     /**
      * @return Page
      */
@@ -43,18 +41,17 @@ class Collection
         return static::$currentPage;
     }
 
-
     /**
      * @param array $items
      */
     protected static function build(array $items)
     {
         foreach ($items as $section) {
-            if ( ! isset( $section['name'] )) {
+            if (! isset($section['name'])) {
                 continue;
             }
 
-            if (isset( $section['url'] )) {
+            if (isset($section['url'])) {
                 $sectionObject = self::getRootSection();
 
                 $page = new Page($section);
@@ -63,13 +60,12 @@ class Collection
                 $sectionObject = self::getSection($section['name']);
                 $sectionObject->setAttribute(array_except($section, ['children']));
 
-                if ( ! empty( $section['children'] )) {
+                if (! empty($section['children'])) {
                     $sectionObject->addPages($section['children']);
                 }
             }
         }
     }
-
 
     /**
      * @param         $name
@@ -98,7 +94,6 @@ class Collection
         return $section;
     }
 
-
     /**
      * @return void
      */
@@ -108,7 +103,6 @@ class Collection
             'name' => 'root',
         ]);
     }
-
 
     /**
      * @return Section
@@ -121,7 +115,6 @@ class Collection
 
         return static::$rootSection;
     }
-
 
     /**
      * @param string $section
@@ -139,7 +132,6 @@ class Collection
         ]), $priority);
     }
 
-
     /**
      * @param string $uri
      * @param array  $data
@@ -155,13 +147,12 @@ class Collection
         }
     }
 
-
     /**
      * @param string $uri
      *
      * @return null|Page
      */
-    public static function & findPageByUri($uri)
+    public static function &findPageByUri($uri)
     {
         foreach (static::getRootSection()->getSections() as $section) {
             if ($page = $section->findPageByUri($uri)) {
@@ -169,9 +160,8 @@ class Collection
             }
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @return void
@@ -183,15 +173,14 @@ class Collection
                 return 0;
             }
 
-            return ( $a->id() < $b->id() ) ? -1 : 1;
+            return ($a->id() < $b->id()) ? -1 : 1;
         });
     }
-
 
     /**
      * @param Page $page
      */
-    public static function setCurrentPage(Page & $page)
+    public static function setCurrentPage(Page &$page)
     {
         static::$currentPage = $page;
     }

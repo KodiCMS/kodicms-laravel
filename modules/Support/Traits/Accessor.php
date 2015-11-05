@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Support\Traits;
 
 trait Accessor
 {
-
     /**
      * @param string $name
      * @param mixed  $default
@@ -14,7 +14,6 @@ trait Accessor
     {
         return array_get($this->attributes, $name, $default);
     }
-
 
     /**
      * @param string $name
@@ -29,8 +28,8 @@ trait Accessor
                 $this->setAttribute($key, $value);
             }
         } else {
-            $method = 'set' . ucfirst($name);
-            if (method_exists($this, 'set' . ucfirst($name))) {
+            $method = 'set'.ucfirst($name);
+            if (method_exists($this, 'set'.ucfirst($name))) {
                 $this->attributes[$name] = $this->{$method}($value);
             } else {
                 $this->attributes[$name] = $value;
@@ -40,9 +39,7 @@ trait Accessor
         return $this;
     }
 
-
     /**
-     *
      * @param string $name
      *
      * @return mixed
@@ -51,7 +48,6 @@ trait Accessor
     {
         return $this->getAttribute($name);
     }
-
 
     /**
      * @param string $name
@@ -64,23 +60,21 @@ trait Accessor
         $this->setAttribute($name, $value);
     }
 
-
     /**
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function __isset($name)
     {
-        return isset( $this->attributes[$name] );
+        return isset($this->attributes[$name]);
     }
-
 
     /**
      * @param $name
      */
     public function __unset($name)
     {
-        unset( $this->attributes[$name] );
+        unset($this->attributes[$name]);
     }
 }

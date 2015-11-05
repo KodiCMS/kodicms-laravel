@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Http\Controllers;
 
 use WYSIWYG;
@@ -7,7 +8,6 @@ use KodiCMS\CMS\Model\FileCollection;
 
 abstract class AbstractFileController extends System\BackendController
 {
-
     /**
      * @var FileCollection
      */
@@ -18,26 +18,22 @@ abstract class AbstractFileController extends System\BackendController
      */
     protected $sectionPrefix;
 
-
     /**
      * @return FileCollection
      */
     abstract protected function getCollection();
-
 
     /**
      * @return string
      */
     abstract protected function getSectionPrefix();
 
-
     public function before()
     {
         parent::before();
-        $this->collection    = $this->getCollection();
+        $this->collection = $this->getCollection();
         $this->sectionPrefix = $this->getSectionPrefix();
     }
-
 
     public function getIndex()
     {
@@ -46,10 +42,9 @@ abstract class AbstractFileController extends System\BackendController
         ]);
     }
 
-
     public function getCreate()
     {
-        $file  = $this->getFile();
+        $file = $this->getFile();
         $roles = UserRole::lists('name', 'name')->all();
 
         $this->setTitle(trans($this->wrapNamespace("{$this->sectionPrefix}.title.create")));
@@ -57,7 +52,6 @@ abstract class AbstractFileController extends System\BackendController
 
         $this->setContent("{$this->sectionPrefix}.create", compact('file', 'roles'));
     }
-
 
     /**
      * @return \Illuminate\Http\RedirectResponse
@@ -79,17 +73,16 @@ abstract class AbstractFileController extends System\BackendController
 
         return $this->smartRedirect(['name' => $file->getName()])
             ->with('success', trans($this->wrapNamespace("{$this->sectionPrefix}.messages.created"), [
-                'name' => $file->getName()
+                'name' => $file->getName(),
             ]));
     }
-
 
     /**
      * @param string $filename
      */
     public function getEdit($filename)
     {
-        $file  = $this->getFile($filename);
+        $file = $this->getFile($filename);
         $roles = UserRole::lists('name', 'name')->all();
 
         $this->setTitle(trans($this->wrapNamespace("{$this->sectionPrefix}.title.edit"), [
@@ -100,7 +93,6 @@ abstract class AbstractFileController extends System\BackendController
 
         $this->setContent("{$this->sectionPrefix}.edit", compact('file', 'roles'));
     }
-
 
     /**
      * @param string $filename
@@ -123,10 +115,9 @@ abstract class AbstractFileController extends System\BackendController
 
         return $this->smartRedirect(['name' => $file->getName()])
             ->with('success', trans($this->wrapNamespace("{$this->sectionPrefix}.messages.updated"), [
-                'name' => $file->getName()
+                'name' => $file->getName(),
             ]));
     }
-
 
     /**
      * @param string $filename
@@ -142,7 +133,7 @@ abstract class AbstractFileController extends System\BackendController
         if ($file->delete()) {
             return $this->smartRedirect()
                 ->with('success', trans($this->wrapNamespace("{$this->sectionPrefix}.messages.deleted"), [
-                    'name' => $file->getName()
+                    'name' => $file->getName(),
                 ]));
         }
 
@@ -151,7 +142,6 @@ abstract class AbstractFileController extends System\BackendController
                 trans($this->wrapNamespace("{$this->sectionPrefix}.messages.not_deleted"))
             );
     }
-
 
     /**
      * @param null|string $filename

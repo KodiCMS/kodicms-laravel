@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource;
 
 use Schema;
@@ -12,7 +13,6 @@ use KodiCMS\Datasource\Contracts\FieldGroupInterface;
 
 class DatasourceManager extends AbstractManager
 {
-
     /**
      * @param array $config
      */
@@ -21,7 +21,7 @@ class DatasourceManager extends AbstractManager
         $this->config = $config;
 
         foreach ($this->config as $type => $data) {
-            if ( ! SectionType::isValid($data)) {
+            if (! SectionType::isValid($data)) {
                 continue;
             }
 
@@ -29,10 +29,9 @@ class DatasourceManager extends AbstractManager
         }
     }
 
-
     /**
      * @param array        $types
-     * @param integer|null $sectionId
+     * @param int|null $sectionId
      *
      * @return Collection
      */
@@ -49,7 +48,6 @@ class DatasourceManager extends AbstractManager
         });
     }
 
-
     /**
      * @param array|null $types
      *
@@ -59,14 +57,14 @@ class DatasourceManager extends AbstractManager
     {
         $query = Section::query();
 
-        if ( ! empty( $types )) {
+        if (! empty($types)) {
             $query->whereIn('type', $types);
         }
 
         $sections = [];
 
         foreach ($query->get() as $section) {
-            if ( ! $this->typeExists($section->type)) {
+            if (! $this->typeExists($section->type)) {
                 continue;
             }
 
@@ -75,7 +73,6 @@ class DatasourceManager extends AbstractManager
 
         return $sections;
     }
-
 
     /**
      * @param array|null $types
@@ -92,7 +89,6 @@ class DatasourceManager extends AbstractManager
         return $select;
     }
 
-
     /**
      * @param SectionInterface $section
      */
@@ -107,7 +103,6 @@ class DatasourceManager extends AbstractManager
         });
     }
 
-
     /**
      * @param                                    $table
      * @param SectionInterface                   $section
@@ -121,7 +116,7 @@ class DatasourceManager extends AbstractManager
             if ($field = $section->fields()->save($field)) {
                 $field->setDatabaseFieldType($table);
             }
-        } else if ($field instanceof FieldGroupInterface) {
+        } elseif ($field instanceof FieldGroupInterface) {
             $group = $field;
 
             $group->section_id = $section->getId();
@@ -134,7 +129,6 @@ class DatasourceManager extends AbstractManager
         }
     }
 
-
     /**
      * @param SectionInterface $section
      */
@@ -142,7 +136,6 @@ class DatasourceManager extends AbstractManager
     {
         Schema::dropIfExists($section->getSectionTableName());
     }
-
 
     /**
      * @param SectionInterface $section
@@ -155,16 +148,15 @@ class DatasourceManager extends AbstractManager
         }
     }
 
-
     /**
      * @param SectionInterface             $section
-     * @param FieldInterface|Field|integer $fieldId
+     * @param FieldInterface|Field|int $fieldId
      */
     public function attachField(SectionInterface $section, $fieldId)
     {
         if ($fieldId instanceof FieldInterface) {
             $field = $fieldId;
-        } else if (is_integer($fieldId)) {
+        } elseif (is_int($fieldId)) {
             $field = Field::find($fieldId);
         }
 

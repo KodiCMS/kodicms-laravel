@@ -5,5 +5,5 @@
  */
 function meta()
 {
-    return app('frontpage.meta');
+    return app('assets.meta');
 }

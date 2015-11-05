@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\CMS\Contracts;
 
 interface WysiwygFilterInterface
 {
-
     /**
      * @param string $text
      *

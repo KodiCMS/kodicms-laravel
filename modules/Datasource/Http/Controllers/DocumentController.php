@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Http\Controllers;
 
 use WYSIWYG;
@@ -7,7 +8,6 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class DocumentController extends BackendController
 {
-
     /**
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -16,23 +16,22 @@ class DocumentController extends BackendController
         return redirect()->route('backend.datasource.list', $this->request->cookie('currentDS'));
     }
 
-
     /**
      * @param SectionRepository $repository
-     * @param integer           $sectionId
+     * @param int           $sectionId
      */
     public function getCreate(SectionRepository $repository, $sectionId)
     {
         WYSIWYG::loadAllEditors();
 
         $document = $repository->getEmptyDocument($sectionId);
-        $section  = $document->getSection();
+        $section = $document->getSection();
 
         $this->breadcrumbs->add($section->getName(), route('backend.datasource.list', $section->getId()));
 
         $this->setTitle($section->getCreateDocumentTitle());
 
-        $this->templateScripts['SECTION']  = $section;
+        $this->templateScripts['SECTION'] = $section;
         $this->templateScripts['DOCUMENT'] = $document;
         $document->onControllerLoad($this);
 
@@ -42,7 +41,6 @@ class DocumentController extends BackendController
             'fields'   => $document->getEditableFields(),
         ]);
     }
-
 
     /**
      * @param SectionRepository $repository
@@ -62,28 +60,27 @@ class DocumentController extends BackendController
             $document->getId(),
         ])
             ->with('success', trans($this->wrapNamespace('core.messages.document_updated'), [
-                'title' => $document->getTitle()
+                'title' => $document->getTitle(),
             ]));
     }
 
-
     /**
      * @param SectionRepository $repository
-     * @param integer           $sectionId
-     * @param integer|string    $documentId
+     * @param int           $sectionId
+     * @param int|string    $documentId
      */
     public function getEdit(SectionRepository $repository, $sectionId, $documentId)
     {
         WYSIWYG::loadAllEditors();
         $document = $repository->getDocumentById($sectionId, $documentId);
-        $section  = $document->getSection();
+        $section = $document->getSection();
 
         $document->onControllerLoad($this);
         $this->breadcrumbs->add($section->getName(), route('backend.datasource.list', $section->getId()));
 
         $this->setTitle($section->getEditDocumentTitle($document->getTitle()));
 
-        $this->templateScripts['SECTION']  = $section;
+        $this->templateScripts['SECTION'] = $section;
         $this->templateScripts['DOCUMENT'] = $document;
 
         $this->setContent($document->getEditTemplate(), [
@@ -92,7 +89,6 @@ class DocumentController extends BackendController
             'fields'   => $document->getEditableFields(),
         ]);
     }
-
 
     /**
      * @param SectionRepository $repository
@@ -116,7 +112,7 @@ class DocumentController extends BackendController
             $document->getId(),
         ])
             ->with('success', trans($this->wrapNamespace('core.messages.document_updated'), [
-                'title' => $document->getTitle()
+                'title' => $document->getTitle(),
             ]));
     }
 }

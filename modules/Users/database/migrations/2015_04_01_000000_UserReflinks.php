@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class UserReflinks extends Migration
 {
-
     public function up()
     {
         Schema::create('user_reflinks', function (Blueprint $table) {
@@ -18,7 +17,6 @@ class UserReflinks extends Migration
             $table->timestamps();
         });
     }
-
 
     public function down()
     {

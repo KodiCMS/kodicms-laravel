@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Engine;
 
 use KodiCMS\Widgets\Contracts\Widget;
@@ -6,7 +7,6 @@ use KodiCMS\Widgets\Contracts\WidgetRenderEngine;
 
 abstract class WidgetRenderAbstract implements WidgetRenderEngine
 {
-
     /**
      * @var Widget
      */
@@ -16,7 +16,6 @@ abstract class WidgetRenderAbstract implements WidgetRenderEngine
      * @var array
      */
     protected $parameters = [];
-
 
     /**
      * @param Widget $widget
@@ -28,7 +27,6 @@ abstract class WidgetRenderAbstract implements WidgetRenderEngine
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 
-
     /**
      * @return WidgetRenderable
      */
@@ -36,7 +34,6 @@ abstract class WidgetRenderAbstract implements WidgetRenderEngine
     {
         return $this->widget;
     }
-
 
     /**
      * @param Widget $widget

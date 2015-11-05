@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Installer\Providers;
 
 use KodiCMS\Installer\Installer;
@@ -9,7 +10,6 @@ use KodiCMS\Installer\Console\Commands\DropDatabaseCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         $this->registerAliases([
@@ -22,7 +22,7 @@ class ModuleServiceProvider extends ServiceProvider
             DropDatabaseCommand::class,
         ]);
 
-        if ( ! $this->app->installed()) {
+        if (! cms_installed()) {
             putenv('APP_ENV=local');
         }
 

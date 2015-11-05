@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CronJobLogs extends Migration
 {
-
     public function up()
     {
         Schema::create('cron_job_logs', function (Blueprint $table) {
@@ -17,7 +16,6 @@ class CronJobLogs extends Migration
             //$table->foreign('job_id')->references('id')->on('cron_jobs')->onDelete('cascade');
         });
     }
-
 
     public function down()
     {

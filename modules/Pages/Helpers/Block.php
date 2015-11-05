@@ -1,18 +1,16 @@
 <?php
+
 namespace KodiCMS\Pages\Helpers;
 
 use KodiCMS\Widgets\Collection\WidgetCollection;
 use KodiCMS\Widgets\Engine\WidgetRenderHTML;
-use View;
 
 class Block
 {
-
     /**
      * @var WidgetCollection
      */
     protected $collection;
-
 
     /**
      * @param WidgetCollection $collection
@@ -23,26 +21,24 @@ class Block
         $this->collection->placeWidgetsToLayoutBlocks();
     }
 
-
     /**
      * @param type string|array
      *
-     * @return boolean
+     * @return bool
      */
     public function hasWidgets($name)
     {
-        if ( ! is_array($name)) {
+        if (! is_array($name)) {
             $name = [$name];
         }
 
         $blocks = $this->collection->getLayoutBlocks();
 
-        return ! empty( $blocks[$name] );
+        return ! empty($blocks[$name]);
     }
 
-
     /**
-     * Метод служит для разметки выводимых блоков на странице
+     * Метод служит для разметки выводимых блоков на странице.
      *
      * @param string $name
      * @param array  $params
@@ -55,7 +51,6 @@ class Block
             echo (new WidgetRenderHTML($widget->getObject()))->render();
         }
     }
-
 
     /**
      * Получение виджетов блока без вывода.
@@ -90,7 +85,6 @@ class Block
         return $widgets;
     }
 
-
     /**
      * Блок типа def служит для помещения в него виджетов без вывода.
      * Необходим в том случае, если необходимо на странице вывести виджет
@@ -111,7 +105,6 @@ class Block
     public function def($name)
     {
     }
-
 
     /**
      * @param string $method

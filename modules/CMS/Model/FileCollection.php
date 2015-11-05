@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Model;
 
 use Iterator;
@@ -7,7 +8,6 @@ use ModulesFileSystem;
 
 class FileCollection implements Iterator
 {
-
     /**
      * @var SplFileInfo
      */
@@ -38,21 +38,19 @@ class FileCollection implements Iterator
      */
     protected $resourceFolder;
 
-
     /**
      * @param string $directory
      * @param string $resourceFolder
      */
     public function __construct($directory, $resourceFolder)
     {
-        $this->directory      = new SplFileInfo($directory);
-        $this->resourceFolder = 'resources' . DIRECTORY_SEPARATOR . $resourceFolder;
+        $this->directory = new SplFileInfo($directory);
+        $this->resourceFolder = 'resources'.DIRECTORY_SEPARATOR.$resourceFolder;
 
         $this->settings = $this->getSettingsFile();
 
         $this->listFiles();
     }
-
 
     protected function listFiles()
     {
@@ -60,7 +58,6 @@ class FileCollection implements Iterator
             $this->addFile($splFile);
         }
     }
-
 
     /**
      * @param SplFileInfo $file
@@ -75,7 +72,6 @@ class FileCollection implements Iterator
         return $this->files[$file->getRealPath()] = $file;
     }
 
-
     /**
      * @return bool
      */
@@ -83,7 +79,6 @@ class FileCollection implements Iterator
     {
         return ! $this->directory->isWritable();
     }
-
 
     /**
      * @return string
@@ -93,7 +88,6 @@ class FileCollection implements Iterator
         return $this->directory->getRealPath();
     }
 
-
     /**
      * @return SplFileInfo|string
      */
@@ -102,15 +96,13 @@ class FileCollection implements Iterator
         return $this->directory;
     }
 
-
     /**
      * @return string
      */
     public function getSettingsFilePath()
     {
-        return normalize_path($this->directory . DIRECTORY_SEPARATOR . '.settings.php');
+        return normalize_path($this->directory.DIRECTORY_SEPARATOR.'.settings.php');
     }
-
 
     /**
      * @return array
@@ -120,12 +112,11 @@ class FileCollection implements Iterator
         $settingsFile = $this->getSettingsFilePath();
 
         if (is_file($settingsFile)) {
-            return (array) include( $settingsFile );
+            return (array) include $settingsFile;
         } else {
             return [];
         }
     }
-
 
     /**
      * @return int
@@ -134,7 +125,6 @@ class FileCollection implements Iterator
     {
         return count($this->files);
     }
-
 
     /**
      * @param string $filename
@@ -158,7 +148,6 @@ class FileCollection implements Iterator
         return false;
     }
 
-
     /**
      * @return File
      */
@@ -167,7 +156,6 @@ class FileCollection implements Iterator
         return $this->newFiles[] = new $this->fileClass(null, $this->getRealPath());
     }
 
-
     /**
      * @return array
      */
@@ -175,7 +163,6 @@ class FileCollection implements Iterator
     {
         return $this->files;
     }
-
 
     /**
      * @return $this
@@ -191,7 +178,6 @@ class FileCollection implements Iterator
         return $this;
     }
 
-
     /**
      * @param File $file
      *
@@ -205,7 +191,6 @@ class FileCollection implements Iterator
         return $this;
     }
 
-
     /**
      * @return int
      */
@@ -213,7 +198,7 @@ class FileCollection implements Iterator
     {
         $status = is_file($this->getSettingsFilePath());
 
-        if ( ! $status) {
+        if (! $status) {
             $status = touch($this->getSettingsFilePath()) !== false;
         }
 
@@ -223,15 +208,14 @@ class FileCollection implements Iterator
                 $settings[$file->getFilename()] = $file->getSettings();
             }
 
-            $data = "<?php" . PHP_EOL;
-            $data .= "return ";
+            $data = '<?php'.PHP_EOL;
+            $data .= 'return ';
             $data .= var_export($settings, true);
-            $data .= ";";
+            $data .= ';';
 
             return file_put_contents($this->getSettingsFilePath(), $data);
         }
     }
-
 
     /**
      * @return array
@@ -249,30 +233,25 @@ class FileCollection implements Iterator
         return $choices;
     }
 
-
     public function current()
     {
         return current($this->files);
     }
-
 
     public function next()
     {
         next($this->files);
     }
 
-
     public function key()
     {
         return key($this->files);
     }
 
-
     public function valid()
     {
-        return isset( $this->files[$this->key()] );
+        return isset($this->files[$this->key()]);
     }
-
 
     public function rewind()
     {

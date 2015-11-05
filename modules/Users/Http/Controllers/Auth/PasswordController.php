@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Http\Controllers\Auth;
 
 use Reflinks;
@@ -8,12 +9,10 @@ use KodiCMS\Users\Reflinks\Generators\ForgotPasswordGenerator;
 
 class PasswordController extends FrontendController
 {
-
     public function boot()
     {
         $this->middleware('guest');
     }
-
 
     /**
      * Display the form to request a password reset link.
@@ -24,7 +23,6 @@ class PasswordController extends FrontendController
     {
         $this->setContent('auth.password')->with('status', $this->session->get('status'));
     }
-
 
     public function postEmail()
     {

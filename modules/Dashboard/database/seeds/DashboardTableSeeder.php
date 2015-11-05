@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Dashboard\database\seeds;
 
 use DB;
@@ -8,7 +9,6 @@ use KodiCMS\Dashboard\Dashboard;
 
 class DashboardTableSeeder extends Seeder
 {
-
     /**
      * Run the database seeds.
      *

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Http\Controllers\API;
 
 use Illuminate\Http\JsonResponse;
@@ -7,7 +8,6 @@ use KodiCMS\Datasource\Repository\SectionRepository;
 
 class SectionController extends Controller
 {
-
     /**
      * @param SectionRepository $repository
      *

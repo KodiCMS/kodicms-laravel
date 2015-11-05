@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Source;
 
 use KodiCMS\Datasource\Fields\Source;
@@ -14,12 +15,10 @@ use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
 
 class User extends Source implements FieldTypeRelationInterface
 {
-
     /**
      * @var bool
      */
     protected $changeableDatabaseField = false;
-
 
     /**
      * @return array
@@ -29,24 +28,21 @@ class User extends Source implements FieldTypeRelationInterface
         return ['set_current', 'current_only', 'unique'];
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCurrentOnly()
     {
         return $this->getSetting('current_only');
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCurrentSet()
     {
         return $this->getSetting('set_current');
     }
-
 
     /**
      * @param Builder           $query
@@ -57,7 +53,6 @@ class User extends Source implements FieldTypeRelationInterface
         parent::querySelectColumn($query, $document);
         $query->with($this->getRelationName());
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -76,7 +71,7 @@ class User extends Source implements FieldTypeRelationInterface
                 ->where($this->getSection()->getDocumentPrimaryKey(), '!=', $document->getKey())
                 ->lists($this->getDBKey());
 
-            if ( ! empty( $usedIds )) {
+            if (! empty($usedIds)) {
                 $query->whereNotIn('id', $usedIds);
             }
         }
@@ -85,7 +80,6 @@ class User extends Source implements FieldTypeRelationInterface
 
         return [0 => 'Not set'] + $list;
     }
-
 
     /**
      * @param Blueprint $table
@@ -97,7 +91,6 @@ class User extends Source implements FieldTypeRelationInterface
         return $table->integer($this->getDBKey())->nullable();
     }
 
-
     /**
      * @param DocumentInterface $document
      * @param mixed             $value
@@ -106,13 +99,12 @@ class User extends Source implements FieldTypeRelationInterface
      */
     public function onGetFormValue(DocumentInterface $document, $value)
     {
-        if (( $this->isCurrentSet() or $this->isCurrentOnly() ) and ! $document->exists) {
+        if (($this->isCurrentSet() or $this->isCurrentOnly()) and ! $document->exists) {
             $value = auth()->user()->id;
         }
 
         return parent::onGetFormValue($document, $value);
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -125,7 +117,6 @@ class User extends Source implements FieldTypeRelationInterface
     {
         return ! is_null($user = $document->getAttribute($this->getRelationName())) ? $user->toArray() : $value;
     }
-
 
     /**
      * @param DocumentInterface     $document
@@ -142,22 +133,19 @@ class User extends Source implements FieldTypeRelationInterface
         return new BelongsTo($instance, $document, $this->getDBKey(), 'id', $this->getRelationName());
     }
 
-
     /**
      * @return string
      */
     public function getRelationName()
     {
-        return $this->getDBKey() . '_users';
+        return $this->getDBKey().'_users';
     }
-
 
     /**
      * @param DocumentInterface $document
      */
     public function onRelatedDocumentDeleting(DocumentInterface $document)
     {
-
     }
 
     /**************************************************************************

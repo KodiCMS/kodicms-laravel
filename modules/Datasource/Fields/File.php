@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields;
 
 use Request;
@@ -10,7 +11,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class File extends Primitive
 {
-
     /**
      * @var bool
      */
@@ -36,7 +36,6 @@ class File extends Primitive
      */
     protected $files;
 
-
     /**
      * @return array
      */
@@ -44,7 +43,6 @@ class File extends Primitive
     {
         return ['allowed_types' => [], 'max_file_size' => 1048576];
     }
-
 
     /**
      * @param Filesystem $files
@@ -54,9 +52,8 @@ class File extends Primitive
         $this->files = $files;
 
         $this->folderRelativePath = "datasource/{$this->section_id}/{$this->getDBKey()}/";
-        $this->folderPath         = normalize_path(public_path($this->folderRelativePath));
+        $this->folderPath = normalize_path(public_path($this->folderRelativePath));
     }
-
 
     /**
      * @return array
@@ -68,23 +65,22 @@ class File extends Primitive
         return array_combine($mimes, $mimes);
     }
 
-
     /**
      * @param string $filePath
      *
-     * @return boolean
+     * @return bool
      */
     public function isImage($filePath)
     {
         $filePath = $this->getFilePath($filePath);
 
-        if ( ! file_exists($filePath) or is_dir($filePath)) {
+        if (! file_exists($filePath) or is_dir($filePath)) {
             return false;
         }
 
         $size = getimagesize($filePath);
 
-        if ( ! $size) {
+        if (! $size) {
             return false;
         }
 
@@ -97,7 +93,6 @@ class File extends Primitive
         return false;
     }
 
-
     /**
      * @return string
      */
@@ -106,15 +101,13 @@ class File extends Primitive
         return $this->folderPath;
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getMaxFileSize()
     {
         return $this->getSetting('max_file_size');
     }
-
 
     /**
      * @return array
@@ -123,7 +116,6 @@ class File extends Primitive
     {
         return (array) $this->getSetting('allowed_types');
     }
-
 
     /**
      * @param $filePath
@@ -135,7 +127,6 @@ class File extends Primitive
         return normalize_path(public_path($filePath));
     }
 
-
     /**
      * @param $size
      */
@@ -144,45 +135,41 @@ class File extends Primitive
         $this->fieldSettings['max_file_size'] = (int) $size;
     }
 
-
     /**
      * @param array $types
      */
     public function setSettingAllowedTypes($types)
     {
-        if ( ! is_array($types)) {
+        if (! is_array($types)) {
             $types = explode(',', $types);
         }
 
         foreach ($types as $i => $type) {
             $type = trim($type);
-            if (empty( $type ) or ! preg_match('~^[A-Za-z0-9_\\-]+$~', $type) or ! $this->checkDisallowedTypes($type)) {
-                unset( $types[$i] );
+            if (empty($type) or ! preg_match('~^[A-Za-z0-9_\\-]+$~', $type) or ! $this->checkDisallowedTypes($type)) {
+                unset($types[$i]);
             }
         }
 
         $this->fieldSettings['allowed_types'] = $types;
     }
 
-
     /**
-     *
      * @param string $type
      *
-     * @return boolean
+     * @return bool
      */
     protected function checkDisallowedTypes($type)
     {
         $disallowedTypes = explode(',', '/^php/,/^phtm/,py,pl,/^asp/,htaccess,cgi,_wc,/^shtm/,/^jsp/');
         foreach ($disallowedTypes as $disallowed) {
-            if (( ( strpos($disallowed, '/') !== false ) and preg_match($disallowed, $type) ) or $disallowed == $type) {
+            if (((strpos($disallowed, '/') !== false) and preg_match($disallowed, $type)) or $disallowed == $type) {
                 return false;
             }
         }
 
         return true;
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -194,15 +181,14 @@ class File extends Primitive
     {
         $rules = parent::getValidationRules($document, $validator);
 
-        if ( ! empty( $allowedTypes = $this->getAllowedTypes() )) {
-            $rules[] = 'mimes:' . implode(',', $allowedTypes);
+        if (! empty($allowedTypes = $this->getAllowedTypes())) {
+            $rules[] = 'mimes:'.implode(',', $allowedTypes);
         }
 
-        $rules[] = 'max:' . $this->getMaxFileSize();
+        $rules[] = 'max:'.$this->getMaxFileSize();
 
         return $rules;
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -214,12 +200,11 @@ class File extends Primitive
     {
         parent::onDocumentFill($document, $value);
 
-        if (( $file = $document->{$this->getDBKey()} ) instanceof UploadedFile) {
+        if (($file = $document->{$this->getDBKey()}) instanceof UploadedFile) {
             $this->onDocumentDeleting($document);
             $document->{$this->getDBKey()} = $filePath = $this->uploadFile($file);
         }
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -229,13 +214,12 @@ class File extends Primitive
      */
     public function onDocumentUpdating(DocumentInterface $document, $value)
     {
-        $this->isRemoveFile = (bool) Request::get($this->getDBKey() . '_remove');
+        $this->isRemoveFile = (bool) Request::get($this->getDBKey().'_remove');
 
         if ($this->isRemoveFile) {
             $this->onDocumentDeleting($document);
         }
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -244,24 +228,21 @@ class File extends Primitive
     {
         parent::onDocumentDeleting($document);
 
-        if ( ! empty( $filePath = $document->getOriginal($this->getDBKey()) )) {
+        if (! empty($filePath = $document->getOriginal($this->getDBKey()))) {
             $this->files->delete($this->getFilePath($filePath));
             $document->{$this->getDBKey()} = '';
         }
     }
-
 
     public function onCreated()
     {
         $this->makeDirectory();
     }
 
-
     public function onDeleted()
     {
         $this->deleteDirectory();
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -283,7 +264,6 @@ class File extends Primitive
         return ! is_null($value) ? $link : null;
     }
 
-
     /**
      * @return bool
      * @throws FieldException
@@ -294,13 +274,12 @@ class File extends Primitive
             return true;
         }
 
-        if ( ! $this->files->makeDirectory($this->getFolder(), 0755, true)) {
+        if (! $this->files->makeDirectory($this->getFolder(), 0755, true)) {
             throw new FieldException("Can't create directory [{$this->getFolder()}]");
         }
 
         return true;
     }
-
 
     /**
      * @return bool
@@ -308,13 +287,12 @@ class File extends Primitive
      */
     protected function deleteDirectory()
     {
-        if ( ! $this->files->deleteDirectory($this->getFolder())) {
+        if (! $this->files->deleteDirectory($this->getFolder())) {
             throw new FieldException("Can't delete directory [{$this->getFolder()}]");
         }
 
         return true;
     }
-
 
     /**
      * @param UploadedFile $file
@@ -324,15 +302,15 @@ class File extends Primitive
     protected function uploadFile(UploadedFile $file)
     {
         if ($file->isValid()) {
-            $ext      = $file->getClientOriginalExtension();
+            $ext = $file->getClientOriginalExtension();
             $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $filename .= '_' . uniqid() . '.' . $ext;
+            $filename .= '_'.uniqid().'.'.$ext;
 
             $file->move($this->getFolder(), $filename);
 
-            return $this->folderRelativePath . $filename;
+            return $this->folderRelativePath.$filename;
         }
 
-        return null;
+        return;
     }
 }

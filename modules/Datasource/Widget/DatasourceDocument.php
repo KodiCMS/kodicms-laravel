@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Widget;
 
 use Request;
@@ -9,12 +10,10 @@ use KodiCMS\Widgets\Contracts\WidgetCacheable;
 use KodiCMS\Datasource\Traits\WidgetDatasource;
 use KodiCMS\Datasource\Fields\Primitive\String;
 use KodiCMS\Datasource\Fields\Primitive\Textarea;
-use KodiCMS\Datasource\Repository\SectionRepository;
 use KodiCMS\Datasource\Traits\WidgetDatasourceFields;
 
 class DatasourceDocument extends Decorator implements WidgetCacheable
 {
-
     use WidgetCache, WidgetDatasource, WidgetDatasourceFields;
 
     const SOURCE_REQUEST = 'request';
@@ -35,7 +34,6 @@ class DatasourceDocument extends Decorator implements WidgetCacheable
      */
     protected $settingsTemplate = 'datasource::widgets.document.settings';
 
-
     /**
      * @return array
      */
@@ -43,7 +41,6 @@ class DatasourceDocument extends Decorator implements WidgetCacheable
     {
         return ['throw_404'];
     }
-
 
     /**
      * @return array
@@ -56,27 +53,25 @@ class DatasourceDocument extends Decorator implements WidgetCacheable
         ];
     }
 
-
     public function onLoad()
     {
         $document = $this->getDocument();
 
-        if ( ! $document->exists and $this->getSetting('throw_404')) {
+        if (! $document->exists and $this->getSetting('throw_404')) {
             abort(404);
         }
 
         Frontpage::setMetaParams('document_title', $document->getTitle(), 'title');
         foreach (['title', 'keywords', 'description'] as $metaKey) {
-            if ( ! is_null($setting = $this->getSetting('meta_' . $metaKey))) {
+            if (! is_null($setting = $this->getSetting('meta_'.$metaKey))) {
                 Frontpage::setMetaParams(
-                    'document_meta_' . $metaKey,
+                    'document_meta_'.$metaKey,
                     $document->getAttribute($setting),
-                    'meta_' . $metaKey
+                    'meta_'.$metaKey
                 );
             }
         }
     }
-
 
     /**
      * @param mixed $id
@@ -85,7 +80,6 @@ class DatasourceDocument extends Decorator implements WidgetCacheable
     {
         $this->documentId = $id;
     }
-
 
     /**
      * @return array
@@ -98,14 +92,13 @@ class DatasourceDocument extends Decorator implements WidgetCacheable
         ];
     }
 
-
     /**
      * @return array
      */
     public function getIdFields()
     {
         $fieldObjects = ! $this->getSection() ? [] : $this->section->getFields();
-        $fields       = [];
+        $fields = [];
         foreach ($fieldObjects as $field) {
             if ($field->canBeUsedAsDocumentID()) {
                 $fields[$field->getDBKey()] = $field->getName();
@@ -115,23 +108,21 @@ class DatasourceDocument extends Decorator implements WidgetCacheable
         return $fields;
     }
 
-
     /**
      * @return array
      */
     public function getMetaFields()
     {
         $fieldObjects = ! $this->getSection() ? [] : $this->section->getFields();
-        $fields       = [];
+        $fields = [];
         foreach ($fieldObjects as $field) {
-            if (( $field instanceof String ) or ( $field instanceof Textarea )) {
+            if (($field instanceof String) or ($field instanceof Textarea)) {
                 $fields[$field->getDBKey()] = $field->getName();
             }
         }
 
         return ['--------'] + $fields;
     }
-
 
     /**
      * @return array
@@ -143,32 +134,30 @@ class DatasourceDocument extends Decorator implements WidgetCacheable
         return compact('fields');
     }
 
-
     /**
      * @return string|null
      */
     public function getDocumentId()
     {
-        if ( ! is_null($this->documentId)) {
+        if (! is_null($this->documentId)) {
             return $this->documentId;
         }
 
-        if ( ! is_null($key = $this->getSetting('document_id_source_key'))) {
+        if (! is_null($key = $this->getSetting('document_id_source_key'))) {
             switch ($this->document_id_source) {
                 case static::SOURCE_BEHAVOUR:
-                    if ( ! is_null($behaviour = Frontpage::getBehaviorObject())) {
+                    if (! is_null($behaviour = Frontpage::getBehaviorObject())) {
                         return $behaviour->getRouter()->getParameter($key);
                     }
 
-                    return null;
+                    return;
                 default:
                     return Request::get($key);
             }
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @return array [[Document] $rawDocument, [array] $document, [KodiCMS\Datasource\Contracts\SectionInterface]
@@ -185,7 +174,7 @@ class DatasourceDocument extends Decorator implements WidgetCacheable
         }
 
         $rawDocument = $this->getDocument();
-        $document    = [];
+        $document = [];
         foreach ($visibleFields as $field) {
             $document[$field->getDBKey()] = $rawDocument->getWidgetValue($field->getDBKey(), $this);
         }
@@ -196,7 +185,6 @@ class DatasourceDocument extends Decorator implements WidgetCacheable
             'section'     => $this->getSection(),
         ];
     }
-
 
     /**
      * @param int|null $id
@@ -212,11 +200,11 @@ class DatasourceDocument extends Decorator implements WidgetCacheable
             $id = $this->getDocumentId();
         }
 
-        if (empty( $id )) {
+        if (empty($id)) {
             return $document;
         }
 
-        if (isset( static::$cachedDocuments[$id] )) {
+        if (isset(static::$cachedDocuments[$id])) {
             return static::$cachedDocuments[$id];
         }
 

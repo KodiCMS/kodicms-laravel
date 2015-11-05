@@ -1,13 +1,12 @@
 <?php
+
 namespace KodiCMS\Email\Http\Controllers;
 
-use KodiCMS\Email\Model\EmailType;
 use KodiCMS\Email\Repository\EmailEventRepository;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class EmailEventController extends BackendController
 {
-
     /**
      * @param EmailEventRepository $repository
      */
@@ -17,7 +16,6 @@ class EmailEventController extends BackendController
         $this->setContent('email.event.list', compact('emailEvents'));
     }
 
-
     /**
      * @param EmailEventRepository $repository
      */
@@ -26,11 +24,10 @@ class EmailEventController extends BackendController
         $this->setTitle(trans('email::core.title.events.create'));
 
         $emailEvent = $repository->instance();
-        $action     = 'backend.email.event.create.post';
+        $action = 'backend.email.event.create.post';
 
         $this->setContent('email.event.form', compact('emailEvent', 'action'));
     }
-
 
     /**
      * @param EmailEventRepository $repository
@@ -47,10 +44,9 @@ class EmailEventController extends BackendController
 
         return $this->smartRedirect([$emailEvent])
             ->with('success', trans('email::core.messages.events.created', [
-                'title' => $emailEvent->name
+                'title' => $emailEvent->name,
             ]));
     }
-
 
     /**
      * @param EmailEventRepository $repository
@@ -68,10 +64,9 @@ class EmailEventController extends BackendController
         $this->setContent('email.event.form', compact('emailEvent', 'action'));
     }
 
-
     /**
      * @param EmailEventRepository $repository
-     * @param integer              $id
+     * @param int              $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -85,14 +80,13 @@ class EmailEventController extends BackendController
 
         return $this->smartRedirect([$emailEvent])
             ->with('success', trans('email::core.messages.events.updated', [
-                'title' => $emailEvent->name
+                'title' => $emailEvent->name,
             ]));
     }
 
-
     /**
      * @param EmailEventRepository $repository
-     * @param integer              $id
+     * @param int              $id
      *
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
@@ -107,7 +101,6 @@ class EmailEventController extends BackendController
             ]));
     }
 
-
     /**
      * @param array $data
      */
@@ -115,7 +108,7 @@ class EmailEventController extends BackendController
     {
         $fields = array_get($data, 'fields', []);
 
-        $keys  = array_get($fields, 'key', []);
+        $keys = array_get($fields, 'key', []);
         $names = array_get($fields, 'value', []);
         $value = array_combine($keys, $names);
         $value = array_unique(array_filter($value));

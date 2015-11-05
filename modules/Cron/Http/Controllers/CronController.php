@@ -1,13 +1,13 @@
 <?php
+
 namespace KodiCMS\Cron\Http\Controllers;
 
-use Assets;
+use Meta;
 use KodiCMS\Cron\Repository\CronRepository;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class CronController extends BackendController
 {
-
     /**
      * @param CronRepository $repository
      */
@@ -17,23 +17,21 @@ class CronController extends BackendController
         $this->setContent('cron.list', compact('jobs'));
     }
 
-
     /**
      * @param CronRepository $repository
      */
     public function getCreate(CronRepository $repository)
     {
         $this->setTitle(trans('cron::core.title.cron.create'));
-        Assets::package('cron');
+        Meta::loadPackage('cron');
 
-        $job    = $repository->instance();
+        $job = $repository->instance();
         $action = 'backend.cron.create.post';
 
         $this->templateScripts['JOB'] = $job->toArray();
 
         $this->setContent('cron.form', compact('job', 'action'));
     }
-
 
     /**
      * @param CronRepository $repository
@@ -49,7 +47,6 @@ class CronController extends BackendController
         return $this->smartRedirect([$job])->with('success', trans('cron::core.messages.created', ['title' => $job->name]));
     }
 
-
     /**
      * @param CronRepository $repository
      * @param int            $id
@@ -58,7 +55,7 @@ class CronController extends BackendController
     {
         $job = $repository->findOrFail($id);
 
-        Assets::package('cron');
+        Meta::loadPackage('cron');
         $this->templateScripts['JOB'] = $job->toArray();
 
         $this->setTitle(trans('cron::core.title.cron.edit', [
@@ -69,7 +66,6 @@ class CronController extends BackendController
 
         $this->setContent('cron.form', compact('job', 'action'));
     }
-
 
     /**
      * @param CronRepository $repository
@@ -87,10 +83,9 @@ class CronController extends BackendController
 
         return $this->smartRedirect([$job])
             ->with('success', trans('cron::core.messages.updated', [
-                'title' => $job->name
+                'title' => $job->name,
             ]));
     }
-
 
     /**
      * @param CronRepository $repository
@@ -104,10 +99,9 @@ class CronController extends BackendController
 
         return $this->smartRedirect()
             ->with('success', trans('cron::core.messages.deleted', [
-                'title' => $job->name
+                'title' => $job->name,
             ]));
     }
-
 
     /**
      * @param CronRepository $repository
@@ -122,8 +116,7 @@ class CronController extends BackendController
         return redirect()
             ->route('backend.cron.edit', $job)
             ->with('success', trans('cron::core.messages.runned', [
-                'title' => $job->name
+                'title' => $job->name,
             ]));
     }
-
 }

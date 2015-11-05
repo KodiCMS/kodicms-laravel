@@ -1,11 +1,10 @@
 <?php
+
 namespace KodiCMS\CMS\Breadcrumbs;
 
 class Collection implements \Countable, \Iterator
 {
-
     /**
-     *
      * @var array
      */
     protected $options = [
@@ -13,23 +12,20 @@ class Collection implements \Countable, \Iterator
     ];
 
     /**
-     *
      * @var array
      */
     protected $items = [];
-
 
     /**
      * @param array $options
      */
     public function __construct(array $options = [])
     {
-        $this->options = $options;
+        $this->options = array_merge($this->options, $options);
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function isLast()
     {
@@ -38,9 +34,8 @@ class Collection implements \Countable, \Iterator
         return $this->current() === end($items);
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function isFirst()
     {
@@ -49,12 +44,11 @@ class Collection implements \Countable, \Iterator
         return $this->current() === reset($items);
     }
 
-
     /**
      * @param string|static $name
      * @param bool          $url
      * @param bool|null     $isActive
-     * @param integer|null  $position
+     * @param int|null  $position
      * @param array         $data
      *
      * @return $this
@@ -65,17 +59,17 @@ class Collection implements \Countable, \Iterator
             foreach ($name as $item) {
                 $this->addItem($item);
             }
-        } else if ($name instanceof Item) {
+        } elseif ($name instanceof Item) {
             $this->addItem($name, $position);
         } else {
-            $this->addItem(new Item(
-                $name, $url, $isActive, $data), $position
+            $this->addItem(
+                new Item($name, $url, $isActive, $data),
+                $position
             );
         }
 
         return $this;
     }
-
 
     /**
      * @param string $key
@@ -87,13 +81,12 @@ class Collection implements \Countable, \Iterator
     {
         $position = $this->findBy($key, $value);
 
-        if ($position === null) {
-            return null;
+        if (is_null($position)) {
+            return;
         }
 
         return $this->items[$position];
     }
-
 
     /**
      * @param string $key
@@ -106,21 +99,20 @@ class Collection implements \Countable, \Iterator
         foreach ($this->items as $position => $item) {
             if (is_array($value) and in_array($item->{$key}, $value)) {
                 return $position;
-            } else if ($item->{$key} == $value) {
+            } elseif ($item->{$key} == $value) {
                 return $position;
             }
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @param string       $key
      * @param string       $value
      * @param bool         $url
      * @param bool         $isActive
-     * @param integer|null $position
+     * @param int|null $position
      * @param array        $data
      *
      * @return $this|bool
@@ -128,28 +120,27 @@ class Collection implements \Countable, \Iterator
     public function changeBy($key, $value, $url = false, $isActive = null, $position = null, array $data = [])
     {
         $item = $this->getBy($key, $value);
-        if ($item === null) {
+        if (is_null($item)) {
             return false;
         }
 
         $item->setUrl($url);
 
-        if ( ! is_null($isActive)) {
+        if (! is_null($isActive)) {
             $item->setActive($isActive);
         }
 
-        if ( ! empty( $data )) {
+        if (! empty($data)) {
             $item->setAttribute($data);
         }
 
-        if ( ! is_null($position)) {
-            $position               = $this->getNextPosition($position);
+        if (! is_null($position)) {
+            $position = $this->getNextPosition($position);
             $this->items[$position] = $item;
         }
 
         return $this;
     }
-
 
     /**
      * @param string $name
@@ -161,7 +152,6 @@ class Collection implements \Countable, \Iterator
         return $this->deleteBy('name', $name);
     }
 
-
     /**
      * @param string $key
      * @param string $value
@@ -172,16 +162,15 @@ class Collection implements \Countable, \Iterator
     {
         $position = $this->findBy($key, $value);
 
-        if ($position === null) {
+        if (is_null($position)) {
             return false;
         }
 
-        unset( $this->items[$position] );
+        unset($this->items[$position]);
     }
 
-
     /**
-     * @param null|integer $position
+     * @param null|int $position
      *
      * @return int
      */
@@ -189,19 +178,17 @@ class Collection implements \Countable, \Iterator
     {
         $position = (int) $position;
 
-        while (isset( $this->items[$position] )) {
+        while (isset($this->items[$position])) {
             $position++;
         }
 
         return $position;
     }
 
-
     public function __unset($name)
     {
-        unset( $this->items[$name] );
+        unset($this->items[$name]);
     }
-
 
     protected function sort()
     {
@@ -210,21 +197,18 @@ class Collection implements \Countable, \Iterator
         return $this;
     }
 
-
     /**
-     * @return  integer
+     * @return  int
      */
     public function count()
     {
         return count($this->items);
     }
 
-
     public function rewind()
     {
         reset($this->items);
     }
-
 
     public function current()
     {
@@ -233,9 +217,8 @@ class Collection implements \Countable, \Iterator
         return $item;
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function key()
     {
@@ -243,7 +226,6 @@ class Collection implements \Countable, \Iterator
 
         return $item;
     }
-
 
     /**
      * @return Item
@@ -255,17 +237,15 @@ class Collection implements \Countable, \Iterator
         return $item;
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function valid()
     {
         $key = key($this->items);
 
-        return ( ! is_null($key) and $key !== false );
+        return (! is_null($key) and $key !== false);
     }
-
 
     /**
      * @return \View
@@ -279,12 +259,10 @@ class Collection implements \Countable, \Iterator
         ]);
     }
 
-
     public function __toString()
     {
         return (string) $this->render();
     }
-
 
     /**
      * @param Item     $item
@@ -292,7 +270,7 @@ class Collection implements \Countable, \Iterator
      */
     protected function addItem(Item $item, $position = null)
     {
-        $position               = $this->getNextPosition($position);
+        $position = $this->getNextPosition($position);
         $this->items[$position] = $item;
     }
 }

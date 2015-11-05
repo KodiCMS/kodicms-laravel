@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class Jobs extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -25,7 +24,6 @@ class Jobs extends Migration
             $table->index(['queue', 'reserved', 'reserved_at']);
         });
     }
-
 
     /**
      * Reverse the migrations.

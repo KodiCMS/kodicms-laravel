@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Primitive;
 
 use UI;
@@ -9,7 +10,6 @@ use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
 class Boolean extends Primitive
 {
-
     const STYLE_RADIO = 0;
     const STYLE_CHECKBOX = 1;
     const STYLE_SELECT = 2;
@@ -18,7 +18,6 @@ class Boolean extends Primitive
      * @var bool
      */
     protected $changeableDatabaseField = false;
-
 
     /**
      * @return array
@@ -31,7 +30,6 @@ class Boolean extends Primitive
         ];
     }
 
-
     /**
      * @param DocumentInterface $document
      * @param mixed             $value
@@ -43,7 +41,6 @@ class Boolean extends Primitive
         return (bool) $value ? UI::icon('check') : UI::icon('close');
     }
 
-
     /**
      * @param Blueprint $table
      *
@@ -54,7 +51,6 @@ class Boolean extends Primitive
         return $table->boolean($this->getDBKey());
     }
 
-
     /**
      * @param SectionHeadlineInterface $headline
      *
@@ -62,24 +58,22 @@ class Boolean extends Primitive
      */
     public function getHeadlineParameters(SectionHeadlineInterface $headline)
     {
-        $params          = parent::getHeadlineParameters($headline);
+        $params = parent::getHeadlineParameters($headline);
         $params['class'] = 'text-center';
 
         return $params;
     }
 
-
     /**
-     * @return integer
+     * @return int
      */
     public function getDisplayStyle()
     {
         return $this->getSetting('style', static::STYLE_CHECKBOX);
     }
 
-
     /**
-     * TODO: translate
+     * TODO: translate.
      * @return array
      */
     public function getDisplayStyles()

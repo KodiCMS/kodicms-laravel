@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Users\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
 class UserReflink extends Model
 {
-
     /**
      * The database table used by the model.
      *
@@ -32,7 +32,6 @@ class UserReflink extends Model
         'properties' => 'json',
     ];
 
-
     /**
      * @return string
      */
@@ -41,7 +40,6 @@ class UserReflink extends Model
         return route('reflink.token', ['token' => $this->token]);
     }
 
-
     /**
      * @return string
      */
@@ -49,7 +47,6 @@ class UserReflink extends Model
     {
         return route('reflink.form');
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\belongsTo

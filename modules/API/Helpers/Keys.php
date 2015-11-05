@@ -1,21 +1,19 @@
 <?php
+
 namespace KodiCMS\API\Helpers;
 
 /**
- * Class Keys
- *
- * @package KodiCMS\API\Helpers
+ * Class Keys.
  */
 class Keys
 {
-
     /**
      * @return string
      */
     public function generate()
     {
         $microTime = microtime();
-        list( $a_dec, $a_sec ) = explode(' ', $microTime);
+        list($a_dec, $a_sec) = explode(' ', $microTime);
 
         $dec_hex = dechex($a_dec * 1000000);
         $sec_hex = dechex($a_sec);
@@ -39,7 +37,6 @@ class Keys
         return $guid;
     }
 
-
     /**
      * @param string $characters
      *
@@ -48,7 +45,7 @@ class Keys
     protected function createGuidSection($characters)
     {
         $characters = (int) $characters;
-        $return     = '';
+        $return = '';
 
         for ($i = 0; $i < $characters; $i++) {
             $return .= dechex(mt_rand(0, 15));
@@ -56,7 +53,6 @@ class Keys
 
         return $return;
     }
-
 
     /**
      * @param string $string
@@ -71,7 +67,7 @@ class Keys
 
         if ($strlen < $length) {
             $string = str_pad($string, $length, 0);
-        } else if ($strlen > $length) {
+        } elseif ($strlen > $length) {
             $string = substr($string, 0, $length);
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Repository;
 
 use DatasourceManager;
@@ -9,7 +10,6 @@ use KodiCMS\Datasource\Exceptions\SectionException;
 
 class SectionRepository extends BaseRepository
 {
-
     /**
      * @param Section $model
      */
@@ -17,7 +17,6 @@ class SectionRepository extends BaseRepository
     {
         parent::__construct($model);
     }
-
 
     /**
      * @param string $type
@@ -32,7 +31,6 @@ class SectionRepository extends BaseRepository
 
         return $this->model->newInstance($attributes);
     }
-
 
     /**
      * @param array $data
@@ -49,7 +47,6 @@ class SectionRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
      * @param array $data
      *
@@ -65,10 +62,9 @@ class SectionRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
-     * @param integer $sectionId
-     * @param integer $folderId
+     * @param int $sectionId
+     * @param int $folderId
      *
      * @return bool
      */
@@ -81,7 +77,6 @@ class SectionRepository extends BaseRepository
         return true;
     }
 
-
     /**
      * @param array $data
      *
@@ -91,7 +86,7 @@ class SectionRepository extends BaseRepository
     public function create(array $data = [])
     {
         if (is_null($type = array_get($data, 'type'))) {
-            throw new SectionException("Type not set");
+            throw new SectionException('Type not set');
         }
 
         if (is_null($typeObject = DatasourceManager::getTypeObject($type))) {
@@ -104,9 +99,8 @@ class SectionRepository extends BaseRepository
         return $section;
     }
 
-
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return Model
      * @throws \Exception
@@ -122,9 +116,8 @@ class SectionRepository extends BaseRepository
         return $model;
     }
 
-
     /**
-     * @param integer     $sectionId
+     * @param int     $sectionId
      * @param string|null $keyword
      *
      * @return array|static[]
@@ -137,13 +130,12 @@ class SectionRepository extends BaseRepository
             ->select('*')
             ->selectRaw("{$section->getDocumentPrimaryKey()} as id")
             ->selectRaw("{$section->getDocumentTitleKey()} as text")
-            ->where($section->getDocumentTitleKey(), 'like', '%' . $keyword . '%')
+            ->where($section->getDocumentTitleKey(), 'like', '%'.$keyword.'%')
             ->get();
     }
 
-
     /**
-     * @param integer $sectionId
+     * @param int $sectionId
      *
      * @return DocumentInterface
      */
@@ -152,10 +144,9 @@ class SectionRepository extends BaseRepository
         return $this->findOrFail($sectionId)->getEmptyDocument();
     }
 
-
     /**
-     * @param integer $sectionId
-     * @param integer $documentId
+     * @param int $sectionId
+     * @param int $documentId
      *
      * @return DocumentInterface
      */
@@ -164,9 +155,8 @@ class SectionRepository extends BaseRepository
         return $this->findOrFail($sectionId)->getDocumentById($documentId);
     }
 
-
     /**
-     * @param integer $sectionId
+     * @param int $sectionId
      *
      * @return bool
      * @throws \KodiCMS\CMS\Exceptions\ValidationException
@@ -184,7 +174,6 @@ class SectionRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
      * @param array $data
      *
@@ -201,9 +190,8 @@ class SectionRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
-     * @param integer $sectionId
+     * @param int $sectionId
      * @param array   $data
      *
      * @return mixed
@@ -211,13 +199,12 @@ class SectionRepository extends BaseRepository
     public function createDocument($sectionId, array $data)
     {
         $document = $this->findOrFail($sectionId)->getEmptyDocument();
-        $data     = array_only($data, $document->getEditableFields()->getKeys());
+        $data = array_only($data, $document->getEditableFields()->getKeys());
 
         $document->fill($data)->save();
 
         return $document;
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -233,9 +220,8 @@ class SectionRepository extends BaseRepository
         return $document;
     }
 
-
     /**
-     * @param integer $sectionId
+     * @param int $sectionId
      * @param array   $ids
      */
     public function deleteDocuments($sectionId, array $ids)

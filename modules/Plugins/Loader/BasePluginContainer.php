@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Plugins\Loader;
 
 use CMS;
@@ -10,7 +11,6 @@ use KodiCMS\Support\Facades\PluginLoader as PluginLoaderFacade;
 
 abstract class BasePluginContainer extends ModuleContainer
 {
-
     use Settings;
 
     /**
@@ -38,7 +38,6 @@ abstract class BasePluginContainer extends ModuleContainer
      */
     protected $details = [];
 
-
     /**
      * @param string      $moduleName
      * @param null|string $modulePath
@@ -50,19 +49,18 @@ abstract class BasePluginContainer extends ModuleContainer
     {
         parent::__construct($moduleName, $modulePath, $namespace);
 
-        $this->name    = strtolower($moduleName);
+        $this->name = strtolower($moduleName);
         $this->details = array_merge($this->defaultDetails(), $this->details());
 
-        if ( ! isset( $this->details['title'] )) {
+        if (! isset($this->details['title'])) {
             throw new PluginContainerException("Plugin title for plugin {$moduleName} not set");
         }
 
         $this->isInstallable = $this->checkPluginVersion();
-        $this->isActivated   = in_array($this, PluginLoaderFacade::getActivated());
+        $this->isActivated = in_array($this, PluginLoaderFacade::getActivated());
 
         $this->setSettings($this->defaultSettings());
     }
-
 
     /**
      * @return array
@@ -72,7 +70,6 @@ abstract class BasePluginContainer extends ModuleContainer
         return [];
     }
 
-
     /**
      * @return string
      */
@@ -80,7 +77,6 @@ abstract class BasePluginContainer extends ModuleContainer
     {
         return array_get($this->details, 'title');
     }
-
 
     /**
      * @return string
@@ -90,7 +86,6 @@ abstract class BasePluginContainer extends ModuleContainer
         return array_get($this->details, 'author');
     }
 
-
     /**
      * @return string
      */
@@ -98,7 +93,6 @@ abstract class BasePluginContainer extends ModuleContainer
     {
         return array_get($this->details, 'description');
     }
-
 
     /**
      * @return string
@@ -108,15 +102,13 @@ abstract class BasePluginContainer extends ModuleContainer
         return array_get($this->details, 'icon');
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function isInstallable()
     {
         return $this->isInstallable;
     }
-
 
     /**
      * @return \Illuminate\View\View|null
@@ -129,27 +121,24 @@ abstract class BasePluginContainer extends ModuleContainer
             ]);
         }
 
-        return null;
+        return;
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasSettingsPage()
     {
         return (bool) array_get($this->details, 'settings_template', false);
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function isActivated()
     {
         return $this->isActivated;
     }
-
 
     /**
      * @return string
@@ -159,7 +148,6 @@ abstract class BasePluginContainer extends ModuleContainer
         return array_get($this->details, 'version', '0.0.0');
     }
 
-
     /**
      * @return string
      */
@@ -167,7 +155,6 @@ abstract class BasePluginContainer extends ModuleContainer
     {
         return array_get($this->details, 'required_cms_version', '0.0.0');
     }
-
 
     /**
      * @return string
@@ -177,7 +164,6 @@ abstract class BasePluginContainer extends ModuleContainer
         return $this->getPath(['database', 'schemas']);
     }
 
-
     /**
      * @return bool
      */
@@ -186,7 +172,6 @@ abstract class BasePluginContainer extends ModuleContainer
         return $this->isActivated = in_array($this, PluginLoaderFacade::getActivated());
     }
 
-
     /**
      * @return bool
      * @throws PluginContainerException
@@ -194,10 +179,10 @@ abstract class BasePluginContainer extends ModuleContainer
     public function activate()
     {
         if ($this->isActivated()) {
-            throw new PluginContainerException("Plugin is activated");
+            throw new PluginContainerException('Plugin is activated');
         }
 
-        if ( ! $this->isInstallable()) {
+        if (! $this->isInstallable()) {
             $CmsVersion = CMS::VERSION;
             throw new PluginContainerException("
 				Plugin can`t be installed.
@@ -221,7 +206,6 @@ abstract class BasePluginContainer extends ModuleContainer
         return true;
     }
 
-
     /**
      * @param bool $removeTable
      *
@@ -230,12 +214,12 @@ abstract class BasePluginContainer extends ModuleContainer
      */
     public function deactivate($removeTable = false)
     {
-        if ( ! $this->isActivated()) {
-            throw new PluginContainerException("Plugin is not activated");
+        if (! $this->isActivated()) {
+            throw new PluginContainerException('Plugin is not activated');
         }
 
         if (is_null($plugin = Plugin::where('name', $this->getName()))) {
-            throw new PluginContainerException("Plugin not found");
+            throw new PluginContainerException('Plugin not found');
         }
 
         $plugin->delete();
@@ -251,7 +235,6 @@ abstract class BasePluginContainer extends ModuleContainer
         return true;
     }
 
-
     /**
      * @param array $settings
      */
@@ -261,11 +244,10 @@ abstract class BasePluginContainer extends ModuleContainer
 
         $model = Plugin::where('name', $this->getName())->first();
 
-        if ( ! is_null($model)) {
+        if (! is_null($model)) {
             $model->update(['settings' => $this->getSettings()]);
         }
     }
-
 
     /**
      * @return bool
@@ -275,7 +257,6 @@ abstract class BasePluginContainer extends ModuleContainer
         return version_compare(CMS::VERSION, $this->getRequiredVersion(), '>=');
     }
 
-
     /**
      * @return array
      */
@@ -284,13 +265,12 @@ abstract class BasePluginContainer extends ModuleContainer
         $details = $this->details;
 
         $details['isInstallable'] = $this->isInstallable();
-        $details['isActivated']   = $this->isActivated();
-        $details['settings']      = $this->getSettings();
-        $details['settingsUrl']   = route('backend.plugins.settings.get', [$this->getName()]);
+        $details['isActivated'] = $this->isActivated();
+        $details['settings'] = $this->getSettings();
+        $details['settingsUrl'] = route('backend.plugins.settings.get', [$this->getName()]);
 
         return array_merge(parent::toArray(), $details);
     }
-
 
     /**
      * @param string $moduleName
@@ -299,9 +279,8 @@ abstract class BasePluginContainer extends ModuleContainer
      */
     protected function getDefaultModulePath($moduleName)
     {
-        return base_path('plugins/' . $moduleName);
+        return base_path('plugins/'.$moduleName);
     }
-
 
     /**
      * @return string
@@ -311,7 +290,6 @@ abstract class BasePluginContainer extends ModuleContainer
         return base_path("/resources/views/plugins/{$this->getName()}");
     }
 
-
     protected function loadViews()
     {
         if (is_dir($appPath = $this->publishViewPath())) {
@@ -320,7 +298,6 @@ abstract class BasePluginContainer extends ModuleContainer
             app('view')->addNamespace($this->getKey(), $this->getViewsPath());
         }
     }
-
 
     /**
      * @return array
@@ -337,7 +314,6 @@ abstract class BasePluginContainer extends ModuleContainer
             'settings_template'    => false,
         ];
     }
-
 
     /**
      * @return array

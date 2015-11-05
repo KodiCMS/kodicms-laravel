@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Widget;
 
 use KodiCMS\Pages\Model\FrontendPage;
@@ -13,7 +14,6 @@ use Request;
 
 class PageList extends Decorator implements WidgetCacheable, WidgetPaginatorInterface
 {
-
     use WidgetCache, WidgetPaginator;
 
     /**
@@ -41,12 +41,10 @@ class PageList extends Decorator implements WidgetCacheable, WidgetPaginatorInte
      */
     protected $currentPage;
 
-
     public function onLoad()
     {
         $this->currentPage = FrontendPage::findById($this->getPageId());
     }
-
 
     /**
      * @param bool $status
@@ -56,7 +54,6 @@ class PageList extends Decorator implements WidgetCacheable, WidgetPaginatorInte
         $this->settings['include_hidden'] = (bool) $status;
     }
 
-
     /**
      * @param bool $status
      */
@@ -64,7 +61,6 @@ class PageList extends Decorator implements WidgetCacheable, WidgetPaginatorInte
     {
         $this->settings['include_user_object'] = (bool) $status;
     }
-
 
     /**
      * @param int $id
@@ -74,7 +70,6 @@ class PageList extends Decorator implements WidgetCacheable, WidgetPaginatorInte
         $this->settings['page_id'] = (int) $id;
     }
 
-
     /**
      * @return FrontendPage
      */
@@ -83,7 +78,6 @@ class PageList extends Decorator implements WidgetCacheable, WidgetPaginatorInte
         return $this->currentPage;
     }
 
-
     /**
      * @return null|int
      */
@@ -91,35 +85,32 @@ class PageList extends Decorator implements WidgetCacheable, WidgetPaginatorInte
     {
         if ($this->settings['page_id'] > 0) {
             return $this->settings['page_id'];
-        } else if ($this->settings['page_id'] == 0 and ( ( $page = Frontpage::getFacadeRoot() ) instanceof FrontendPage )) {
+        } elseif ($this->settings['page_id'] == 0 and (($page = Frontpage::getFacadeRoot()) instanceof FrontendPage)) {
             return $page->getId();
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @return int
      */
     public function getTotalDocuments()
     {
-        if ( ! is_null($page = $this->getCurrentPage())) {
+        if (! is_null($page = $this->getCurrentPage())) {
             return $page->childrenCount($this->include_hidden);
         }
 
         return 0;
     }
 
-
     /**
      * @return string
      */
     public function getCacheKey()
     {
-        return parent::getCacheKey() . '::' . Request::path();
+        return parent::getCacheKey().'::'.Request::path();
     }
-
 
     /**
      * @return array
@@ -131,13 +122,12 @@ class PageList extends Decorator implements WidgetCacheable, WidgetPaginatorInte
         $select = [trans('pages::widgets.page_list.label.linked_page')];
 
         foreach ($pageSitemap->flatten() as $page) {
-            $uri                 = ! empty( $page['uri'] ) ? $page['uri'] : '/';
-            $select[$page['id']] = $page['title'] . ' [ ' . $uri . ' ]';
+            $uri = ! empty($page['uri']) ? $page['uri'] : '/';
+            $select[$page['id']] = $page['title'].' [ '.$uri.' ]';
         }
 
         return compact('select');
     }
-
 
     /**
      * @return array [[array] $pages]
@@ -155,10 +145,10 @@ class PageList extends Decorator implements WidgetCacheable, WidgetPaginatorInte
 
         $pages = [];
         foreach ($query->get() as $row) {
-            $page               = $row->toArray();
+            $page = $row->toArray();
             $page['created_by'] = $row->createdBy;
             $page['updated_by'] = $row->updatedBy;
-            $pages[$row->id]    = new FrontendPage((object) $page, $currentPage);
+            $pages[$row->id] = new FrontendPage((object) $page, $currentPage);
         }
 
         return [

@@ -1,4 +1,5 @@
 <?php
+
 return [
     'label'  => [
         'protected'  => 'Защитить',

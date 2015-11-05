@@ -9,16 +9,15 @@
 	<link href="{{ asset('cms/favicon.ico') }}" rel="favourites icon" />
 	@yield('head')
 
-	{!! Assets::group('global', 'templateScripts') !!}
-	{!! Assets::css() !!}
-	{!! Assets::js() !!}
-	{!! Assets::group('global', 'frontendEvents') !!}
+	{!! Assets::getGroup('global', 'templateScripts') !!}
+	{!! Meta::render() !!}
+	{!! Assets::getGroup('global', 'frontendEvents') !!}
 	@yield('scripts')
 </head>
 <body id="body.{{ $bodyId or 'backend' }}" class="{{ $theme or 'theme-default' }}">
 	{!! $content or NULL !!}
 
-	{!! Assets::js(true) !!}
+	{!! Assets::getJsList(true) !!}
 	@yield('footer_scripts')
 </body>
 </html>

@@ -39,7 +39,7 @@ return [
             'layout_not_set' => 'Шаблон не указан',
             'current_layout' => 'Текущий шаблон :name',
             'redirect'       => 'Редирект: :url',
-            'behavior'       => "Поведение: :behavior",
+            'behavior'       => 'Поведение: :behavior',
         ],
     ],
     'field'    => [

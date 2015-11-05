@@ -5,7 +5,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class CacheTable extends Migration
 {
-
     public function up()
     {
         Schema::create('cache', function (Blueprint $table) {
@@ -15,7 +14,6 @@ class CacheTable extends Migration
             $table->integer('expiration');
         });
     }
-
 
     public function down()
     {

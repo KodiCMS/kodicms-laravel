@@ -1,15 +1,14 @@
 <?php
+
 namespace KodiCMS\Support\Helpers;
 
 /**
  * Class Text
  * TODO: Транслитирация только rus и lat? Китайцы не люди? )) Перепилить под интерфейс + классы транслитерации.
- * TODO: И да... выпилить статику Greabock 20.05.2015
- * @package KodiCMS\CMS\Helpers
+ * TODO: И да... выпилить статику Greabock 20.05.2015.
  */
 class Text
 {
-
     /**
      * @param srtring $string
      *
@@ -157,9 +156,7 @@ class Text
         return str_replace($rus, $lat, $string);
     }
 
-
     /**
-     *
      * @param string $word
      * @param array  $words
      *
@@ -167,12 +164,12 @@ class Text
      */
     public static function similarWord($word, array $words)
     {
-        $similarity         = config('pages.similar.similarity');
-        $metaSimilarity     = 0;
-        $minLevenshtein     = 1000;
+        $similarity = config('pages.similar.similarity');
+        $metaSimilarity = 0;
+        $minLevenshtein = 1000;
         $metaMinLevenshtein = 1000;
 
-        $result     = [];
+        $result = [];
         $metaResult = [];
 
         foreach ($words as $n) {
@@ -208,7 +205,6 @@ class Text
         return $metaResult;
     }
 
-
     /**
      * Returns human readable sizes. Based on original functions written by
      * [Aidan Lister](http://aidanlister.com/repos/v/function.size_readable.php)
@@ -216,31 +212,31 @@ class Text
      *
      *     echo Text::bytes(filesize($file));
      *
-     * @param   integer $bytes      size in bytes
+     * @param   int $bytes      size in bytes
      * @param   string  $force_unit a definitive unit
      * @param   string  $format     the return string format
-     * @param   boolean $si         whether to use SI prefixes or IEC
+     * @param   bool $si         whether to use SI prefixes or IEC
      *
      * @return  string
      */
     public static function bytes($bytes, $force_unit = null, $format = null, $si = true)
     {
         // Format string
-        $format = ( $format === null ) ? '%01.2f %s' : (string) $format;
+        $format = ($format === null) ? '%01.2f %s' : (string) $format;
 
         // IEC prefixes (binary)
         if ($si == false or strpos($force_unit, 'i') !== false) {
             $units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
-            $mod   = 1024;
+            $mod = 1024;
         } // SI prefixes (decimal)
         else {
             $units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB'];
-            $mod   = 1000;
+            $mod = 1000;
         }
 
         // Determine unit to use
-        if (( $power = array_search((string) $force_unit, $units) ) === false) {
-            $power = ( $bytes > 0 ) ? floor(log($bytes, $mod)) : 0;
+        if (($power = array_search((string) $force_unit, $units)) === false) {
+            $power = ($bytes > 0) ? floor(log($bytes, $mod)) : 0;
         }
 
         return sprintf($format, $bytes / pow($mod, $power), $units[$power]);

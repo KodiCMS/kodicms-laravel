@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Support\Helpers;
 
 class Mime
 {
-
     /**
      * @return array
      */
@@ -11,7 +11,6 @@ class Mime
     {
         return config('mimes', []);
     }
-
 
     /**
      * Attempt to get the mime type from a file. This method is horribly
@@ -23,7 +22,7 @@ class Mime
      * @param   string $filename file name or path
      *
      * @return  string  mime type on success
-     * @return  FALSE   on failure
+     * @return  false   on failure
      */
     public static function byFilename($filename)
     {
@@ -37,7 +36,7 @@ class Mime
             // Use getimagesize() to find the mime type on images
             $file = getimagesize($filename);
 
-            if (isset( $file['mime'] )) {
+            if (isset($file['mime'])) {
                 return $file['mime'];
             }
         }
@@ -47,14 +46,13 @@ class Mime
             return mime_content_type($filename);
         }
 
-        if ( ! empty( $extension )) {
+        if (! empty($extension)) {
             return static::byExt($extension);
         }
 
         // Unable to find the mime-type
         return false;
     }
-
 
     /**
      * Return the mime type of an extension.
@@ -64,16 +62,15 @@ class Mime
      * @param   string $extension php, pdf, txt, etc
      *
      * @return  string  mime type on success
-     * @return  FALSE   on failure
+     * @return  false   on failure
      */
     public static function byExt($extension)
     {
         // Load all of the mime types
         $mimes = static::getList();
 
-        return isset( $mimes[$extension] ) ? $mimes[$extension][0] : false;
+        return isset($mimes[$extension]) ? $mimes[$extension][0] : false;
     }
-
 
     /**
      * Lookup a single file extension by MIME type.
@@ -87,9 +84,8 @@ class Mime
         return current(static::extsByMime($type));
     }
 
-
     /**
-     * Lookup file extensions by MIME type
+     * Lookup file extensions by MIME type.
      *
      * @param   string $type File MIME type
      *
@@ -100,7 +96,7 @@ class Mime
         static $types = [];
 
         // Fill the static array
-        if (empty( $types )) {
+        if (empty($types)) {
             foreach (static::getList() as $ext => $mimes) {
                 foreach ($mimes as $mime) {
                     if ($mime == 'application/octet-stream') {
@@ -108,15 +104,15 @@ class Mime
                         continue;
                     }
 
-                    if ( ! isset( $types[$mime] )) {
+                    if (! isset($types[$mime])) {
                         $types[$mime] = [(string) $ext];
-                    } elseif ( ! in_array($ext, $types[$mime])) {
+                    } elseif (! in_array($ext, $types[$mime])) {
                         $types[$mime][] = (string) $ext;
                     }
                 }
             }
         }
 
-        return isset( $types[$type] ) ? $types[$type] : false;
+        return isset($types[$type]) ? $types[$type] : false;
     }
 }

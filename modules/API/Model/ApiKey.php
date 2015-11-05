@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\API\Model;
 
 use Keys;
@@ -6,8 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class ApiKey
- * @package KodiCMS\API\Model
+ * Class ApiKey.
  *
  * @property string $id
  * @property string $description
@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ApiKey extends Model
 {
-
     protected static function boot()
     {
         parent::boot();
@@ -26,7 +25,6 @@ class ApiKey extends Model
             $key->id = Keys::generate();
         });
     }
-
 
     /**
      * Indicates if the IDs are auto-incrementing.
@@ -49,11 +47,10 @@ class ApiKey extends Model
      */
     protected $fillable = ['description'];
 
-
     /**
      * @param string $description
      *
-     * @return integer|null
+     * @return int|null
      */
     public function generate($description = '')
     {
@@ -64,11 +61,10 @@ class ApiKey extends Model
         return $key->id;
     }
 
-
     /**
      * @param $oldKey
      *
-     * @return bool|integer
+     * @return bool|int
      */
     public function refresh($oldKey)
     {
@@ -81,7 +77,6 @@ class ApiKey extends Model
 
         return $key->id;
     }
-
 
     /**
      * @param string $key

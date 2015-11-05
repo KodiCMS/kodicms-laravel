@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Plugins\Http\Controllers\API;
 
 use KodiCMS\Plugins\Exceptions\PluginContainerException;
@@ -8,10 +9,9 @@ use KodiCMS\API\Http\Controllers\System\Controller;
 
 class PluginController extends Controller
 {
-
     public function getList()
     {
-        if ( ! acl_check('backend.plugins.list')) {
+        if (! acl_check('backend.plugins.list')) {
             throw new PermissionException('backend.plugins.list');
         }
 
@@ -23,17 +23,16 @@ class PluginController extends Controller
         $this->setContent($plugins);
     }
 
-
     /**
      * @throws PluginContainerException
      */
     public function changeStatus()
     {
-        if ( ! acl_check('plugins.change_status')) {
+        if (! acl_check('plugins.change_status')) {
             throw new PermissionException('plugins.change_status');
         }
 
-        $name        = $this->getRequiredParameter('name');
+        $name = $this->getRequiredParameter('name');
         $removeTable = $this->getParameter('remove_data');
 
         if (is_null($plugin = PluginLoader::getPluginContainer($name))) {

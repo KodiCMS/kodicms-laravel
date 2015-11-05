@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Pages\Http\Controllers\API;
 
 use KodiCMS\Pages\Repository\PagePartRepository;
@@ -6,18 +7,16 @@ use KodiCMS\API\Http\Controllers\System\Controller;
 
 class PagePartController extends Controller
 {
-
     /**
      * @param PagePartRepository $repository
      */
     public function getByPageId(PagePartRepository $repository)
     {
         $pageId = $this->getRequiredParameter('pid');
-        $parts  = $repository->findByPageId($pageId);
+        $parts = $repository->findByPageId($pageId);
 
         $this->setContent($parts->toArray());
     }
-
 
     /**
      * @param PagePartRepository $repository
@@ -28,10 +27,9 @@ class PagePartController extends Controller
         $this->setContent($part->toArray());
     }
 
-
     /**
      * @param PagePartRepository $repository
-     * @param integer            $id
+     * @param int            $id
      */
     public function update(PagePartRepository $repository, $id)
     {
@@ -39,23 +37,21 @@ class PagePartController extends Controller
         $this->setContent($part->toArray());
     }
 
-
     /**
      * @param PagePartRepository $repository
-     * @param integer            $id
+     * @param int            $id
      */
     public function delete(PagePartRepository $repository, $id)
     {
         $repository->delete($id);
     }
 
-
     /**
      * @param PagePartRepository $repository
      */
     public function reorder(PagePartRepository $repository)
     {
-        if ( ! acl_check('parts.reorder')) {
+        if (! acl_check('parts.reorder')) {
             return;
         }
 

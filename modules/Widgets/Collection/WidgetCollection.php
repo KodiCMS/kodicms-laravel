@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Collection;
 
 use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
@@ -7,7 +8,6 @@ use Iterator;
 
 class WidgetCollection implements WidgetCollectionInterface, Iterator
 {
-
     /**
      * @var array
      */
@@ -18,9 +18,8 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator
      */
     protected $layoutBlocks = [];
 
-
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return Widget|null
      */
@@ -32,9 +31,8 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator
             }
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @return array
@@ -43,7 +41,6 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator
     {
         return $this->registeredWidgets;
     }
-
 
     /**
      * @param string $block
@@ -64,7 +61,6 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator
         return $widgets;
     }
 
-
     /**
      * @return array
      */
@@ -72,7 +68,6 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator
     {
         return array_keys($this->layoutBlocks);
     }
-
 
     /**
      * @param WidgetInterface $widget
@@ -87,7 +82,6 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator
         return $this;
     }
 
-
     /**
      * @param integet $id
      *
@@ -97,7 +91,7 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator
     {
         foreach ($this->registeredWidgets as $i => $widget) {
             if ($widget->getObject()->getId() == $id) {
-                unset( $this->registeredWidgets[$i] );
+                unset($this->registeredWidgets[$i]);
 
                 return true;
             }
@@ -105,7 +99,6 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator
 
         return false;
     }
-
 
     /**
      * @return void
@@ -135,7 +128,6 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator
         }
     }
 
-
     /**
      * @return $this
      */
@@ -148,16 +140,15 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator
                 return 0;
             }
 
-            return ( $a->getPosition() < $b->getPosition() ) ? -1 : 1;
+            return ($a->getPosition() < $b->getPosition()) ? -1 : 1;
         });
 
         return $this;
     }
 
-
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Return the current element
+     * Return the current element.
      * @link http://php.net/manual/en/iterator.current.php
      * @return mixed Can return any type.
      */
@@ -166,10 +157,9 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator
         return current($this->registeredWidgets);
     }
 
-
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Move forward to next element
+     * Move forward to next element.
      * @link http://php.net/manual/en/iterator.next.php
      * @return void Any returned value is ignored.
      */
@@ -178,10 +168,9 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator
         return next($this->registeredWidgets);
     }
 
-
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Return the key of the current element
+     * Return the key of the current element.
      * @link http://php.net/manual/en/iterator.key.php
      * @return mixed scalar on success, or null on failure.
      */
@@ -190,12 +179,11 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator
         return key($this->registeredWidgets);
     }
 
-
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Checks if current position is valid
+     * Checks if current position is valid.
      * @link http://php.net/manual/en/iterator.valid.php
-     * @return boolean The return value will be casted to boolean and then evaluated.
+     * @return bool The return value will be casted to boolean and then evaluated.
      * Returns true on success or false on failure.
      */
     public function valid()
@@ -203,10 +191,9 @@ class WidgetCollection implements WidgetCollectionInterface, Iterator
         return key($this->registeredWidgets) !== null;
     }
 
-
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Rewind the Iterator to the first element
+     * Rewind the Iterator to the first element.
      * @link http://php.net/manual/en/iterator.rewind.php
      * @return void Any returned value is ignored.
      */

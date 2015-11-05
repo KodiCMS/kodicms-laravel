@@ -1,9 +1,10 @@
 <?php
+
 namespace KodiCMS\Installer\Http\Controllers;
 
 use Lang;
 use Date;
-use Assets;
+use Meta;
 use EnvironmentTester;
 use KodiCMS\Installer\Installer;
 use KodiCMS\Support\Helpers\Locale;
@@ -12,12 +13,10 @@ use KodiCMS\CMS\Http\Controllers\System\FrontendController;
 
 class InstallerController extends FrontendController
 {
-
     /**
      * @var Installer
      */
     protected $installer;
-
 
     /**
      * @param Installer $installer
@@ -27,7 +26,6 @@ class InstallerController extends FrontendController
         $this->installer = $installer;
     }
 
-
     public function error()
     {
         $this->setTitle(trans('installer::core.title.not_installed'));
@@ -36,20 +34,19 @@ class InstallerController extends FrontendController
         ]);
     }
 
-
     public function run()
     {
-        Assets::package(['steps', 'validate']);
+        Meta::loadPackage('steps', 'validate');
 
         if ($locale = $this->request->get('lang') and array_key_exists($locale, Locale::getAvailable())) {
             $this->session->set('installer_locale', $locale);
-        } else if ($locale = Locale::detectBrowser() and array_key_exists($locale, Locale::getAvailable())) {
+        } elseif ($locale = Locale::detectBrowser() and array_key_exists($locale, Locale::getAvailable())) {
             $this->session->set('installer_locale', $locale);
         }
 
         Lang::setLocale($this->session->get('installer_locale', Locale::getSystemDefault()));
 
-        list( $failed, $tests, $optional ) = EnvironmentTester::check();
+        list($failed, $tests, $optional) = EnvironmentTester::check();
 
         $this->setContent('install', [
             'environment'    => view("{$this->moduleNamespace}env", [
@@ -70,12 +67,11 @@ class InstallerController extends FrontendController
         $this->templateScripts['FAILED'] = $failed;
     }
 
-
     public function install()
     {
         $this->autoRender = false;
-        $installData      = $this->request->get('install', []);
-        $databaseData     = $this->request->get('database', []);
+        $installData = $this->request->get('install', []);
+        $databaseData = $this->request->get('database', []);
 
         try {
             $data = $this->installer->install($installData, $databaseData);

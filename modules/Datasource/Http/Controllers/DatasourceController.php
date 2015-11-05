@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Http\Controllers;
 
 use DatasourceManager;
@@ -7,7 +8,6 @@ use KodiCMS\Datasource\Repository\SectionRepository;
 
 class DatasourceController extends BackendController
 {
-
     const DS_COOKIE_NAME = 'currentDS';
 
     /**
@@ -15,10 +15,9 @@ class DatasourceController extends BackendController
      */
     public $moduleNamespace = 'datasource::';
 
-
     /**
      * @param SectionRepository $repository
-     * @param integer           $sectionId
+     * @param int           $sectionId
      */
     public function getIndex(SectionRepository $repository, $sectionId = null)
     {
@@ -32,9 +31,9 @@ class DatasourceController extends BackendController
             $section = $repository->findOrFail($sectionId);
         }
 
-        if ( ! is_null($section)) {
+        if (! is_null($section)) {
             $headline = $section->getHeadline()->render();
-            $toolbar  = $section->getToolbar()->render();
+            $toolbar = $section->getToolbar()->render();
             $this->setTitle($section->getName());
 
             $this->response->withCookie(cookie()->forever(static::DS_COOKIE_NAME, $section->getId()));
@@ -59,7 +58,6 @@ class DatasourceController extends BackendController
         $this->templateScripts['SECTION'] = $section;
     }
 
-
     /**
      * @param SectionRepository $repository
      * @param string            $type
@@ -70,13 +68,12 @@ class DatasourceController extends BackendController
     {
         $type = strtolower($type);
 
-        $section    = $repository->instanceByType($type);
+        $section = $repository->instanceByType($type);
         $typeObject = $section->getType();
 
         $this->setTitle(trans($this->wrapNamespace('core.title.create'), ['type' => $typeObject->getTitle()]));
         $this->setContent($typeObject->getCreateTemplate(), compact('typeObject', 'section'));
     }
-
 
     /**
      * @param SectionRepository $repository
@@ -89,7 +86,7 @@ class DatasourceController extends BackendController
     {
         $type = strtolower($type);
 
-        $data         = $this->request->except(['type']);
+        $data = $this->request->except(['type']);
         $data['type'] = $type;
 
         $repository->validateOnCreate($data);
@@ -98,14 +95,13 @@ class DatasourceController extends BackendController
 
         return $this->smartRedirect([$section->getId()])
             ->with('success', trans($this->wrapNamespace('core.messages.section.created'), [
-                'title' => $section->name
+                'title' => $section->name,
             ]));
     }
 
-
     /**
      * @param SectionRepository $repository
-     * @param integer           $sectionId
+     * @param int           $sectionId
      *
      * @throws SectionException
      */
@@ -123,7 +119,6 @@ class DatasourceController extends BackendController
         ]);
     }
 
-
     /**
      * @param SectionRepository $repository
      * @param                   $sectionId
@@ -138,10 +133,9 @@ class DatasourceController extends BackendController
 
         return $this->smartRedirect([$section->getId()])
             ->with('success', trans($this->wrapNamespace('core.messages.section.updated'), [
-                'title' => $section->getName()
+                'title' => $section->getName(),
             ]));
     }
-
 
     /**
      * @param SectionRepository $repository

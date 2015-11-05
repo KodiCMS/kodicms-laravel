@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => backend_url(), 'as' => 'backend.'], function () {
+Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.'], function () {
     Route::get('/settings', ['as' => 'settings', 'uses' => 'SystemController@settings']);
     Route::get('/about', ['as' => 'about', 'uses' => 'SystemController@about']);
     Route::get('/update', ['as' => 'update', 'uses' => 'SystemController@update']);

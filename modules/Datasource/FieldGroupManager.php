@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Datasource;
 
 class FieldGroupManager extends AbstractManager
 {
-
     /**
      * @param array $config
      */
@@ -12,7 +12,7 @@ class FieldGroupManager extends AbstractManager
         $this->config = $config;
 
         foreach ($this->config as $type => $data) {
-            if ( ! FieldGroupType::isValid($data)) {
+            if (! FieldGroupType::isValid($data)) {
                 continue;
             }
             $this->types[$type] = new FieldGroupType($type, $data);

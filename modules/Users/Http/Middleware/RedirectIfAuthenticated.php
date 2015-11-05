@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Http\Middleware;
 
 use Closure;
@@ -7,14 +8,12 @@ use Illuminate\Http\RedirectResponse;
 
 class RedirectIfAuthenticated
 {
-
     /**
      * The Guard implementation.
      *
      * @var Guard
      */
     protected $auth;
-
 
     /**
      * Create a new filter instance.
@@ -28,7 +27,6 @@ class RedirectIfAuthenticated
         $this->auth = $auth;
     }
 
-
     /**
      * Handle an incoming request.
      *
@@ -40,10 +38,9 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next)
     {
         if ($this->auth->check()) {
-            return new RedirectResponse(url(backend_url()));
+            return new RedirectResponse(backend_url());
         }
 
         return $next($request);
     }
-
 }

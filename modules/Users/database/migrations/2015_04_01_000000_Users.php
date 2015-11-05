@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class Users extends Migration
 {
-
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
@@ -27,7 +26,6 @@ class Users extends Migration
             $table->timestamps();
         });
     }
-
 
     public function down()
     {

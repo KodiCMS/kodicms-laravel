@@ -1,7 +1,8 @@
 <?php
+
 namespace KodiCMS\Pages\Http\Controllers;
 
-use Assets;
+use Meta;
 use Carbon\Carbon;
 use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Repository\PageRepository;
@@ -9,19 +10,17 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class PageController extends BackendController
 {
-
     /**
      * @var array
      */
     public $allowedActions = ['children'];
-
 
     /**
      * @param PageRepository $repository
      */
     public function getIndex(PageRepository $repository)
     {
-        Assets::package(['nestable', 'editable']);
+        Meta::loadPackage('nestable', 'editable');
 
         $this->templateScripts['PAGE_STATUSES'] = array_map(function ($value, $key) {
             return ['id' => $key, 'text' => $value];
@@ -32,14 +31,13 @@ class PageController extends BackendController
         $this->setContent('pages.index', compact('page'));
     }
 
-
     /**
      * @param PageRepository $repository
-     * @param integer        $id
+     * @param int        $id
      */
     public function getEdit(PageRepository $repository, $id)
     {
-        Assets::package(['backbone', 'jquery-ui']);
+        Meta::loadPackage('backbone', 'jquery-ui');
         $this->includeModuleMediaFile('BehaviorController');
 
         $page = $repository->findOrFail($id);
@@ -57,10 +55,9 @@ class PageController extends BackendController
         $this->setContent('pages.edit', compact('page', 'updator', 'creator'));
     }
 
-
     /**
      * @param PageRepository $repository
-     * @param integer        $id
+     * @param int        $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -73,14 +70,13 @@ class PageController extends BackendController
 
         return $this->smartRedirect([$page])
             ->with('success', trans('pages::core.messages.updated', [
-                'title' => $page->title
+                'title' => $page->title,
             ]));
     }
 
-
     /**
      * @param PageRepository $repository
-     * @param integer|null   $parentId
+     * @param int|null   $parentId
      */
     public function getCreate(PageRepository $repository, $parentId = null)
     {
@@ -96,7 +92,6 @@ class PageController extends BackendController
         $this->setContent('pages.create', compact('page'));
     }
 
-
     /**
      * @param PageRepository $repository
      *
@@ -110,14 +105,13 @@ class PageController extends BackendController
 
         return $this->smartRedirect([$page])
             ->with('success', trans('pages::core.messages.created', [
-                'title' => $page->title
+                'title' => $page->title,
             ]));
     }
 
-
     /**
      * @param PageRepository $repository
-     * @param integer        $id
+     * @param int        $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -127,7 +121,7 @@ class PageController extends BackendController
 
         return $this->smartRedirect()
             ->with('success', trans('pages::core.messages.deleted', [
-                'title' => $page->title
+                'title' => $page->title,
             ]));
     }
 }

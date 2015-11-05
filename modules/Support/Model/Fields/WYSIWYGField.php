@@ -1,16 +1,15 @@
 <?php
+
 namespace KodiCMS\Support\Model\Fields;
 
 use WYSIWYG;
 
 class WYSIWYGField extends TextAreaField
 {
-
     /**
      * @var string
      */
     protected $template = 'cms::model_fields.wysiwyg';
-
 
     /**
      * @param string $name
@@ -26,10 +25,8 @@ class WYSIWYGField extends TextAreaField
         return parent::getFormFieldHTML($name, $value, $attributes);
     }
 
-
     protected function addScriptToView()
     {
         WYSIWYG::loadHTMLEditors();
     }
-
 }

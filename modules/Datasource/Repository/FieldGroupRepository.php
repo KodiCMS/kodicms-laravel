@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Repository;
 
 use KodiCMS\Datasource\Model\FieldGroup;
@@ -6,7 +7,6 @@ use KodiCMS\CMS\Repository\BaseRepository;
 
 class FieldGroupRepository extends BaseRepository
 {
-
     /**
      * @param FieldGroup $model
      */
@@ -14,7 +14,6 @@ class FieldGroupRepository extends BaseRepository
     {
         parent::__construct($model);
     }
-
 
     /**
      * @param array $data
@@ -32,7 +31,6 @@ class FieldGroupRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
      * @param array $data
      *
@@ -47,7 +45,6 @@ class FieldGroupRepository extends BaseRepository
 
         return $this->_validate($validator);
     }
-
 
     /**
      * @param array $data

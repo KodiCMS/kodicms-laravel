@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Http\Controllers\API;
 
 use KodiCMS\CMS\Helpers\Updater;
@@ -8,7 +9,6 @@ use KodiCMS\Notifications\Types\CMSNewVersionNotification;
 
 class UpdateController extends Controller
 {
-
     /**
      * @param Updater $updater
      */
@@ -18,7 +18,6 @@ class UpdateController extends Controller
             (new CMSNewVersionNotification($updater))->toArray()
         );
     }
-
 
     /**
      * @param Updater $updater
@@ -31,7 +30,6 @@ class UpdateController extends Controller
         );
     }
 
-
     /**
      * @param Updater $updater
      */
@@ -40,12 +38,12 @@ class UpdateController extends Controller
         $path = $this->getRequiredParameter('path');
 
         $localFile = base_path($path);
-        if ( ! is_file($localFile)) {
+        if (! is_file($localFile)) {
             throw new Exception("File [{$path}] not found");
         }
 
         $remoteFileContent = $updater->getRemoteFileContent($path);
-        $localFileContent  = file_get_contents($localFile);
+        $localFileContent = file_get_contents($localFile);
 
         $this->setContent(
             view('cms::system.diff_files', compact('remoteFileContent', 'localFileContent'))

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Primitive;
 
 use Illuminate\Validation\Validator;
@@ -8,7 +9,6 @@ use KodiCMS\Datasource\Contracts\DocumentInterface;
 
 class Integer extends Primitive
 {
-
     /**
      * @return array
      */
@@ -16,7 +16,6 @@ class Integer extends Primitive
     {
         return ['auto_increment', 'unique'];
     }
-
 
     /**
      * @return array
@@ -34,48 +33,42 @@ class Integer extends Primitive
         ];
     }
 
-
     public function isAutoIncrementable()
     {
         return (bool) $this->getSetting('auto_increment');
     }
 
-
     /**
-     * @return integer|null
+     * @return int|null
      */
     public function getLength()
     {
         return $this->getSetting('length');
     }
 
-
     /**
-     * @return integer|null
+     * @return int|null
      */
     public function getMin()
     {
         return $this->getSetting('min');
     }
 
-
     /**
-     * @return integer|null
+     * @return int|null
      */
     public function getMax()
     {
         return $this->getSetting('max');
     }
 
-
     /**
-     * @return integer|null
+     * @return int|null
      */
     public function getIncrementStep()
     {
         return $this->getSetting('increment_step');
     }
-
 
     /**
      * @return string
@@ -85,7 +78,6 @@ class Integer extends Primitive
         return 'num';
     }
 
-
     /**
      * @param DocumentInterface $document
      * @param Validator         $validator
@@ -94,13 +86,12 @@ class Integer extends Primitive
      */
     public function getValidationRules(DocumentInterface $document, Validator $validator)
     {
-        $rules   = parent::getValidationRules($document, $validator);
+        $rules = parent::getValidationRules($document, $validator);
         $rules[] = 'numeric';
         $rules[] = "between:{$this->getMin()},{$this->getMax()}";
 
         return $rules;
     }
-
 
     /**
      * @param Blueprint $table
@@ -111,7 +102,6 @@ class Integer extends Primitive
     {
         return $table->unsignedInteger($this->getDBKey())->default($this->getDatabaseDefaultValue());
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -127,6 +117,7 @@ class Integer extends Primitive
     /**************************************************************************
      * Setting mutators
      **************************************************************************/
+
     /**
      * @param int $defaultLength
      *
@@ -136,7 +127,6 @@ class Integer extends Primitive
     {
         return (int) array_get($this->fieldSettings, 'length', $defaultLength);
     }
-
 
     /**
      * @param int $default
@@ -148,7 +138,6 @@ class Integer extends Primitive
         return (int) array_get($this->fieldSettings, 'min', $default);
     }
 
-
     /**
      * @param int $value
      *
@@ -158,7 +147,6 @@ class Integer extends Primitive
     {
         $this->fieldSettings['min'] = (int) $value;
     }
-
 
     /**
      * @param int $value
@@ -170,7 +158,6 @@ class Integer extends Primitive
         $this->fieldSettings['max'] = (int) $value;
     }
 
-
     /**
      * @param int $default
      *
@@ -180,7 +167,6 @@ class Integer extends Primitive
     {
         return (int) array_get($this->fieldSettings, 'max', $default);
     }
-
 
     /**
      * @param int $default
@@ -198,7 +184,6 @@ class Integer extends Primitive
         return $step;
     }
 
-
     /**
      * @param int $default
      *
@@ -208,7 +193,6 @@ class Integer extends Primitive
     {
         return (int) array_get($this->fieldSettings, 'default_value', $default);
     }
-
 
     /**
      * @return int
@@ -222,7 +206,6 @@ class Integer extends Primitive
         return $value + $this->getIncrementStep();
     }
 
-
     /**
      * @param DocumentInterface $document
      * @param mixed             $value
@@ -231,7 +214,7 @@ class Integer extends Primitive
      */
     public function onGetFormValue(DocumentInterface $document, $value)
     {
-        if ( ! $document->exists and $this->isAutoIncrementable()) {
+        if (! $document->exists and $this->isAutoIncrementable()) {
             $value = $this->getNextIncrementedValue();
         }
 

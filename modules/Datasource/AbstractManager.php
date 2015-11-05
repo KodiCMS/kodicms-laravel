@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Datasource;
 
 use KodiCMS\Datasource\Contracts\DatasourceManagerInterface;
 
 class AbstractManager implements DatasourceManagerInterface
 {
-
     /**
      * @var array
      */
@@ -16,7 +16,6 @@ class AbstractManager implements DatasourceManagerInterface
      */
     protected $types = [];
 
-
     /**
      * @param string $type
      *
@@ -24,9 +23,8 @@ class AbstractManager implements DatasourceManagerInterface
      */
     public function typeExists($type)
     {
-        return isset( $this->types[$type] );
+        return isset($this->types[$type]);
     }
-
 
     /**
      * @return array
@@ -35,7 +33,6 @@ class AbstractManager implements DatasourceManagerInterface
     {
         return $this->types;
     }
-
 
     /**
      * @return array
@@ -51,7 +48,6 @@ class AbstractManager implements DatasourceManagerInterface
         return $types;
     }
 
-
     /**
      * @param $type
      *
@@ -65,9 +61,8 @@ class AbstractManager implements DatasourceManagerInterface
             }
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @param string $key
@@ -78,15 +73,14 @@ class AbstractManager implements DatasourceManagerInterface
     public function getFieldTypeBy($key, $value)
     {
         foreach ($this->getAvailableTypes() as $object) {
-            $method = 'get' . ucfirst($key);
+            $method = 'get'.ucfirst($key);
             if ($value == $object->{$method}()) {
                 return $object;
             }
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @param string $class
@@ -99,7 +93,6 @@ class AbstractManager implements DatasourceManagerInterface
             ? null
             : $object->getType();
     }
-
 
     /**
      * @param string $type

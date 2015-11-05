@@ -1,4 +1,5 @@
 <?php
+
 namespace Plugins\butschster\News\Repository;
 
 use Plugins\butschster\News\Model\News;
@@ -7,15 +8,13 @@ use Plugins\butschster\News\Model\NewsContent;
 
 class NewsRepository extends BaseRepository
 {
-
     /**
      * @param News $model
      */
-    function __construct(News $model)
+    public function __construct(News $model)
     {
         parent::__construct($model);
     }
-
 
     /**
      * @param array $data
@@ -33,9 +32,8 @@ class NewsRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
-     * @param integer $id
+     * @param int $id
      * @param array   $data
      *
      * @return bool
@@ -50,7 +48,6 @@ class NewsRepository extends BaseRepository
 
         return $this->_validate($validator);
     }
-
 
     /**
      * @param array $data
@@ -68,7 +65,6 @@ class NewsRepository extends BaseRepository
 
         return $news;
     }
-
 
     /**
      * @param int   $id

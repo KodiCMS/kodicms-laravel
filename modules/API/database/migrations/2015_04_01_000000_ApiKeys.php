@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class ApiKeys extends Migration
 {
-
     public function up()
     {
         Schema::create('api_keys', function (Blueprint $table) {
@@ -15,7 +14,6 @@ class ApiKeys extends Migration
             $table->timestamps();
         });
     }
-
 
     public function down()
     {

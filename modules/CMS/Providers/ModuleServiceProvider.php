@@ -1,21 +1,19 @@
 <?php
+
 namespace KodiCMS\CMS\Providers;
 
 use Blade;
 use Cache;
-use Config;
-use Event;
-use Profiler;
-use PDOException;
-use ModulesFileSystem;
+use KodiCMS\CMS\CMS;
 use KodiCMS\Support\Helpers\UI;
+use KodiCMS\Assets\Facades\Meta;
 use KodiCMS\Support\Helpers\Date;
+use KodiCMS\Assets\Facades\Assets;
 use KodiCMS\Support\ServiceProvider;
-use KodiCMS\CMS\Helpers\DatabaseConfig;
+use KodiCMS\Assets\Facades\PackageManager;
 use KodiCMS\Support\Cache\SqLiteTaggedStore;
 use KodiCMS\Support\Cache\DatabaseTaggedStore;
 use KodiCMS\CMS\Console\Commands\WysiwygListCommand;
-use KodiCMS\CMS\Console\Commands\PackagesListCommand;
 use KodiCMS\CMS\Console\Commands\ModulePublishCommand;
 use KodiCMS\CMS\Console\Commands\ControllerMakeCommand;
 use KodiCMS\CMS\Console\Commands\ModuleLocaleDiffCommand;
@@ -24,12 +22,14 @@ use KodiCMS\CMS\Console\Commands\GenerateScriptTranslatesCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         $this->registerAliases([
-            'UI'   => UI::class,
-            'Date' => Date::class,
+            'UI'             => UI::class,
+            'Date'           => Date::class,
+            'Assets'         => Assets::class,
+            'PackageManager' => PackageManager::class,
+            'Meta'           => Meta::class,
         ]);
 
         $this->registerConsoleCommand([
@@ -38,33 +38,11 @@ class ModuleServiceProvider extends ServiceProvider
             ModuleLocaleDiffCommand::class,
             ControllerMakeCommand::class,
             ModulePublishCommand::class,
-            PackagesListCommand::class,
             WysiwygListCommand::class,
         ]);
 
-        Event::listen('config.loaded', function () {
-            if ($this->app->installed()) {
-                try {
-                    $databaseConfig = new DatabaseConfig;
-                    $this->app->instance('config.database', $databaseConfig);
-
-                    $config = $databaseConfig->getAll();
-                    foreach ($config as $group => $data) {
-                        Config::set($group, array_merge(Config::get($group, []), $data));
-                    }
-                } catch (PDOException $e) {
-                }
-            }
-        }, 999);
-
-        Event::listen('illuminate.query', function ($sql, $bindings, $time) {
-            $sql = str_replace(['%', '?'], ['%%', '%s'], $sql);
-            $sql = vsprintf($sql, $bindings);
-
-            Profiler::append('Database', $sql, $time / 1000);
-        });
+        $this->app->singleton('cms', CMS::class);
     }
-
 
     public function boot()
     {
@@ -72,15 +50,16 @@ class ModuleServiceProvider extends ServiceProvider
             return "<?php event{$expression}; ?>";
         });
 
-        $this->app->shutdown(function () {
-            ModulesFileSystem::cacheFoundFiles();
-        });
+        $this->registerCacheDrivers();
+    }
 
+    protected function registerCacheDrivers()
+    {
         Cache::extend('sqlite', function ($app, $config) {
-            $connectionName   = array_get($config, 'connection');
-            $connectionConfig = config('database.connections.' . $connectionName);
+            $connectionName = array_get($config, 'connection');
+            $connectionConfig = config('database.connections.'.$connectionName);
 
-            if ( ! file_exists($connectionConfig['database'])) {
+            if (! file_exists($connectionConfig['database'])) {
                 touch($connectionConfig['database']);
             }
 

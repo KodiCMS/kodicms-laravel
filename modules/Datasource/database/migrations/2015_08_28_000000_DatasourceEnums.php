@@ -5,7 +5,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class DatasourceEnums extends Migration
 {
-
     public function up()
     {
         Schema::create('datasource_enums', function (Blueprint $table) {
@@ -18,7 +17,6 @@ class DatasourceEnums extends Migration
             $table->unique(['field_id', 'value']);
         });
     }
-
 
     public function down()
     {

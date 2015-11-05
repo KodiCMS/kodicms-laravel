@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Repository;
 
 use FieldManager;
@@ -10,7 +11,6 @@ use KodiCMS\Datasource\Contracts\FieldTypeRelationInterface;
 
 class FieldRepository extends BaseRepository
 {
-
     /**
      * @param Field $model
      */
@@ -18,7 +18,6 @@ class FieldRepository extends BaseRepository
     {
         parent::__construct($model);
     }
-
 
     /**
      * @return array
@@ -35,7 +34,6 @@ class FieldRepository extends BaseRepository
         ];
     }
 
-
     /**
      * @param array $data
      *
@@ -45,7 +43,7 @@ class FieldRepository extends BaseRepository
     public function validateOnCreate(array $data = [])
     {
         $validator = $this->validator($data, [
-            'key'  => 'required|unique:datasource_fields,key,NULL,id,section_id,' . array_get($data, 'section_id'),
+            'key'  => 'required|unique:datasource_fields,key,NULL,id,section_id,'.array_get($data, 'section_id'),
             'type' => 'required',
             'name' => 'required',
         ]);
@@ -58,7 +56,6 @@ class FieldRepository extends BaseRepository
 
         return $this->_validate($validator);
     }
-
 
     /**
      * @param array $data
@@ -75,7 +72,6 @@ class FieldRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
      * @param array $data
      *
@@ -85,7 +81,7 @@ class FieldRepository extends BaseRepository
     public function create(array $data = [])
     {
         if (is_null($type = array_get($data, 'type'))) {
-            throw new FieldException("Type not set");
+            throw new FieldException('Type not set');
         }
 
         if (is_null($typeObject = FieldManager::getFieldTypeBy('type', $type))) {
@@ -97,7 +93,6 @@ class FieldRepository extends BaseRepository
 
         return $field;
     }
-
 
     /**
      * @param array $ids
@@ -111,9 +106,8 @@ class FieldRepository extends BaseRepository
         }
     }
 
-
     /**
-     * @param integer $fieldId
+     * @param int $fieldId
      * @param bool    $status
      */
     public function updateVisible($fieldId, $status)
@@ -123,7 +117,6 @@ class FieldRepository extends BaseRepository
         $field->setVisibleStatus($status);
         $field->update();
     }
-
 
     /**
      * @return array

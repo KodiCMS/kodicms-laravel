@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Support\Model;
 
 use Form;
@@ -7,14 +8,12 @@ use KodiCMS\Support\Model\Contracts\ModelFieldInterface;
 
 class ModelFieldLabel
 {
-
     use HtmlAttributes;
 
     /**
      * @var string
      */
     protected $field;
-
 
     /**
      * @param ModelFieldInterface $field
@@ -24,11 +23,10 @@ class ModelFieldLabel
     {
         $this->field = $field;
 
-        if ( ! is_null($attributes)) {
+        if (! is_null($attributes)) {
             $this->setAttributes($attributes);
         }
     }
-
 
     /**
      * @param array       $attributes
@@ -47,7 +45,6 @@ class ModelFieldLabel
         return $this->getFormFieldLabel($this->field->getId(), $title, $this->getAttributes());
     }
 
-
     /**
      * @return string
      */
@@ -55,7 +52,6 @@ class ModelFieldLabel
     {
         return (string) $this->render();
     }
-
 
     /**
      * @param       $id

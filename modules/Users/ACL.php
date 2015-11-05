@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users;
 
 use Illuminate\Contracts\Auth\Access\Gate;
@@ -7,7 +8,6 @@ use Lang;
 
 class ACL
 {
-
     const DENY = false;
     const ALLOW = true;
 
@@ -15,7 +15,7 @@ class ACL
     const ADMIN_ROLE = 'administrator';
 
     /**
-     * Список прав
+     * Список прав.
      * @var array
      */
     protected static $permissions = [];
@@ -40,7 +40,6 @@ class ACL
      */
     protected $gate;
 
-
     /**
      * @param array $permissions
      * @param Gate  $gate
@@ -51,7 +50,7 @@ class ACL
         $this->gate = $gate;
 
         foreach ($permissions as $module => $actions) {
-            $langKey = $module . '::' . 'permissions.title';
+            $langKey = $module.'::'.'permissions.title';
             if (Lang::has($langKey)) {
                 $title = trans($langKey);
             } else {
@@ -59,8 +58,8 @@ class ACL
             }
 
             foreach ($actions as $action) {
-                $this->permissionsList[$title][$action] = trans($module . '::permissions.' . $action);
-                $this->actions[]                        = $action;
+                $this->permissionsList[$title][$action] = trans($module.'::permissions.'.$action);
+                $this->actions[] = $action;
             }
         }
 
@@ -71,7 +70,6 @@ class ACL
         }
     }
 
-
     /**
      * @return array
      */
@@ -80,11 +78,10 @@ class ACL
         return $this->permissionsList;
     }
 
-
     /**
      * @param User $user
      *
-     * @return boolean
+     * @return bool
      */
     public function userIsAdmin($user = null)
     {
@@ -94,10 +91,10 @@ class ACL
 
         if ($user instanceof User) {
             $user_id = $user->id;
-            $roles   = $user->getRoles()->lists('name')->all();
+            $roles = $user->getRoles()->lists('name')->all();
         } else {
             $user_id = (int) $user;
-            $roles   = ['login'];
+            $roles = ['login'];
         }
 
         if ($user_id == static::ADMIN_USER or in_array(static::ADMIN_ROLE, $roles)) {
@@ -107,14 +104,13 @@ class ACL
         return false;
     }
 
-
     /**
      * Проверка прав на доступ
      *
      * @param string $action
      * @param User   $user
      *
-     * @return boolean
+     * @return bool
      */
     public function check($action, User $user = null)
     {
@@ -122,15 +118,15 @@ class ACL
             $user = $this->getUser();
         }
 
-        if ( ! in_array($action, $this->actions)) {
+        if (! in_array($action, $this->actions)) {
             return static::ALLOW;
         }
 
-        if ( ! ( $user instanceof User )) {
+        if (! ($user instanceof User)) {
             return static::DENY;
         }
 
-        if (empty( $action )) {
+        if (empty($action)) {
             return static::ALLOW;
         }
 
@@ -142,21 +138,20 @@ class ACL
             $action = strtolower(implode('.', $action));
         }
 
-        if ( ! isset( static::$permissions[$user->id] )) {
+        if (! isset(static::$permissions[$user->id])) {
             $this->setPermissions($user);
         }
 
-        return isset( static::$permissions[$user->id][$action] );
+        return isset(static::$permissions[$user->id][$action]);
     }
 
-
     /**
-     * Проверка прав доступа по массиву
+     * Проверка прав доступа по массиву.
      *
      * @param array $actions
      * @param User  $user
      *
-     * @return boolean
+     * @return bool
      */
     public function checkByArray(array $actions, User $user = null)
     {
@@ -169,7 +164,6 @@ class ACL
         return false;
     }
 
-
     /**
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
@@ -178,9 +172,8 @@ class ACL
         return $this->user;
     }
 
-
     /**
-     * Загрузка прав доступа для пользователя
+     * Загрузка прав доступа для пользователя.
      *
      * @param User $user
      */

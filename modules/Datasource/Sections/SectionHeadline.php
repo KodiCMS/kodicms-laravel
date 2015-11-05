@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Sections;
 
 use Illuminate\Http\JsonResponse;
@@ -7,7 +8,6 @@ use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
 class SectionHeadline implements SectionHeadlineInterface
 {
-
     /**
      * @var SectionInterface
      */
@@ -19,17 +19,17 @@ class SectionHeadline implements SectionHeadlineInterface
     protected $fields = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $perPage = 20;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $currentPage;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $offset = 0;
 
@@ -37,7 +37,6 @@ class SectionHeadline implements SectionHeadlineInterface
      * @var string
      */
     protected $template = 'datasource::section.headline';
-
 
     /**
      * @param SectionInterface $section
@@ -47,20 +46,19 @@ class SectionHeadline implements SectionHeadlineInterface
         $this->section = $section;
     }
 
-
     /**
      * @return array
      */
     public function getHeadlineFields()
     {
-        if ( ! is_null($this->fields)) {
+        if (! is_null($this->fields)) {
             return $this->fields;
         }
 
         $this->fields = [];
 
         foreach ($this->section->getFields() as $field) {
-            if ( ! $field->isVisible()) {
+            if (! $field->isVisible()) {
                 continue;
             }
 
@@ -74,7 +72,6 @@ class SectionHeadline implements SectionHeadlineInterface
         return $this->fields;
     }
 
-
     /**
      * @return array
      */
@@ -82,7 +79,7 @@ class SectionHeadline implements SectionHeadlineInterface
     {
         $fields = [];
         foreach ($this->section->getFields() as $field) {
-            if ( ! $field->isVisible()) {
+            if (! $field->isVisible()) {
                 continue;
             }
 
@@ -91,7 +88,6 @@ class SectionHeadline implements SectionHeadlineInterface
 
         return $fields;
     }
-
 
     /**
      * @return array
@@ -107,7 +103,6 @@ class SectionHeadline implements SectionHeadlineInterface
         }, $fields);
     }
 
-
     /**
      * @return array
      */
@@ -115,7 +110,6 @@ class SectionHeadline implements SectionHeadlineInterface
     {
         return $this->section->getHeadlineOrdering();
     }
-
 
     /**
      * @return array
@@ -127,7 +121,6 @@ class SectionHeadline implements SectionHeadlineInterface
             ->paginate();
     }
 
-
     /**
      * @return JsonResponse
      */
@@ -135,7 +128,6 @@ class SectionHeadline implements SectionHeadlineInterface
     {
         return new JsonResponse($this->render());
     }
-
 
     /**
      * @param string|null $template
@@ -148,7 +140,7 @@ class SectionHeadline implements SectionHeadlineInterface
             if (method_exists($this->section, 'getHeadlineTemplate')) {
                 $template = $this->section->getHeadlineTemplate();
             } else {
-                $template = $template = $this->template;;
+                $template = $template = $this->template;
             }
         }
 
@@ -158,7 +150,6 @@ class SectionHeadline implements SectionHeadlineInterface
             'section'     => $this->section,
         ])->render();
     }
-
 
     /**
      * @return \Illuminate\View\View

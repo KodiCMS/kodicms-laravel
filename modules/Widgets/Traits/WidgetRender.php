@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Traits;
 
 use Illuminate\Contracts\View\View;
@@ -6,7 +7,6 @@ use KodiCMS\Widgets\Contracts\WidgetRenderEngine;
 
 trait WidgetRender
 {
-
     /**
      * @return string|View
      */
@@ -14,7 +14,6 @@ trait WidgetRender
     {
         return $this->frontendTemplate;
     }
-
 
     /**
      * @return string|View
@@ -28,7 +27,6 @@ trait WidgetRender
         return $this->defaultFrontendTemplate;
     }
 
-
     /**
      * @param string|View $template
      */
@@ -36,7 +34,6 @@ trait WidgetRender
     {
         $this->frontendTemplate = $template;
     }
-
 
     /**
      * @return string
@@ -46,7 +43,6 @@ trait WidgetRender
         return $this->header;
     }
 
-
     /**
      * @return array
      */
@@ -55,19 +51,15 @@ trait WidgetRender
         return (array) $this->media_packages;
     }
 
-
     /**********************************************************************************************************
      * Events
      **********************************************************************************************************/
+
     public function onLoad()
     {
-
     }
-
 
     public function onRender(WidgetRenderEngine $engine)
     {
-
     }
-
 }

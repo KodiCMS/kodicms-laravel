@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Email\database\seeds;
 
 use DB;
@@ -6,7 +7,6 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-
     /**
      * Run the database seeds.
      *

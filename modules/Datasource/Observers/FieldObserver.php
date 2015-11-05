@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Observers;
 
 use FieldManager;
@@ -6,7 +7,6 @@ use KodiCMS\Datasource\Model\Field;
 
 class FieldObserver
 {
-
     /**
      * @param Field $field
      */
@@ -19,7 +19,6 @@ class FieldObserver
         }
     }
 
-
     /**
      * @param Field $field
      */
@@ -30,7 +29,6 @@ class FieldObserver
         }
     }
 
-
     /**
      * @param Field $field
      */
@@ -40,7 +38,6 @@ class FieldObserver
             app()->call([$field, 'onUpdating']);
         }
     }
-
 
     /**
      * @param Field $field
@@ -56,7 +53,6 @@ class FieldObserver
         }
     }
 
-
     /**
      * @param Field $field
      */
@@ -66,7 +62,6 @@ class FieldObserver
             app()->call([$field, 'onDeleting']);
         }
     }
-
 
     /**
      * @param Field $field
@@ -81,5 +76,4 @@ class FieldObserver
             FieldManager::dropSectionTableField($field);
         }
     }
-
 }

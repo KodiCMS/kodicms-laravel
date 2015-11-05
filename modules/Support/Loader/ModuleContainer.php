@@ -1,18 +1,16 @@
 <?php
+
 namespace KodiCMS\Support\Loader;
 
-use App;
 use Illuminate\Routing\Router;
 use KodiCMS\ModulesLoader\ModuleContainer as BaseModuleContainer;
 
 class ModuleContainer extends BaseModuleContainer
 {
-
     /**
      * @var string
      */
     protected $namespace = 'KodiCMS';
-
 
     /**
      * @param \Illuminate\Foundation\Application $app
@@ -21,13 +19,12 @@ class ModuleContainer extends BaseModuleContainer
      */
     public function boot($app)
     {
-        if ( ! $this->isBooted) {
+        if (! $this->isBooted) {
             $this->loadAssets();
         }
 
         return parent::boot($app);
     }
-
 
     /**
      * @return string
@@ -37,19 +34,17 @@ class ModuleContainer extends BaseModuleContainer
         return $this->getPath(['resources', 'packages.php']);
     }
 
-
     /**
      * @param Router $router
      */
     public function loadRoutes(Router $router)
     {
-        if ( ! App::installed()) {
+        if (! cms_installed()) {
             return;
         }
 
         parent::loadRoutes($router);
     }
-
 
     /**
      * Register a config file namespace.
@@ -57,16 +52,15 @@ class ModuleContainer extends BaseModuleContainer
      */
     public function loadConfig()
     {
-        if ( ! App::installed()) {
+        if (! cms_installed()) {
             return [];
         }
 
         return parent::loadConfig();
     }
 
-
     /**
-     * Include assets package file
+     * Include assets package file.
      *
      * @return void
      */

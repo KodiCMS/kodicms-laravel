@@ -1,14 +1,14 @@
 <?php
+
 namespace KodiCMS\Datasource\Sections;
 
-use SectionDatatables;
+use Meta;
 use Illuminate\Http\JsonResponse;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
 class SectionHeadlineDatatables implements SectionHeadlineInterface
 {
-
     /**
      * @var SectionInterface
      */
@@ -24,30 +24,28 @@ class SectionHeadlineDatatables implements SectionHeadlineInterface
      */
     protected $template = 'datasource::section.headline_datatables';
 
-
     /**
      * @param SectionInterface $section
      */
     public function __construct(SectionInterface $section)
     {
         $this->section = $section;
-        \Assets::package('datatables');
+        Meta::loadPackage('datatables');
     }
-
 
     /**
      * @return array
      */
     public function getHeadlineFields()
     {
-        if ( ! is_null($this->fields)) {
+        if (! is_null($this->fields)) {
             return $this->fields;
         }
 
         $this->fields = [];
 
         foreach ($this->section->getFields() as $field) {
-            if ( ! $field->isVisible()) {
+            if (! $field->isVisible()) {
                 continue;
             }
 
@@ -61,33 +59,26 @@ class SectionHeadlineDatatables implements SectionHeadlineInterface
         return $this->fields;
     }
 
-
     /**
      * @return array
      */
     public function getActiveFieldIds()
     {
-
     }
-
 
     /**
      * @return array
      */
     public function getSearchableFields()
     {
-
     }
-
 
     /**
      * @return array
      */
     public function getOrderingRules()
     {
-
     }
-
 
     /**
      * @return array
@@ -99,7 +90,6 @@ class SectionHeadlineDatatables implements SectionHeadlineInterface
         return app('datatables')->usingDatasourceEngine($document, $this)->make();
     }
 
-
     /**
      * @return JsonResponse
      */
@@ -107,7 +97,6 @@ class SectionHeadlineDatatables implements SectionHeadlineInterface
     {
         return $this->getDocuments();
     }
-
 
     /**
      * @param string|null $template
@@ -130,12 +119,11 @@ class SectionHeadlineDatatables implements SectionHeadlineInterface
         ]);
     }
 
-
     /**
      * @return \Illuminate\View\View|null
      */
     public function renderOrderSettings()
     {
-        return null;
+        return;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Model;
 
 use FieldGroupManager;
@@ -10,7 +11,6 @@ use KodiCMS\Datasource\Contracts\FieldsCollectionInterface;
 
 class FieldGroup extends DatasourceModel implements FieldGroupInterface
 {
-
     /**
      * The table associated with the model.
      *
@@ -35,7 +35,6 @@ class FieldGroup extends DatasourceModel implements FieldGroupInterface
      */
     protected $template = 'datasource::document.group.default';
 
-
     /**
      * @return string
      */
@@ -44,7 +43,6 @@ class FieldGroup extends DatasourceModel implements FieldGroupInterface
         return $this->name;
     }
 
-
     /**
      * @return int
      */
@@ -52,7 +50,6 @@ class FieldGroup extends DatasourceModel implements FieldGroupInterface
     {
         return time();
     }
-
 
     /**
      * @param array $fields
@@ -66,7 +63,6 @@ class FieldGroup extends DatasourceModel implements FieldGroupInterface
         return $this;
     }
 
-
     /**
      * @return FieldsCollectionInterface
      */
@@ -75,12 +71,10 @@ class FieldGroup extends DatasourceModel implements FieldGroupInterface
         return $this->fields;
     }
 
-
     public function addField(FieldInterface $field)
     {
         $this->getFields()->add($field);
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -90,7 +84,6 @@ class FieldGroup extends DatasourceModel implements FieldGroupInterface
         return $this->hasMany(Field::class, 'group_id');
     }
 
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -98,7 +91,6 @@ class FieldGroup extends DatasourceModel implements FieldGroupInterface
     {
         return $this->belongsTo(Section::class);
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -116,9 +108,8 @@ class FieldGroup extends DatasourceModel implements FieldGroupInterface
             ])->render();
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @return DatasourceManagerInterface

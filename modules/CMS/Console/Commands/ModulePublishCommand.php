@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Console\Commands;
 
 use ModulesLoader;
@@ -7,7 +8,6 @@ use Illuminate\Foundation\Console\VendorPublishCommand;
 
 class ModulePublishCommand extends VendorPublishCommand
 {
-
     /**
      * The console command name.
      *
@@ -20,8 +20,7 @@ class ModulePublishCommand extends VendorPublishCommand
      *
      * @var string
      */
-    protected $description = "Publish any publishable assets from modules";
-
+    protected $description = 'Publish any publishable assets from modules';
 
     /**
      * Execute the console command.
@@ -30,12 +29,11 @@ class ModulePublishCommand extends VendorPublishCommand
      */
     public function fire()
     {
-
         $module = $this->option('module');
-        $paths  = [];
+        $paths = [];
 
-        if ( ! is_null($module)) {
-            if ( ! is_null($module = ModulesLoader::getRegisteredModule($this->option('module')))) {
+        if (! is_null($module)) {
+            if (! is_null($module = ModulesLoader::getRegisteredModule($this->option('module')))) {
                 $paths = $module->getPublishPath();
             }
         } else {
@@ -44,8 +42,8 @@ class ModulePublishCommand extends VendorPublishCommand
             }
         }
 
-        if (empty( $paths )) {
-            return $this->comment("Nothing to publish.");
+        if (empty($paths)) {
+            return $this->comment('Nothing to publish.');
         }
 
         foreach ($paths as $from => $to) {
@@ -60,7 +58,6 @@ class ModulePublishCommand extends VendorPublishCommand
 
         $this->info('Publishing Complete!');
     }
-
 
     /**
      * Get the console command options.

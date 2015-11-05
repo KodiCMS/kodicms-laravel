@@ -1,19 +1,17 @@
 <?php
+
 namespace Plugins\butschster\News\Http\Controllers;
 
-use WYSIWYG;
 use Plugins\butschster\News\Model\News;
 use Plugins\butschster\News\Repository\NewsRepository;
 use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class NewsController extends BackendController
 {
-
     /**
      * @var string
      */
     public $moduleNamespace = 'butschster:news::';
-
 
     /**
      * @param NewsRepository $repository
@@ -24,10 +22,9 @@ class NewsController extends BackendController
         $this->setContent('news.index', compact('newsList'));
     }
 
-
     /**
      * @param NewsRepository $repository
-     * @param integer        $id
+     * @param int        $id
      */
     public function getEdit(NewsRepository $repository, $id)
     {
@@ -40,10 +37,9 @@ class NewsController extends BackendController
         $this->setContent('news.edit', compact('news'));
     }
 
-
     /**
      * @param NewsRepository $repository
-     * @param integer        $id
+     * @param int        $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -55,10 +51,9 @@ class NewsController extends BackendController
 
         return $this->smartRedirect([$news])
             ->with('success', trans('butschster:news::core.messages.updated', [
-                'title' => $news->title
+                'title' => $news->title,
             ]));
     }
-
 
     /**
      * @param NewsRepository $repository
@@ -69,7 +64,6 @@ class NewsController extends BackendController
         $this->setTitle(trans('butschster:news::core.title.create'));
         $this->setContent('news.create', compact('news'));
     }
-
 
     /**
      * @param NewsRepository $repository
@@ -84,14 +78,13 @@ class NewsController extends BackendController
 
         return $this->smartRedirect([$news])
             ->with('success', trans('butschster:news::core.messages.created', [
-                'title' => $news->title
+                'title' => $news->title,
             ]));
     }
 
-
     /**
      * @param NewsRepository $repository
-     * @param integer        $id
+     * @param int        $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -101,7 +94,7 @@ class NewsController extends BackendController
 
         return $this->smartRedirect()
             ->with('success', trans('butschster:news::core.messages.deleted', [
-                'title' => $news->title
+                'title' => $news->title,
             ]));
     }
 }

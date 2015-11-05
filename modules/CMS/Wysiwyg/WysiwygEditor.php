@@ -1,14 +1,14 @@
 <?php
+
 namespace KodiCMS\CMS\Wysiwyg;
 
-use Assets;
+use Meta;
 use Illuminate\Contracts\Support\Arrayable;
 use KodiCMS\CMS\Contracts\WysiwygEditorInterface;
 use KodiCMS\CMS\Contracts\WysiwygFilterInterface;
 
 class WysiwygEditor implements WysiwygEditorInterface, Arrayable
 {
-
     /**
      * @var string
      */
@@ -39,7 +39,6 @@ class WysiwygEditor implements WysiwygEditorInterface, Arrayable
      */
     protected $used = false;
 
-
     /**
      * @param string       $id
      * @param string|null  $name
@@ -68,7 +67,6 @@ class WysiwygEditor implements WysiwygEditorInterface, Arrayable
             : $package;
     }
 
-
     /**
      * @return string
      */
@@ -76,7 +74,6 @@ class WysiwygEditor implements WysiwygEditorInterface, Arrayable
     {
         return $this->id;
     }
-
 
     /**
      * @return string
@@ -86,7 +83,6 @@ class WysiwygEditor implements WysiwygEditorInterface, Arrayable
         return $this->name;
     }
 
-
     /**
      * @return string
      */
@@ -94,7 +90,6 @@ class WysiwygEditor implements WysiwygEditorInterface, Arrayable
     {
         return $this->type;
     }
-
 
     /**
      * @return WysiwygFilterInterface
@@ -104,7 +99,6 @@ class WysiwygEditor implements WysiwygEditorInterface, Arrayable
         return $this->filter;
     }
 
-
     /**
      * @return bool
      */
@@ -112,7 +106,6 @@ class WysiwygEditor implements WysiwygEditorInterface, Arrayable
     {
         return $this->used;
     }
-
 
     /**
      * @param string $text
@@ -124,14 +117,15 @@ class WysiwygEditor implements WysiwygEditorInterface, Arrayable
         return $this->getFilter()->apply($text);
     }
 
-
+    /**
+     * @return bool
+     */
     public function load()
     {
-        Assets::package($this->packageName);
+        Meta::loadPackage($this->packageName);
 
         return $this->used = true;
     }
-
 
     /**
      * Get the instance as an array.
@@ -149,7 +143,6 @@ class WysiwygEditor implements WysiwygEditorInterface, Arrayable
         ];
     }
 
-
     /**
      * @param string $filter
      *
@@ -163,7 +156,6 @@ class WysiwygEditor implements WysiwygEditorInterface, Arrayable
 
         return $this->loadDefaultFilter();
     }
-
 
     /**
      * @return WysiwygFilterInterface

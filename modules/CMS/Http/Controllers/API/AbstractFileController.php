@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\CMS\Http\Controllers\API;
 
 use Illuminate\Http\JsonResponse;
@@ -8,7 +9,6 @@ use KodiCMS\API\Http\Controllers\System\Controller;
 
 abstract class AbstractFileController extends Controller
 {
-
     /**
      * @var FileCollection
      */
@@ -19,18 +19,15 @@ abstract class AbstractFileController extends Controller
      */
     protected $sectionPrefix;
 
-
     /**
      * @return FileCollection
      */
     abstract protected function getCollection();
 
-
     /**
      * @return string
      */
     abstract protected function getSectionPrefix();
-
 
     /**
      * @param string $filename
@@ -39,14 +36,12 @@ abstract class AbstractFileController extends Controller
      */
     abstract protected function getRedirectToEditUrl($filename);
 
-
     public function before()
     {
         parent::before();
-        $this->collection    = $this->getCollection();
+        $this->collection = $this->getCollection();
         $this->sectionPrefix = $this->getSectionPrefix();
     }
-
 
     /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -68,18 +63,17 @@ abstract class AbstractFileController extends Controller
 
         $this->setMessage(
             trans($this->wrapNamespace("{$this->sectionPrefix}.messages.created"), [
-                'name' => $file->getName()
+                'name' => $file->getName(),
             ])
         );
 
         return redirect($this->getRedirectToEditUrl($file->getName()));
     }
 
-
     public function postEdit()
     {
         $filename = $this->getRequiredParameter('name');
-        $data     = $this->request->all();
+        $data = $this->request->all();
 
         $file = $this->getFile($filename);
         $file->fill(array_only($data, ['name', 'content', 'editor', 'roles']));
@@ -93,11 +87,10 @@ abstract class AbstractFileController extends Controller
 
         $this->setMessage(
             trans($this->wrapNamespace("{$this->sectionPrefix}.messages.updated"), [
-                'name' => $file->getName()
+                'name' => $file->getName(),
             ])
         );
     }
-
 
     /**
      * @param null|string $filename
@@ -118,7 +111,6 @@ abstract class AbstractFileController extends Controller
             trans($this->wrapNamespace("{$this->sectionPrefix}.messages.not_found"))
         );
     }
-
 
     /**
      * @return JsonResponse

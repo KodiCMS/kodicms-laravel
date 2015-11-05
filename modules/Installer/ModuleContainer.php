@@ -1,7 +1,7 @@
 <?php
+
 namespace KodiCMS\Installer;
 
-use App;
 use Event;
 use Route;
 use Illuminate\Routing\Router;
@@ -9,26 +9,24 @@ use KodiCMS\Support\Loader\ModuleContainer as BaseModuleContainer;
 
 class ModuleContainer extends BaseModuleContainer
 {
-
     /**
      * @param Router $router
      */
     public function loadRoutes(Router $router)
     {
-        if (App::installed()) {
+        if (cms_installed()) {
             return;
         }
 
         $this->includeRoutes($router);
     }
 
-
     /**
      * @param Router $router
      */
     protected function loadSystemRoutes(Router $router)
     {
-        if (App::installed()) {
+        if (cms_installed()) {
             return;
         }
 

@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Support\Model\Fields;
 
 use Form;
 
 class EmailField extends TextField
 {
-
     protected function boot()
     {
         parent::boot();
@@ -14,7 +14,6 @@ class EmailField extends TextField
                 'fieldCol' => 'col-md-4',
             ]);
     }
-
 
     /**
      * @param string $name

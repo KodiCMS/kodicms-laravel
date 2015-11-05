@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Providers;
 
 use Event;
@@ -12,7 +13,6 @@ use KodiCMS\Datasource\Datatables\SectionDatatables;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         $this->registerAliases([
@@ -43,11 +43,10 @@ class ModuleServiceProvider extends ServiceProvider
         $this->registerConsoleCommand(\KodiCMS\Datasource\Console\Commands\DatasourceMigrate::class);
     }
 
-
     public function boot()
     {
         Event::listen('navigation.inited', function (Section $navigation) {
-            if ( ! is_null($section = $navigation->findSection('Datasources'))) {
+            if (! is_null($section = $navigation->findSection('Datasources'))) {
                 $sections = app('datasource.manager')->getSections();
 
                 foreach ($sections as $dsSection) {
@@ -66,7 +65,7 @@ class ModuleServiceProvider extends ServiceProvider
                     }
                 }
 
-                $types      = app('datasource.manager')->getAvailableTypes();
+                $types = app('datasource.manager')->getAvailableTypes();
                 $subSection = new Section([
                     'name'  => 'Datasource',
                     'label' => trans('datasource::core.button.create'),

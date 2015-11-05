@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\CMS\Exceptions;
 
 use Illuminate\Validation\Validator;
 
 class ValidationException extends Exception
 {
-
     /**
      * @var array
      */
@@ -21,7 +21,6 @@ class ValidationException extends Exception
      */
     protected $validator;
 
-
     /**
      * @param Validator $validator
      *
@@ -30,12 +29,11 @@ class ValidationException extends Exception
     public function setValidator(Validator $validator)
     {
         $this->validator = $validator;
-        $this->messages  = $validator->errors()->getMessages();
-        $this->rules     = $validator->failed();
+        $this->messages = $validator->errors()->getMessages();
+        $this->rules = $validator->failed();
 
         return $this;
     }
-
 
     /**
      * @return Validator
@@ -45,7 +43,6 @@ class ValidationException extends Exception
         return $this->validator;
     }
 
-
     /**
      * @return array
      */
@@ -53,7 +50,6 @@ class ValidationException extends Exception
     {
         return $this->rules;
     }
-
 
     /**
      * @return array

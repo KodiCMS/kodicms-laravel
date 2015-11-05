@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Http\Middleware;
 
 use Closure;
@@ -7,14 +8,12 @@ use Illuminate\Contracts\Auth\Guard;
 
 class Authenticate
 {
-
     /**
      * The Guard implementation.
      *
      * @var Guard
      */
     protected $auth;
-
 
     /**
      * Create a new filter instance.
@@ -25,7 +24,6 @@ class Authenticate
     {
         $this->auth = $auth;
     }
-
 
     /**
      * Handle an incoming request.
@@ -43,11 +41,10 @@ class Authenticate
             if ($request->ajax()) {
                 throw new AuthenticateException('Unauthorized.');
             } else {
-                return redirect()->guest(backend_url('/auth/login'));
+                return redirect()->guest(backend_url('auth/login'));
             }
         }
 
         return $next($request);
     }
-
 }

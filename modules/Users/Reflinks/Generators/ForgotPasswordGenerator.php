@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Reflinks\Generators;
 
 use Bus;
@@ -12,7 +13,6 @@ use KodiCMS\Users\Reflinks\Handlers\ForgotPasswordHandler;
 
 class ForgotPasswordGenerator implements ReflinkGeneratorInterface
 {
-
     /**
      * @var string
      */
@@ -23,7 +23,6 @@ class ForgotPasswordGenerator implements ReflinkGeneratorInterface
      */
     protected $properties = [];
 
-
     /**
      * @param string $email
      * @param array  $properties
@@ -32,10 +31,9 @@ class ForgotPasswordGenerator implements ReflinkGeneratorInterface
      */
     public function __construct($email, array $properties = [])
     {
-        $this->email      = $email;
+        $this->email = $email;
         $this->properties = $properties;
     }
-
 
     /**
      * @return string
@@ -44,7 +42,6 @@ class ForgotPasswordGenerator implements ReflinkGeneratorInterface
     {
         return ForgotPasswordHandler::class;
     }
-
 
     /**
      * @return User
@@ -61,7 +58,6 @@ class ForgotPasswordGenerator implements ReflinkGeneratorInterface
         return $user;
     }
 
-
     /**
      * @return array
      */
@@ -69,7 +65,6 @@ class ForgotPasswordGenerator implements ReflinkGeneratorInterface
     {
         return $this->properties;
     }
-
 
     /**
      * @param UserReflink $reflink

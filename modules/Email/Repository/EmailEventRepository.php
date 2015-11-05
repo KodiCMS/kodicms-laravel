@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Email\Repository;
 
 use KodiCMS\Email\Model\EmailEvent;
@@ -6,7 +7,6 @@ use KodiCMS\CMS\Repository\BaseRepository;
 
 class EmailEventRepository extends BaseRepository
 {
-
     /**
      * @param EmailEvent $model
      */
@@ -14,7 +14,6 @@ class EmailEventRepository extends BaseRepository
     {
         parent::__construct($model);
     }
-
 
     /**
      * @param array $data
@@ -32,7 +31,6 @@ class EmailEventRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
      * @param array $data
      *
@@ -47,7 +45,6 @@ class EmailEventRepository extends BaseRepository
 
         return $this->_validate($validator);
     }
-
 
     /**
      * @return array

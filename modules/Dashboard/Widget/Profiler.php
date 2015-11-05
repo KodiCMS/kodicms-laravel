@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Dashboard\Widget;
 
 use Profiler as ProfilerHelper;
 
 class Profiler extends Decorator
 {
-
     /**
      * @var string
      */
@@ -20,7 +20,6 @@ class Profiler extends Decorator
         'max_size' => [6, 2],
         'min_size' => [3, 2],
     ];
-
 
     /**
      * @return array

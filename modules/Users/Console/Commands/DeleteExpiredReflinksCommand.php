@@ -1,11 +1,11 @@
 <?php
+
 namespace KodiCMS\Users\Console\Commands;
 
 use Illuminate\Console\Command;
 
 class DeleteExpiredReflinksCommand extends Command
 {
-
     /**
      * The console command name.
      */
@@ -17,7 +17,6 @@ class DeleteExpiredReflinksCommand extends Command
      * @var string
      */
     protected $description = 'Delete expired referial links';
-
 
     /**
      * Execute the console command.

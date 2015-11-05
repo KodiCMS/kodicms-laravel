@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Repository;
 
 use KodiCMS\Users\Model\UserRole;
@@ -6,7 +7,6 @@ use KodiCMS\CMS\Repository\BaseRepository;
 
 class UserRoleRepository extends BaseRepository
 {
-
     /**
      * @param UserRole $model
      */
@@ -14,7 +14,6 @@ class UserRoleRepository extends BaseRepository
     {
         parent::__construct($model);
     }
-
 
     /**
      * @param array $data
@@ -31,9 +30,8 @@ class UserRoleRepository extends BaseRepository
         return $this->_validate($validator);
     }
 
-
     /**
-     * @param integer $id
+     * @param int $id
      * @param array   $data
      *
      * @return bool
@@ -46,12 +44,11 @@ class UserRoleRepository extends BaseRepository
         ]);
 
         $validator->sometimes('password', 'required|confirmed|min:6', function ($input) {
-            return ! empty( $input->password );
+            return ! empty($input->password);
         });
 
         return $this->_validate($validator);
     }
-
 
     /**
      * @param array $data
@@ -65,14 +62,13 @@ class UserRoleRepository extends BaseRepository
             'description',
         ]));
 
-        if (isset( $data['permissions'] )) {
+        if (isset($data['permissions'])) {
             $permissions = (array) $data['permissions'];
             $role->attachPermissions($permissions);
         }
 
         return $role;
     }
-
 
     /**
      * @param int   $id
@@ -89,7 +85,7 @@ class UserRoleRepository extends BaseRepository
 
         if ($role->id > 2) {
             $permissions = [];
-            if (isset( $data['permissions'] )) {
+            if (isset($data['permissions'])) {
                 $permissions = (array) $data['permissions'];
             }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Support\Cache;
 
 use Closure;
@@ -8,7 +9,6 @@ use Illuminate\Database\ConnectionInterface;
 
 class SqLiteTaggedStore extends TaggableStore implements Store
 {
-
     /**
      * The database connection instance.
      *
@@ -28,7 +28,6 @@ class SqLiteTaggedStore extends TaggableStore implements Store
      */
     protected $prefix;
 
-
     /**
      * @param ConnectionInterface $connection
      * @param atring              $schema
@@ -37,7 +36,7 @@ class SqLiteTaggedStore extends TaggableStore implements Store
     public function __construct(ConnectionInterface $connection, $schema, $prefix = '')
     {
         $this->connection = $connection;
-        $this->prefix     = $prefix;
+        $this->prefix = $prefix;
 
         $result = $this->connection->select("SELECT * FROM sqlite_master WHERE name = '{$this->table}' AND type = 'table'");
         if (0 == count($result)) {
@@ -45,7 +44,6 @@ class SqLiteTaggedStore extends TaggableStore implements Store
             $this->connection->statement($schema);
         }
     }
-
 
     /**
      * Retrieve an item from the cache by key.
@@ -56,14 +54,14 @@ class SqLiteTaggedStore extends TaggableStore implements Store
      */
     public function get($key)
     {
-        $prefixed = $this->prefix . $key;
+        $prefixed = $this->prefix.$key;
 
         $cache = $this->table()->where('key', '=', $prefixed)->first();
 
         // If we have a cache record we will check the expiration time against current
         // time on the system and see if the record has expired. If it has, we will
         // remove the records from the database table so it isn't returned again.
-        if ( ! is_null($cache)) {
+        if (! is_null($cache)) {
             if (is_array($cache)) {
                 $cache = (object) $cache;
             }
@@ -78,7 +76,6 @@ class SqLiteTaggedStore extends TaggableStore implements Store
         }
     }
 
-
     /**
      * Store an item in the cache for a given number of minutes.
      *
@@ -92,7 +89,6 @@ class SqLiteTaggedStore extends TaggableStore implements Store
     {
         return $this->tags(null)->put($key, $value, $minutes);
     }
-
 
     /**
      * Increment the value of an item in the cache.
@@ -111,7 +107,6 @@ class SqLiteTaggedStore extends TaggableStore implements Store
         });
     }
 
-
     /**
      * Increment the value of an item in the cache.
      *
@@ -129,7 +124,6 @@ class SqLiteTaggedStore extends TaggableStore implements Store
         });
     }
 
-
     /**
      * Increment or decrement an item in the cache.
      *
@@ -141,11 +135,11 @@ class SqLiteTaggedStore extends TaggableStore implements Store
      */
     protected function incrementOrDecrement($key, $value, Closure $callback)
     {
-        $prefixed = $this->prefix . $key;
+        $prefixed = $this->prefix.$key;
 
         $cache = $this->table()->where('key', $prefixed)->lockForUpdate()->first();
 
-        if ( ! is_null($cache)) {
+        if (! is_null($cache)) {
             $current = $cache->value;
 
             if (is_numeric($current)) {
@@ -155,7 +149,6 @@ class SqLiteTaggedStore extends TaggableStore implements Store
             }
         }
     }
-
 
     /**
      * Store an item in the cache indefinitely.
@@ -170,7 +163,6 @@ class SqLiteTaggedStore extends TaggableStore implements Store
         $this->put($key, $value, 5256000);
     }
 
-
     /**
      * Remove an item from the cache.
      *
@@ -180,11 +172,10 @@ class SqLiteTaggedStore extends TaggableStore implements Store
      */
     public function forget($key)
     {
-        $this->table()->where('key', '=', $this->prefix . $key)->delete();
+        $this->table()->where('key', '=', $this->prefix.$key)->delete();
 
         return true;
     }
-
 
     /**
      * Remove all items from the cache.
@@ -196,7 +187,6 @@ class SqLiteTaggedStore extends TaggableStore implements Store
         $this->table()->delete();
     }
 
-
     /**
      * Get a query builder for the cache table.
      *
@@ -206,7 +196,6 @@ class SqLiteTaggedStore extends TaggableStore implements Store
     {
         return $this->connection->table($this->table);
     }
-
 
     /**
      * Get the underlying database connection.
@@ -218,7 +207,6 @@ class SqLiteTaggedStore extends TaggableStore implements Store
         return $this->connection;
     }
 
-
     /**
      * Get the cache key prefix.
      *
@@ -229,7 +217,6 @@ class SqLiteTaggedStore extends TaggableStore implements Store
         return $this->prefix;
     }
 
-
     /**
      * @return string
      */
@@ -237,7 +224,6 @@ class SqLiteTaggedStore extends TaggableStore implements Store
     {
         return $this->table;
     }
-
 
     /**
      * Begin executing a new tags operation.

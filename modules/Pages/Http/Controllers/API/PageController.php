@@ -1,32 +1,28 @@
 <?php
+
 namespace KodiCMS\Pages\Http\Controllers\API;
 
-use KodiCMS\Pages\Model\Page;
 use KodiCMS\Pages\Repository\PageRepository;
 use KodiCMS\Users\Model\UserMeta;
-use KodiCMS\Pages\Model\PageSitemap;
-use KodiCMS\Pages\Model\FrontendPage;
 use KodiCMS\API\Http\Controllers\System\Controller as APIController;
 
 class PageController extends APIController
 {
-
     /**
      * @param PageRepository $repository
      */
     public function getChildren(PageRepository $repository)
     {
         $parentId = (int) $this->getRequiredParameter('parent_id');
-        $level    = (int) $this->getParameter('level');
+        $level = (int) $this->getParameter('level');
 
         $this->setContent($this->_children($repository, $parentId, $level));
     }
 
-
     /**
      * @param PageRepository $repository
-     * @param integer        $parentId
-     * @param integer        $level
+     * @param int        $parentId
+     * @param int        $level
      *
      * @return null|string
      */
@@ -37,14 +33,14 @@ class PageController extends APIController
         $page = $repository->find($parentId);
 
         if (is_null($page)) {
-            return null;
+            return;
         }
 
         $children = $repository->getChildrenByPageId($parentId);
 
         foreach ($children as $id => $child) {
             $children[$id]->hasChildren = $child->hasChildren();
-            $children[$id]->isExpanded  = in_array($child->id, $expandedRows);
+            $children[$id]->isExpanded = in_array($child->id, $expandedRows);
 
             if ($children[$id]->isExpanded === true) {
                 $children[$id]->childrenRows = $this->_children($repository, $child->id, $level + 1);
@@ -56,7 +52,6 @@ class PageController extends APIController
             'level'     => $level + 1,
         ])->render();
     }
-
 
     /**
      * @param PageRepository $repository
@@ -70,7 +65,6 @@ class PageController extends APIController
         ]));
     }
 
-
     /**
      * @param PageRepository $repository
      */
@@ -78,13 +72,12 @@ class PageController extends APIController
     {
         $pages = $this->getRequiredParameter('pids', []);
 
-        if (empty( $pages )) {
+        if (empty($pages)) {
             return;
         }
 
         $this->setContent($repository->reorder($pages));
     }
-
 
     /**
      * @param PageRepository $repository
@@ -92,7 +85,7 @@ class PageController extends APIController
     public function postChangeStatus(PageRepository $repository)
     {
         $pageId = $this->getRequiredParameter('page_id');
-        $value  = $this->getRequiredParameter('value');
+        $value = $this->getRequiredParameter('value');
 
         $page = $repository->update($pageId, [
             'status' => $value,
@@ -101,7 +94,6 @@ class PageController extends APIController
         $this->setContent($page->getStatus());
     }
 
-
     /**
      * @param PageRepository $repository
      */
@@ -109,11 +101,11 @@ class PageController extends APIController
     {
         $query = trim($this->getRequiredParameter('search'));
 
-        $pages    = $repository->searchByKeyword($query);
+        $pages = $repository->searchByKeyword($query);
         $children = [];
 
         foreach ($pages as $page) {
-            $page->isExpanded  = false;
+            $page->isExpanded = false;
             $page->hasChildren = false;
 
             $children[] = $page;

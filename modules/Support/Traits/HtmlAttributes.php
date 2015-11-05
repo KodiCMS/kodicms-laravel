@@ -1,14 +1,13 @@
 <?php
+
 namespace KodiCMS\Support\Traits;
 
 trait HtmlAttributes
 {
-
     /**
      * @var array
      */
     private $attributes = [];
-
 
     /**
      * @return array
@@ -23,7 +22,6 @@ trait HtmlAttributes
         return $attributes;
     }
 
-
     /**
      * @param string $key
      * @param string $default
@@ -34,7 +32,6 @@ trait HtmlAttributes
     {
         return array_get($this->getAttributes(), $key, $default);
     }
-
 
     /**
      * @param string       $key
@@ -55,7 +52,6 @@ trait HtmlAttributes
         return $this;
     }
 
-
     /**
      * @param array $attributes
      *
@@ -74,7 +70,6 @@ trait HtmlAttributes
         return $this;
     }
 
-
     /**
      * @param string       $key
      * @param string|array $attribute
@@ -83,12 +78,11 @@ trait HtmlAttributes
      */
     public function replaceAttribute($key, $attribute)
     {
-        $attribute              = $this->attributeElement($attribute);
+        $attribute = $this->attributeElement($attribute);
         $this->attributes[$key] = $attribute;
 
         return $this;
     }
-
 
     /**
      * @param string $key
@@ -97,11 +91,10 @@ trait HtmlAttributes
      */
     public function removeAttribute($key)
     {
-        unset( $this->attributes[$key] );
+        unset($this->attributes[$key]);
 
         return $this;
     }
-
 
     /**
      * @return $this
@@ -112,7 +105,6 @@ trait HtmlAttributes
 
         return $this;
     }
-
 
     /**
      * @param string|array $value

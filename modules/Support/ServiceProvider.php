@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Support;
 
 use Illuminate\Foundation\AliasLoader;
@@ -6,9 +7,8 @@ use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 abstract class ServiceProvider extends BaseServiceProvider
 {
-
     /**
-     * Registers a new console (artisan) command
+     * Registers a new console (artisan) command.
      *
      * @param array|string $class The command class
      *
@@ -19,7 +19,6 @@ abstract class ServiceProvider extends BaseServiceProvider
         $this->commands($class);
     }
 
-
     /**
      * @param array $alias
      */
@@ -27,7 +26,6 @@ abstract class ServiceProvider extends BaseServiceProvider
     {
         AliasLoader::getInstance($alias);
     }
-
 
     /**
      * @param array $providers

@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Datatables;
 
 use League\Fractal\Manager;
@@ -12,12 +13,10 @@ use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 
 class DatasourceBuilderEngine extends QueryBuilderEngine
 {
-
     /**
      * @var SectionHeadlineInterface
      */
     protected $headline;
-
 
     /**
      * @param DocumentInterface        $model
@@ -26,12 +25,12 @@ class DatasourceBuilderEngine extends QueryBuilderEngine
      */
     public function __construct(DocumentInterface $model, SectionHeadlineInterface $headline, Request $request)
     {
-        $this->request    = $request;
+        $this->request = $request;
         $this->query_type = 'datasource';
-        $this->headline   = $headline;
+        $this->headline = $headline;
 
-        $this->query      = $model->select();
-        $this->columns    = $this->query->getQuery()->columns;
+        $this->query = $model->select();
+        $this->columns = $this->query->getQuery()->columns;
         $this->connection = $model->getConnection();
 
         $this->database = $this->connection->getDriverName();
@@ -41,16 +40,15 @@ class DatasourceBuilderEngine extends QueryBuilderEngine
         }
     }
 
-
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function ordering()
     {
         foreach ($this->request->orderableColumns() as $orderable) {
             $column = $this->setupColumnName($orderable['column']);
-            if (isset( $this->columnDef['order'][$column] )) {
-                $method     = $this->columnDef['order'][$column]['method'];
+            if (isset($this->columnDef['order'][$column])) {
+                $method = $this->columnDef['order'][$column]['method'];
                 $parameters = $this->columnDef['order'][$column]['parameters'];
                 $this->compileColumnQuery($this->getQueryBuilder(), $method, $parameters, $column, $orderable['direction']);
             } else {
@@ -58,7 +56,6 @@ class DatasourceBuilderEngine extends QueryBuilderEngine
             }
         }
     }
-
 
     /**
      * Render json response.
@@ -78,10 +75,10 @@ class DatasourceBuilderEngine extends QueryBuilderEngine
                    'recordsFiltered' => $this->filteredRecords,
         ];
 
-        if (isset( $this->transformer )) {
-            $fractal        = new Manager();
-            $resource       = new Collection($data, new $this->transformer());
-            $collection     = $fractal->createData($resource)->toArray();
+        if (isset($this->transformer)) {
+            $fractal = new Manager();
+            $resource = new Collection($data, new $this->transformer());
+            $collection = $fractal->createData($resource)->toArray();
             $output['data'] = $collection['data'];
         } else {
             $output['data'] = Helper::transform($data);

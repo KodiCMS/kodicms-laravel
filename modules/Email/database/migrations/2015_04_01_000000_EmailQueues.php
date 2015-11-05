@@ -6,7 +6,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class EmailQueues extends Migration
 {
-
     public function up()
     {
         Schema::create('email_queues', function (Blueprint $table) {
@@ -20,7 +19,6 @@ class EmailQueues extends Migration
             $table->unsignedInteger('attempts')->default(0);
         });
     }
-
 
     public function down()
     {

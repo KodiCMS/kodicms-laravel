@@ -1,14 +1,13 @@
 <?php
+
 namespace KodiCMS\Support\Traits;
 
 trait Tentacle
 {
-
     /**
      * @var array
      */
     protected static $tentacles = [];
-
 
     /**
      * @param atring $method
@@ -28,7 +27,6 @@ trait Tentacle
         return parent::__call($method, $parameters);
     }
 
-
     /**
      * @param string   $name
      * @param callable $function
@@ -37,7 +35,6 @@ trait Tentacle
     {
         static::$tentacles[$name] = $function;
     }
-
 
     /**
      * @param string $key
@@ -48,7 +45,7 @@ trait Tentacle
     {
         $attribute = parent::getAttribute($key);
 
-        if ( ! is_null($attribute)) {
+        if (! is_null($attribute)) {
             return $attribute;
         }
 

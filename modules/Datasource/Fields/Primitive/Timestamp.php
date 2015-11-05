@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Primitive;
 
 use Date;
@@ -9,7 +10,6 @@ use KodiCMS\Datasource\Contracts\DocumentInterface;
 
 class Timestamp extends Primitive
 {
-
     /**
      * @var bool
      */
@@ -20,7 +20,6 @@ class Timestamp extends Primitive
      */
     protected $changeableDatabaseField = false;
 
-
     /**
      * @param Blueprint $table
      *
@@ -30,7 +29,6 @@ class Timestamp extends Primitive
     {
         return $table->timestamp($this->getDBKey());
     }
-
 
     /**
      * @param DocumentInterface $document
@@ -43,7 +41,6 @@ class Timestamp extends Primitive
         return Date::format($value);
     }
 
-
     /**
      * @param SectionHeadlineInterface $headline
      *
@@ -51,12 +48,11 @@ class Timestamp extends Primitive
      */
     public function getHeadlineParameters(SectionHeadlineInterface $headline)
     {
-        $params          = parent::getHeadlineParameters($headline);
+        $params = parent::getHeadlineParameters($headline);
         $params['class'] = 'text-right';
 
         return $params;
     }
-
 
     /**
      * @return string

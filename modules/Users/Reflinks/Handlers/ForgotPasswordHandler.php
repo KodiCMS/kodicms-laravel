@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Reflinks\Handlers;
 
 use Bus;
@@ -10,7 +11,6 @@ use KodiCMS\Users\Contracts\ReflinkHandlerInterface;
 
 class ForgotPasswordHandler implements ReflinkHandlerInterface
 {
-
     /**
      * @var UserReflink
      */
@@ -26,7 +26,6 @@ class ForgotPasswordHandler implements ReflinkHandlerInterface
      */
     protected $redirectUrl = null;
 
-
     /**
      * @param UserReflink $reflink
      */
@@ -34,7 +33,6 @@ class ForgotPasswordHandler implements ReflinkHandlerInterface
     {
         $this->reflink = $reflink;
     }
-
 
     /**
      * @return string
@@ -44,7 +42,6 @@ class ForgotPasswordHandler implements ReflinkHandlerInterface
         return $this->message;
     }
 
-
     /**
      * @return string
      */
@@ -53,11 +50,10 @@ class ForgotPasswordHandler implements ReflinkHandlerInterface
         return $this->redirectUrl;
     }
 
-
     public function handle()
     {
         $password = str_random(8);
-        $user     = $this->reflink->user;
+        $user = $this->reflink->user;
 
         Bus::dispatch(new EmailSend('user_new_password', [
             'password' => $password,

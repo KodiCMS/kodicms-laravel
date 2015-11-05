@@ -1,4 +1,5 @@
 <?php
+
 namespace Plugins\butschster\DSArticles;
 
 use KodiCMS\Datasource\Fields\Source\User;
@@ -16,12 +17,10 @@ use KodiCMS\Datasource\Sections\SectionHeadlineDatatables;
 
 class Section extends \KodiCMS\Datasource\Model\Section
 {
-
     /**
      * @var string
      */
     protected $sectionTableName = 'articles';
-
 
     /**
      * @return string
@@ -31,7 +30,6 @@ class Section extends \KodiCMS\Datasource\Model\Section
         return Document::class;
     }
 
-
     /**
      * @return string
      */
@@ -40,7 +38,6 @@ class Section extends \KodiCMS\Datasource\Model\Section
         return SectionHeadlineDatatables::class;
     }
 
-
     /**
      * @return string
      */
@@ -48,7 +45,6 @@ class Section extends \KodiCMS\Datasource\Model\Section
     {
         return SectionToolbar::class;
     }
-
 
     /**
      * @return array

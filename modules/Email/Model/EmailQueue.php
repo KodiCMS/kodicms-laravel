@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Email\Model;
 
 use KodiCMS\Email\Support\EmailSender;
@@ -6,43 +7,39 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * Class EmailQueue
- * @package KodiCMS\Email\Model
+ * Class EmailQueue.
  *
- * @property integer $id
+ * @property int $id
  * @property string  $status
  * @property object  $parameters
  * @property string  $message_type
  * @property string  $body
- * @property integer $attempts
+ * @property int $attempts
  *
  * @property Carbon  $created_at
  * @property Carbon  $updated_at
  */
 class EmailQueue extends Model
 {
-
     const STATUS_PENDING = 'pending';
     const STATUS_SENT = 'sent';
     const STATUS_FAILED = 'failed';
-
 
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($instance) {
-            $instance->status   = static::STATUS_PENDING;
+            $instance->status = static::STATUS_PENDING;
             $instance->attempts = 0;
         });
     }
-
 
     public static function sendAll()
     {
         set_time_limit(0);
 
-        $size     = config('email_queue.batch_size');
+        $size = config('email_queue.batch_size');
         $interval = config('email_queue.interval');
 
         $queue = static::pending()->get();
@@ -58,12 +55,10 @@ class EmailQueue extends Model
         }
     }
 
-
     public static function cleanOld()
     {
         static::notPending()->old()->delete();
     }
-
 
     /**
      * @param EmailTemplate $emailTemplate
@@ -89,7 +84,6 @@ class EmailQueue extends Model
         ]);
     }
 
-
     /**
      * The attributes that are mass assignable.
      *
@@ -110,7 +104,6 @@ class EmailQueue extends Model
         'parameters' => 'object',
     ];
 
-
     public function send()
     {
         $sent = EmailSender::send($this->body, $this->parameters, $this->message_type);
@@ -128,6 +121,7 @@ class EmailQueue extends Model
     /*******************************************************
      * Scopes
      *******************************************************/
+
     /**
      * @param Builder $query
      */
@@ -136,7 +130,6 @@ class EmailQueue extends Model
         $query->whereStatus(static::STATUS_PENDING);
     }
 
-
     /**
      * @param Builder $query
      */
@@ -144,7 +137,6 @@ class EmailQueue extends Model
     {
         $query->where('status', '!=', static::STATUS_PENDING);
     }
-
 
     /**
      * @param Builder $query

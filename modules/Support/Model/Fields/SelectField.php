@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Support\Model\Fields;
 
 use Form;
@@ -6,7 +7,6 @@ use KodiCMS\Support\Helpers\Callback;
 
 class SelectField extends KodiCMSField
 {
-
     protected function boot()
     {
         parent::boot();
@@ -16,7 +16,6 @@ class SelectField extends KodiCMSField
             ]);
     }
 
-
     /**
      * @param string $key
      * @param mixed  $value
@@ -25,7 +24,7 @@ class SelectField extends KodiCMSField
      */
     public function getOptions($key, $value)
     {
-        if (isset( $this->callbackOptions )) {
+        if (isset($this->callbackOptions)) {
             return Callback::invoke($this->callbackOptions, [$value], [
                 '{model}' => $this->model,
             ]);
@@ -37,7 +36,6 @@ class SelectField extends KodiCMSField
 
         return [];
     }
-
 
     /**
      * @param string $name
@@ -51,7 +49,6 @@ class SelectField extends KodiCMSField
         return Form::select($name, $this->getOptions($name, $value), $value, $attributes);
     }
 
-
     /**
      * @param string $key
      *
@@ -59,9 +56,8 @@ class SelectField extends KodiCMSField
      */
     protected function hasGetOptionsMethod($key)
     {
-        return method_exists($this->model, 'getField' . studly_case($key) . 'Options');
+        return method_exists($this->model, 'getField'.studly_case($key).'Options');
     }
-
 
     /**
      * @param string $key
@@ -71,6 +67,6 @@ class SelectField extends KodiCMSField
      */
     protected function callGetOptionsMethod($key, $value)
     {
-        return $this->model->{'getField' . studly_case($key) . 'Options'}($value);
+        return $this->model->{'getField'.studly_case($key).'Options'}($value);
     }
 }

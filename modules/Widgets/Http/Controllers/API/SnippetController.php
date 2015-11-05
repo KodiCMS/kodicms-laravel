@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Widgets\Http\Controllers\API;
 
 use KodiCMS\Widgets\Model\SnippetCollection;
@@ -6,7 +7,6 @@ use KodiCMS\CMS\Http\Controllers\API\AbstractFileController;
 
 class SnippetController extends AbstractFileController
 {
-
     /**
      * @return SnippetCollection
      */
@@ -15,7 +15,6 @@ class SnippetController extends AbstractFileController
         return new SnippetCollection();
     }
 
-
     /**
      * @return string
      */
@@ -23,7 +22,6 @@ class SnippetController extends AbstractFileController
     {
         return 'snippet';
     }
-
 
     /**
      * @param string $filename
@@ -34,7 +32,6 @@ class SnippetController extends AbstractFileController
     {
         return route('backend.snippet.edit', [$filename]);
     }
-
 
     public function getList()
     {

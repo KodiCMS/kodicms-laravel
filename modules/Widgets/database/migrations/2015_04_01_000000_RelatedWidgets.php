@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class RelatedWidgets extends Migration
 {
-
     public function up()
     {
         Schema::create('related_widgets', function (Blueprint $table) {
@@ -13,7 +12,6 @@ class RelatedWidgets extends Migration
             $table->unsignedInteger('to_widget_id');
         });
     }
-
 
     public function down()
     {

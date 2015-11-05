@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Dashboard;
 
 use KodiCMS\Users\Model\UserMeta;
@@ -7,30 +8,29 @@ use KodiCMS\Dashboard\Contracts\WidgetDashboard;
 
 class WidgetManagerDashboard extends WidgetManager
 {
-
     /**
      * @return string
      */
     public static function getWidgets()
     {
         $widgetsPosition = UserMeta::get(Dashboard::WIDGET_BLOCKS_KEY, []);
-        $widgetSettings  = UserMeta::get(Dashboard::WIDGET_SETTINGS_KEY, []);
+        $widgetSettings = UserMeta::get(Dashboard::WIDGET_SETTINGS_KEY, []);
 
         foreach ($widgetsPosition as $i => $data) {
-            if ( ! isset( $data['widget_id'] )) {
-                unset( $widgetsPosition[$i] );
+            if (! isset($data['widget_id'])) {
+                unset($widgetsPosition[$i]);
                 continue;
             }
 
             $widget = array_get($widgetSettings, $data['widget_id']);
 
             if (is_array($widget) and is_null($widget = static::toWidget($widget))) {
-                unset( $widgetsPosition[$i] );
+                unset($widgetsPosition[$i]);
                 continue;
             }
 
-            if ( ! ( $widget instanceof WidgetDashboard )) {
-                unset( $widgetsPosition[$i] );
+            if (! ($widget instanceof WidgetDashboard)) {
+                unset($widgetsPosition[$i]);
                 continue;
             }
 
@@ -40,7 +40,6 @@ class WidgetManagerDashboard extends WidgetManager
         return $widgetsPosition;
     }
 
-
     /**
      * @return array
      */
@@ -48,7 +47,7 @@ class WidgetManagerDashboard extends WidgetManager
     {
         $types = [];
         foreach (config('dashboard', []) as $type => $widget) {
-            if ( ! isset( $widget['class'] ) or static::isCorrupt($widget['class'])) {
+            if (! isset($widget['class']) or static::isCorrupt($widget['class'])) {
                 continue;
             }
 
@@ -58,7 +57,6 @@ class WidgetManagerDashboard extends WidgetManager
         return $types;
     }
 
-
     /**
      * @param string $needleType
      *
@@ -67,7 +65,7 @@ class WidgetManagerDashboard extends WidgetManager
     public static function getClassNameByType($needleType)
     {
         foreach (config('dashboard', []) as $type => $widget) {
-            if ( ! isset( $widget['class'] ) or static::isCorrupt($widget['class'])) {
+            if (! isset($widget['class']) or static::isCorrupt($widget['class'])) {
                 continue;
             }
 
@@ -76,9 +74,8 @@ class WidgetManagerDashboard extends WidgetManager
             }
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @param string $needleClass
@@ -88,7 +85,7 @@ class WidgetManagerDashboard extends WidgetManager
     public static function getTypeByClassName($needleClass)
     {
         foreach (config('dashboard', []) as $type => $widget) {
-            if ( ! isset( $widget['class'] ) or static::isCorrupt($widget['class'])) {
+            if (! isset($widget['class']) or static::isCorrupt($widget['class'])) {
                 continue;
             }
             if (strpos($widget['class'], $needleClass) !== false) {
@@ -96,9 +93,8 @@ class WidgetManagerDashboard extends WidgetManager
             }
         }
 
-        return null;
+        return;
     }
-
 
     /**
      * @param array $data
@@ -107,7 +103,7 @@ class WidgetManagerDashboard extends WidgetManager
      */
     public static function toWidget(array $data)
     {
-        /**
+        /*
          * @var string $type
          * @var string $id
          * @var array  $settings
@@ -115,7 +111,7 @@ class WidgetManagerDashboard extends WidgetManager
          */
         extract($data);
 
-        $widget = WidgetManagerDashboard::makeWidget($type, $type, null, $settings);
+        $widget = self::makeWidget($type, $type, null, $settings);
         $widget->setId($id);
 
         if (is_array($parameters)) {

@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => backend_url(), 'as' => 'backend.email.'], function () {
+Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.email.'], function () {
     Route::get('/email/template', [
         'as'   => 'template.list',
         'uses' => 'EmailTemplateController@getIndex',

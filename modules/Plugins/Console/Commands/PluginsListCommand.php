@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Plugins\Console\Commands;
 
 use PluginLoader;
@@ -7,7 +8,6 @@ use Symfony\Component\Console\Helper\TableSeparator;
 
 class PluginsListCommand extends Command
 {
-
     /**
      * The console command name.
      *
@@ -25,7 +25,6 @@ class PluginsListCommand extends Command
         '',
     ];
 
-
     /**
      * Execute the console command.
      *
@@ -37,7 +36,7 @@ class PluginsListCommand extends Command
 
         foreach (PluginLoader::findPlugins() as $module) {
             $modules[] = [
-                $module->getName() . ' [' . get_class($module) . ']',
+                $module->getName().' ['.get_class($module).']',
                 '',
             ];
             $modules[] = new TableSeparator;

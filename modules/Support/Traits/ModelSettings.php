@@ -1,9 +1,9 @@
 <?php
+
 namespace KodiCMS\Support\Traits;
 
 trait ModelSettings
 {
-
     /**
      * @return array
      */
@@ -11,7 +11,6 @@ trait ModelSettings
     {
         return [];
     }
-
 
     /**
      * @return array
@@ -21,7 +20,6 @@ trait ModelSettings
         return [];
     }
 
-
     /**
      * @return array
      */
@@ -29,7 +27,6 @@ trait ModelSettings
     {
         return $this->{$this->getSettingsProperty()};
     }
-
 
     /**
      * @param string $name
@@ -39,7 +36,7 @@ trait ModelSettings
      */
     public function getSetting($name, $default = null)
     {
-        $method = 'getSetting' . studly_case($name);
+        $method = 'getSetting'.studly_case($name);
 
         if (is_null($default)) {
             $default = array_get($this->defaultSettings(), $name);
@@ -52,7 +49,6 @@ trait ModelSettings
         return array_get($this->{$this->getSettingsProperty()}, $name, $default);
     }
 
-
     /**
      * @param string $name
      * @param mixed  $value
@@ -64,12 +60,12 @@ trait ModelSettings
         if (is_array($name)) {
             $this->setSettings($name);
         } else {
-            $method = 'setSetting' . studly_case($name);
+            $method = 'setSetting'.studly_case($name);
             if (method_exists($this, $method)) {
                 return $this->{$method}($value);
             } else {
                 if (array_key_exists($name, $this->booleanSettings())) {
-                    $value = ! empty( $value ) ? true : false;
+                    $value = ! empty($value) ? true : false;
                 }
 
                 $this->{$this->getSettingsProperty()}[$name] = $value;
@@ -78,7 +74,6 @@ trait ModelSettings
 
         return $this;
     }
-
 
     /**
      * @param array $settings
@@ -94,7 +89,6 @@ trait ModelSettings
         return $this;
     }
 
-
     /**
      * @param array $settings
      *
@@ -106,7 +100,6 @@ trait ModelSettings
 
         return $this->setSettings($settings);
     }
-
 
     /**
      * @return string

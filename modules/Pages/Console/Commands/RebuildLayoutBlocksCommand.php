@@ -1,13 +1,14 @@
 <?php
+
 namespace KodiCMS\Pages\Console\Commands;
 
 use Illuminate\Console\Command;
+use KodiCMS\Pages\Model\Layout;
 use KodiCMS\Pages\Model\LayoutCollection;
 use Symfony\Component\Console\Helper\TableSeparator;
 
-class RebuldLayoutBlocksCommand extends Command
+class RebuildLayoutBlocksCommand extends Command
 {
-
     /**
      * The console command name.
      */
@@ -23,7 +24,6 @@ class RebuldLayoutBlocksCommand extends Command
         'Found blocks',
     ];
 
-
     /**
      * Execute the console command.
      */
@@ -33,10 +33,13 @@ class RebuldLayoutBlocksCommand extends Command
 
         $layouts = [];
 
-        foreach (new LayoutCollection as $layout) {
+        /** @var Layout[] $collection */
+        $collection = new LayoutCollection;
+
+        foreach ($collection as $layout) {
             $blocks = $layout->findBlocks();
 
-            $blocks = ! empty( $blocks ) ? '{' . implode('} {', $blocks) . '}' : 'null';
+            $blocks = ! empty($blocks) ? '{'.implode('} {', $blocks).'}' : 'null';
 
             $layouts[] = [$layout->getName(), $blocks];
             $layouts[] = new TableSeparator;

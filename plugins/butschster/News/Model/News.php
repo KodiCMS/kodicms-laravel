@@ -1,4 +1,5 @@
 <?php
+
 namespace Plugins\butschster\News\Model;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,7 +8,6 @@ use Plugins\butschster\News\Model\FieldCollections\NewsFieldCollection;
 
 class News extends Model
 {
-
     use ModelFieldTrait;
 
     /**
@@ -33,7 +33,6 @@ class News extends Model
         'user_id' => 'integer',
     ];
 
-
     /**
      * @return array
      */
@@ -42,7 +41,6 @@ class News extends Model
         return new NewsFieldCollection;
     }
 
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -50,7 +48,6 @@ class News extends Model
     {
         return $this->belongsTo(\KodiCMS\Users\Model\User::class, 'user_id');
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

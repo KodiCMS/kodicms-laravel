@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Datasource\Fields\Relation;
 
 use KodiCMS\Datasource\Fields\Relation;
@@ -11,12 +12,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo as BelongsToRelation;
 
 class BelongsTo extends Relation implements FieldTypeOnlySystemInterface
 {
-
     /**
      * @var bool
      */
     protected $hasDatabaseColumn = false;
-
 
     /**
      * @param DocumentInterface $document
@@ -31,7 +30,6 @@ class BelongsTo extends Relation implements FieldTypeOnlySystemInterface
             : null;
     }
 
-
     /**
      * @param Builder           $query
      * @param DocumentInterface $document
@@ -40,7 +38,6 @@ class BelongsTo extends Relation implements FieldTypeOnlySystemInterface
     {
         $query->with($this->getRelationName());
     }
-
 
     /**
      * @param DocumentInterface     $document
@@ -55,8 +52,8 @@ class BelongsTo extends Relation implements FieldTypeOnlySystemInterface
         $instance = $relatedSection->getEmptyDocument()->newQuery();
 
         $foreignKey = $this->getSection()->getDocumentPrimaryKey();
-        $otherKey   = str_replace('_belongs_to', '', $this->getDBKey());
-        $relation   = $this->getRelationName();
+        $otherKey = str_replace('_belongs_to', '', $this->getDBKey());
+        $relation = $this->getRelationName();
 
         return new BelongsToRelation($instance, $document, $foreignKey, $otherKey, $relation);
     }

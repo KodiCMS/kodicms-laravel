@@ -1,29 +1,31 @@
 <?php
+
 namespace KodiCMS\CMS\Http\Controllers\System;
 
 use App;
+use Auth;
 use Lang;
 use View;
 use Assets;
 use ModulesFileSystem;
+use KodiCMS\Support\Helpers\File;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
 
 class TemplateController extends Controller
 {
-
     /**
      * @var  \View  page template
      */
     public $template = 'cms::app.backend';
 
     /**
-     * @var  boolean  auto render template
+     * @var  bool  auto render template
      **/
     public $autoRender = true;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $onlyContent = false;
 
@@ -31,7 +33,6 @@ class TemplateController extends Controller
      * @var array
      */
     public $templateScripts = [];
-
 
     /**
      * @param string $view
@@ -41,7 +42,7 @@ class TemplateController extends Controller
      */
     public function setContent($view, array $data = [])
     {
-        if ( ! is_null($this->template)) {
+        if (! is_null($this->template)) {
             $content = view($this->wrapNamespace($view), $data);
             $this->template->with('content', $content);
 
@@ -51,7 +52,6 @@ class TemplateController extends Controller
         return view($this->wrapNamespace($view), $data);
     }
 
-
     public function before()
     {
         parent::before();
@@ -60,7 +60,6 @@ class TemplateController extends Controller
             $this->registerMedia();
         }
 
-        View::share('adminDir', backend_url());
         View::share('controllerAction', $this->getCurrentAction());
         View::share('currentUser', $this->currentUser);
         View::share('requestType', $this->requestType);
@@ -68,7 +67,6 @@ class TemplateController extends Controller
         // Todo: подумать нужно ли передавать во view название модуля
         //View::share('currentModule', substr($this->getModuleNamespace(), 0, -2));
     }
-
 
     public function after()
     {
@@ -78,31 +76,29 @@ class TemplateController extends Controller
             if ($this->onlyContent) {
                 $this->template = $this->template->content;
             } else {
-                Assets::group('global', 'templateScripts', '<script type="text/javascript">' . $this->getTemplateScriptsAsString() . '</script>', 'global');
+                Assets::group('global', 'templateScripts', '<script type="text/javascript">'.$this->getTemplateScriptsAsString().'</script>', 'global');
             }
         }
     }
-
 
     public function registerMedia()
     {
         $this->templateScripts = [
             'CURRENT_URL'       => $this->request->url(),
             'SITE_URL'          => url(),
-            'BASE_URL'          => url(backend_url()),
-            'BACKEND_PATH'      => backend_url(),
-            'BACKEND_RESOURCES' => App::backendResourcesURL(),
+            'BASE_URL'          => backend_url(),
+            'BACKEND_PATH'      => backend_url_segment(),
+            'BACKEND_RESOURCES' => resources_url(),
             'PUBLIC_URL'        => url(),
             'LOCALE'            => Lang::getLocale(),
             'ROUTE'             => ! is_null($this->getRouter()) ? $this->getRouter()->currentRouteAction() : null,
             'ROUTE_PATH'        => $this->getRouterPath(),
             'REQUEST_TYPE'      => $this->requestType,
-            'USER_ID'           => \Auth::id(),
+            'USER_ID'           => Auth::id(),
             'MESSAGE_ERRORS'    => view()->shared('errors')->getBag('default'),
             'MESSAGE_SUCCESS'   => (array) $this->session->get('success', []),
         ];
     }
-
 
     /**
      * @return string
@@ -111,10 +107,9 @@ class TemplateController extends Controller
     {
         $script = '';
         foreach ($this->templateScripts as $var => $value) {
-
             if ($value instanceof Jsonable) {
                 $value = $value->toJson();
-            } else if ($value instanceof Arrayable) {
+            } elseif ($value instanceof Arrayable) {
                 $value = json_encode($value->toArray());
             } else {
                 $value = json_encode($value);
@@ -126,17 +121,15 @@ class TemplateController extends Controller
         return $script;
     }
 
-
     /**
      * @param string $key
      * @param string $file
      */
     public function includeMergedMediaFile($key, $file)
     {
-        $mediaContent = '<script type="text/javascript">' . Assets::mergeFiles($file, 'js') . "</script>";
+        $mediaContent = '<script type="text/javascript">'.File::mergeByPath($file, 'js').'</script>';
         Assets::group('global', $key, $mediaContent, 'global');
     }
-
 
     /**
      * @param $filename
@@ -144,10 +137,9 @@ class TemplateController extends Controller
     public function includeModuleMediaFile($filename)
     {
         if (ModulesFileSystem::findFile('resources/js', $filename, 'js')) {
-            Assets::js('include.' . $filename, backend_resources_url("/js/$filename.js"), 'core', false);
+            Assets::addJs('include.'.$filename, backend_resources_url("/js/$filename.js"), 'core', false);
         }
     }
-
 
     /**
      * Execute an action on the controller.
@@ -172,7 +164,6 @@ class TemplateController extends Controller
         return $response;
     }
 
-
     /**
      * Setup the layout used by the controller.
      *
@@ -180,13 +171,12 @@ class TemplateController extends Controller
      */
     protected function setupLayout()
     {
-        if ( ! is_null($this->template)) {
+        if (! is_null($this->template)) {
             $this->template = view($this->template);
         }
 
         return $this;
     }
-
 
     /**
      * Set the layout used by the controller.
@@ -201,7 +191,6 @@ class TemplateController extends Controller
 
         return $this;
     }
-
 
     /**
      * @param $title

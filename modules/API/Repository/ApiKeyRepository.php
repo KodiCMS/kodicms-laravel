@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Api\Repository;
 
 use DatabaseConfig;
@@ -7,7 +8,6 @@ use KodiCMS\CMS\Repository\BaseRepository;
 
 class ApiKeyRepository extends BaseRepository
 {
-
     /**
      * @param ApiKey $model
      */
@@ -16,7 +16,6 @@ class ApiKeyRepository extends BaseRepository
         parent::__construct($model);
     }
 
-
     /**
      * @return string|null
      */
@@ -24,7 +23,6 @@ class ApiKeyRepository extends BaseRepository
     {
         return config('cms.api_key');
     }
-
 
     /**
      * @param string $key
@@ -35,7 +33,6 @@ class ApiKeyRepository extends BaseRepository
     {
         return $this->getSystemKey() == $key;
     }
-
 
     /**
      * @param string $description
@@ -50,7 +47,6 @@ class ApiKeyRepository extends BaseRepository
         return $key;
     }
 
-
     /**
      * @param string $key
      *
@@ -64,7 +60,6 @@ class ApiKeyRepository extends BaseRepository
         return $key;
     }
 
-
     /**
      * @return array
      */
@@ -74,7 +69,6 @@ class ApiKeyRepository extends BaseRepository
             ->lists('description', 'id')
             ->all();
     }
-
 
     /**
      * @param string $key
@@ -88,7 +82,6 @@ class ApiKeyRepository extends BaseRepository
             ->delete();
     }
 
-
     /**
      * @param string $key
      *
@@ -98,7 +91,6 @@ class ApiKeyRepository extends BaseRepository
     {
         return ! is_null($key) && $this->getModel()->isValid($key);
     }
-
 
     /**
      * @param string $key

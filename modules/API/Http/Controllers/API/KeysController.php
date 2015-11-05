@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\API\Http\Controllers\API;
 
 use KodiCMS\API\Exceptions\Exception;
@@ -8,29 +9,27 @@ use KodiCMS\API\Http\Controllers\System\Controller;
 
 class KeysController extends Controller
 {
-
     /**
      * @param ApiKeyRepository $repository
      */
     public function getKeys(ApiKeyRepository $repository)
     {
-        if ( ! acl_check('api.view_keys')) {
+        if (! acl_check('api.view_keys')) {
             throw new PermissionException('api.view_keys');
         }
 
         $keys = $repository->getList();
-        unset( $keys[$repository->getSystemKey()] );
+        unset($keys[$repository->getSystemKey()]);
 
         $this->setContent($keys);
     }
-
 
     /**
      * @param ApiKeyRepository $repository
      */
     public function putKey(ApiKeyRepository $repository)
     {
-        if ( ! acl_check('api.create_keys')) {
+        if (! acl_check('api.create_keys')) {
             throw new PermissionException('api.create_keys');
         }
 
@@ -38,13 +37,12 @@ class KeysController extends Controller
         $this->setContent($repository->generate($description));
     }
 
-
     /**
      * @param ApiKeyRepository $repository
      */
     public function deleteKey(ApiKeyRepository $repository)
     {
-        if ( ! acl_check('api.delete_keys')) {
+        if (! acl_check('api.delete_keys')) {
             throw new PermissionException('api.delete_keys');
         }
 
@@ -57,19 +55,18 @@ class KeysController extends Controller
         $this->setContent((bool) $repository->deleteByKey($key));
     }
 
-
     /**
      * @param ApiKeyRepository $repository
      */
     public function postRefresh(ApiKeyRepository $repository)
     {
-        if ( ! acl_check('api.refresh_key')) {
+        if (! acl_check('api.refresh_key')) {
             throw new PermissionException('api.refresh_key');
         }
 
         $key = $repository->getSystemKey();
 
-        if ( ! $repository->isValid($key)) {
+        if (! $repository->isValid($key)) {
             $key = $repository->generate();
         } else {
             $key = $repository->refresh($key);

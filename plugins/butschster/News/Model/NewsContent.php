@@ -1,4 +1,5 @@
 <?php
+
 namespace Plugins\butschster\News\Model;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,7 +8,6 @@ use Plugins\butschster\News\Model\FieldCollections\NewsContentFieldCollection;
 
 class NewsContent extends Model
 {
-
     use ModelFieldTrait;
 
     /**
@@ -47,7 +47,6 @@ class NewsContent extends Model
         'news_id' => 'integer',
     ];
 
-
     /**
      * @return array
      */
@@ -55,7 +54,6 @@ class NewsContent extends Model
     {
         return new NewsContentFieldCollection;
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

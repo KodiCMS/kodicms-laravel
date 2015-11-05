@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\Users\Repository;
 
 use KodiCMS\Users\Model\UserReflink;
@@ -6,7 +7,6 @@ use KodiCMS\CMS\Repository\BaseRepository;
 
 class UserReflinkRepository extends BaseRepository
 {
-
     /**
      * @param UserReflink $model
      */
@@ -14,7 +14,6 @@ class UserReflinkRepository extends BaseRepository
     {
         parent::__construct($model);
     }
-
 
     /**
      * @param string $code
@@ -25,7 +24,6 @@ class UserReflinkRepository extends BaseRepository
     {
         return $this->model->where('code', $code)->find();
     }
-
 
     /**
      * @param string $code
