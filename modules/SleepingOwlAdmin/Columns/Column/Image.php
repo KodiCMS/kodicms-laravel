@@ -1,49 +1,32 @@
-<?php namespace KodiCMS\SleepingOwlAdmin\Columns\Column;
+<?php
 
-use AdminTemplate;
-use Illuminate\View\View;
-use KodiCMS\SleepingOwlAdmin\AssetManager\AssetManager;
+namespace KodiCMS\SleepingOwlAdmin\Columns\Column;
 
 class Image extends NamedColumn
 {
+    /**
+     * @param $name
+     */
+    public function __construct($name)
+    {
+        parent::__construct($name);
 
-	/**
-	 * Initialize column
-	 */
-	public function initialize()
-	{
-		parent::initialize();
+        $this->orderable(false);
+    }
 
-		AssetManager::addStyle('admin::default/css/ekko-lightbox.min.css');
-		AssetManager::addScript('admin::default/js/ekko-lightbox.min.js');
-		AssetManager::addScript('admin::default/js/columns/image.js');
-	}
+    /**
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function render()
+    {
+        $value = $this->getValue($this->instance, $this->name());
+        if (! empty($value) && (strpos($value, '://') === false)) {
+            $value = asset($value);
+        }
 
-	/**
-	 * @param $name
-	 */
-	function __construct($name)
-	{
-		parent::__construct($name);
-
-		$this->orderable(false);
-	}
-
-	/**
-	 * @return View
-	 */
-	public function render()
-	{
-		$value = $this->getValue($this->instance, $this->name());
-		if ( ! empty($value) && (strpos($value, '://') === false))
-		{
-			$value = asset($value);
-		}
-		$params = [
-			'value'  => $value,
-			'append' => $this->append(),
-		];
-		return view(AdminTemplate::view('column.image'), $params);
-	}
-
+        return app('sleeping_owl.template')->view('column.image', [
+            'value'  => $value,
+            'append' => $this->append(),
+        ]);
+    }
 }

@@ -1,15 +1,16 @@
 <?php
+
 namespace KodiCMS\SleepingOwlAdmin\Interfaces;
 
 interface DisplayInterface
 {
     /**
-     * Initialize display
+     * Initialize display.
      */
     public function initialize();
 
     /**
-     * Set display class
+     * Set display class.
      *
      * @param string $class
      */

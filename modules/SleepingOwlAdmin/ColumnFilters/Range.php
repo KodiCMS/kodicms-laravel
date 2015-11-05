@@ -1,6 +1,6 @@
-<?php namespace KodiCMS\SleepingOwlAdmin\ColumnFilters;
+<?php
 
-use KodiCMS\SleepingOwlAdmin\AssetManager\AssetManager;
+namespace KodiCMS\SleepingOwlAdmin\ColumnFilters;
 
 class Range extends BaseColumnFilter
 {
@@ -20,12 +20,12 @@ class Range extends BaseColumnFilter
     protected $to;
 
     /**
-     * Initialize column filter
+     * Initialize column filter.
      */
     public function initialize()
     {
         parent::initialize();
-        AssetManager::addScript('admin::default/js/columnfilters/range.js');
+
         $this->from()->initialize();
         $this->to()->initialize();
     }
@@ -82,7 +82,7 @@ class Range extends BaseColumnFilter
     public function apply($repository, $column, $query, $search, $fullSearch, $operator = '=')
     {
         $from = array_get($fullSearch, 'from');
-        $to   = array_get($fullSearch, 'to');
+        $to = array_get($fullSearch, 'to');
         if (! empty($from)) {
             $this->from()->apply($repository, $column, $query, $from, $fullSearch, '>=');
         }

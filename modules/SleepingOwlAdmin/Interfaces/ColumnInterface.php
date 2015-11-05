@@ -1,15 +1,16 @@
 <?php
+
 namespace KodiCMS\SleepingOwlAdmin\Interfaces;
 
 interface ColumnInterface
 {
     /**
-     * Initialize column
+     * Initialize column.
      */
     public function initialize();
 
     /**
-     * Set currently rendered instance
+     * Set currently rendered instance.
      *
      * @param mixed $instance
      */

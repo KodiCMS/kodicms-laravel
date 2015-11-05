@@ -1,14 +1,14 @@
 <?php
+
 namespace KodiCMS\SleepingOwlAdmin;
 
 use Route;
 use BadMethodCallException;
-use KodiCMS\SleepingOwlAdmin\Providers\RouteServiceProvider;
 
 abstract class AliasBinder
 {
     /**
-     * Register new alias
+     * Register new alias.
      *
      * @param string $alias
      * @param string $class
@@ -16,16 +16,18 @@ abstract class AliasBinder
     public static function register($alias, $class)
     {
         static::$aliases[$alias] = $class;
-        Route::group(
-            ['prefix' => config('sleeping_owl.prefix'), 'middleware' => config('sleeping_owl.middleware')],
-            function () use ($class) {
+        Route::group([
+            'prefix' => config('sleeping_owl.prefix'),
+            'middleware' => config('sleeping_owl.middleware'),
+        ], function () use ($class) {
+            if (method_exists($class, 'registerRoutes')) {
                 call_user_func([$class, 'registerRoutes']);
             }
-        );
+        });
     }
 
     /**
-     * Get class by alias
+     * Get class by alias.
      *
      * @param string $alias
      *
@@ -37,7 +39,7 @@ abstract class AliasBinder
     }
 
     /**
-     * Check if alias is registered
+     * Check if alias is registered.
      *
      * @param string $alias
      *
@@ -49,7 +51,7 @@ abstract class AliasBinder
     }
 
     /**
-     * Create new instance by alias
+     * Create new instance by alias.
      *
      * @param string $name
      * @param        $arguments

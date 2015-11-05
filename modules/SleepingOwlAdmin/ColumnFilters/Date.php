@@ -1,7 +1,8 @@
-<?php namespace KodiCMS\SleepingOwlAdmin\ColumnFilters;
+<?php
+
+namespace KodiCMS\SleepingOwlAdmin\ColumnFilters;
 
 use Carbon\Carbon;
-use KodiCMS\SleepingOwlAdmin\AssetManager\AssetManager;
 
 class Date extends Text
 {
@@ -35,16 +36,6 @@ class Date extends Text
      */
     protected $width = 150;
 
-    public function initialize()
-    {
-        parent::initialize();
-        AssetManager::addStyle('admin::default/css/formitems/datetime/bootstrap-datetimepicker.min.css');
-        AssetManager::addStyle('admin::default/css/formitems/datetime/style.css');
-        AssetManager::addScript('admin::default/js/formitems/datetime/moment-with-locales.min.js');
-        AssetManager::addScript('admin::default/js/formitems/datetime/s_bootstrap-datetimepicker.min.js');
-        AssetManager::addScript('admin::default/js/formitems/datetime/init.js');
-    }
-
     /**
      * @param string|null $format
      *
@@ -54,7 +45,7 @@ class Date extends Text
     {
         if (is_null($format)) {
             if (is_null($this->format)) {
-                $this->format(config('admin.datetimeFormat'));
+                $this->format(config('sleeping_owl.datetimeFormat'));
             }
 
             return $this->format;
@@ -155,8 +146,8 @@ class Date extends Text
         if ($repository->hasColumn($name)) {
             $query->where($name, $operator, $time);
         } elseif (strpos($name, '.') !== false) {
-            $parts        = explode('.', $name);
-            $fieldName    = array_pop($parts);
+            $parts = explode('.', $name);
+            $fieldName = array_pop($parts);
             $relationName = implode('.', $parts);
             $query->whereHas($relationName, function ($q) use ($time, $fieldName, $operator) {
                 $q->where($fieldName, $operator, $time);
@@ -182,7 +173,7 @@ class Date extends Text
      */
     protected function generatePickerFormat()
     {
-        $format      = $this->format();
+        $format = $this->format();
         $replacement = [
             'i' => 'mm',
             's' => 'ss',

@@ -1,16 +1,13 @@
-<?php namespace KodiCMS\SleepingOwlAdmin\Columns\Column;
+<?php
 
-use AdminTemplate;
-use Illuminate\View\View;
-use KodiCMS\SleepingOwlAdmin\AssetManager\AssetManager;
+namespace KodiCMS\SleepingOwlAdmin\Columns\Column;
 
 class Checkbox extends BaseColumn
 {
-
     /**
      *
      */
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
 
@@ -18,28 +15,13 @@ class Checkbox extends BaseColumn
         $this->orderable(false);
     }
 
-
     /**
-     * Initialize column
-     */
-    public function initialize()
-    {
-        parent::initialize();
-
-        AssetManager::addScript('admin::default/js/columns/checkbox.js');
-    }
-
-
-    /**
-     * @return View
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
     public function render()
     {
-        $params = [
+        return app('sleeping_owl.template')->view('column.checkbox', [
             'value' => $this->instance->getKey(),
-        ];
-
-        return view(AdminTemplate::view('column.checkbox'), $params);
+        ]);
     }
-
 }

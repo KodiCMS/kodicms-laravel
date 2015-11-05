@@ -1,20 +1,16 @@
-<?php namespace KodiCMS\SleepingOwlAdmin\Columns\Column;
+<?php
 
-use AdminTemplate;
-use Illuminate\View\View;
+namespace KodiCMS\SleepingOwlAdmin\Columns\Column;
 
 class Url extends NamedColumn
 {
-
-	/**
-	 * @return View
-	 */
-	public function render()
-	{
-		$params = [
-			'url'    => $this->getValue($this->instance, $this->name()),
-		];
-		return view(AdminTemplate::view('column.url'), $params);
-	}
-
+    /**
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function render()
+    {
+        return app('sleeping_owl.template')->view('column.url', [
+            'url' => $this->getValue($this->instance, $this->name()),
+        ]);
+    }
 }

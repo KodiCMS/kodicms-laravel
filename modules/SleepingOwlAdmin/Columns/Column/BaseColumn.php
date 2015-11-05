@@ -1,129 +1,142 @@
-<?php namespace KodiCMS\SleepingOwlAdmin\Columns\Column;
+<?php
 
+namespace KodiCMS\SleepingOwlAdmin\Columns\Column;
+
+use Meta;
 use Illuminate\Contracts\Support\Renderable;
-use KodiCMS\SleepingOwlAdmin\Admin;
-use KodiCMS\SleepingOwlAdmin\Interfaces\ColumnInterface;
 use KodiCMS\SleepingOwlAdmin\Model\ModelConfiguration;
+use KodiCMS\SleepingOwlAdmin\Interfaces\ColumnInterface;
 
 abstract class BaseColumn implements Renderable, ColumnInterface
 {
+    /**
+     * Column header.
+     * @var ColumnHeader
+     */
+    protected $header;
 
-	/**
-	 * Column header
-	 * @var ColumnHeader
-	 */
-	protected $header;
-	/**
-	 * Model instance currently rendering
-	 * @var mixed
-	 */
-	protected $instance;
-	/**
-	 * Column appendant
-	 * @var ColumnInterface
-	 */
-	protected $append;
+    /**
+     * Model instance currently rendering.
+     * @var mixed
+     */
+    protected $instance;
 
-	/**
-	 *
-	 */
-	function __construct()
-	{
-		$this->header = new ColumnHeader;
-	}
+    /**
+     * Column appendant.
+     * @var ColumnInterface
+     */
+    protected $append;
 
-	/**
-	 * Initialize column
-	 */
-	public function initialize()
-	{
-	}
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->header = new ColumnHeader;
+    }
 
-	/**
-	 * Get related model configuration
-	 * @return ModelConfiguration
-	 */
-	protected function model()
-	{
-		return Admin::model(get_class($this->instance));
-	}
+    /**
+     * Initialize column.
+     */
+    public function initialize()
+    {
+        Meta::loadPackage(get_class());
+    }
 
-	/**
-	 * Set column header label
-	 * @param string $title
-	 * @return $this
-	 */
-	public function label($title)
-	{
-		$this->header->title($title);
-		return $this;
-	}
+    /**
+     * Get related model configuration.
+     * @return ModelConfiguration
+     */
+    protected function model()
+    {
+        return app('sleeping_owl.admin')->getModel(get_class($this->instance));
+    }
 
-	/**
-	 * Enable/disable column orderable feature
-	 * @param bool $orderable
-	 * @return $this
-	 */
-	public function orderable($orderable)
-	{
-		$this->header->orderable($orderable);
-		return $this;
-	}
+    /**
+     * Set column header label.
+     *
+     * @param string $title
+     *
+     * @return $this
+     */
+    public function label($title)
+    {
+        $this->header->title($title);
 
-	/**
-	 * Check if column is orderable
-	 * @return bool
-	 */
-	public function isOrderable()
-	{
-		return $this->header()->orderable();
-	}
+        return $this;
+    }
 
-	/**
-	 * Get column header
-	 * @return ColumnHeader
-	 */
-	public function header()
-	{
-		return $this->header;
-	}
+    /**
+     * Enable/disable column orderable feature.
+     *
+     * @param bool $orderable
+     *
+     * @return $this
+     */
+    public function orderable($orderable)
+    {
+        $this->header->orderable($orderable);
 
-	/**
-	 * Get or set column appendant
-	 * @param ColumnInterface|null $append
-	 * @return $this|ColumnInterface
-	 */
-	public function append($append = null)
-	{
-		if (is_null($append))
-		{
-			return $this->append;
-		}
-		$this->append = $append;
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Set currently rendering instance
-	 * @param mixed $instance
-	 * @return $this
-	 */
-	public function setInstance($instance)
-	{
-		$this->instance = $instance;
-		if ( ! is_null($this->append()) && ($this->append() instanceof ColumnInterface))
-		{
-			$this->append()->setInstance($instance);
-		}
-		return $this;
-	}
+    /**
+     * Check if column is orderable.
+     * @return bool
+     */
+    public function isOrderable()
+    {
+        return $this->header()->orderable();
+    }
 
-	/**
-	 * @return string
-	 */
-	function __toString()
-	{
-		return (string)$this->render();
-	}
+    /**
+     * Get column header.
+     * @return ColumnHeader
+     */
+    public function header()
+    {
+        return $this->header;
+    }
 
+    /**
+     * Get or set column appendant.
+     *
+     * @param ColumnInterface|null $append
+     *
+     * @return $this|ColumnInterface
+     */
+    public function append($append = null)
+    {
+        if (is_null($append)) {
+            return $this->append;
+        }
+        $this->append = $append;
+
+        return $this;
+    }
+
+    /**
+     * Set currently rendering instance.
+     *
+     * @param mixed $instance
+     *
+     * @return $this
+     */
+    public function setInstance($instance)
+    {
+        $this->instance = $instance;
+        if (! is_null($this->append()) && ($this->append() instanceof ColumnInterface)) {
+            $this->append()->setInstance($instance);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string) $this->render();
+    }
 }

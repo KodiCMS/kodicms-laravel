@@ -1,43 +1,43 @@
 <?php
+
 namespace KodiCMS\SleepingOwlAdmin\Columns\Column;
 
 use Closure;
-use AdminTemplate;
 
 class Action extends NamedColumn
 {
     /**
-     * Action icon class
+     * Action icon class.
      * @var string
      */
     protected $icon;
 
     /**
-     * Action button style ('long' or 'short')
+     * Action button style ('long' or 'short').
      * @var string
      */
     protected $style = 'long';
 
     /**
-     * Button submit action
+     * Button submit action.
      * @var Closure
      */
     protected $callback;
 
     /**
-     * Action button target ('_self', '_blank' or any else)
+     * Action button target ('_self', '_blank' or any else).
      * @var string
      */
     protected $target = '_self';
 
     /**
-     * Action button value (button label)
+     * Action button value (button label).
      * @var string
      */
     protected $value;
 
     /**
-     * Action button url
+     * Action button url.
      * @var string
      */
     protected $url;
@@ -45,14 +45,14 @@ class Action extends NamedColumn
     /**
      * @param string $name
      */
-    function __construct($name)
+    public function __construct($name)
     {
         parent::__construct($name);
         $this->orderable(false);
     }
 
     /**
-     * Get or set icon class
+     * Get or set icon class.
      *
      * @param string|null $icon
      *
@@ -69,7 +69,7 @@ class Action extends NamedColumn
     }
 
     /**
-     * Get or set action button style
+     * Get or set action button style.
      *
      * @param string|null $style
      *
@@ -86,7 +86,7 @@ class Action extends NamedColumn
     }
 
     /**
-     * Get or set action callback
+     * Get or set action callback.
      *
      * @param Closure|null $callback
      *
@@ -103,7 +103,7 @@ class Action extends NamedColumn
     }
 
     /**
-     * Get or set action button target
+     * Get or set action button target.
      *
      * @param string|null $target
      *
@@ -120,7 +120,7 @@ class Action extends NamedColumn
     }
 
     /**
-     * Get or set action buttom value (buttom label)
+     * Get or set action buttom value (buttom label).
      *
      * @param string|null $value
      *
@@ -137,24 +137,22 @@ class Action extends NamedColumn
     }
 
     /**
-     * Render action button
-     * @return \Illuminate\View\View
+     * Render action button.
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
     public function render()
     {
-        $params = [
+        return app('sleeping_owl.template')->view('column.action', [
             'icon'   => $this->icon(),
             'style'  => $this->style(),
             'value'  => $this->value(),
             'target' => $this->target(),
             'url'    => $this->url(),
-        ];
-
-        return view(AdminTemplate::view('column.action'), $params);
+        ]);
     }
 
     /**
-     * Get or set action button url
+     * Get or set action button url.
      *
      * @param string|null $url
      *
@@ -185,7 +183,7 @@ class Action extends NamedColumn
     }
 
     /**
-     * Call action button callback
+     * Call action button callback.
      *
      * @param $instance
      */

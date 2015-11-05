@@ -1,6 +1,8 @@
-<?php namespace KodiCMS\SleepingOwlAdmin\Columns;
+<?php
 
-use KodiCMS\SleepingOwlAdmin\Base\AliasBinder;
+namespace KodiCMS\SleepingOwlAdmin\Columns;
+
+use KodiCMS\SleepingOwlAdmin\AliasBinder;
 
 /**
  * @method static \KodiCMS\SleepingOwlAdmin\Columns\Column\Action action($name)
@@ -19,11 +21,9 @@ use KodiCMS\SleepingOwlAdmin\Base\AliasBinder;
  */
 class Column extends AliasBinder
 {
-
-	/**
-	 * Column class aliases
-	 * @var string[]
-	 */
-	protected static $aliases = [];
-
+    /**
+     * Column class aliases.
+     * @var string[]
+     */
+    protected static $aliases = [];
 }

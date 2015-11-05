@@ -1,9 +1,11 @@
-<?php namespace KodiCMS\SleepingOwlAdmin\Interfaces;
+<?php
+
+namespace KodiCMS\SleepingOwlAdmin\Interfaces;
 
 interface WithRoutesInterface
 {
     /**
-     * Register router
+     * Register router.
      */
     public static function registerRoutes();
 }

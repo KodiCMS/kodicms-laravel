@@ -1,27 +1,29 @@
-<?php namespace KodiCMS\SleepingOwlAdmin\Interfaces;
+<?php
+
+namespace KodiCMS\SleepingOwlAdmin\Interfaces;
 
 interface FormItemInterface
 {
     /**
-     * Initialize form item
+     * Initialize form item.
      */
     public function initialize();
 
     /**
-     * Set currently rendered instance
+     * Set currently rendered instance.
      *
      * @param mixed $instance
      */
     public function setInstance($instance);
 
     /**
-     * Get form item validation rules
+     * Get form item validation rules.
      * @return mixed
      */
     public function getValidationRules();
 
     /**
-     * Save form item
+     * Save form item.
      */
     public function save();
 }

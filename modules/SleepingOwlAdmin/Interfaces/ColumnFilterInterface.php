@@ -1,10 +1,11 @@
 <?php
+
 namespace KodiCMS\SleepingOwlAdmin\Interfaces;
 
 interface ColumnFilterInterface
 {
     /**
-     * Initialize column filter
+     * Initialize column filter.
      */
     public function initialize();
 

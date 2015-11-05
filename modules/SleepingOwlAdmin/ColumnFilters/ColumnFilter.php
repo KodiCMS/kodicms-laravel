@@ -1,4 +1,6 @@
-<?php namespace KodiCMS\SleepingOwlAdmin\ColumnFilters;
+<?php
+
+namespace KodiCMS\SleepingOwlAdmin\ColumnFilters;
 
 use KodiCMS\SleepingOwlAdmin\AliasBinder;
 
@@ -11,7 +13,7 @@ use KodiCMS\SleepingOwlAdmin\AliasBinder;
 class ColumnFilter extends AliasBinder
 {
     /**
-     * Column filter class aliases
+     * Column filter class aliases.
      * @var string[]
      */
     protected static $aliases = [];

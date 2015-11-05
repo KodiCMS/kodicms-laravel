@@ -1,13 +1,27 @@
-<?php namespace KodiCMS\SleepingOwlAdmin\Interfaces;
+<?php
+
+namespace KodiCMS\SleepingOwlAdmin\Interfaces;
 
 interface TemplateInterface
 {
     /**
-     * Get full view name
-     *
+     * @return string
+     */
+    public function getViewNamespace();
+
+    /**
      * @param string $view
      *
      * @return string
      */
-    public function view($view);
+    public function getTemplateViewPath($view);
+
+    /**
+     * @param string $view
+     * @param array  $data
+     * @param array  $mergeData
+     *
+     * @return \BladeView|bool|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function view($view, $data = [], $mergeData = []);
 }

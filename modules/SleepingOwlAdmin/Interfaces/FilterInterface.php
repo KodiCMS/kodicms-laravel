@@ -1,10 +1,13 @@
 <?php
+
 namespace KodiCMS\SleepingOwlAdmin\Interfaces;
+
+use Illuminate\Database\Query\Builder;
 
 interface FilterInterface
 {
     /**
-     * Initialize filter
+     * Initialize filter.
      */
     public function initialize();
 
@@ -14,9 +17,9 @@ interface FilterInterface
     public function isActive();
 
     /**
-     * Apply filter to the query
+     * Apply filter to the query.
      *
-     * @param $query
+     * @param Builder $query
      */
-    public function apply($query);
+    public function apply(Builder $query);
 }

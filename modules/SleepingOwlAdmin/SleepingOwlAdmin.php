@@ -1,11 +1,14 @@
 <?php
+
 namespace KodiCMS\SleepingOwlAdmin;
 
-use Illuminate\View\View;
+use Illuminate\Contracts\Support\Renderable;
 use KodiCMS\SleepingOwlAdmin\Model\ModelConfiguration;
+use KodiCMS\CMS\Navigation\Section as NavigationSection;
 use KodiCMS\SleepingOwlAdmin\Interfaces\TemplateInterface;
+use KodiCMS\SleepingOwlAdmin\Http\Controllers\AdminController;
 
-class Admin
+class SleepingOwlAdmin
 {
     /**
      * @var ModelConfiguration[]
@@ -18,17 +21,22 @@ class Admin
     protected $template;
 
     /**
+     * @var NavigationPage[]
+     */
+    protected $menuItems = [];
+
+    /**
      * @return string[]
      */
     public function modelAliases()
     {
-        return array_map(function ($model) {
+        return array_map(function (ModelConfiguration $model) {
             return $model->alias();
-        }, static::models());
+        }, $this->getModels());
     }
 
     /**
-     * @param $class
+     * @param string $class
      *
      * @return ModelConfiguration
      */
@@ -53,7 +61,7 @@ class Admin
     }
 
     /**
-     * @param $class
+     * @param string $class
      *
      * @return bool
      */
@@ -63,7 +71,7 @@ class Admin
     }
 
     /**
-     * @param                    $class
+     * @param string             $class
      * @param ModelConfiguration $model
      */
     public function setModel($class, $model)
@@ -77,7 +85,7 @@ class Admin
     public function template()
     {
         if (is_null($this->template)) {
-            $templateClass  = config('admin.template');
+            $templateClass = config('sleeping_owl.template');
             $this->template = app($templateClass);
         }
 
@@ -85,14 +93,39 @@ class Admin
     }
 
     /**
-     * @param             $content
-     * @param string|null $title
+     * @param string $class
      *
-     * @return View
+     * @return NavigationPage
      */
-    public static function view($content, $title = null)
+    public function addMenuLink($class)
     {
-        $controller = app(\KodiCMS\SleepingOwlAdmin\Http\Controllers\AdminController::class);
+        $model = $this->getModel($class);
+
+        $page = new NavigationPage($model);
+        $this->menuItems[] = $page;
+
+        return $page;
+    }
+
+    /**
+     * @param NavigationSection $navigation
+     */
+    public function buildMenu(NavigationSection $navigation)
+    {
+        foreach ($this->menuItems as $item) {
+            $navigation->addPage($item);
+        }
+    }
+
+    /**
+     * @param string|Renderable $content
+     * @param string|null       $title
+     *
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function view($content, $title = null)
+    {
+        $controller = app(AdminController::class);
 
         return $controller->render($title, $content);
     }

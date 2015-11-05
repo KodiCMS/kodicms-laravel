@@ -1,110 +1,107 @@
-<?php namespace KodiCMS\SleepingOwlAdmin\Columns\Column;
+<?php
 
-use AdminTemplate;
-use Illuminate\View\View;
+namespace KodiCMS\SleepingOwlAdmin\Columns\Column;
+
 use Route;
 use KodiCMS\SleepingOwlAdmin\Interfaces\WithRoutesInterface;
 
 class Order extends BaseColumn implements WithRoutesInterface
 {
+    /**
+     * Register routes.
+     */
+    public static function registerRoutes()
+    {
+        Route::post('{adminModel}/{adminModelId}/up', [
+            'as' => 'admin.model.move-up',
+            function ($model, $id) {
+                $instance = $model->repository()->find($id);
+                $instance->moveUp();
 
-	/**
-	 * Register routes
-	 */
-	public static function registerRoutes()
-	{
-		Route::post('{adminModel}/{adminModelId}/up', [
-			'as' => 'admin.model.move-up',
-			function ($model, $id)
-			{
-				$instance = $model->repository()->find($id);
-				$instance->moveUp();
-				return back();
-			}
-		]);
-		Route::post('{adminModel}/{adminModelId}/down', [
-			'as' => 'admin.model.move-down',
-			function ($model, $id)
-			{
-				$instance = $model->repository()->find($id);
-				$instance->moveDown();
-				return back();
-			}
-		]);
-	}
+                return back();
+            },
+        ]);
+        Route::post('{adminModel}/{adminModelId}/down', [
+            'as' => 'admin.model.move-down',
+            function ($model, $id) {
+                $instance = $model->repository()->find($id);
+                $instance->moveDown();
 
-	/**
-	 * Get order value from instance
-	 * @return int
-	 */
-	protected function orderValue()
-	{
-		return $this->instance->getOrderValue();
-	}
+                return back();
+            },
+        ]);
+    }
 
-	/**
-	 * Get models total count
-	 * @return int
-	 */
-	protected function totalCount()
-	{
-		return $this->model()->repository()->query()->count();
-	}
+    /**
+     * Get order value from instance.
+     * @return int
+     */
+    protected function orderValue()
+    {
+        return $this->instance->getOrderValue();
+    }
 
-	/**
-	 * Check if instance is movable up
-	 * @return bool
-	 */
-	protected function movableUp()
-	{
-		return $this->orderValue() > 0;
-	}
+    /**
+     * Get models total count.
+     * @return int
+     */
+    protected function totalCount()
+    {
+        return $this->model()->repository()->query()->count();
+    }
 
-	/**
-	 * Get instance move up url
-	 * @return Route
-	 */
-	protected function moveUpUrl()
-	{
-		return route('admin.model.move-up', [
-			$this->model()->alias(),
-			$this->instance->getKey()
-		]);
-	}
+    /**
+     * Check if instance is movable up.
+     * @return bool
+     */
+    protected function movableUp()
+    {
+        return $this->orderValue() > 0;
+    }
 
-	/**
-	 * Check if instance is movable down
-	 * @return bool
-	 */
-	protected function movableDown()
-	{
-		return $this->orderValue() < $this->totalCount() - 1;
-	}
+    /**
+     * Get instance move up url.
+     * @return Route
+     */
+    protected function moveUpUrl()
+    {
+        return route('admin.model.move-up', [
+            $this->model()->alias(),
+            $this->instance->getKey(),
+        ]);
+    }
 
-	/**
-	 * Get instance move down url
-	 * @return Route
-	 */
-	protected function moveDownUrl()
-	{
-		return route('admin.model.move-down', [
-			$this->model()->alias(),
-			$this->instance->getKey()
-		]);
-	}
+    /**
+     * Check if instance is movable down.
+     * @return bool
+     */
+    protected function movableDown()
+    {
+        return $this->orderValue() < $this->totalCount() - 1;
+    }
 
-	/**
-	 * @return View
-	 */
-	public function render()
-	{
-		$params = [
-			'movableUp'   => $this->movableUp(),
-			'moveUpUrl'   => $this->moveUpUrl(),
-			'movableDown' => $this->movableDown(),
-			'moveDownUrl' => $this->moveDownUrl(),
-		];
-		return view(AdminTemplate::view('column.order'), $params);
-	}
+    /**
+     * Get instance move down url.
+     * @return Route
+     */
+    protected function moveDownUrl()
+    {
+        return route('admin.model.move-down', [
+            $this->model()->alias(),
+            $this->instance->getKey(),
+        ]);
+    }
 
+    /**
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function render()
+    {
+        return app('sleeping_owl.template')->view('column.order', [
+            'movableUp'   => $this->movableUp(),
+            'moveUpUrl'   => $this->moveUpUrl(),
+            'movableDown' => $this->movableDown(),
+            'moveDownUrl' => $this->moveDownUrl(),
+        ]);
+    }
 }

@@ -1,45 +1,45 @@
 <?php
+
 namespace KodiCMS\SleepingOwlAdmin\ColumnFilters;
 
-use AdminTemplate;
 use Illuminate\Contracts\Support\Renderable;
-use KodiCMS\SleepingOwlAdmin\AssetManager\AssetManager;
-use KodiCMS\SleepingOwlAdmin\Helpers\ExceptionHandler;
 use KodiCMS\SleepingOwlAdmin\Interfaces\ColumnFilterInterface;
 
 abstract class BaseColumnFilter implements Renderable, ColumnFilterInterface
 {
+    /**
+     * @var string
+     */
     protected $view;
 
     /**
-     * Initialize column filter
+     * Initialize column filter.
      */
     public function initialize()
     {
-        AssetManager::addScript('admin::default/js/columnfilters/base.js');
     }
 
+    /**
+     * @return array
+     */
     protected function getParams()
     {
         return [];
     }
 
+    /**
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function render()
     {
-        $params = $this->getParams();
-
-        return view(AdminTemplate::view('columnfilter.'.$this->view), $params);
+        return app('sleeping_owl.template')->view('columnfilter.'.$this->view, $this->getParams());
     }
 
     /**
      * @return string
      */
-    function __toString()
+    public function __toString()
     {
-        try {
-            return (string)$this->render();
-        } catch (\Exception $e) {
-            ExceptionHandler::handle($e);
-        }
+        return (string) $this->render();
     }
 }

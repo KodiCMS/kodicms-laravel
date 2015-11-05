@@ -1,8 +1,8 @@
 <?php
+
 namespace KodiCMS\SleepingOwlAdmin\ColumnFilters;
 
 use Illuminate\Support\Collection;
-use KodiCMS\SleepingOwlAdmin\AssetManager\AssetManager;
 use KodiCMS\SleepingOwlAdmin\Repository\BaseRepository;
 
 class Select extends BaseColumnFilter
@@ -35,28 +35,19 @@ class Select extends BaseColumnFilter
     /**
      * @var string
      */
-    protected $filter_field = '';
-
-    /**
-     * Initialize column filter
-     */
-    public function initialize()
-    {
-        parent::initialize();
-        AssetManager::addScript('admin::default/js/columnfilters/select.js');
-    }
+    protected $filterField = '';
 
     /**
      * @param string|null $field
      *
      * @return $this|string
      */
-    public function filter_field($field = null)
+    public function filterField($field = null)
     {
         if (is_null($field)) {
-            return $this->filter_field;
+            return $this->filterField;
         }
-        $this->filter_field = $field;
+        $this->filterField = $field;
 
         return $this;
     }
@@ -115,8 +106,8 @@ class Select extends BaseColumnFilter
     protected function loadOptions()
     {
         $repository = new BaseRepository($this->model());
-        $key        = $repository->model()->getKeyName();
-        $options    = $repository->query()->get()->lists($this->display(), $key);
+        $key = $repository->model()->getKeyName();
+        $options = $repository->query()->get()->lists($this->display(), $key);
         if ($options instanceof Collection) {
             $options = $options->all();
         }
@@ -160,12 +151,13 @@ class Select extends BaseColumnFilter
      */
     public function apply($repository, $column, $query, $search, $fullSearch, $operator = '=')
     {
-        #if (empty($search)) return;
         if ($search === '') {
             return;
         }
-        if ($this->filter_field()) {
-            $query->where($this->filter_field(), '=', $search);
+
+        // TODO поправить
+        if ($this->filterField()) {
+            $query->where($this->filterField(), '=', $search);
 
             return;
         }
@@ -176,8 +168,8 @@ class Select extends BaseColumnFilter
         if ($repository->hasColumn($name)) {
             $query->where($name, $operator, $search);
         } elseif (strpos($name, '.') !== false) {
-            $parts        = explode('.', $name);
-            $fieldName    = array_pop($parts);
+            $parts = explode('.', $name);
+            $fieldName = array_pop($parts);
             $relationName = implode('.', $parts);
             $query->whereHas($relationName, function ($q) use ($search, $fieldName, $operator) {
                 $q->where($fieldName, $operator, $search);

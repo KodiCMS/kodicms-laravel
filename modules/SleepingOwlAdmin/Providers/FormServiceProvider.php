@@ -1,4 +1,5 @@
 <?php
+
 namespace KodiCMS\SleepingOwlAdmin\Providers;
 
 use KodiCMS\Support\ServiceProvider;

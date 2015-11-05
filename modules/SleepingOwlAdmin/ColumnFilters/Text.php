@@ -1,6 +1,6 @@
-<?php namespace KodiCMS\SleepingOwlAdmin\ColumnFilters;
+<?php
 
-use KodiCMS\SleepingOwlAdmin\AssetManager\AssetManager;
+namespace KodiCMS\SleepingOwlAdmin\ColumnFilters;
 
 class Text extends BaseColumnFilter
 {
@@ -13,15 +13,6 @@ class Text extends BaseColumnFilter
      * @var string
      */
     protected $placeholder;
-
-    /**
-     * Initialize column filter
-     */
-    public function initialize()
-    {
-        parent::initialize();
-        AssetManager::addScript('admin::default/js/columnfilters/text.js');
-    }
 
     /**
      * @param string|null $placeholder
@@ -58,8 +49,8 @@ class Text extends BaseColumnFilter
         if ($repository->hasColumn($name)) {
             $query->where($name, $operator, $search);
         } elseif (strpos($name, '.') !== false) {
-            $parts        = explode('.', $name);
-            $fieldName    = array_pop($parts);
+            $parts = explode('.', $name);
+            $fieldName = array_pop($parts);
             $relationName = implode('.', $parts);
             $query->whereHas($relationName, function ($q) use ($search, $fieldName, $operator) {
                 $q->where($fieldName, $operator, $search);
