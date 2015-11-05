@@ -15,8 +15,9 @@ class AdminController extends BackendController
     public function before()
     {
         parent::before();
+
         // TODO: изменить порядок
-        $this->breadcrumbs->add('Sleeping Owl Admin', false, true);
+        $this->breadcrumbs->add(config('sleeping_owl.title'), false, true);
     }
 
     /**
