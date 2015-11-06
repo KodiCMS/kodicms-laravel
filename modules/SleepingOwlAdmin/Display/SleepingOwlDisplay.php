@@ -12,7 +12,7 @@ use KodiCMS\SleepingOwlAdmin\AliasBinder;
  * @method static \KodiCMS\SleepingOwlAdmin\Display\DisplayTable table()
  * @method static \KodiCMS\SleepingOwlAdmin\Display\DisplayTree tree()
  */
-class AdminDisplay extends AliasBinder
+class SleepingOwlDisplay extends AliasBinder
 {
     /**
      * Display class aliases.

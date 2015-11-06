@@ -2,7 +2,9 @@
 
 namespace KodiCMS\SleepingOwlAdmin\Interfaces;
 
-interface DisplayInterface
+use Illuminate\Contracts\Support\Arrayable;
+
+interface DisplayInterface extends Arrayable
 {
     /**
      * Initialize display.
@@ -15,4 +17,9 @@ interface DisplayInterface
      * @param string $class
      */
     public function setClass($class);
+
+    /**
+     * @return array
+     */
+    public function getParams();
 }

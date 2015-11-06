@@ -20,30 +20,40 @@ class TextAddon extends NamedFormItem
     protected $addon;
 
     /**
-     * @param string|null $placement
-     *
-     * @return $this|string
+     * @return string
      */
-    public function placement($placement = null)
+    public function getPlacement()
     {
-        if (is_null($placement)) {
-            return $this->placement;
-        }
+        return $this->placement;
+    }
+
+    /**
+     * @param string $placement
+     *
+     * @return $this
+     */
+    public function setPlacement($placement)
+    {
         $this->placement = $placement;
 
         return $this;
     }
 
     /**
-     * @param string|null $addon
-     *
-     * @return $this|string
+     * @return string
      */
-    public function addon($addon = null)
+    public function getAddon()
     {
-        if (is_null($addon)) {
-            return $this->addon;
-        }
+        return $this->addon;
+    }
+
+    /**
+     * @param string $addon
+     *
+     * @return $this
+     */
+    public function setAddon($addon)
+    {
         $this->addon = $addon;
 
         return $this;
@@ -55,8 +65,8 @@ class TextAddon extends NamedFormItem
     public function getParams()
     {
         return parent::getParams() + [
-            'placement' => $this->placement(),
-            'addon'     => $this->addon(),
+            'placement' => $this->getPlacement(),
+            'addon'     => $this->getAddon(),
         ];
     }
 }

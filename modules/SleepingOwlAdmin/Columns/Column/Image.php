@@ -10,8 +10,7 @@ class Image extends NamedColumn
     public function __construct($name)
     {
         parent::__construct($name);
-
-        $this->orderable(false);
+        $this->setOrderable(false);
     }
 
     /**
@@ -19,14 +18,14 @@ class Image extends NamedColumn
      */
     public function render()
     {
-        $value = $this->getValue($this->instance, $this->name());
+        $value = $this->getModelValue();
         if (! empty($value) && (strpos($value, '://') === false)) {
             $value = asset($value);
         }
 
         return app('sleeping_owl.template')->view('column.image', [
             'value'  => $value,
-            'append' => $this->append(),
+            'append' => $this->getAppend(),
         ]);
     }
 }

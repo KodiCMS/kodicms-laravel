@@ -8,7 +8,7 @@ class Filter extends NamedColumn
      * Filter related model.
      * @var string
      */
-    protected $model;
+    protected $relatedModel;
 
     /**
      * Field to get filter value from.
@@ -17,42 +17,44 @@ class Filter extends NamedColumn
     protected $field;
 
     /**
-     * Get or set filter related model.
-     *
-     * @param string|null $model
-     *
-     * @return $this|string
+     * @return string
      */
-    public function model($model = null)
+    public function getRelatedModel()
     {
-        if (is_null($model)) {
-            if (is_null($this->model)) {
-                $this->model(get_class($this->instance));
-            }
-
-            return $this->model;
+        if (is_null($this->relatedModel)) {
+            $this->setModel(get_class($this->getModel()));
         }
-        $this->model = $model;
 
-        return $this;
+        return $this->relatedModel;
     }
 
     /**
-     * Get or set field to get filter value from.
-     *
-     * @param string|null $field
-     *
-     * @return $this|string
+     * @param string $relatedModel
      */
-    public function field($field = null)
+    public function setRelatedModel($relatedModel)
     {
-        if (is_null($field)) {
-            if (is_null($this->field)) {
-                $this->field($this->isSelf() ? $this->name() : 'id');
-            }
+        $this->relatedModel = $relatedModel;
+    }
 
-            return $this->field;
+    /**
+     * @return string
+     */
+    public function getField()
+    {
+        if (is_null($this->field)) {
+            $this->setField($this->isSelf() ? $this->getName() : 'id');
         }
+
+        return $this->field;
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return $this
+     */
+    public function setField($field)
+    {
         $this->field = $field;
 
         return $this;
@@ -64,9 +66,9 @@ class Filter extends NamedColumn
      */
     public function getUrl()
     {
-        $value = $this->getValue($this->instance, $this->field());
+        $value = $this->getValue($this->getModel(), $this->getField());
 
-        return app('sleeping_owl.admin')->getModel($this->model)->displayUrl([$this->name() => $value]);
+        return app('sleeping_owl')->getModel($this->relatedModel)->getDisplayUrl([$this->getName() => $value]);
     }
 
     /**
@@ -75,7 +77,7 @@ class Filter extends NamedColumn
      */
     protected function isSelf()
     {
-        return get_class($this->instance) == $this->model();
+        return get_class($this->getModel()) == $this->getRelatedModel();
     }
 
     /**
@@ -86,7 +88,7 @@ class Filter extends NamedColumn
         return app('sleeping_owl.template')->view('column.filter', [
             'isSelf' => $this->isSelf(),
             'url'    => $this->getUrl(),
-            'value'  => $this->getValue($this->instance, $this->field()),
+            'value'  => $this->getValue($this->getModel(), $this->getField()),
         ]);
     }
 }

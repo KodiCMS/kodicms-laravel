@@ -17,16 +17,16 @@
 	<thead>
 		<tr>
 			@foreach ($columns as $column)
-				{!! $column->header() !!}
+				{!! $column->getHeader() !!}
 			@endforeach
 		</tr>
 	</thead>
 	<tbody>
-		@foreach ($collection as $instance)
+		@foreach ($collection as $model)
 			<tr>
 				@foreach ($columns as $column)
 					<?php
-						$column->setInstance($instance);
+						$column->setModel($model);
 					?>
 					{!! $column !!}
 				@endforeach

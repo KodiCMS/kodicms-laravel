@@ -2,8 +2,8 @@
 
 namespace KodiCMS\SleepingOwlAdmin\FormItems;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
 use KodiCMS\SleepingOwlAdmin\Repository\BaseRepository;
 
 class Select extends NamedFormItem
@@ -16,7 +16,7 @@ class Select extends NamedFormItem
     /**
      * @var Model
      */
-    protected $model;
+    protected $modelForOptions;
 
     /**
      * @var string
@@ -34,98 +34,79 @@ class Select extends NamedFormItem
     protected $nullable = false;
 
     /**
-     * @param string|null $model
+     * @return Model
+     */
+    public function getModelForOptions()
+    {
+        return $this->modelForOptions;
+    }
+
+    /**
+     * @param Model $modelForOptions
      *
      * @return $this
      */
-    public function model($model = null)
+    public function setModelForOptions(Model $modelForOptions)
     {
-        if (is_null($model)) {
-            return $this->model;
-        }
-        $this->model = $model;
+        $this->modelForOptions = $modelForOptions;
 
         return $this;
     }
 
     /**
-     * @param string|null $display
-     *
-     * @return $this|string
+     * @return string
      */
-    public function display($display = null)
+    public function getDisplay()
     {
-        if (is_null($display)) {
-            return $this->display;
-        }
+        return $this->display;
+    }
+
+    /**
+     * @param string $display
+     *
+     * @return $this
+     */
+    public function setDisplay($display)
+    {
         $this->display = $display;
 
         return $this;
     }
 
     /**
-     * @param array|null $options
-     *
-     * @return $this|array|null
+     * @return array
      */
-    public function options($options = null)
+    public function getOptions()
     {
-        if (is_null($options)) {
-            if (! is_null($this->model()) && ! is_null($this->display())) {
-                $this->loadOptions();
-            }
-            $options = $this->options;
-            asort($options);
-
-            return $options;
+        if (! is_null($this->getModelForOptions()) && ! is_null($this->getDisplay())) {
+            $this->loadOptions();
         }
+        $options = $this->options;
+        asort($options);
+
+        return $options;
+    }
+
+    /**
+     * @param array
+     *
+     * @return $this
+     */
+    public function setOptions(array $options)
+    {
         $this->options = $options;
 
         return $this;
     }
 
-    protected function loadOptions()
-    {
-        $repository = new BaseRepository($this->model());
-        $key = $repository->model()->getKeyName();
-        $options = $repository->query()->get()->lists($this->display(), $key);
-        if ($options instanceof Collection) {
-            $options = $options->all();
-        }
-        $this->options($options);
-    }
-
-    /**
-     * @return array
-     */
-    public function getParams()
-    {
-        return parent::getParams() + [
-            'options'  => $this->options(),
-            'nullable' => $this->isNullable(),
-        ];
-    }
-
     /**
      * @param array $values
      *
-     * @return array
-     */
-    public function enum($values)
-    {
-        return $this->options(array_combine($values, $values));
-    }
-
-    /**
-     * @param bool $nullable
-     *
      * @return $this
      */
-    public function nullable($nullable = true)
+    public function setEnum(array $values)
     {
-        $this->nullable = $nullable;
-
-        return $this;
+        return $this->setOptions(array_combine($values, $values));
     }
 
     /**
@@ -134,5 +115,39 @@ class Select extends NamedFormItem
     public function isNullable()
     {
         return $this->nullable;
+    }
+
+    /**
+     * @param bool $nullable
+     *
+     * @return $this
+     */
+    public function setNullable($nullable)
+    {
+        $this->nullable = (bool) $nullable;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParams()
+    {
+        return parent::getParams() + [
+            'options'  => $this->getOptions(),
+            'nullable' => $this->isNullable(),
+        ];
+    }
+
+    protected function loadOptions()
+    {
+        $repository = new BaseRepository($this->getModelForOptions());
+        $key = $repository->getModel()->getKeyName();
+        $options = $repository->getQuery()->get()->lists($this->getDisplay(), $key);
+        if ($options instanceof Collection) {
+            $options = $options->all();
+        }
+        $this->setOptions($options);
     }
 }

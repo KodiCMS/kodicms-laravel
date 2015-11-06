@@ -10,8 +10,8 @@ class String extends NamedColumn
     public function render()
     {
         return app('sleeping_owl.template')->view('column.string', [
-            'value'  => $this->getValue($this->instance, $this->name()),
-            'append' => $this->append(),
+            'value'  => $this->getModelValue(),
+            'append' => $this->getAppend(),
         ]);
     }
 }

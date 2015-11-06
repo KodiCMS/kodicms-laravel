@@ -11,6 +11,6 @@ class FilterScope extends FilterField
      */
     public function apply(Builder $query)
     {
-        call_user_func([$query, $this->name()], $this->value());
+        call_user_func([$query, $this->getName()], $this->getValue());
     }
 }

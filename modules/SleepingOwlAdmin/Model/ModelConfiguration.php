@@ -2,6 +2,7 @@
 
 namespace KodiCMS\SleepingOwlAdmin\Model;
 
+use Closure;
 use Illuminate\Support\Str;
 use KodiCMS\SleepingOwlAdmin\Interfaces\FormInterface;
 use KodiCMS\SleepingOwlAdmin\Repository\BaseRepository;
@@ -10,30 +11,50 @@ use KodiCMS\SleepingOwlAdmin\Interfaces\DisplayInterface;
 class ModelConfiguration
 {
     /**
-     * @var string|object
+     * @var string
      */
     protected $class;
 
+    /**
+     * @var string
+     */
     protected $alias;
 
+    /**
+     * @var string
+     */
     protected $title;
 
+    /**
+     * @var Closure|null
+     */
     protected $display;
 
+    /**
+     * @var Closure|null
+     */
     protected $create;
 
+    /**
+     * @var Closure|null
+     */
     protected $edit;
 
     /**
-     * @var bool
+     * @var Closure|null
      */
     protected $delete = true;
 
     /**
-     * @var bool
+     * @var Closure|null
      */
     protected $restore = true;
 
+    /**
+     * ModelConfiguration constructor.
+     *
+     * @param string $class
+     */
     public function __construct($class)
     {
         $this->class = $class;
@@ -43,158 +64,262 @@ class ModelConfiguration
     /**
      * @return BaseRepository
      */
-    public function repository()
+    public function getRepository()
     {
-        return new BaseRepository($this->class);
+        return new BaseRepository($this->getClass());
     }
 
-    protected function setDefaultAlias()
+    /**
+     * @return string
+     */
+    public function getClass()
     {
-        $alias = Str::snake(Str::plural(class_basename($this->class)));
-        $this->alias($alias);
+        return $this->class;
     }
 
-    public function alias($alias = null)
+    /**
+     * @return string
+     */
+    public function getAlias()
     {
-        if (func_num_args() == 0) {
-            return $this->alias;
-        }
+        return $this->alias;
+    }
+
+    /**
+     * @param string $alias
+     *
+     * @return $this
+     */
+    public function setAlias($alias)
+    {
         $this->alias = $alias;
 
         return $this;
     }
 
-    public function title($title = null)
+    /**
+     * @return string
+     */
+    public function getTitle()
     {
-        if (func_num_args() == 0) {
-            return $this->title;
-        }
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return $this
+     */
+    public function setTitle($title)
+    {
         $this->title = $title;
 
         return $this;
     }
 
-    public function create($create = null)
+    /**
+     * @return Closure|null
+     */
+    public function getRestore()
     {
-        if (func_num_args() == 0) {
-            return $this->getCreate();
+        return $this->restore;
+    }
+
+    /**
+     * @return Closure|null
+     */
+    public function getDelete()
+    {
+        return $this->delete;
+    }
+
+    /**
+     * @return Closure|null
+     */
+    public function getEdit()
+    {
+        return $this->edit;
+    }
+
+    /**
+     * @return Closure|null
+     */
+    public function getCreate()
+    {
+        return $this->create;
+    }
+
+    /**
+     * @return Closure|null
+     */
+    public function getDisplay()
+    {
+        return $this->display;
+    }
+
+    /**
+     * @param Closure|null $callback
+     *
+     * @return $this
+     */
+    public function onCreate(Closure $callback = null)
+    {
+        $this->create = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param Closure|null $callback
+     *
+     * @return $this
+     */
+    public function onEdit(Closure $callback = null)
+    {
+        $this->edit = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param Closure|null $callback
+     *
+     * @return $this
+     */
+    public function onCreateAndEdit(Closure $callback = null)
+    {
+        $this->onCreate($callback);
+        $this->onEdit($callback);
+
+        return $this;
+    }
+
+    /**
+     * @param Closure|null $callback
+     *
+     * @return $this
+     */
+    public function onDelete(Closure $callback = null)
+    {
+        $this->delete = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param Closure|null $callback
+     *
+     * @return $this
+     */
+    public function onRestore(Closure $callback = null)
+    {
+        $this->restore = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param Closure $callback
+     *
+     * @return $this
+     */
+    public function onDisplay(Closure $callback)
+    {
+        $this->display = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @return DisplayInterface|mixed
+     */
+    public function fireDisplay()
+    {
+        if (! is_callable($this->display)) {
+            return;
         }
-        $this->create = $create;
-
-        return $this;
-    }
-
-    public function edit($edit = null)
-    {
-        if ((func_num_args() == 0) || is_numeric($edit)) {
-            return $this->getEdit($edit);
-        }
-        $this->edit = $edit;
-
-        return $this;
-    }
-
-    public function createAndEdit($callback)
-    {
-        $this->create($callback);
-        $this->edit($callback);
-
-        return $this;
-    }
-
-    public function delete($delete = null)
-    {
-        if ((func_num_args() == 0) || is_numeric($delete)) {
-            return $this->getDelete($delete);
-        }
-        $this->delete = $delete;
-
-        return $this;
-    }
-
-    public function restore($restore = null)
-    {
-        if ((func_num_args() == 0) || is_numeric($restore)) {
-            return $this->getRestore($restore);
-        }
-        $this->restore = $restore;
-
-        return $this;
-    }
-
-    public function display($display = null)
-    {
-        if (func_num_args() == 0) {
-            return $this->getDisplay();
-        }
-        $this->display = $display;
-
-        return $this;
-    }
-
-    protected function getDisplay()
-    {
         $display = call_user_func($this->display);
         if ($display instanceof DisplayInterface) {
-            $display->setClass($this->class);
+            $display->setClass($this->getClass());
             $display->initialize();
         }
 
         return $display;
     }
 
-    protected function getCreate()
+    /**
+     * @return mixed|void
+     */
+    public function fireCreate()
     {
-        if (is_null($this->create)) {
+        if (! is_callable($this->create)) {
             return;
         }
-        $create = call_user_func($this->create, null);
+        $create = call_user_func($this->create);
         if ($create instanceof DisplayInterface) {
-            $create->setClass($this->class);
+            $create->setClass($this->getClass());
             $create->initialize();
         }
         if ($create instanceof FormInterface) {
-            $create->setAction($this->storeUrl());
+            $create->setAction($this->getStoreUrl());
         }
 
         return $create;
     }
 
-    protected function getEdit($id)
+    /**
+     * @param $id
+     *
+     * @return mixed|void
+     */
+    public function fireEdit($id)
     {
-        if (is_null($this->edit)) {
+        if (! is_callable($this->edit)) {
             return;
         }
         $edit = call_user_func($this->edit, $id);
         if ($edit instanceof DisplayInterface) {
-            $edit->setClass($this->class);
+            $edit->setClass($this->getClass());
             $edit->initialize();
         }
 
         return $edit;
     }
 
-    public function fullEdit($id)
+    /**
+     * @param int $id
+     *
+     * @return $this
+     */
+    public function fireFullEdit($id)
     {
-        $edit = $this->edit($id);
+        $edit = $this->fireEdit($id);
         if ($edit instanceof FormInterface) {
-            $edit->setAction($this->updateUrl($id));
+            $edit->setAction($this->getUpdateUrl($id));
             $edit->setId($id);
         }
 
         return $edit;
     }
 
-    protected function getDelete($id)
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
+    public function fireDelete($id)
     {
         if (is_callable($this->delete)) {
             return call_user_func($this->delete, $id);
         }
-
-        return $this->delete;
     }
 
-    protected function getRestore($id)
+    /**
+     * @param $id
+     *
+     * @return bool|mixed
+     */
+    public function fireRestore($id)
     {
         if (is_callable($this->restore)) {
             return call_user_func($this->restore, $id);
@@ -203,42 +328,81 @@ class ModelConfiguration
         return $this->restore;
     }
 
-    public function displayUrl($parameters = [])
+    /**
+     * @param array $parameters
+     *
+     * @return string
+     */
+    public function getDisplayUrl(array $parameters = [])
     {
-        array_unshift($parameters, $this->alias());
+        array_unshift($parameters, $this->getAlias());
 
         return route('admin.model', $parameters);
     }
 
-    public function createUrl($parameters = [])
+    /**
+     * @param array $parameters
+     *
+     * @return string
+     */
+    public function getCreateUrl(array $parameters = [])
     {
-        array_unshift($parameters, $this->alias());
+        array_unshift($parameters, $this->getAlias());
 
         return route('admin.model.create', $parameters);
     }
 
-    public function storeUrl()
+    /**
+     * @return string
+     */
+    public function getStoreUrl()
     {
-        return route('admin.model.store', $this->alias());
+        return route('admin.model.store', $this->getAlias());
     }
 
-    public function editUrl($id)
+    /**
+     * @param string|int $id
+     *
+     * @return string
+     */
+    public function getEditUrl($id)
     {
-        return route('admin.model.edit', [$this->alias(), $id]);
+        return route('admin.model.edit', [$this->getAlias(), $id]);
     }
 
-    public function updateUrl($id)
+    /**
+     * @param string|int $id
+     *
+     * @return string
+     */
+    public function getUpdateUrl($id)
     {
-        return route('admin.model.update', [$this->alias(), $id]);
+        return route('admin.model.update', [$this->getAlias(), $id]);
     }
 
-    public function deleteUrl($id)
+    /**
+     * @param string|int $id
+     *
+     * @return string
+     */
+    public function getDeleteUrl($id)
     {
-        return route('admin.model.destroy', [$this->alias(), $id]);
+        return route('admin.model.destroy', [$this->getAlias(), $id]);
     }
 
-    public function restoreUrl($id)
+    /**
+     * @param string|int $id
+     *
+     * @return string
+     */
+    public function getRestoreUrl($id)
     {
-        return route('admin.model.restore', [$this->alias(), $id]);
+        return route('admin.model.restore', [$this->getAlias(), $id]);
+    }
+
+    protected function setDefaultAlias()
+    {
+        $alias = Str::snake(Str::plural(class_basename($this->getClass())));
+        $this->setAlias($alias);
     }
 }

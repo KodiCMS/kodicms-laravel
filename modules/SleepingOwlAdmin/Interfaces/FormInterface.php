@@ -2,6 +2,9 @@
 
 namespace KodiCMS\SleepingOwlAdmin\Interfaces;
 
+use Illuminate\Contracts\Validation\Validator;
+use KodiCMS\SleepingOwlAdmin\Model\ModelConfiguration;
+
 interface FormInterface
 {
     /**
@@ -19,16 +22,16 @@ interface FormInterface
     public function setId($id);
 
     /**
-     * Validate model.
+     * @param ModelConfiguration $model
      *
-     * @param mixed $model
+     * @return Validator|null
      */
-    public function validate($model);
+    public function validate(ModelConfiguration $model);
 
     /**
      * Save model.
      *
-     * @param mixed $model
+     * @param ModelConfiguration $model
      */
-    public function save($model);
+    public function save(ModelConfiguration $model);
 }

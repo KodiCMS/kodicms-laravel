@@ -3,6 +3,7 @@
 namespace KodiCMS\SleepingOwlAdmin\FormItems;
 
 use Closure;
+use Illuminate\Database\Eloquent\Model;
 use KodiCMS\SleepingOwlAdmin\Interfaces\FormItemInterface;
 
 class Columns extends BaseFormItem
@@ -17,17 +18,45 @@ class Columns extends BaseFormItem
      */
     protected $columns = [];
 
-    /**
-     * @param array|null $columns
-     *
-     * @return $this|array
-     */
-    public function columns($columns = null)
+    public function initialize()
     {
-        if (is_null($columns)) {
-            return $this->columns;
-        }
+        parent::initialize();
+        $this->all(function ($item) {
+            $item->initialize();
+        });
+    }
+
+    /**
+     * @return array
+     */
+    public function getColumns()
+    {
+        return $this->columns;
+    }
+
+    /**
+     * @param array $columns
+     *
+     * @return $this
+     */
+    public function setColumns($columns)
+    {
         $this->columns = $columns;
+
+        return $this;
+    }
+
+    /**
+     * @param Model $model
+     *
+     * @return $this
+     */
+    public function setModel(Model $model)
+    {
+        parent::setModel($model);
+        $this->all(function ($item) use ($model) {
+            $item->setModel($model);
+        });
 
         return $this;
     }
@@ -38,7 +67,7 @@ class Columns extends BaseFormItem
     public function getParams()
     {
         return parent::getParams() + [
-            'columns' => $this->columns(),
+            'columns' => $this->getColumns(),
         ];
     }
 
@@ -48,7 +77,7 @@ class Columns extends BaseFormItem
     public function getValidationRules()
     {
         $rules = parent::getValidationRules();
-        foreach ($this->columns() as $columnItems) {
+        foreach ($this->getColumns() as $columnItems) {
             foreach ($columnItems as $item) {
                 if ($item instanceof FormItemInterface) {
                     $rules += $item->getValidationRules();
@@ -67,33 +96,15 @@ class Columns extends BaseFormItem
         });
     }
 
-    public function initialize()
-    {
-        parent::initialize();
-        $this->all(function ($item) {
-            $item->initialize();
-        });
-    }
-
-    public function setInstance($instance)
-    {
-        parent::setInstance($instance);
-        $this->all(function ($item) use ($instance) {
-            $item->setInstance($instance);
-        });
-
-        return $this->instance($instance);
-    }
-
     /**
      * @param Closure $callback
      */
-    protected function all($callback)
+    protected function all(Closure $callback)
     {
-        foreach ($this->columns() as $columnItems) {
+        foreach ($this->getColumns() as $columnItems) {
             foreach ($columnItems as $item) {
                 if ($item instanceof FormItemInterface) {
-                    $callback($item);
+                    call_user_func($callback, $item);
                 }
             }
         }

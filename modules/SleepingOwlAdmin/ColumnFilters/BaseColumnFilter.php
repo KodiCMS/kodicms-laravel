@@ -2,10 +2,11 @@
 
 namespace KodiCMS\SleepingOwlAdmin\ColumnFilters;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Renderable;
 use KodiCMS\SleepingOwlAdmin\Interfaces\ColumnFilterInterface;
 
-abstract class BaseColumnFilter implements Renderable, ColumnFilterInterface
+abstract class BaseColumnFilter implements Renderable, ColumnFilterInterface, Arrayable
 {
     /**
      * @var string
@@ -20,11 +21,29 @@ abstract class BaseColumnFilter implements Renderable, ColumnFilterInterface
     }
 
     /**
+     * @return string
+     */
+    public function getView()
+    {
+        return $this->view;
+    }
+
+    /**
      * @return array
      */
-    protected function getParams()
+    public function getParams()
     {
         return [];
+    }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->getParams();
     }
 
     /**
@@ -32,7 +51,7 @@ abstract class BaseColumnFilter implements Renderable, ColumnFilterInterface
      */
     public function render()
     {
-        return app('sleeping_owl.template')->view('columnfilter.'.$this->view, $this->getParams());
+        return app('sleeping_owl.template')->view('columnfilter.'.$this->getView(), $this->getParams());
     }
 
     /**

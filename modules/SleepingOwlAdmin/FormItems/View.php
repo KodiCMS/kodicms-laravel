@@ -14,22 +14,28 @@ class View extends Custom
      */
     public function __construct($view)
     {
-        $this->view($view);
+        $this->setView($view);
     }
 
     /**
-     * @param string|null $view
-     *
-     * @return $this|string
+     * @return string
      */
-    public function view($view = null)
+    public function getView()
     {
-        if (is_null($view)) {
-            return $this->view;
-        }
+        return $this->view;
+    }
+
+    /**
+     * @param string $view
+     *
+     * @return $this
+     */
+    public function setView($view)
+    {
         $this->view = $view;
-        $this->display(function ($instance) {
-            return view($this->view(), ['instance' => $instance]);
+
+        $this->setDisplay(function ($model) {
+            return view($this->getView(), ['model' => $model]);
         });
 
         return $this;
@@ -37,9 +43,9 @@ class View extends Custom
 
     public function save()
     {
-        $callback = $this->callback();
+        $callback = $this->getCallback();
         if (is_callable($callback)) {
-            call_user_func($callback, $this->instance());
+            call_user_func($callback, $this->getModel());
         }
     }
 }

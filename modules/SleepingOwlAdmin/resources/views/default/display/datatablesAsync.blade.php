@@ -17,7 +17,7 @@
 	<thead>
 		<tr>
 			@foreach ($columns as $column)
-				{!! $column->header() !!}
+				{!! $column->getHeader() !!}
 			@endforeach
 		</tr>
 	</thead>

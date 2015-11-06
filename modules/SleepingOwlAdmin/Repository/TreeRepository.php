@@ -76,7 +76,7 @@ class TreeRepository extends BaseRepository
      * Get tree structure.
      * @return mixed
      */
-    public function tree()
+    public function getTree()
     {
         $collection = $this->query()->get();
         switch ($this->type()) {

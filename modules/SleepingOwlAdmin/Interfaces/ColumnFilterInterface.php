@@ -2,6 +2,8 @@
 
 namespace KodiCMS\SleepingOwlAdmin\Interfaces;
 
+use Illuminate\Database\Query\Builder;
+
 interface ColumnFilterInterface
 {
     /**
@@ -10,14 +12,26 @@ interface ColumnFilterInterface
     public function initialize();
 
     /**
-     * @param        $repository
-     * @param        $column
-     * @param        $query
-     * @param        $search
-     * @param        $fullSearch
-     * @param string $operator
-     *
-     * @return mixed
+     * @return array
      */
-    public function apply($repository, $column, $query, $search, $fullSearch, $operator = '=');
+    public function getParams();
+
+    /**
+     * @param RepositoryInterface  $repository
+     * @param NamedColumnInterface $column
+     * @param Builder              $query
+     * @param string               $search
+     * @param array|string         $fullSearch
+     * @param string               $operator
+     *
+     * @return void
+     */
+    public function apply(
+        RepositoryInterface $repository,
+        NamedColumnInterface $column,
+        Builder $query,
+        $search,
+        $fullSearch,
+        $operator = '='
+    );
 }

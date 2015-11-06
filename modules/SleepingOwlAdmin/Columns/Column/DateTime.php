@@ -13,21 +13,24 @@ class DateTime extends NamedColumn
     protected $format;
 
     /**
-     * Get or set datetime format.
-     *
-     * @param string|null $format
-     *
-     * @return $this|string
+     * @return string
      */
-    public function format($format = null)
+    public function getFormat()
     {
-        if (is_null($format)) {
-            if (is_null($this->format)) {
-                $this->format(config('sleeping_owl.datetimeFormat'));
-            }
-
-            return $this->format;
+        if (is_null($this->format)) {
+            $this->setFormat(config('sleeping_owl.datetimeFormat'));
         }
+
+        return $this->format;
+    }
+
+    /**
+     * @param string $format
+     *
+     * @return $this
+     */
+    public function setFormat($format)
+    {
         $this->format = $format;
 
         return $this;
@@ -38,19 +41,19 @@ class DateTime extends NamedColumn
      */
     public function render()
     {
-        $value = $this->getValue($this->instance, $this->name());
+        $value = $this->getModelValue();
         $originalValue = $value;
         if (! is_null($value)) {
             if (! $value instanceof Carbon) {
                 $value = Carbon::parse($value);
             }
-            $value = $value->format($this->format());
+            $value = $value->format($this->getFormat());
         }
 
         return app('sleeping_owl.template')->view('column.datetime', [
             'value'         => $value,
             'originalValue' => $originalValue,
-            'append'        => $this->append(),
+            'append'        => $this->getAppend(),
         ]);
     }
 }

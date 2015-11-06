@@ -13,7 +13,7 @@ class Checkbox extends NamedFormItem
 
     public function save()
     {
-        $name = $this->name();
+        $name = $this->getName();
         if (! Input::has($name)) {
             Input::merge([$name => 0]);
         }

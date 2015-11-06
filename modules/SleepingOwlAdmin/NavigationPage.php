@@ -28,7 +28,7 @@ class NavigationPage extends Page
      */
     public function getName()
     {
-        return $this->model->title();
+        return $this->model->getTitle();
     }
 
     /**
@@ -37,7 +37,7 @@ class NavigationPage extends Page
     public function getLabel()
     {
         if (is_null($label = $this->getAttribute('label'))) {
-            $label = $this->model->title();
+            $label = $this->model->getTitle();
         }
 
         return $label;
@@ -48,6 +48,6 @@ class NavigationPage extends Page
      */
     public function getUrl()
     {
-        return $this->model->displayUrl();
+        return $this->model->getDisplayUrl();
     }
 }

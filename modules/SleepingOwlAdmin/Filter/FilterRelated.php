@@ -3,45 +3,59 @@
 namespace KodiCMS\SleepingOwlAdmin\Filter;
 
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class FilterRelated extends FilterBase
 {
     /**
+     * TODO: возможно стоит изменить название параметра на $field.
      * @var string
      */
     protected $display = 'title';
 
     /**
-     * @var Model
+     * @var string
      */
     protected $model;
 
     /**
-     * @param string|null $display
-     *
-     * @return $this|string
+     * @return string
      */
-    public function display($display = null)
+    public function getDisplay()
     {
-        if (is_null($display)) {
-            return $this->display;
-        }
+        return $this->display;
+    }
+
+    /**
+     * @param string $display
+     *
+     * @return $this
+     */
+    public function setDisplay($display)
+    {
         $this->display = $display;
 
         return $this;
     }
 
     /**
-     * @param string|null $model
-     *
-     * @return $this|Model
+     * @return string
      */
-    public function model($model = null)
+    public function getModel()
     {
-        if (is_null($model)) {
-            return $this->model;
+        return $this->model;
+    }
+
+    /**
+     * @param string $model
+     *
+     * @return $this
+     * @throws Exception
+     */
+    public function setModel($model)
+    {
+        if (! class_exists($model)) {
+            throw new Exception("Class model [$model] not found");
         }
         $this->model = $model;
 
@@ -49,15 +63,12 @@ class FilterRelated extends FilterBase
     }
 
     /**
-     * @param string|null $title
-     *
-     * @return $this|null|string
+     * @return null|string
      * @throws Exception
      */
-    public function title($title = null)
+    public function getTitle()
     {
-        $parent = parent::title($title);
-        if (is_null($parent)) {
+        if (is_null($parent = parent::getTitle())) {
             return $this->getDisplayField();
         }
 
@@ -70,14 +81,14 @@ class FilterRelated extends FilterBase
      */
     protected function getDisplayField()
     {
-        $model = $this->model();
+        $model = $this->getModel();
         if (is_null($model)) {
-            throw new Exception('Specify model for filter: '.$this->name());
+            throw new Exception('Specify model for filter: '.$this->getName());
         }
         try {
-            $instance = app($model)->findOrFail($this->value());
+            $modelObject = app($model)->findOrFail($this->getValue());
 
-            return $instance->{$this->display()};
+            return $modelObject->{$this->getDisplay()};
         } catch (ModelNotFoundException $e) {
         }
 

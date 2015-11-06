@@ -2,6 +2,11 @@
 
 namespace KodiCMS\SleepingOwlAdmin\ColumnFilters;
 
+use Illuminate\Database\Query\Builder;
+use KodiCMS\SleepingOwlAdmin\Interfaces\ColumnFilterInterface;
+use KodiCMS\SleepingOwlAdmin\Interfaces\NamedColumnInterface;
+use KodiCMS\SleepingOwlAdmin\Interfaces\RepositoryInterface;
+
 class Range extends BaseColumnFilter
 {
     /**
@@ -10,12 +15,12 @@ class Range extends BaseColumnFilter
     protected $view = 'range';
 
     /**
-     * @var string
+     * @var ColumnFilterInterface
      */
     protected $from;
 
     /**
-     * @var string
+     * @var ColumnFilterInterface
      */
     protected $to;
 
@@ -26,36 +31,46 @@ class Range extends BaseColumnFilter
     {
         parent::initialize();
 
-        $this->from()->initialize();
-        $this->to()->initialize();
+        $this->getFrom()->initialize();
+        $this->getTo()->initialize();
     }
 
     /**
-     * @param areing|null $from
-     *
-     * @return $this|string
+     * @return ColumnFilterInterface
      */
-    public function from($from = null)
+    public function getFrom()
     {
-        if (is_null($from)) {
-            return $this->from;
-        }
-        $this->from = $from;
+        return $this->from;
+    }
+
+    /**
+     * @param ColumnFilterInterface $from
+     *
+     * @return $this
+     */
+    public function setFrom(ColumnFilterInterface $from)
+    {
+        $this->from = (int) $from;
 
         return $this;
     }
 
     /**
-     * @param string|null $to
-     *
-     * @return $this|string
+     * @return ColumnFilterInterface
      */
-    public function to($to = null)
+    public function getTo()
     {
-        if (is_null($to)) {
-            return $this->to;
-        }
-        $this->to = $to;
+        return $this->to;
+    }
+
+    /**
+     * @param ColumnFilterInterface $to
+     *
+     * @return $this
+     */
+    public function setTo(ColumnFilterInterface $to)
+    {
+        $this->to = (int) $to;
 
         return $this;
     }
@@ -63,31 +78,40 @@ class Range extends BaseColumnFilter
     /**
      * @return array
      */
-    protected function getParams()
+    public function getParams()
     {
         return parent::getParams() + [
-            'from' => $this->from(),
-            'to'   => $this->to(),
+            'from' => $this->getFrom(),
+            'to'   => $this->getTo(),
         ];
     }
 
     /**
-     * @param        $repository
-     * @param        $column
-     * @param        $query
-     * @param        $search
-     * @param        $fullSearch
-     * @param string $operator
+     * @param RepositoryInterface  $repository
+     * @param NamedColumnInterface $column
+     * @param Builder              $query
+     * @param string               $search
+     * @param array|string         $fullSearch
+     * @param string               $operator
+     *
+     * @return void
      */
-    public function apply($repository, $column, $query, $search, $fullSearch, $operator = '=')
-    {
+    public function apply(
+        RepositoryInterface $repository,
+        NamedColumnInterface $column,
+        Builder $query,
+        $search,
+        $fullSearch,
+        $operator = '='
+    ) {
         $from = array_get($fullSearch, 'from');
         $to = array_get($fullSearch, 'to');
+
         if (! empty($from)) {
-            $this->from()->apply($repository, $column, $query, $from, $fullSearch, '>=');
+            $this->getFrom()->apply($repository, $column, $query, $from, $fullSearch, '>=');
         }
         if (! empty($to)) {
-            $this->to()->apply($repository, $column, $query, $to, $fullSearch, '<=');
+            $this->getTo()->apply($repository, $column, $query, $to, $fullSearch, '<=');
         }
     }
 }

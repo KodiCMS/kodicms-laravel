@@ -4,8 +4,10 @@ namespace KodiCMS\SleepingOwlAdmin\Repository;
 
 use Cache;
 use Schema;
+use Illuminate\Database\Eloquent\Model;
+use KodiCMS\SleepingOwlAdmin\Interfaces\RepositoryInterface;
 
-class BaseRepository
+class BaseRepository implements RepositoryInterface
 {
     /**
      * Repository related class name.
@@ -15,7 +17,7 @@ class BaseRepository
 
     /**
      * Repository related model instance.
-     * @var mixed
+     * @var Model
      */
     protected $model;
 
@@ -30,40 +32,63 @@ class BaseRepository
      */
     public function __construct($class)
     {
-        $this->class = $class;
-        $this->model(app($this->class));
+        if ($class instanceof Model) {
+            $this->class = get_class($class);
+            $model = $class;
+        } else {
+            $this->class = $class;
+            $model = app($this->class);
+        }
+        $this->setModel($model);
     }
 
     /**
-     * Get or set eager loading relations.
-     *
-     * @param string|string[]|null $with
-     *
-     * @return $this|string[]
+     * @return Model
      */
-    public function with($with = null)
+    public function getModel()
     {
-        if (is_null($with)) {
-            return $this->with;
-        }
+        return $this->model;
+    }
+
+    /**
+     * @param Model $model
+     */
+    public function setModel(Model $model)
+    {
+        $this->model = $model;
+    }
+
+    /**
+     * @return \string[]
+     */
+    public function getWith()
+    {
+        return $this->with;
+    }
+
+    /**
+     * @param \string[] $with
+     */
+    public function setWith($with)
+    {
         if (! is_array($with)) {
             $with = func_get_args();
         }
-        $this->with = $with;
 
-        return $this;
+        $this->with = $with;
     }
 
     /**
      * Get base query.
      * @return mixed
      */
-    public function query()
+    public function getQuery()
     {
-        $query = $this->model->query();
-        $query->with($this->with());
-
-        return $query;
+        return $this->getModel()
+            ->query()
+            ->with(
+                $this->getWith()
+            );
     }
 
     /**
@@ -75,7 +100,7 @@ class BaseRepository
      */
     public function find($id)
     {
-        return $this->model->find($id);
+        return $this->getModel()->find($id);
     }
 
     /**
@@ -85,14 +110,14 @@ class BaseRepository
      *
      * @return mixed
      */
-    public function findMany($ids)
+    public function findMany(array $ids)
     {
-        $query = $this->model->query();
-        if (method_exists($this->model, 'withTrashed')) {
+        $query = $this->getModel()->query();
+        if (method_exists($this->getModel(), 'withTrashed')) {
             $query->withTrashed();
         }
 
-        return $query->whereIn($this->model->getKeyName(), $ids)->get();
+        return $query->whereIn($this->getModel()->getKeyName(), $ids)->get();
     }
 
     /**
@@ -116,23 +141,6 @@ class BaseRepository
     }
 
     /**
-     * Get or set repository related model intance.
-     *
-     * @param mixed|null $model
-     *
-     * @return $this|mixed
-     */
-    public function model($model = null)
-    {
-        if (is_null($model)) {
-            return $this->model;
-        }
-        $this->model = $model;
-
-        return $this;
-    }
-
-    /**
      * Check if model's table has column.
      *
      * @param string $column
@@ -141,7 +149,7 @@ class BaseRepository
      */
     public function hasColumn($column)
     {
-        $table = $this->model->getTable();
+        $table = $this->getModel()->getTable();
         $columns = Cache::remember('admin.columns.'.$table, 60, function () use ($table) {
             return Schema::getColumnListing($table);
         });

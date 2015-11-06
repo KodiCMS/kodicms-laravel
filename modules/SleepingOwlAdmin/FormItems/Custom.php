@@ -17,52 +17,61 @@ class Custom extends BaseFormItem
     protected $callback;
 
     /**
-     * @param string|Closure|null $display
-     *
-     * @return $this|mixed
+     * @return Closure|string
      */
-    public function display($display = null)
+    public function getDisplay()
     {
-        if (is_null($display)) {
-            if (is_callable($this->display)) {
-                return call_user_func($this->display, $this->instance());
-            }
-
-            return $this->display;
+        if (is_callable($this->display)) {
+            return call_user_func($this->display, $this->getModel());
         }
+
+        return $this->display;
+    }
+
+    /**
+     * @param Closure|string $display
+     *
+     * @return $this
+     */
+    public function setDisplay($display)
+    {
         $this->display = $display;
 
         return $this;
     }
 
     /**
-     * @param Closure|null $callback
+     * @return Closure
+     */
+    public function getCallback()
+    {
+        return $this->callback;
+    }
+
+    /**
+     * @param Closure $callback
      *
      * @return $this
      */
-    public function callback(Closure $callback = null)
+    public function setCallback(Closure $callback)
     {
-        if (is_null($callback)) {
-            return $this->callback;
-        }
         $this->callback = $callback;
 
         return $this;
     }
-
     /**
      * @return $this|Custom|mixed
      */
     public function render()
     {
-        return $this->display();
+        return $this->getDisplay();
     }
 
     public function save()
     {
-        $callback = $this->callback();
+        $callback = $this->getCallback();
         if (is_callable($callback)) {
-            call_user_func($callback, $this->instance());
+            call_user_func($callback, $this->getModel());
         }
     }
 }

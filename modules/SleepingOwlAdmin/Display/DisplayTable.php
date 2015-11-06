@@ -2,12 +2,19 @@
 
 namespace KodiCMS\SleepingOwlAdmin\Display;
 
-use Illuminate\Contracts\Support\Renderable;
 use Input;
+use Closure;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Support\Renderable;
 use KodiCMS\SleepingOwlAdmin\Columns\Column;
+use KodiCMS\SleepingOwlAdmin\Model\ModelConfiguration;
 use KodiCMS\SleepingOwlAdmin\Repository\BaseRepository;
+use KodiCMS\SleepingOwlAdmin\Interfaces\FilterInterface;
 use KodiCMS\SleepingOwlAdmin\Interfaces\ColumnInterface;
 use KodiCMS\SleepingOwlAdmin\Interfaces\DisplayInterface;
+use KodiCMS\SleepingOwlAdmin\Interfaces\RepositoryInterface;
+use KodiCMS\SleepingOwlAdmin\Interfaces\NamedColumnInterface;
+use KodiCMS\SleepingOwlAdmin\Interfaces\ColumnActionInterface;
 
 class DisplayTable implements Renderable, DisplayInterface
 {
@@ -32,10 +39,13 @@ class DisplayTable implements Renderable, DisplayInterface
     protected $with = [];
 
     /**
-     * @var BaseRepository
+     * @var RepositoryInterface
      */
     protected $repository;
 
+    /**
+     * @var Closure
+     */
     protected $apply;
 
     /**
@@ -44,12 +54,12 @@ class DisplayTable implements Renderable, DisplayInterface
     protected $scopes = [];
 
     /**
-     * @var array
+     * @var FilterInterface[]
      */
     protected $filters = [];
 
     /**
-     * @var array
+     * @var FilterInterface[]
      */
     protected $activeFilters = [];
 
@@ -64,7 +74,7 @@ class DisplayTable implements Renderable, DisplayInterface
     protected $parameters = [];
 
     /**
-     * @var array
+     * @var ColumnActionInterface[]
      */
     protected $actions = [];
 
@@ -78,17 +88,33 @@ class DisplayTable implements Renderable, DisplayInterface
         }
     }
 
-    /**
-     * @param array|null $columns
-     *
-     * @return $this|array
-     */
-    public function columns($columns = null)
+    public function initialize()
     {
-        if (is_null($columns)) {
-            return $this->columns;
+        $this->repository = new BaseRepository($this->class);
+        $this->repository->setWith($this->getWith());
+        $this->initializeFilters();
+        foreach ($this->getAllColumns() as $column) {
+            if ($column instanceof ColumnInterface) {
+                $column->initialize();
+            }
         }
+    }
 
+    /**
+     * @return array
+     */
+    public function getColumns()
+    {
+        return $this->columns;
+    }
+
+    /**
+     * @param array $columns
+     *
+     * @return $this
+     */
+    public function setColumns(array $columns)
+    {
         $this->columns = $columns;
 
         return $this;
@@ -97,10 +123,10 @@ class DisplayTable implements Renderable, DisplayInterface
     /**
      * @return array
      */
-    public function allColumns()
+    public function getAllColumns()
     {
-        $columns = $this->columns();
-        if ($this->controlActive()) {
+        $columns = $this->getColumns();
+        if ($this->isControlActive()) {
             $columns[] = Column::control();
         }
 
@@ -108,15 +134,20 @@ class DisplayTable implements Renderable, DisplayInterface
     }
 
     /**
-     * @param array|null $with
-     *
-     * @return $this|array
+     * @return \string[]
      */
-    public function with($with = null)
+    public function getWith()
     {
-        if (is_null($with)) {
-            return $this->with;
-        }
+        return $this->with;
+    }
+
+    /**
+     * @param \string[] $with
+     *
+     * @return $this
+     */
+    public function setWith($with)
+    {
         if (! is_array($with)) {
             $with = func_get_args();
         }
@@ -126,14 +157,30 @@ class DisplayTable implements Renderable, DisplayInterface
     }
 
     /**
-     * @param array|null $filters
-     *
-     * @return $this|array
+     * @param Closure $apply
      */
-    public function filters($filters = null)
+    public function setApply(Closure $apply)
     {
-        if (is_null($filters)) {
-            return $this->filters;
+        $this->apply = $apply;
+    }
+
+    /**
+     * @return FilterInterface[]
+     */
+    public function getFilters()
+    {
+        return $this->filters;
+    }
+
+    /**
+     * @param array $filters
+     *
+     * @return $this
+     */
+    public function setFilters($filters)
+    {
+        if (! is_array($filters)) {
+            $filters = func_get_args();
         }
         $this->filters = $filters;
 
@@ -141,31 +188,162 @@ class DisplayTable implements Renderable, DisplayInterface
     }
 
     /**
-     * @param array|null $apply
+     * @param string $filter
      *
      * @return $this
      */
-    public function apply($apply = null)
+    public function appendFilter($filter)
     {
-        if (is_null($apply)) {
-            return $this->apply;
-        }
-        $this->apply = $apply;
+        $this->filters[] = $filter;
 
         return $this;
     }
 
     /**
-     * @param array|null $scope
-     *
-     * @return $this|array
+     * @return array
      */
-    public function scope($scope = null)
+    public function getScopes()
     {
-        if (is_null($scope)) {
-            return $this->scopes;
+        return $this->scopes;
+    }
+
+    /**
+     * @param array $scopes
+     *
+     * @return $this
+     */
+    public function setScopes($scopes)
+    {
+        if (! is_array($scopes)) {
+            $scopes = func_get_args();
         }
-        $this->scopes[] = func_get_args();
+        $this->scopes = $scopes;
+
+        return $this;
+    }
+
+    /**
+     * @param string $scope
+     *
+     * @return $this
+     */
+    public function appendScope($scope)
+    {
+        $this->filters[] = $scope;
+
+        return $this;
+    }
+
+    /**
+     * @return \KodiCMS\SleepingOwlAdmin\Interfaces\FilterInterface[]
+     */
+    public function getActiveFilters()
+    {
+        return $this->activeFilters;
+    }
+
+    /**
+     * @param array $activeFilters
+     *
+     * @return $this
+     */
+    public function setActiveFilters($activeFilters)
+    {
+        if (! is_array($activeFilters)) {
+            $activeFilters = func_get_args();
+        }
+        $this->activeFilters = $activeFilters;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isControlActive()
+    {
+        return $this->controlActive;
+    }
+
+    /**
+     * @return $this
+     */
+    public function enableControls()
+    {
+        $this->setControlActive(true);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function disableControls()
+    {
+        $this->setControlActive(false);
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param array $parameters
+     *
+     * @return $this
+     */
+    public function setParameters($parameters)
+    {
+        $this->parameters = $parameters;
+
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return $this
+     */
+    public function setParameter($key, $value)
+    {
+        $this->parameters[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return \KodiCMS\SleepingOwlAdmin\Interfaces\ColumnActionInterface[]
+     */
+    public function getActions()
+    {
+        foreach ($this->actions as $action) {
+            $action->setUrl($this->getModel()->displayUrl([
+                '_action' => $action->name(),
+                '_ids'    => '',
+            ]));
+        }
+
+        return $this->actions;
+    }
+
+    /**
+     * @param array|string $actions
+     *
+     * @return $this
+     */
+    public function setActions($actions)
+    {
+        if (! is_array($actions)) {
+            $actions = func_get_args();
+        }
+        $this->actions = $actions;
 
         return $this;
     }
@@ -173,27 +351,68 @@ class DisplayTable implements Renderable, DisplayInterface
     /**
      * @return string
      */
-    public function title()
+    public function getTitle()
     {
-        $titles = array_map(function ($filter) {
-            return $filter->title();
-        }, $this->activeFilters);
+        $titles = array_map(function (FilterInterface $filter) {
+            return $filter->getTitle();
+        }, $this->getActiveFilters());
 
         return implode(', ', $titles);
     }
 
-    public function initialize()
+    /**
+     * @return array
+     */
+    public function getParams()
     {
-        $this->repository = new BaseRepository($this->class);
-        $this->repository->with($this->with());
+        $model = $this->getModel();
 
-        $this->initializeFilters();
+        return [
+            'title'     => $this->getTitle(),
+            'columns'   => $this->getAllColumns(),
+            'creatable' => ! is_null($model->fireCreate()),
+            'createUrl' => $model->getCreateUrl($this->getParameters() + Input::all()),
+            'actions'   => $this->getActions(),
+        ];
+    }
 
-        foreach ($this->allColumns() as $column) {
-            if ($column instanceof ColumnInterface) {
-                $column->initialize();
-            }
-        }
+    /**
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function render()
+    {
+        $query = $this->getRepository()->getQuery();
+        $this->modifyQuery($query);
+        $params = $this->getParams();
+        $params['collection'] = $query->get();
+
+        return app('sleeping_owl.template')->view('display.'.$this->view, $params);
+    }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->getParams();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string) $this->render();
+    }
+
+    /**
+     * @return RepositoryInterface
+     */
+    protected function getRepository()
+    {
+        return $this->repository;
     }
 
     protected function initializeAction()
@@ -202,19 +421,18 @@ class DisplayTable implements Renderable, DisplayInterface
         $id = Input::get('_id');
         $ids = Input::get('_ids');
         if (! is_null($action) && (! is_null($id) || ! is_null($ids))) {
-            $columns = array_merge($this->columns(), $this->actions());
+            $columns = array_merge($this->getColumns(), $this->getActions());
             foreach ($columns as $column) {
-                if (! $column instanceof Column\NamedColumn) {
+                if (! $column instanceof NamedColumnInterface) {
                     continue;
                 }
-
-                if ($column->name() == $action) {
+                if ($column->getName() == $action) {
                     $param = null;
                     if (! is_null($id)) {
-                        $param = $this->repository->find($id);
+                        $param = $this->getRepository()->find($id);
                     } else {
                         $ids = explode(',', $ids);
-                        $param = $this->repository->findMany($ids);
+                        $param = $this->getRepository()->findMany($ids);
                     }
                     $column->call($param);
                 }
@@ -225,7 +443,7 @@ class DisplayTable implements Renderable, DisplayInterface
     protected function initializeFilters()
     {
         $this->initializeAction();
-        foreach ($this->filters() as $filter) {
+        foreach ($this->getFilters() as $filter) {
             $filter->initialize();
             if ($filter->isActive()) {
                 $this->activeFilters[] = $filter;
@@ -233,9 +451,12 @@ class DisplayTable implements Renderable, DisplayInterface
         }
     }
 
-    protected function modifyQuery($query)
+    /**
+     * @param Builder $query
+     */
+    protected function modifyQuery(Builder $query)
     {
-        foreach ($this->scope() as $scope) {
+        foreach ($this->getScopes() as $scope) {
             if (! is_null($scope)) {
                 $method = array_shift($scope);
                 call_user_func_array([
@@ -244,124 +465,39 @@ class DisplayTable implements Renderable, DisplayInterface
                 ], $scope);
             }
         }
-        $apply = $this->apply();
-        if (! is_null($apply)) {
-            call_user_func($apply, $query);
-        }
-        foreach ($this->activeFilters as $filter) {
+        $this->apply($query);
+        foreach ($this->getActiveFilters() as $filter) {
             $filter->apply($query);
         }
     }
 
     /**
-     * @param array|null $actions
-     *
-     * @return $this|array
+     * @return ModelConfiguration
      */
-    public function actions($actions = null)
+    protected function getModel()
     {
-        if (is_null($actions)) {
-            foreach ($this->actions as $action) {
-                $action->url($this->model()->displayUrl([
-                    '_action' => $action->name(),
-                    '_ids'    => '',
-                ]));
-            }
-
-            return $this->actions;
-        }
-        $this->actions = $actions;
-
-        return $this;
+        return app('sleeping_owl')->getModel($this->class);
     }
 
     /**
-     * @param bool|null $controlActive
+     * @param bool $controlActive
      *
-     * @return $this|bool
-     */
-    public function controlActive($controlActive = null)
-    {
-        if (is_null($controlActive)) {
-            return $this->controlActive;
-        }
-        $this->controlActive = $controlActive;
-
-        return $this;
-    }
-
-    /**
      * @return $this
      */
-    public function enableControls()
+    protected function setControlActive($controlActive)
     {
-        $this->controlActive(true);
-
-        return $this;
+        $this->controlActive = (bool) $controlActive;
     }
 
     /**
-     * @return $this
-     */
-    public function disableControls()
-    {
-        $this->controlActive(false);
-
-        return $this;
-    }
-
-    public function model()
-    {
-        return app('sleeping_owl.admin')->getModel($this->class);
-    }
-
-    /**
-     * @param array|null $parameters
+     * @param Builder $query
      *
-     * @return $this|array
+     * @return mixed
      */
-    public function parameters($parameters = null)
+    protected function apply(Builder $query)
     {
-        if (is_null($parameters)) {
-            return $this->parameters;
+        if (is_callable($this->apply)) {
+            call_user_func($this->apply, $query);
         }
-        $this->parameters = $parameters;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getParams()
-    {
-        return [
-            'title'     => $this->title(),
-            'columns'   => $this->allColumns(),
-            'creatable' => ! is_null($this->model()->create()),
-            'createUrl' => $this->model()->createUrl($this->parameters() + Input::all()),
-            'actions'   => $this->actions(),
-        ];
-    }
-
-    /**
-     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
-     */
-    public function render()
-    {
-        $query = $this->repository->query();
-        $this->modifyQuery($query);
-        $params = $this->getParams();
-        $params['collection'] = $query->get();
-
-        return app('sleeping_owl.template')->view('display.'.$this->view, $params);
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string) $this->render();
     }
 }

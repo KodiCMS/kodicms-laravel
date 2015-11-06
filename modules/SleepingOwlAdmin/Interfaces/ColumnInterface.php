@@ -2,6 +2,8 @@
 
 namespace KodiCMS\SleepingOwlAdmin\Interfaces;
 
+use Illuminate\Database\Eloquent\Model;
+
 interface ColumnInterface
 {
     /**
@@ -10,9 +12,9 @@ interface ColumnInterface
     public function initialize();
 
     /**
-     * Set currently rendered instance.
+     * @param Model $model
      *
-     * @param mixed $instance
+     * @return $this
      */
-    public function setInstance($instance);
+    public function setModel(Model $model);
 }

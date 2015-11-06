@@ -27,7 +27,7 @@ class AdminController extends BackendController
      */
     public function getDisplay(ModelConfiguration $model)
     {
-        return $this->render($model->title(), $model->display());
+        return $this->render($model->getTitle(), $model->fireDisplay());
     }
 
     /**
@@ -37,12 +37,12 @@ class AdminController extends BackendController
      */
     public function getCreate(ModelConfiguration $model)
     {
-        $create = $model->create();
+        $create = $model->fireCreate();
         if (is_null($create)) {
             abort(404);
         }
 
-        return $this->render($model->title(), $create);
+        return $this->render($model->getTitle(), $create);
     }
 
     /**
@@ -52,7 +52,7 @@ class AdminController extends BackendController
      */
     public function postStore(ModelConfiguration $model)
     {
-        $create = $model->create();
+        $create = $model->fireCreate();
         if (is_null($create)) {
             abort(404);
         }
@@ -65,7 +65,7 @@ class AdminController extends BackendController
             $create->save($model);
         }
 
-        return redirect()->to(Input::get('_redirectBack', $model->displayUrl()));
+        return redirect()->to(Input::get('_redirectBack', $model->getDisplayUrl()));
     }
 
     /**
@@ -76,12 +76,12 @@ class AdminController extends BackendController
      */
     public function getEdit(ModelConfiguration $model, $id)
     {
-        $edit = $model->fullEdit($id);
+        $edit = $model->fireFullEdit($id);
         if (is_null($edit)) {
             abort(404);
         }
 
-        return $this->render($model->title(), $edit);
+        return $this->render($model->getTitle(), $edit);
     }
 
     /**
@@ -92,7 +92,7 @@ class AdminController extends BackendController
      */
     public function postUpdate(ModelConfiguration $model, $id)
     {
-        $edit = $model->fullEdit($id);
+        $edit = $model->fireFullEdit($id);
         if (is_null($edit)) {
             abort(404);
         }
@@ -105,7 +105,7 @@ class AdminController extends BackendController
             $edit->save($model);
         }
 
-        return redirect()->to(Input::get('_redirectBack', $model->displayUrl()));
+        return redirect()->to(Input::get('_redirectBack', $model->getDisplayUrl()));
     }
 
     /**
@@ -116,11 +116,11 @@ class AdminController extends BackendController
      */
     public function postDestroy(ModelConfiguration $model, $id)
     {
-        $delete = $model->delete($id);
+        $delete = $model->fireDelete($id);
         if (is_null($delete)) {
             abort(404);
         }
-        $model->repository()->delete($id);
+        $model->getRepository()->delete($id);
 
         return redirect()->back();
     }
@@ -133,11 +133,11 @@ class AdminController extends BackendController
      */
     public function postRestore($model, $id)
     {
-        $restore = $model->restore($id);
+        $restore = $model->fireRestore($id);
         if (is_null($restore)) {
             abort(404);
         }
-        $model->repository()->restore($id);
+        $model->getRepository()->restore($id);
 
         return redirect()->back();
     }
@@ -154,6 +154,8 @@ class AdminController extends BackendController
             $content = $content->render();
         }
 
+        $this->setTitle($title);
+
         $this->template->with('content', $content);
     }
 
@@ -162,17 +164,17 @@ class AdminController extends BackendController
      */
     public function getLang()
     {
-        $lang = trans('admin::lang');
-        if ($lang == 'admin::lang') {
-            $lang = trans('admin::lang', [], 'messages', 'en');
+        $lang = trans('sleeping_owl::core');
+        if ($lang == 'sleeping_owl::core') {
+            $lang = trans('sleeping_owl::core', [], 'messages', 'en');
         }
 
         $data = [
             'locale'       => App::getLocale(),
             'token'        => csrf_token(),
-            'prefix'       => config('admin.prefix'),
+            'prefix'       => config('sleeping_owl.prefix'),
             'lang'         => $lang,
-            'ckeditor_cfg' => config('admin.ckeditor'),
+            'ckeditor_cfg' => config('sleeping_owl.ckeditor'),
         ];
 
         $content = 'window.admin = '.json_encode($data).';';

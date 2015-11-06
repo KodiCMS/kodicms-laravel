@@ -15,7 +15,7 @@ class Order extends BaseColumn implements WithRoutesInterface
         Route::post('{adminModel}/{adminModelId}/up', [
             'as' => 'admin.model.move-up',
             function ($model, $id) {
-                $instance = $model->repository()->find($id);
+                $instance = $model->getRepository()->find($id);
                 $instance->moveUp();
 
                 return back();
@@ -24,7 +24,7 @@ class Order extends BaseColumn implements WithRoutesInterface
         Route::post('{adminModel}/{adminModelId}/down', [
             'as' => 'admin.model.move-down',
             function ($model, $id) {
-                $instance = $model->repository()->find($id);
+                $instance = $model->getRepository()->find($id);
                 $instance->moveDown();
 
                 return back();
@@ -36,9 +36,9 @@ class Order extends BaseColumn implements WithRoutesInterface
      * Get order value from instance.
      * @return int
      */
-    protected function orderValue()
+    protected function getOrderValue()
     {
-        return $this->instance->getOrderValue();
+        return $this->getModel()->getOrderValue();
     }
 
     /**
@@ -47,7 +47,7 @@ class Order extends BaseColumn implements WithRoutesInterface
      */
     protected function totalCount()
     {
-        return $this->model()->repository()->query()->count();
+        return $this->getModelConfiguration()->getRepository()->getQuery()->count();
     }
 
     /**
@@ -56,7 +56,7 @@ class Order extends BaseColumn implements WithRoutesInterface
      */
     protected function movableUp()
     {
-        return $this->orderValue() > 0;
+        return $this->getOrderValue() > 0;
     }
 
     /**
@@ -66,8 +66,8 @@ class Order extends BaseColumn implements WithRoutesInterface
     protected function moveUpUrl()
     {
         return route('admin.model.move-up', [
-            $this->model()->alias(),
-            $this->instance->getKey(),
+            $this->getModelConfiguration()->getAlias(),
+            $this->getModel()->getKey(),
         ]);
     }
 
@@ -77,7 +77,7 @@ class Order extends BaseColumn implements WithRoutesInterface
      */
     protected function movableDown()
     {
-        return $this->orderValue() < $this->totalCount() - 1;
+        return $this->getOrderValue() < $this->totalCount() - 1;
     }
 
     /**
@@ -87,8 +87,8 @@ class Order extends BaseColumn implements WithRoutesInterface
     protected function moveDownUrl()
     {
         return route('admin.model.move-down', [
-            $this->model()->alias(),
-            $this->instance->getKey(),
+            $this->getModelConfiguration()->getAlias(),
+            $this->getModel()->getKey(),
         ]);
     }
 

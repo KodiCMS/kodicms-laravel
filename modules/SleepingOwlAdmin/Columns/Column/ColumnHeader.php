@@ -19,37 +19,39 @@ class ColumnHeader implements Renderable
     protected $orderable = true;
 
     /**
-     * Get or set title.
-     *
-     * @param string|null $title
-     *
-     * @return $this|string
+     * @return string
      */
-    public function title($title = null)
+    public function getTitle()
     {
-        if (is_null($title)) {
-            return $this->title;
-        }
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return $this
+     */
+    public function setTitle($title)
+    {
         $this->title = $title;
 
         return $this;
     }
 
     /**
-     * Get or set column orderable feature.
-     *
-     * @param bool|null $orderable
-     *
-     * @return $this|bool
+     * @return bool
      */
-    public function orderable($orderable = null)
+    public function isOrderable()
     {
-        if (is_null($orderable)) {
-            return $this->orderable;
-        }
-        $this->orderable = $orderable;
+        return $this->orderable;
+    }
 
-        return $this;
+    /**
+     * @param bool $orderable
+     */
+    public function setOrderable($orderable)
+    {
+        $this->orderable = (bool) $orderable;
     }
 
     /**
@@ -58,8 +60,8 @@ class ColumnHeader implements Renderable
     public function render()
     {
         return app('sleeping_owl.template')->view('column.header', [
-            'title'     => $this->title(),
-            'orderable' => $this->orderable(),
+            'title'     => $this->getTitle(),
+            'orderable' => $this->isOrderable(),
         ]);
     }
 

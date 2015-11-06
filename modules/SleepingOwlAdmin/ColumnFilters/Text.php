@@ -2,6 +2,10 @@
 
 namespace KodiCMS\SleepingOwlAdmin\ColumnFilters;
 
+use Illuminate\Database\Query\Builder;
+use KodiCMS\SleepingOwlAdmin\Interfaces\NamedColumnInterface;
+use KodiCMS\SleepingOwlAdmin\Interfaces\RepositoryInterface;
+
 class Text extends BaseColumnFilter
 {
     /**
@@ -15,37 +19,50 @@ class Text extends BaseColumnFilter
     protected $placeholder;
 
     /**
-     * @param string|null $placeholder
-     *
-     * @return $this|string
+     * @return string
      */
-    public function placeholder($placeholder = null)
+    public function getPlaceholder()
     {
-        if (is_null($placeholder)) {
-            return $this->placeholder;
-        }
+        return $this->placeholder;
+    }
+
+    /**
+     * @param string $placeholder
+     *
+     * @return $this
+     */
+    public function setPlaceholder($placeholder)
+    {
         $this->placeholder = $placeholder;
 
         return $this;
     }
 
     /**
-     * @param        $repository
-     * @param        $column
-     * @param        $query
-     * @param        $search
-     * @param        $fullSearch
-     * @param string $operator
+     * @param RepositoryInterface  $repository
+     * @param NamedColumnInterface $column
+     * @param Builder              $query
+     * @param string               $search
+     * @param array|string         $fullSearch
+     * @param string               $operator
+     *
+     * @return void
      */
-    public function apply($repository, $column, $query, $search, $fullSearch, $operator = 'like')
-    {
+    public function apply(
+        RepositoryInterface $repository,
+        NamedColumnInterface $column,
+        Builder $query,
+        $search,
+        $fullSearch,
+        $operator = '='
+    ) {
         if (empty($search)) {
             return;
         }
         if ($operator == 'like') {
             $search = '%'.$search.'%';
         }
-        $name = $column->name();
+        $name = $column->getName();
         if ($repository->hasColumn($name)) {
             $query->where($name, $operator, $search);
         } elseif (strpos($name, '.') !== false) {
@@ -61,10 +78,10 @@ class Text extends BaseColumnFilter
     /**
      * @return array
      */
-    protected function getParams()
+    public function getParams()
     {
         return parent::getParams() + [
-            'placeholder' => $this->placeholder(),
+            'placeholder' => $this->getPlaceholder(),
         ];
     }
 }

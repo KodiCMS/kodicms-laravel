@@ -42,159 +42,156 @@ abstract class NamedFormItem extends BaseFormItem
      */
     public function __construct($path, $label = null)
     {
-        $this->label = $label;
+        $this->setLabel($label);
         $parts = explode('.', $path);
+        $this->setPath($path);
         if (count($parts) > 1) {
-            $this->path = $path;
-            $this->name = $parts[0].'['.implode('][', array_slice($parts, 1)).']';
-            $this->attribute = implode('.', array_slice(explode('.', $path), -1, 1));
+            $this->setName($parts[0].'['.implode('][', array_slice($parts, 1)).']');
+            $this->setAttribute(implode('.', array_slice(explode('.', $path), -1, 1)));
         } else {
-            $this->path = $path;
-            $this->name = $path;
-            $this->attribute = $path;
+            $this->setName($path);
+            $this->setAttribute($path);
         }
     }
 
     /**
-     * @param string|null $path
-     *
-     * @return string|null
+     * @return string
      */
-    public function path($path = null)
+    public function getPath()
     {
-        if (is_null($path)) {
-            return $this->path;
-        }
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return $this
+     */
+    public function setPath($path)
+    {
         $this->path = $path;
 
-        return $path;
+        return $this;
     }
 
     /**
-     * @param string|null $attribute
-     *
-     * @return string|null
+     * @return string
      */
-    public function attribute($attribute = null)
+    public function getName()
     {
-        if (is_null($attribute)) {
-            return $this->attribute;
-        }
-        $this->attribute = $attribute;
-
-        return $attribute;
+        return $this->name;
     }
 
     /**
-     * @param string|null $name
+     * @param string $name
      *
-     * @return $this|string
+     * @return $this
      */
-    public function name($name = null)
+    public function setName($name)
     {
-        if (is_null($name)) {
-            return $this->name;
-        }
         $this->name = $name;
 
         return $this;
     }
 
     /**
-     * @param string|null $label
-     *
-     * @return $this|null|string
+     * @return string
      */
-    public function label($label = null)
+    public function getLabel()
     {
-        if (is_null($label)) {
-            return $this->label;
-        }
+        return $this->label;
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return $this
+     */
+    public function setLabel($label)
+    {
         $this->label = $label;
 
         return $this;
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getParams()
+    public function getAttribute()
     {
-        return parent::getParams() + [
-            'name'     => $this->name(),
-            'label'    => $this->label(),
-            'readonly' => $this->readonly(),
-            'value'    => $this->value(),
-        ];
+        return $this->attribute;
     }
 
     /**
-     * @param mixed|null $defaultValue
+     * @param string $attribute
      *
-     * @return $this|mixed
+     * @return $this
      */
-    public function defaultValue($defaultValue = null)
+    public function setAttribute($attribute)
     {
-        if (is_null($defaultValue)) {
-            return $this->defaultValue;
-        }
+        $this->attribute = $attribute;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultValue()
+    {
+        return $this->defaultValue;
+    }
+
+    /**
+     * @param mixed $defaultValue
+     *
+     * @return $this
+     */
+    public function setDefaultValue($defaultValue)
+    {
         $this->defaultValue = $defaultValue;
 
         return $this;
     }
 
     /**
-     * @param bool|null $readonly
-     *
-     * @return $this|bool
+     * @return bool
      */
-    public function readonly($readonly = null)
+    public function isReadonly()
     {
-        if (is_null($readonly)) {
-            return $this->readonly;
-        }
+        return $this->readonly;
+    }
 
-        $this->readonly = $readonly;
+    /**
+     * @param bool $readonly
+     *
+     * @return $this
+     */
+    public function setReadonly($readonly)
+    {
+        $this->readonly = (bool) $readonly;
 
         return $this;
     }
 
-    public function value()
+    /**
+     * @return mixed
+     */
+    public function getValue()
     {
-        $instance = $this->instance();
-        if (! is_null($value = old($this->path()))) {
+        $model = $this->getModel();
+        if (! is_null($value = old($this->getPath()))) {
             return $value;
         }
         $input = Input::all();
-        if (($value = array_get($input, $this->path())) !== null) {
+        if (($value = array_get($input, $this->getPath())) !== null) {
             return $value;
         }
-        if (! is_null($instance) && ! is_null($value = $instance->getAttribute($this->attribute()))) {
+        if (! is_null($model) && ! is_null($value = $model->getAttribute($this->getAttribute()))) {
             return $value;
         }
 
-        return $this->defaultValue();
-    }
-
-    public function save()
-    {
-        $attribute = $this->attribute();
-        if (Input::get($this->path()) === null) {
-            $value = null;
-        } else {
-            $value = $this->value();
-        }
-        $this->instance()->$attribute = $value;
-    }
-
-    public function required()
-    {
-        $this->validationRule('required');
-    }
-
-    public function unique()
-    {
-        $this->validationRule('_unique');
+        return $this->getDefaultValue();
     }
 
     /**
@@ -204,15 +201,50 @@ abstract class NamedFormItem extends BaseFormItem
     {
         $rules = parent::getValidationRules();
         array_walk($rules, function (&$item) {
+            $model = $this->getModel();
             if ($item == '_unique') {
-                $table = $this->instance()->getTable();
-                $item = 'unique:'.$table.','.$this->attribute();
-                if ($this->instance()->exists()) {
-                    $item .= ','.$this->instance()->getKey();
+                $table = $model->getTable();
+                $item = 'unique:'.$table.','.$this->getAttribute();
+                if ($model->exists()) {
+                    $item .= ','.$model->getKey();
                 }
             }
         });
 
-        return [$this->name() => $rules];
+        return [$this->getName() => $rules];
+    }
+
+    /**
+     * @return array
+     */
+    public function getParams()
+    {
+        return parent::getParams() + [
+            'name'     => $this->getName(),
+            'label'    => $this->getLabel(),
+            'readonly' => $this->isReadonly(),
+            'value'    => $this->getValue(),
+        ];
+    }
+
+    public function save()
+    {
+        $attribute = $this->getAttribute();
+        if (Input::get($this->getPath()) === null) {
+            $value = null;
+        } else {
+            $value = $this->getValue();
+        }
+        $this->getModel()->$attribute = $value;
+    }
+
+    public function required()
+    {
+        $this->addValidationRule('required');
+    }
+
+    public function unique()
+    {
+        $this->addValidationRule('_unique');
     }
 }

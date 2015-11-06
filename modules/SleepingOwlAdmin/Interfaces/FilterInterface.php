@@ -13,8 +13,14 @@ interface FilterInterface
 
     /**
      * Is filter active?
+     * @return bool
      */
     public function isActive();
+
+    /**
+     * @return string
+     */
+    public function getTitle();
 
     /**
      * Apply filter to the query.

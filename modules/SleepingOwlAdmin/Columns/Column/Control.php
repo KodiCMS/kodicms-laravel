@@ -16,18 +16,25 @@ class Control extends BaseColumn
     public function __construct()
     {
         parent::__construct();
+        $this->setOrderable(false);
+    }
 
-        $this->orderable(false);
+    /**
+     * @return mixed
+     */
+    protected function getModelKey()
+    {
+        return $this->getModel()->getKey();
     }
 
     /**
      * Check if instance supports soft-deletes and trashed.
      * @return bool
      */
-    protected function trashed()
+    protected function isTrashed()
     {
-        if (method_exists($this->instance, 'trashed')) {
-            return $this->instance->trashed();
+        if (method_exists($this->getModel(), 'trashed')) {
+            return $this->getModel()->trashed();
         }
 
         return false;
@@ -39,7 +46,7 @@ class Control extends BaseColumn
      */
     protected function editable()
     {
-        return ! $this->trashed() && ! is_null($this->model()->edit($this->instance->getKey()));
+        return ! $this->isTrashed() && ! is_null($this->getModelConfiguration()->fireEdit($this->getModelKey()));
     }
 
     /**
@@ -48,7 +55,7 @@ class Control extends BaseColumn
      */
     protected function editUrl()
     {
-        return $this->model()->editUrl($this->instance->getKey());
+        return $this->getModelConfiguration()->getEditUrl($this->getModelKey());
     }
 
     /**
@@ -57,7 +64,7 @@ class Control extends BaseColumn
      */
     protected function deletable()
     {
-        return ! $this->trashed() && ! is_null($this->model()->delete($this->instance->getKey()));
+        return ! $this->isTrashed() && ! is_null($this->getModelConfiguration()->fireDelete($this->getModelKey()));
     }
 
     /**
@@ -66,7 +73,7 @@ class Control extends BaseColumn
      */
     protected function deleteUrl()
     {
-        return $this->model()->deleteUrl($this->instance->getKey());
+        return $this->getModelConfiguration()->getDeleteUrl($this->getModelKey());
     }
 
     /**
@@ -75,7 +82,7 @@ class Control extends BaseColumn
      */
     protected function restorable()
     {
-        return $this->trashed() && ! is_null($this->model()->restore($this->instance->getKey()));
+        return $this->isTrashed() && ! is_null($this->getModelConfiguration()->fireRestore($this->getModelKey()));
     }
 
     /**
@@ -84,7 +91,7 @@ class Control extends BaseColumn
      */
     protected function restoreUrl()
     {
-        return $this->model()->restoreUrl($this->instance->getKey());
+        return $this->getModelConfiguration()->getRestoreUrl($this->getModelKey());
     }
 
     /**

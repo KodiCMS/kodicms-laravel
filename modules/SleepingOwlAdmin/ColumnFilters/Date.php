@@ -2,7 +2,11 @@
 
 namespace KodiCMS\SleepingOwlAdmin\ColumnFilters;
 
+use Exception;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
+use KodiCMS\SleepingOwlAdmin\Interfaces\RepositoryInterface;
+use KodiCMS\SleepingOwlAdmin\Interfaces\NamedColumnInterface;
 
 class Date extends Text
 {
@@ -37,112 +41,129 @@ class Date extends Text
     protected $width = 150;
 
     /**
-     * @param string|null $format
-     *
-     * @return $this|string
+     * @return string
      */
-    public function format($format = null)
+    public function getFormat()
     {
-        if (is_null($format)) {
-            if (is_null($this->format)) {
-                $this->format(config('sleeping_owl.datetimeFormat'));
-            }
-
-            return $this->format;
+        if (is_null($this->format)) {
+            $this->setFormat(config('sleeping_owl.datetimeFormat'));
         }
+
+        return $this->format;
+    }
+
+    /**
+     * @param string $format
+     */
+    public function setFormat($format)
+    {
         $this->format = $format;
-
-        return $this;
     }
 
     /**
-     * @param int|null $seconds
-     *
-     * @return $this|bool
+     * @return bool
      */
-    public function seconds($seconds = null)
+    public function hasSeconds()
     {
-        if (is_null($seconds)) {
-            return $this->seconds;
-        }
-        $this->seconds = $seconds;
-
-        return $this;
+        return $this->seconds;
     }
 
     /**
-     * @param string|null $pickerFormat
-     *
-     * @return $this|string
+     * @param bool $seconds
      */
-    public function pickerFormat($pickerFormat = null)
+    public function setSeconds($seconds)
     {
-        if (is_null($pickerFormat)) {
-            if (is_null($this->pickerFormat)) {
-                return $this->generatePickerFormat();
-            }
+        $this->seconds = (bool) $seconds;
+    }
 
-            return $this->pickerFormat;
+    /**
+     * @return string
+     */
+    public function getPickerFormat()
+    {
+        if (is_null($this->pickerFormat)) {
+            return $this->generatePickerFormat();
         }
+
+        return $this->pickerFormat;
+    }
+
+    /**
+     * @param string $pickerFormat
+     */
+    public function setPickerFormat($pickerFormat)
+    {
         $this->pickerFormat = $pickerFormat;
+    }
 
-        return $this;
+    /**
+     * @return int
+     */
+    public function getWidth()
+    {
+        return $this->width;
     }
 
     /**
      * @param int $width
-     *
-     * @return $this|int
      */
-    public function width($width = null)
+    public function setWidth($width)
     {
-        if (is_null($width)) {
-            return $this->width;
+        intval($width);
+        if ($width < 0) {
+            $width = 0;
         }
-        $this->width = $width;
-
-        return $this;
+        $this->width = (int) $width;
     }
 
     /**
-     * @param string|null $searchFormat
-     *
-     * @return $this|string
+     * @return string
      */
-    public function searchFormat($searchFormat = null)
+    public function getSearchFormat()
     {
-        if (is_null($searchFormat)) {
-            return $this->searchFormat;
-        }
+        return $this->searchFormat;
+    }
+
+    /**
+     * @param string $searchFormat
+     */
+    public function setSearchFormat($searchFormat)
+    {
         $this->searchFormat = $searchFormat;
-
-        return $this;
     }
 
     /**
-     * @param        $repository
-     * @param        $column
-     * @param        $query
-     * @param        $search
-     * @param        $fullSearch
-     * @param string $operator
+     * @param RepositoryInterface  $repository
+     * @param NamedColumnInterface $column
+     * @param Builder              $query
+     * @param string               $search
+     * @param string               $fullSearch
+     * @param string               $operator
+     *
+     * @return void
      */
-    public function apply($repository, $column, $query, $search, $fullSearch, $operator = '=')
-    {
+    public function apply(
+        RepositoryInterface $repository,
+        NamedColumnInterface $column,
+        Builder $query,
+        $search,
+        $fullSearch,
+        $operator = '='
+    ) {
         if (empty($search)) {
             return;
         }
         try {
-            $time = Carbon::createFromFormat($this->format(), $search);
-        } catch (\Exception $e) {
+            $time = Carbon::createFromFormat($this->getFormat(), $search);
+        } catch (Exception $e) {
             try {
                 $time = Carbon::parse($search);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 return;
             }
         }
-        $time = $time->format($this->searchFormat());
-        $name = $column->name();
+        $time = $time->format($this->getSearchFormat());
+        $name = $column->getName();
         if ($repository->hasColumn($name)) {
             $query->where($name, $operator, $time);
         } elseif (strpos($name, '.') !== false) {
@@ -161,10 +182,10 @@ class Date extends Text
     public function getParams()
     {
         return parent::getParams() + [
-            'seconds'      => $this->seconds(),
-            'format'       => $this->format(),
-            'pickerFormat' => $this->pickerFormat(),
-            'width'        => $this->width(),
+            'seconds'      => $this->hasSeconds(),
+            'format'       => $this->getFormat(),
+            'pickerFormat' => $this->getPickerFormat(),
+            'width'        => $this->getWidth(),
         ];
     }
 
@@ -173,8 +194,7 @@ class Date extends Text
      */
     protected function generatePickerFormat()
     {
-        $format = $this->format();
-        $replacement = [
+        return strtr($this->getFormat(), [
             'i' => 'mm',
             's' => 'ss',
             'h' => 'hh',
@@ -187,8 +207,6 @@ class Date extends Text
             'n' => 'M',
             'Y' => 'YYYY',
             'y' => 'YY',
-        ];
-
-        return strtr($format, $replacement);
+        ]);
     }
 }

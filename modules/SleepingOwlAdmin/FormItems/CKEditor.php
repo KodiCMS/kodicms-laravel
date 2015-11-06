@@ -17,7 +17,6 @@ class CKEditor extends NamedFormItem implements WithRoutesInterface
         Route::get('assets/images/all', function () {
             return static::getAll();
         });
-
         Route::post('assets/images/upload', function () {
             return static::postUpload();
         });
@@ -76,7 +75,6 @@ class CKEditor extends NamedFormItem implements WithRoutesInterface
     {
         $path = config('sleeping_owl.imagesUploadDirectory').'/';
         $upload_dir = public_path($path);
-
         $allowedExtensions = [
             'bmp',
             'gif',
@@ -84,16 +82,13 @@ class CKEditor extends NamedFormItem implements WithRoutesInterface
             'jpeg',
             'png',
         ];
-
         $maxsize = 2000;
         $maxwidth = 9000;
         $maxheight = 8000;
         $minwidth = 10;
         $minheight = 10;
-
         $file = Input::file('upload');
         $errors = [];
-
         $extension = null;
         $width = 0;
         $height = 0;
@@ -130,11 +125,9 @@ class CKEditor extends NamedFormItem implements WithRoutesInterface
             }
         } catch (Exception $e) {
         }
-
         if (! empty($errors)) {
             return '<script>alert("'.implode('\\n', $errors).'");</script>';
         }
-
         $finalFilename = $file->getClientOriginalName();
         $file = $file->move($upload_dir, $finalFilename);
         $CKEditorFuncNum = Input::get('CKEditorFuncNum');

@@ -2,6 +2,8 @@
 
 namespace KodiCMS\SleepingOwlAdmin\Interfaces;
 
+use Illuminate\Database\Eloquent\Model;
+
 interface FormItemInterface
 {
     /**
@@ -12,9 +14,9 @@ interface FormItemInterface
     /**
      * Set currently rendered instance.
      *
-     * @param mixed $instance
+     * @param Model $model
      */
-    public function setInstance($instance);
+    public function setModel(Model $model);
 
     /**
      * Get form item validation rules.

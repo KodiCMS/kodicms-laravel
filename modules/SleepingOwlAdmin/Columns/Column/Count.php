@@ -10,8 +10,8 @@ class Count extends NamedColumn
     public function render()
     {
         return app('sleeping_owl.template')->view('column.count', [
-            'value'  => count($this->getValue($this->instance, $this->name())),
-            'append' => $this->append(),
+            'value'  => count($this->getModelValue()),
+            'append' => $this->getAppend(),
         ]);
     }
 }

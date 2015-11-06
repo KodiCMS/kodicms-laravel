@@ -2,6 +2,7 @@
 
 namespace KodiCMS\SleepingOwlAdmin\FormItems;
 
+use Exception;
 use Carbon\Carbon;
 
 class BaseDateTime extends NamedFormItem
@@ -72,10 +73,10 @@ class BaseDateTime extends NamedFormItem
         if (! is_null($value)) {
             try {
                 $time = Carbon::parse($value);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 try {
                     $time = Carbon::createFromFormat($this->format(), $value);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     return;
                 }
             }

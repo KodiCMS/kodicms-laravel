@@ -11,23 +11,6 @@ use KodiCMS\SleepingOwlAdmin\Interfaces\WithRoutesInterface;
 class DisplayDatatablesAsync extends DisplayDatatables implements WithRoutesInterface
 {
     /**
-     * Datatables name.
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @param string|null $name
-     */
-    protected $distinct;
-
-    public function __construct($name = null, $distinct = null)
-    {
-        $this->name($name);
-        $this->distinct = $distinct;
-    }
-
-    /**
      * Register display routes.
      */
     public static function registerRoutes()
@@ -57,10 +40,10 @@ class DisplayDatatablesAsync extends DisplayDatatables implements WithRoutesInte
      */
     protected static function findDatatablesAsyncByName(DisplayTabbed $display, $name)
     {
-        $tabs = $display->tabs();
+        $tabs = $display->getTabs();
         foreach ($tabs as $tab) {
-            $content = $tab->getOriginalContent();
-            if ($content instanceof self && $content->name() === $name) {
+            $content = $tab->getContent();
+            if ($content instanceof self && $content->getName() === $name) {
                 return $content;
             }
         }
@@ -69,17 +52,74 @@ class DisplayDatatablesAsync extends DisplayDatatables implements WithRoutesInte
     }
 
     /**
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * @param string|null $name
+     */
+    protected $distinct;
+
+    public function __construct($name = null, $distinct = null)
+    {
+        $this->setName($name);
+        $this->setDistinct($distinct);
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDistinct()
+    {
+        return $this->distinct;
+    }
+
+    /**
+     * @param mixed $distinct
+     */
+    public function setDistinct($distinct)
+    {
+        $this->distinct = $distinct;
+    }
+
+    /**
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
     public function render()
     {
-        $params = $this->getParams();
+        return app('sleeping_owl.template')->view('display.datatablesAsync', $this->getParams());
+    }
+
+    /**
+     * Get view render parameters.
+     * @return array
+     */
+    public function getParams()
+    {
+        $params = parent::getParams();
         $attributes = Input::all();
-        array_unshift($attributes, $this->name());
-        array_unshift($attributes, $this->model()->alias());
+        array_unshift($attributes, $this->getName());
+        array_unshift($attributes, $this->getModel()->alias());
         $params['url'] = route('admin.model.async', $attributes);
 
-        return app('sleeping_owl.template')->view('display.datatablesAsync', $params);
+        return $params;
     }
 
     /**
@@ -88,21 +128,17 @@ class DisplayDatatablesAsync extends DisplayDatatables implements WithRoutesInte
      */
     public function renderAsync()
     {
-        $query = $this->repository->query();
+        $query = $this->getRepository()->getQuery();
         $totalCount = $query->count();
-
         if (! is_null($this->distinct)) {
-            $filteredCount = $query->distinct()->count($this->distinct);
+            $filteredCount = $query->distinct()->count($this->getDistinct());
         }
-
         $this->modifyQuery($query);
         $this->applySearch($query);
         $this->applyColumnSearch($query);
-
         if (is_null($this->distinct)) {
             $filteredCount = $query->count();
         }
-
         $this->applyOrders($query);
         $this->applyOffset($query);
         $collection = $query->get();
@@ -155,7 +191,6 @@ class DisplayDatatablesAsync extends DisplayDatatables implements WithRoutesInte
         if (is_null($search)) {
             return;
         }
-
         $query->where(function ($query) use ($search) {
             $columns = $this->columns();
             foreach ($columns as $column) {
@@ -175,7 +210,6 @@ class DisplayDatatablesAsync extends DisplayDatatables implements WithRoutesInte
         foreach ($queryColumns as $index => $queryColumn) {
             $search = array_get($queryColumn, 'search.value');
             $fullSearch = array_get($queryColumn, 'search');
-
             $column = array_get($this->columns(), $index);
             $columnFilter = array_get($this->columnFilters(), $index);
             if (! is_null($columnFilter)) {
@@ -196,7 +230,6 @@ class DisplayDatatablesAsync extends DisplayDatatables implements WithRoutesInte
     protected function prepareDatatablesStructure($collection, $totalCount, $filteredCount)
     {
         $columns = $this->allColumns();
-
         $result = [];
         $result['draw'] = Input::get('draw', 0);
         $result['recordsTotal'] = $totalCount;
@@ -212,22 +245,5 @@ class DisplayDatatablesAsync extends DisplayDatatables implements WithRoutesInte
         }
 
         return $result;
-    }
-
-    /**
-     * Get or set datatables name.
-     *
-     * @param null $name
-     *
-     * @return $this
-     */
-    public function name($name = null)
-    {
-        if (is_null($name)) {
-            return $this->name;
-        }
-        $this->name = $name;
-
-        return $this;
     }
 }

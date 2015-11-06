@@ -17,7 +17,7 @@
 	<thead>
 		<tr>
 			@foreach ($columns as $column)
-				{!! $column->header() !!}
+				{!! $column->getHeader() !!}
 			@endforeach
 		</tr>
 	</thead>
@@ -32,11 +32,11 @@
 		</tr>
 	</tfoot>
 	<tbody>
-		@foreach ($collection as $instance)
+		@foreach ($collection as $model)
 			<tr>
 				@foreach ($columns as $column)
 					<?php
-						$column->setInstance($instance);
+						$column->setModel($model);
 					?>
 					{!! $column !!}
 				@endforeach

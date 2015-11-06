@@ -3,6 +3,7 @@
 namespace KodiCMS\SleepingOwlAdmin\Columns\Column;
 
 use Meta;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Support\Renderable;
 use KodiCMS\SleepingOwlAdmin\Model\ModelConfiguration;
 use KodiCMS\SleepingOwlAdmin\Interfaces\ColumnInterface;
@@ -17,9 +18,9 @@ abstract class BaseColumn implements Renderable, ColumnInterface
 
     /**
      * Model instance currently rendering.
-     * @var mixed
+     * @var Model
      */
-    protected $instance;
+    protected $model;
 
     /**
      * Column appendant.
@@ -27,9 +28,6 @@ abstract class BaseColumn implements Renderable, ColumnInterface
      */
     protected $append;
 
-    /**
-     *
-     */
     public function __construct()
     {
         $this->header = new ColumnHeader;
@@ -44,12 +42,64 @@ abstract class BaseColumn implements Renderable, ColumnInterface
     }
 
     /**
+     * @return ColumnHeader
+     */
+    public function getHeader()
+    {
+        return $this->header;
+    }
+
+    /**
+     * @return ColumnInterface
+     */
+    public function getAppend()
+    {
+        return $this->append;
+    }
+
+    /**
+     * @param ColumnInterface $append
+     *
+     * @return $this
+     */
+    public function setAppend(ColumnInterface $append)
+    {
+        $this->append = $append;
+
+        return $this;
+    }
+
+    /**
+     * @return Model $model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
+     * @param Model $model
+     *
+     * @return $this
+     */
+    public function setModel(Model $model)
+    {
+        $this->model = $model;
+        $append = $this->getAppend();
+        if (! is_null($append) && ($append instanceof ColumnInterface)) {
+            $append->setModel($model);
+        }
+
+        return $this;
+    }
+
+    /**
      * Get related model configuration.
      * @return ModelConfiguration
      */
-    protected function model()
+    protected function getModelConfiguration()
     {
-        return app('sleeping_owl.admin')->getModel(get_class($this->instance));
+        return app('sleeping_owl')->getModel(get_class($this->getModel()));
     }
 
     /**
@@ -59,23 +109,21 @@ abstract class BaseColumn implements Renderable, ColumnInterface
      *
      * @return $this
      */
-    public function label($title)
+    public function setLabel($title)
     {
-        $this->header->title($title);
+        $this->header->setTitle($title);
 
         return $this;
     }
 
     /**
-     * Enable/disable column orderable feature.
-     *
      * @param bool $orderable
      *
      * @return $this
      */
-    public function orderable($orderable)
+    public function setOrderable($orderable)
     {
-        $this->header->orderable($orderable);
+        $this->header->setOrderable($orderable);
 
         return $this;
     }
@@ -86,50 +134,7 @@ abstract class BaseColumn implements Renderable, ColumnInterface
      */
     public function isOrderable()
     {
-        return $this->header()->orderable();
-    }
-
-    /**
-     * Get column header.
-     * @return ColumnHeader
-     */
-    public function header()
-    {
-        return $this->header;
-    }
-
-    /**
-     * Get or set column appendant.
-     *
-     * @param ColumnInterface|null $append
-     *
-     * @return $this|ColumnInterface
-     */
-    public function append($append = null)
-    {
-        if (is_null($append)) {
-            return $this->append;
-        }
-        $this->append = $append;
-
-        return $this;
-    }
-
-    /**
-     * Set currently rendering instance.
-     *
-     * @param mixed $instance
-     *
-     * @return $this
-     */
-    public function setInstance($instance)
-    {
-        $this->instance = $instance;
-        if (! is_null($this->append()) && ($this->append() instanceof ColumnInterface)) {
-            $this->append()->setInstance($instance);
-        }
-
-        return $this;
+        return $this->header()->isOrderable();
     }
 
     /**

@@ -15,14 +15,23 @@ class Textarea extends NamedFormItem
     protected $rows = 10;
 
     /**
-     * @param int|null $rows
-     *
-     * @return $this|int
+     * @return int
      */
-    public function rows($rows = null)
+    public function getRows()
     {
-        if (is_null($rows)) {
-            return $this->rows;
+        return $this->rows;
+    }
+
+    /**
+     * @param int $rows
+     *
+     * @return $this
+     */
+    public function setRows($rows)
+    {
+        intval($rows);
+        if ($rows < 1) {
+            $rows = 1;
         }
         $this->rows = $rows;
 
@@ -35,11 +44,11 @@ class Textarea extends NamedFormItem
     public function getParams()
     {
         return parent::getParams() + [
-            'name'     => $this->name(),
-            'label'    => $this->label(),
-            'readonly' => $this->readonly(),
-            'value'    => $this->value(),
-            'rows'     => $this->rows(),
+            'name'     => $this->getName(),
+            'label'    => $this->getLabel(),
+            'readonly' => $this->isReadonly(),
+            'value'    => $this->getValue(),
+            'rows'     => $this->getRows(),
         ];
     }
 }

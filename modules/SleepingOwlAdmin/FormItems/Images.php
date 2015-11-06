@@ -16,7 +16,7 @@ class Images extends Image
 
     public function save()
     {
-        $name = $this->name();
+        $name = $this->getName();
         $value = Input::get($name, '');
         if (! empty($value)) {
             $value = explode(',', $value);
@@ -32,7 +32,7 @@ class Images extends Image
      */
     public function value()
     {
-        $value = parent::value();
+        $value = parent::getValue();
         if (is_null($value)) {
             $value = [];
         }

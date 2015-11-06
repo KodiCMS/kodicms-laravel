@@ -3,178 +3,205 @@
 namespace KodiCMS\SleepingOwlAdmin\Display;
 
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\Validation\Validator;
 use KodiCMS\SleepingOwlAdmin\Interfaces\FormInterface;
+use KodiCMS\SleepingOwlAdmin\Model\ModelConfiguration;
 use KodiCMS\SleepingOwlAdmin\Interfaces\DisplayInterface;
 
 class DisplayTab implements Renderable, DisplayInterface, FormInterface
 {
     /**
-     * Tab label.
      * @var string
      */
     protected $label = '';
 
     /**
-     * Is tab active by default?
      * @var bool
      */
     protected $active = false;
 
     /**
-     * Tab name.
      * @var string
      */
     protected $name;
 
     /**
-     * Tab content.
-     * @var Renderable
+     * @var DisplayInterface
      */
     protected $content;
 
     /**
-     * @param $content
+     * @param DisplayInterface $content
      */
-    public function __construct($content)
+    public function __construct(DisplayInterface $content)
     {
         $this->content = $content;
     }
 
     /**
-     * Get or set tab label.
-     *
-     * @param null $label
-     *
-     * @return $this|array
+     * @return string
      */
-    public function label($label = null)
+    public function getLabel()
     {
-        if (is_null($label)) {
-            return $this->label;
-        }
+        return $this->label;
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return $this
+     */
+    public function setLabel($label)
+    {
         $this->label = $label;
 
         return $this;
     }
 
     /**
-     * Get or set tab active state.
-     *
-     * @param null $active
-     *
-     * @return $this|bool
+     * @return bool
      */
-    public function active($active = null)
+    public function isActive()
     {
-        if (is_null($active)) {
-            return $this->active;
-        }
-        $this->active = $active;
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     *
+     * @return $this
+     */
+    public function setActive($active)
+    {
+        $this->active = (bool) $active;
 
         return $this;
     }
 
     /**
-     * Get or set tab name.
-     *
-     * @param null $name
-     *
-     * @return $this|string
+     * @return string
      */
-    public function name($name = null)
+    public function getName()
     {
-        if (is_null($name)) {
-            return (is_null($this->name)) ? md5($this->label) : $this->name;
-        }
+        return is_null($this->name) ? md5($this->getLabel()) : $this->name;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function setName($name)
+    {
         $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get tab original content.
-     * @return mixed
+     * @return DisplayInterface
      */
-    public function getOriginalContent()
+    public function getContent()
     {
         return $this->content;
     }
 
     /**
-     * Render tab content.
-     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     * @return array
      */
-    public function content()
+    public function getParams()
     {
-        return app('sleeping_owl.template')->view('display.tab_content', [
-            'active'  => $this->active(),
-            'name'    => $this->name(),
-            'content' => $this->content,
-        ]);
+        return [
+            'label'  => $this->getLabel(),
+            'active' => $this->isActive(),
+            'name'   => $this->getName(),
+        ];
     }
 
     /**
      * @param string $class
+     *
+     * @return $this
      */
     public function setClass($class)
     {
-        if ($this->content instanceof DisplayInterface) {
-            $this->content->setClass($class);
+        if ($this->getContent() instanceof DisplayInterface) {
+            $this->getContent()->setClass($class);
         }
+
+        return $this;
     }
 
     /**
      * Initialize tab.
+     *
+     * @return $this
      */
     public function initialize()
     {
-        if ($this->content instanceof DisplayInterface) {
-            $this->content->initialize();
+        if ($this->getContent() instanceof DisplayInterface) {
+            $this->getContent()->initialize();
         }
+
+        return $this;
     }
 
     /**
      * @param string $action
+     *
+     * @return $this
      */
     public function setAction($action)
     {
-        if ($this->content instanceof FormInterface) {
-            $this->content->setAction($action);
+        if ($this->getContent() instanceof FormInterface) {
+            $this->getContent()->setAction($action);
         }
+
+        return $this;
     }
 
     /**
      * @param int $id
+     *
+     * @return $this
      */
     public function setId($id)
     {
-        if ($this->content instanceof FormInterface) {
-            $this->content->setId($id);
+        if ($this->getContent() instanceof FormInterface) {
+            $this->getContent()->setId($id);
         }
+
+        return $this;
     }
 
     /**
-     * @param mixed $model
+     * @param ModelConfiguration $model
      *
-     * @return null
+     * @return Validator|null
      */
-    public function validate($model)
+    public function validate(ModelConfiguration $model)
     {
-        if ($this->content instanceof FormInterface) {
-            return $this->content->validate($model);
+        if ($this->getContent() instanceof FormInterface) {
+            return $this->getContent()->validate($model);
         }
 
         return;
     }
 
     /**
-     * @param mixed $model
+     * Save model.
+     *
+     * @param ModelConfiguration $model
+     *
+     * @return $this
      */
-    public function save($model)
+    public function save(ModelConfiguration $model)
     {
-        if ($this->content instanceof FormInterface) {
-            $this->content->save($model);
+        if ($this->getContent() instanceof FormInterface) {
+            $this->getContent()->save($model);
         }
+
+        return $this;
     }
 
     /**
@@ -182,11 +209,30 @@ class DisplayTab implements Renderable, DisplayInterface, FormInterface
      */
     public function render()
     {
-        return app('sleeping_owl.template')->view('display.tab', [
-            'label'  => $this->label(),
-            'active' => $this->active(),
-            'name'   => $this->name(),
+        return app('sleeping_owl.template')->view('display.tab', $this->getParams());
+    }
+
+    /**
+     * Render tab content.
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function renderContent()
+    {
+        return app('sleeping_owl.template')->view('display.tab_content', [
+            'active'  => $this->isActive(),
+            'name'    => $this->getName(),
+            'content' => $this->getContent(),
         ]);
+    }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->getParams();
     }
 
     /**

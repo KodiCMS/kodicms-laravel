@@ -7,9 +7,9 @@
 			{{{ $entry->$value }}}
 			@foreach ($controls as $control)
 				<?php
-					if ($control instanceof \SleepingOwl\Admin\Interfaces\ColumnInterface)
+					if ($control instanceof \KodiCMS\SleepingOwlAdmin\Interfaces\ColumnInterface)
 					{
-						$control->setInstance($entry);
+						$control->setModel($entry);
 					}
 				?>
 				{!! $control !!}

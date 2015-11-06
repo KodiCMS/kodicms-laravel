@@ -4,10 +4,10 @@ namespace KodiCMS\SleepingOwlAdmin\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class SleepingOwlAdmin extends Facade
+class SleepingOwlModule extends Facade
 {
     public static function getFacadeAccessor()
     {
-        return 'sleeping_owl.admin';
+        return 'sleeping_owl';
     }
 }

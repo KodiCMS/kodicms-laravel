@@ -3,17 +3,22 @@
 namespace KodiCMS\SleepingOwlAdmin\FormItems;
 
 use Meta;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Renderable;
 use KodiCMS\SleepingOwlAdmin\Interfaces\FormItemInterface;
 
-abstract class BaseFormItem implements Renderable, FormItemInterface
+abstract class BaseFormItem implements Renderable, FormItemInterface, Arrayable
 {
     /**
      * @var string
      */
     protected $view;
 
-    protected $instance;
+    /**
+     * @var Model
+     */
+    protected $model;
 
     /**
      * @var array
@@ -25,35 +30,30 @@ abstract class BaseFormItem implements Renderable, FormItemInterface
         Meta::loadPackage(get_class());
     }
 
-    public function setInstance($instance)
+    /**
+     * @return string
+     */
+    public function getView()
     {
-        return $this->instance($instance);
-    }
-
-    public function instance($instance = null)
-    {
-        if (is_null($instance)) {
-            return $this->instance;
-        }
-        $this->instance = $instance;
-
-        return $this;
+        return $this->view;
     }
 
     /**
-     * @param array|string|null $validationRules
-     *
-     * @return $this|array
+     * @return Model
      */
-    public function validationRules($validationRules = null)
+    public function getModel()
     {
-        if (is_null($validationRules)) {
-            return $this->validationRules;
-        }
-        if (is_string($validationRules)) {
-            $validationRules = explode('|', $validationRules);
-        }
-        $this->validationRules = $validationRules;
+        return $this->model;
+    }
+
+    /**
+     * @param Model $model
+     *
+     * @return $this
+     */
+    public function setModel(Model $model)
+    {
+        $this->model = $model;
 
         return $this;
     }
@@ -63,7 +63,25 @@ abstract class BaseFormItem implements Renderable, FormItemInterface
      */
     public function getValidationRules()
     {
-        return $this->validationRules();
+        return $this->validationRules;
+    }
+
+    /**
+     * @param array|string $validationRules
+     *
+     * @return $this
+     */
+    public function setValidationRules($validationRules)
+    {
+        if (! is_array($validationRules)) {
+            $validationRules = func_get_args();
+        }
+        foreach ($validationRules as $rule) {
+            $validationRules[] = explode('|', $rule);
+        }
+        $this->validationRules = $validationRules;
+
+        return $this;
     }
 
     /**
@@ -71,7 +89,7 @@ abstract class BaseFormItem implements Renderable, FormItemInterface
      *
      * @return $this
      */
-    public function validationRule($rule)
+    public function addValidationRule($rule)
     {
         $this->validationRules[] = $rule;
 
@@ -88,8 +106,18 @@ abstract class BaseFormItem implements Renderable, FormItemInterface
     public function getParams()
     {
         return [
-            'instance' => $this->instance(),
+            'model' => $this->getModel(),
         ];
+    }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->getParams();
     }
 
     /**
@@ -97,7 +125,9 @@ abstract class BaseFormItem implements Renderable, FormItemInterface
      */
     public function render()
     {
-        return app('sleeping_owl.template')->view('formitem.'.$this->view, $this->getParams())->render();
+        return app('sleeping_owl.template')
+            ->view('formitem.'.$this->getView(), $this->getParams())
+            ->render();
     }
 
     /**

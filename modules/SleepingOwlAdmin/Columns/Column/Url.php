@@ -10,7 +10,7 @@ class Url extends NamedColumn
     public function render()
     {
         return app('sleeping_owl.template')->view('column.url', [
-            'url' => $this->getValue($this->instance, $this->name()),
+            'url' => $this->getModelValue(),
         ]);
     }
 }

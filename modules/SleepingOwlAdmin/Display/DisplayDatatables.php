@@ -13,13 +13,18 @@ class DisplayDatatables extends DisplayTable
     protected $view = 'datatables';
 
     /**
-     * Datatables order.
      * @var array
      */
     protected $order = [[0, 'asc']];
 
+    /**
+     * @var ColumnFilterInterface[]
+     */
     protected $columnFilters = [];
 
+    /**
+     * @var array
+     */
     protected $attributes = [];
 
     /**
@@ -28,47 +33,78 @@ class DisplayDatatables extends DisplayTable
     public function initialize()
     {
         parent::initialize();
-
-        foreach ($this->columnFilters() as $columnFilter) {
+        foreach ($this->getColumnFilters() as $columnFilter) {
             if ($columnFilter instanceof ColumnFilterInterface) {
                 $columnFilter->initialize();
             }
         }
     }
 
-    public function columnFilters($columnFilters = null)
+    /**
+     * @return array
+     */
+    public function getOrder()
     {
-        if (is_null($columnFilters)) {
-            return $this->columnFilters;
+        return $this->order;
+    }
+
+    /**
+     * @param array $order
+     *
+     * @return $this
+     */
+    public function setOrder($order)
+    {
+        if (! is_array($order)) {
+            $order = func_get_args();
+        }
+        $this->order = $order;
+
+        return $this;
+    }
+
+    /**
+     * @return ColumnFilterInterface[]
+     */
+    public function getColumnFilters()
+    {
+        return $this->columnFilters;
+    }
+
+    /**
+     * @param array|ColumnFilterInterface $columnFilters
+     *
+     * @return $this
+     */
+    public function setColumnFilters($columnFilters)
+    {
+        if (! is_array($columnFilters)) {
+            $columnFilters = func_get_args();
         }
         $this->columnFilters = $columnFilters;
 
         return $this;
     }
 
-    public function attributes($attributes = null)
+    /**
+     * @return array
+     */
+    public function getAttributes()
     {
-        if (is_null($attributes)) {
-            return $this->attributes;
-        }
-        $this->attributes = $attributes;
-
-        return $this;
+        return $this->attributes;
     }
 
     /**
-     * Set or get datatables order.
+     * @param array|string $attributes
      *
-     * @param array|null $order
-     *
-     * @return $this|array
+     * @return $this
      */
-    public function order($order = null)
+    public function setAttributes($attributes)
     {
-        if (is_null($order)) {
-            return $this->order;
+        if (! is_array($attributes)) {
+            $attributes = func_get_args();
         }
-        $this->order = $order;
+        $this->attributes = $attributes;
 
         return $this;
     }
@@ -77,12 +113,12 @@ class DisplayDatatables extends DisplayTable
      * Get view render parameters.
      * @return array
      */
-    protected function getParams()
+    public function getParams()
     {
         $params = parent::getParams();
-        $params['order'] = $this->order();
-        $params['columnFilters'] = $this->columnFilters();
-        $params['attributes'] = $this->attributes();
+        $params['order'] = $this->getOrder();
+        $params['columnFilters'] = $this->getColumnFilters();
+        $params['attributes'] = $this->getAttributes();
 
         return $params;
     }

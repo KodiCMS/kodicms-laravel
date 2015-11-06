@@ -2,9 +2,11 @@
 
 namespace KodiCMS\SleepingOwlAdmin\Columns\Column;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use KodiCMS\SleepingOwlAdmin\Interfaces\NamedColumnInterface;
 
-abstract class NamedColumn extends BaseColumn
+abstract class NamedColumn extends BaseColumn implements NamedColumnInterface
 {
     /**
      * Column field name.
@@ -18,36 +20,46 @@ abstract class NamedColumn extends BaseColumn
     public function __construct($name)
     {
         parent::__construct();
-
-        $this->name($name);
+        $this->setName($name);
     }
 
     /**
-     * Get or set column field name.
-     *
-     * @param string|null $name
-     *
-     * @return $this|string
+     * @return string
      */
-    public function name($name = null)
+    public function getName()
     {
-        if (is_null($name)) {
-            return $this->name;
-        }
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function setName($name)
+    {
         $this->name = $name;
 
         return $this;
     }
 
     /**
+     * @return mixed
+     */
+    public function getModelValue()
+    {
+        return $this->getValueFromObject($this->getModel(), $this->getName());
+    }
+
+    /**
      * Get column value from instance.
      *
-     * @param mixed  $instance
-     * @param string $name
+     * @param Collection|Model $instance
+     * @param string           $name
      *
      * @return mixed
      */
-    protected function getValue($instance, $name)
+    protected function getValueFromObject($instance, $name)
     {
         $parts = explode('.', $name);
         $part = array_shift($parts);

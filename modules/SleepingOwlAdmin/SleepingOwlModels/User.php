@@ -2,13 +2,13 @@
 
 use KodiCMS\Users\Model\User;
 
-SleepingOwlAdmin::addMenuLink(User::class);
+SleepingOwlModule::addMenuLink(User::class)->setIcon('users');
 
-SleepingOwlAdmin::getModel(User::class)
-    ->title('User')
-    ->display(function () {
-        return AdminDisplay::table();
+SleepingOwlModule::getModel(User::class)
+    ->setTitle('User')
+    ->onDisplay(function () {
+        return SleepingOwlDisplay::table();
     })
-    ->createAndEdit(function () {
-        return AdminForm::form();
+    ->onCreateAndEdit(function () {
+        return SleepingOwlForm::form();
     });

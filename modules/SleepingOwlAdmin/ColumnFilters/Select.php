@@ -2,7 +2,11 @@
 
 namespace KodiCMS\SleepingOwlAdmin\ColumnFilters;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
+use KodiCMS\SleepingOwlAdmin\Interfaces\NamedColumnInterface;
+use KodiCMS\SleepingOwlAdmin\Interfaces\RepositoryInterface;
 use KodiCMS\SleepingOwlAdmin\Repository\BaseRepository;
 
 class Select extends BaseColumnFilter
@@ -13,7 +17,7 @@ class Select extends BaseColumnFilter
     protected $view = 'select';
 
     /**
-     * @var
+     * @var Model
      */
     protected $model;
 
@@ -38,93 +42,106 @@ class Select extends BaseColumnFilter
     protected $filterField = '';
 
     /**
-     * @param string|null $field
-     *
-     * @return $this|string
+     * @return Model
      */
-    public function filterField($field = null)
+    public function getModel()
     {
-        if (is_null($field)) {
-            return $this->filterField;
-        }
-        $this->filterField = $field;
-
-        return $this;
+        return $this->model;
     }
 
     /**
-     * @param null $model
+     * @param Model $model
      *
      * @return $this
      */
-    public function model($model = null)
+    public function setModel(Model $model)
     {
-        if (is_null($model)) {
-            return $this->model;
-        }
         $this->model = $model;
 
         return $this;
     }
 
     /**
-     * @param null $display
-     *
-     * @return $this|string
+     * @return string
      */
-    public function display($display = null)
+    public function getFilterField()
     {
-        if (is_null($display)) {
-            return $this->display;
-        }
+        return $this->filterField;
+    }
+
+    /**
+     * @param string $filterField
+     *
+     * @return $this
+     */
+    public function setFilterField($filterField)
+    {
+        $this->filterField = $filterField;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDisplay()
+    {
+        return $this->display;
+    }
+
+    /**
+     * @param string $display
+     *
+     * @return $this
+     */
+    public function setDisplay($display)
+    {
         $this->display = $display;
 
         return $this;
     }
 
     /**
-     * @param array|null $options
-     *
-     * @return $this|array|null
+     * @return array
      */
-    public function options($options = null)
+    public function getOptions()
     {
-        if (is_null($options)) {
-            if (! is_null($this->model()) && ! is_null($this->display())) {
-                $this->loadOptions();
-            }
-            $options = $this->options;
-            asort($options);
-
-            return $options;
+        if (! is_null($this->getModel()) and ! is_null($this->getDisplay())) {
+            $this->loadOptions();
         }
+        $options = $this->options;
+        asort($options);
+
+        return $options;
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return $this
+     */
+    public function setOptions(array $options)
+    {
         $this->options = $options;
 
         return $this;
     }
 
-    protected function loadOptions()
+    /**
+     * @return string
+     */
+    public function getPlaceholder()
     {
-        $repository = new BaseRepository($this->model());
-        $key = $repository->model()->getKeyName();
-        $options = $repository->query()->get()->lists($this->display(), $key);
-        if ($options instanceof Collection) {
-            $options = $options->all();
-        }
-        $options = array_unique($options);
-        $this->options($options);
+        return $this->placeholder;
     }
 
     /**
-     * @param string|null $placeholder
+     * @param string $placeholder
      *
-     * @return $this|string
+     * @return $this
      */
-    public function placeholder($placeholder = null)
+    public function setPlaceholder($placeholder)
     {
-        if (is_null($placeholder)) {
-            return $this->placeholder;
-        }
         $this->placeholder = $placeholder;
 
         return $this;
@@ -136,35 +153,41 @@ class Select extends BaseColumnFilter
     public function getParams()
     {
         return parent::getParams() + [
-            'options'     => $this->options(),
-            'placeholder' => $this->placeholder(),
+            'options'     => $this->getOptions(),
+            'placeholder' => $this->getPlaceholder(),
         ];
     }
 
     /**
-     * @param        $repository
-     * @param        $column
-     * @param        $query
-     * @param        $search
-     * @param        $fullSearch
-     * @param string $operator
+     * @param RepositoryInterface  $repository
+     * @param NamedColumnInterface $column
+     * @param Builder              $query
+     * @param string               $search
+     * @param array|string         $fullSearch
+     * @param string               $operator
+     *
+     * @return void
      */
-    public function apply($repository, $column, $query, $search, $fullSearch, $operator = '=')
-    {
+    public function apply(
+        RepositoryInterface $repository,
+        NamedColumnInterface $column,
+        Builder $query,
+        $search,
+        $fullSearch,
+        $operator = '='
+    ) {
         if ($search === '') {
             return;
         }
-
-        // TODO поправить
-        if ($this->filterField()) {
-            $query->where($this->filterField(), '=', $search);
+        if ($this->getFilterField()) {
+            $query->where($this->getFilterField(), '=', $search);
 
             return;
         }
         if ($operator == 'like') {
             $search = '%'.$search.'%';
         }
-        $name = $column->name();
+        $name = $column->getName();
         if ($repository->hasColumn($name)) {
             $query->where($name, $operator, $search);
         } elseif (strpos($name, '.') !== false) {
@@ -175,5 +198,17 @@ class Select extends BaseColumnFilter
                 $q->where($fieldName, $operator, $search);
             });
         }
+    }
+
+    protected function loadOptions()
+    {
+        $repository = new BaseRepository($this->getModel());
+        $key = $repository->getModel()->getKeyName();
+        $options = $repository->query()->get()->lists($this->getDisplay(), $key);
+        if ($options instanceof Collection) {
+            $options = $options->all();
+        }
+        $options = array_unique($options);
+        $this->setOptions($options);
     }
 }

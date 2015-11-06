@@ -10,8 +10,8 @@ class Lists extends NamedColumn
     public function render()
     {
         return app('sleeping_owl.template')->view('column.lists', [
-            'values' => $this->getValue($this->instance, $this->name()),
-            'append' => $this->append(),
+            'values' => $this->getModelValue(),
+            'append' => $this->getAppend(),
         ]);
     }
 }

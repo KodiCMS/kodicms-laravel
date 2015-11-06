@@ -3,8 +3,9 @@
 namespace KodiCMS\SleepingOwlAdmin\Columns\Column;
 
 use Closure;
+use KodiCMS\SleepingOwlAdmin\Interfaces\ColumnActionInterface;
 
-class Action extends NamedColumn
+class Action extends NamedColumn implements ColumnActionInterface
 {
     /**
      * Action icon class.
@@ -48,89 +49,100 @@ class Action extends NamedColumn
     public function __construct($name)
     {
         parent::__construct($name);
-        $this->orderable(false);
+        $this->setOrderable(false);
     }
 
     /**
-     * Get or set icon class.
-     *
-     * @param string|null $icon
-     *
-     * @return $this|string
+     * @return string
      */
-    public function icon($icon = null)
+    public function getIcon()
     {
-        if (is_null($icon)) {
-            return $this->icon;
-        }
+        return $this->icon;
+    }
+
+    /**
+     * @param string $icon
+     *
+     * @return $this
+     */
+    public function setIcon($icon)
+    {
         $this->icon = $icon;
 
         return $this;
     }
 
     /**
-     * Get or set action button style.
-     *
-     * @param string|null $style
-     *
-     * @return $this|string
+     * @return string
      */
-    public function style($style = null)
+    public function getStyle()
     {
-        if (is_null($style)) {
-            return $this->style;
-        }
+        return $this->style;
+    }
+
+    /**
+     * @param string $style
+     *
+     * @return $this
+     */
+    public function setStyle($style)
+    {
         $this->style = $style;
 
         return $this;
     }
 
     /**
-     * Get or set action callback.
-     *
-     * @param Closure|null $callback
-     *
-     * @return $this|Closure
+     * @return Closure
      */
-    public function callback($callback = null)
+    public function getCallback()
     {
-        if (is_null($callback)) {
-            return $this->callback;
-        }
-        $this->callback = $callback;
-
-        return $this;
+        return $this->callback;
     }
 
     /**
-     * Get or set action button target.
-     *
-     * @param string|null $target
-     *
-     * @return $this|string
+     * @param Closure $callback
      */
-    public function target($target = null)
+    public function setCallback(Closure $callback)
     {
-        if (is_null($target)) {
-            return $this->target;
-        }
+        $this->callback = $callback;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * @param string $target
+     *
+     * @return $this
+     */
+    public function setTarget($target)
+    {
         $this->target = $target;
 
         return $this;
     }
 
     /**
-     * Get or set action buttom value (buttom label).
-     *
-     * @param string|null $value
-     *
-     * @return $this|string
+     * @return string
      */
-    public function value($value = null)
+    public function getValue()
     {
-        if (is_null($value)) {
-            return $this->value;
-        }
+        return $this->value;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function setValue($value)
+    {
         $this->value = $value;
 
         return $this;
@@ -152,31 +164,34 @@ class Action extends NamedColumn
     }
 
     /**
-     * Get or set action button url.
-     *
-     * @param string|null $url
-     *
-     * @return $this|string
+     * @return string
      */
-    public function url($url = null)
+    public function getUrl()
     {
-        if (is_null($url)) {
-            if (! is_null($this->url)) {
-                if (is_callable($this->url)) {
-                    return call_user_func($this->url, $this->instance);
-                }
-                if (! is_null($this->instance)) {
-                    return strtr($this->url, [':id' => $this->instance->getKey()]);
-                }
-
-                return $this->url;
+        if (! is_null($this->url)) {
+            if (is_callable($this->url)) {
+                return call_user_func($this->url, $this->getModel());
+            }
+            if (! is_null($this->getModel())) {
+                return strtr($this->url, [':id' => $this->getModel()->getKey()]);
             }
 
-            return $this->model()->displayUrl([
-                '_action' => $this->name(),
-                '_id'     => $this->instance->getKey(),
-            ]);
+            return $this->url;
         }
+
+        return $this->getModelConfiguration()->displayUrl([
+            '_action' => $this->getName(),
+            '_id'     => $this->getModel()->getKey(),
+        ]);
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return $this
+     */
+    public function setUrl($url)
+    {
         $this->url = $url;
 
         return $this;
@@ -189,7 +204,6 @@ class Action extends NamedColumn
      */
     public function call($instance)
     {
-        $callback = $this->callback();
-        call_user_func($callback, $instance);
+        call_user_func($this->getCallback(), $instance);
     }
 }

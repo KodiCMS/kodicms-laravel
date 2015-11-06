@@ -12,17 +12,17 @@ use KodiCMS\SleepingOwlAdmin\Form\AdminForm;
 use KodiCMS\SleepingOwlAdmin\TemplateDefault;
 use KodiCMS\SleepingOwlAdmin\SleepingOwlAdmin;
 use KodiCMS\SleepingOwlAdmin\FormItems\FormItem;
-use KodiCMS\SleepingOwlAdmin\Display\AdminDisplay;
+use KodiCMS\SleepingOwlAdmin\Facades\SleepingOwlModule;
+use KodiCMS\SleepingOwlAdmin\Display\SleepingOwlDisplay;
 use KodiCMS\CMS\Navigation\Section as NavigationSection;
 use KodiCMS\SleepingOwlAdmin\ColumnFilters\ColumnFilter;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use KodiCMS\SleepingOwlAdmin\Facades\SleepingOwlAdmin as SleepingOwlAdminFacade;
 
 class ModuleServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->singleton('sleeping_owl.admin', function () {
+        $this->app->singleton('sleeping_owl', function () {
             return new SleepingOwlAdmin();
         });
 
@@ -40,13 +40,13 @@ class ModuleServiceProvider extends ServiceProvider
         ]);
 
         $this->registerAliases([
-            'SleepingOwlAdmin' => SleepingOwlAdminFacade::class,
-            'Column'           => Column::class,
-            'ColumnFilter'     => ColumnFilter::class,
-            'Filter'           => Filter::class,
-            'AdminDisplay'     => AdminDisplay::class,
-            'AdminForm'        => AdminForm::class,
-            'FormItem'         => FormItem::class,
+            'SleepingOwlModule'       => SleepingOwlModule::class,
+            'SleepingOwlColumn'       => Column::class,
+            'SleepingOwlColumnFilter' => ColumnFilter::class,
+            'SleepingOwlFilter'       => Filter::class,
+            'SleepingOwlDisplay'      => SleepingOwlDisplay::class,
+            'SleepingOwlForm'         => AdminForm::class,
+            'SleepingOwlFormItem'     => FormItem::class,
         ]);
 
         foreach (ModulesFileSystem::listFiles('SleepingOwlModels') as $file) {
@@ -59,7 +59,7 @@ class ModuleServiceProvider extends ServiceProvider
     public function boot()
     {
         Event::listen('navigation.inited', function (NavigationSection $navigation) {
-            $this->app['sleeping_owl.admin']->buildMenu($navigation);
+            $this->app['sleeping_owl']->buildMenu($navigation);
         });
     }
 
@@ -67,7 +67,7 @@ class ModuleServiceProvider extends ServiceProvider
     {
         Route::pattern('adminModelId', '[0-9]+');
 
-        $aliases = $this->app['sleeping_owl.admin']->modelAliases();
+        $aliases = $this->app['sleeping_owl']->modelAliases();
 
         if (count($aliases) > 0) {
             Route::pattern('adminModel', implode('|', $aliases));
@@ -77,7 +77,7 @@ class ModuleServiceProvider extends ServiceProvider
                     throw new ModelNotFoundException;
                 }
 
-                return $this->app['sleeping_owl.admin']->getModel($class);
+                return $this->app['sleeping_owl']->getModel($class);
             });
         }
 

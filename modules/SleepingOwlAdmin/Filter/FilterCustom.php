@@ -8,7 +8,7 @@ use Illuminate\Database\Query\Builder;
 class FilterCustom extends FilterField
 {
     /**
-     * @var Closure|array
+     * @var Closure
      */
     protected $callback;
 
@@ -17,19 +17,24 @@ class FilterCustom extends FilterField
      */
     public function apply(Builder $query)
     {
-        call_user_func($this->callback(), $query, $this->value());
+        call_user_func($this->getCallback(), $query, $this->getValue());
     }
 
     /**
-     * @param Closure|array|null $callback
-     *
-     * @return $this|Closure|array
+     * @return Closure
      */
-    public function callback($callback = null)
+    public function getCallback()
     {
-        if (is_null($callback)) {
-            return $this->callback;
-        }
+        return $this->callback;
+    }
+
+    /**
+     * @param Closure $callback
+     *
+     * @return $this
+     */
+    public function setCallback(Closure $callback)
+    {
         $this->callback = $callback;
 
         return $this;

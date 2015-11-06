@@ -2,17 +2,17 @@
 
 namespace KodiCMS\SleepingOwlAdmin\Form;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\View\View;
+use Illuminate\Database\Eloquent\Model;
+use URL;
 use Input;
-use KodiCMS\SleepingOwlAdmin\Admin;
-use KodiCMS\SleepingOwlAdmin\Interfaces\DisplayInterface;
+use Validator;
+use Illuminate\Contracts\Support\Renderable;
 use KodiCMS\SleepingOwlAdmin\Interfaces\FormInterface;
-use KodiCMS\SleepingOwlAdmin\Interfaces\FormItemInterface;
 use KodiCMS\SleepingOwlAdmin\Model\ModelConfiguration;
 use KodiCMS\SleepingOwlAdmin\Repository\BaseRepository;
-use URL;
-use Validator;
+use KodiCMS\SleepingOwlAdmin\Interfaces\DisplayInterface;
+use KodiCMS\SleepingOwlAdmin\Interfaces\FormItemInterface;
+use KodiCMS\SleepingOwlAdmin\Interfaces\RepositoryInterface;
 
 class FormDefault implements Renderable, DisplayInterface, FormInterface
 {
@@ -30,7 +30,7 @@ class FormDefault implements Renderable, DisplayInterface, FormInterface
 
     /**
      * Form related repository.
-     * @var BaseRepository
+     * @var RepositoryInterface
      */
     protected $repository;
 
@@ -48,9 +48,9 @@ class FormDefault implements Renderable, DisplayInterface, FormInterface
 
     /**
      * Form related model instance.
-     * @var mixed
+     * @var Model
      */
-    protected $instance;
+    protected $modelObject;
 
     /**
      * Currently loaded model id.
@@ -72,53 +72,89 @@ class FormDefault implements Renderable, DisplayInterface, FormInterface
         if ($this->initialized) {
             return;
         }
-
         $this->initialized = true;
         $this->repository = new BaseRepository($this->class);
-        $this->instance(app($this->class));
-        $items = $this->items();
-        array_walk_recursive($items, function ($item) {
-            if ($item instanceof FormItemInterface) {
-                $item->initialize();
-            }
-        });
+        $this->setModelObject(app($this->class));
+        $this->initializeItems();
     }
 
     /**
-     * Set form action.
-     *
+     * @return RepositoryInterface
+     */
+    public function getRepository()
+    {
+        return $this->repository;
+    }
+
+    /**
+     * @return string
+     */
+    public function getView()
+    {
+        return $this->view;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    /**
      * @param string $action
+     *
+     * @return $this
      */
     public function setAction($action)
     {
         if (is_null($this->action)) {
             $this->action = $action;
         }
+
+        return $this;
     }
 
     /**
-     * Set form class.
-     *
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    /**
      * @param string $class
+     *
+     * @return $this
      */
     public function setClass($class)
     {
         if (is_null($this->class)) {
             $this->class = $class;
         }
+
+        return $this;
     }
 
     /**
-     * Get or set form items.
-     *
-     * @param FormInterface[]|null $items
-     *
-     * @return $this|FormInterface[]
+     * @return FormItemInterface[]
      */
-    public function items($items = null)
+    public function getItems()
     {
-        if (is_null($items)) {
-            return $this->items;
+        return $this->items;
+    }
+
+    /**
+     * @param array|FormItemInterface $items
+     *
+     * @return $this
+     */
+    public function setItems($items)
+    {
+        if (! is_array($items)) {
+            $items = func_get_args();
         }
         $this->items = $items;
 
@@ -126,22 +162,25 @@ class FormDefault implements Renderable, DisplayInterface, FormInterface
     }
 
     /**
-     * Get or set form related model instance.
-     *
-     * @param mixed|null $instance
-     *
-     * @return $this|mixed
+     * @return Model
      */
-    public function instance($instance = null)
+    public function getModelObject()
     {
-        if (is_null($instance)) {
-            return $this->instance;
-        }
-        $this->instance = $instance;
-        $items = $this->items();
-        array_walk_recursive($items, function ($item) use ($instance) {
+        return $this->modelObject;
+    }
+
+    /**
+     * @param Model $modelObject
+     *
+     * @return $this
+     */
+    public function setModelObject(Model $modelObject)
+    {
+        $this->modelObject = $modelObject;
+        $items = $this->getItems();
+        array_walk_recursive($items, function ($item) {
             if ($item instanceof FormItemInterface) {
-                $item->setInstance($instance);
+                $item->setModel($this->modelObject);
             }
         });
 
@@ -157,7 +196,7 @@ class FormDefault implements Renderable, DisplayInterface, FormInterface
     {
         if (is_null($this->id)) {
             $this->id = $id;
-            $this->instance($this->repository->find($id));
+            $this->setModelObject($this->getRepository()->find($id));
         }
     }
 
@@ -165,9 +204,9 @@ class FormDefault implements Renderable, DisplayInterface, FormInterface
      * Get related form model configuration.
      * @return ModelConfiguration
      */
-    public function model()
+    public function getModel()
     {
-        return app('sleeping_owl.admin')->getModel($this->class);
+        return app('sleeping_owl')->getModel($this->class);
     }
 
     /**
@@ -175,35 +214,32 @@ class FormDefault implements Renderable, DisplayInterface, FormInterface
      *
      * @param $model
      */
-    public function save($model)
+    public function save(ModelConfiguration $model)
     {
-        if ($this->model() != $model) {
+        if ($this->getModel() != $model) {
             return;
         }
-        $items = $this->items();
+        $items = $this->getItems();
         array_walk_recursive($items, function ($item) {
             if ($item instanceof FormItemInterface) {
                 $item->save();
             }
         });
-        $this->instance()->save();
+        $this->getModelObject()->save();
     }
 
     /**
-     * Validate data, returns null on success.
+     * @param ModelConfiguration $model
      *
-     * @param mixed $model
-     *
-     * @return Validator|null
+     * @return \Illuminate\Contracts\Validation\Validator|null
      */
-    public function validate($model)
+    public function validate(ModelConfiguration $model)
     {
-        if ($this->model() != $model) {
+        if ($this->getModel() != $model) {
             return;
         }
-
         $rules = [];
-        $items = $this->items();
+        $items = $this->getItems();
         array_walk_recursive($items, function ($item) use (&$rules) {
             if ($item instanceof FormItemInterface) {
                 $rules += $item->getValidationRules();
@@ -211,7 +247,7 @@ class FormDefault implements Renderable, DisplayInterface, FormInterface
         });
         $data = Input::all();
         $verifier = app('validation.presence');
-        $verifier->setConnection($this->instance()->getConnectionName());
+        $verifier->setConnection($this->getModelObject()->getConnectionName());
         $validator = Validator::make($data, $rules);
         $validator->setPresenceVerifier($verifier);
         if ($validator->fails()) {
@@ -226,12 +262,7 @@ class FormDefault implements Renderable, DisplayInterface, FormInterface
      */
     public function render()
     {
-        return app('sleeping_owl.template')->view('form.'.$this->view, [
-            'items'    => $this->items(),
-            'instance' => $this->instance(),
-            'action'   => $this->action,
-            'backUrl'  => session('_redirectBack', URL::previous()),
-        ]);
+        return app('sleeping_owl.template')->view('form.'.$this->view, $this->getParams());
     }
 
     /**
@@ -240,5 +271,38 @@ class FormDefault implements Renderable, DisplayInterface, FormInterface
     public function __toString()
     {
         return (string) $this->render();
+    }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->getParams();
+    }
+
+    /**
+     * @return array
+     */
+    public function getParams()
+    {
+        return [
+            'items'    => $this->getItems(),
+            'instance' => $this->getModelObject(),
+            'action'   => $this->action,
+            'backUrl'  => session('_redirectBack', URL::previous()),
+        ];
+    }
+
+    protected function initializeItems()
+    {
+        $items = $this->getItems();
+        array_walk_recursive($items, function ($item) {
+            if ($item instanceof FormItemInterface) {
+                $item->initialize();
+            }
+        });
     }
 }

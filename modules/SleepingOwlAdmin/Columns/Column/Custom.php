@@ -13,17 +13,20 @@ class Custom extends BaseColumn
     protected $callback;
 
     /**
-     * Get or set callback.
-     *
-     * @param Closure|null $callback
-     *
-     * @return $this|Closure
+     * @return Closure
      */
-    public function callback($callback = null)
+    public function getCallback()
     {
-        if (is_null($callback)) {
-            return $this->callback;
-        }
+        return $this->callback;
+    }
+
+    /**
+     * @param Closure $callback
+     *
+     * @return $this
+     */
+    public function setCallback(Closure $callback)
+    {
         $this->callback = $callback;
 
         return $this;
@@ -32,18 +35,18 @@ class Custom extends BaseColumn
     /**
      * Get value from callback.
      *
-     * @param mixed $instance
+     * @param Model $model
      *
      * @return mixed
      * @throws \Exception
      */
-    protected function getValue($instance)
+    protected function getValue(Model $model)
     {
-        if (! is_callable($this->callback())) {
+        if (! is_callable($callback = $this->getCallback())) {
             throw new \Exception('Invalid custom column callback');
         }
 
-        return call_user_func($this->callback(), $instance);
+        return call_user_func($callback, $model);
     }
 
     /**
@@ -53,8 +56,8 @@ class Custom extends BaseColumn
     public function render()
     {
         return app('sleeping_owl.template')->view('column.custom', [
-            'value'  => $this->getValue($this->instance),
-            'append' => $this->append(),
+            'value'  => $this->getValue($this->getModel()),
+            'append' => $this->getAppend(),
         ]);
     }
 }

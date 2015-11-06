@@ -4,15 +4,11 @@ namespace KodiCMS\SleepingOwlAdmin\Columns\Column;
 
 class Checkbox extends BaseColumn
 {
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
-
-        $this->label('<input type="checkbox" class="adminCheckboxAll"/>');
-        $this->orderable(false);
+        $this->setLabel('<input type="checkbox" class="adminCheckboxAll"/>');
+        $this->setOrderable(false);
     }
 
     /**
@@ -21,7 +17,7 @@ class Checkbox extends BaseColumn
     public function render()
     {
         return app('sleeping_owl.template')->view('column.checkbox', [
-            'value' => $this->instance->getKey(),
+            'value' => $this->getModel()->getKey(),
         ]);
     }
 }
