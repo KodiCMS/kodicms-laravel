@@ -3,8 +3,14 @@
 namespace KodiCMS\CMS\Navigation;
 
 use UI;
+use Illuminate\Support\Str;
 use KodiCMS\Support\Traits\Accessor;
 
+/**
+ * Class ItemDecorator.
+ *
+ * @method setIcon($icon)
+ */
 class ItemDecorator
 {
     use Accessor;
@@ -135,5 +141,23 @@ class ItemDecorator
     public function getSection()
     {
         return $this->sectionObject;
+    }
+
+    /**
+     * is triggered when invoking inaccessible methods in an object context.
+     *
+     * @param $name      string
+     * @param $arguments array
+     *
+     * @return mixed
+     * @link http://php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.methods
+     */
+    public function __call($name, $arguments)
+    {
+        if (Str::startsWith($name, 'set') and count($arguments) === 1) {
+            $method = substr($name, 3);
+
+            return $this->setAttribute(strtolower($method), $arguments[0]);
+        }
     }
 }
