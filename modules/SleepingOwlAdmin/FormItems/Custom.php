@@ -59,6 +59,7 @@ class Custom extends BaseFormItem
 
         return $this;
     }
+
     /**
      * @return $this|Custom|mixed
      */
