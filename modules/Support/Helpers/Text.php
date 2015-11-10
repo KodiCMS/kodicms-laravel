@@ -4,13 +4,14 @@ namespace KodiCMS\Support\Helpers;
 
 /**
  * Class Text
- * TODO: Транслитирация только rus и lat? Китайцы не люди? )) Перепилить под интерфейс + классы транслитерации.
  * TODO: И да... выпилить статику Greabock 20.05.2015.
  */
 class Text
 {
     /**
-     * @param srtring $string
+     * TODO: Использовать сторонний пакет для работы со Slug
+     *
+     *@param srtring $string
      *
      * @return srtring
      */
