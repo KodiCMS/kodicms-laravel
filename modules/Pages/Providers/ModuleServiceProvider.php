@@ -10,7 +10,6 @@ use KodiCMS\Pages\Observers\PageObserver;
 use KodiCMS\Pages\Observers\PagePartObserver;
 use KodiCMS\Support\Facades\Block as BlockFacade;
 use KodiCMS\Pages\Model\PagePart as PagePartModel;
-use KodiCMS\Support\Facades\Wysiwyg as WysiwygFacade;
 use KodiCMS\Pages\Console\Commands\RebuildLayoutBlocksCommand;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -30,8 +29,7 @@ class ModuleServiceProvider extends ServiceProvider
     {
         $this->registerAliases([
             'Frontpage' => Frontpage::class,
-            'Block'     => BlockFacade::class,
-            'WYSIWYG'   => WysiwygFacade::class,
+            'Block'     => BlockFacade::class
         ]);
 
         $this->registerProviders([

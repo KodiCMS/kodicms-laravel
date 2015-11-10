@@ -3,6 +3,7 @@
 namespace KodiCMS\CMS\Providers;
 
 use KodiCMS\CMS\CMS;
+use KodiCMS\Support\Facades\Wysiwyg;
 use KodiCMS\Support\Facades\RouteAPI;
 use KodiCMS\Support\Helpers\Profiler;
 use Illuminate\Foundation\AliasLoader;
@@ -73,6 +74,7 @@ class ModuleLoaderServiceProvider extends BaseModuleServiceProvider
             'CMS'               => CMS::class,
             'DatabaseConfig'    => DatabaseConfig::class,
             'Profiler'          => Profiler::class,
+            'WYSIWYG'           => Wysiwyg::class,
         ]);
     }
 }
