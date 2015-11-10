@@ -235,6 +235,7 @@ class Installer
     }
 
     /**
+     * TODO: реализовать
      * Используется для установки данных из модулей.
      *
      * Метод проходится по модулям, ищет в них файл install.php, если существует
@@ -242,17 +243,17 @@ class Installer
      */
     protected function installModules()
     {
-        Artisan::call('cms:modules:install');
+        Artisan::call('modules:install');
     }
 
     protected function databaseMigrate()
     {
-        Artisan::call('cms:modules:migrate');
+        Artisan::call('modules:migrate');
     }
 
     protected function databaseSeed()
     {
-        Artisan::call('cms:modules:seed');
+        Artisan::call('modules:seed');
     }
 
     /**

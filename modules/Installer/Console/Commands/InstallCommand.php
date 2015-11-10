@@ -2,10 +2,9 @@
 
 namespace KodiCMS\Installer\Console\Commands;
 
-use App;
+use Config;
 use Installer;
 use ModulesLoader;
-use ModulesFileSystem;
 use EnvironmentTester;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Console\ConfirmableTrait;
@@ -103,7 +102,11 @@ class InstallCommand extends GeneratorCommand
             app()->call([$module, 'loadRoutes'], [app('router')]);
         }
 
-        ModulesFileSystem::loadConfigs();
+        foreach (ModulesLoader::getRegisteredModules() as $module) {
+            foreach ($module->loadConfig() as $group => $data) {
+                Config::set($group, $data);
+            }
+        }
     }
 
     /**
@@ -126,7 +129,7 @@ class InstallCommand extends GeneratorCommand
      */
     protected function migrate()
     {
-        $this->call('cms:modules:migrate', ['--force' => true]);
+        $this->call('modules:migrate', ['--force' => true]);
     }
 
     /**
@@ -134,7 +137,7 @@ class InstallCommand extends GeneratorCommand
      */
     protected function seed()
     {
-        $this->call('cms:modules:seed', ['--force' => true]);
+        $this->call('modules:seed', ['--force' => true]);
     }
 
     /**
