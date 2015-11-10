@@ -1,4 +1,4 @@
-@if(count($section) > 0 OR count($section->getSections()) > 0)
+@if(count($section) > 0 or $section->hasSections())
     <li class="mm-dropdown @if($section->isActive()) open @endif">
         <a href="#">
             {!! $section->getIcon() !!}

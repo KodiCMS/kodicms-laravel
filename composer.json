@@ -21,7 +21,8 @@
     "intervention/image": "^2.3",
     "kodicms/module-loader": "~2.0",
     "kodicms/laravel-api": "^1.0",
-    "kodicms/laravel-assets": "0.*"
+    "kodicms/laravel-assets": "0.*",
+    "kodicms/laravel-navigation": "1.*"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",

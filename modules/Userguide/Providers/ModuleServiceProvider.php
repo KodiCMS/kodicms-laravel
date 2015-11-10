@@ -3,15 +3,15 @@
 namespace KodiCMS\Userguide\Providers;
 
 use Event;
-use KodiCMS\CMS\Navigation\Page;
-use KodiCMS\CMS\Navigation\Section;
+use KodiCMS\Navigation\Page;
+use KodiCMS\Navigation\Navigation;
 use KodiCMS\Support\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        Event::listen('navigation.inited', function (Section $navigation) {
+        Event::listen('navigation.inited', function (Navigation $navigation) {
             $modules = array_reverse(config('userguide.modules'));
 
             // Remove modules that have been disabled via config
@@ -20,7 +20,7 @@ class ModuleServiceProvider extends ServiceProvider
                     continue;
                 }
 
-                if (! is_null($section = $navigation->findSection('Documentation'))) {
+                if (! is_null($section = $navigation->findSectionOrCreate('Documentation'))) {
                     $section->addPage(new Page([
                         'name'  => $key,
                         'icon'  => 'leanpub',
