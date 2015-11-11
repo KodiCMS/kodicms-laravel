@@ -1,0 +1,167 @@
+#profiler {
+    border-top: solid 1px #555;
+
+    table.profiler {
+        width: 100%;
+        margin: 0 auto;
+        border: 0;
+        border-bottom: 1px solid #555;
+        border-collapse: initial;
+
+        thead {
+            &[data-toggle="collapse"] {
+                cursor: n-resize;
+            }
+        }
+
+        tbody {
+            th, td {
+                border: solid 1px #ccc;
+            }
+        }
+
+        th, td {
+            padding: 0 0.4em;
+            background: #fff;
+            border-width: 1px 0;
+            text-align: left;
+            font-weight: normal;
+            font-size: 1em;
+            color: #111;
+            vertical-align: top;
+            text-align: right;
+        }
+
+        tr.group {
+            th {
+                background: #222;
+                color: #eee;
+                border-color: #222;
+            }
+
+            td {
+                background: #222;
+                color: #777;
+                border-color: #222;
+            }
+
+            td.time {
+                padding-bottom: 0;
+            }
+        }
+
+        tr.headers {
+            th {
+                text-transform: lowercase;
+                font-variant: small-caps;
+                background: #ddd;
+                color: #777;
+            }
+        }
+
+        tr.mark {
+            th.name {
+                width: 40%;
+                background: #fff;
+                vertical-align: middle;
+            }
+
+            td {
+                padding: 0;
+
+                > div {
+                    position: relative;
+                    padding: 0.2em 0.4em;
+                }
+
+                div.value {
+                    position: relative;
+                    z-index: 2;
+                }
+
+                div.graph {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    right: 0;
+                    left: 100%;
+                    background: #71bdf0;
+                    z-index: 1;
+                }
+            }
+
+            &.final td {
+                padding: 0 0.4em;
+            }
+
+            &.memory td div.graph {
+                background: #acd4f0;
+            }
+
+            td.current {
+                background: #eddecc;
+            }
+
+            td.min {
+                background: #d2f1cb;
+            }
+
+            td.max {
+                background: #ead3cb;
+            }
+
+            td.average {
+                background: #ddd;
+            }
+
+            td.total {
+                background: #d0e3f0;
+            }
+        }
+
+        tr.time {
+            td {
+                border-bottom: 0;
+                font-weight: bold;
+            }
+        }
+
+        tr.memory {
+            td {
+                border-top: 0;
+            }
+        }
+
+        tr.final {
+            th.name {
+                background: #222;
+                color: #fff;
+            }
+        }
+
+        abbr {
+            border: 0;
+            color: #777;
+            font-weight: normal;
+        }
+    }
+
+    table.profiler,
+    table.profiler th.name {
+        text-align: left;
+    }
+
+    table.profiler:hover {
+        tr.group td {
+            color: #ccc;
+        }
+
+        tr.mark td div.graph {
+            background: #1197f0;
+        }
+
+        tr.mark.memory td div.graph {
+            background: #7cc1f0;
+        }
+    }
+}
