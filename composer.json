@@ -19,7 +19,7 @@
     "doctrine/dbal": "~2.3",
     "yajra/laravel-datatables-oracle": "~5.0",
     "intervention/image": "^2.3",
-    "kodicms/module-loader": "~2.0",
+    "kodicms/module-loader": "2.*",
     "kodicms/laravel-api": "^1.0",
     "kodicms/laravel-assets": "0.*",
     "kodicms/laravel-navigation": "1.*"
@@ -52,14 +52,16 @@
   "scripts": {
     "post-install-cmd": [
       "php artisan clear-compiled",
-      "php artisan optimize"
+      "php artisan optimize",
+      "php artisan modules:assets:publish"
     ],
     "pre-update-cmd": [
       "php artisan clear-compiled"
     ],
     "post-update-cmd": [
       "php artisan ide-helper:generate",
-      "php artisan optimize"
+      "php artisan optimize",
+      "php artisan modules:assets:publish"
     ],
     "post-root-package-install": [
       "php -r \"copy('.env.example', '.env');\""
