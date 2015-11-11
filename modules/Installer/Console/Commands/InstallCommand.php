@@ -30,6 +30,7 @@ class InstallCommand extends GeneratorCommand
      * Configs DB.
      */
     protected $DBConfigs = [
+        'driver' => 'DB_DRIVER',
         'host' => 'DB_HOST',
         'database' => 'DB_DATABASE',
         'username' => 'DB_USERNAME',
@@ -163,6 +164,19 @@ class InstallCommand extends GeneratorCommand
             $config = array_add($config, $option[0], $this->input->getOption($option[0]));
         }
 
+        $config = $this->configDBConnection($config, 'DB_DRIVER', 'DB_DATABASE');
+
+        return $config;
+    }
+
+    private function configDBConnection($config, $opt_driver, $opt_database)
+    {
+        if (array_get($config, $opt_driver) == 'sqlite') {
+            $filename = array_get($config, $opt_database);
+            if (!file_exists($filename)) {
+                array_set($config, $opt_database, storage_path() . DIRECTORY_SEPARATOR . $filename . '.sqlite');
+            }
+        }
         return $config;
     }
 
@@ -173,6 +187,7 @@ class InstallCommand extends GeneratorCommand
             foreach ($this->DBConfigs as $key => $value) {
                 $config = array_add($config, $key, $this->input->getOption($value));
             }
+            $config = $this->configDBConnection($config, 'driver', 'database');
 
             return Installer::createDBConnection($config);
         } catch (InstallDatabaseException $e) {
@@ -201,6 +216,7 @@ class InstallCommand extends GeneratorCommand
         $defaults = Installer::getDefaultEnvironment();
 
         return [
+            ['DB_DRIVER', 'driver', InputOption::VALUE_OPTIONAL, 'Database driver', array_get($defaults, 'DB_DRIVER')],
             ['DB_HOST', 'host', InputOption::VALUE_OPTIONAL, 'Database host', array_get($defaults, 'DB_HOST')],
             ['DB_DATABASE', 'db', InputOption::VALUE_OPTIONAL, 'Database name', array_get($defaults, 'DB_DATABASE')],
             ['DB_USERNAME', 'u', InputOption::VALUE_OPTIONAL, 'Database username', array_get($defaults, 'DB_USERNAME')],
