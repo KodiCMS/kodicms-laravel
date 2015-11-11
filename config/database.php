@@ -25,7 +25,7 @@ return [
     |
     */
 
-    'default'     => 'mysql',
+    'default'     => env('DB_DRIVER', 'mysql'),
     /*
     |--------------------------------------------------------------------------
     | Database Connections
@@ -46,8 +46,8 @@ return [
 
         'sqlite'       => [
             'driver'   => 'sqlite',
-            'database' => storage_path().DIRECTORY_SEPARATOR.'database.sqlite',
-            'prefix'   => '',
+            'database' => env('DB_DATABASE', storage_path().DIRECTORY_SEPARATOR.'forge.sqlite'),
+            'prefix'   => env('DB_PREFIX', ''),
         ],
         'mysql'        => [
             'driver'    => 'mysql',

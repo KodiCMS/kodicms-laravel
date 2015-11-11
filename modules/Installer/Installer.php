@@ -67,6 +67,7 @@ class Installer
             'APP_ENV'        => env('APP_ENV', 'local'),
             'APP_DEBUG'      => config('cms.debug', true),
             'APP_KEY'        => str_random(32),
+            'DB_DRIVER'      => env('DB_DRIVER', 'mysql'),
             'DB_HOST'        => env('DB_HOST', 'localhost'),
             'DB_DATABASE'    => env('DB_DATABASE', 'homestead'),
             'DB_USERNAME'    => env('DB_USERNAME', 'homestead'),
@@ -133,7 +134,7 @@ class Installer
      */
     public function getAvailableDatabaseDrivers()
     {
-        return ['mysql'];
+        return ['mysql', 'sqlite'];
     }
 
     /**
@@ -166,7 +167,7 @@ class Installer
     /**
      * Создание коннекта к БД.
      *
-     * @param array $config [host,database,username,password]
+     * @param array $config [driver,host,database,username,password]
      *
      * @return DatabaseManager
      * @throws InstallDatabaseException
@@ -176,10 +177,18 @@ class Installer
         // Сбрасываем подключение к БД
         DB::purge();
 
+        $driver = $config['driver'];
+        if ($driver == 'sqlite') {
+            if (is_dir(dirname($config['database'])) AND !file_exists($config['database'])) {
+                @touch($config['database']);
+            }        }
+        unset($config['driver']);
+
         // Обновляем данные подключения к БД
         foreach ($config as $key => $value) {
-            Config::set("database.connections.mysql.{$key}", $value);
+            Config::set("database.connections.{$driver}.{$key}", $value);
         }
+        Config::set("database.default", $driver);
 
         try {
             return DB::connection();
@@ -195,13 +204,21 @@ class Installer
     {
         $tables = DB::connection()->getPdo()->query('SHOW FULL TABLES')->fetchAll();
 
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        if (Config::get('database.default') == 'mysql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        } else if (Config::get('database.default') == 'sqlite') {
+            DB::statement('PRAGMA foreign_keys = OFF');
+        }
 
         foreach ($tables as $table) {
             Schema::dropIfExists($table[0]);
         }
 
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+        if (Config::get('database.default') == 'mysql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        } else if (Config::get('database.default') == 'sqlite') {
+            DB::statement('PRAGMA foreign_keys = ON');
+        }
     }
 
     /**

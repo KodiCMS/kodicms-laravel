@@ -19,13 +19,14 @@ class InstallerController extends Controller
         $this->setContent(
             Installer::createDBConnection(
                 array_only($post, [
+                    'driver',
                     'host',
                     'username',
                     'password',
                     'database',
                     'prefix',
                 ])
-            ) instanceof MySqlConnection
+            ) instanceof Connection
         );
     }
 }

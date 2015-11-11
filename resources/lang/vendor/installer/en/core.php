@@ -27,6 +27,7 @@ return [
 	],
 	'field' => [
 		'current_language' => 'Current language',
+		'db_driver' => 'Driver',
 		'db_server' => 'Server',
 		'db_username' => 'DB Username',
 		'db_password' => 'DB Password',
