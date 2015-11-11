@@ -21,9 +21,9 @@ $application_cols = ['min', 'max', 'average', 'current'];
                 </thead>
                 <tbody class="collapse" id="collapse_{{ snake_case($group) }}">
                 <tr class="headers">
-                    <th class="name">@lang('core::profiler.benchmark')</th>
+                    <th class="name">@lang('cms::profiler.benchmark')</th>
                     @foreach ($group_cols as $key)
-                        <th class="{{ $key }}">@lang("core::profiler.{$key}")</th>
+                        <th class="{{ $key }}">@lang("cms::profiler.{$key}")</th>
                     @endforeach
                 </tr>
                 @foreach ($benchmarks as $name => $tokens)
@@ -62,7 +62,7 @@ $application_cols = ['min', 'max', 'average', 'current'];
             <thead>
             <?php $stats = Profiler::application() ?>
             <tr class="final mark time">
-                <th class="name" rowspan="2" scope="rowgroup">@lang('core::profiler.application_execution') ({{ $stats['count'] }})</th>
+                <th class="name" rowspan="2" scope="rowgroup">@lang('cms::profiler.application_execution') ({{ $stats['count'] }})</th>
                 @foreach ($application_cols as $key)
                     <td class="{{ $key }}">{{ number_format($stats[$key]['time'], 6) }} <abbr title="seconds">s</abbr></td>
                 @endforeach

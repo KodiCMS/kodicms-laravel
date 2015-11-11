@@ -3,7 +3,7 @@
 return [
     'title'                 => 'Профайлер',
     'application_execution' => 'Запуск приложения',
-    'benchmark'             => 'Бенчмарк',
+    'benchmark'             => 'Benchmark',
     'min'                   => 'Мин',
     'max'                   => 'Макс',
     'average'               => 'Среднее',
