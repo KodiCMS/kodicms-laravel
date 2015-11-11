@@ -23,15 +23,15 @@ class Pages extends Migration
             $table->string('slug', 100)->index();
             $table->string('breadcrumb', 100);
 
-            $table->string('meta_title');
-            $table->string('meta_keywords');
-            $table->text('meta_description');
+            $table->string('meta_title')->nullable();
+            $table->string('meta_keywords')->nullable();
+            $table->text('meta_description')->nullable();
 
-            $table->string('robots', 100);
-            $table->string('layout_file');
+            $table->string('robots', 100)->nullable();
+            $table->string('layout_file')->nullable();
 
-            $table->unsignedInteger('created_by_id');
-            $table->unsignedInteger('updated_by_id');
+            $table->unsignedInteger('created_by_id')->nullable();
+            $table->unsignedInteger('updated_by_id')->nullable();
 
             $table->smallInteger('position')->default(0);
 

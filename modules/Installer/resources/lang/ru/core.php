@@ -32,6 +32,7 @@ return [
     ],
     'field'    => [
         'current_language' => 'Текущий язык',
+        'db_driver'        => 'Драйвер',
         'db_server'        => 'Сервер',
         'db_username'      => 'Имя пользователя',
         'db_password'      => 'Пароль',

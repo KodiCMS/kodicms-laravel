@@ -2,6 +2,7 @@
 
 namespace KodiCMS\Installer\Console\Commands;
 
+use Config;
 use DB;
 use Schema;
 use Illuminate\Console\Command;
@@ -43,12 +44,12 @@ class DropDatabaseCommand extends Command
             return;
         }
 
-        $tables = [];
+        $tables = Schema::getConnection()->getDoctrineSchemaManager()->listTableNames();
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
-        foreach (DB::select('SHOW TABLES') as $k => $v) {
-            $tables[] = array_values((array) $v)[0];
+        if (Config::get('database.default') == 'mysql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        } else if (Config::get('database.default') == 'sqlite') {
+            DB::statement('PRAGMA foreign_keys = OFF');
         }
 
         foreach ($tables as $table) {
@@ -56,7 +57,11 @@ class DropDatabaseCommand extends Command
             $this->info("Table [{$table}] has been dropped.");
         }
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        if (Config::get('database.default') == 'mysql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        } else if (Config::get('database.default') == 'sqlite') {
+            DB::statement('PRAGMA foreign_keys = ON');
+        }
     }
 
     /**
