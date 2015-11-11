@@ -18,8 +18,6 @@ class UserguideController extends BackendController
         }
 
         parent::before();
-
-        $this->setTitle(trans($this->wrapNamespace('core.title')));
     }
 
     public function getIndex()
@@ -59,7 +57,6 @@ class UserguideController extends BackendController
 
         $menu = view($this->wrapNamespace('menu'), compact('menuItems', 'title'));
 
-        $this->setTitle($title, UserguideMarkdown::$baseUrl);
         $this->setTitle($this->title($module, $page));
 
         $this->setContent('doc', compact('title', 'menu', 'content'));
