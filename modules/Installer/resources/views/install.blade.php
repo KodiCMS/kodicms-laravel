@@ -26,10 +26,19 @@
 			<div class="panel-body">
 				<div class="connection-settings">
 					<div class="form-group">
+						<label class="control-label col-md-3" for="db_driver">@lang('installer::core.field.db_driver')</label>
+						<div class="col-md-3">
+							{!! Form::select('database[driver]', array_combine($dbDrivers, $dbDrivers),array_get($database, 'driver'), [
+                                'id' => 'db_driver', 'class' => 'form-control col-sm-auto'
+                            ]) !!}
+						</div>
+					</div>
+
+					<div class="form-group">
 						<label class="control-label col-md-3" for="db_host">@lang('installer::core.field.db_server')</label>
 						<div class="col-md-9">
 							{!! Form::text('database[host]', array_get($database, 'host'), [
-								'class' => 'form-control col-sm-auto', 'id' => 'db_host', 'required'
+								'class' => 'form-control col-sm-auto', 'id' => 'db_host'
 							]) !!}
 						</div>
 					</div>
@@ -38,7 +47,7 @@
 						<label class="control-label col-md-3" for="db_username">@lang('installer::core.field.db_username')</label>
 						<div class="col-md-9 form-inline">
 							{!! Form::text('database[username]', array_get($database, 'username'), [
-								'class' => 'form-control col-sm-auto', 'id' => 'db_username', 'required'
+								'class' => 'form-control col-sm-auto', 'id' => 'db_username',
 							]) !!}
 						</div>
 					</div>
@@ -120,10 +129,10 @@
 			</div>
 			<div class="panel-body">
 				<div class="form-group form-group-lg">
-					<label class="control-label col-md-3" for="site_name">@lang('installer::core.field.site_title')</label>
+					<label class="control-label col-md-3" for="site_title">@lang('installer::core.field.site_title')</label>
 					<div class="col-md-9">
-						{!! Form::text('install[site_name]', array_get($data, 'site_name'), [
-							'class' => 'form-control', 'id' => 'site_name', 'required'
+						{!! Form::text('install[site_title]', array_get($data, 'site_title'), [
+							'class' => 'form-control', 'id' => 'site_title', 'required'
 						]) !!}
 					</div>
 				</div>
@@ -154,14 +163,14 @@
 				<div class="form-group">
 					<label class="control-label col-md-3">@lang('installer::core.field.timezone')</label>
 					<div class="col-md-3">
-						{!! Form::select('install[timezone]', $timezones, array_get($data, 'timezone'), ['class' => 'form-control']) !!}
+						{!! Form::select('install[timezone]', array_combine($timezones, $timezones), array_get($data, 'timezone'), ['class' => 'form-control']) !!}
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="control-label col-md-3">@lang('installer::core.field.date_format')</label>
 					<div class="col-md-3">
-						{!! Form::select('install[date_format]', $dateFormats, array_get($data, 'date_format'), ['class' => 'form-control']) !!}
+						{!! Form::select('install[date_format]', array_combine($dateFormats, $dateFormats), array_get($data, 'date_format'), ['class' => 'form-control']) !!}
 					</div>
 				</div>
 			</div>
@@ -175,14 +184,14 @@
 				<div class="form-group">
 					<label class="control-label col-md-3">@lang('installer::core.field.cache_type')</label>
 					<div class="col-md-3">
-						{!! Form::select('install[cache_type]', $cacheTypes, array_get($data, 'cache_type')) !!}
+						{!! Form::select('install[cache_driver]', array_combine($cacheDrivers, $cacheDrivers), array_get($data, 'cache_driver')) !!}
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="control-label col-md-3">@lang('installer::core.field.session_type')</label>
 					<div class="col-md-3">
-						{!! Form::select('install[session_type]', $sessionTypes, array_get($data, 'session_type')) !!}
+						{!! Form::select('install[session_driver]', array_combine($sessionDrivers, $sessionDrivers), array_get($data, 'session_driver')) !!}
 					</div>
 				</div>
 			</div>

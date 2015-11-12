@@ -70,7 +70,7 @@ class Handler extends ExceptionHandler
      *
      * @return APIResponse
      */
-    protected function renderApiException(Exception $e)
+    protected function renderApiException(\Exception $e)
     {
         return (new APIResponse(config('app.debug')))->createExceptionResponse($e);
     }

@@ -3,7 +3,7 @@
 namespace KodiCMS\Installer\Http\Controllers\API;
 
 use Installer;
-use Illuminate\Database\MySqlConnection;
+use Illuminate\Database\Connection;
 use KodiCMS\API\Http\Controllers\System\Controller;
 
 class InstallerController extends Controller
