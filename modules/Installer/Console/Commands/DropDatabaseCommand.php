@@ -44,22 +44,34 @@ class DropDatabaseCommand extends Command
             return;
         }
 
-        $tables = Schema::getConnection()->getDoctrineSchemaManager()->listTableNames();
+        $driver = Config::get('database.default');
 
-        if (Config::get('database.default') == 'mysql') {
+        if ($driver == 'sqlite') {
+            $query = "SELECT tbl_name as name FROM sqlite_master WHERE type = 'table' AND tbl_name NOT LIKE 'sqlite_%'";
+        } else {
+            // https://en.wikipedia.org/wiki/Information_schema
+            $database = Config::get("database.$driver.database");
+            $query = "SELECT table_name as name FROM information_schema.tables  WHERE table_schema LIKE '$database'";
+        }
+
+        $tables = DB::connection()->select($query);
+
+        print_r($tables);
+
+        if ($driver == 'mysql') {
             DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        } else if (Config::get('database.default') == 'sqlite') {
+        } else if ($driver == 'sqlite') {
             DB::statement('PRAGMA foreign_keys = OFF');
         }
 
         foreach ($tables as $table) {
-            Schema::drop($table);
-            $this->info("Table [{$table}] has been dropped.");
+            Schema::drop($table->name);
+            $this->info("Table [{$table->name}] has been dropped.");
         }
 
-        if (Config::get('database.default') == 'mysql') {
+        if ($driver == 'mysql') {
             DB::statement('SET FOREIGN_KEY_CHECKS=1');
-        } else if (Config::get('database.default') == 'sqlite') {
+        } else if ($driver == 'sqlite') {
             DB::statement('PRAGMA foreign_keys = ON');
         }
     }
