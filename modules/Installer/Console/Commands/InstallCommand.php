@@ -87,7 +87,7 @@ class InstallCommand extends GeneratorCommand
             $this->dropDatabase();
         }
 
-        $this->initModules();
+        Installer::initModules();
 
         $this->migrate();
         if ($this->confirm('Install seed data?')) {
@@ -95,19 +95,6 @@ class InstallCommand extends GeneratorCommand
         }
 
         $this->info('Installation completed successfully');
-    }
-
-    protected function initModules()
-    {
-        foreach (ModulesLoader::getRegisteredModules() as $module) {
-            app()->call([$module, 'loadRoutes'], [app('router')]);
-        }
-
-        foreach (ModulesLoader::getRegisteredModules() as $module) {
-            foreach ($module->loadConfig() as $group => $data) {
-                Config::set($group, $data);
-            }
-        }
     }
 
     /**
@@ -164,19 +151,8 @@ class InstallCommand extends GeneratorCommand
             $config = array_add($config, $option[0], $this->input->getOption($option[0]));
         }
 
-        $config = $this->configDBConnection($config, 'DB_DRIVER', 'DB_DATABASE');
+        $config = Installer::configDBConnection($config, 'DB_DRIVER', 'DB_DATABASE');
 
-        return $config;
-    }
-
-    private function configDBConnection($config, $opt_driver, $opt_database)
-    {
-        if (array_get($config, $opt_driver) == 'sqlite') {
-            $filename = array_get($config, $opt_database);
-            if (!file_exists($filename)) {
-                array_set($config, $opt_database, storage_path() . DIRECTORY_SEPARATOR . $filename . '.sqlite');
-            }
-        }
         return $config;
     }
 
@@ -187,7 +163,7 @@ class InstallCommand extends GeneratorCommand
             foreach ($this->DBConfigs as $key => $value) {
                 $config = array_add($config, $key, $this->input->getOption($value));
             }
-            $config = $this->configDBConnection($config, 'driver', 'database');
+            $config = Installer::configDBConnection($config, 'driver', 'database');
 
             return Installer::createDBConnection($config);
         } catch (InstallDatabaseException $e) {

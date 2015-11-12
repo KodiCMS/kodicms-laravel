@@ -46,7 +46,7 @@ return [
 	],
 	'messages' => [
 		'not_installed' => 'File Not Found environment :file. You can create it manually and install the system via the console, or use the installer.',
-		'database_name_inforamtion' => 'You must specify the name of an existing database',
+		'database_name_inforamtion' => 'You must specify the name of an existing database, or filename (when select sqlite)',
 		'database_connection_failed' => 'Unable to connect to database',
 		'database_no_password' => 'If you connect to the database does not require a password, leave it blank.',
 		'database_connection_information' => 'You need to specify the figures in the database connection. For details, contact the administrator.',

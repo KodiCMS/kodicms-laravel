@@ -48,20 +48,22 @@ class InstallerController extends FrontendController
 
         list($failed, $tests, $optional) = EnvironmentTester::check();
 
+        $moduleNamespace = \ModulesFileSystem::getModuleNameByNamespace().'::';
         $this->setContent('install', [
-            'environment'    => view("{$this->moduleNamespace}env", [
+            'environment'    => view("{$moduleNamespace}env", [
                 'failed'   => $failed,
                 'tests'    => $tests,
                 'optional' => $optional,
             ]),
             'data'           => $this->installer->getParameters(),
+            'dbDrivers'      => $this->installer->getAvailableDatabaseDrivers(),
             'database'       => $this->installer->getDatabaseParameters(),
             'locales'        => config('cms.locales'),
             'selectedLocale' => Lang::locale(),
             'dateFormats'    => config('cms.date_format_list'),
             'timezones'      => Date::getTimezones(),
-            'cacheTypes'     => ['file' => 'File'],
-            'sessionTypes'   => ['file' => 'File', 'database' => 'Database'],
+            'cacheDrivers'   => $this->installer->getAvailableCacheTypes(),
+            'sessionDrivers' => $this->installer->getAvailableSessionTypes(),
         ]);
 
         $this->templateScripts['FAILED'] = $failed;
