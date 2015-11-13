@@ -60,7 +60,7 @@ class DropDatabaseCommand extends Command
 
         if ($driver == 'mysql') {
             DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        } else if ($driver == 'sqlite') {
+        } elseif ($driver == 'sqlite') {
             DB::statement('PRAGMA foreign_keys = OFF');
         }
 
@@ -71,7 +71,7 @@ class DropDatabaseCommand extends Command
 
         if ($driver == 'mysql') {
             DB::statement('SET FOREIGN_KEY_CHECKS=1');
-        } else if ($driver == 'sqlite') {
+        } elseif ($driver == 'sqlite') {
             DB::statement('PRAGMA foreign_keys = ON');
         }
     }

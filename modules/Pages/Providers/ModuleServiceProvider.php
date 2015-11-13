@@ -29,7 +29,7 @@ class ModuleServiceProvider extends ServiceProvider
     {
         $this->registerAliases([
             'Frontpage' => Frontpage::class,
-            'Block'     => BlockFacade::class
+            'Block'     => BlockFacade::class,
         ]);
 
         $this->registerProviders([

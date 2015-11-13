@@ -196,12 +196,13 @@ class Installer
     {
         if (array_get($config, $opt_driver) == 'sqlite') {
             $database = array_get($config, $opt_database);
-            list( $dirname ) = array_values( pathinfo($database) );
-            if (empty($dirname) OR $dirname == '.' OR $dirname == '..') {
-                $database = storage_path() . DIRECTORY_SEPARATOR . $database . '.sqlite';
+            list($dirname) = array_values(pathinfo($database));
+            if (empty($dirname) or $dirname == '.' or $dirname == '..') {
+                $database = storage_path().DIRECTORY_SEPARATOR.$database.'.sqlite';
             }
             array_set($config, $opt_database, $database);
         }
+
         return $config;
     }
 
@@ -220,16 +221,17 @@ class Installer
 
         $driver = $config['driver'];
         if ($driver == 'sqlite') {
-            if (is_dir(dirname($config['database'])) AND !file_exists($config['database'])) {
+            if (is_dir(dirname($config['database'])) and ! file_exists($config['database'])) {
                 @touch($config['database']);
-            }        }
+            }
+        }
         unset($config['driver']);
 
         // Обновляем данные подключения к БД
         foreach ($config as $key => $value) {
             Config::set("database.connections.{$driver}.{$key}", $value);
         }
-        Config::set("database.default", $driver);
+        Config::set('database.default', $driver);
 
         try {
             return DB::connection();

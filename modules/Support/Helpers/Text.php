@@ -9,7 +9,7 @@ namespace KodiCMS\Support\Helpers;
 class Text
 {
     /**
-     * TODO: Использовать сторонний пакет для работы со Slug
+     * TODO: Использовать сторонний пакет для работы со Slug.
      *
      *@param srtring $string
      *

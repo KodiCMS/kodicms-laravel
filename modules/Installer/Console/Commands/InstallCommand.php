@@ -2,9 +2,7 @@
 
 namespace KodiCMS\Installer\Console\Commands;
 
-use Config;
 use Installer;
-use ModulesLoader;
 use EnvironmentTester;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Console\ConfirmableTrait;

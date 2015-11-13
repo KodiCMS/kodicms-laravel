@@ -27,7 +27,7 @@ class NavigationBreadcrumbs
     public function __construct(Breadcrumbs $breadcrumbs, Page $page)
     {
         $this->breadcrumbs = $breadcrumbs;
-        $this->page        = $page;
+        $this->page = $page;
 
         $this->build();
     }
@@ -38,7 +38,7 @@ class NavigationBreadcrumbs
             $this->addBreadcrumb($parent);
         }
 
-        if(!is_null($title = $this->page->getName())) {
+        if (! is_null($title = $this->page->getName())) {
             $this->breadcrumbs->add($this->page->getName(), $this->page->getUrl());
         }
     }
