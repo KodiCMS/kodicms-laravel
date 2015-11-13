@@ -17,7 +17,7 @@ class PostJson
      */
     public function handle($request, Closure $next)
     {
-        if (0 === strpos($request->headers->get('CONTENT_TYPE'), 'application/json') AND Request::isMethod('post')) {
+        if (0 === strpos($request->headers->get('CONTENT_TYPE'), 'application/json') and Request::isMethod('post')) {
             $request->request = new ParameterBag(
                 json_decode($request->getContent(), true)
             );

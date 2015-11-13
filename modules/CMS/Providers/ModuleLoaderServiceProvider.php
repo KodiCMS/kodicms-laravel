@@ -8,6 +8,7 @@ use KodiCMS\Support\Facades\RouteAPI;
 use KodiCMS\Support\Helpers\Profiler;
 use Illuminate\Foundation\AliasLoader;
 use KodiCMS\Support\Facades\KeysHelper;
+use KodiCMS\Assets\AssetsServiceProvider;
 use KodiCMS\Support\Loader\ModulesLoader;
 use KodiCMS\Support\Facades\DatabaseConfig;
 use KodiCMS\ModulesLoader\ModulesFileSystem;
@@ -34,6 +35,7 @@ class ModuleLoaderServiceProvider extends BaseModuleServiceProvider
         AppServiceProvider::class,
         ConfigServiceProvider::class,
         AuthServiceProvider::class,
+        AssetsServiceProvider::class,
     ];
 
     /**

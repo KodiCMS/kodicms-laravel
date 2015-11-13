@@ -141,7 +141,6 @@ return [
         KodiCMS\Support\Html\HtmlServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         KodiCMS\CMS\Providers\ModuleLoaderServiceProvider::class,
-        KodiCMS\Assets\AssetsServiceProvider::class,
 
         /*
          * App Service Providers must be here...

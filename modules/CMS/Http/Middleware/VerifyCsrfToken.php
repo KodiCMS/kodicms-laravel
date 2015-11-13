@@ -2,16 +2,22 @@
 
 namespace KodiCMS\CMS\Http\Middleware;
 
+use Illuminate\Contracts\Encryption\Encrypter;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
 
 class VerifyCsrfToken extends BaseVerifier
 {
     /**
-     * The URIs that should be excluded from CSRF verification.
+     * Create a new middleware instance.
      *
-     * @var array
+     * @param  \Illuminate\Contracts\Encryption\Encrypter  $encrypter
+     * @return void
      */
-    protected $except = [
-        'api.filemanager',
-    ];
+    public function __construct(Encrypter $encrypter)
+    {
+        $this->encrypter = $encrypter;
+
+        // TODO: добавить возможность, чтобы модули сами могли добавлять исключения
+        $this->except[] = 'api.filemanager';
+    }
 }

@@ -4,37 +4,29 @@ namespace KodiCMS\CMS\Http;
 
 define('LARAVEL_START_MEMORY', memory_get_usage());
 
+use Illuminate\Routing\Router;
 use KodiCMS\Support\Helpers\Profiler;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
     /**
-     * The application's global HTTP middleware stack.
+     * Create a new HTTP kernel instance.
      *
-     * @var array
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     * @param  \Illuminate\Routing\Router  $router
+     * @return void
      */
-    protected $middleware = [
-        \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
-        \KodiCMS\CMS\Http\Middleware\EncryptCookies::class,
-        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-        \Illuminate\Session\Middleware\StartSession::class,
-        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \KodiCMS\CMS\Http\Middleware\PostJson::class,
-        \KodiCMS\CMS\Http\Middleware\VerifyCsrfToken::class,
-    ];
+    public function __construct(Application $app, Router $router)
+    {
+        $this->middleware[] = \KodiCMS\CMS\Http\Middleware\PostJson::class;
 
-    /**
-     * The application's route middleware.
-     *
-     * @var array
-     */
-    protected $routeMiddleware = [
-        'backend.auth'  => \KodiCMS\Users\Http\Middleware\BackendAuthenticate::class,
-        'backend.guest' => \KodiCMS\Users\Http\Middleware\BackendRedirectIfAuthenticated::class,
-        'auth'          => \KodiCMS\Users\Http\Middleware\Authenticate::class,
-        'guest'         => \KodiCMS\Users\Http\Middleware\RedirectIfAuthenticated::class,
-    ];
+        $this->routeMiddleware['backend.auth'] = \KodiCMS\Users\Http\Middleware\BackendAuthenticate::class;
+        $this->routeMiddleware['backend.guest'] = \KodiCMS\Users\Http\Middleware\BackendRedirectIfAuthenticated::class;
+
+        parent::__construct($app, $router);
+    }
 
     /**
      * Bootstrap the application for HTTP requests.
