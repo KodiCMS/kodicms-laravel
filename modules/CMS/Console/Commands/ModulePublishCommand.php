@@ -23,6 +23,13 @@ class ModulePublishCommand extends VendorPublishCommand
     protected $description = 'Publish any publishable assets from modules';
 
     /**
+     * The console command signature.
+     *
+     * @var string
+     */
+    protected $signature = null;
+
+    /**
      * Execute the console command.
      *
      * @return void
