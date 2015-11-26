@@ -3,8 +3,9 @@
 namespace KodiCMS\Datasource\Providers;
 
 use Event;
-use KodiCMS\CMS\Navigation\Page;
-use KodiCMS\CMS\Navigation\Section;
+use KodiCMS\Navigation\Page;
+use KodiCMS\Navigation\Section;
+use KodiCMS\Navigation\Navigation;
 use KodiCMS\Support\ServiceProvider;
 use KodiCMS\Datasource\FieldManager;
 use KodiCMS\Datasource\FieldGroupManager;
@@ -45,8 +46,8 @@ class ModuleServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        Event::listen('navigation.inited', function (Section $navigation) {
-            if (! is_null($section = $navigation->findSection('Datasources'))) {
+        Event::listen('navigation.inited', function (Navigation $navigation) {
+            if (! is_null($section = $navigation->findSectionOrCreate('Datasources'))) {
                 $sections = app('datasource.manager')->getSections();
 
                 foreach ($sections as $dsSection) {
@@ -66,7 +67,8 @@ class ModuleServiceProvider extends ServiceProvider
                 }
 
                 $types = app('datasource.manager')->getAvailableTypes();
-                $subSection = new Section([
+
+                $subSection = new Section($navigation, [
                     'name'  => 'Datasource',
                     'label' => trans('datasource::core.button.create'),
                     'icon'  => 'plus',

@@ -2,6 +2,7 @@
 
 namespace KodiCMS\Email\database\seeds;
 
+use Config;
 use DB;
 use Illuminate\Database\Seeder;
 
@@ -14,9 +15,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        if (Config::get('database.default') == 'mysql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        } elseif (Config::get('database.default') == 'sqlite') {
+            DB::statement('PRAGMA foreign_keys = OFF');
+        }
+
         $this->call(EmailEventsTableSeeder::class);
         $this->call(EmailTemplatesTableSeeder::class);
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+        if (Config::get('database.default') == 'mysql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        } elseif (Config::get('database.default') == 'sqlite') {
+            DB::statement('PRAGMA foreign_keys = ON');
+        }
     }
 }

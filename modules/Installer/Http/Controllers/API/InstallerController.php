@@ -3,7 +3,7 @@
 namespace KodiCMS\Installer\Http\Controllers\API;
 
 use Installer;
-use Illuminate\Database\MySqlConnection;
+use Illuminate\Database\Connection;
 use KodiCMS\API\Http\Controllers\System\Controller;
 
 class InstallerController extends Controller
@@ -19,13 +19,14 @@ class InstallerController extends Controller
         $this->setContent(
             Installer::createDBConnection(
                 array_only($post, [
+                    'driver',
                     'host',
                     'username',
                     'password',
                     'database',
                     'prefix',
                 ])
-            ) instanceof MySqlConnection
+            ) instanceof Connection
         );
     }
 }

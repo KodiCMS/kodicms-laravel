@@ -165,6 +165,14 @@ abstract class BasePluginContainer extends ModuleContainer
     }
 
     /**
+     * @return string
+     */
+    public function getAssetsPublicPath()
+    {
+        return public_path('cms'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$this->getName());
+    }
+
+    /**
      * @return bool
      */
     public function checkActivation()

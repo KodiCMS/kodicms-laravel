@@ -3,10 +3,12 @@
 namespace KodiCMS\CMS\Providers;
 
 use KodiCMS\CMS\CMS;
+use KodiCMS\Support\Facades\Wysiwyg;
 use KodiCMS\Support\Facades\RouteAPI;
 use KodiCMS\Support\Helpers\Profiler;
 use Illuminate\Foundation\AliasLoader;
 use KodiCMS\Support\Facades\KeysHelper;
+use KodiCMS\Assets\AssetsServiceProvider;
 use KodiCMS\Support\Loader\ModulesLoader;
 use KodiCMS\Support\Facades\DatabaseConfig;
 use KodiCMS\ModulesLoader\ModulesFileSystem;
@@ -33,6 +35,7 @@ class ModuleLoaderServiceProvider extends BaseModuleServiceProvider
         AppServiceProvider::class,
         ConfigServiceProvider::class,
         AuthServiceProvider::class,
+        AssetsServiceProvider::class,
     ];
 
     /**
@@ -73,6 +76,7 @@ class ModuleLoaderServiceProvider extends BaseModuleServiceProvider
             'CMS'               => CMS::class,
             'DatabaseConfig'    => DatabaseConfig::class,
             'Profiler'          => Profiler::class,
+            'WYSIWYG'           => Wysiwyg::class,
         ]);
     }
 }

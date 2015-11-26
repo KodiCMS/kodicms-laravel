@@ -35,6 +35,14 @@ class ModuleContainer extends BaseModuleContainer
     }
 
     /**
+     * @return string
+     */
+    public function getAssetsPublicPath()
+    {
+        return public_path('cms'.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$this->getName());
+    }
+
+    /**
      * @param Router $router
      */
     public function loadRoutes(Router $router)

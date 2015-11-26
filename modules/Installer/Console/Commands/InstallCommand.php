@@ -2,10 +2,7 @@
 
 namespace KodiCMS\Installer\Console\Commands;
 
-use App;
 use Installer;
-use ModulesLoader;
-use ModulesFileSystem;
 use EnvironmentTester;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Console\ConfirmableTrait;
@@ -31,6 +28,7 @@ class InstallCommand extends GeneratorCommand
      * Configs DB.
      */
     protected $DBConfigs = [
+        'driver' => 'DB_DRIVER',
         'host' => 'DB_HOST',
         'database' => 'DB_DATABASE',
         'username' => 'DB_USERNAME',
@@ -87,7 +85,7 @@ class InstallCommand extends GeneratorCommand
             $this->dropDatabase();
         }
 
-        $this->initModules();
+        Installer::initModules();
 
         $this->migrate();
         if ($this->confirm('Install seed data?')) {
@@ -95,15 +93,6 @@ class InstallCommand extends GeneratorCommand
         }
 
         $this->info('Installation completed successfully');
-    }
-
-    protected function initModules()
-    {
-        foreach (ModulesLoader::getRegisteredModules() as $module) {
-            app()->call([$module, 'loadRoutes'], [app('router')]);
-        }
-
-        ModulesFileSystem::loadConfigs();
     }
 
     /**
@@ -126,7 +115,7 @@ class InstallCommand extends GeneratorCommand
      */
     protected function migrate()
     {
-        $this->call('cms:modules:migrate', ['--force' => true]);
+        $this->call('modules:migrate', ['--force' => true]);
     }
 
     /**
@@ -134,7 +123,7 @@ class InstallCommand extends GeneratorCommand
      */
     protected function seed()
     {
-        $this->call('cms:modules:seed', ['--force' => true]);
+        $this->call('modules:seed', ['--force' => true]);
     }
 
     /**
@@ -160,6 +149,8 @@ class InstallCommand extends GeneratorCommand
             $config = array_add($config, $option[0], $this->input->getOption($option[0]));
         }
 
+        $config = Installer::configDBConnection($config, 'DB_DRIVER', 'DB_DATABASE');
+
         return $config;
     }
 
@@ -170,6 +161,7 @@ class InstallCommand extends GeneratorCommand
             foreach ($this->DBConfigs as $key => $value) {
                 $config = array_add($config, $key, $this->input->getOption($value));
             }
+            $config = Installer::configDBConnection($config, 'driver', 'database');
 
             return Installer::createDBConnection($config);
         } catch (InstallDatabaseException $e) {
@@ -198,6 +190,7 @@ class InstallCommand extends GeneratorCommand
         $defaults = Installer::getDefaultEnvironment();
 
         return [
+            ['DB_DRIVER', 'driver', InputOption::VALUE_OPTIONAL, 'Database driver', array_get($defaults, 'DB_DRIVER')],
             ['DB_HOST', 'host', InputOption::VALUE_OPTIONAL, 'Database host', array_get($defaults, 'DB_HOST')],
             ['DB_DATABASE', 'db', InputOption::VALUE_OPTIONAL, 'Database name', array_get($defaults, 'DB_DATABASE')],
             ['DB_USERNAME', 'u', InputOption::VALUE_OPTIONAL, 'Database username', array_get($defaults, 'DB_USERNAME')],

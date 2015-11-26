@@ -60,6 +60,10 @@ class Item
      */
     public function getLink()
     {
+        if (is_null($url = $this->getUrl())) {
+            return $this->getName();
+        }
+
         return link_to($this->getUrl(), $this->getName());
     }
 

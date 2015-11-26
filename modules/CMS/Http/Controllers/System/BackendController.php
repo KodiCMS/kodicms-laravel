@@ -5,9 +5,10 @@ namespace KodiCMS\CMS\Http\Controllers\System;
 use UI;
 use View;
 use Meta;
+use KodiCMS\Navigation\Navigation;
 use KodiCMS\Support\Helpers\Callback;
 use KodiCMS\CMS\Exceptions\ValidationException;
-use KodiCMS\CMS\Navigation\Collection as Navigation;
+use KodiCMS\Support\Helpers\NavigationBreadcrumbs;
 use KodiCMS\CMS\Breadcrumbs\Collection as Breadcrumbs;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -30,7 +31,7 @@ class BackendController extends TemplateController
 
     public function boot()
     {
-        $this->navigation = Navigation::init($this->request->getUri(), config('sitemap', []));
+        $this->navigation = Navigation::make(config('sitemap', []));
         $this->breadcrumbs = new Breadcrumbs;
     }
 
@@ -42,12 +43,12 @@ class BackendController extends TemplateController
 
     public function before()
     {
-        $currentPage = Navigation::getCurrentPage();
+        $currentPage = $this->navigation->getCurrentPage();
 
         $this->breadcrumbs->add(UI::icon('home'), route('backend.dashboard'));
 
         if (! is_null($currentPage)) {
-            $this->setTitle($currentPage->getName(), $currentPage->getUrl());
+            new NavigationBreadcrumbs($this->breadcrumbs, $currentPage);
         }
 
         View::share('currentPage', $currentPage);

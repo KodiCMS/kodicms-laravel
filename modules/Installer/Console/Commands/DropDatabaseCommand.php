@@ -2,6 +2,7 @@
 
 namespace KodiCMS\Installer\Console\Commands;
 
+use Config;
 use DB;
 use Schema;
 use Illuminate\Console\Command;
@@ -43,20 +44,36 @@ class DropDatabaseCommand extends Command
             return;
         }
 
-        $tables = [];
+        $driver = Config::get('database.default');
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        if ($driver == 'sqlite') {
+            $query = "SELECT tbl_name as name FROM sqlite_master WHERE type = 'table' AND tbl_name NOT LIKE 'sqlite_%'";
+        } else {
+            // https://en.wikipedia.org/wiki/Information_schema
+            $database = Config::get("database.$driver.database");
+            $query = "SELECT table_name as name FROM information_schema.tables  WHERE table_schema LIKE '$database'";
+        }
 
-        foreach (DB::select('SHOW TABLES') as $k => $v) {
-            $tables[] = array_values((array) $v)[0];
+        $tables = DB::connection()->select($query);
+
+        print_r($tables);
+
+        if ($driver == 'mysql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        } elseif ($driver == 'sqlite') {
+            DB::statement('PRAGMA foreign_keys = OFF');
         }
 
         foreach ($tables as $table) {
-            Schema::drop($table);
-            $this->info("Table [{$table}] has been dropped.");
+            Schema::drop($table->name);
+            $this->info("Table [{$table->name}] has been dropped.");
         }
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        if ($driver == 'mysql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        } elseif ($driver == 'sqlite') {
+            DB::statement('PRAGMA foreign_keys = ON');
+        }
     }
 
     /**

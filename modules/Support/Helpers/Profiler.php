@@ -2,6 +2,10 @@
 
 namespace KodiCMS\Support\Helpers;
 
+if (! defined('LARAVEL_START_MEMORY')) {
+    define('LARAVEL_START_MEMORY', memory_get_usage());
+}
+
 use Cache;
 
 /**

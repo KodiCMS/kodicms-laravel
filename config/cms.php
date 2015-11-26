@@ -2,7 +2,7 @@
 
 return [
     'title'               => 'KodiCMS',
-    'backend_path'        => env('ADMIN_DIR_NAME', 'backend'),
+    'backend_url_segment' => env('ADMIN_DIR_NAME', 'backend'),
     'url_suffix'          => null, //'.html',
     'modules'             => [
         'API',

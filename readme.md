@@ -27,6 +27,54 @@ password: **password**
 
 ---
 
+### Изменения в Laravel.
+
+##### bootstrap/app.php
+Для профилирования загрузки сервис профайдеров в `bootstrap/app.php` изменен Application на `\KodiCMS\CMS\Application`, 
+данное изменение можно не вносить.
+
+##### app/Http/Kernel.php
+Наследование `Kernel` от `KodiCMS\CMS\Http\Kernel`. Добавляются необходимые **middlemare** критичные для работы компонентов админ инетрфеса. **Обязательно**
+
+##### app/Exceptions/Handler.php
+Наследование `Handler` от `KodiCMS\CMS\Exceptions\Handler`. Добавлена обработка ошибок AJAX запросов, а также использование 
+контроллера системы для вывода текста ошибок и whoops. **Желательно для установки**
+
+##### app/Console/Kernel.php
+Наследование `Kernel` от `KodiCMS\Cron\Console\Kernel`. Пока что нигде не используется. **Желательно для установки** при использовании модуля **Cron**
+
+
+##### App/Http/Middleware/VerifyCsrfToken.php
+Наследование `VerifyCsrfToken` от `KodiCMS\CMS\Http\Middleware\VerifyCsrfToken` для возможности добавления исключения для модулей. На данный момент 
+используется только модулем Filemanager. **Желательно для установки**
+
+##### config/app.php
+
+```
+'providers' => [
+   Illuminate\View\ViewServiceProvider::class,
+   
+   ...
+   /*
+    * KodiCMS Service Providers...
+    * Установить до App провафдеров
+    */
+   KodiCMS\Support\Html\HtmlServiceProvider::class,
+   Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class, // Можно не использовать, необходимо очистить 
+   KodiCMS\CMS\Providers\ModuleLoaderServiceProvider::class,
+   ...
+]
+```
+
+##### config/cms.php
+Добавлен конфиг `cms.php`
+
+##### .env
+`APP_PROFILING=false`
+`ADMIN_DIR_NAME=backend`
+
+---
+
 ### Консольные команды (Console commands)
 
  * `php artisan cms:install` - создание .env файла, миграция и добавление сидов (в будущем данная команда будет создавать файл и производить миграцию)

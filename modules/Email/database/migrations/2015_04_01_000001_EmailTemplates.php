@@ -25,9 +25,9 @@ class EmailTemplates extends Migration
 
             $table->string('message_type', 5);
 
-            $table->string('cc');
-            $table->string('bcc');
-            $table->string('reply_to');
+            $table->string('cc')->nullable();
+            $table->string('bcc')->nullable();
+            $table->string('reply_to')->nullable();
         });
     }
 

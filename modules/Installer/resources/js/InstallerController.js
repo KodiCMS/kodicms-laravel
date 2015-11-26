@@ -66,7 +66,9 @@ $(function () {
 	function validate_step_2($form) {
 		$form.validate({
 			onsubmit: false,
-			rules: {
+			rules: $(':input[name="database[driver]"] option:selected').text() == 'sqlite' ? {
+				'database[database]': "required"
+			} : {
 				'database[host]': "required",
 				'database[username]': "required",
 				'database[database]': "required"
