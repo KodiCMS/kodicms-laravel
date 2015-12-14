@@ -2,8 +2,6 @@
 
 namespace KodiCMS\CMS\Http;
 
-define('LARAVEL_START_MEMORY', memory_get_usage());
-
 use Illuminate\Routing\Router;
 use KodiCMS\Support\Helpers\Profiler;
 use Illuminate\Contracts\Foundation\Application;
