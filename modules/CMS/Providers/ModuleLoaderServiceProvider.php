@@ -50,7 +50,7 @@ class ModuleLoaderServiceProvider extends BaseModuleServiceProvider
     public function register()
     {
         $this->app->singleton('modules.loader', function () {
-            return new ModulesLoader(config('cms.modules', []));
+            return new ModulesLoader(config('app.modules', []));
         });
 
         $this->app->singleton('modules.filesystem', function ($app) {
