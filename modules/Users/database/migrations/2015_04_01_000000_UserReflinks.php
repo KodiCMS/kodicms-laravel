@@ -9,11 +9,10 @@ class UserReflinks extends Migration
     {
         Schema::create('user_reflinks', function (Blueprint $table) {
             $table->increments('id');
-
             $table->unsignedInteger('user_id')->index();
             $table->string('handler', 255);
             $table->string('token', 100)->unique();
-            $table->json('properties');
+            $table->text('properties');
             $table->timestamps();
         });
     }

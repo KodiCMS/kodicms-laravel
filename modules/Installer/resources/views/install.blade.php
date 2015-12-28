@@ -141,7 +141,7 @@
 					<label class="control-label col-md-3" for="admin_dir_name">@lang('installer::core.field.admin_dir_name')</label>
 					<div class="col-md-9 form-inline">
 						<div class="input-group">
-							<div class="input-group-addon">{{ url() }}/</div>
+							<div class="input-group-addon">{{ url()->current() }}/</div>
 							{!! Form::text('install[admin_dir_name]', array_get($data, 'admin_dir_name'), [
 							'class' => 'form-control', 'id' => 'admin_dir_name', 'size' => 20, 'maxlength' => 20, 'required'
 							]) !!}

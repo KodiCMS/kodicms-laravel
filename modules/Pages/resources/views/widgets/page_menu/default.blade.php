@@ -1,7 +1,7 @@
 <nav class="navbar navbar-default">
 	@if($header)
 	<div class="navbar-header">
-		<a class="navbar-brand" href="{{ url() }}">{{ $header }}</a>
+		<a class="navbar-brand" href="{{ url()->current() }}">{{ $header }}</a>
 	</div>
 	@endif
 

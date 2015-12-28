@@ -2,9 +2,9 @@
 
 namespace KodiCMS\Users\Http\Controllers\Auth;
 
+use Auth;
 use Illuminate\Http\Request;
 use KodiCMS\Users\Model\User;
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use KodiCMS\CMS\Http\Controllers\System\FrontendController;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -35,13 +35,9 @@ class AuthController extends FrontendController
 
     /**
      * Create a new authentication controller instance.
-     *
-     * @param Guard $auth
      */
-    public function boot(Guard $auth)
+    public function boot()
     {
-        $this->auth = $auth;
-
         $this->redirectPath = backend_url_segment();
         $this->loginPath = $this->redirectAfterLogout = backend_url('auth/login');
     }
@@ -58,7 +54,7 @@ class AuthController extends FrontendController
      */
     public function getLogin()
     {
-        if ($this->auth->check()) {
+        if (Auth::check()) {
             return redirect()->intended($this->redirectPath());
         }
 
@@ -90,7 +86,7 @@ class AuthController extends FrontendController
 
         $credentials = $this->getCredentials($request);
 
-        if ($this->auth->attempt($credentials, $request->has('remember'))) {
+        if (Auth::attempt($credentials, $request->has('remember'))) {
             return $this->handleUserWasAuthenticated($request, $throttles);
         }
 
@@ -102,8 +98,8 @@ class AuthController extends FrontendController
         }
 
         return redirect($this->loginPath())->withInput($request->only($this->loginUsername(), 'remember'))->withErrors([
-                $this->loginUsername() => $this->getFailedLoginMessage(),
-            ]);
+            $this->loginUsername() => $this->getFailedLoginMessage(),
+        ]);
     }
 
     /**
@@ -115,7 +111,6 @@ class AuthController extends FrontendController
     protected function authenticated(Request $request, User $user)
     {
         $user->authenticated();
-
         return redirect()->intended($this->redirectPath());
     }
 

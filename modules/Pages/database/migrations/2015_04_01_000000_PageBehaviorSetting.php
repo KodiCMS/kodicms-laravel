@@ -9,7 +9,7 @@ class PageBehaviorSetting extends Migration
     {
         Schema::create('page_behavior_settings', function (Blueprint $table) {
             $table->unsignedInteger('page_id')->index()->unique();
-            $table->json('settings');
+            $table->text('settings');
         });
     }
 

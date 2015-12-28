@@ -10,10 +10,9 @@ class EmailEvents extends Migration
         Schema::create('email_events', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-
             $table->string('code');
             $table->string('name');
-            $table->json('fields');
+            $table->text('fields');
         });
     }
 

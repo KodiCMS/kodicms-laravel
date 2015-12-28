@@ -2,8 +2,8 @@
 
 namespace KodiCMS\Support\Traits;
 
+use Auth;
 use ModulesFileSystem;
-use Illuminate\Auth\Guard;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -74,9 +74,8 @@ trait Controller
      * @param Request      $request
      * @param Response     $response
      * @param SessionStore $session
-     * @param Guard        $auth
      */
-    public function initController(Request $request, Response $response, SessionStore $session, Guard $auth)
+    public function initController(Request $request, Response $response, SessionStore $session)
     {
         $this->request = $request;
         $this->response = $response;
@@ -84,7 +83,7 @@ trait Controller
 
         $this->requestType = $this->request->input('type', $this->request->method());
 
-        $this->currentUser = $auth->user();
+        $this->currentUser = Auth::user();
     }
 
     /**

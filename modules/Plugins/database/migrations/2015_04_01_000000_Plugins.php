@@ -9,11 +9,10 @@ class Plugins extends Migration
     {
         Schema::create('installed_plugins', function (Blueprint $table) {
             $table->timestamps();
-
             $table->increments('id');
             $table->string('name');
             $table->string('path');
-            $table->json('settings');
+            $table->text('settings');
         });
     }
 

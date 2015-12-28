@@ -10,7 +10,7 @@ class ConfigsTable extends Migration
         Schema::create('config', function (Blueprint $table) {
             $table->string('group', 128);
             $table->string('key', 128);
-            $table->json('value');
+            $table->text('value');
 
             $table->primary(['group', 'key']);
         });

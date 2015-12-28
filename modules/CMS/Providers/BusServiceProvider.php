@@ -2,7 +2,7 @@
 
 namespace KodiCMS\CMS\Providers;
 
-use Illuminate\Bus\Dispatcher;
+use Collective\Bus\Dispatcher;
 use KodiCMS\Support\ServiceProvider;
 
 class BusServiceProvider extends ServiceProvider
@@ -10,7 +10,7 @@ class BusServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      *
-     * @param  \Illuminate\Bus\Dispatcher $dispatcher
+     * @param  \Collective\Bus\Dispatcher $dispatcher
      *
      * @return void
      */

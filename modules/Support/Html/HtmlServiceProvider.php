@@ -12,7 +12,6 @@ class HtmlServiceProvider extends \Illuminate\Html\HtmlServiceProvider
     public function register()
     {
         $this->registerHtmlBuilder();
-
         $this->registerFormBuilder();
 
         $this->app->alias('html', \KodiCMS\Support\Html\HtmlBuilder::class);
@@ -26,7 +25,7 @@ class HtmlServiceProvider extends \Illuminate\Html\HtmlServiceProvider
      */
     protected function registerHtmlBuilder()
     {
-        $this->app->bindShared('html', function ($app) {
+        $this->app->singleton('html', function ($app) {
             return new HtmlBuilder($app['url']);
         });
     }
@@ -38,9 +37,8 @@ class HtmlServiceProvider extends \Illuminate\Html\HtmlServiceProvider
      */
     protected function registerFormBuilder()
     {
-        $this->app->bindShared('form', function ($app) {
+        $this->app->singleton('form', function ($app) {
             $form = new FormBuilder($app['html'], $app['url'], $app['session.store']->getToken());
-
             return $form->setSessionStore($app['session.store']);
         });
     }

@@ -11,9 +11,8 @@ class EmailQueues extends Migration
         Schema::create('email_queues', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-
             $table->enum('status', [EmailQueue::STATUS_PENDING, EmailQueue::STATUS_SENT, EmailQueue::STATUS_FAILED]);
-            $table->json('parameters');
+            $table->text('parameters');
             $table->string('message_type', 5);
             $table->text('body');
             $table->unsignedInteger('attempts')->default(0);

@@ -10,9 +10,8 @@ class UserMeta extends Migration
         Schema::create('user_meta', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id')->index();
-
             $table->string('key', 50)->index();
-            $table->json('value');
+            $table->text('value');
         });
     }
 

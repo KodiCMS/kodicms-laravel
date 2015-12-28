@@ -85,11 +85,11 @@ class TemplateController extends Controller
     {
         $this->templateScripts = [
             'CURRENT_URL'       => $this->request->url(),
-            'SITE_URL'          => url(),
+            'SITE_URL'          => url()->current(),
             'BASE_URL'          => backend_url(),
             'BACKEND_PATH'      => backend_url_segment(),
             'BACKEND_RESOURCES' => resources_url(),
-            'PUBLIC_URL'        => url(),
+            'PUBLIC_URL'        => url()->current(),
             'LOCALE'            => Lang::getLocale(),
             'ROUTE'             => ! is_null($this->getRouter()) ? $this->getRouter()->currentRouteAction() : null,
             'ROUTE_PATH'        => $this->getRouterPath(),

@@ -24,7 +24,7 @@ return [
     |
     */
 
-    'debug'           => env('APP_DEBUG'),
+    'debug' => env('APP_DEBUG'),
     /*
     |--------------------------------------------------------------------------
     | Application Profiling Mode
@@ -32,7 +32,7 @@ return [
     |
     */
 
-    'profiling'       => env('APP_PROFILING', false),
+    'profiling' => env('APP_PROFILING', false),
     /*
     |--------------------------------------------------------------------------
     | Application URL
@@ -44,7 +44,7 @@ return [
     |
     */
 
-    'url'             => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://localhost'),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -56,7 +56,7 @@ return [
     |
     */
 
-    'timezone'        => 'UTC',
+    'timezone' => 'UTC',
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
@@ -68,7 +68,7 @@ return [
     |
     */
 
-    'locale'          => 'ru',
+    'locale' => 'ru',
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale
@@ -92,8 +92,10 @@ return [
     |
     */
 
-    'key'             => env('APP_KEY', 'SomeRandomString'),
-    'cipher'          => MCRYPT_RIJNDAEL_128,
+    'key' => env('APP_KEY', 'SomeRandomString'),
+
+    'cipher'    => 'AES-256-CBC',
+
     /*
     |--------------------------------------------------------------------------
     | Logging Configuration
@@ -106,8 +108,8 @@ return [
     | Available Settings: "single", "daily", "syslog", "errorlog"
     |
     */
+    'log'       => env('APP_LOG', 'single'),
 
-    'log'             => 'daily',
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -118,17 +120,15 @@ return [
     | this array to grant expanded functionality to your applications.
     |
     */
-    'providers'       => [
+    'providers' => [
         /*
          * Laravel Framework Service Providers...
          */
-        Illuminate\Foundation\Providers\ArtisanServiceProvider::class,
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
         Illuminate\Cache\CacheServiceProvider::class,
         Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
-        Illuminate\Routing\ControllerServiceProvider::class,
         Illuminate\Cookie\CookieServiceProvider::class,
         Illuminate\Database\DatabaseServiceProvider::class,
         Illuminate\Encryption\EncryptionServiceProvider::class,
@@ -145,18 +145,20 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Collective\Bus\BusServiceProvider::class,
 
         /*
          * KodiCMS Service Providers...
          */
         KodiCMS\Support\Html\HtmlServiceProvider::class,
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         KodiCMS\CMS\Providers\ModuleLoaderServiceProvider::class,
+        KodiCMS\Assets\AssetsServiceProvider::class,
 
         /*
          * App Service Providers must be here...
          */
         App\Providers\AppServiceProvider::class,
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     ],
     /*
     |--------------------------------------------------------------------------
@@ -169,7 +171,7 @@ return [
     |
     */
 
-    'aliases'         => [
+    'aliases' => [
         /*
          * Laravel Framework aliases...
          */
@@ -186,9 +188,9 @@ return [
         'Eloquent'  => Illuminate\Database\Eloquent\Model::class,
         'Event'     => Illuminate\Support\Facades\Event::class,
         'File'      => Illuminate\Support\Facades\File::class,
+        'Gate'      => Illuminate\Support\Facades\Gate::class,
         'Hash'      => Illuminate\Support\Facades\Hash::class,
         'Input'     => Illuminate\Support\Facades\Input::class,
-        'Inspiring' => Illuminate\Foundation\Inspiring::class,
         'Lang'      => Illuminate\Support\Facades\Lang::class,
         'Log'       => Illuminate\Support\Facades\Log::class,
         'Mail'      => Illuminate\Support\Facades\Mail::class,
@@ -205,7 +207,6 @@ return [
         'URL'       => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
-        'Gate'      => Illuminate\Support\Facades\Gate::class,
         'Form'      => Illuminate\Html\FormFacade::class,
         'HTML'      => Illuminate\Html\HtmlFacade::class,
     ],
