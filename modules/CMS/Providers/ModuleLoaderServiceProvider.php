@@ -31,7 +31,6 @@ class ModuleLoaderServiceProvider extends BaseModuleServiceProvider
         PluginServiceProvider::class,
         RouteServiceProvider::class,
         EventServiceProvider::class,
-        BusServiceProvider::class,
         AppServiceProvider::class,
         ConfigServiceProvider::class,
         AuthServiceProvider::class,

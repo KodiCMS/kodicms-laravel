@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['as' => 'api.'], function () {
+Route::group(['as' => 'api.', 'middleware' => ['web', 'api']], function () {
     RouteAPI::post('refresh.key', ['as' => 'refresh.key', 'uses' => 'API\KeysController@postRefresh']);
     RouteAPI::get('keys', ['as' => 'keys.list', 'uses' => 'API\KeysController@getKeys']);
     RouteAPI::put('key', ['as' => 'key.put', 'uses' => 'API\KeysController@putKey']);

@@ -145,7 +145,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Collective\Bus\BusServiceProvider::class,
 
         /*
          * KodiCMS Service Providers...

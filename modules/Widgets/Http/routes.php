@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.'], function () {
+Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.', 'middleware' => ['web']], function () {
     Route::controller('snippets', 'SnippetController', [
         'getIndex'   => 'snippet.list',
         'getCreate'  => 'snippet.create',
@@ -24,7 +24,7 @@ Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.'], function (
     ]);
 });
 
-Route::group(['as' => 'api.'], function () {
+Route::group(['as' => 'api.', 'middleware' => ['web', 'api']], function () {
     RouteAPI::put('widget', ['as' => 'widget.place', 'uses' => 'API\WidgetController@putPlace']);
     RouteAPI::post('widget.set.template', [
         'as'   => 'widget.set.template',
@@ -43,4 +43,4 @@ Route::group(['as' => 'api.'], function () {
     ]);
 });
 
-Route::get('handler/{handler}', ['as' => 'widget.handler', 'uses' => 'HandlerController@getHandle']);
+Route::get('handler/{handler}', ['as' => 'widget.handler', 'uses' => 'HandlerController@getHandle', 'middleware' => ['web']]);

@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.'], function () {
+Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.', 'middleware' => ['web']], function () {
     Route::get('page/wysiwyg/{id}', [
         'as'   => 'pages.wysiwyg',
         'uses' => 'PageWysiwygController@getPageWysiwyg',
@@ -25,7 +25,7 @@ Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.'], function (
     ]);
 });
 
-Route::group(['as' => 'api.'], function () {
+Route::group(['as' => 'api.', 'middleware' => ['web', 'api']], function () {
     RouteAPI::post('layout', ['as' => 'layout.create', 'uses' => 'API\LayoutController@postCreate']);
     RouteAPI::put('layout', ['as' => 'layout.edit', 'uses' => 'API\LayoutController@postEdit']);
     RouteAPI::get('layout.rebuild', ['as' => 'layout.rebuild.get', 'uses' => 'API\LayoutController@getRebuildBlocks']);

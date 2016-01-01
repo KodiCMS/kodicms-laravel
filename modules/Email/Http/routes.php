@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.email.'], function () {
+Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.email.', 'middleware' => ['web']], function () {
     Route::get('/email/template', [
         'as'   => 'template.list',
         'uses' => 'EmailTemplateController@getIndex',
@@ -34,7 +34,7 @@ Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.email.'], func
     Route::post('/email/event/{id}/delete', ['as' => 'event.delete', 'uses' => 'EmailEventController@postDelete']);
 });
 
-Route::group(['as' => 'api.email.'], function () {
+Route::group(['as' => 'api.email.', 'middleware' => ['web', 'api']], function () {
     RouteAPI::get('email.events.options', ['as' => 'event.options', 'uses' => 'API\EmailEventController@getOptions']);
     RouteAPI::post('email.send', ['as' => 'send', 'uses' => 'API\EmailEventController@postSend']);
 });

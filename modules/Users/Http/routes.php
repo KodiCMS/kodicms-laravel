@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.'], function () {
+Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.', 'middleware' => ['web']], function () {
     Route::get('user/{id}/edit', ['as' => 'user.edit', 'uses' => 'UserController@getEdit'])->where('id', '[0-9]+');
     Route::post('user/{id}/edit', [
         'as'   => 'user.edit.post',
@@ -50,7 +50,7 @@ Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.'], function (
     ]);
 });
 
-Route::group(['as' => 'api.user.'], function () {
+Route::group(['as' => 'api.user.', 'middleware' => ['web', 'api']], function () {
     RouteAPI::get('api.user.list', ['as' => 'list.get', 'uses' => 'API\UserController@getUsers']);
     RouteAPI::get('api.user.like', ['as' => 'like.get', 'uses' => 'API\UserController@getLike']);
     RouteAPI::get('api.user.roles', ['as' => 'roles.get', 'uses' => 'API\UserController@getRoles']);
@@ -60,9 +60,9 @@ Route::group(['as' => 'api.user.'], function () {
     RouteAPI::delete('api.user.meta', ['as' => 'meta.delete', 'uses' => 'API\UserMetaController@deleteData']);
 });
 
-RouteAPI::get('api.roles', ['as' => 'api.roles.get', 'uses' => 'API\RoleController@getAll']);
+RouteAPI::get('api.roles', ['as' => 'api.roles.get', 'uses' => 'API\RoleController@getAll', 'middleware' => ['web', 'api']]);
 
-Route::group(['prefix' => 'reflink', 'as' => 'reflink.'], function () {
+Route::group(['prefix' => 'reflink', 'as' => 'reflink.', 'middleware' => ['web']], function () {
     Route::get('', ['as' => 'form', 'uses' => 'ReflinkController@getForm']);
     Route::post('', ['as' => 'form.post', 'uses' => 'ReflinkController@postForm']);
     Route::get('complete', ['as' => 'complete', 'uses' => 'ReflinkController@complete']);

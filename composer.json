@@ -22,8 +22,7 @@
     "kodicms/module-loader": "3.*",
     "kodicms/laravel-api": "^1.0",
     "kodicms/laravel-assets": "0.*",
-    "kodicms/laravel-navigation": "2.*",
-    "laravelcollective/bus": "^5.2"
+    "kodicms/laravel-navigation": "2.*"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",

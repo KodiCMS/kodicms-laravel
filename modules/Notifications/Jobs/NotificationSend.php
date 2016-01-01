@@ -4,12 +4,11 @@ namespace KodiCMS\Notifications\Jobs;
 
 use Event;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Bus\SelfHandling;
 use KodiCMS\Notifications\Types\DefaultNotification;
 use KodiCMS\Notifications\Repository\NotificationRepository;
 use KodiCMS\Notifications\Contracts\NotificationTypeInterface;
 
-class NotificationSend implements SelfHandling
+class NotificationSend
 {
     /**
      * @var array

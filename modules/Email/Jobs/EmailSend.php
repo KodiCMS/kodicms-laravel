@@ -2,11 +2,10 @@
 
 namespace KodiCMS\Email\Jobs;
 
-use KodiCMS\Email\Exceptions\EmailEventException;
 use KodiCMS\Email\Model\EmailEvent;
-use Illuminate\Contracts\Bus\SelfHandling;
+use KodiCMS\Email\Exceptions\EmailEventException;
 
-class EmailSend implements SelfHandling
+class EmailSend
 {
     /**
      * @var string
