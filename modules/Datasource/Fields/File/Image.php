@@ -43,7 +43,7 @@ class Image extends File
     /**
      * @param int $width
      */
-    public function seSettingWidth($width)
+    public function setSettingWidth($width)
     {
         intval($width);
 
