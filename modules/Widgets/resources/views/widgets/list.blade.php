@@ -58,7 +58,7 @@
 					@endif
 				</th>
 				<td class="type">
-					{!! UI::label($widget->getType()) !!}
+					{!! link_to_route('backend.widget.list.by_type', UI::label($widget->getType()), [$widget->type]) !!}
 				</td>
 				<td class="description">
 					<span class="text-muted">{{ $widget->description }}</span>

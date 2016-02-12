@@ -25,6 +25,12 @@ class WidgetController extends BackendController
 
         $query = $repository->getModel()->newQuery();
 
+        foreach (WidgetManagerDatabase::getAvailableTypes() as $group => $types) {
+            if (isset($types[$type])) {
+                $this->breadcrumbs->add($types[$type]);
+            }
+        }
+
         if (! is_null($type)) {
             $query->where('type', $type);
         }
