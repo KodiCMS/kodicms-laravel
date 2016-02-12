@@ -170,7 +170,9 @@ class FieldsCollection implements Arrayable, FieldsCollectionInterface, \Countab
      */
     public function add(FieldInterface $field)
     {
-        $field->initFilterType();
+        if ($field->exists) {
+            $field->initFilterType();
+        }
 
         $this->fields[$field->getDBKey()] = $field;
         $this->fieldIds[$field->getId()] = $field;
