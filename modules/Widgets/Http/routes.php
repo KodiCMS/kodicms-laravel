@@ -10,6 +10,8 @@ Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.', 'middleware
         'postDelete' => 'snippet.delete',
     ]);
 
+    Route::get('widget/{type}', ['as' => 'widget.list.by_type', 'uses' => 'WidgetController@getIndex']);
+
     Route::controller('widget', 'WidgetController', [
         'getIndex'     => 'widget.list',
         'getLocation'  => 'widget.location',
@@ -22,6 +24,7 @@ Route::group(['prefix' => backend_url_segment(), 'as' => 'backend.', 'middleware
         'postDelete'   => 'widget.delete',
         'getPopupList' => 'widget.popup_list',
     ]);
+
 });
 
 Route::group(['as' => 'api.', 'middleware' => ['web', 'api']], function () {

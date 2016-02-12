@@ -14,14 +14,23 @@ use KodiCMS\CMS\Http\Controllers\System\BackendController;
 
 class WidgetController extends BackendController
 {
+
     /**
      * @param WidgetRepository $repository
+     * @param string           $type
      */
-    public function getIndex(WidgetRepository $repository)
+    public function getIndex(WidgetRepository $repository, $type = null)
     {
         Meta::loadPackage('editable');
 
-        $widgets = $repository->paginate();
+        $query = $repository->getModel()->newQuery();
+
+        if (! is_null($type)) {
+            $query->where('type', $type);
+        }
+
+        $widgets = $query->paginate();
+
         $this->setContent('widgets.list', compact('widgets'));
     }
 
@@ -72,7 +81,7 @@ class WidgetController extends BackendController
     public function getEdit(WidgetRepository $repository, $id)
     {
         $widget = $repository->findOrFail($id);
-        $this->breadcrumbs->add($widget->getType());
+        $this->breadcrumbs->add($widget->getType(), route('backend.widget.list.by_type', ['type' => $widget->type]));
 
         $this->setTitle(trans($this->wrapNamespace('core.title.edit'), [
             'name' => $widget->getName(),
