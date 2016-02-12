@@ -31,6 +31,7 @@ interface FieldInterface
      */
     public function getType();
 
+
     /**
      * @return string
      */
@@ -252,13 +253,6 @@ interface FieldInterface
     public function queryOrderBy(Builder $query, $dir = 'asc');
 
     /**
-     * @param Builder $query
-     * @param string  $condition
-     * @param string  $value
-     */
-    public function queryWhereCondition(Builder $query, $condition, $value, array $params);
-
-    /**
      * @return bool
      */
     public function isChangeableDatabaseField();
@@ -279,4 +273,22 @@ interface FieldInterface
      * @return string
      */
     public function renderDocumentTemplate(DocumentInterface $document, $template = null);
+
+    /**************************************************************************
+     * Filter
+     **************************************************************************/
+    /**
+     * @return void
+     */
+    public function initFilterType();
+
+    /**
+     * @return FilterTypeInterface
+     */
+    public function getFilterType();
+
+    /**
+     * @return string
+     */
+    public function getFilterTypeClass();
 }

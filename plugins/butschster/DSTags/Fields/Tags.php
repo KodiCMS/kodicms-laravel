@@ -77,7 +77,7 @@ class Tags extends ManyToMany
      */
     public function onControllerLoad(DocumentInterface $document, TemplateController $controller)
     {
-        Assets::package(['jquery-tagsinput', 'jquery-ui']);
+        Assets::loadPackage(['jquery-tagsinput', 'jquery-ui']);
         parent::onControllerLoad($document, $controller);
     }
 

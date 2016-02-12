@@ -35,5 +35,5 @@
 
 @include('datasource::widgets.partials.fields', compact('fields', 'widget'))
 @include('datasource::widgets.partials.ordering', compact('fields', 'ordering', 'widget'))
-@include('datasource::widgets.partials.filtering', compact('fields', 'widget'))
+@include('datasource::widgets.partials.query_builder')
 @endif

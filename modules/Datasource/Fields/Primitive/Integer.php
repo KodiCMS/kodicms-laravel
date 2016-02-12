@@ -5,10 +5,19 @@ namespace KodiCMS\Datasource\Fields\Primitive;
 use Illuminate\Validation\Validator;
 use KodiCMS\Datasource\Fields\Primitive;
 use Illuminate\Database\Schema\Blueprint;
+use KodiCMS\Datasource\Filter\Type\Number;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
 
 class Integer extends Primitive
 {
+    /**
+     * @return string
+     */
+    public function getFilterTypeClass()
+    {
+        return Number::class;
+    }
+
     /**
      * @return array
      */

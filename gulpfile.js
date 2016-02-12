@@ -76,6 +76,30 @@ elixir(function(mix) {
 		'cms/page-wysiwyg.js'
 	], 'public/cms/js/page-wysiwyg.js');
 
+
+	mix.scripts([
+		'jQuery.extendext.js',
+		'doT.js',
+		'main.js',
+		'defaults.js',
+		'core.js',
+		'public.js',
+		'data.js',
+		'template.js',
+		'model.js',
+		'utils.js',
+		'jquery.js',
+		'fields/types/core.js',
+		'fields/types/checkbox.js',
+		'fields/types/datetime.js',
+		'fields/types/number.js',
+		'fields/types/select.js',
+		'fields/types/textarea.js',
+		'fields/core.js',
+		'plugins/sortable.js'
+	], 'public/cms/libs/query-builder/query-builder.js', 'resources/assets/js/query-builder')
+		.less('query-builder/default.less', 'public/cms/libs/query-builder/query-builder.css');
+
 	/**************************************************************
 	 * elFinder
 	 **************************************************************/

@@ -11,6 +11,11 @@ use KodiCMS\Datasource\Contracts\DocumentInterface;
 class Timestamp extends Primitive
 {
     /**
+     * @var string
+     */
+    protected $dateFormat = 'Y-m-d H:i:s';
+
+    /**
      * @var bool
      */
     protected $isEditable = false;
@@ -19,6 +24,14 @@ class Timestamp extends Primitive
      * @var bool
      */
     protected $changeableDatabaseField = false;
+
+    /**
+     * @return string
+     */
+    public function getFilterTypeClass()
+    {
+        return \KodiCMS\Datasource\Filter\Type\Date::class;
+    }
 
     /**
      * @param Blueprint $table
@@ -60,5 +73,13 @@ class Timestamp extends Primitive
     public function getHeadlineType()
     {
         return 'date';
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateFormat()
+    {
+        return $this->dateFormat;
     }
 }

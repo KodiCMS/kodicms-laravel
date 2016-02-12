@@ -4,6 +4,7 @@ namespace KodiCMS\Datasource\Fields\Primitive;
 
 use DB;
 use KodiCMS\Datasource\Fields\Primitive;
+use KodiCMS\Datasource\Filter\Type\Select as SelectFilterType;
 
 class Select extends Primitive
 {
@@ -11,6 +12,14 @@ class Select extends Primitive
      * @var array|null
      */
     protected $options = null;
+
+    /**
+     * @return string
+     */
+    public function getFilterTypeClass()
+    {
+        return SelectFilterType::class;
+    }
 
     /**
      * @return array

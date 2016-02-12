@@ -2,7 +2,10 @@
 
 namespace KodiCMS\Datasource\Widget;
 
+use Assets;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
+use KodiCMS\Datasource\Filter\Parser;
 use KodiCMS\Widgets\Widget\Decorator;
 use KodiCMS\Widgets\Traits\WidgetCache;
 use KodiCMS\Widgets\Contracts\WidgetCacheable;
@@ -27,6 +30,17 @@ class DatasourceList extends Decorator implements WidgetCacheable
      * @var string
      */
     protected $settingsTemplate = 'datasource::widgets.list.settings';
+
+
+    /**
+     * @param string $name
+     * @param string $description
+     */
+    public function __construct($name, $description = '')
+    {
+        parent::__construct($name, $description);
+        Assets::loadPackage('query-builder');
+    }
 
     /**
      * @return array
@@ -53,9 +67,16 @@ class DatasourceList extends Decorator implements WidgetCacheable
     public function prepareSettingsData()
     {
         $fields = ! $this->getSection() ? [] : $this->section->getFields();
+
         $ordering = (array) $this->ordering;
 
-        return compact('fields', 'ordering');
+        $queryBuilderFields = [];
+
+        foreach ($fields as $field) {
+            $queryBuilderFields[] = $field->getFilterType()->toArray();
+        }
+
+        return compact('fields', 'ordering', 'queryBuilderFields');
     }
 
     /**
@@ -116,9 +137,16 @@ class DatasourceList extends Decorator implements WidgetCacheable
             $this->ordering = [];
         }
 
+        $queryBuilderFields = [];
+
+        /** @var Builder $documents */
         $documents = $this->getSection()
             ->getEmptyDocument()
-            ->getDocuments($this->selected_fields, (array) $this->ordering, (array) $this->filters);
+            ->getDocuments($this->selected_fields, (array) $this->ordering);
+
+        $rulesParser = new Parser($this->getSettingRules(), $this->getSection()->getFields());
+
+        $rulesParser->compile($documents);
 
         if ($this->order_By_rand) {
             $documents->orderByRaw('RAND()');
@@ -156,17 +184,16 @@ class DatasourceList extends Decorator implements WidgetCacheable
      ****************************************************************************************************************/
 
     /**
-     * @param array $filters
+     * @param array
      */
-    public function setSettingFilters(array $filters)
+    public function getSettingRules()
     {
-        $data = [];
-        foreach ($filters as $key => $rows) {
-            foreach ($rows as $i => $row) {
-                $data[$i][$key] = $row;
-            }
+        $rules = array_get($this->settings, 'rules');
+
+        if (empty($rules)) {
+            return 'null';
         }
 
-        $this->settings['filters'] = $data;
+        return $rules;
     }
 }

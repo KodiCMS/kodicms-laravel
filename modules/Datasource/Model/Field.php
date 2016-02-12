@@ -5,6 +5,7 @@ namespace KodiCMS\Datasource\Model;
 use DB;
 use FieldManager;
 use KodiCMS\Datasource\FieldType;
+use KodiCMS\Datasource\Filter\Type;
 use Illuminate\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,6 +15,7 @@ use KodiCMS\Datasource\Contracts\FieldInterface;
 use KodiCMS\Datasource\Exceptions\FieldException;
 use KodiCMS\Datasource\Contracts\SectionInterface;
 use KodiCMS\Datasource\Contracts\DocumentInterface;
+use KodiCMS\Datasource\Contracts\FilterTypeInterface;
 use KodiCMS\Widgets\Contracts\Widget as WidgetInterface;
 use KodiCMS\Datasource\Contracts\SectionHeadlineInterface;
 use KodiCMS\CMS\Http\Controllers\System\TemplateController;
@@ -112,6 +114,56 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
         'position'           => 'integer',
         'settings'           => 'array',
     ];
+
+    /**
+     * @var string
+     */
+    protected $filterTypeClass;
+
+    /**
+     * @var FilterTypeInterface
+     */
+    protected $filterType;
+
+    /**
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+    }
+
+    /**
+     * @return FilterTypeInterface
+     */
+    public function getFilterType()
+    {
+        if (is_null($this->filterType)) {
+            $this->initFilterType();
+        }
+
+        return $this->filterType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilterTypeClass()
+    {
+        return Type\String::class;
+    }
+
+    /**
+     * @return void
+     */
+    public function initFilterType()
+    {
+        if (! class_exists($type = $this->getFilterTypeClass())) {
+            $type = Type::class;
+        }
+
+        $this->filterType = new $type($this);
+    }
 
     /**
      * @return int
@@ -581,38 +633,6 @@ class Field extends DatasourceModel implements FieldInterface, Arrayable
     public function queryOrderBy(Builder $query, $dir = 'asc')
     {
         $query->orderBy($this->getDBKey(), $dir);
-    }
-
-    /**
-     * @param Builder $query
-     * @param string  $condition
-     * @param string  $value
-     * @param array   $params
-     */
-    public function queryWhereCondition(Builder $query, $condition, $value, array $params)
-    {
-        switch ($condition) {
-            case 'IN':
-                $query->whereIn($this->getKey(), $value);
-                break;
-            case 'NOT IN':
-                $query->whereNotIn($this->getKey(), $value);
-                break;
-            case 'NULL':
-                $query->whereNull($this->getKey(), $value);
-                break;
-            case 'NOT NULL':
-                $query->whereNotNull($this->getKey());
-                break;
-            case 'BETWEEN':
-                $query->whereBetween($this->getKey());
-                break;
-            case 'NOT BETWEEN':
-                $query->whereNotBetween($this->getKey(), $value);
-                break;
-            default:
-                $query->where($this->getKey(), $condition, $value);
-        }
     }
 
     /**
