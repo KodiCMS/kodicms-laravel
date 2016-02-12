@@ -1,1 +1,0 @@
-<textarea id="textarea_content" data-readonly="true">{{ $content }}</textarea>

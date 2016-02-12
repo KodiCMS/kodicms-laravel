@@ -1,9 +1,0 @@
-<?php namespace {{namespace}};
-
-use KodiCMS\API\Http\Controllers\System\Controller;
-
-class {{class}} extends Controller {
-
-	//
-
-}

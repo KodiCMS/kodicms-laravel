@@ -19,10 +19,16 @@
     "doctrine/dbal": "~2.3",
     "yajra/laravel-datatables-oracle": "~5.0",
     "intervention/image": "^2.3",
-    "kodicms/module-loader": "3.*",
-    "kodicms/laravel-api": "^1.0",
-    "kodicms/laravel-assets": "0.*",
-    "kodicms/laravel-navigation": "2.*"
+    "kodicms/core": "dev-master",
+    "kodicms/dashboard": "dev-master",
+    "kodicms/widgets": "dev-master",
+    "kodicms/pages": "dev-master",
+    "kodicms/plugins": "dev-master",
+    "kodicms/api": "dev-master",
+    "kodicms/datasource": "dev-master",
+    "kodicms/filemanager": "dev-master",
+    "kodicms/users": "dev-master",
+    "kodicms/userguide": "dev-master"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",

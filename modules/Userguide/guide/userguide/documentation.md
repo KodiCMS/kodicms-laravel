@@ -1,4 +1,0 @@
-- Userguide
- - [How userguide works](works)
- - [Markdown Syntax](markdown)
- - [Adding your module](adding)
