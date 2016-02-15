@@ -2,7 +2,7 @@
 
 namespace KodiCMS\Support\Html;
 
-class HtmlBuilder extends \Illuminate\Html\HtmlBuilder
+class HtmlBuilder extends \Collective\Html\HtmlBuilder
 {
     /**
      * Build a single attribute element.

@@ -38,12 +38,12 @@ PackageManager::add('jquery-tagsinput')
     ->css(null, resources_url('/libs/jquery.tagsinput//css/jquery.tagsinput.css'));
 
 PackageManager::add('dropzone')
-    ->js(null, resources_url('/libs/dropzone/js/dropzone.min.js'), 'jquery')
+    ->js(null, resources_url('/libs/dropzone/js/dropzone.min.js'), ['jquery', 'libraries'])
     ->css('dropzone-basic', resources_url('/libs/dropzone/css/basic.min.css'))
     ->css(null, resources_url('/libs/dropzone/css/dropzone.min.css'));
 
 PackageManager::add('datepicker')
-    ->js(null, resources_url('/libs/datetimepicker/js/jquery.datetimepicker.min.js'), 'jquery')
+    ->js(null, resources_url('/libs/datetimepicker/js/jquery.datetimepicker.min.js'), ['jquery', 'libraries'])
     ->css(null, resources_url('/libs/datetimepicker/css/jquery.datetimepicker.css'));
 
 PackageManager::add('editable')
@@ -51,45 +51,45 @@ PackageManager::add('editable')
     ->css(null, resources_url('/libs/x-editable/css/bootstrap-editable.css'));
 
 PackageManager::add('nestable')
-    ->js(null, resources_url('/libs/nestable/js/jquery.nestable.js'), 'jquery');
+    ->js(null, resources_url('/libs/nestable/js/jquery.nestable.js'), ['jquery', 'libraries']);
 
 PackageManager::add('steps')
-    ->js(null, resources_url('/libs/jquery.steps/js/jquery.steps.min.js'), 'jquery');
+    ->js(null, resources_url('/libs/jquery.steps/js/jquery.steps.min.js'), ['jquery', 'libraries']);
 
 PackageManager::add('noty')
-    ->js(null, resources_url('/libs/noty/js/jquery.noty.packaged.min.js'), 'jquery');
+    ->js(null, resources_url('/libs/noty/js/jquery.noty.packaged.min.js'), ['jquery', 'libraries']);
 
 PackageManager::add('select2')
-    ->js(null, resources_url('/libs/select2/js/select2.min.js'), 'jquery')
+    ->js(null, resources_url('/libs/select2/js/select2.min.js'), ['jquery', 'libraries'])
     ->js("select2-{$locale}", resources_url("/libs/select2/js/i18n/{$locale}.js"), 'select2')
     ->css(null, resources_url('/libs/select2/css/select2.min.css'));
 
 PackageManager::add('sortable')
-    ->js(null, resources_url('/libs/Sortable/js/Sortable.min.js'), 'jquery')
-    ->js('sortable-binding', resources_url('/libs/Sortable/js/jquery.binding.js'), 'jquery');
+    ->js(null, resources_url('/libs/Sortable/js/Sortable.min.js'), ['jquery', 'libraries'])
+    ->js('sortable-binding', resources_url('/libs/Sortable/js/jquery.binding.js'), ['jquery', 'libraries']);
 
 PackageManager::add('validate')
-    ->js(null, resources_url('/libs/jquery-validation/js/jquery.validate.min.js'), 'jquery')
+    ->js(null, resources_url('/libs/jquery-validation/js/jquery.validate.min.js'), ['jquery', 'libraries'])
     ->js("validate-{$locale}", resources_url("/libs/jquery-validation/js/messages_{$locale}.js"), 'validate');
 
 PackageManager::add('moment')
-    ->js(null, resources_url('/libs/moment/js/moment.min.js'), 'jquery')
+    ->js(null, resources_url('/libs/moment/js/moment.min.js'), ['jquery', 'libraries'])
     ->js("moment-{$locale}", resources_url("/libs/moment/js/{$locale}.js"), 'moment');
 
 PackageManager::add('ckeditor')
-    ->js('ckeditor-library', resources_url('/libs/ckeditor/ckeditor.js'), 'jquery')
+    ->js('ckeditor-library', resources_url('/libs/ckeditor/ckeditor.js'), ['jquery', 'libraries'])
     ->js(null, backend_resources_url('/js/ckeditor.js'), 'ckeditor-library')
     ->js("ckeditor-{$locale}", resources_url("/libs/ckeditor/lang/{$locale}.js"), 'validate');
 
 PackageManager::add('ace')
-    ->js('ace-library', resources_url('/libs/ace/src-min/ace.js'), 'jquery')
+    ->js('ace-library', resources_url('/libs/ace/src-min/ace.js'), ['jquery', 'libraries'])
     ->js(null, backend_resources_url('/js/ace.js'), 'ace-library');
 
 PackageManager::add('diff')
     ->js(null, resources_url('/libs/jsdiff/js/diff.js'));
 
 PackageManager::add('datatables')
-    ->js(null, resources_url('/libs/datatables/js/jquery.dataTables.min.js'), 'jquery')
+    ->js(null, resources_url('/libs/datatables/js/jquery.dataTables.min.js'), ['jquery', 'libraries'])
     ->js('datatables.bootstrap', resources_url('/libs/datatables/js/datatables.bootstrap.js'), 'datatables')
     ->css(null, resources_url('/libs/datatables/css/datatables.bootstrap.css'));
 

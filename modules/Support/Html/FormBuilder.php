@@ -2,7 +2,7 @@
 
 namespace KodiCMS\Support\Html;
 
-class FormBuilder extends \Illuminate\Html\FormBuilder
+class FormBuilder extends \Collective\Html\FormBuilder
 {
     /**
      * @param string    $name

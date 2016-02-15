@@ -2,7 +2,7 @@
 
 namespace KodiCMS\Support\Html;
 
-class HtmlServiceProvider extends \Illuminate\Html\HtmlServiceProvider
+class HtmlServiceProvider extends \Collective\Html\HtmlServiceProvider
 {
     /**
      * Register the service provider.
@@ -14,8 +14,8 @@ class HtmlServiceProvider extends \Illuminate\Html\HtmlServiceProvider
         $this->registerHtmlBuilder();
         $this->registerFormBuilder();
 
-        $this->app->alias('html', \KodiCMS\Support\Html\HtmlBuilder::class);
-        $this->app->alias('form', \KodiCMS\Support\Html\FormBuilder::class);
+        $this->app->alias('html', HtmlBuilder::class);
+        $this->app->alias('form', FormBuilder::class);
     }
 
     /**
@@ -26,7 +26,7 @@ class HtmlServiceProvider extends \Illuminate\Html\HtmlServiceProvider
     protected function registerHtmlBuilder()
     {
         $this->app->singleton('html', function ($app) {
-            return new HtmlBuilder($app['url']);
+            return new HtmlBuilder($app['url'], $app['view']);
         });
     }
 
@@ -38,7 +38,7 @@ class HtmlServiceProvider extends \Illuminate\Html\HtmlServiceProvider
     protected function registerFormBuilder()
     {
         $this->app->singleton('form', function ($app) {
-            $form = new FormBuilder($app['html'], $app['url'], $app['session.store']->getToken());
+            $form = new FormBuilder($app['html'], $app['url'], $app['view'], $app['session.store']->getToken());
             return $form->setSessionStore($app['session.store']);
         });
     }
