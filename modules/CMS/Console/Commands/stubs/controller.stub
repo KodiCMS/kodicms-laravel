@@ -1,0 +1,9 @@
+<?php namespace {{namespace}};
+
+use KodiCMS\CMS\Http\Controllers\System\BackendController;
+
+class {{class}} extends BackendController {
+
+	//
+
+}

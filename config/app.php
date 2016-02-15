@@ -8,9 +8,7 @@ return [
     |
     */
     'modules' => [
-        'API', 'CMS', 'Users', 'Dashboard', 'Email', 'Plugins',
-        'Notifications', 'Pages', 'Cron', 'Widgets', 'Filemanager',
-        'Installer', 'Datasource', 'Userguide',
+        'API', 'CMS'
     ],
 
     /*

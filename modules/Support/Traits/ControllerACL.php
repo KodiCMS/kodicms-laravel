@@ -3,7 +3,6 @@
 namespace KodiCMS\Support\Traits;
 
 use KodiCMS\CMS\Contracts\ControllerACLInterface;
-use KodiCMS\Users\Http\ControllerACL as UserControllerACL;
 
 trait ControllerACL
 {
@@ -49,6 +48,10 @@ trait ControllerACL
      */
     protected function getControllerAcl()
     {
-        return new UserControllerACL;
+        if (! class_exists($class = '\KodiCMS\Users\Http\ControllerACL')) {
+            $class = \KodiCMS\CMS\Http\ControllerACL::class;
+        }
+
+        return new $class;
     }
 }
