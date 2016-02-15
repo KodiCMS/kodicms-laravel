@@ -154,9 +154,7 @@ return [
         /*
          * KodiCMS Service Providers...
          */
-        KodiCMS\Support\Html\HtmlServiceProvider::class,
         KodiCMS\CMS\Providers\ModuleLoaderServiceProvider::class,
-        KodiCMS\Assets\AssetsServiceProvider::class,
 
         /*
          * App Service Providers must be here...
@@ -210,8 +208,6 @@ return [
         'Storage'   => Illuminate\Support\Facades\Storage::class,
         'URL'       => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
-        'View'      => Illuminate\Support\Facades\View::class,
-        'Form'      => Collective\Html\FormFacade::class,
-        'HTML'      => Collective\Html\HtmlFacade::class,
+        'View'      => Illuminate\Support\Facades\View::class
     ],
 ];
