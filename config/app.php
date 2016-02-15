@@ -7,16 +7,7 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'modules' => [
-        'API' => [
-            'namespace' => '\\KodiCMS\\API\\',
-            'path' => base_path('vendor'.DIRECTORY_SEPARATOR.'kodicms'.DIRECTORY_SEPARATOR.'api'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR)
-        ],
-        'CMS' => [
-            'namespace' => '\\KodiCMS\\CMS\\',
-            'path' => base_path('vendor'.DIRECTORY_SEPARATOR.'kodicms'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR)
-        ]
-    ],
+    'modules' => [],
 
     /*
     |--------------------------------------------------------------------------
