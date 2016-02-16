@@ -30,9 +30,7 @@ class Kernel extends CMSHttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
         ],
-        'api' => [
-            'throttle:60,1',
-        ],
+        'api' => [],
     ];
 
     /**
@@ -46,6 +44,6 @@ class Kernel extends CMSHttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'throttle' => \KodiCMS\API\Middleware\ThrottleRequests::class,
     ];
 }
