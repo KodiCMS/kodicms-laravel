@@ -10,17 +10,9 @@
   "require": {
     "php": ">=5.5.9",
     "laravel/framework": "5.2.*",
-    "fzaninotto/faker": "dev-master",
     "barryvdh/laravel-ide-helper": "^2.0",
     "kodicms/core": "0.*",
-    "kodicms/users": "0.*",
-    "kodicms/dashboard": "0.*",
-    "kodicms/widgets": "0.*",
-    "kodicms/pages": "0.*",
-    "kodicms/datasource": "0.*",
-    "kodicms/filemanager": "0.*",
-    "kodicms/plugins": "0.*",
-    "kodicms/userguide": "0.*"
+    "kodicms/sleepingowl": "0.*"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",
