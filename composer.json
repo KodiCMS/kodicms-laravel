@@ -12,6 +12,7 @@
     "laravel/framework": "5.2.*",
     "barryvdh/laravel-ide-helper": "^2.0",
     "kodicms/core": "0.*",
+    "kodicms/users": "0.*",
     "kodicms/sleepingowl": "0.*"
   },
   "require-dev": {
