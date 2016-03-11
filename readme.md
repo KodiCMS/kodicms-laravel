@@ -7,7 +7,8 @@
 
  * Клонировать репозиторий *(Clone repository)* `git clone https://github.com/KodiCMS/kodicms-laravel.git`
  * Запустить команду *(Run command)* `composer install` для загрузки всех необходимых компонентов
- * Выполнить установку системы *(Install CMS)* `php artisan cms:install` (`php artisan cms:install --help`) Или переименовать .env.example в .env и настроить подключение к БД, затем выполнить комманду *(Or rename .env.example to .env and set database connection, then run artisan command)* `php artisan cms:modules:migrate --seed`
+ * Выполнить установку системы *(Install CMS)* `php artisan cms:modules:install`. 
+ * Скопировать .env.example в .env и настроить подключение к БД, затем выполнить комманду *(Copy .env.example and rename to .env. Configure database connection, then run artisan command)* `php artisan modules:migrate --seed`
  
 ---
 
@@ -77,7 +78,7 @@ password: **password**
 
 ### Консольные команды (Console commands)
 
- * `php artisan cms:install` - создание .env файла, миграция и добавление сидов (в будущем данная команда будет создавать файл и производить миграцию)
+ * `php artisan cms:modules:install` - инждексация установленных модулей
  * `php artisan modules:migrate` - создание таблиц в БД
    - Для отката старых миграций необходимо добавить `--rollback`
    - Для сидирования данных необходимо добавить `--seed`
