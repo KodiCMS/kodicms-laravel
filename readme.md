@@ -7,8 +7,9 @@
 
  * Клонировать репозиторий *(Clone repository)* `git clone https://github.com/KodiCMS/kodicms-laravel.git`
  * Запустить команду *(Run command)* `composer install` для загрузки всех необходимых компонентов
- * Выполнить установку системы *(Install CMS)* `php artisan cms:modules:install`. 
  * Скопировать .env.example в .env и настроить подключение к БД, затем выполнить комманду *(Copy .env.example and rename to .env. Configure database connection, then run artisan command)* `php artisan modules:migrate --seed`
+ * Сгенерировать application ключ `php artisan key:generate`
+ * Выполнить установку системы *(Install CMS)* `php artisan cms:modules:install`. 
  
 ---
 
