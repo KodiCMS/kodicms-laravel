@@ -1,4 +1,4 @@
-## KodiCMS based on Laravel PHP Framework 
+## KodiCMS based on Laravel PHP Framework
 ### [English Version](https://github.com/teodorsandu/kodicms-laravel/blob/dev/README_EN.md)
 
 [![Join the chat at https://gitter.im/KodiCMS/kodicms-laravel](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/KodiCMS/kodicms-laravel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -9,22 +9,22 @@
  * Запустить команду *(Run command)* `composer install` для загрузки всех необходимых компонентов
  * Скопировать .env.example в .env и настроить подключение к БД, затем выполнить комманду *(Copy .env.example and rename to .env. Configure database connection, then run artisan command)* `php artisan modules:migrate --seed`
  * Сгенерировать application ключ `php artisan key:generate`
- * Выполнить установку системы *(Install CMS)* `php artisan cms:modules:install`. 
- 
+ * Выполнить установку системы *(Install CMS)* `php artisan cms:modules:install`.
+
 ---
 
 ### Авторизация (Authorization)
 
-Сайт: http://laravel.kodicms.ru/backend
+Сайт: http://demo.kodicms.com/backend
 
 **Русский интерфейс**
 
-username: **admin@site.com**  
+username: **admin@site.com**
 password: **password**
 
 **English interface**
 
-username: **admin_en@site.com**  
+username: **admin_en@site.com**
 password: **password**
 
 ---
@@ -32,14 +32,14 @@ password: **password**
 ### Изменения в Laravel.
 
 ##### bootstrap/app.php
-Для профилирования загрузки сервис профайдеров в `bootstrap/app.php` изменен Application на `\KodiCMS\CMS\Application`, 
+Для профилирования загрузки сервис профайдеров в `bootstrap/app.php` изменен Application на `\KodiCMS\CMS\Application`,
 данное изменение можно не вносить.
 
 ##### app/Http/Kernel.php
 Наследование `Kernel` от `KodiCMS\CMS\Http\Kernel`. Добавляются необходимые **middlemare** критичные для работы компонентов админ инетрфеса. **Обязательно**
 
 ##### app/Exceptions/Handler.php
-Наследование `Handler` от `KodiCMS\CMS\Exceptions\Handler`. Добавлена обработка ошибок AJAX запросов, а также использование 
+Наследование `Handler` от `KodiCMS\CMS\Exceptions\Handler`. Добавлена обработка ошибок AJAX запросов, а также использование
 контроллера системы для вывода текста ошибок и whoops. **Желательно для установки**
 
 ##### app/Console/Kernel.php
@@ -47,7 +47,7 @@ password: **password**
 
 
 ##### App/Http/Middleware/VerifyCsrfToken.php
-Наследование `VerifyCsrfToken` от `KodiCMS\CMS\Http\Middleware\VerifyCsrfToken` для возможности добавления исключения для модулей. На данный момент 
+Наследование `VerifyCsrfToken` от `KodiCMS\CMS\Http\Middleware\VerifyCsrfToken` для возможности добавления исключения для модулей. На данный момент
 используется только модулем Filemanager. **Желательно для установки**
 
 ##### config/app.php
@@ -55,14 +55,14 @@ password: **password**
 ```
 'providers' => [
    Illuminate\View\ViewServiceProvider::class,
-   
+
    ...
    /*
     * KodiCMS Service Providers...
     * Установить до App провафдеров
     */
    KodiCMS\Support\Html\HtmlServiceProvider::class,
-   Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class, // Можно не использовать, необходимо очистить 
+   Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class, // Можно не использовать, необходимо очистить
    KodiCMS\CMS\Providers\ModuleLoaderServiceProvider::class,
    ...
 ]
@@ -85,23 +85,23 @@ password: **password**
    - Для сидирования данных необходимо добавить `--seed`
 
  * `php artisan modules:seed` - заполнение таблиц тестовыми данными
- 
+
  * `php artisan cms:modules:publish` - публикация `view` шаблонов *(Publish view templates)*
  * `php artisan cms:modules:locale:publish` - генерация пакета lang файлов для перевода. Файлы будут скопированы в `/resources/lang/vendor`
  * `php artisan cms:modules:locale:diff --locale=en` - проверка наличия всех ключей в переводе в папке `/resources/lang/vendor` относительно модулей.
  * `php artisan cms:generate:translate:js` - генерация JS языковых файлов *(Generate javascript translate admin files)*
- 
+
  * `php artisan modules:list` - просмотр информации о добавленных модулях и плагинов *(Show modules information)*
  * `php artisan cms:wysiwyg:list` - список установленных в системе редакторов текста *(Show wysiwyg information)*
  * `php artisan cms:packages:list` - список всех media пакетов *(Show asset packages list)*
  * `php artisan cms:plugins:list` - просмотр информации о добавленных плагинах *(Show plugins information)*
- 
+
  * `php artisan cms:layout:rebuild-blocks` - индексация размеченых блоков в шаблонах *(Rebuild templates blocks)*
  * `php artisan cms:api:generate-key` - генерация нового API ключа *(Generate API key)*
  * `php artisan cms:reflinks:delete-expired` - Удаление просроченых сервисных ссылок
-  
+
  * `php artisan cms:make:controller` - создание контроллера (`cms:make:controller TestController --module=cms --type=backend` создаст контроллер в модуле `modules\CMS`. Существует два типа контроллеров `[api, backend]`)
- 
+
  * `php artisan cms:plugins:activate author:plugin` - активация плагина *(Plugin activation)*
  * `php artisan cms:plugins:deactivate author:plugin [--removetable=no]` - деактивация плагина (удаление таблицы из БД) *(Plugin deactivation)*
 
