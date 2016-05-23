@@ -35,16 +35,12 @@ password: **password**
 Для профилирования загрузки сервис профайдеров в `bootstrap/app.php` изменен Application на `\KodiCMS\CMS\Application`,
 данное изменение можно не вносить.
 
-##### app/Http/Kernel.php
-Наследование `Kernel` от `KodiCMS\CMS\Http\Kernel`. Добавляются необходимые **middlemare** критичные для работы компонентов админ инетрфеса. **Обязательно**
-
 ##### app/Exceptions/Handler.php
 Наследование `Handler` от `KodiCMS\CMS\Exceptions\Handler`. Добавлена обработка ошибок AJAX запросов, а также использование
 контроллера системы для вывода текста ошибок и whoops. **Желательно для установки**
 
 ##### app/Console/Kernel.php
 Наследование `Kernel` от `KodiCMS\Cron\Console\Kernel`. Пока что нигде не используется. **Желательно для установки** при использовании модуля **Cron**
-
 
 ##### App/Http/Middleware/VerifyCsrfToken.php
 Наследование `VerifyCsrfToken` от `KodiCMS\CMS\Http\Middleware\VerifyCsrfToken` для возможности добавления исключения для модулей. На данный момент
@@ -79,7 +75,7 @@ password: **password**
 
 ### Консольные команды (Console commands)
 
- * `php artisan cms:modules:install` - инждексация установленных модулей
+ * `php artisan cms:modules:install` - индексация установленных модулей
  * `php artisan modules:migrate` - создание таблиц в БД
    - Для отката старых миграций необходимо добавить `--rollback`
    - Для сидирования данных необходимо добавить `--seed`
@@ -109,15 +105,12 @@ password: **password**
 
 ### RoadMap
 
- * ~~Переход на PSR-2~~
- * Написание документации по созданию модулей и плагинов, и по работе с системой (можно также встроить ее через модуль Userguide)
- * Настройка прав доступа для пользователя и группы
- * Реализация инсталлятора системы
- * Модуль поиска с использованием ElasticSearch
- * Работа с изображениями. Загрузка, редактирование, изменение размера на лету, вставка в текст.
- * Локализация
- * Виджеты для вывода данныхх
- * Развитие модуля DataSource
+ * Убрать конфиги вроде такого https://github.com/KodiComponents/module-datasource/blob/master/src/config/widgets.php и сделать расширение функционала через сервис провайдеры
+ * Добавить возможность хранить виджеты в виде JSON файлов.
+ * Настроить наконец то разграничение прав доступа
+ * Добавить недостающие виджеты для вывода данных из раздела Datasource
+ * Доделать интеграцию админки SleepingOwl для более простого создания модулей
+ * Upload изображение в таблицу images и использование их в разичных редакторах
 
 ### Отдельное спасибо команде JetBrains за бесплатно предоставленый ключ для PHPStorm
 ![PHPStorm](https://www.jetbrains.com/phpstorm/documentation/docs/logo_phpstorm.png)
