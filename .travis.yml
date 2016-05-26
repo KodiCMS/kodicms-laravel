@@ -11,11 +11,11 @@ env:
 services:
   - mysql
 
-before_script:
+before_install:
   - phpenv config-rm xdebug.ini
   - mysql -e 'create database homestead;'
 
-script:
-  - composer install
-  - "php -r \"copy('.env.example', '.env');\""
-  - php artisan modules:migrate --seed
+install:
+  - travis_retry composer install
+  - travis_retry "php -r \"copy('.env.example', '.env');\""
+  - travis_retry php artisan modules:migrate --seed
