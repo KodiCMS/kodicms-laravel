@@ -1,5 +1,9 @@
 language: php
+sudo: required
 
+install:
+     # Disable xdebug. We aren't generating code coverage, and it has a huge impact upon test performance.
+     - rm /home/travis/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
 php:
   - 5.6
   - 7.0
@@ -11,8 +15,8 @@ services:
   - mysql
 
 before_script:
-  - travis_retry composer self-update
   - phpenv config-rm xdebug.ini
+  - travis_retry composer self-update
   - mysql -e 'create database homestead;'
 
 install:
