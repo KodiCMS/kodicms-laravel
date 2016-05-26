@@ -16,6 +16,6 @@ before_install:
   - mysql -e 'create database homestead;'
 
 install:
-  - travis_retry composer install
-  - travis_retry "php -r \"copy('.env.example', '.env');\""
-  - travis_retry php artisan modules:migrate --seed
+  - composer install
+  - "php -r \"copy('.env.example', '.env');\""
+  - php artisan modules:migrate --seed
