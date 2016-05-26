@@ -1,6 +1,7 @@
 ## KodiCMS based on Laravel PHP Framework
 ### [English Version](https://github.com/teodorsandu/kodicms-laravel/blob/dev/README_EN.md)
 
+[![Build Status](https://travis-ci.org/KodiCMS/kodicms-laravel.svg?branch=dev)](https://travis-ci.org/KodiCMS/kodicms-laravel)
 [![Join the chat at https://gitter.im/KodiCMS/kodicms-laravel](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/KodiCMS/kodicms-laravel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ### Установка (Installation):
