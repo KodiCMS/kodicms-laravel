@@ -11,13 +11,10 @@ services:
   - mysql
 
 before_script:
-  - travis_retry phpenv config-rm xdebug.ini
-  - travis_retry sudo a2dismod xdebug
-  - travis_retry sudo service apache2 restart
-  - travis_retry composer self-update
-  - travis_retry mysql -e 'create database homestead;'
+  - mysql -e 'create database homestead;'
+  - config-rm xdebug.ini || true
 
 install:
-  - travis_retry composer install --no-interaction --prefer-dist
-  - travis_retry "php -r \"copy('.env.example', '.env');\""
-  - travis_retry php artisan modules:migrate --seed
+  - composer install --no-interaction --prefer-dist
+  - "php -r \"copy('.env.example', '.env');\""
+  - php artisan modules:migrate --seed
