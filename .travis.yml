@@ -14,7 +14,7 @@ before_script:
   - mysql -e 'create database homestead;'
   - config-rm xdebug.ini || true
 
-install:
+script:
   - composer install --no-interaction --prefer-dist
   - "php -r \"copy('.env.example', '.env');\""
   - php artisan modules:migrate --seed
