@@ -14,8 +14,6 @@ services:
 before_script:
   - phpenv config-rm xdebug.ini
   - mysql -e 'create database homestead;'
-  - sudo a2dismod xdebug
-  - sudo service apache2 restart
 
 script:
   - composer install
