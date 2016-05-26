@@ -1,4 +1,5 @@
 language: php
+sudo: required
 
 php:
   - 5.6
@@ -10,11 +11,13 @@ env:
 services:
   - mysql
 
-before_install:
-  - phpenv config-rm xdebug.ini 
+before_script:
+  - phpenv config-rm xdebug.ini
   - mysql -e 'create database homestead;'
+  - sudo a2dismod xdebug
+  - sudo service apache2 restart
 
-install:
-  - composer install --no-interaction --prefer-dist
+script:
+  - composer install
   - "php -r \"copy('.env.example', '.env');\""
   - php artisan modules:migrate --seed
