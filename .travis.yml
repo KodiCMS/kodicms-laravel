@@ -6,7 +6,7 @@ php:
   - 7.0
 
 env:
-  - DB_USERNAME=root DB_PASSWORD=
+  - DB_USERNAME=root
 
 services:
   - mysql
@@ -14,6 +14,7 @@ services:
 before_install:
   - phpenv config-rm xdebug.ini
   - mysql -e 'create database homestead;'
+  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('secret') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
 
 install:
   - composer install
