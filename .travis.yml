@@ -12,15 +12,12 @@ services:
   - mysql
 
 before_script:
-  - phpenv config-rm xdebug.ini
+  - sudo a2dismod xdebug
+  - sudo service apache2 restart
   - travis_retry composer self-update
   - mysql -e 'create database homestead;'
 
 install:
-  # Load xdebug Zend extension with php command
-  - alias php='php -dzend_extension=xdebug.so'
-  # PHPUnit needs xdebug for coverage. In this case, just make an alias with php command prefix.
-  - alias phpunit='php $(which phpunit)'
   - travis_retry composer install --no-interaction --prefer-dist
   - travis_retry "php -r \"copy('.env.example', '.env');\""
   - travis_retry php artisan modules:migrate --seed
