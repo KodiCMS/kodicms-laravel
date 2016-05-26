@@ -1,5 +1,4 @@
 language: php
-sudo: required
 
 php:
   - 5.6
@@ -12,10 +11,11 @@ services:
   - mysql
 
 before_script:
-  - sudo a2dismod xdebug
-  - sudo service apache2 restart
+  - travis_retry phpenv config-rm xdebug.ini
+  - travis_retry sudo a2dismod xdebug
+  - travis_retry sudo service apache2 restart
   - travis_retry composer self-update
-  - mysql -e 'create database homestead;'
+  - travis_retry mysql -e 'create database homestead;'
 
 install:
   - travis_retry composer install --no-interaction --prefer-dist
