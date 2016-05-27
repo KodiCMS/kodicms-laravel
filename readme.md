@@ -11,6 +11,7 @@
  * Скопировать .env.example в .env и настроить подключение к БД, затем выполнить комманду *(Copy .env.example and rename to .env. Configure database connection, then run artisan command)* `php artisan modules:migrate --seed`
  * Сгенерировать application ключ `php artisan key:generate`
  * Выполнить установку системы *(Install CMS)* `php artisan cms:modules:install`.
+ * Выполнить миграцию модуей `php artisan modules:migrate --seed`.
 
 ---
 
@@ -32,24 +33,23 @@ password: **password**
 
 ### Изменения в Laravel.
 
-##### app/Console/Kernel.php
-Наследование `Kernel` от `KodiCMS\Cron\Console\Kernel`. Пока что нигде не используется. **Желательно для установки** при использовании модуля **Cron**
-
 ##### config/app.php
 
-```
+```php
 'providers' => [
-   Illuminate\View\ViewServiceProvider::class,
-
-   ...
-   /*
-    * KodiCMS Service Providers...
-    * Установить до App провафдеров
-    */
-   KodiCMS\Support\Html\HtmlServiceProvider::class,
-   Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class, // Можно не использовать, необходимо очистить
-   KodiCMS\CMS\Providers\ModuleLoaderServiceProvider::class,
-   ...
+    ...
+   	Illuminate\View\ViewServiceProvider::class,
+   	
+   	/*
+   	 * KodiCMS Service Providers...
+   	 */
+   	KodiCMS\CMS\Providers\ModuleLoaderServiceProvider::class,
+   	
+   	/*
+   	 * Application Service Providers...
+   	 */
+   	App\Providers\AppServiceProvider::class,
+   	...
 ]
 ```
 
@@ -59,6 +59,30 @@ password: **password**
 ##### .env
 `APP_PROFILING=false`
 `ADMIN_DIR_NAME=backend`
+
+#### public/index.php
+
+```php
+...
+|
+*/
+
+$app = require_once __DIR__.'/../bootstrap/app.php';
+
+/*
+|--------------------------------------------------------------------------
+| Tune up KodiCMS
+|--------------------------------------------------------------------------
+|
+*/
+require_once __DIR__.'/../vendor/kodicms/core/src/bootstrap/app.php';
+
+
+/*
+|--------------------------------------------------------------------------
+| Run The Application
+...
+```
 
 ---
 
