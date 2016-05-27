@@ -107,7 +107,7 @@ return [
 
     'key' => env('APP_KEY'),
 
-    'cipher'    => 'AES-256-CBC',
+    'cipher' => 'AES-256-CBC',
 
     /*
     |--------------------------------------------------------------------------
@@ -121,7 +121,7 @@ return [
     | Available Settings: "single", "daily", "syslog", "errorlog"
     |
     */
-    'log'       => env('APP_LOG', 'single'),
+    'log' => env('APP_LOG', 'single'),
 
     /*
     |--------------------------------------------------------------------------
