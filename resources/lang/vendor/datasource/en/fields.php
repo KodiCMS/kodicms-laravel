@@ -46,7 +46,9 @@ return [
 	],
 	'boolean' => [
 		'title' => 'Boolean',
-		'style' => 'Style'
+		'style' => 'Style',
+		'true'  => 'True',
+		'false' => 'False',
 	],
 	'timestamp' => [
 		'title' => 'Timestamp'
